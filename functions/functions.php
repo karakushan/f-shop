@@ -1,35 +1,24 @@
 <?php 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-// Получаем категории товара в виде списка ul
-function fs_product_categories()
+function fs_attr_group_filter($group,$type='option',$option_default='Выберите значение')
 {
-	$product_taxonomy= new FS_Taxonomies_Class();
-	$product_taxonomy->get_product_terms('catalog');
-
-}
-// Получаем производителей товара в виде списка ul
-function fs_product_manufacturer()
-{
-	$product_taxonomy= new FS_Taxonomies_Class();
-	$product_taxonomy->get_product_terms('manufacturer');
-
+	$fs_filter=new FS\FS_Filters;
+	echo $fs_filter->attr_group_filter($group,$type,$option_default);
 }
 
 /**
- * [fs_get_attr_group description]
- * @param  [type] $group   [description]
- * @param  string $post_id [description]
- * @param  string $type    [description]
- * @return [type]          [description]
+ * 	выводит группы свойств товара в виде опций select или обычного ul списка		
+ * @param  string $group   название группы свойств
+ * @param  string $post_id id поста к которому нужно вывести свойства(по умолчанию текущий пост, если в цикле)
+ * @param  string $type    тип вывода: 'option' - опции select, 'list' обычный список
+ * @return  выводит или группу опций или маркированый список 
  */
 function fs_get_attr_group($group,$post_id="",$type='option'){
 	global $post;
 	$post_id=(!$post_id)?$post->ID : 0;
 	$fs_atributes_post=get_post_meta($post_id,'fs_attributes',false);
 	$fs_atributes_post=$fs_atributes_post[0];
-
-	// print_r($fs_atributes_post);
 
 	$fs_atributes=get_option('fs-attr-group');
 	if ($fs_atributes_post) {
@@ -57,7 +46,6 @@ function fs_get_attr_group($group,$post_id="",$type='option'){
 
 	}
 }
-
 
 function fs_lightslider($post_id='',$args='')
 {
@@ -454,5 +442,17 @@ function fs_quantity_product($product_id='',$wrap_class='count_wrap',$args='')
 
 	if (!is_numeric($product_id))  exit;
 	echo "<div class=\"$wrap_class\"><input type=\"number\" name=\"count-ch\" data-fs-action=\"change_count\" data-count-id=\"".get_the_id()."\" value=\"1\" min=\"1\" $args></div>";
+}
+
+/**
+ * Парсит урл и возвращает всё что находится до знака ?
+ * @param  string $url строка url которую нужно спарсить
+ * @return string      возвращает строку урл
+ */
+function fs_parse_url($url='')
+{
+	$url=(filter_var($url, FILTER_VALIDATE_URL)) ? $url : $_SERVER['REQUEST_URI'];
+	$parse=explode('?',$url);
+	return $parse[0];
 }
 

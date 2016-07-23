@@ -194,7 +194,7 @@ jQuery(document).ready(function($) {
 				action: 'update_cart',
 				product:productId,
 				count:productCount
-			},
+			}
 		})
 		.done(function() {
 			location.reload();
@@ -238,3 +238,40 @@ jQuery(document).ready(function($) {
 		}
 	});
 });
+
+jQuery(document).ready(function($) {
+	var priceStart=getUrlVars()['price_start'];
+	var priceEnd=getUrlVars()['price_end'];
+	if (priceStart==undefined) { priceStart=0; }
+	if (priceEnd==undefined) { priceEnd=2500; }
+	$("#amount_show" ).html('<span>'+ priceStart + "</span> грн - <span>" + priceEnd+'</span> грн' );
+	console.log(priceStart);
+	    //слайдер-фильтр цены виджет
+	    $( "#slider-range" ).slider({
+	    	range: true,
+	    	min: 0,
+	    	max: 2500,
+	    	values: [ priceStart, priceEnd ],
+	    	slide: function( event, ui ) {
+	    		$( "#amount" ).val( ui.values[0] + "-" + ui.values[1]);
+
+	    		$("#amount_show" ).html('<span>'+ ui.values[0] + "</span> грн - <span>" + ui.values[1]+'</span> грн' );
+	    	},
+	    	change: function( event, ui ) {
+	    		var curentUrl=$('#slider-range').attr('data-uri')+'?fs-filter=1&price_start='+ui.values[0]+'&price_end='+ui.values[1];
+	    		
+	    			window.location.href=curentUrl;
+	    		
+	    	}
+
+	    });
+	});
+
+function getUrlVars() {
+	var vars = {};
+	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+		vars[key] = value;
+	});
+	return vars;
+}
+

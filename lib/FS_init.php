@@ -3,7 +3,7 @@ namespace FS;
 /**
 * Инициализирует функции и классы плагина
 */
-class FS_init
+class FS_Init
 {
 	protected $conf;
 	
@@ -21,6 +21,7 @@ class FS_init
 		new FS_Rating_Class();	
 		new FS_Post_Type();
 		new FS_Post_Types();
+		new FS_Filters();
 		new FS_Cart_Class();
 		new FS_Orders_Class();
 		new FS_Images_Class();
@@ -91,7 +92,7 @@ class FS_init
 
 
 		function fast_shop_scripts() {
-			wp_enqueue_style( 'fs-style', $this->conf['plugin_url'].'assets/css/fast-shop.css',array(),$this->conf['table_name']['plugin_ver'],'all');	
+			wp_enqueue_style( 'fs-style', $this->conf['plugin_url'].'assets/css/fast-shop.css',array(),$this->conf['plugin_ver'],'all');	
 			wp_enqueue_style( 'lightslider',$this->conf['plugin_url'].'assets/lightslider/dist/css/lightslider.min.css',array(),$this->conf['plugin_ver'],'all');
 			wp_enqueue_style( 'lightbox', $this->conf['plugin_url'].'assets/lightbox2/dist/css/lightbox.min.css',array(),$this->conf['plugin_ver'],'all');			
 			wp_enqueue_style( 'font-awesome',$this->conf['plugin_url'].'assets/fontawesome/css/font-awesome.min.css',array(),$this->conf['plugin_ver'],'all');			

@@ -40,11 +40,17 @@ $GLOBALS['fs_config']=array(
 	'plugin_name'=>'fast-shop',
 	'table_name'=>$wpdb->prefix."fs_orders",
 	'plugin_meta'=>array(
-		),
+		'price'=>'fs_price',
+		'discount'=>'fs_discount',
+		'availability'=>'fs_availability',
+		'action'=>'fs_action',
+		'displayed_price'=>'fs_displayed_price',
+		'attributes'=>'fs_attributes'
+		)
 	);
 
 
-new FS\Fs_init();
+new FS\Fs_Init();
 	// Installation and uninstallation hooks
 register_activation_hook(__FILE__, array('Fs_init', 'activate'));
 register_deactivation_hook(__FILE__, array('Fs_init', 'deactivate'));

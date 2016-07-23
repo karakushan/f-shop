@@ -14,6 +14,7 @@ class FS_Shortcode
 		add_shortcode( 'fs_last_order_id', array(&$this,'last_order_id'));
 		add_shortcode( 'fs_review_form', array(&$this,'review_form'));
 		add_shortcode( 'fs_checkout', array(&$this,'checkout_form'));
+		add_shortcode( 'fs_range_slider', array('FS\FS_Filters','range_slider'));
 	}
 
 			//Шорткод для отображения купленных товаров и оформления покупки
@@ -126,6 +127,5 @@ function checkout_form()
 		include ($checkout_form_plugin);
 	}	
 }
-}//end class
 
-?>
+}//end classs
