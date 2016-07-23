@@ -1,19 +1,21 @@
 <?php
+namespace FS;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-if(!class_exists('FS_Settings_Class'))
+/**
+ * Класс выводит страницу настроек в админке
+ */
+class FS_Settings_Class
 {
-	class FS_Settings_Class
-	{
-		/**
-		 * Construct the plugin object
-		 */
+  protected $conf;
+
 		public function __construct()
 		{
 			// register actions
       add_action('admin_init', array(&$this, 'admin_init'));
       add_action('admin_menu', array(&$this, 'add_menu'));
 
+      global $fs_config;
+      $this->conf=$fs_config;
 		} // END public function __construct
 		
         /**
@@ -97,22 +99,22 @@ if(!class_exists('FS_Settings_Class'))
             // echo a proper input type="text"
           echo sprintf('<input type="text" name="%s" id="%s" value="%s" />', $field, $field, $value);
         }
-            public function settings_field_select($args)
+        public function settings_field_select($args)
         {
             // Get the field name from the $args array
           $field = $args['field'];
             // Get the value of this setting
           $value = get_option($field);
             // echo a proper input type="text"
-            $list_option="";
-            $posts=query_posts(array('post_type'=>'page'));
-            if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-            
-            <?php $list_option.="<option value=\"".get_the_ID()."\" ".selected(get_the_ID(),  $value, false ).">".get_the_title()."</option>"; ?>
-            <?php endwhile;wp_reset_query(); ?>
-            <?php endif; ?>
+          $list_option="";
+          $posts=query_posts(array('post_type'=>'page'));
+          if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
           
-          <?php echo sprintf('<select name="%s" id="%s" />'. $list_option.'</select>', $field, $field, $value);
+          <?php $list_option.="<option value=\"".get_the_ID()."\" ".selected(get_the_ID(),  $value, false ).">".get_the_title()."</option>"; ?>
+        <?php endwhile;wp_reset_query(); ?>
+      <?php endif; ?>
+      
+      <?php echo sprintf('<select name="%s" id="%s" />'. $list_option.'</select>', $field, $field, $value);
         } // END public function settings_field_input_text($args)
         
         /**
@@ -142,6 +144,16 @@ if(!class_exists('FS_Settings_Class'))
              'manage_options', 
              'fs-delivery', 
              array(&$this, 'fast_shop_delivery')
+             );    
+
+             // Add a page to manage this plugin's settings
+            add_submenu_page(
+             'edit.php?post_type=product', 
+             'Атрибуты товаров', 
+             'Атрибуты товаров', 
+             'manage_options', 
+             'fs-atributes', 
+             array(&$this, 'fast_shop_admin_menu')
              );                   
 
                    // Add a page to manage this plugin's settings
@@ -160,43 +172,56 @@ if(!class_exists('FS_Settings_Class'))
          */		
         public function plugin_settings_page()
         {
+          global $fs_config;
           // шаблон страницы настроек магазина
-        	include(sprintf("%s/templates/back-end/settings.php", dirname(__FILE__)));
+          include($fs_config['plugin_path'].'/templates/back-end/settings.php');
         } 
+
+        public function fast_shop_admin_menu()
+        {
+          $page=$_GET['page'];
+          $template=$this->conf['plugin_path'].'templates/back-end/'.$page.'.php';
+          switch ($page) {
+            case 'fs-atributes':
+            require_once $template;
+            break;
+            
+            default:
+              # code...
+            break;
+          }
+        }
 
       //Визуальное отображение контента на странице настройки доставки
         public function fast_shop_delivery()
         {
+          global $fs_config;
           $delivery=new FS_Delivery_Class();
-         $delivery->add_delivery();
-         $fs_delivery=$delivery->delivery;
+          $delivery->add_delivery();
+          $fs_delivery=$delivery->delivery;
 
           // шаблон  страницы настроек доставки
-         include(sprintf("%s/templates/back-end/delivery.php", dirname(__FILE__)));
-       }
-
-       public function fast_shop_orders()
-       {
-
-        $orders=new FS_Orders_Class();
-        $delivery=new FS_Delivery_Class();
-
-        $action=esc_sql($_GET['action']);
-        switch ($action) {
-          case 'info':
-          $order_info=$orders->get_order(esc_sql($_GET['id'] ));
-          $products=unserialize($order_info->products);
-          include(sprintf("%s/templates/back-end/order-info.php", dirname(__FILE__)));
-          break;
-          
-          default:
-          include(sprintf("%s/templates/back-end/orders.php", dirname(__FILE__)));
-          break;
+          include($this->conf['plugin_path'].'/templates/back-end/delivery.php');
         }
 
+        public function fast_shop_orders()
+        {
 
-      }
+          $orders=new FS_Orders_Class();
+          $delivery=new FS_Delivery_Class();
+          $action=esc_sql($_GET['action']);
+          switch ($action) {
+            case 'info':
+            $order_info=$orders->get_order(esc_sql($_GET['id'] ));
+            $products=unserialize($order_info->products);
+            include $this->conf['plugin_path'].'templates/back-end/order-info.php';
+            break;
+            
+            default:
+            include $this->conf['plugin_path'].'templates/back-end/orders.php';
+            break;
+          }
 
 
-    } // END class WP_Plugin_Template_Settings
-} // END if(!class_exists('WP_Plugin_Template_Settings'))
+        }
+      } 

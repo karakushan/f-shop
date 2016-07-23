@@ -1,4 +1,5 @@
 <?php
+namespace FS;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if(!class_exists('FS_Post_Type'))
@@ -14,7 +15,8 @@ if(!class_exists('FS_Post_Type'))
             'fs_discount',
             'fs_availability',
             'fs_action',
-            'fs_displayed_price'
+            'fs_displayed_price',
+            'fs_attributes'
             );
 		
     	/**

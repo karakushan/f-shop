@@ -1,9 +1,11 @@
 <?php
+namespace FS;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
  /**
 * Клас для обработки ajax запросов
 */
+
 class FS_Ajax_Class
 {
 	

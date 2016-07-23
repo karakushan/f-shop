@@ -1,0 +1,20 @@
+{
+	"name": "karak/fast-shop",
+	"authors": [
+		{
+			"name": "Vitaliy Karakushan",
+			"email": "karakushan@gmail.com"
+		}
+	],
+	"require": {
+
+	},
+	"autoload": {
+		"psr-4": {
+			"FS\\": "lib/"
+		},
+		"files": [
+			"functions/functions.php"
+		]
+	}
+}

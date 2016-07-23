@@ -1,4 +1,5 @@
 <?php 
+namespace FS;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
 * Класс доставки
@@ -25,13 +26,14 @@ class FS_Delivery_Class
 	//Получаем способы доставки в виде опций селект или списка
 	public function list_delivery($type='select')
 	{
+		$key=0;
 		if ($this->delivery) {
 			switch ($type) {
 				case 'select':
 				if ($this->delivery) {
 					echo "<select name=\"delivery\" id=\"delivery\">";
 					echo "<option value=\"\">".__('Select the method','fast-shop')."</option>";
-					foreach ($this->delivery as $del) {
+					foreach ($this->delivery as $key=>$del) {
 						echo "<option value=\"$del[id]\">$del[name]</option>";
 					}
 					echo "</select>";
@@ -44,12 +46,16 @@ class FS_Delivery_Class
 				}
 				break;				
 				case 'radio':
-				foreach ($this->delivery as $del) {
+				foreach ($this->delivery as$del) {
+					
+					
+					if ($key==0){ $checked='checked="checked"';} else{ $checked='';}
 					echo "<li>
-					<input type=\"radio\" name=\"delivery\" value=\"$del[id]\" id=\"$del[id]\">
+					<input type=\"radio\" name=\"delivery\" value=\"$del[id]\" id=\"$del[id]\" $checked>
 					<label for=\"$del[id]\">$del[name]</label>
-					<div class=\"check\"></div>
+				
 				</li>";
+				$key++;
 			}
 			break;
 			default:	

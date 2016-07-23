@@ -121,6 +121,10 @@ button.remove-tr {
 }
 .send_ok {
   display: none;
+  position: absolute;
+  left: 116px;
+  top: 2px;
+  color: #208e2b;
 }
 .count_wrap {
   position: relative;

@@ -1,4 +1,5 @@
 <?php 
+namespace FS;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if (!class_exists('FS_Taxonomies_Class')) {
@@ -51,9 +52,7 @@ if (!class_exists('FS_Taxonomies_Class')) {
 		);	
 
 			register_taxonomy('catalog', 'product', $args );
-	
 
-			
 		}
 
 //Получаем списком все категории продуктов

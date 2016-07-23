@@ -16,13 +16,48 @@ function fs_product_manufacturer()
 
 }
 
-// Получаем страны производителей товара в виде списка ul
-function fs_product_countries()
-{
-	$product_taxonomy= new FS_Taxonomies_Class();
-	$product_taxonomy->get_product_terms('countries');
+/**
+ * [fs_get_attr_group description]
+ * @param  [type] $group   [description]
+ * @param  string $post_id [description]
+ * @param  string $type    [description]
+ * @return [type]          [description]
+ */
+function fs_get_attr_group($group,$post_id="",$type='option'){
+	global $post;
+	$post_id=(!$post_id)?$post->ID : 0;
+	$fs_atributes_post=get_post_meta($post_id,'fs_attributes',false);
+	$fs_atributes_post=$fs_atributes_post[0];
 
+	// print_r($fs_atributes_post);
+
+	$fs_atributes=get_option('fs-attr-group');
+	if ($fs_atributes_post) {
+		switch ($type) {
+			case 'option':
+			foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+				if (!$fs_atribute) continue;
+				echo "<option value=\"".$fs_atributes[$group]['slug'].":".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
+			}
+			break;		
+			case 'list':
+			foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+				if (!$fs_atribute) continue;
+				echo "<li>".$fs_atributes[$group]['attributes'][$key]."</li>";
+			}
+			break;
+
+			default:
+			foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+				if (!$fs_atribute) continue;
+				echo "<option value=\"".$fs_atributes_post[$group]['slug'].":".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
+			}
+			break;
+		}
+
+	}
 }
+
 
 function fs_lightslider($post_id='',$args='')
 {
@@ -166,8 +201,8 @@ function fs_get_cart()
 				'name'=>get_the_title($key),
 				'count'=>$count['count'],
 				'link'=>get_permalink($key),
-				'price'=>$price.' '.$cur_symb,
-				'all_price'=>$all_price.' '.$cur_symb
+				'price'=>$price.' <span>'.$cur_symb.'</span>',
+				'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
 				);
 		}
 	}
@@ -280,51 +315,22 @@ function fs_post_views($post_id='')
 }
 
 /**
- * показывает и скрывает вижет корзины в шаблоне
- * @param  boolean $show_hide показывать скрывать если нет продуктов, false показывать всегда
+ * показывает вижет корзины в шаблоне
+
  * @return показывает виджет корзины
  */
-function fs_cart_widget($show_hide=true)
+function fs_cart_widget()
 { 
 	global $fs_config;
-	$style='';
-	if ($show_hide) {
-		$style="style=\"display:none\"";
-		if (fs_product_count()>0) {
-			$style="style=\"display:block\"";
-		}
-	}
-
 	$template_theme=TEMPLATEPATH.'/fast-shop/cart-widget/widget.php';
-	$template_plugin=plugin_dir_path( __FILE__ ).'/templates/front-end/cart-widget/widget.php';
-	$template_none=TEMPLATEPATH.'/fast-shop/cart-widget/widget-none.php';
-	$template_none_plugin=plugin_dir_path( __FILE__ ).'/templates/front-end/cart-widget/widget-none.php';
+	$template=plugin_dir_path( __FILE__ ).'templates/front-end/cart-widget/widget.php';
 
-	if (!isset($_SESSION['cart'])) {
-		if (file_exists($template_none)) {
-			$template=$template_none;
-		}else{
-			$template=$template_none_plugin;
-		}
-	}else{
-		if (count($_SESSION['cart'])==0) {
-			if (file_exists($template_none)) {
-				$template=$template_none;
-			}else{
-				$template=$template_none_plugin;
-			}
-		}else{
-			if (file_exists($template_theme)) {
-				$template=$template_theme;
-			}else{
-				$template=$template_plugin;
-			}
-		}
+	if (file_exists($template_theme)) {
+		$template=$template_theme;
 
 	}
-
 	echo "<div id=\"fs_cart_widget\" $style>";
-	include ($template);
+	require $template;
 	echo "</div>";
 }
 

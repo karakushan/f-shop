@@ -53,7 +53,7 @@ $('[data-fs-action=change_count]').on('change', function(event) {
 	var product=$(this).data('count-id');
 	var count=$(this).val();
 	if (count<1) { $(this).val(1) }
-	$('[data-product-id='+product+']').data('count',count);
+		$('[data-product-id='+product+']').data('count',count);
 });
 
 $('.up').click(function(event) {
@@ -96,8 +96,8 @@ $(".order-send").validate({
 	rules : {
 		name : {required : true},
 		telefon : {required : true},
-		delivery : {required : true},
-		billing_city : {required : true},
+		
+		city : {required : true},
 		email: {
 			required: true,
 			email: true
@@ -111,10 +111,8 @@ $(".order-send").validate({
 		telefon : {
 			required : "Введите ваш номер телефона",
 		},				
-		delivery : {
-			required : "Необходимо выбрать способ доставки",
-		},
-		billing_city : {
+		
+		city : {
 			required : "Укажите город",
 		},
 		email: {
@@ -163,5 +161,80 @@ $('[data-fs-action=change_count]').on('change', function(event) {
 
 });
 
+// Увеличиваем значение input на единицу
+jQuery(document).ready(function($) {
+	$('.fs_product_minus').click(function () {
+		var $input = $(this).parent().find('input');
+		var count = parseInt($input.val()) - 1;
+		count = count < 1 ? 1 : count;
+		$input.val(count);
+		$input.change();
+		return false;
+	});
+	$('.fs_product_plus').click(function () {
+		var $input = $(this).parent().find('input');
+		$input.val(parseInt($input.val()) + 1);
+		$input.change();
+		return false;
+	});
+});
 
+//Изменение количества продуктов в корзине
+jQuery(document).ready(function($) {
+	$('[data-fs-type="cart-quantity"]').on('change', function(event) {
+		event.preventDefault();
+		var productId = $(this).data('fs-id');
+		var productCount = $(this).val();
 
+		$.ajax({
+			url: ajaxurl,
+			type: 'POST',
+			dataType: 'html',
+			data: {
+				action: 'update_cart',
+				product:productId,
+				count:productCount
+			},
+		})
+		.done(function() {
+			location.reload();
+		})
+		.fail(function() {
+			console.log("ошибка обновления количества товаров в корзине");
+		})
+		.always(function() {
+			
+		});
+		
+
+	});
+});
+
+//Удаление продукта из корзины
+jQuery(document).ready(function($) {
+	$('[data-fs-type="product-delete"]').on('click', function(event) {
+		event.preventDefault();
+		var productId = $(this).data('fs-id');
+		var productName = $(this).data('fs-name');
+		if (confirm('Вы точно хотите удалить продукт "'+productName+'" из корзины?')) {
+			$.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				dataType: 'html',
+				data: {
+					action: 'delete_product',
+					product:productId
+				},
+			})
+			.done(function() {
+				location.reload();
+			})
+			.fail(function() {
+				console.log("ошибка удаления товара из корзины");
+			})
+			.always(function() {
+
+			});
+		}
+	});
+});

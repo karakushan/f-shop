@@ -1,4 +1,6 @@
-<?php /**
+<?php 
+namespace FS;
+/**
 * 
 */
 class FS_Post_Types
