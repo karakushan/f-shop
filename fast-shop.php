@@ -54,4 +54,5 @@ new FS\Fs_Init();
 	// Installation and uninstallation hooks
 register_activation_hook(__FILE__, array('Fs_init', 'activate'));
 register_deactivation_hook(__FILE__, array('Fs_init', 'deactivate'));
+//
 
