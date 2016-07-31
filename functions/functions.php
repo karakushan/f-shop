@@ -49,7 +49,7 @@ function fs_get_attr_group($group,$post_id="",$type='option'){
 
 function fs_lightslider($post_id='',$args='')
 {
-	$galery=new FS_Images_Class();
+	$galery=new FS\FS_Images_Class();
 	
 
 	$galery=$galery->fs_galery_list($post_id,array(90,90));
