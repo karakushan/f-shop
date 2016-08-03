@@ -32,7 +32,7 @@ require_once __DIR__.'/vendor/autoload.php';
 
 global $wpdb;
 
-//отсюда всё пляшет, основные настройки плагина
+//глобальный массив настроек плагина
 $GLOBALS['fs_config']=array(
 	'plugin_path'=>plugin_dir_path( __FILE__ ),
 	'plugin_url'=>plugin_dir_url( __FILE__ ),
@@ -45,12 +45,13 @@ $GLOBALS['fs_config']=array(
 		'availability'=>'fs_availability',
 		'action'=>'fs_action',
 		'displayed_price'=>'fs_displayed_price',
-		'attributes'=>'fs_attributes'
+		'attributes'=>'fs_attributes',
+		'gallery'=>'fs_galery'
 		)
 	);
 
 
-new FS\Fs_Init();
+new FS\FS_Init;
 	// Installation and uninstallation hooks
 register_activation_hook(__FILE__, array('Fs_init', 'activate'));
 register_deactivation_hook(__FILE__, array('Fs_init', 'deactivate'));

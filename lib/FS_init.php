@@ -101,16 +101,20 @@ class FS_Init
 			wp_enqueue_script( 'lightbox',$this->conf['plugin_url'].'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'lightslider',$this->conf['plugin_url'].'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'fast-shop',$this->conf['plugin_url'].'assets/js/fast-shop.js', array( 'jquery', 'jquery-validate'), $this->conf['plugin_ver'], true);
+			
 		}
 
 		public function fast_shop_admin_scripts()
 		{
 			
+			
+			wp_enqueue_style( 'fs-jqueryui', $this->conf['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.css',array(),$this->conf['plugin_ver'],'all');
 			wp_enqueue_style( 'fs-style', $this->conf['plugin_url'].'assets/css/fast-shop.css',array(),$this->conf['plugin_ver'],'all');	
-			wp_enqueue_style( 'jquery-ui', 'https://code.jquery.com/ui/1.12.0/themes/dark-hive/jquery-ui.css');	
-			wp_enqueue_script( 'fs-galery',$this->conf['plugin_url'].'assets/js/fs-galery.js', array( 'jquery' ), null, true);
-			wp_enqueue_script('jquery-ui-tabs');
-			wp_enqueue_script('jqueryui','https://code.jquery.com/ui/1.12.0/jquery-ui.js');
+
+			wp_enqueue_script('fs-jqueryui',$this->conf['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.js',array('jquery'),null,true);
+			wp_enqueue_script( 'fs-admin',$this->conf['plugin_url'].'assets/js/fs-admin.js', array( 'jquery' ), null, true);
+
+
 
 		}
 

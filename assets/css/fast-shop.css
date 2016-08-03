@@ -153,3 +153,17 @@ input[name="count-ch"] {
   border: 4px solid transparent;
   border-top: 8px solid #7C1D6B;
 }
+.fs-metabox td {
+    padding: 2px 8px;
+}
+.fs-metabox label {
+    font-weight: bold;
+}
+  li.fs-attr {
+    margin-bottom: 6px;
+    display: inline-block;
+    margin-right: 13px;
+    border: 1px solid #e5e5e5;
+    padding: 0 15px 15px 15px;
+    border-radius: 4px;
+}

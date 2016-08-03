@@ -14,7 +14,7 @@ function fs_attr_group_filter($group,$type='option',$option_default='Выбер�
  * @param  string $type    тип вывода: 'option' - опции select, 'list' обычный список
  * @return  выводит или группу опций или маркированый список 
  */
-function fs_get_attr_group($group,$post_id="",$type='option'){
+function fs_attr_group($group,$post_id="",$type='option',$option_default='',$class='form-control'){
 	global $post;
 	$post_id=(!$post_id)?$post->ID : 0;
 	$fs_atributes_post=get_post_meta($post_id,'fs_attributes',false);
@@ -24,10 +24,13 @@ function fs_get_attr_group($group,$post_id="",$type='option'){
 	if ($fs_atributes_post) {
 		switch ($type) {
 			case 'option':
+			echo '<select name="'.$group.'" data-fs-element="attr" class="'.$class.'" data-product-id="'.$post_id.'">';
+			echo '<option value="">'.$option_default.'</option>';
 			foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
 				if (!$fs_atribute) continue;
 				echo "<option value=\"".$fs_atributes[$group]['slug'].":".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
 			}
+			echo '</select>';
 			break;		
 			case 'list':
 			foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
@@ -270,7 +273,7 @@ function fs_old_price($post_id='',$curency=true,$cur_tag_before=' <span>',$cur_t
  * @param  string $send_icon [html код иконки успешного добавления в корзину]
  * @return [type]            [выводит html код кпопки добавления в корзину]
  */
-function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon='')
+function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon='',$json='')
 {
 	global $post;
 	if($post_id=='') $post_id=$post->ID;
@@ -279,8 +282,17 @@ function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon=
 	if ($label=='') {
 		$label=__( 'Add to cart', 'fast-shop' );
 	}
+	
+	//Добавляем к json свои значения
+	$js=json_decode($json,true);
+	$js['post_id']=$post_id;
+	$js['action']='add_to_cart';
+	$js['count']=1;
+	$js['attr']=array('count'=>1);
 
-	echo "<button data-fs-action=\"add-to-cart\" data-product-id=\"$post_id\" data-count=\"1\" data-product-name=\"".get_the_title($post_id)."\" $attr>$label <div class=\"send_ok\">$send_icon</div><span class=\"fs-preloader\">$preloader</span></button> ";
+	$json=json_encode($js);
+
+	echo "<button data-fs-action=\"add-to-cart\" data-product-id=\"$post_id\" data-product-name=\"".get_the_title($post_id)."\" data-json='".$json."' $attr id=\"fs-atc-$post_id\">$label <div class=\"send_ok\">$send_icon</div><span class=\"fs-preloader\">$preloader</span></button> ";
 }
 
 //Отображает кнопку сабмита формы заказа

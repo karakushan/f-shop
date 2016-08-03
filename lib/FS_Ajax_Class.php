@@ -17,7 +17,7 @@ class FS_Ajax_Class
 	}
 
 
-
+//Отправка заказа в базу, на почту админа и заказчика
 	function order_send_ajax()
 	{
 		ini_set('error_reporting', E_ALL);
