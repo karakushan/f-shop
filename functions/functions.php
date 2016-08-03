@@ -89,8 +89,8 @@ function fs_get_price($post_id='')
 	if (!$price) {
 		$price=0;
 	}
-	$price=round($price-($price*$action/100),2);
-	$price=number_format($price, 2, '.', ' ');
+	// $price=round($price-($price*$action/100),2);
+	// $price=number_format($price, 2, '.', ' ');
 	return $price;
 }
 
@@ -155,7 +155,7 @@ function fs_total_amount($show=true,$cur_before=' <span>',$cur_after='</span>')
 			$all_price[$key]=$count['count']*fs_get_price($key); 
 		}
 		$price=round(array_sum($all_price),2);
-		$price=number_format($price,2,'.','');
+		// $price=number_format($price,2,'.','');
 
 	}
 	$cur_symb=get_option( 'currency_icon', '$');
@@ -185,12 +185,14 @@ function fs_get_cart()
 	if (count($_SESSION['cart'])) {
 		foreach ($_SESSION['cart'] as $key => $count){
 			$price=fs_get_price($key);
-			$all_price=round($price*$count['count'],2);
-			$all_price=number_format($all_price, 2, '.', ' ');
+			$count=(int)$count['count'];
+
+			$all_price=$price*$count;
+			// $all_price=number_format($all_price, 2, '.', ' ');
 			$products[$key]=array(
 				'id'=>$key,
 				'name'=>get_the_title($key),
-				'count'=>$count['count'],
+				'count'=>$count,
 				'link'=>get_permalink($key),
 				'price'=>$price.' <span>'.$cur_symb.'</span>',
 				'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
