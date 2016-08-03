@@ -210,11 +210,8 @@ function fs_get_cart()
 function fs_delete_position($product_id,$html='',$class='')
 {
 
-	$confirm=sprintf(__('Are you sure you want to remove the items %d  from the trash?', 'fast-shop' ),$product_id);
-	$nonce=wp_create_nonce('fs_action');
-	$curent_url=add_query_arg(array('fs_action'=>'delete_product','fs_request'=>$nonce,'product_id'=>$product_id));
-	$remove_title=__('Remove this item','fast-shop');
-	echo "<a href=\"#\" class=\"$class\" title=\"$remove_title\" onclick=\"if (confirm('$confirm') ) { document.location.href='$curent_url'}\">$html</a>";
+	echo '<button type="button" class="'.$class.'" data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$html.'</button>';
+	
 }
 
 
