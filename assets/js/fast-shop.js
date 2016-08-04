@@ -5,7 +5,6 @@ jQuery(document).ready(function($) {
 		var curent=$(this);
 		var productName=$(this).data('product-name');
 		var productObject=$(this).data('json');
-
 		$.ajax({
 			url: ajaxurl,
 			data: productObject,
