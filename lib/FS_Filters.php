@@ -11,6 +11,7 @@ class FS_Filters
 		global $fs_config;
 		$this->conf=$fs_config;
 		add_action('pre_get_posts',array($this,'filter_curr_product'));
+		add_action( 'pre_get_posts', array($this,'fs_pre_posts_filter') );
 
 	}
 
@@ -65,4 +66,32 @@ class FS_Filters
 			echo '</ul>';
 		}
 	}//end attr_group_filter()
+
+	public function posts_per_page_filter($post_count)
+	{
+		$req=(int)$_REQUEST['posts_per_page'];
+		if(count($post_count)){
+			$filter = '<select name="post_count" onchange="document.location=this.options[this.selectedIndex].value">';
+			foreach ($post_count as $key => $count) {
+				$filter.= '<option value="'.add_query_arg(array("fs-filter"=>1,"posts_per_page"=>$count)).'" '.selected($count,$req,false).'>'.$count.'</option>';
+
+			}
+			$filter.= '</select>';	
+
+		}else{
+			$filter = false;
+		}
+		return $filter;
+
+	}
+
+	function fs_pre_posts_filter( $query ) {
+		if(isset($_GET['fs-filter'])){
+			foreach ($_GET as $key => $value) {
+				if($key=='fs-filter') continue;
+				$query->set($key,$value);
+			}
+		}
+	}
+
 }
