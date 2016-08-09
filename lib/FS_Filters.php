@@ -67,6 +67,11 @@ class FS_Filters
 		}
 	}//end attr_group_filter()
 
+/**
+ * метод позволяет вывести поле типа select  для изменения к-ва выводимых постов на странице
+ * @param  [array] $post_count массив к-ва выводимых записей например array(10,20,30,40)
+ * @return [type]             html код селекта с опциями
+ */
 	public function posts_per_page_filter($post_count)
 	{
 		$req=(int)$_REQUEST['posts_per_page'];
