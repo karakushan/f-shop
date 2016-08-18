@@ -28,7 +28,7 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
 			echo '<option value="">'.$option_default.'</option>';
 			foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
 				if (!$fs_atribute) continue;
-				echo "<option value=\"".$fs_atributes[$group]['slug'].":".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
+				echo "<option value=\"".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
 			}
 			echo '</select>';
 			break;		
