@@ -446,13 +446,13 @@ function fs_aviable_product($product_id='',$aviable_text='',$no_aviable_text='')
  * @param  boolean $wrap       [если указать true (по умолчанию) выведет стилизированное поле иначе обычный input type number]
  * @return [type]              [description]
  */
-function fs_quantity_product($product_id='',$wrap_class='count_wrap',$args='')
+function fs_quantity_product($product_id='',$wrap_class='count_wrap',$class='form-control')
 {
 	global $post;
 	if ($product_id=='') $product_id=$post->ID;
 
 	if (!is_numeric($product_id))  exit;
-	echo "<div class=\"$wrap_class\"><input type=\"number\" name=\"count-ch\" data-fs-action=\"change_count\" data-count-id=\"".get_the_id()."\" value=\"1\" min=\"1\" $args></div>";
+	echo "<input type=\"number\" name=\"count\" class=\"$class\" value=\"1\" min=\"1\" data-fs-element=\"attr\" data-product-id=\"$product_id\">";
 }
 
 /**

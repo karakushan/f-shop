@@ -14,7 +14,8 @@
 			"FS\\": "lib/"
 		},
 		"files": [
-			"functions/functions.php"
+			"functions/functions.php",
+			"functions/filters.php"
 		]
 	}
 }
