@@ -10,7 +10,8 @@ class FS_Post_Type
     'fs_price',
     'fs_discount',
     'fs_availability',
-    'fs_action',
+    'fs_actions',
+    'fs_page_action',
     'fs_displayed_price',
     'fs_attributes',
     'fs_galery'
@@ -103,19 +104,17 @@ class FS_Post_Type
                         break;
 
                         default:
-                        if (isset( $_POST[$field_name])){
-                            update_post_meta($post_id, $field_name, $_POST[$field_name]);
+                        if (!empty($_POST[$field_name])){
+                          update_post_meta($post_id, $field_name, $_POST[$field_name]);
                         }else{
-                           delete_post_meta($post_id, $field_name); 
+                            delete_post_meta($post_id, $field_name);
                         }
                         break;
                     }        
                 }
             }
-            else
-            {
-             return;
-    		} // if($_POST['post_type'] == self::POST_TYPE && current_user_can('edit_post', $post_id))
+
+             // if($_POST['post_type'] == self::POST_TYPE && current_user_can('edit_post', $post_id))
     	} // END public function save_post($post_id)
 
     	/**

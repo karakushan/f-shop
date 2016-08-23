@@ -320,7 +320,7 @@ function fs_post_views($post_id='')
  */
 function fs_cart_widget()
 { 
-	global $fs_config;
+
 	$template_theme=TEMPLATEPATH.'/fast-shop/cart-widget/widget.php';
 	$template=plugin_dir_path( __FILE__ ).'templates/front-end/cart-widget/widget.php';
 
@@ -328,7 +328,7 @@ function fs_cart_widget()
 		$template=$template_theme;
 
 	}
-	echo "<div id=\"fs_cart_widget\" $style>";
+	echo "<div id=\"fs_cart_widget\">";
 	require $template;
 	echo "</div>";
 }
