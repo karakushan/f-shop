@@ -5,12 +5,15 @@ namespace FS;
 */
 class FS_Init
 {
-	protected $conf;
-	
-	public function __construct()
+	public $config;
+
+    /**
+     * FS_Init constructor.
+     */
+    public function __construct()
 	{
-		$config=new FS_Config();
-		$this->conf=$config->data;
+       $this->config=new FS_Config();
+
 		add_action( 'wp_enqueue_scripts',array(&$this,'fast_shop_scripts' ) );
 		add_action( 'admin_enqueue_scripts',array(&$this,'fast_shop_admin_scripts' ) );
 
@@ -38,21 +41,22 @@ class FS_Init
 		} // END public function __construct
 
 		function true_load_plugin_textdomain() {
-			load_plugin_textdomain( 'fast-shop', false, $this->conf['plugin_name'] . '/languages/' ); 
+			load_plugin_textdomain( 'fast-shop', false, $this->config->data['plugin_name'] . '/languages/' );
 		}
 
 		/**
 		 * Activate the plugin
 		 */
-		public static function activate()
+		public function activate()
 
 		{
 			global $wpdb;
+
+			$table_name=$this->config->data['table_name'];
 			
-			
-			if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $this->conf['table_name']){
-				$sql = "CREATE TABLE ".$this->conf['table_name']." (
-				`id` INT(11) NOT NULL AUTO_INCREMENT,
+			if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name){
+				$sql = "CREATE TABLE $table_name 
+( `id` INT(11) NOT NULL AUTO_INCREMENT,
 				`products` TEXT NOT NULL,
 				`comments` TEXT NOT NULL,
 				`delivery` VARCHAR(50) NOT NULL,
@@ -92,15 +96,15 @@ class FS_Init
 
 
 		function fast_shop_scripts() {
-			wp_enqueue_style( 'fs-style', $this->conf['plugin_url'].'assets/css/fast-shop.css',array(),$this->conf['plugin_ver'],'all');	
-			wp_enqueue_style( 'lightslider',$this->conf['plugin_url'].'assets/lightslider/dist/css/lightslider.min.css',array(),$this->conf['plugin_ver'],'all');
-			wp_enqueue_style( 'lightbox', $this->conf['plugin_url'].'assets/lightbox2/dist/css/lightbox.min.css',array(),$this->conf['plugin_ver'],'all');			
-			wp_enqueue_style( 'font-awesome',$this->conf['plugin_url'].'assets/fontawesome/css/font-awesome.min.css',array(),$this->conf['plugin_ver'],'all');			
+			wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'].'assets/css/fast-shop.css',array(),$this->config->data['plugin_ver'],'all');	
+			wp_enqueue_style( 'lightslider',$this->config->data['plugin_url'].'assets/lightslider/dist/css/lightslider.min.css',array(),$this->config->data['plugin_ver'],'all');
+			wp_enqueue_style( 'lightbox', $this->config->data['plugin_url'].'assets/lightbox2/dist/css/lightbox.min.css',array(),$this->config->data['plugin_ver'],'all');			
+			wp_enqueue_style( 'font-awesome',$this->config->data['plugin_url'].'assets/fontawesome/css/font-awesome.min.css',array(),$this->config->data['plugin_ver'],'all');			
 			
-			wp_enqueue_script( 'jquery-validate',$this->conf['plugin_url'].'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true);
-			wp_enqueue_script( 'lightbox',$this->conf['plugin_url'].'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true);
-			wp_enqueue_script( 'lightslider',$this->conf['plugin_url'].'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true);
-			wp_enqueue_script( 'fast-shop',$this->conf['plugin_url'].'assets/js/fast-shop.js', array( 'jquery', 'jquery-validate'), $this->conf['plugin_ver'], true);
+			wp_enqueue_script( 'jquery-validate',$this->config->data['plugin_url'].'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true);
+			wp_enqueue_script( 'lightbox',$this->config->data['plugin_url'].'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true);
+			wp_enqueue_script( 'lightslider',$this->config->data['plugin_url'].'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true);
+			wp_enqueue_script( 'fast-shop',$this->config->data['plugin_url'].'assets/js/fast-shop.js', array( 'jquery', 'jquery-validate'), $this->config->data['plugin_ver'], true);
 			
 		}
 
@@ -108,11 +112,11 @@ class FS_Init
 		{
 			
 			
-			wp_enqueue_style( 'fs-jqueryui', $this->conf['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.css',array(),$this->conf['plugin_ver'],'all');
-			wp_enqueue_style( 'fs-style', $this->conf['plugin_url'].'assets/css/fast-shop.css',array(),$this->conf['plugin_ver'],'all');	
+			wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.css',array(),$this->config->data['plugin_ver'],'all');
+			wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'].'assets/css/fast-shop.css',array(),$this->config->data['plugin_ver'],'all');	
 
-			wp_enqueue_script('fs-jqueryui',$this->conf['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.js',array('jquery'),null,true);
-			wp_enqueue_script( 'fs-admin',$this->conf['plugin_url'].'assets/js/fs-admin.js', array( 'jquery' ), null, true);
+			wp_enqueue_script('fs-jqueryui',$this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.js',array('jquery'),null,true);
+			wp_enqueue_script( 'fs-admin',$this->config->data['plugin_url'].'assets/js/fs-admin.js', array( 'jquery' ), null, true);
 
 
 
