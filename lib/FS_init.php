@@ -9,8 +9,8 @@ class FS_Init
 	
 	public function __construct()
 	{
-		global $fs_config;
-		$this->conf=$fs_config;
+		$config=new FS_Config();
+		$this->conf=$config->data;
 		add_action( 'wp_enqueue_scripts',array(&$this,'fast_shop_scripts' ) );
 		add_action( 'admin_enqueue_scripts',array(&$this,'fast_shop_admin_scripts' ) );
 

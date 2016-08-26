@@ -16,8 +16,9 @@ function fs_attr_group_filter($group,$type='option',$option_default='Выбер�
  */
 function fs_attr_group($group,$post_id="",$type='option',$option_default='',$class='form-control'){
 	global $post;
-	$post_id=(!$post_id)?$post->ID : 0;
-	$fs_atributes_post=get_post_meta($post_id,'fs_attributes',false);
+	$config=new \FS\FS_Config();
+	$post_id=(!empty($post_id) ? $post->ID : 0);
+	$fs_atributes_post=get_post_meta($post_id,$config->meta['attributes'],false);
 	$fs_atributes_post=$fs_atributes_post[0];
 
 	$fs_atributes=get_option('fs-attr-group');
@@ -76,27 +77,28 @@ function fs_lightslider($post_id='',$args='')
 }
 
 //Получает текущую цену с учётом скидки
+/**
+ * @param string $post_id
+ * @return int|mixed
+ */
 function fs_get_price($post_id='')
 {
 	global $post;
+	$config=new \FS\FS_Config();
+	$post_id=( empty( $post_id) ? $post->ID : $post_id );
+	$price=get_post_meta( $post_id, $config->meta['price'], true );
+	$price=(empty($price) ? 0 : $price);
+	$price=round($price,2);
+	$price=number_format($price, 2, '.', ' ');
 
-	if($post_id=='') $post_id=$post->ID;
-	$price=get_post_meta( $post_id, 'fs_price', true );
-	$action=get_post_meta( $post_id, 'fs_discount', true );
-	if (!$action) {
-		$action=0;
-	}
-	if (!$price) {
-		$price=0;
-	}
-	// $price=round($price-($price*$action/100),2);
-	// $price=number_format($price, 2, '.', ' ');
 	return $price;
 }
 
 //Отображает общую сумму продуктов с одним артикулом
 function fs_row_price($post_id,$count,$curency=true,$cur_tag_before=' <span>',$cur_tag_after='</span>')
 {
+	global $post;
+	$post_id=( empty( $post_id) ? $post->ID : $post_id );
 	$price=fs_get_price($post_id)*$count;
 	$price=number_format($price, 2, '.', ' ');
 
@@ -155,7 +157,7 @@ function fs_total_amount($show=true,$cur_before=' <span>',$cur_after='</span>')
 			$all_price[$key]=$count['count']*fs_get_price($key); 
 		}
 		$price=round(array_sum($all_price),2);
-		// $price=number_format($price,2,'.','');
+		$price=number_format($price,2,'.','');
 
 	}
 	$cur_symb=get_option( 'currency_icon', '$');
@@ -465,5 +467,18 @@ function fs_parse_url($url='')
 	$url=(filter_var($url, FILTER_VALIDATE_URL)) ? $url : $_SERVER['REQUEST_URI'];
 	$parse=explode('?',$url);
 	return $parse[0];
+}
+
+/**
+ * @param string $post_id
+ * @return bool|mixed
+ */
+function fs_action($post_id=""){
+	global $post;
+	$post_id = (empty($post_id) ? $post->ID : $post_id);
+	$config=new \FS\FS_Config();
+	$action=get_post_meta($post_id,$config->meta['action'],1);
+	$action=(empty($action)?false:true);
+	return $action;
 }
 
