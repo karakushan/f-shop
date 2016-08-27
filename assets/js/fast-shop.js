@@ -221,7 +221,7 @@ jQuery(document).ready(function($) {
 				data: {
 					action: 'delete_product',
 					product:productId
-				},
+				}
 			})
 			.done(function() {
 				location.reload();
@@ -252,24 +252,63 @@ jQuery(document).ready(function($) {
 	});
 });
 
+/**
+ * Add a URL parameter (or changing it if it already exists)
+ * @param {search} string  this is typically document.location.search
+ * @param {key}    string  the key to set
+ * @param {val}    string  value
+ */
+var addUrlParam = function(search, key, val){
+	var newParam = key + '=' + val,
+		params = '&' + newParam;
+
+	// If the "search" string exists, then build params from it
+	if (search) {
+		// Try to replace an existance instance
+		params = search.replace(new RegExp('([?&])' + key + '[^&]*'), '$1' + newParam);
+
+		// If nothing was replaced, then add the new param to the end
+		if (params === search) {
+			params += '&' + newParam;
+		}
+	}
+
+	return params;
+};
+
 (function ($) {
+
+    var u  = new Url;
+    var p_start=u.query.price_start==undefined ? 0 : u.query.price_start;
+    var p_end=u.query.price_end==undefined ? 2500 : u.query.price_end;
+
+
 	$( "#slider-range" ).slider({
 		range: true,
 		min: 0,
 		max: 2500,
-		values: [ 0, 2500 ],
+		values: [ p_start, p_end],
 		slide: function( event, ui ) {
-			$( "#amount_show" ).html( ui.values[ 0 ] + "грн. - " + ui.values[ 1 ]+' грн.' );
+			$( "#amount_show" ).html( ui.values[ 0 ] + " грн. - " + ui.values[ 1 ]+' грн.' );
 		},
 		change: function( event, ui ) {
-			var uri={
-				fs_filter:1,
-				price_start:ui.values[ 0 ],
-				price_end:ui.values[ 1 ]
-			}
-			window.location.search = jQuery.param(uri);
+
+            u.query.fs_filter=1;
+            u.query.price_start=ui.values[ 0 ];
+            u.query.price_end=ui.values[ 1 ];
+            // console.log(u.toString());
+            window.location.href=u.toString();
+
+
 		}
 	});
 	$( "#amount_show" ).html( $( "#slider-range" ).slider( "values", 0 ) +
 		" грн. " + $( "#slider-range" ).slider( "values", 1 )+" грн." );
+
+    $('[data-fs-action="filter"]').on('change',function (e) {
+        e.preventDefault();
+        window.location.href=$(this).val();
+
+    })
 })(jQuery)
+
