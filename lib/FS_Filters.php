@@ -26,6 +26,8 @@ class FS_Filters
 
         if (!$validate_url && !isset($_REQUEST['fs_filter'])) return;
 
+        if (!$query->is_main_query()) return;
+
         $arr_url=urldecode($_SERVER['QUERY_STRING']);
         parse_str ($arr_url,$url);
 
@@ -53,6 +55,28 @@ class FS_Filters
             $_SESSION['fs_user_settings']['posts_per_page']=$per_page;
             $query->set('posts_per_page',$per_page);
         }
+        if (isset($url['attr'])){
+            global $wpdb;
+            $escl_p=array();
+            $q=get_queried_object();
+            $excludeposts = $wpdb->get_results( "SELECT object_id FROM $wpdb->term_relationships WHERE term_taxonomy_id='$q->term_id'" );
+            if ($excludeposts)
+            foreach ( $excludeposts as $posts) {
+                $post_id=$posts->object_id;
+                $post_meta=get_post_meta($posts->object_id,$this->conf->meta['attributes'],false);
+                if (!empty($post_meta)){
+                    $post_meta=$post_meta[0];
+                }
+
+                foreach ($url['attr'] as $key=>$attr) {
+                    if ($post_meta[$key][$attr]!=1){
+                        $escl_p[]=$post_id;
+                    }
+
+                }
+            }
+                $query->set('post__not_in',$escl_p);
+        }
     }//end filter_curr_product()
 
     public function range_slider()
@@ -75,9 +99,9 @@ class FS_Filters
     {
 
         $fs_atributes=get_option('fs-attr-group');
-/*        echo "<pre>";
-        print_r($fs_atributes);
-        echo "</pre>";*/
+        /*        echo "<pre>";
+                print_r($fs_atributes);
+                echo "</pre>";*/
         if (!isset($fs_atributes[$group]['attributes'])) return;
 
         $arr_url=urldecode($_SERVER['QUERY_STRING']);

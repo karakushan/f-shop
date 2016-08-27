@@ -282,7 +282,6 @@ var addUrlParam = function(search, key, val){
     var p_start=u.query.price_start==undefined ? 0 : u.query.price_start;
     var p_end=u.query.price_end==undefined ? 2500 : u.query.price_end;
 
-
 	$( "#slider-range" ).slider({
 		range: true,
 		min: 0,
