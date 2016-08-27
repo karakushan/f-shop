@@ -6,26 +6,32 @@ namespace FS;
  */
 class FS_Filters
 {
+    protected $conf;
 	function __construct()
 	{
-		global $fs_config;
-		$this->conf=$fs_config;
+
+		$this->conf=new FS_Config();
 		add_action('pre_get_posts',array($this,'filter_curr_product'));
-		add_action( 'pre_get_posts', array($this,'fs_pre_posts_filter') );
+//		add_action( 'pre_get_posts', array($this,'fs_pre_posts_filter') );
+        add_shortcode( 'fs_range_slider', array($this,'range_slider'));
 
 	}
 
-	public function filter_curr_product($query)
+    /**
+     * @param $query
+     */
+    public function filter_curr_product($query)
 	{
-		if(!isset($_REQUEST['fs-filter'])) return;
-		
+		if(!isset($_REQUEST['fs_filter'])) return;
+
+        //Фильтрируем по значениям диапазона цен
 		if (isset($_REQUEST['price_start']) && isset($_REQUEST['price_end'])) {
 			$price_start=(int)$_REQUEST['price_start'];
 			$price_end=(int)$_REQUEST['price_end'];
 			$query->set('post_type','product');
 			$query->set('meta_query',array(
 				array(
-					'key'     => $this->conf['plugin_meta']['price'],
+					'key'     => $this->conf->meta['price'],
 					'value'   => array( $price_start,$price_end),
 					'compare' => 'BETWEEN',
 					'type'    => 'NUMERIC',
@@ -35,13 +41,20 @@ class FS_Filters
 			);
 			$query->set('orderby','meta_value_num');
 		}
+
+        //Фильтрируем по к-во выводимых постов на странице
+		if (isset($_REQUEST['posts_per_page'])){
+		    $per_page=(int)$_REQUEST['posts_per_page'];
+            $_SESSION['fs_user_settings']['posts_per_page']=$per_page;
+            $query->set('posts_per_page',$per_page);
+        }
 	}//end filter_curr_product()
 
 	public function range_slider()
 	{
 		$slider='
 		<div class="range">
-			<div id="slider-range" data-uri="'.fs_parse_url().'"></div>
+			<div id="slider-range" data-uri="0-0"></div>
 			<div id="amount_show" class="ashow"><span>0</span> грн - <span>2500</span> грн</div>
 		</div>
 		';
@@ -54,14 +67,14 @@ class FS_Filters
 		if ($fs_atributes && $type=='option') {
 			echo '<select name="product_color" id="product_color" onchange="document.location=this.options[this.selectedIndex].value"><option value="">'.$option_default.'</option>';
 			foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
-				echo '<option value="'.add_query_arg(array('fs-filter'=>1,'attr:'.$group=>$key)).'">'.$value.'</option>';
+				echo '<option value="'.add_query_arg(array('fs_filter'=>1,'attr'=>array($group=>$value)),esc_url($_SERVER['REQUEST_URI'])).'">'.$value.'</option>';
 			}
 			echo '</select>';
 		}	
 		if ($fs_atributes && $type=='list') {
 			echo '<ul>';
 			foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
-				echo '<li><a href="'.add_query_arg(array('fs-filter'=>1,'attr:'.$group=>$value)).'">'.$value.'</a></li>';
+				echo '<li><a href="'.add_query_arg(array('fs_filter'=>1,'attr'=>array($group=>$value)),esc_url($_SERVER['REQUEST_URI'])).'">'.$value.'</a></li>';
 			}
 			echo '</ul>';
 		}
@@ -78,7 +91,7 @@ class FS_Filters
 		if(count($post_count)){
 			$filter = '<select name="post_count" onchange="document.location=this.options[this.selectedIndex].value">';
 			foreach ($post_count as $key => $count) {
-				$filter.= '<option value="'.add_query_arg(array("fs-filter"=>1,"posts_per_page"=>$count)).'" '.selected($count,$req,false).'>'.$count.'</option>';
+				$filter.= '<option value="'.add_query_arg(array("fs_filter"=>1,"posts_per_page"=>$count)).'" '.selected($count,$req,false).'>'.$count.'</option>';
 
 			}
 			$filter.= '</select>';	
@@ -88,15 +101,6 @@ class FS_Filters
 		}
 		return $filter;
 
-	}
-
-	function fs_pre_posts_filter( $query ) {
-		if(isset($_GET['fs-filter'])){
-			foreach ($_GET as $key => $value) {
-				if($key=='fs-filter') continue;
-				$query->set($key,$value);
-			}
-		}
 	}
 
 }

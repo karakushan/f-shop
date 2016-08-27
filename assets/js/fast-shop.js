@@ -251,3 +251,25 @@ jQuery(document).ready(function($) {
 		cartbutton.attr('data-json',jsontostr);
 	});
 });
+
+(function ($) {
+	$( "#slider-range" ).slider({
+		range: true,
+		min: 0,
+		max: 2500,
+		values: [ 0, 2500 ],
+		slide: function( event, ui ) {
+			$( "#amount_show" ).html( ui.values[ 0 ] + "грн. - " + ui.values[ 1 ]+' грн.' );
+		},
+		change: function( event, ui ) {
+			var uri={
+				fs_filter:1,
+				price_start:ui.values[ 0 ],
+				price_end:ui.values[ 1 ]
+			}
+			window.location.search = jQuery.param(uri);
+		}
+	});
+	$( "#amount_show" ).html( $( "#slider-range" ).slider( "values", 0 ) +
+		" грн. " + $( "#slider-range" ).slider( "values", 1 )+" грн." );
+})(jQuery)

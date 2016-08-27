@@ -18,3 +18,16 @@ function fs_per_page_filter($post_count=array(), $echo=true)
 		return $page_filter;
 	}
 }
+
+
+/**
+ * Добавляет возможность фильтрации по определёному атрибуту
+ * @param string $group             название группы (slug)
+ * @param string $type              тип фильтра 'option' (список опций в теге "select",по умолчанию) или обычный список "ul"
+ * @param string $option_default    первая опция (текст) если выбран 2 параметр "option"
+ */
+function fs_attr_group_filter($group, $type='option', $option_default='Выберите значение')
+{
+    $fs_filter=new FS\FS_Filters;
+    echo $fs_filter->attr_group_filter($group,$type,$option_default);
+}

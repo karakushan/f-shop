@@ -1,12 +1,6 @@
 <?php 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-function fs_attr_group_filter($group,$type='option',$option_default='Выберите значение')
-{
-	$fs_filter=new FS\FS_Filters;
-	echo $fs_filter->attr_group_filter($group,$type,$option_default);
-}
-
 /**
  * 	выводит группы свойств товара в виде опций select или обычного ul списка		
  * @param  string $group   название группы свойств
