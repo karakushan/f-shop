@@ -44,47 +44,7 @@ class FS_Init
 			load_plugin_textdomain( 'fast-shop', false, $this->config->data['plugin_name'] . '/languages/' );
 		}
 
-		/**
-		 * Activate the plugin
-		 */
-		public function activate()
 
-		{
-			global $wpdb;
-
-			$table_name=$this->config->data['table_name'];
-			
-			if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name){
-				$sql = "CREATE TABLE $table_name 
-( `id` INT(11) NOT NULL AUTO_INCREMENT,
-				`products` TEXT NOT NULL,
-				`comments` TEXT NOT NULL,
-				`delivery` VARCHAR(50) NOT NULL,
-				`name` VARCHAR(50) NOT NULL,
-				`email` VARCHAR(50) NOT NULL,
-				`telephone` VARCHAR(50) NULL DEFAULT NULL,
-				`summa` DOUBLE NULL DEFAULT NULL,
-				`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				`status` INT(11) NULL DEFAULT NULL,
-				PRIMARY KEY (`id`),
-				UNIQUE INDEX `id` (`id`)
-				)
-				COLLATE='utf8_general_ci'
-				ENGINE=InnoDB
-				AUTO_INCREMENT=130;";
-
-				require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-				dbDelta($sql);
-			}
-		} // END public static function activate
-
-		/**
-		 * Deactivate the plugin
-		 */
-		public static function deactivate()
-		{
-			// Do nothing
-		} // END public static function deactivate
 
 		// Add the settings link to the plugins page
 		function plugin_settings_link($links)

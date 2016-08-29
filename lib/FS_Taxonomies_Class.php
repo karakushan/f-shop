@@ -102,4 +102,3 @@ if (!class_exists('FS_Taxonomies_Class')) {
 
 	
 }
-?>

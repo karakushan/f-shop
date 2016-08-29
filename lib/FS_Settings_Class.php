@@ -24,62 +24,16 @@ class FS_Settings_Class
      */
     public function admin_init()
     {
-        // register your plugin's settings
-        register_setting('wp_plugin_template-group', 'currency_icon');
-        register_setting('wp_plugin_template-group', 'cart_url');
-        register_setting('wp_plugin_template-group', 'pay_url');
-        register_setting('wp_plugin_template-group', 'fs_success');
+        if (isset($_POST['fs_save_options'])){
+            if( !wp_verify_nonce( $_GET['_wpnonce'], 'fs_nonce' ) ) return;
+            $options=$_POST['fs_option'];
+            if ($options){
+               update_option('fs_option',$options);
+            }
 
-        // add your settings section
-        add_settings_section(
-            'wp_plugin_template-section',
-            'Общие настройки',
-            array(&$this, 'settings_section_wp_plugin_template'),
-            'wp_plugin_template'
-        );
+        }
 
-        // add your setting's fields
-        add_settings_field(
-            'currency_icon',
-            'Символ валюты',
-            array(&$this, 'settings_field_input_text'),
-            'wp_plugin_template',
-            'wp_plugin_template-section',
-            array(
-                'field' => 'currency_icon'
-            )
-        );
-        add_settings_field(
-            'cart_url',
-            'Ссылка на страницу корзины',
-            array(&$this, 'settings_field_select'),
-            'wp_plugin_template',
-            'wp_plugin_template-section',
-            array(
-                'field' => 'cart_url'
-            )
-        );
-        add_settings_field(
-            'pay_url',
-            'Ссылка на страницу оплаты/оформления заказа',
-            array(&$this, 'settings_field_select'),
-            'wp_plugin_template',
-            'wp_plugin_template-section',
-            array(
-                'field' => 'pay_url'
-            )
-        );
-        add_settings_field(
-            'fs_success',
-            'Ссылка на страницу после отправки заказа (если пусто, страница перзагрузится)',
-            array(&$this, 'settings_field_input_text'),
-            'wp_plugin_template',
-            'wp_plugin_template-section',
-            array(
-                'field' => 'fs_success'
-            )
-        );
-        // Possibly do additional admin_init tasks
+
     } // END public static function activate
 
     public function settings_section_wp_plugin_template()

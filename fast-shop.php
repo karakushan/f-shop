@@ -28,9 +28,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-//ini_set('error_reporting', E_ALL);
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 
 
 require_once __DIR__.'/vendor/autoload.php';
@@ -40,8 +40,51 @@ define('PLUGIN_URL',plugin_dir_url( __FILE__ ));
 
 new FS\FS_Init;
 
-	// Installation and uninstallation hooks
-register_activation_hook(__FILE__, array('Fs_init', 'activate'));
-register_deactivation_hook(__FILE__, array('Fs_init', 'deactivate'));
-//
+/**
+ * Activate the plugin
+ */
+function activate()
 
+{
+    global $wpdb;
+    $config=new FS\FS_Config();
+    $table_name=$config->data['table_name'];
+
+    /*if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name){
+        $sql = "CREATE TABLE $table_name
+( `id` INT(11) NOT NULL AUTO_INCREMENT,
+        `products` TEXT NOT NULL,
+        `comments` TEXT NOT NULL,
+        `delivery` VARCHAR(50) NOT NULL,
+        `name` VARCHAR(50) NOT NULL,
+        `email` VARCHAR(50) NOT NULL,
+        `telephone` VARCHAR(50) NULL DEFAULT NULL,
+        `summa` DOUBLE NULL DEFAULT NULL,
+        `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `status` INT(11) NULL DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        UNIQUE INDEX `id` (`id`)
+        )
+        COLLATE='utf8_general_ci'
+        ENGINE=InnoDB
+        AUTO_INCREMENT=130;";
+
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        dbDelta($sql);
+    }*/
+
+    add_role('wholesale_buyer', 'Оптовый покупатель', array( 'read' => true, 'level_0' => true ) );
+
+} // END public static function activate
+
+/**
+ * Deactivate the plugin
+ */
+function deactivate()
+{
+    // Do nothing
+} // END public static function deactivate
+
+	// Installation and uninstallation hooks
+register_activation_hook(__FILE__, 'activate');
+register_deactivation_hook(__FILE__,'deactivate');

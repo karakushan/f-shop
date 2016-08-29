@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 function fs_attr_group($group,$post_id="",$type='option',$option_default='',$class='form-control'){
 	global $post;
 	$config=new \FS\FS_Config();
-	$post_id=(!empty($post_id) ? $post->ID : 0);
+	$post_id=(empty($post_id) ? $post->ID : $post_id);
 	$fs_atributes_post=get_post_meta($post_id,$config->meta['attributes'],false);
 	$fs_atributes_post=$fs_atributes_post[0];
 
@@ -221,13 +221,13 @@ function fs_delete_position($product_id,$html='',$class='')
 function fs_product_count($show=false)
 {
 	$count=0;
-	if (count($_SESSION['cart'])) {
+	if (isset($_SESSION['cart'])) {
 		foreach ($_SESSION['cart'] as $key => $count){
 			$all_count[$key]=$count['count'];
 		}
 		$count=array_sum($all_count);
 	}
-
+    $count=(int)$count;
 	if ($show==false) {
 		return $count;
 	} else {

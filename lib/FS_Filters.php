@@ -12,7 +12,6 @@ class FS_Filters
 
         $this->conf=new FS_Config();
         add_action('pre_get_posts',array($this,'filter_curr_product'));
-//		add_action( 'pre_get_posts', array($this,'fs_pre_posts_filter') );
         add_shortcode( 'fs_range_slider', array($this,'range_slider'));
 
     }
@@ -55,27 +54,30 @@ class FS_Filters
             $_SESSION['fs_user_settings']['posts_per_page']=$per_page;
             $query->set('posts_per_page',$per_page);
         }
+
+        //Фильтруем по свойствам (атрибутам)
         if (isset($url['attr'])){
             global $wpdb;
             $escl_p=array();
             $q=get_queried_object();
             $excludeposts = $wpdb->get_results( "SELECT object_id FROM $wpdb->term_relationships WHERE term_taxonomy_id='$q->term_id'" );
             if ($excludeposts)
-            foreach ( $excludeposts as $posts) {
-                $post_id=$posts->object_id;
-                $post_meta=get_post_meta($posts->object_id,$this->conf->meta['attributes'],false);
-                if (!empty($post_meta)){
-                    $post_meta=$post_meta[0];
-                }
-
-                foreach ($url['attr'] as $key=>$attr) {
-                    if ($post_meta[$key][$attr]!=1){
-                        $escl_p[]=$post_id;
+                foreach ( $excludeposts as $posts) {
+                    $post_id=$posts->object_id;
+                    $post_meta=get_post_meta($posts->object_id,$this->conf->meta['attributes'],false);
+                    if (!empty($post_meta)){
+                        $post_meta=$post_meta[0];
                     }
+                    if ($url['attr'])
+                        foreach ($url['attr'] as $key=>$attr) {
+                            if (!isset($post_meta[$key][$attr])) continue;
+                            if ($post_meta[$key][$attr]!=1){
+                                $escl_p[]=$post_id;
+                            }
 
+                        }
                 }
-            }
-                $query->set('post__not_in',$escl_p);
+            $query->set('post__not_in',$escl_p);
         }
     }//end filter_curr_product()
 
@@ -111,7 +113,13 @@ class FS_Filters
             echo '<select name="'.$group.'" data-fs-action="filter"><option value="">'.$option_default.'</option>';
             foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
                 $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.']'=>$key),urldecode($_SERVER['REQUEST_URI'])));
-                echo '<option value="'.$redirect_url.'" '.selected($key,$url['attr'][$group],false).'>'.$value.'</option>';
+
+                if (isset($url['attr'][$group])){
+                    $selected=selected($key,$url['attr'][$group],false);
+                }else{
+                    $selected="";
+                }
+                echo '<option value="'.$redirect_url.'" '.$selected.'>'.$value.'</option>';
             }
             echo '</select>';
         }
@@ -119,7 +127,7 @@ class FS_Filters
             echo '<ul>';
             foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
                 $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.']'=>$key),urldecode($_SERVER['REQUEST_URI'])));
-                $class=($key==$url['attr'][$group]?'class="active"':"");
+                $class=(isset($url['attr'][$group]) && $key==$url['attr'][$group]?'class="active"':"");
                 echo '<li '.$class.'><a href="'.$redirect_url.'" data-fs-action="filter" >'.$value.'</a></li>';
             }
             echo '</ul>';

@@ -49,5 +49,7 @@ function btn_view(e) {
 	$( "#fs-tabs" ).tabs( {
 		active: 0
 	});
+	$( "#fs-options-tabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+	$( "#fs-options-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
 	$(".fs-metabox input[type='radio']").checkboxradio();
 })(jQuery);
