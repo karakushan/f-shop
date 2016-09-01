@@ -50,7 +50,7 @@ function activate()
     $config=new FS\FS_Config();
     $table_name=$config->data['table_name'];
 
-    /*if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name){
+    if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name){
         $sql = "CREATE TABLE $table_name
 ( `id` INT(11) NOT NULL AUTO_INCREMENT,
         `products` TEXT NOT NULL,
@@ -71,7 +71,7 @@ function activate()
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
-    }*/
+    }
 
     add_role('wholesale_buyer', 'Оптовый покупатель', array( 'read' => true, 'level_0' => true ) );
 
