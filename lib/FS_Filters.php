@@ -32,8 +32,9 @@ class FS_Filters
 
         //Фильтрируем по значениям диапазона цен
         if (isset($url['price_start']) && isset($url['price_end'])) {
-            $price_start=(int)$url['price_start'];
-            $price_end=(int)$url['price_end'];
+            $price_start=!empty($url['price_start']) ? (int)$url['price_start'] : 0;
+            $price_end=!empty($url['price_end']) ? (int)$url['price_end'] : 99999999999999999;
+
             $query->set('post_type','product');
             $query->set('meta_query',array(
                     array(
@@ -141,7 +142,8 @@ class FS_Filters
      */
     public function posts_per_page_filter($post_count)
     {
-        $req=(int)$_REQUEST['posts_per_page'];
+        $req=isset($_SESSION['fs_user_settings']['posts_per_page']) ? $_SESSION['fs_user_settings']['posts_per_page'] : get_option("posts_per_page");
+
         if(count($post_count)){
             $filter = '<select name="post_count" onchange="document.location=this.options[this.selectedIndex].value">';
             foreach ($post_count as $key => $count) {
@@ -152,6 +154,7 @@ class FS_Filters
 
         }else{
             $filter = false;
+
         }
         return $filter;
 

@@ -476,3 +476,9 @@ function fs_action($post_id=""){
 	return $action;
 }
 
+//Возвращает массив просмотренных товаров или записей
+function fs_user_viewed(){
+	$viewed=isset($_SESSION['fs_user_settings']['viewed_product']) ? $_SESSION['fs_user_settings']['viewed_product'] : array();
+	return $viewed;
+}
+
