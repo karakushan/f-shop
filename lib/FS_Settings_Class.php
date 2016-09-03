@@ -28,7 +28,17 @@ class FS_Settings_Class
             if( !wp_verify_nonce( $_GET['_wpnonce'], 'fs_nonce' ) ) return;
             $options=$_POST['fs_option'];
             if ($options){
-               update_option('fs_option',$options);
+               $upd=update_option('fs_option',$options);
+                if ($upd){
+                    add_action('admin_notices', function(){
+                        echo '<div class="updated is-dismissible"><p>Настройки обновлены</p></div>';
+                    });
+                }else{
+                    add_action('admin_notices', function(){
+                        echo '<div class="notice notice-warning is-dismissible"><p>Страница перезагружена, но настройки не обновлялись.</p></div>';
+                    });
+                }
+
             }
 
         }
@@ -41,37 +51,6 @@ class FS_Settings_Class
         // Think of this as help text for the section.
         echo 'Определите настройки вашего магазина.';
     }
-
-    /**
-     * This function provides text inputs for settings fields
-     * @param $args
-     */
-    public function settings_field_input_text($args)
-    {
-        // Get the field name from the $args array
-        $field = $args['field'];
-        // Get the value of this setting
-        $value = get_option($field);
-        // echo a proper input type="text"
-        echo sprintf('<input type="text" name="%s" id="%s" value="%s" />', $field, $field, $value);
-    }
-    public function settings_field_select($args)
-    {
-        // Get the field name from the $args array
-        $field = $args['field'];
-        // Get the value of this setting
-        $value = get_option($field);
-        // echo a proper input type="text"
-        $list_option="";
-        query_posts(array('post_type'=>'page'));
-        if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-
-            <?php $list_option.="<option value=\"".get_the_ID()."\" ".selected(get_the_ID(),  $value, false ).">".get_the_title()."</option>"; ?>
-        <?php endwhile;wp_reset_query(); ?>
-        <?php endif; ?>
-
-        <?php echo sprintf('<select name="%s" id="%s" />'. $list_option.'</select>', $field, $field, $value);
-    } // END public function settings_field_input_text($args)
 
     /**
      * add a menu
@@ -128,6 +107,8 @@ class FS_Settings_Class
      */
     public function plugin_settings_page()
     {
+
+       $config=new FS_Config();
         // шаблон страницы настроек магазина
         include($this->config->data['plugin_path'].'/templates/back-end/settings.php');
     }
@@ -167,7 +148,7 @@ class FS_Settings_Class
 
         $orders=new FS_Orders_Class();
         $delivery=new FS_Delivery_Class();
-        $action=esc_sql($_GET['action']);
+        $action=!empty($_GET['action'])? $_GET['action']:'' ;
         switch ($action) {
             case 'info':
                 $order_info=$orders->get_order(esc_sql($_GET['id'] ));

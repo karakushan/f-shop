@@ -13,6 +13,7 @@ class FS_Config
 {
     public $data;
     public $meta;
+    public $options;
 
     function __construct()
     {
@@ -27,6 +28,10 @@ class FS_Config
             'plugin_settings'=>'fast-shop-settings',
             'table_name'=>$wpdb->prefix."fs_orders"
         );
+
+        //Массив настроек сайта
+        $this->options=get_option('fs_option',array());
+
 
         //Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
         $this->meta=array(

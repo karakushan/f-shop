@@ -175,4 +175,68 @@ input[name="count-ch"] {
 .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
 .fs-option input[type="submit"] {
   margin: 15px 0 0 0;
+  background: #46b450;
+
+  color: #fff;
+  padding: 17px 22px;
+  border: 1px solid #237b27;
+  text-transform: uppercase;
+  border-radius: 4px;
+  line-height: 1em;
+  font-size: 12px;
+  letter-spacing: .1em;
+  -webkit-transition: all .4s;
+  -moz-transition:all .4s;
+  -ms-transition: all .4s;
+  -o-transition: all .4s;
+  transition: all .4s;
 }
+.fs-option input[type="submit"]:hover{
+  background: #438543;
+  cursor: pointer;
+}
+.fs-option textarea{
+  width: 100%;
+}
+.fs-option label{
+  font-weight: bold;
+  line-height: 25px;
+}
+.fs-option label.label-light{
+  font-weight: normal;
+    line-height: 18px;
+}
+.fs-option p {
+  margin: 0 0 10px 0;
+}
+.fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-nav {
+  float: left;
+  width: 10em;
+  background: #23282d;
+  border-radius: 4px 0 0 4px;
+  border-right: 1px solid #32373c;
+}
+.fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-nav li {
+  clear: left;
+  width: 100%;
+  margin: 0.2em 0;
+  border: 1px solid #32373c;
+  border-width: 1px 0 1px 1px;
+  border-radius: 4px 0 0 4px;
+  overflow: hidden;
+  position: relative;
+  right: -2px;
+  z-index: 2;
+}
+.fast-shop-settings .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+  background: #0073aa;
+}
+.fast-shop-settings .wp-person a:focus .gravatar, a:focus, a:focus .media-icon img {
+    color: #124964;
+    box-shadow: none;
+}
+.fs-option label span {
+  font-weight: normal;
+  font-style: italic;
+}
+
