@@ -27,6 +27,8 @@ class FS_Cart_Class
 		
 	}
 
+
+
 	//Инициализируем сессии
 	function fast_shop_init_session()
 	{

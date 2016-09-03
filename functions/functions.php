@@ -11,7 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 function fs_attr_group($group,$post_id="",$type='option',$option_default='',$class='form-control'){
     global $post;
     $config=new \FS\FS_Config();
-    $post_id=(empty($post_id) ? $post->ID : $post_id);
+    $post_id=(empty($post_id) ? $post->ID : (int)$post_id);
+
     $fs_atributes_post=get_post_meta($post_id,$config->meta['attributes'],false);
     $fs_atributes_post=$fs_atributes_post[0];
 
@@ -45,10 +46,15 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
     }
 }
 
-function fs_lightslider($post_id='',$args='')
+/**
+ * @param string $post_id
+ * @param string $args
+ */
+function fs_lightslider($post_id='', $args='')
 {
     $galery=new FS\FS_Images_Class();
-
+    global $post;
+    $post_id=(empty($post_id) ? $post->ID : (int)$post_id);
 
     $galery=$galery->fs_galery_list($post_id,array(90,90));
     if (!$galery) {
@@ -79,38 +85,41 @@ function fs_get_price($post_id='')
 {
     global $post;
     $config=new \FS\FS_Config();
-    $post_id=( empty( $post_id) ? $post->ID : $post_id );
+    $post_id=( empty( $post_id) ? $post->ID : (int)$post_id );
     $price=get_post_meta( $post_id, $config->meta['price'], true );
-    $price=(empty($price) ? 0 : $price);
+    $price=(empty($price) ? 0 :(int)$price);
     $price=round($price,2);
-    $price=number_format($price, 2, '.', ' ');
-
     return $price;
 }
 
 //Отображает общую сумму продуктов с одним артикулом
-function fs_row_price($post_id,$count,$curency=true,$cur_tag_before=' <span>',$cur_tag_after='</span>')
+/**
+ * @param $post_id
+ * @param $count
+ * @param bool $curency
+ * @param string $cur_tag_before
+ * @param string $cur_tag_after
+ * @return int|mixed|string
+ */
+function fs_row_price($post_id, $count, $curency=true, $cur_tag_before=' <span>', $cur_tag_after='</span>')
 {
     global $post;
-    $post_id=( empty( $post_id) ? $post->ID : $post_id );
+    $post_id=( empty( $product) ? $post->ID : (int)$post_id );
     $price=fs_get_price($post_id)*$count;
-    $price=number_format($price, 2, '.', ' ');
+    $price=number_format($price, 2, fs_option('currency_delimiter','.'), ' ');
 
     if ($curency) {
-        $cur_symb=get_option( 'currency_icon', '$');
-
+        $cur_symb=fs_currency();
         $price=$price.$cur_tag_before.$cur_symb.$cur_tag_after;
     }
-
     return $price;
-
 }
 
 //Выводит текущую цену с символом валюты и с учётом скидки
 function fs_the_price($post_id='',$curency=true,$cur_tag_before=' <span>',$cur_tag_after='</span>')
 {
     global $post;
-    $cur_symb='';
+    $cur_symb=fs_currency();
     if($post_id=='') $post_id=$post->ID;
     $price=get_post_meta( $post_id, 'fs_price', true );
     $action=get_post_meta( $post_id, 'fs_discount', true );
@@ -122,10 +131,8 @@ function fs_the_price($post_id='',$curency=true,$cur_tag_before=' <span>',$cur_t
         $price=0;
     }
     $price=round($price-($price*$action/100),2);
+    $price=number_format($price,2,fs_option('currency_delimiter','.'),'');
 
-    if ($curency) {
-        $cur_symb=get_option( 'currency_icon', '$');
-    }
     if ($displayed_price!="") {
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
@@ -151,7 +158,7 @@ function fs_total_amount($show=true,$cur_before=' <span>',$cur_after='</span>')
             $all_price[$key]=$count['count']*fs_get_price($key);
         }
         $price=round(array_sum($all_price),2);
-        $price=number_format($price,2,'.','');
+        $price=number_format($price,2,fs_option('currency_delimiter','.'),'');
 
     }
 
@@ -187,12 +194,13 @@ function fs_get_cart()
             $count=(int)$count['count'];
 
             $all_price=$price*$count;
-            // $all_price=number_format($all_price, 2, '.', ' ');
+            $all_price=number_format($all_price, 2,fs_option('currency_delimiter','.'), ' ');
             $products[$key]=array(
                 'id'=>$key,
                 'name'=>get_the_title($key),
                 'count'=>$count,
                 'link'=>get_permalink($key),
+
                 'price'=>$price.' <span>'.$cur_symb.'</span>',
                 'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
             );
@@ -204,14 +212,25 @@ function fs_get_cart()
 /**
  * Отображает ссылку для удаления товара
  * @param  [type] $product_id id удаляемого товара
- * @param  string $html       содержимое тега a
- * @param  string $class      css класс присваемый ссылке
- * @return [type]             отображает ссылку для удаления товара
+ * @param string $text
+ * @param string $type
+ * @param string $attr
  */
-function fs_delete_position($product_id,$html='',$class='')
+function fs_delete_position($product_id,$text='',$type='link',$class='')
 {
+    switch ($type){
+        case 'link':
+            echo '<a href="#" class="'.$class.'"  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+            break;
+        case 'button':
+            echo '<button type="button" class="'.$class.'"  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
+            break;
+        default:
+            echo '<a href="#" class="'.$class.'"  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
 
-    echo '<button type="button" class="'.$class.'" data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$html.'</button>';
+            break;
+    }
+
 
 }
 
@@ -224,6 +243,7 @@ function fs_delete_position($product_id,$html='',$class='')
 function fs_product_count($show=false)
 {
     $count=0;
+    $all_count=array();
     if (isset($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $count){
             $all_count[$key]=$count['count'];
@@ -243,12 +263,10 @@ function fs_product_count($show=false)
 function fs_old_price($post_id='',$curency=true,$cur_tag_before=' <span>',$cur_tag_after='</span>')
 {
     global $post;
-
-    if($post_id=='') $post_id=$post->ID;
+    $post_id=empty($post_id) ? $post->ID : $post_id;
 
     $action=get_post_meta( $post_id, 'fs_discount', true );
     if($action=='' || $action<=0) return;
-    $cur_symb='';
 
     $price=get_post_meta( $post_id, 'fs_price', true );
     if (!$price) {
@@ -261,20 +279,20 @@ function fs_old_price($post_id='',$curency=true,$cur_tag_before=' <span>',$cur_t
 }
 
 
-
 /**
  * [Отображает кнопку "в корзину" со всеми необходимыми атрибутамии]
- * @param  string $post_id   [id поста (оставьте пустым в цикле wordpress)]
- * @param  string $label     [надпись на кнопке]
- * @param  string $attr      [атрибуты тега button такие как класс и прочее]
+ * @param  string $post_id [id поста (оставьте пустым в цикле wordpress)]
+ * @param  string $label [надпись на кнопке]
+ * @param  string $attr [атрибуты тега button такие как класс и прочее]
  * @param  string $preloader [html код прелоадера]
  * @param  string $send_icon [html код иконки успешного добавления в корзину]
- * @return [type]            [выводит html код кпопки добавления в корзину]
+ * @param string $json
  */
 function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon='',$json='')
 {
     global $post;
-    if($post_id=='') $post_id=$post->ID;
+    $post_id=empty($post_id) ? $post->ID : $post_id;
+
     if ($preloader=='') $preloader='<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>';
 
     if ($label=='') {
@@ -303,7 +321,8 @@ function fs_order_send($label='Отправить заказ',$attr='',$preloade
 function fs_post_views($post_id='')
 {
     global $post;
-    if($post_id=='') $post_id=$post->ID;
+    $post_id=empty($post_id) ? $post->ID : $post_id;
+
     $views=get_post_meta( $post_id, 'views', true );
 
     if (!$views) {
@@ -335,12 +354,11 @@ function fs_cart_widget()
 // Показывает ссылку на страницу корзины
 function fs_cart_url($show=true)
 {
-    $cart_page_id=get_option( 'cart_url', '' );
-
+    $cart_page=get_permalink(fs_option('page_cart',0));
     if ($show==true) {
-        echo get_permalink($cart_page_id);
+        echo $cart_page;
     }else{
-        return get_permalink($cart_page_id);
+        return $cart_page;
     }
 }
 
@@ -351,7 +369,7 @@ function fs_cart_url($show=true)
  */
 function fs_checkout_url($show=true)
 {
-    $checkout_page_id=get_option( 'pay_url', '' );
+    $checkout_page_id=fs_option('page_payment',0);
     if ($show==true) {
         echo get_permalink($checkout_page_id);
     }else{
@@ -359,77 +377,17 @@ function fs_checkout_url($show=true)
     }
 }
 
-function fs_product_filter($type='select'){
-    switch ($type) {
-        case 'list': ?>
-            <div class="sort-by ">Сортировать по: &nbsp;
-                <a href="<?php echo add_query_arg(array('filter'=>'yes','order'=>'popular',)) ?>">	популярности     </a>&nbsp;
-                <a href="<?php echo add_query_arg(array('filter'=>'yes','order'=>'price_p',)) ?>">возрастанию цены     </a>&nbsp;
-                <a href="<?php echo add_query_arg(array('filter'=>'yes','order'=>'price_m',)) ?>">убыванию цены</a>
-            </div><!-- sort-by -->
-            <?php
-            break;
-        case 'select':
-
-            ?>
-            <select name="" id="" onchange="document.location=this.options[this.selectedIndex].value">
-                <option value="">выберите способ сортировки</option>
-                <option value="<?php echo add_query_arg(array('filter'=>'yes','order'=>'price_p')) ?>">цена по возрастанию</option>
-                <option value="<?php echo add_query_arg(array('filter'=>'yes','order'=>'price_m')) ?>">цена по убыванию</option>
-                <option value="<?php echo add_query_arg(array('filter'=>'yes','order'=>'popular')) ?>">по популярности</option>
-
-            </select>
-            <?php
-            break;
-    }
-
-
-    if (isset($_GET['filter']) ) {
-        $query='';
-        switch ($_GET['order']) {
-            case 'popular':
-                $query=array(
-                    'post_type'=>'product',
-                    'meta_key'=>'views',
-                    'orderby'=>'meta_value_num',
-                    'order'=>'DESC',
-                );
-                break;
-            case 'price_p':
-                $query=array(
-                    'post_type'=>'product',
-                    'meta_key'=>'fs_price',
-                    'orderby'=>'meta_value_num',
-                    'order'=>'ASC',
-
-                );
-                break;
-            case 'price_m':
-                $query=array(
-                    'post_type'=>'product',
-                    'meta_key'=>'fs_price',
-                    'orderby'=>'meta_value_num',
-                    'order'=>'DESC',
-
-                );
-                break;
-            default:
-                $query=array(
-                    'post_type'=>'product'
-                );
-                break;
-        }
-        query_posts($query);
-    }
-}
 
 //Показывает наличие продукта
-function fs_aviable_product($product_id='',$aviable_text='',$no_aviable_text='')
+/**
+ * @param string $post_id
+ * @param string $aviable_text
+ * @param string $no_aviable_text
+ */
+function fs_aviable_product($post_id='', $aviable_text='', $no_aviable_text='')
 {
     global $post;
-    if ($product_id=='') $product_id=$post->ID;
-
-    if (!is_numeric($product_id))  exit('id поста может быть только целым числом');
+    $product_id=empty($post_id) ? $post->ID : (int)$post_id;
 
     $availability=get_post_meta($product_id,'fs_availability',true);
     if ($availability==1) {
@@ -441,17 +399,26 @@ function fs_aviable_product($product_id='',$aviable_text='',$no_aviable_text='')
 
 /**
  * Отоюражает поле для ввода количества добавляемых продуктов в корзину
- * @param  string  $product_id [id продукта]
- * @param  boolean $wrap       [если указать true (по умолчанию) выведет стилизированное поле иначе обычный input type number]
- * @return [type]              [description]
+ * @param  string $product_id - id продукта
+ * @param string $type - тип поля input type="number" (по умолчанию) или input type="text"
+ *
  */
-function fs_quantity_product($product_id='',$wrap_class='count_wrap',$class='form-control')
+function fs_quantity_product($product_id='',$type='number')
 {
     global $post;
-    if ($product_id=='') $product_id=$post->ID;
+    $product_id=!empty($product_id)?$product_id : $post->ID;
+    switch ($type){
+        case 'number':
+            echo '<input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+            break;
+        case 'text':
+            echo '<input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+            break;
+        default:
+            echo '<input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+            break;
+    }
 
-    if (!is_numeric($product_id))  exit;
-    echo "<input type=\"number\" name=\"count\" class=\"$class\" value=\"1\" min=\"1\" data-fs-element=\"attr\" data-product-id=\"$product_id\">";
 }
 
 /**
@@ -472,7 +439,7 @@ function fs_parse_url($url='')
  */
 function fs_action($post_id=""){
     global $post;
-    $post_id = (empty($post_id) ? $post->ID : $post_id);
+    $post_id = (empty($post_id) ? $post->ID : (int)$post_id);
     $config=new \FS\FS_Config();
     $action=get_post_meta($post_id,$config->meta['action'],1);
     $action=(empty($action)?false:true);
@@ -510,5 +477,17 @@ function fs_option($option_name,$default=''){
     $options=$config->options;
     $option=!empty($options[$option_name]) ? $options[$option_name] : $default;
     return $option;
+}
+
+/**
+ * @return bool|массив
+ */
+function fs_products_loop(){
+    $cart=fs_get_cart();
+    if ($cart){
+        return $cart;
+    }else{
+        return false;
+    }
 }
 

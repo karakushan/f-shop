@@ -18,20 +18,23 @@ class FS_Shortcode
 	}
 
 			//Шорткод для отображения купленных товаров и оформления покупки
-	public function cart_shortcode()
+    /**
+     *
+     */
+    public function cart_shortcode()
 	{
-		global $fs_config;
+
 
 		$template_row_before=TEMPLATEPATH.'/fast-shop/cart/product-row-before.php';
-		$plugin_row_before=$fs_config['plugin_path'].'templates/front-end/cart/product-row-before.php';
+		$plugin_row_before=PLUGIN_PATH.'templates/front-end/cart/product-row-before.php';
 
 		$template_row=TEMPLATEPATH.'/fast-shop/cart/product-row.php';
-		$plugin_row=$fs_config['plugin_path'].'templates/front-end/cart/product-row.php';
+		$plugin_row=PLUGIN_PATH.'templates/front-end/cart/product-row.php';
 
 		$template_row_after=TEMPLATEPATH.'/fast-shop/cart/product-row-after.php';
-		$plugin_row_after=$fs_config['plugin_path'].'templates/front-end/cart/product-row-after.php';
+		$plugin_row_after=PLUGIN_PATH.'templates/front-end/cart/product-row-after.php';
 
-		$template_none_plugin=$fs_config['plugin_path'].'templates/front-end/cart/cart-empty.php';
+		$template_none_plugin=PLUGIN_PATH.'templates/front-end/cart/cart-empty.php';
 		$template_none_theme=TEMPLATEPATH.'/fast-shop/cart/cart-empty.php';
 		//получаем содержимое корзины (сессии)
 		$carts=fs_get_cart();
@@ -42,7 +45,9 @@ class FS_Shortcode
 			} else {
 				include ($plugin_row_before);
 			}
-			foreach ($carts as $cart){
+
+			foreach ($carts as $id=>$product){
+			    $GLOBALS['product']=$product;
 				if (file_exists($template_row)) {
 					include ($template_row);
 				} else {

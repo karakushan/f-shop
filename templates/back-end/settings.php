@@ -18,6 +18,11 @@
                     <input type="text" name="fs_option[currency_symbol]" value="<?php echo fs_currency() ?>">
 
                 </p>
+                <p>
+                    <label for="currency_delimiter">Разделитель цены <span>(по умолчанию .):</span></label><br>
+                    <input type="text" name="fs_option[currency_delimiter]" value="<?php echo fs_option('currency_delimiter','.') ?>">
+
+                </p>
             </div>
             <div id="tabs-2">
                 <p>
@@ -83,7 +88,7 @@
 
                 </p>
                 <p>
-                    <label for="page_cart">Страница успешного заказа:</label><br>
+                    <label for="page_cart">Страница успешной отправки заказа:</label><br>
                     <?php
                     $query=new WP_Query(array('post_type'=>'page','posts_per_page'=>-1)); ?>
 
