@@ -118,10 +118,13 @@ $(".order-send").validate({
 		}
 	},
 	submitHandler: function(form) {
+
 		var formData=$('.order-send').serialize();
+
 		$.ajax({
 			url: ajaxurl,
 			dataType: 'html',
+			type: 'POST',
 			data:formData,
 			beforeSend:function () {
 				$('button[data-fs-action=order-send]').find('.fs-preloader').fadeIn('slow');
@@ -129,9 +132,9 @@ $(".order-send").validate({
 		})
 		.done(function(result) {
 			$('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
-			// console.log(result);
+			console.log(result);
 			// console.log(fs_succes);
-			document.location.href=fs_succes;
+			// document.location.href=fs_succes;
 			
 		})
 		.fail(function() {
@@ -140,6 +143,7 @@ $(".order-send").validate({
 		.always(function() {
 			console.log("complete");
 		});
+
 
 	}
 });

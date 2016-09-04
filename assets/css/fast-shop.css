@@ -231,11 +231,26 @@ input[name="count-ch"] {
 .fast-shop-settings .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
   background: #0073aa;
 }
+.fast-shop-settings input[type=text] {
+    width: 100%;
+}
 .fast-shop-settings .wp-person a:focus .gravatar, a:focus, a:focus .media-icon img {
     color: #124964;
     box-shadow: none;
 }
 .fs-option label span {
   font-weight: normal;
+}
+.fast-shop-settings .ui-tabs.ui-tabs-vertical {
+
+    width: 70em;
+}
+.fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-panel {
+    float: left;
+    width: 47em;
+    border-left: 1px solid gray;
+    border-radius: 0;
+    position: relative;
+    left: -1px;
 }
 

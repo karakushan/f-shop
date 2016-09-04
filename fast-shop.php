@@ -52,18 +52,19 @@ function activate()
 
     if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name){
         $sql = "CREATE TABLE $table_name
-( `id` INT(11) NOT NULL AUTO_INCREMENT,
-        `products` TEXT NOT NULL,
-        `comments` TEXT NOT NULL,
-        `delivery` VARCHAR(50) NOT NULL,
-        `name` VARCHAR(50) NOT NULL,
-        `email` VARCHAR(50) NOT NULL,
-        `telephone` VARCHAR(50) NULL DEFAULT NULL,
-        `summa` DOUBLE NULL DEFAULT NULL,
-        `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        `status` INT(11) NULL DEFAULT NULL,
-        PRIMARY KEY (`id`),
-        UNIQUE INDEX `id` (`id`)
+( 
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`products` TEXT NULL,
+	`comments` TEXT NULL,
+	`delivery` VARCHAR(50) NULL DEFAULT NULL,
+	`name` VARCHAR(50) NULL DEFAULT NULL,
+	`email` VARCHAR(50) NULL DEFAULT NULL,
+	`telephone` VARCHAR(50) NULL DEFAULT NULL,
+	`summa` DOUBLE NULL DEFAULT NULL,
+	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`status` INT(11) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE INDEX `id` (`id`)
         )
         COLLATE='utf8_general_ci'
         ENGINE=InnoDB
@@ -85,6 +86,6 @@ function deactivate()
     // Do nothing
 } // END public static function deactivate
 
-	// Installation and uninstallation hooks
+// Installation and uninstallation hooks
 register_activation_hook(__FILE__, 'activate');
 register_deactivation_hook(__FILE__,'deactivate');

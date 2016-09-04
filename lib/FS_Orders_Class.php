@@ -6,23 +6,22 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 */
 class FS_Orders_Class
 {
-	public $order_status=array(
-		'0'=>'ожидает подтверждения',
-		'1'=>'в ожидании оплаты',
-		'2'=>'оплачен',
-		'3'=>'отменён'
-		);
+	public $order_status;
+    private $config;
 	
 	function __construct()
 	{
 		add_action( 'init',array(&$this, 'order_status_change'));
+        $this->config=new FS_Config();
+        $this->order_status=$this->config->data['order_statuses'];
 	}
 
 	//Получаем все заказы в виде объекта
 	public function get_orders()
 	{
-		global $wpdb,$fs_config;
-		$table_name=$fs_config['table_name'];
+		global $wpdb;
+        $table_name= $this->config->data['table_name'];
+
 		$per_page=15;
 		if (isset($_SESSION['pagination'])) {
 			$per_page=$_SESSION['pagination'];
@@ -44,8 +43,8 @@ class FS_Orders_Class
 
 	public function order_pagination($class='')
 	{
-		global $wpdb,$fs_config;
-		$table_name=$fs_config['table_name'];
+		global $wpdb;
+		$table_name= $this->config->data['table_name'];
 		$per_page=15;
 		if (isset($_SESSION['pagination'])) {
 			$per_page=$_SESSION['pagination'];
@@ -86,17 +85,17 @@ class FS_Orders_Class
 	//Получаем объект одного заказа
 	public function get_order($id='')
 	{
-		global $wpdb,$fs_config;
-		$table_name=$fs_config['table_name'];
+		global $wpdb;
+		$table_name=$this->config->data['table_name'];
 		$res=$wpdb->get_row("SELECT * FROM $table_name WHERE id =$id");
 		return $res;
 	}
 
 	public function order_status_change()
 	{
-		global $wpdb,$fs_config;
+		global $wpdb;
 		$upd=false;
-		$table_name=$fs_config['table_name'];
+		$table_name=$this->config->data['table_name'];
 		if (isset($_GET['action']) && $_GET['action']=='edit') {
 			if(isset($_GET['id']) || isset($_GET['status'])){
 				$upd=$wpdb->update( 

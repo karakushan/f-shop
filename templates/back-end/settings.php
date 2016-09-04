@@ -8,6 +8,7 @@
                 <li><a href="#tabs-2">Письма</a></li>
                 <li><a href="#tabs-3">Акции</a></li>
                 <li><a href="#tabs-4">Страницы</a></li>
+                <li><a href="#tabs-5">Пользователи</a></li>
 
 
             </ul>
@@ -25,21 +26,48 @@
                 </p>
             </div>
             <div id="tabs-2">
+
                 <p>
                     <label for="manager_email">Куда отправлять письма <span>(по умолчанию почта админа):</span></label><br>
                     <input type="email" name="fs_option[manager_email]" id="manager_email" value="<?php echo fs_option('manager_email',get_option('admin_email')) ?>">
 
                 </p>
                 <p>
+                    <label for="">Список переменных для использования в письмах</label><br>
+                    <code>
+                        %first_name% - Имя заказчика,
+                        %last_name% - Фамилия,
+                        %number_products% - к-во купленных продуктов,
+                        %total_amount% - общая сумма покупки,
+                        %order_id% - id заказа,
+                        %products_listing% - список купленных продуктов,
+                        %mail_client% - почта заказчика,
+                        %delivery_address% - адрес доставки,
+                        %delivery% - тип доставки,
+                        %customer_phone% - телефон заказчика,
+                        %comments% - комментарий заказчика,
+                        %site_name% - название сайта,
+                    </code>
+                </p>
+                <p>
+                    <label for="customer_mail_header">Заголовок письма заказчику:</label><br>
+                    <input type="text" name="fs_option[customer_mail_header]" id="customer_mail_header" value="<?php echo fs_option('customer_mail_header','Заказ товара на сайте «'.get_bloginfo('name').'»'); ?>">
+                </p>
+                <p>
                     <label for="customer_mail">Текст письма заказчику после отправки заказа:</label><br>
                     <textarea name="fs_option[customer_mail]" id="customer_mail"  rows="10"><?php echo fs_option('customer_mail') ?></textarea>
                 </p>
                 <p>
+                    <label for="admin_mail_header">Заголовок письма администратору:</label><br>
+                    <input type="text" name="fs_option[admin_mail_header]" id="admin_mail_header" value="<?php echo fs_option('admin_mail_header','Заказ товара на сайте «'.get_bloginfo('name').'»'); ?>">
+                </p>
+                <p>
                     <label for="admin_mail">Текст письма администратору после отправки заказа:</label><br>
-                    <textarea name="fs_option[admin_mail]" id="admin_mail"  rows="10"><?php echo fs_option('admin_mail') ?></textarea>
+                    <textarea name="fs_option[admin_mail]" id="admin_mail"  rows="10"><?php echo fs_option('c') ?></textarea>
                 </p>
             </div>
             <div id="tabs-3">
+
                 <p>
                     <label for="action_pcount">К-во товаров при которых активируется скидка:</label><br>
                     <input type="number" min="1" name="fs_option[action_pcount]" id="action_pcount" value="<?php echo fs_option('action_pcount') ?>">
@@ -102,6 +130,12 @@
                         <?php endif; ?>
                     </select>
 
+                </p>
+            </div>
+            <div id="tabs-5">
+                <p>
+                    <label for="register_user">Регистрировать пользователя при покупке</label><br>
+                    <input type="checkbox" name="fs_option[register_user]" id="register_user" value="1" <?php checked(fs_option('register_user'),1) ?>>
                 </p>
             </div>
         </div>

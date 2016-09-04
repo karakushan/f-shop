@@ -26,7 +26,13 @@ class FS_Config
             'plugin_ver'=>'1.0',
             'plugin_name'=>'fast-shop',
             'plugin_settings'=>'fast-shop-settings',
-            'table_name'=>$wpdb->prefix."fs_orders"
+            'table_name'=>$wpdb->prefix."fs_orders",
+            'order_statuses'=>array(
+                '0'=>'ожидает подтверждения',
+                '1'=>'в ожидании оплаты',
+                '2'=>'оплачен',
+                '3'=>'отменён'
+            )
         );
 
         //Массив настроек сайта

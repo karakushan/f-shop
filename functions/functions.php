@@ -116,14 +116,21 @@ function fs_row_price($post_id, $count, $curency=true, $cur_tag_before=' <span>'
 }
 
 //Выводит текущую цену с символом валюты и с учётом скидки
-function fs_the_price($post_id='',$curency=true,$cur_tag_before=' <span>',$cur_tag_after='</span>')
+/**
+ * @param string $post_id
+ * @param bool $curency
+ * @param string $cur_tag_before
+ * @param string $cur_tag_after
+ */
+function fs_the_price($post_id='', $curency=true, $cur_tag_before=' <span>', $cur_tag_after='</span>')
 {
     global $post;
     $cur_symb=fs_currency();
-    if($post_id=='') $post_id=$post->ID;
+    $post_id=empty($post_id)?$post->ID:$post_id;
+
     $price=get_post_meta( $post_id, 'fs_price', true );
     $action=get_post_meta( $post_id, 'fs_discount', true );
-    $displayed_price=get_post_meta($post->ID, 'fs_displayed_price', true);
+    $displayed_price=get_post_meta($post_id, 'fs_displayed_price', true);
     if (!$action) {
         $action=0;
     }
@@ -153,7 +160,7 @@ function fs_the_price($post_id='',$curency=true,$cur_tag_before=' <span>',$cur_t
 function fs_total_amount($show=true,$cur_before=' <span>',$cur_after='</span>')
 {
     $price=0;
-    if (count($_SESSION['cart'])) {
+    if (isset($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $count){
             $all_price[$key]=$count['count']*fs_get_price($key);
         }
