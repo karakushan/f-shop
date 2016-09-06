@@ -22,9 +22,9 @@ class FS_Ajax_Class
      */
     function order_send_ajax()
     {
-     /*   ini_set('error_reporting', E_ALL);
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);*/
+        /*   ini_set('error_reporting', E_ALL);
+           ini_set('display_errors', 1);
+           ini_set('display_startup_errors', 1);*/
 
         if ( !wp_verify_nonce( $_REQUEST['_wpnonce']) || !isset($_SESSION['cart']))
             die ( 'не пройдена верификация формы или не существует сессия корзины');
@@ -44,7 +44,7 @@ class FS_Ajax_Class
             }
         }
 
-        //Производим очиску полученных данных с формы заказа
+        //Производим очистку полученных данных с формы заказа
         $first_name=filter_input(INPUT_POST,'name',FILTER_SANITIZE_STRING);
         $last_name=filter_input(INPUT_POST,'last_name',FILTER_SANITIZE_STRING);
         $mail_client=filter_input(INPUT_POST,'email',FILTER_SANITIZE_EMAIL);
@@ -76,8 +76,6 @@ class FS_Ajax_Class
 
         $order_id=$wpdb->insert_id;
         $_SESSION['last_order_id']=$order_id;
-        if (!$order_id) $wpdb->print_error();
-
         /*
          Список переменных:
          %first_name% - Имя заказчика,
@@ -107,8 +105,9 @@ class FS_Ajax_Class
             '%site_name%'=>get_bloginfo('name')
 
         );
-        $search_replace=$search_replace+$fields;
-            print_r($search_replace);
+
+        //Производим замену в отсылаемих письмах
+        $search_replace=$fields+$search_replace;
         $search=array_keys($search_replace);
         $replace=array_values($search_replace);
 
@@ -135,6 +134,11 @@ class FS_Ajax_Class
                 wp_new_user_notification( $new_user_id, $random_password);
             }
         }
+        $result=array(
+            'wpdb_error'=>$wpdb->last_error,
+            'redirect'=>get_permalink(fs_option('page_success'))
+        );
+        echo json_encode($result);
 
         unset($_SESSION['cart']);
         exit;

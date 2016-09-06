@@ -88,39 +88,10 @@ $('.close').live('click',function() {
 
 });
 
-// валидация формы заказа
+// валидация и отправка формы заказа
 $(".order-send").validate({
-	rules : {
-		name : {required : true},
-		telefon : {required : true},
-		
-		city : {required : true},
-		email: {
-			required: true,
-			email: true
-		}
-
-	},
-	messages : {
-		name : {
-			required : "Введите ваше имя",
-		},				
-		telefon : {
-			required : "Введите ваш номер телефона",
-		},				
-		
-		city : {
-			required : "Укажите город",
-		},
-		email: {
-			required: "Заполните поле E-mail",
-			email: "Поле E-mail имеет недопустимый формат"
-		}
-	},
 	submitHandler: function(form) {
-
 		var formData=$('.order-send').serialize();
-
 		$.ajax({
 			url: ajaxurl,
 			dataType: 'html',
@@ -132,16 +103,12 @@ $(".order-send").validate({
 		})
 		.done(function(result) {
 			$('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
-			console.log(result);
-			// console.log(fs_succes);
-			// document.location.href=fs_succes;
-			
-		})
-		.fail(function() {
-			console.log("error");
-		})
-		.always(function() {
-			console.log("complete");
+			var jsonData=JSON.parse(result);
+			if(jsonData.wpdb_error){
+				console.log(jsonData.wpdb_error);
+			}
+			document.location.href=jsonData.redirect;
+            
 		});
 
 
