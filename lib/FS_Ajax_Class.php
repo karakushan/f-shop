@@ -35,7 +35,16 @@ class FS_Ajax_Class
         $fs_config=new FS_Config();
         $fs_delivery=new FS_Delivery_Class();
 
-        //Производим очитску полученных данных с формы заказа
+        $fields=array();
+        $exclude_fields=array('action','_wpnonce','_wp_http_referer');
+        if (isset($_POST)){
+            foreach ($_POST as $key=>$post_field){
+                if (in_array($key,$exclude_fields)) continue;
+                $fields['%'.$key.'%']=filter_input(INPUT_POST,$key,FILTER_SANITIZE_STRING);
+            }
+        }
+
+        //Производим очиску полученных данных с формы заказа
         $first_name=filter_input(INPUT_POST,'name',FILTER_SANITIZE_STRING);
         $last_name=filter_input(INPUT_POST,'last_name',FILTER_SANITIZE_STRING);
         $mail_client=filter_input(INPUT_POST,'email',FILTER_SANITIZE_EMAIL);
@@ -98,6 +107,8 @@ class FS_Ajax_Class
             '%site_name%'=>get_bloginfo('name')
 
         );
+        $search_replace=$search_replace+$fields;
+            print_r($search_replace);
         $search=array_keys($search_replace);
         $replace=array_values($search_replace);
 

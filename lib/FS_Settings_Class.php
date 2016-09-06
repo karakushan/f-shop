@@ -63,19 +63,18 @@ class FS_Settings_Class
         // Add a page to manage this plugin's settings
         add_submenu_page(
             'edit.php?post_type=product',
-            'Заказы',
-            'Заказы',
+            __('Orders','fast-shop'),
+            __('Orders','fast-shop'),
             'manage_options',
             'fast-shop-orders',
             array(&$this, 'fast_shop_orders')
         );
 
-
         // Add a page to manage this plugin's settings
         add_submenu_page(
             'edit.php?post_type=product',
-            'Способы доставки',
-            'Способы доставки',
+            __('Delivery methods','fast-shop'),
+            __('Delivery methods','fast-shop'),
             'manage_options',
             'fs-delivery',
             array(&$this, 'fast_shop_delivery')
@@ -84,8 +83,8 @@ class FS_Settings_Class
         // Add a page to manage this plugin's settings
         add_submenu_page(
             'edit.php?post_type=product',
-            'Атрибуты товаров',
-            'Атрибуты товаров',
+            __('Product Attributes','fast-shop'),
+            __('Product Attributes','fast-shop'),
             'manage_options',
             'fs-atributes',
             array(&$this, 'fast_shop_admin_menu')
@@ -94,8 +93,8 @@ class FS_Settings_Class
         // Add a page to manage this plugin's settings
         add_submenu_page(
             'edit.php?post_type=product',
-            'Настройки магазина',
-            'Настройки магазина',
+            __('Store settings','fast-shop'),
+            __('Store settings','fast-shop'),
             'manage_options',
             'fast-shop-settings',
             array(&$this, 'plugin_settings_page')

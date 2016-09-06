@@ -223,17 +223,20 @@ function fs_get_cart()
  * @param string $type
  * @param string $attr
  */
-function fs_delete_position($product_id,$text='',$type='link',$class='')
+function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
+
 {
+    $title='title="'.__('Remove items','fast-shop').' '.get_the_title($product_id).'"';
+    $class="class=\"$class\"";
     switch ($type){
         case 'link':
-            echo '<a href="#" class="'.$class.'"  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
             break;
         case 'button':
-            echo '<button type="button" class="'.$class.'"  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
+            echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
             break;
         default:
-            echo '<a href="#" class="'.$class.'"  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
 
             break;
     }

@@ -1,157 +1,157 @@
 .row-images {
-  width: 100%;
-  float: none;
-  overflow: hidden;
+    width: 100%;
+    float: none;
+    overflow: hidden;
 }
 button#new_image {
-  border-radius: 20px;
-  border: none;
-  margin: 10px 0;
-  padding: 6px 11px;
-  background: #32373c;
-  color: #fff;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
-  outline: none;
+    border-radius: 20px;
+    border: none;
+    margin: 10px 0;
+    padding: 6px 11px;
+    background: #32373c;
+    color: #fff;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
+    outline: none;
 }
 button#new_image:hover {
-  background: #000;
-  cursor: pointer;
+    background: #000;
+    cursor: pointer;
 }
 .mmf-image {
-  display: inline-block;
-  width: 165px;
-  border: 1px dashed #ccc;
-  padding: 5px;
-  height: 165px;
-  background-color: #eee;
-  margin-right: 2px;
-  margin-bottom: 2px;
-  float: left;
+    display: inline-block;
+    width: 165px;
+    border: 1px dashed #ccc;
+    padding: 5px;
+    height: 165px;
+    background-color: #eee;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    float: left;
 }
 .mmf-image img {
-  width: 100%;
-  height: 133px;
+    width: 100%;
+    height: 133px;
 }
 .mmf-image button {
-  width: 49%;
-  float: left;
-  height: 28px;
-  padding: 0px;
-  text-transform: uppercase;
-  font-size: 12px;
-  border: none;
-  border-radius: 2px;
+    width: 49%;
+    float: left;
+    height: 28px;
+    padding: 0px;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: none;
+    border-radius: 2px;
 }
 .mmf-image button:hover {
-  cursor: pointer;
-  opacity: 0.8;
+    cursor: pointer;
+    opacity: 0.8;
 }
 button.upload-mft {
-  background: #2196F3;
-  margin-right: 2%;
-  color: #fff;
+    background: #2196F3;
+    margin-right: 2%;
+    color: #fff;
 }
 button.remove-tr {
-  background: #E91E63;
-  color: #fff;
+    background: #E91E63;
+    color: #fff;
 }
 .cssload-container {
-  width: 100%;
-  height: 49px;
-  text-align: center;
+    width: 100%;
+    height: 49px;
+    text-align: center;
 }
 .cssload-speeding-wheel {
-  width: 22px;
-  height: 22px;
-  margin: 0 auto;
-  border: 3px solid #000000;
-  border-radius: 50%;
-  border-left-color: transparent;
-  border-right-color: transparent;
-  animation: cssload-spin 575ms infinite linear;
-  -o-animation: cssload-spin 575ms infinite linear;
-  -ms-animation: cssload-spin 575ms infinite linear;
-  -webkit-animation: cssload-spin 575ms infinite linear;
-  -moz-animation: cssload-spin 575ms infinite linear;
+    width: 22px;
+    height: 22px;
+    margin: 0 auto;
+    border: 3px solid #000000;
+    border-radius: 50%;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    animation: cssload-spin 575ms infinite linear;
+    -o-animation: cssload-spin 575ms infinite linear;
+    -ms-animation: cssload-spin 575ms infinite linear;
+    -webkit-animation: cssload-spin 575ms infinite linear;
+    -moz-animation: cssload-spin 575ms infinite linear;
 }
 @keyframes cssload-spin {
-  100% {
-    transform: rotate(360deg);
-  }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 @-o-keyframes cssload-spin {
-  100% {
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+    100% {
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 @-ms-keyframes cssload-spin {
-  100% {
-    -ms-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+    100% {
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 @-webkit-keyframes cssload-spin {
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 @-moz-keyframes cssload-spin {
-  100% {
-    -moz-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+    100% {
+        -moz-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 [data-fs-action="add-to-cart"],
 [data-fs-action="order-send"] {
-  position: relative;
+    position: relative;
 }
 .fs-preloader {
-  position: absolute;
-  left: 42px;
-  top: 10px;
-  display: none;
+    position: absolute;
+    left: 42px;
+    top: 10px;
+    display: none;
 }
 [data-fs-action="order-send"] .fs-preloader {
-  position: absolute;
-  right: 9px;
-  top: 17px;
-  left: auto;
+    position: absolute;
+    right: 9px;
+    top: 17px;
+    left: auto;
 }
 .send_ok {
-  display: none;
-  position: absolute;
-  left: 116px;
-  top: 2px;
-  color: #208e2b;
+    display: none;
+    position: absolute;
+    left: 116px;
+    top: 2px;
+    color: #208e2b;
 }
 .count_wrap {
-  position: relative;
-  float: left;
+    position: relative;
+    float: left;
 }
 input[name="count-ch"] {
-  float: left;
-  width: 39px;
-  border: 1px solid #7C1D6B;
-  height: 32px;
-  text-align: center;
+    float: left;
+    width: 39px;
+    border: 1px solid #7C1D6B;
+    height: 32px;
+    text-align: center;
 }
 .count_wrap .up {
-  content: '';
-  position: absolute;
-  right: -15px;
-  bottom: 19px;
-  border: 4px solid transparent;
-  border-bottom: 8px solid #7C1D6B;
+    content: '';
+    position: absolute;
+    right: -15px;
+    bottom: 19px;
+    border: 4px solid transparent;
+    border-bottom: 8px solid #7C1D6B;
 }
 .count_wrap .down {
-  content: '';
-  position: absolute;
-  right: -15px;
-  bottom: 0px;
-  border: 4px solid transparent;
-  border-top: 8px solid #7C1D6B;
+    content: '';
+    position: absolute;
+    right: -15px;
+    bottom: 0px;
+    border: 4px solid transparent;
+    border-top: 8px solid #7C1D6B;
 }
 .fs-metabox td {
     padding: 2px 8px;
@@ -159,7 +159,7 @@ input[name="count-ch"] {
 .fs-metabox label {
     font-weight: bold;
 }
-  li.fs-attr {
+li.fs-attr {
     margin-bottom: 6px;
     display: inline-block;
     margin-right: 13px;
@@ -174,62 +174,62 @@ input[name="count-ch"] {
 .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; }
 .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
 .fs-option input[type="submit"] {
-  margin: 15px 0 0 0;
-  background: #46b450;
+    margin: 15px 0 0 0;
+    background: #46b450;
 
-  color: #fff;
-  padding: 17px 22px;
-  border: 1px solid #237b27;
-  text-transform: uppercase;
-  border-radius: 4px;
-  line-height: 1em;
-  font-size: 12px;
-  letter-spacing: .1em;
-  -webkit-transition: all .4s;
-  -moz-transition:all .4s;
-  -ms-transition: all .4s;
-  -o-transition: all .4s;
-  transition: all .4s;
+    color: #fff;
+    padding: 17px 22px;
+    border: 1px solid #237b27;
+    text-transform: uppercase;
+    border-radius: 4px;
+    line-height: 1em;
+    font-size: 12px;
+    letter-spacing: .1em;
+    -webkit-transition: all .4s;
+    -moz-transition:all .4s;
+    -ms-transition: all .4s;
+    -o-transition: all .4s;
+    transition: all .4s;
 }
 .fs-option input[type="submit"]:hover{
-  background: #438543;
-  cursor: pointer;
+    background: #438543;
+    cursor: pointer;
 }
 .fs-option textarea{
-  width: 100%;
+    width: 100%;
 }
 .fs-option label{
-  font-weight: bold;
-  line-height: 25px;
+    font-weight: bold;
+    line-height: 25px;
 }
 .fs-option label.label-light{
-  font-weight: normal;
+    font-weight: normal;
     line-height: 18px;
 }
 .fs-option p {
-  margin: 0 0 10px 0;
+    margin: 0 0 10px 0;
 }
 .fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-nav {
-  float: left;
-  width: 10em;
-  background: #23282d;
-  border-radius: 4px 0 0 4px;
-  border-right: 1px solid #32373c;
+    float: left;
+    width: 10em;
+    background: #23282d;
+    border-radius: 4px 0 0 4px;
+    border-right: 1px solid #32373c;
 }
 .fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-nav li {
-  clear: left;
-  width: 100%;
-  margin: 0.2em 0;
-  border: 1px solid #32373c;
-  border-width: 1px 0 1px 1px;
-  border-radius: 4px 0 0 4px;
-  overflow: hidden;
-  position: relative;
-  right: -2px;
-  z-index: 2;
+    clear: left;
+    width: 100%;
+    margin: 0.2em 0;
+    border: 1px solid #32373c;
+    border-width: 1px 0 1px 1px;
+    border-radius: 4px 0 0 4px;
+    overflow: hidden;
+    position: relative;
+    right: -2px;
+    z-index: 2;
 }
 .fast-shop-settings .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
-  background: #0073aa;
+    background: #0073aa;
 }
 .fast-shop-settings input[type=text] {
     width: 100%;
@@ -239,7 +239,7 @@ input[name="count-ch"] {
     box-shadow: none;
 }
 .fs-option label span {
-  font-weight: normal;
+    font-weight: normal;
 }
 .fast-shop-settings .ui-tabs.ui-tabs-vertical {
 
@@ -253,4 +253,3 @@ input[name="count-ch"] {
     position: relative;
     left: -1px;
 }
-

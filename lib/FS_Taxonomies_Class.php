@@ -15,24 +15,10 @@ if (!class_exists('FS_Taxonomies_Class')) {
 		}
 
 		function create_taxonomy(){
-	// заголовки
-			$labels = array(
-				'name'              =>__( 'Product categories', 'fast-shop' ),
-				'singular_name'     => 'Категория товара',
-				'search_items'      => 'Искать категорию',
-				'all_items'         => 'Все категории',
-				'parent_item'       => 'Родительская категория',
-				'parent_item_colon' => 'Родительская категория:',
-				'edit_item'         => 'Изменить категорию',
-				'update_item'       => 'Обновить категорию',
-				'add_new_item'      => 'Добавить категорию',
-				'new_item_name'     => 'Новая категория',
-				'menu_name'         => 'Категории товара',
-				); 
-	// параметры
+
 			$args = array(
-		'label'                 => '', // определяется параметром $labels->name
-		'labels'                => $labels,
+		'label'                 => __( 'Product categories', 'fast-shop' ), // определяется параметром $labels->name
+
 		'public'                => true,
 		'show_ui'               => true, // равен аргументу public
 		'show_tagcloud'         => true, // равен аргументу show_ui
@@ -41,7 +27,6 @@ if (!class_exists('FS_Taxonomies_Class')) {
 		'show_tagcloud'  => true,
 		'update_count_callback' => '',
 		'rewrite' =>true,
-
 		'update_count_callback' => '_update_post_term_count',
 		'query_var'             => true, // название параметра запроса
 		'capabilities'          => array(),

@@ -1,19 +1,5 @@
-<style>
-	table, table td, table th {
-		border: 2px dashed rgb(241, 241, 241);
-		border-collapse: collapse;
-		padding: 6px 16px;
-		/* border-radius: 10px; */
-		background: #ccc;
-	}
-	table th{
-		background: #00b9eb;
-		font-weight: bold;
-		color: #000;
-	}
-</style>
 <div class="wrap">
-	<h2>Настройка доставки</h2>
+	<h2><?php _e('Delivery methods','fast-shop') ?></h2>
 	<form method="post" action=""> 
 
 		<h3>Добавление способа доставки</h3>

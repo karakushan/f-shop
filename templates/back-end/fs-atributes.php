@@ -1,23 +1,5 @@
-<style type="text/css">	
-	.attr-desc {
-		margin-bottom: 25px;
-		max-width: 530px;
-		border: 1px solid #e0e0e0;
-		padding: 10px;
-		background: #fff;
-		line-height: 1.4em;
-	}
-	.fs-atributes label{
-		font-weight: bold;
-	}
-	.fs-atributes form{
-		margin-bottom: 30px;
-	}
-</style>
 <div class="wrap fs-atributes">
-	<h1>Атрибуты товаров</h1>
-	<div class="attr-desc">В этом разделе меню вы можете добавлять атрибуты товара. Это необходимо если ваш товар может иметь различные цвета, типы и т.д.. В клиентской части покупатель сможет увидеть и выбрать товар с нужными ему свойствами.</div>
-
+	<h1><?php _e('Product Attributes','fast-shop') ?></h1>
 	<?php $fs_atributes=get_option('fs-attr-group'); ?>
 	<?php // print_r($fs_atributes) ?>
 	<form action="<?php echo wp_nonce_url(add_query_arg(array('fs_action'=>'fs-add-attr-group')),'fs_action') ?>" method="post">

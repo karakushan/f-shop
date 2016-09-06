@@ -7,9 +7,6 @@ class FS_Init
 {
 	public $config;
 
-    /**
-     * FS_Init constructor.
-     */
     public function __construct()
 	{
        $this->config=new FS_Config();
@@ -37,14 +34,11 @@ class FS_Init
 		add_filter("plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ));
 		add_action( 'plugins_loaded', array($this,'true_load_plugin_textdomain' ));
 
-
 		} // END public function __construct
 
 		function true_load_plugin_textdomain() {
 			load_plugin_textdomain( 'fast-shop', false, $this->config->data['plugin_name'] . '/languages/' );
 		}
-
-
 
 		// Add the settings link to the plugins page
 		function plugin_settings_link($links)
@@ -53,7 +47,6 @@ class FS_Init
 			array_unshift($links, $settings_link);
 			return $links;
 		}
-
 
 		function fast_shop_scripts() {
 			wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'].'assets/css/fast-shop.css',array(),$this->config->data['plugin_ver'],'all');	
@@ -76,7 +69,7 @@ class FS_Init
 			
 			
 			wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.css',array(),$this->config->data['plugin_ver'],'all');
-			wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'].'assets/css/fast-shop.css',array(),$this->config->data['plugin_ver'],'all');	
+			wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'].'assets/css/fast-shop.css',array(),$this->config->data['plugin_ver'],'all');
 
 			wp_enqueue_script('fs-jqueryui',$this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.js',array('jquery'),null,true);
 			wp_enqueue_script( 'fs-admin',$this->config->data['plugin_url'].'assets/js/fs-admin.js', array( 'jquery' ), null, true);

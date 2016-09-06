@@ -1,6 +1,5 @@
 <div class="wrap fast-shop-settings">
-    <h2>Fast Shop настройки</h2>
-    <p>Вы можете изменять настройки во всех вкладках. После изменнения настроек не забудьте сохранить.</p>
+    <h2><?php _e('Store settings','fast-shop') ?></h2>
     <form action="<?php echo wp_nonce_url($_SERVER['REQUEST_URI'],'fs_nonce'); ?>" method="post" class="fs-option">
         <div id="fs-options-tabs">
             <ul>
@@ -9,10 +8,7 @@
                 <li><a href="#tabs-3">Акции</a></li>
                 <li><a href="#tabs-4">Страницы</a></li>
                 <li><a href="#tabs-5">Пользователи</a></li>
-
-
             </ul>
-
             <div id="tabs-1">
                 <p>
                     <label for="">Символ валюты <span>(по умолчанию $):</span></label><br>

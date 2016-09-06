@@ -1,52 +1,9 @@
-<style>
-	table, table td, table th {
-		border: 2px dashed rgb(241, 241, 241);
-		border-collapse: collapse;
-		padding: 6px 16px;
-		/* border-radius: 10px; */
-		background: #ccc;
-	}
-	table th{
-		background: #00b9eb;
-		font-weight: bold;
-		color: #000;
-	}
-	select.status_0 {
-		background: #294AFF;
-		color: #fff;
-	}
-	select.status_2 {
-		background: #7CFF82;
-	}
-	select.status_3 {
-		background: #E61E1E;
-		color: #fff;
-	}
-	select.status_1 {
-		background: #FFD042;
-	}
-	.order-paggination li {
-		display: inline;
-	}	
-	.order-paggination a {
-		padding: 4px 9px;
-		margin-right: 5px;
-		background: #23282D;
-		color: #fff;
-		text-decoration: none;
-		border-radius: 2px;
-	}
-	.order-paggination a:hover, .order-paggination a.active{
-    background: #E91E63;
-}
-</style>
 <div class="wrap">
-	<h2>Управление заказами</h2>
+	<h2><?php _e('Orders','fast-shop') ?></h2>
 	<table>
 		<tr>
 			<th>#ID</th><th>Дата заказа</th><th>Телефон</th><th>Email</th><th>Способ доставки</th><th>Статус/Изменить</th><th>Сумма</th><th>Подробности</th><!-- <th>Отмена</th> -->
 		</tr>
-		<?php // print_r($orders->get_orders()) ?>
 		<?php foreach ($orders->get_orders() as $order): ?>
 			<?php $status=$orders->order_status($order->status); ?>
 			<tr>

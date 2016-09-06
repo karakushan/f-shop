@@ -7,11 +7,18 @@ namespace FS;
 class FS_Filters
 {
     protected $conf;
+    private  $exclude=array(
+        'fs_filter',
+        'price_start',
+        'price_end',
+        'sort_custom'
+    );
     function __construct()
     {
 
         $this->conf=new FS_Config();
         add_action('pre_get_posts',array($this,'filter_curr_product'));
+        add_action('pre_get_posts',array($this,'filter_by_query'));
         add_shortcode( 'fs_range_slider', array($this,'range_slider'));
 
     }
@@ -49,6 +56,19 @@ class FS_Filters
             $query->set('orderby','meta_value_num');
         }
 
+        if (!empty($url['sort_custom'])){
+
+            switch ($url['sort_custom']){
+                case 'price_asc':
+                    $query->set('meta_key','fs_price');
+                    $query->set('orderby','meta_value_num');
+                    $query->set('order','ASC');
+
+                    break;
+            }
+
+        }
+
         //Фильтрируем по к-во выводимых постов на странице
         if (isset($url['posts_per_page'])){
             $per_page=(int)$url['posts_per_page'];
@@ -80,6 +100,8 @@ class FS_Filters
                 }
             $query->set('post__not_in',$escl_p);
         }
+
+        return $query;
     }//end filter_curr_product()
 
     public function range_slider()
@@ -157,6 +179,31 @@ class FS_Filters
 
         }
         return $filter;
+
+    }
+
+    /**
+     * фильтрирует посты методом pre_get_posts, берёт данные из адресной строки,
+     * сработает только при наличии параметра fs_filter
+     * @param $query
+     */
+    public function filter_by_query($query){
+        if (!isset($_REQUEST['fs_filter'])) return;
+        if (!$query->is_main_query()) return;
+        $query_string=array();
+
+        if (!empty($_GET)){
+            foreach ($_GET as $key=>$item) {
+                if (in_array($key,$this->exclude)) continue;
+                $query_string[$key]=filter_input(INPUT_GET,$key,FILTER_SANITIZE_STRING);
+            }
+        }
+
+        if (count($query_string)){
+            foreach ($query_string as $query_key=>$query_value) {
+                $query->set($query_key,$query_value);
+            }
+        }
 
     }
 
