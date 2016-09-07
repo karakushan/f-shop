@@ -34,6 +34,10 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
                     echo "<li>".$fs_atributes[$group]['attributes'][$key]."</li>";
                 }
                 break;
+            case 'array':
+                return $fs_atributes_post[$group];
+                break;
+                
 
             default:
                 foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {

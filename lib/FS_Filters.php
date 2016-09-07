@@ -85,20 +85,25 @@ class FS_Filters
             if ($excludeposts)
                 foreach ( $excludeposts as $posts) {
                     $post_id=$posts->object_id;
-                    $post_meta=get_post_meta($posts->object_id,$this->conf->meta['attributes'],false);
-                    if (!empty($post_meta)){
-                        $post_meta=$post_meta[0];
-                    }
                     if ($url['attr'])
                         foreach ($url['attr'] as $key=>$attr) {
-                            if (!isset($post_meta[$key][$attr])) continue;
-                            if ($post_meta[$key][$attr]!=1){
-                                $escl_p[]=$post_id;
-                            }
+                            foreach ($attr as $att_key=>$att) {
+                                if (get_post_meta($post_id, $this->conf->meta['attributes'],false)!=false){
+                                    $post_meta=get_post_meta($post_id,$this->conf->meta['attributes'],false);
+                                    $post_meta=$post_meta[0];
+                                    if (isset($post_meta[$key][$att])){
+                                        if ($post_meta[$key][$att]==1){
+                                            $escl_p[]=$post_id;
+                                        }
+                                    }
 
+                                }
+                            }
                         }
                 }
-            $query->set('post__not_in',$escl_p);
+
+            if (count($escl_p )) $escl_p=array_unique($escl_p);
+            $query->set('post__in',$escl_p);
         }
 
         return $query;
@@ -135,8 +140,7 @@ class FS_Filters
         if ( $type=='option') {
             echo '<select name="'.$group.'" data-fs-action="filter"><option value="">'.$option_default.'</option>';
             foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
-                $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.']'=>$key),urldecode($_SERVER['REQUEST_URI'])));
-
+                $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.'][]'=>$key),urldecode($_SERVER['REQUEST_URI'])));
                 if (isset($url['attr'][$group])){
                     $selected=selected($key,$url['attr'][$group],false);
                 }else{
@@ -149,7 +153,7 @@ class FS_Filters
         if ($type=='list') {
             echo '<ul>';
             foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
-                $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.']'=>$key),urldecode($_SERVER['REQUEST_URI'])));
+                $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.'][]'=>$key),urldecode($_SERVER['REQUEST_URI'])));
                 $class=(isset($url['attr'][$group]) && $key==$url['attr'][$group]?'class="active"':"");
                 echo '<li '.$class.'><a href="'.$redirect_url.'" data-fs-action="filter" >'.$value.'</a></li>';
             }
