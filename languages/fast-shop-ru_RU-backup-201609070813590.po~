@@ -29,22 +29,22 @@ msgstr "Удалить позицию"
 #: lib/FS_Settings_Class.php:66 lib/FS_Settings_Class.php:67 
 #: templates/back-end/orders.php:2
 msgid "Orders"
-msgstr "Заказы"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:76 lib/FS_Settings_Class.php:77 
 #: templates/back-end/delivery.php:2
 msgid "Delivery methods"
-msgstr "Способы доставки"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:86 lib/FS_Settings_Class.php:87 
 #: templates/back-end/fs-atributes.php:2
 msgid "Product Attributes"
-msgstr "Свойства товаров"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:96 lib/FS_Settings_Class.php:97 
 #: templates/back-end/settings.php:2
 msgid "Store settings"
-msgstr "Настройки магазина"
+msgstr ""
 
 #. Plugin Name of the plugin/theme
 msgid "Fast Shop"

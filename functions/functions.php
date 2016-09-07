@@ -160,6 +160,7 @@ function fs_the_price($post_id='', $curency=true, $cur_tag_before=' <span>', $cu
 function fs_total_amount($show=true,$cur_before=' <span>',$cur_after='</span>')
 {
     $price=0;
+    $all_price=array();
     if (isset($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $count){
             $all_price[$key]=$count['count']*fs_get_price($key);
