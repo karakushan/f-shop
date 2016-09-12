@@ -56,18 +56,7 @@ class FS_Filters
             $query->set('orderby','meta_value_num');
         }
 
-        if (!empty($url['sort_custom'])){
 
-            switch ($url['sort_custom']){
-                case 'price_asc':
-                    $query->set('meta_key','fs_price');
-                    $query->set('orderby','meta_value_num');
-                    $query->set('order','ASC');
-
-                    break;
-            }
-
-        }
 
         //Фильтрируем по к-во выводимых постов на странице
         if (isset($url['posts_per_page'])){
@@ -76,41 +65,79 @@ class FS_Filters
             $query->set('posts_per_page',$per_page);
         }
 
+        //Фильтрируем по возрастанию и падению цены
+        if (isset($url['order_type'])){
+            if ($url['order_type']=='price_asc'){
+                $query->set('meta_query',array(
+                        'price'=>array(
+                            'key'     => $this->conf->meta['price'],
+                            'compare' => 'EXISTS',
+                            'type'    => 'NUMERIC',
+                        )
+                    )
+
+                );
+                $query->set('orderby','price');
+                $query->set( 'order' , 'ASC');
+            }
+            if ($url['order_type']=='price_desc'){
+                $query->set('meta_query',array(
+                        'price'=>array(
+                            'key'     => $this->conf->meta['price'],
+                            'compare' => 'EXISTS',
+                            'type'    => 'NUMERIC',
+                        )
+                    )
+
+                );
+                $query->set('orderby','price');
+                $query->set( 'order' , 'DESC');
+            }
+        }
+
         //Фильтруем по свойствам (атрибутам)
         if (isset($url['attr'])){
             global $wpdb;
             $escl_p=array();
             $q=get_queried_object();
-            $excludeposts = $wpdb->get_results( "SELECT object_id FROM $wpdb->term_relationships WHERE term_taxonomy_id='$q->term_id'" );
-            if ($excludeposts)
+
+            $excludeposts = $wpdb->get_results( "SELECT * FROM $wpdb->term_relationships WHERE term_taxonomy_id='$q->term_id'"  );
+          /*  echo '<pre>';
+                                    print_r($excludeposts);
+                                    echo '</pre>';*/
+            if ($excludeposts){
+
                 foreach ( $excludeposts as $posts) {
                     $post_id=$posts->object_id;
-                    if ($url['attr'])
-                    /*    echo "<pre>";
-                        print_r($url['attr']);
-                    echo "</pre>";*/
+//                    echo $post_id.'<br>';
 
-                        $esc=true;
-                    foreach ($url['attr'] as $key=>$attr) {
-                        //$key - название группы свойств
+                    if ($url['attr'])
+                        foreach ($url['attr'] as $key=>$attr) {
+
+                            //$key - название группы свойств
                             // $att_key - название материала
                             foreach ($attr as $att_key=>$att) {
+
                                 if (get_post_meta($post_id, $this->conf->meta['attributes'],false)!=false){
                                     $post_meta=get_post_meta($post_id,$this->conf->meta['attributes'],false);
                                     $post_meta=$post_meta[0];
-                                    if (isset($post_meta[$key][$att_key]) && $post_meta[$key][$att_key]==1) $esc=false;
+                                    $meta_value=isset($post_meta[$key][$att_key])?$post_meta[$key][$att_key]:0;
+                                    /*echo '<pre>';
+                                    print_r($post_meta);
+                                    echo '</pre>';*/
+
                                 }
+                                //echo 'Запись: '.$post_id. ', Группа: '. $key.', Название материала: '.$att_key.', Значение: '.$meta_value.'<br>';
                             }
 
                         }
-                        if ($esc) $escl_p[]=$post_id;
-                    unset($esc);
-
-
+                    if ($meta_value==0) $escl_p[]=$post_id;
                 }
+                print_r($escl_p);
+                $query->set('post__not_in',array_unique($escl_p));
+            }
 
 
-            $query->set('post__not_in',array_unique($escl_p));
         }
 
         return $query;

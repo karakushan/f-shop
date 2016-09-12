@@ -90,6 +90,11 @@ $('.close').live('click',function() {
 
 // валидация и отправка формы заказа
 var validator =$(".order-send").validate({
+	rules: {
+		name: {
+			required: true
+		}
+	},
 	submitHandler: function(form) {
 		var formData=$('.order-send').serialize();
 		$.ajax({
@@ -108,18 +113,14 @@ var validator =$(".order-send").validate({
 				console.log(jsonData.wpdb_error);
 			}
 			document.location.href=jsonData.redirect;
-            
+
 		});
 
 
 	}
 });
 
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-  $.validator.setDefaults({
-        ignore: []
-    });
-})
+
 
 //Изменение к-ва добавляемых продуктов
 $('[data-fs-action=change_count]').on('change', function(event) {
@@ -235,9 +236,9 @@ jQuery(document).ready(function($) {
  * @param {key}    string  the key to set
  * @param {val}    string  value
  */
-var addUrlParam = function(search, key, val){
-	var newParam = key + '=' + val,
-		params = '&' + newParam;
+ var addUrlParam = function(search, key, val){
+ 	var newParam = key + '=' + val,
+ 	params = '&' + newParam;
 
 	// If the "search" string exists, then build params from it
 	if (search) {
@@ -255,9 +256,9 @@ var addUrlParam = function(search, key, val){
 
 (function ($) {
 
-    var u  = new Url;
-    var p_start=u.query.price_start==undefined ? 0 : u.query.price_start;
-    var p_end=u.query.price_end==undefined ? 2500 : u.query.price_end;
+	var u  = new Url;
+	var p_start=u.query.price_start==undefined ? 0 : u.query.price_start;
+	var p_end=u.query.price_end==undefined ? 2500 : u.query.price_end;
 
 	$( "#slider-range" ).slider({
 		range: true,
@@ -269,22 +270,22 @@ var addUrlParam = function(search, key, val){
 		},
 		change: function( event, ui ) {
 
-            u.query.fs_filter=1;
-            u.query.price_start=ui.values[ 0 ];
-            u.query.price_end=ui.values[ 1 ];
+			u.query.fs_filter=1;
+			u.query.price_start=ui.values[ 0 ];
+			u.query.price_end=ui.values[ 1 ];
             // console.log(u.toString());
             window.location.href=u.toString();
 
 
-		}
-	});
+        }
+    });
 	$( "#amount_show" ).html( $( "#slider-range" ).slider( "values", 0 ) +
 		" грн. " + $( "#slider-range" ).slider( "values", 1 )+" грн." );
 
-    $('[data-fs-action="filter"]').on('change',function (e) {
-        e.preventDefault();
-        window.location.href=$(this).val();
+	$('[data-fs-action="filter"]').on('change',function (e) {
+		e.preventDefault();
+		window.location.href=$(this).val();
 
-    })
+	})
 })(jQuery)
 
