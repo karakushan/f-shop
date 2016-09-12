@@ -7,7 +7,10 @@ class FS_Post_Type
 {
     const POST_TYPE	= "product";
     protected $config;
-
+    public $custom_tab_title;
+    public $custom_tab_body;
+    public $tabs;
+    public $product_id;
 
     /**
      * The Constructor
@@ -19,8 +22,39 @@ class FS_Post_Type
         add_action('init', array($this, 'init'));
         add_action('admin_init', array($this, 'admin_init'));
         add_action( 'save_post', array($this,'save_fs_fields' ));
+        $this->product_id=isset($_GET['post'])?(int)$_GET['post']:0;
 
         $this->config=new FS_Config();
+        $this->tabs=array(
+            '0'=>
+                array(
+                    'title'=>__('Prices','fast-shop'),
+                    'on'=>true,
+                    'body'=>'',
+                    'template'=>''
+                ),
+            '1'=>
+                array(
+                    'title'=>__('Attributes','fast-shop'),
+                    'on'=>true,
+                    'body'=>'',
+                    'template'=>''
+                ),
+            '2'=>
+                array(
+                    'title'=>__('Gallery','fast-shop'),
+                    'on'=>true,
+                    'body'=>'',
+                    'template'=>''
+                ),
+            '3'=>
+                array(
+                    'title'=>__('Discounts','fast-shop'),
+                    'on'=>true,
+                    'body'=>'',
+                    'template'=>''
+                ),
+        );
     } // END public function __construct()
 
     /**
@@ -141,12 +175,36 @@ class FS_Post_Type
      */
     public function add_inner_meta_boxes($post)
     {
-        global $post;
-        $mft=get_post_meta($post->ID, $this->config->meta['gallery'], false);
-        // print_r($mft);
+        $this->product_id=$post->ID;
+        echo '<div id="fs-tabs" class="fs-metabox">';
+        if ($this->tabs){
+            echo '<ul>';
+            foreach ($this->tabs as $key=>$tab) {
+                echo '<li><a href="#tab-'.$key.'">'.$tab['title'].'</a></li>';
 
-        // Render the job order metabox
-        include($this->config->data['plugin_path'].'/templates/back-end/products_metabox.php');
-    } // END public function add_inner_meta_boxes($post)
+            }
+            echo '</ul>';
+            foreach ($this->tabs as $key_body=>$tab_body) {
+
+                $template_default = PLUGIN_PATH.'templates/back-end/metabox\tab-'.$key_body.'.php';
+                $template_file=empty($tab_body['template']) ? $template_default : $tab_body['template'];
+
+                echo '<div id="tab-'.$key_body.'">';
+                if (empty($tab_body['body'])){
+                    if (file_exists($template_file)){
+                        include($template_file);
+                    }
+                }else{
+                    echo $tab_body['body'];
+                }
+                echo '</div>';
+
+            }
+
+        }
+        echo '</div>';
+    }
+
+
 
 } // END class Post_Type_Template

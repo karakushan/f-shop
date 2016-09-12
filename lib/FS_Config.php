@@ -49,7 +49,9 @@ class FS_Config
             'action_page'=>'fs_page_action',
             'displayed_price'=>'fs_displayed_price',
             'attributes'=>'fs_attributes',
-            'gallery'=>'fs_galery'
+            'gallery'=>'fs_galery',
+            'fs_gallery_path'=>'fs_gallery_path'
+
         );
     }
 
