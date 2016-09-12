@@ -86,24 +86,31 @@ class FS_Filters
                 foreach ( $excludeposts as $posts) {
                     $post_id=$posts->object_id;
                     if ($url['attr'])
-                        foreach ($url['attr'] as $key=>$attr) {
+                    /*    echo "<pre>";
+                        print_r($url['attr']);
+                    echo "</pre>";*/
+
+                        $esc=true;
+                    foreach ($url['attr'] as $key=>$attr) {
+                        //$key - название группы свойств
+                            // $att_key - название материала
                             foreach ($attr as $att_key=>$att) {
                                 if (get_post_meta($post_id, $this->conf->meta['attributes'],false)!=false){
                                     $post_meta=get_post_meta($post_id,$this->conf->meta['attributes'],false);
                                     $post_meta=$post_meta[0];
-                                    if (isset($post_meta[$key][$att])){
-                                        if ($post_meta[$key][$att]==1){
-                                            $escl_p[]=$post_id;
-                                        }
-                                    }
-
+                                    if (isset($post_meta[$key][$att_key]) && $post_meta[$key][$att_key]==1) $esc=false;
                                 }
                             }
+
                         }
+                        if ($esc) $escl_p[]=$post_id;
+                    unset($esc);
+
+
                 }
 
-            if (count($escl_p )) $escl_p=array_unique($escl_p);
-            $query->set('post__in',$escl_p);
+
+            $query->set('post__not_in',array_unique($escl_p));
         }
 
         return $query;

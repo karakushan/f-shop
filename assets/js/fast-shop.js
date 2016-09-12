@@ -89,7 +89,7 @@ $('.close').live('click',function() {
 });
 
 // валидация и отправка формы заказа
-$(".order-send").validate({
+var validator =$(".order-send").validate({
 	submitHandler: function(form) {
 		var formData=$('.order-send').serialize();
 		$.ajax({
@@ -114,6 +114,12 @@ $(".order-send").validate({
 
 	}
 });
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  $.validator.setDefaults({
+        ignore: []
+    });
+})
 
 //Изменение к-ва добавляемых продуктов
 $('[data-fs-action=change_count]').on('change', function(event) {
