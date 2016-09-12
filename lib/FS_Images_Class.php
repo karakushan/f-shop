@@ -29,7 +29,7 @@ class FS_Images_Class
 			$images=array();
 		}
 		$galery=get_post_meta( $post_id, $this->config->meta['gallery'], false);
-		$galerys=$galery[0];
+		$galerys=isset($galery[0])?$galery[0]:array();
 
 		if (has_post_thumbnail( $post_id)) {
 			$atach_id = get_post_thumbnail_id($post_id);
