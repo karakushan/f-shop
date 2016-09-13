@@ -97,14 +97,17 @@ class FS_Filters
 
         //Фильтруем по свойствам (атрибутам)
         if (isset($url['attr'])){
+
             global $wpdb;
             $escl_p=array();
             $q=get_queried_object();
+            $term_id=$q->term_id;
+            $terms_children=get_term_children($term_id,'catalog');
+            $terms_parent[]=$term_id;
+            $terms_all=array_merge($terms_parent,$terms_children);
+            $impl=implode(',',$terms_all);
+            $excludeposts = $wpdb->get_results( "SELECT * FROM $wpdb->term_relationships WHERE term_taxonomy_id IN ($impl)"  );
 
-            $excludeposts = $wpdb->get_results( "SELECT * FROM $wpdb->term_relationships WHERE term_taxonomy_id='$q->term_id'"  );
-          /*  echo '<pre>';
-                                    print_r($excludeposts);
-                                    echo '</pre>';*/
             if ($excludeposts){
 
                 foreach ( $excludeposts as $posts) {
@@ -127,13 +130,15 @@ class FS_Filters
                                     echo '</pre>';*/
 
                                 }
-                                //echo 'Запись: '.$post_id. ', Группа: '. $key.', Название материала: '.$att_key.', Значение: '.$meta_value.'<br>';
+//                                echo 'Запись: '.$post_id. ', Группа: '. $key.', Название материала: '.$att_key.', Значение: '.$meta_value.'<br>';
                             }
 
                         }
                     if ($meta_value==0) $escl_p[]=$post_id;
                 }
-                print_r($escl_p);
+                print_r( $q);
+
+
                 $query->set('post__not_in',array_unique($escl_p));
             }
 
