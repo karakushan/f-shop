@@ -67,6 +67,7 @@ class FS_Filters
 
         //Фильтрируем по возрастанию и падению цены
         if (isset($url['order_type'])){
+            //сортируем по цене в возрастающем порядке
             if ($url['order_type']=='price_asc'){
                 $query->set('meta_query',array(
                         'price'=>array(
@@ -80,6 +81,7 @@ class FS_Filters
                 $query->set('orderby','price');
                 $query->set( 'order' , 'ASC');
             }
+            //сортируем по цене в спадающем порядке
             if ($url['order_type']=='price_desc'){
                 $query->set('meta_query',array(
                         'price'=>array(
@@ -93,6 +95,26 @@ class FS_Filters
                 $query->set('orderby','price');
                 $query->set( 'order' , 'DESC');
             }
+            //сортируем по названию по алфавиту
+            if ($url['order_type']=='name_asc'){
+                $query->set('orderby','title');
+                $query->set( 'order' , 'ASC');
+            }
+            //сортируем по названию по алфавиту в обратном порядке
+            if ($url['order_type']=='name_desc'){
+                $query->set('orderby','title');
+                $query->set( 'order' , 'DESC');
+            }
+            if ($url['order_type']=='field_action'){
+                $query->set('meta_query',array(
+                      array(
+                            'key'     => $this->conf->meta['action'],
+                            'compare' => 'EXISTS',
+                        )
+                    )
+                );
+            }
+
         }
 
         //Фильтруем по свойствам (атрибутам)
@@ -113,10 +135,8 @@ class FS_Filters
                 foreach ( $excludeposts as $posts) {
                     $post_id=$posts->object_id;
 //                    echo $post_id.'<br>';
-
                     if ($url['attr'])
                         foreach ($url['attr'] as $key=>$attr) {
-
                             //$key - название группы свойств
                             // $att_key - название материала
                             foreach ($attr as $att_key=>$att) {
@@ -136,15 +156,9 @@ class FS_Filters
                         }
                     if ($meta_value==0) $escl_p[]=$post_id;
                 }
-                print_r( $q);
-
-
                 $query->set('post__not_in',array_unique($escl_p));
             }
-
-
         }
-
         return $query;
     }//end filter_curr_product()
 
@@ -249,5 +263,4 @@ class FS_Filters
         }
 
     }
-
 }

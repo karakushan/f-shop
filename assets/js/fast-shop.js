@@ -108,7 +108,9 @@ var validator =$(".order-send").validate({
 		})
 		.done(function(result) {
 			$('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
+			console.log(result);
 			var jsonData=JSON.parse(result);
+
 			if(jsonData.wpdb_error){
 				console.log(jsonData.wpdb_error);
 			}
@@ -210,6 +212,17 @@ jQuery(document).ready(function($) {
 			.always(function() {
 
 			});
+		}
+	});
+});
+
+//очищаем корзину
+jQuery(document).ready(function($) {
+	$('[data-fs-type="delete-cart"]').on('click', function(event) {
+		event.preventDefault();
+		console.log('click');
+		if (confirm('Вы точно хотите удалить все товары из корзины?')) {
+			document.location.href=$(this).data('url');
 		}
 	});
 });

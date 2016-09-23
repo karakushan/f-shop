@@ -41,16 +41,17 @@ class FS_Config
 
         //Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
         $this->meta=array(
-            'price'=>'fs_price',
-            'wholesale_price'=>'fs_wholesale_price',
-            'discount'=>'fs_discount',
-            'availability'=>'fs_availability',
-            'action'=>'fs_actions',
-            'action_page'=>'fs_page_action',
-            'displayed_price'=>'fs_displayed_price',
-            'attributes'=>'fs_attributes',
-            'gallery'=>'fs_galery',
-            'fs_gallery_path'=>'fs_gallery_path'
+            'price'=>'fs_price',//базовая цена
+            'wholesale_price'=>'fs_wholesale_price',//цена для оптовиков
+            'discount'=>'fs_discount',//размер скидки
+            'availability'=>'fs_availability',//наличие на складе
+            'remaining_amount'=>'remaining_amount',//к-во товаров доступных для покупки
+            'action'=>'fs_actions',//включить  или выключить акцию
+            'action_page'=>'fs_page_action',//сылка на страницу описывающую акцию на товар
+            'displayed_price'=>'fs_displayed_price',//тображаемая цена
+            'attributes'=>'fs_attributes',//атрибуты товара
+            'gallery'=>'fs_galery',//галерея
+            'fs_gallery_path'=>'fs_gallery_path'//ссылка на папку с изображениями
 
         );
     }

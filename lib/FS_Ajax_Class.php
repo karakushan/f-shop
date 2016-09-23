@@ -26,8 +26,19 @@ class FS_Ajax_Class
            ini_set('display_errors', 1);
            ini_set('display_startup_errors', 1);*/
 
-        if ( !wp_verify_nonce( $_REQUEST['_wpnonce']) || !isset($_SESSION['cart']))
-            die ( 'не пройдена верификация формы или не существует сессия корзины');
+        if ( !wp_verify_nonce( $_REQUEST['_wpnonce'])) die ( 'не пройдена верификация формы');
+
+        if (isset($_REQUEST['fast-order']) && is_numeric($_REQUEST['fast-order'])){
+            $product_id=(int)$_REQUEST['fast-order'];
+            $product_count=(int)$_REQUEST['count'];
+            $order_type='form';
+        }else{
+            if (empty($_SESSION['cart'])){
+                die ( 'не найдена сессия корзины');
+            }else{
+                $order_type='session';
+            }
+        }
 
         global $wpdb;
         $wpdb->show_errors();
@@ -53,6 +64,8 @@ class FS_Ajax_Class
         $delivery_address=filter_input(INPUT_POST,'delivery_address',FILTER_SANITIZE_STRING);
         $comments=filter_input(INPUT_POST,'comments',FILTER_SANITIZE_STRING);
 
+        $insert_products=isset($_SESSION['cart'])?serialize($_SESSION['cart']):serialize(array($product_id));
+
         //Добавляем  данные заказа в базу
         $wpdb->insert(
             $fs_config->data['table_name'],
@@ -63,16 +76,21 @@ class FS_Ajax_Class
                 'telephone' => $customer_phone,
                 'comments' =>$comments,
                 'delivery' =>$delivery,
-                'products' =>serialize($_SESSION['cart']),
+                'products' =>$insert_products,
                 'summa' =>fs_total_amount(false)
             ),
             array( '%s','%s','%d','%s','%s','%s','%s','%d')
         );
 
         $products='';
-        foreach ($_SESSION['cart'] as $key => $count) {
-            $products.='<li>'.get_the_title($key).' - '.fs_get_price($key).' '.fs_currency().'</li>';
+        if ($order_type=='form'){
+            $products.='<li>'.get_the_title($product_id).' - '.fs_get_price($product_id).' '.fs_currency().'('.$product_count.' шт.)</li>';
+        }else{
+            foreach ($_SESSION['cart'] as $key => $count) {
+                $products.='<li>'.get_the_title($key).' - '.fs_get_price($key).' '.fs_currency().'('.$count['count'].' шт.)</li>';
+            }
         }
+
 
         $order_id=$wpdb->insert_id;
         $_SESSION['last_order_id']=$order_id;

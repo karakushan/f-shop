@@ -105,6 +105,11 @@ class FS_Action_Class
 
 
 				break;
+                case "delete-cart":
+                    unset($_SESSION['cart']);
+                    wp_redirect(remove_query_arg(array('fs_action','_wpnonce') ) );
+                    exit();
+                    break;
 
 				default:
 				exit;

@@ -506,3 +506,12 @@ function fs_products_loop(){
     }
 }
 
+/**
+ * Эта функция выводит кнопку удаления всех товаров в корзине
+ * @param string $text - надпись на кнопке (мультиязык)
+ * @param string $class - класс присваемый кнопке
+ */
+function fs_delete_cart($text='Remove all items', $class=''){
+    echo '<button class="'.sanitize_html_class( $class,'').'" data-fs-type="delete-cart" data-url="'.wp_nonce_url(add_query_arg(array("fs_action"=>"delete-cart")),"fs_action").'">'.__($text,'fast-shop').'</button> ';
+}
+
