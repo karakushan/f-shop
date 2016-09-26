@@ -48,6 +48,7 @@ class FS_Config
             'remaining_amount'=>'remaining_amount',//к-во товаров доступных для покупки
             'action'=>'fs_actions',//включить  или выключить акцию
             'action_page'=>'fs_page_action',//сылка на страницу описывающую акцию на товар
+            'action_price'=>'fs_action_price',//акционная цена, перебивает цену поставленнуюю полем 'discount'
             'displayed_price'=>'fs_displayed_price',//тображаемая цена
             'attributes'=>'fs_attributes',//атрибуты товара
             'gallery'=>'fs_galery',//галерея
