@@ -37,7 +37,7 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
             case 'array':
                 return $fs_atributes_post[$group];
                 break;
-                
+
 
             default:
                 foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
@@ -71,10 +71,10 @@ function fs_lightslider($post_id='', $args='')
         echo "<script> var product_sc={";
         echo $args;
         echo "}; 
-		jQuery(document).ready(function($) {
-			$('#product_slider').lightSlider(product_sc); 
-		});
-	</script>";
+        jQuery(document).ready(function($) {
+         $('#product_slider').lightSlider(product_sc); 
+     });
+ </script>";
 
     }
 
@@ -90,9 +90,27 @@ function fs_get_price($post_id='')
     global $post;
     $config=new \FS\FS_Config();
     $post_id=( empty( $post_id) ? $post->ID : (int)$post_id );
+
+    //устанавливаем правильную цену
     $price=get_post_meta( $post_id, $config->meta['price'], true );
-    $price=(empty($price) ? 0 :(int)$price);
-    $price=round($price,2);
+    $price=empty($price) ? 0 :(int)$price;
+
+    //получаем размер скидки (в процентах или в фиксированной сумме)
+    $action=get_post_meta( $post_id,$config->meta['discount'], true );
+    $action=empty($action)?0:(float)$action;
+
+    //узнаём какой тип скидки активирован в настройках (% или фикс)
+    $action_type=isset($config->options['action_count'])&&$config->options['action_count']==1?1:0;
+
+    //если цена равна нулю или скидака нет смысла делать то что в условии ниже и всёже если установлено, то корректируеми цену
+    if ($price>0 && $action>0){
+        if($action_type==1){
+            $price=round($price-($price*$action/100),2);//расчёт цены если скидка в процентах, с округлением до 2 знаков
+        }else{
+            $price=round($price-$action,2);//расчёт цены если скидка в фикс. к-ве, с округлением до 2 знаков
+        }
+
+    }
     return $price;
 }
 
@@ -119,38 +137,30 @@ function fs_row_price($post_id, $count, $curency=true, $cur_tag_before=' <span>'
     return $price;
 }
 
-//Выводит текущую цену с символом валюты и с учётом скидки
+
 /**
- * @param string $post_id
- * @param bool $curency
- * @param string $cur_tag_before
- * @param string $cur_tag_after
+ * Выводит текущую цену с учётом скидки
+ * @param string $post_id  - id товара
+ * @param string $wrap     - html обёртка для цены
  */
-function fs_the_price($post_id='', $curency=true, $cur_tag_before=' <span>', $cur_tag_after='</span>')
+function fs_the_price($post_id='',$wrap="<span>%s</span>")
 {
     global $post;
+    $config=new \FS\FS_Config();
     $cur_symb=fs_currency();
     $post_id=empty($post_id)?$post->ID:$post_id;
-
-    $price=get_post_meta( $post_id, 'fs_price', true );
-    $action=get_post_meta( $post_id, 'fs_discount', true );
-    $displayed_price=get_post_meta($post_id, 'fs_displayed_price', true);
-    if (!$action) {
-        $action=0;
-    }
-    if (!$price) {
-        $price=0;
-    }
-    $price=round($price-($price*$action/100),2);
-    $price=number_format($price,2,fs_option('currency_delimiter','.'),'');
+    $displayed_price=get_post_meta($post_id,$config->meta['displayed_price'],1);
+    $displayed_price=!empty($displayed_price) ? $displayed_price : '';
+    $price=fs_get_price($post_id);
+    $price=number_format($price,2,fs_option('currency_delimiter','.'),' ');
 
     if ($displayed_price!="") {
+
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
     } else {
-        echo $price.$cur_tag_before.$cur_symb.$cur_tag_after;
+        echo sprintf($wrap,$price.' <span>'.$cur_symb.'</span>');
     }
-
 
 }
 
@@ -170,7 +180,7 @@ function fs_total_amount($show=true,$cur_before=' <span>',$cur_after='</span>')
             $all_price[$key]=$count['count']*fs_get_price($key);
         }
         $price=round(array_sum($all_price),2);
-        $price=number_format($price,2,fs_option('currency_delimiter','.'),'');
+        $price=number_format($price,2,fs_option('currency_delimiter','.'),' ');
 
     }
 
@@ -275,22 +285,30 @@ function fs_product_count($show=false)
 
 
 //Выводит текущую цену с символом валюты без учёта скидки
-function fs_old_price($post_id='',$curency=true,$cur_tag_before=' <span>',$cur_tag_after='</span>')
+/**
+ * @param string $post_id - id товара
+ * @param bool $echo - вывести или возвратить (по умолчанию вывести)
+ * @param string $wrap - html обёртка для цены
+ * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
+ */
+function fs_base_price($post_id='',$echo=true, $wrap='<span>%s</span>')
 {
     global $post;
+    $config=new \FS\FS_Config();
     $post_id=empty($post_id) ? $post->ID : $post_id;
+    $price=get_post_meta( $post_id, 'fs_price', 1);
+    if ( $price==fs_get_price($post_id)) return;
+    $price=empty($price) ? 0 : (float)$price;
+    
 
-    $action=get_post_meta( $post_id, 'fs_discount', true );
-    if($action=='' || $action<=0) return;
+    $price=number_format($price,2,fs_option('currency_delimiter','.'),' ');
+    $cur_symb=fs_currency();
 
-    $price=get_post_meta( $post_id, 'fs_price', true );
-    if (!$price) {
-        $price=0;
+    if ($echo===true){
+        printf($wrap,$price.' <span>'.$cur_symb.'</span>');
+    }else{
+        return $price;
     }
-    if ($curency) {
-        $cur_symb=fs_currency();
-    }
-    echo $price.$cur_tag_before.$cur_symb.$cur_tag_after;
 }
 
 
@@ -361,7 +379,7 @@ function fs_cart_widget()
         $template=$template_theme;
 
     }
-    echo "<div id=\"fs_cart_widget\">";
+    echo "<div id=\"fs_cart_widget\" class=\"fs_cart_widget\">";
     require $template;
     echo "</div>";
 }
@@ -402,14 +420,11 @@ function fs_checkout_url($show=true)
 function fs_aviable_product($post_id='', $aviable_text='', $no_aviable_text='')
 {
     global $post;
+    $config=new FS\FS_Config;
     $product_id=empty($post_id) ? $post->ID : (int)$post_id;
-
-    $availability=get_post_meta($product_id,'fs_availability',true);
-    if ($availability==1) {
-        echo $aviable_text;
-    }else{
-        echo $no_aviable_text;
-    }
+    $availability=get_post_meta($product_id,$config->meta['availability'],true);
+    $aviable=$availability==1?$aviable_text:$no_aviable_text;
+    echo $aviable;
 }
 
 /**
@@ -513,5 +528,27 @@ function fs_products_loop(){
  */
 function fs_delete_cart($text='Remove all items', $class=''){
     echo '<button class="'.sanitize_html_class( $class,'').'" data-fs-type="delete-cart" data-url="'.wp_nonce_url(add_query_arg(array("fs_action"=>"delete-cart")),"fs_action").'">'.__($text,'fast-shop').'</button> ';
+}
+
+/**
+ * Выводит процент или сумму скидки(в зависимости от настрорек)
+ * @param  string $product_id - id товара(записи)
+ * @param  string $wrap - html обёртка для скидки
+ * @return выводит или возвращает скидку если таковая имеется или пустая строка
+ */
+function fs_amount_discount($product_id='',$echo=true,$wrap='<span>%s</span>'){
+    global $post;
+    $config=new FS\FS_Config;
+    $product_id=empty($product_id)?$post->ID:$product_id;
+    $action_symbol=isset($config->options['action_count']) && $config->options['action_count']==1 ? '<span>%</span>':'<span>'.fs_currency().'</span>';
+    $discount_meta=(float)get_post_meta($product_id,$config->meta['discount'],1);
+    $discount=empty($discount_meta)?'': sprintf($wrap,$discount_meta.' '.$action_symbol);
+    $discount_return=empty($discount_meta)? 0 :$discount_meta;
+    if ($echo) {
+        echo $discount;
+    }else{
+        return $discount_return;
+    }
+
 }
 

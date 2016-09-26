@@ -20,6 +20,11 @@
                     <input type="text" name="fs_option[currency_delimiter]" value="<?php echo fs_option('currency_delimiter','.') ?>">
 
                 </p>
+                <p>
+                    <label for="currency_delimiter">Использовать копейки</label><br>
+                    <input type="checkbox" name="fs_option[price_cents]" value="1">
+
+                </p>
             </div>
             <div id="tabs-2">
 

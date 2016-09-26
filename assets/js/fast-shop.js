@@ -13,8 +13,8 @@ jQuery(document).ready(function($) {
 			}
 		})
 		.done(function(result) {
-			// console.log(result);
-			$('#fs_cart_widget').replaceWith(result);
+			console.log(result);
+			$('#fs_cart_widget,.fs_cart_widget').replaceWith(result);
 			curent.find('.fs-preloader ').fadeOut('fast');
 			curent.find('.send_ok').fadeIn('slow');
 			$('#curent_product').html(productName);

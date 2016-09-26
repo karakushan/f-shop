@@ -28,28 +28,28 @@ class FS_Post_Type
         $this->tabs=array(
             '0'=>
                 array(
-                    'title'=>__('Prices','fast-shop'),
+                    'title'=>'Prices',
                     'on'=>true,
                     'body'=>'',
                     'template'=>''
                 ),
             '1'=>
                 array(
-                    'title'=>__('Attributes','fast-shop'),
+                    'title'=>'Attributes',
                     'on'=>true,
                     'body'=>'',
                     'template'=>''
                 ),
             '2'=>
                 array(
-                    'title'=>__('Gallery','fast-shop'),
+                    'title'=>'Gallery',
                     'on'=>true,
                     'body'=>'',
                     'template'=>''
                 ),
             '3'=>
                 array(
-                    'title'=>__('Discounts','fast-shop'),
+                    'title'=>'Discounts',
                     'on'=>true,
                     'body'=>'',
                     'template'=>''
@@ -180,14 +180,15 @@ class FS_Post_Type
         if ($this->tabs){
             echo '<ul>';
             foreach ($this->tabs as $key=>$tab) {
-                echo '<li><a href="#tab-'.$key.'">'.$tab['title'].'</a></li>';
+                echo '<li><a href="#tab-'.$key.'">'.__( $tab['title'], 'fast-shop' ).'</a></li>';
 
             }
             echo '</ul>';
             foreach ($this->tabs as $key_body=>$tab_body) {
 
-                $template_default = PLUGIN_PATH.'templates/back-end/metabox\tab-'.$key_body.'.php';
+                $template_default = PLUGIN_PATH.'templates/back-end/metabox/tab-'.$key_body.'.php';
                 $template_file=empty($tab_body['template']) ? $template_default : $tab_body['template'];
+               
 
                 echo '<div id="tab-'.$key_body.'">';
                 if (empty($tab_body['body'])){
