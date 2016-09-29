@@ -20,31 +20,31 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
     if ($fs_atributes_post) {
         switch ($type) {
             case 'option':
-                echo '<select name="'.$group.'" data-fs-element="attr" class="'.$class.'" data-product-id="'.$post_id.'">';
-                echo '<option value="">'.$option_default.'</option>';
-                foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                    if (!$fs_atribute) continue;
-                    echo "<option value=\"".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
-                }
-                echo '</select>';
-                break;
+            echo '<select name="'.$group.'" data-fs-element="attr" class="'.$class.'" data-product-id="'.$post_id.'">';
+            echo '<option value="">'.$option_default.'</option>';
+            foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+                if (!$fs_atribute) continue;
+                echo "<option value=\"".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
+            }
+            echo '</select>';
+            break;
             case 'list':
-                foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                    if (!$fs_atribute) continue;
-                    echo "<li>".$fs_atributes[$group]['attributes'][$key]."</li>";
-                }
-                break;
+            foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+                if (!$fs_atribute) continue;
+                echo "<li>".$fs_atributes[$group]['attributes'][$key]."</li>";
+            }
+            break;
             case 'array':
-                return $fs_atributes_post[$group];
-                break;
+            return $fs_atributes_post[$group];
+            break;
 
 
             default:
-                foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                    if (!$fs_atribute) continue;
-                    echo "<option value=\"".$fs_atributes_post[$group]['slug'].":".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
-                }
-                break;
+            foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+                if (!$fs_atribute) continue;
+                echo "<option value=\"".$fs_atributes_post[$group]['slug'].":".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
+            }
+            break;
         }
 
     }
@@ -72,11 +72,11 @@ function fs_lightslider($post_id='', $args='')
         echo $args;
         echo "}; 
         jQuery(document).ready(function($) {
-         $('#product_slider').lightSlider(product_sc); 
-     });
- </script>";
+           $('#product_slider').lightSlider(product_sc); 
+       });
+   </script>";
 
-    }
+}
 
 }
 
@@ -93,25 +93,37 @@ function fs_get_price($post_id='')
 
     //устанавливаем правильную цену
     $price=get_post_meta( $post_id, $config->meta['price'], true );
-    $price=empty($price) ? 0 :(int)$price;
+    $price=empty($price) ? 0 :(float)$price;
 
     //получаем размер скидки (в процентах или в фиксированной сумме)
     $action=get_post_meta( $post_id,$config->meta['discount'], true );
     $action=empty($action)?0:(float)$action;
 
+    //получаем поле акционная цена, которое должно перебить автоматические акционные цены
+    $action_price=get_post_meta( $post_id,$config->meta['action_price'], true );
+    $action=empty($action_price)?0:(float)$action_price;
+
+
+
+
     //узнаём какой тип скидки активирован в настройках (% или фикс)
     $action_type=isset($config->options['action_count'])&&$config->options['action_count']==1?1:0;
 
     //если цена равна нулю или скидака нет смысла делать то что в условии ниже и всёже если установлено, то корректируеми цену
-    if ($price>0 && $action>0){
-        if($action_type==1){
-            $price=round($price-($price*$action/100),2);//расчёт цены если скидка в процентах, с округлением до 2 знаков
+    if ($action_price>0) {
+        $price=$action_price;
+    }else{
+        if ($price>0 && $action>0){
+            if($action_type==1){
+            $price=$price-($price*$action/100);//расчёт цены если скидка в процентах, с округлением до 2 знаков
         }else{
-            $price=round($price-$action,2);//расчёт цены если скидка в фикс. к-ве, с округлением до 2 знаков
+            $price=$price-$action;//расчёт цены если скидка в фикс. к-ве, с округлением до 2 знаков
         }
 
     }
-    return $price;
+}
+
+return $price;
 }
 
 //Отображает общую сумму продуктов с одним артикулом
@@ -225,7 +237,7 @@ function fs_get_cart()
 
                 'price'=>$price.' <span>'.$cur_symb.'</span>',
                 'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
-            );
+                );
         }
     }
     return $products;
@@ -245,15 +257,15 @@ function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
     $class="class=\"$class\"";
     switch ($type){
         case 'link':
-            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
-            break;
+        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+        break;
         case 'button':
-            echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
-            break;
+        echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
+        break;
         default:
-            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
 
-            break;
+        break;
     }
 
 
@@ -439,14 +451,14 @@ function fs_quantity_product($product_id='',$type='number')
     $product_id=!empty($product_id)?$product_id : $post->ID;
     switch ($type){
         case 'number':
-            echo '<input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-            break;
+        echo '<input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        break;
         case 'text':
-            echo '<input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-            break;
+        echo '<input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        break;
         default:
-            echo '<input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-            break;
+        echo '<input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        break;
     }
 
 }
@@ -473,6 +485,12 @@ function fs_action($post_id=""){
     $config=new \FS\FS_Config();
     $action=get_post_meta($post_id,$config->meta['action'],1);
     $action=(empty($action)?false:true);
+    $action_auto=fs_option('action_label');
+    if ($action_auto==1) {
+        if(fs_get_price($post_id)<fs_base_price($post_id,false)){
+            $action=true;
+        }
+    }
     return $action;
 }
 

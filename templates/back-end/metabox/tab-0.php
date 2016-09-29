@@ -1,7 +1,12 @@
 <p>
     <label for="fs_price">Цена</label>
     <br>
-    <input type="number" id="fs_price" name="fs_price" value="<?php echo @get_post_meta($post->ID, 'fs_price', true); ?>" />
+    <input type="text" id="fs_price" name="fs_price" value="<?php echo @get_post_meta($post->ID, 'fs_price', true); ?>" />
+</p>
+<p>
+    <label for="fs_action_price">Акционная цена</label>
+    <br>
+    <input type="text" id="fs_action_price" name="fs_action_price" value="<?php echo @get_post_meta($post->ID, 'fs_action_price', true); ?>" />
 </p>
 <p>
     <label for="fs_wholesale_price">Оптовая цена</label><br>

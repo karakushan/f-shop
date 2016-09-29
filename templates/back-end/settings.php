@@ -79,9 +79,15 @@
                     <label class="label-light"><input type="radio" name="fs_option[action_count]" id="action_count2" value="1" <?php checked('1',fs_option('action_count')) ?>>в процентах</label>
                 </p>
                 <p>
-                    <label for="action_summa">Размер скидки</label><br>
+                    <label for="action_summa">Размер скидки <span>(действует глобально, по всему сайту)</span></label><br>
                     <input type="number" min="1" name="fs_option[action_summa]" id="action_summa" value="<?php echo fs_option('action_summa') ?>">
                 </p>
+                <p>
+                    <label for="action_label">Включать отметку акция атоматически <span>(надпись акция включится без отметки чекбокса, при наличии акционной цены)</span></label><br>
+                    <input type="checkbox" name="fs_option[action_label]" value="1" <?php checked(1,fs_option('action_label')) ?>>
+
+                </p>
+
             </div>
             <div id="tabs-4">
                 <p>
