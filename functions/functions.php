@@ -159,7 +159,7 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
     } else {
-        echo sprintf($wrap,$price.' <span>'.$cur_symb.'</span>');
+       printf($wrap,$price.' <span>'.$cur_symb.'</span>');
     }
 
 }
