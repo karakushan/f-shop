@@ -14,6 +14,12 @@ class FS_Ajax_Class
         add_action('wp_ajax_order_send',array(&$this,'order_send_ajax') );
         add_action('wp_ajax_nopriv_order_send',array(&$this,'order_send_ajax') );
 
+        add_action('wp_ajax_attr_edit',array(&$this,'attr_edit_ajax') );
+        add_action('wp_ajax_nopriv_attr_edit',array(&$this,'attr_edit_ajax') );
+
+        add_action('wp_ajax_attr_group_edit',array(&$this,'attr_group_edit_ajax') );
+        add_action('wp_ajax_nopriv_attr_group_edit',array(&$this,'attr_group_edit_ajax') );
+
     }
 
 
@@ -26,9 +32,9 @@ class FS_Ajax_Class
            ini_set('display_errors', 1);
            ini_set('display_startup_errors', 1);*/
 
-        if ( !wp_verify_nonce( $_REQUEST['_wpnonce'])) die ( 'не пройдена верификация формы');
+           if ( !wp_verify_nonce( $_REQUEST['_wpnonce'])) die ( 'не пройдена верификация формы');
 
-        if (isset($_REQUEST['fast-order']) && is_numeric($_REQUEST['fast-order'])){
+           if (isset($_REQUEST['fast-order']) && is_numeric($_REQUEST['fast-order'])){
             $product_id=(int)$_REQUEST['fast-order'];
             $product_count=(int)$_REQUEST['count'];
             $order_type='form';
@@ -78,9 +84,9 @@ class FS_Ajax_Class
                 'delivery' =>$delivery,
                 'products' =>$insert_products,
                 'summa' =>fs_total_amount(false)
-            ),
+                ),
             array( '%s','%s','%d','%s','%s','%s','%s','%d')
-        );
+            );
 
         $products='';
         if ($order_type=='form'){
@@ -109,7 +115,7 @@ class FS_Ajax_Class
          %comments% - комментарий заказчика,
          %site_name% - название сайта
         */
-        $search_replace=array(
+         $search_replace=array(
             '%first_name%'=>$first_name,
             '%last_name%'=>$last_name,
             '%number_products%'=>fs_product_count(),
@@ -122,28 +128,28 @@ class FS_Ajax_Class
             '%customer_phone%'=>$customer_phone,
             '%site_name%'=>get_bloginfo('name')
 
-        );
+            );
 
         //Производим замену в отсылаемих письмах
-        $search_replace=$fields+$search_replace;
-        $search=array_keys($search_replace);
-        $replace=array_values($search_replace);
+         $search_replace=$fields+$search_replace;
+         $search=array_keys($search_replace);
+         $replace=array_values($search_replace);
 
-        $user_message=str_replace($search,$replace,fs_option('customer_mail'));
-        $admin_message=str_replace($search,$replace,fs_option('admin_mail'));
+         $user_message=str_replace($search,$replace,fs_option('customer_mail'));
+         $admin_message=str_replace($search,$replace,fs_option('admin_mail'));
 
         //Отсылаем письмо с данными заказа заказчику
-        $headers[] = 'Content-type: text/html; charset=utf-8';
-        $customer_mail_header=fs_option('customer_mail_header','Заказ товара на сайте «'.get_bloginfo('name').'»');
-        wp_mail($mail_client,$customer_mail_header,$user_message, $headers );
+         $headers[] = 'Content-type: text/html; charset=utf-8';
+         $customer_mail_header=fs_option('customer_mail_header','Заказ товара на сайте «'.get_bloginfo('name').'»');
+         wp_mail($mail_client,$customer_mail_header,$user_message, $headers );
 
         //Отсылаем письмо с данными заказа админу
-        $admin_email=fs_option('manager_email',get_option('admin_email'));
-        $admin_mail_header=fs_option('admin_mail_header','Заказ товара на сайте «'.get_bloginfo('name').'»');
-        wp_mail($admin_email,$admin_mail_header,$admin_message, $headers );
+         $admin_email=fs_option('manager_email',get_option('admin_email'));
+         $admin_mail_header=fs_option('admin_mail_header','Заказ товара на сайте «'.get_bloginfo('name').'»');
+         wp_mail($admin_email,$admin_mail_header,$admin_message, $headers );
 
         //Регистрируем нового пользователя
-        if (!is_user_logged_in() && fs_option('register_user')==1){
+         if (!is_user_logged_in() && fs_option('register_user')==1){
             require_once(ABSPATH . WPINC . '/registration.php');
             $user_id = username_exists($mail_client);
             if ( !$user_id ) {
@@ -155,7 +161,7 @@ class FS_Ajax_Class
         $result=array(
             'wpdb_error'=>$wpdb->last_error,
             'redirect'=>get_permalink(fs_option('page_success'))
-        );
+            );
         echo json_encode($result);
 
         unset($_SESSION['cart']);
@@ -163,5 +169,44 @@ class FS_Ajax_Class
 
     }
 
+    public function attr_edit_ajax()
+    {
+        // print_r($_REQUEST);
+        $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
+        if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_edit') {
+           $fs_atributes[$_REQUEST['fs_attr_group']][]=array(
+            'name'=>$_REQUEST['fs_attr_name'],
+            'type'=>$_REQUEST['fs_attr_type'],
+            'value'=>$_REQUEST['fs_attr_image_id']
+            );
 
-} ?>
+           update_option('fs-attributes',$fs_atributes);
+           print_r($fs_atributes);
+       }
+       exit;
+   } 
+
+   public function attr_group_edit_ajax()
+   {
+        // print_r($_REQUEST);
+    $fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array();
+    if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_group_edit') {
+        if (!empty($_REQUEST['slug']) || !empty($_REQUEST['name'])){
+            $fs_atributes[$_REQUEST['slug']]=$_REQUEST['name'];
+        } 
+        $fs_atributes=array_diff($fs_atributes, array(''));
+        update_option('fs-attr-groups',$fs_atributes);
+
+        if (!empty($fs_atributes)) {
+             echo "<option value=\"\">выберите группу</option>";
+           foreach ($fs_atributes as $key => $value) {
+            echo "<option value=\"$key\">$value</option>";
+           }
+       }
+       
+   }
+   exit;
+}
+
+
+} 

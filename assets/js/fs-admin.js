@@ -1,4 +1,49 @@
 jQuery(function($){
+	//Отправка нового атрибута в базу
+			$('#fs_attr_form').submit(function(event) {
+			$.ajax({
+				url: ajaxurl,
+				data: $('#fs_attr_form').serialize(),
+			})
+			.done(function(data) {
+				console.log(data);
+				$('#fs_attr_form_i').html('<span class="fs_form_succes">Свойство товара добавлено. Вы можете добавить ещё.</span>');
+				setTimeout(function() { $('#fs_attr_form_i').html(''); }, 3000);
+				$('#fs_attr_form')[0].reset();
+				$('#fs_select_image').css({
+					'background-image': 'none'
+				});
+				$('#fs_attr_type_block').fadeOut('800');
+
+			});
+			return false;
+		});
+
+		
+	//показываем скррываем кнопку загрузки изображения в зависимости от типа добавляемого атрибута
+		$('#fs_attr_type').on('change', function(event) {
+			event.preventDefault();
+			if($(this).val()=='image'){
+				$('#fs_attr_type_block').fadeIn(800);
+			}else{
+				$('#fs_attr_type_block').fadeOut(800);
+			}
+		});
+		//вызываем стандартный загрузчик изображений
+		$('#fs_select_image').on('click',function(){
+			var send_attachment_bkp = wp.media.editor.send.attachment;
+			var button = $(this);
+			wp.media.editor.send.attachment = function(props, attachment) {
+				$(button).next().val( attachment.id);
+				$(button).css({
+					'background-image': 'url('+attachment.url+')'
+				});
+				$(button).find('button').text('изменить');
+				wp.media.editor.send.attachment = send_attachment_bkp;
+			}
+			wp.media.editor.open(button);
+			return false;    
+		});
 
 	/*
 	 * действие при нажатии на кнопку загрузки изображения
