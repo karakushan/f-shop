@@ -20,6 +20,12 @@ class FS_Ajax_Class
         add_action('wp_ajax_attr_group_edit',array(&$this,'attr_group_edit_ajax') );
         add_action('wp_ajax_nopriv_attr_group_edit',array(&$this,'attr_group_edit_ajax') );
 
+        add_action('wp_ajax_attr_group_remove',array(&$this,'attr_group_remove_ajax') );
+        add_action('wp_ajax_nopriv_attr_group_remove',array(&$this,'attr_group_remove_ajax') );
+
+        add_action('wp_ajax_attr_single_remove',array(&$this,'attr_single_remove_ajax') );
+        add_action('wp_ajax_nopriv_attr_single_remove',array(&$this,'attr_single_remove_ajax') );
+
     }
 
 
@@ -174,20 +180,20 @@ class FS_Ajax_Class
         // print_r($_REQUEST);
         $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
         if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_edit') {
-           $fs_atributes[$_REQUEST['fs_attr_group']][]=array(
+         $fs_atributes[$_REQUEST['fs_attr_group']][]=array(
             'name'=>$_REQUEST['fs_attr_name'],
             'type'=>$_REQUEST['fs_attr_type'],
             'value'=>$_REQUEST['fs_attr_image_id']
             );
 
-           update_option('fs-attributes',$fs_atributes);
-           print_r($fs_atributes);
-       }
-       exit;
-   } 
+         update_option('fs-attributes',$fs_atributes);
+         print_r($fs_atributes);
+     }
+     exit;
+ } 
 
-   public function attr_group_edit_ajax()
-   {
+ public function attr_group_edit_ajax()
+ {
         // print_r($_REQUEST);
     $fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array();
     if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_group_edit') {
@@ -198,12 +204,48 @@ class FS_Ajax_Class
         update_option('fs-attr-groups',$fs_atributes);
 
         if (!empty($fs_atributes)) {
-             echo "<option value=\"\">выберите группу</option>";
-           foreach ($fs_atributes as $key => $value) {
-            echo "<option value=\"$key\">$value</option>";
-           }
-       }
-       
+            $count=count($fs_atributes);
+            echo "<option value=\"\">выберите группу</option>";
+            $count_inc=0;
+            foreach ($fs_atributes as $key => $value) {
+                $count_inc++;
+                if ( $count==$count_inc) {
+                    echo "<option value=\"$key\" selected>$value</option>";
+                } else {
+                    echo "<option value=\"$key\">$value</option>";
+                }
+                
+                
+            }
+        }
+    }
+    exit;
+}
+
+public function attr_group_remove_ajax()
+{
+    $fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array();
+    if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_group_remove') {
+      unset( $fs_atributes[$_REQUEST['attr']]);
+      update_option('fs-attr-groups',$fs_atributes);
+      echo "<option value=\"\">выберите группу</option>";
+      if (!empty($fs_atributes)) {
+       foreach ($fs_atributes as $key => $value) {     
+        echo "<option value=\"$key\">$value</option>";
+    }
+}
+
+}
+exit;
+}
+
+public function attr_single_remove_ajax()
+{
+
+    if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_single_remove') {
+       $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
+       unset($fs_atributes[$_REQUEST['attr_group']][$_REQUEST['attr_id']]);
+       update_option('fs-attributes',$fs_atributes);
    }
    exit;
 }

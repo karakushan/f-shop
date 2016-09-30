@@ -1,4 +1,100 @@
 jQuery(function($){
+	//Удаление отдельного свойства
+	$('[data-fs-action="delete-attr-single"]').on('click', function(event) {
+			event.preventDefault();
+			if(confirm('Удалить свойство '+$(this).data('name')+'?')){
+				var attrGroup=$(this).data('fs-attr-group');
+				var attrID=$(this).data('fs-attr-id');
+				var attrParent=$(this).parent();
+				$.ajax({
+					url: ajaxurl,
+					
+					data: {action: "attr_single_remove", attr_id:attrID,attr_group:attrGroup},
+				})
+				.done(function(data) {
+					attrParent.remove();
+					
+				})
+				.fail(function() {
+					console.log("error");
+				})
+				.always(function() {
+					console.log("complete");
+				});
+				
+			}
+		});
+	//удаление группы атрибутов
+	$('[data-fs-action="delete-attr-group"]').on('click', function(event) {
+			event.preventDefault();
+			if(confirm('Удалить группу '+$(this).data('name')+'?')){
+				var attr=$(this).data('fs-attr-group');
+				var attrParent=$(this).parent();
+				$.ajax({
+					url: ajaxurl,
+					
+					data: {action: "attr_group_remove", attr:attr},
+				})
+				.done(function(data) {
+					// console.log(data);
+					$('#fs_attr_group').html(data);
+					attrParent.remove();
+				})
+				.fail(function() {
+					console.log("error");
+				})
+				.always(function() {
+					console.log("complete");
+				});
+				
+			}
+		});
+	//добавление группы атрибутов
+		$('#fs_add_attr_group button').on('click', function(event) {
+			event.preventDefault();
+			var inputStatus=true;
+
+			$('#fs_add_attr_group input').each(function(index, el) {
+				if ($(this).val().length<1) {
+					inputStatus=false;
+					$(this).addClass('fs_error_input');
+					$(this).next().text('заполните поле');
+
+				}else{
+					$(this).removeClass('fs_error_input');
+					$(this).next().text('');
+				}
+			});
+			
+			if (inputStatus!=false) {
+				$.ajax({
+					url: ajaxurl,
+					data: {
+						action: "attr_group_edit",
+						name: $('#fs_attr_group_name').val(),
+						slug: $('#fs_attr_group_name_en').val(),
+					},
+				})
+				.done(function(data) {
+					$('#fs_attr_group').html(data);
+					$('#fs_add_attr_group').fadeOut('800');
+					$('#fs_add_attr_group input').each(function(index, el) {
+						$(this).val('');
+					});
+				})
+				.fail(function() {
+					console.log("error");
+				})
+				.always(function() {
+					console.log("complete");
+				});
+			}
+			
+		});
+		$('#fs_add_group_link').on('click', function(event) {
+			event.preventDefault();
+			$('#fs_add_attr_group').fadeIn(800);
+		});	
 	//Отправка нового атрибута в базу
 			$('#fs_attr_form').submit(function(event) {
 			$.ajax({

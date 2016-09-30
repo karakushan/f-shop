@@ -161,7 +161,7 @@ input[name="count-ch"] {
 }
 li.fs-attr {
     margin-bottom: 6px;
-    display: inline-block;
+    display: block;
     margin-right: 13px;
     border: 1px solid #e5e5e5;
     padding: 0 15px 15px 15px;

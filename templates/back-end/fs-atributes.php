@@ -1,6 +1,9 @@
-<div class="wrap fs-atributes">
+<div class="wrap fs-atributes fs-settings">
 	<h1><?php _e('Product Attributes','fast-shop') ?></h1>
-	<?php $fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array(); ?>
+	<?php 
+	$fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array(); 
+	$fs_atr=get_option('fs-attributes')!=false?get_option('fs-attributes'):array(); 
+	?>
 	<form action="#" method="post" id="fs_attr_form" class="fs_form">
 		<input type="hidden" name="action" value="attr_edit">
 		<div class="fs-add-attr">
@@ -58,56 +61,21 @@
 			</p>
 		</div>
 	</form>
+	<h3 class="fs-section-title">Группы и свойства</h3>
+	<?php if ( $fs_atributes): ?>
+		<ul class="fs-group-list">
+			<?php foreach ($fs_atributes as $key => $attr): ?>
+				<li><?php echo $attr.' <span>('.$key.')</span>'; ?> <a href="#" data-fs-attr-group="<?php echo $key ?>" data-name="<?php echo $attr ?>" data-fs-action="delete-attr-group">удалить группу</a>
+					<?php if (count($fs_atr[$key])): ?>
+						<ul>
+							<?php foreach ($fs_atr[$key] as $key2 => $att): ?>
+								<li><?php echo $att['name']; ?> <a href="#" data-fs-action="delete-attr-single" data-fs-attr-group="<?php echo $key ?>" data-name="<?php echo $att['name'] ?>" data-fs-attr-id="<?php echo $key2; ?>">удалить атрибут</a></li>
+							<?php endforeach ?>
+						</ul>
+					<?php endif ?>
+				</li>
+			<?php endforeach ?>	
+		</ul>
+	<?php endif ?>
 </div>
-<style type="text/css">
-	
-</style>
-<script type="text/javascript">
-	jQuery(function($) {
-		$('#fs_add_attr_group button').on('click', function(event) {
-			event.preventDefault();
-			var inputStatus=true;
 
-			$('#fs_add_attr_group input').each(function(index, el) {
-				if ($(this).val().length<1) {
-					inputStatus=false;
-					$(this).addClass('fs_error_input');
-					$(this).next().text('заполните поле');
-
-				}else{
-					$(this).removeClass('fs_error_input');
-					$(this).next().text('');
-				}
-			});
-			
-			if (inputStatus!=false) {
-				$.ajax({
-					url: ajaxurl,
-					data: {
-						action: "attr_group_edit",
-						name: $('#fs_attr_group_name').val(),
-						slug: $('#fs_attr_group_name_en').val(),
-					},
-				})
-				.done(function(data) {
-					$('#fs_attr_group').html(data);
-					$('#fs_add_attr_group').fadeOut('800');
-					$('#fs_add_attr_group input').each(function(index, el) {
-						$(this).val('');
-					});
-				})
-				.fail(function() {
-					console.log("error");
-				})
-				.always(function() {
-					console.log("complete");
-				});
-			}
-			
-		});
-		$('#fs_add_group_link').on('click', function(event) {
-			event.preventDefault();
-			$('#fs_add_attr_group').fadeIn(800);
-		});		
-	});
-</script>

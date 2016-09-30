@@ -14,9 +14,20 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
     $post_id=(empty($post_id) ? $post->ID : (int)$post_id);
 
     $fs_atributes_post=get_post_meta($post_id,$config->meta['attributes'],false);
-    $fs_atributes_post=$fs_atributes_post[0];
 
-    $fs_atributes=get_option('fs-attr-group');
+    $fs_atributes_post=isset($fs_atributes_post[0])?$fs_atributes_post[0]:array();
+    $fs_atributes_all=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
+
+   /* echo "<pre>";
+
+    print_r($fs_atributes_post);
+    echo "</pre>"; 
+    echo "<pre>";
+
+    print_r($fs_atributes_all);
+    echo "</pre>";*/
+
+
     if ($fs_atributes_post) {
         switch ($type) {
             case 'option':
@@ -31,23 +42,37 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
             case 'list':
             foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
                 if (!$fs_atribute) continue;
+
                 echo "<li>".$fs_atributes[$group]['attributes'][$key]."</li>";
             }
-            break;
-            case 'array':
-            return $fs_atributes_post[$group];
-            break;
-
-
-            default:
+            break; 
+            case 'radio':
             foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                if (!$fs_atribute) continue;
-                echo "<option value=\"".$fs_atributes_post[$group]['slug'].":".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
-            }
-            break;
-        }
+                if ($fs_atribute==0) continue;
+                  $checked=$key==0?"checked":"";
+                if ($fs_atributes_all[$group][$key]['type']=='image') {
+                    $img_url=wp_get_attachment_url($fs_atributes_all[$group][$key]['value']);
+                    echo "<li><div>". $fs_atributes_all[$group][$key]['name']."</div><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></label></li>";
+                }else{
+                   echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
+               }
+               
+           }
+           break;
+           case 'array':
+           return $fs_atributes_post[$group];
+           break;
 
+
+           default:
+           foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+            if (!$fs_atribute) continue;
+            echo "<option value=\"".$fs_atributes_post[$group]['slug'].":".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
+        }
+        break;
     }
+
+}
 }
 
 /**
@@ -172,7 +197,7 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
         printf($displayed_price,$price,$cur_symb);
     } else {
        printf($wrap,$price.' <span>'.$cur_symb.'</span>');
-    }
+   }
 
 }
 

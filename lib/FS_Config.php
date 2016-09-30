@@ -50,7 +50,7 @@ class FS_Config
             'action_page'=>'fs_page_action',//сылка на страницу описывающую акцию на товар
             'action_price'=>'fs_action_price',//акционная цена, перебивает цену поставленнуюю полем 'discount'
             'displayed_price'=>'fs_displayed_price',//тображаемая цена
-            'attributes'=>'fs_attributes',//атрибуты товара
+            'attributes'=>'fs_attributes_post',//атрибуты товара
             'gallery'=>'fs_galery',//галерея
             'fs_gallery_path'=>'fs_gallery_path'//ссылка на папку с изображениями
 
