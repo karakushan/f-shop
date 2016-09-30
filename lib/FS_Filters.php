@@ -162,16 +162,7 @@ class FS_Filters
         return $query;
     }//end filter_curr_product()
 
-    public function range_slider()
-    {
-        $slider='
-		<div class="range">
-			<div id="slider-range" data-uri="0-0"></div>
-			<div id="amount_show" class="ashow"><span>0</span> грн - <span>2500</span> грн</div>
-		</div>
-		';
-        return $slider;
-    }//end range_slider()
+
 
     /**
      * @param $group

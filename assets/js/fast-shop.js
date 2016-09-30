@@ -271,12 +271,12 @@ jQuery(document).ready(function($) {
 
 	var u  = new Url;
 	var p_start=u.query.price_start==undefined ? 0 : u.query.price_start;
-	var p_end=u.query.price_end==undefined ? 2500 : u.query.price_end;
+	var p_end=u.query.price_end==undefined ? fs_slider_max : u.query.price_end;
 
 	$( "#slider-range" ).slider({
 		range: true,
-		min: 0,
-		max: 2500,
+        min:0,
+		max:fs_slider_max,
 		values: [ p_start, p_end],
 		slide: function( event, ui ) {
 			$( "#amount_show" ).html( ui.values[ 0 ] + " грн. - " + ui.values[ 1 ]+' грн.' );
