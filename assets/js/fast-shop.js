@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+jQuery(function($) {
 	//добавление товара в корзину (сессию)
 	$('[data-fs-action=add-to-cart]').live('click', function(event) {
 		event.preventDefault();
@@ -88,15 +88,17 @@ $('.close').live('click',function() {
 
 });
 
+var validator =$("#order-send")
 // валидация и отправка формы заказа
-var validator =$(".order-send").validate({
+validator.validate({
+	ignore: [] ,
 	rules: {
 		name: {
 			required: true
 		}
 	},
 	submitHandler: function(form) {
-		var formData=$('.order-send').serialize();
+		var formData=$('#order-send').serialize();
 		$.ajax({
 			url: ajaxurl,
 			dataType: 'html',
@@ -121,6 +123,48 @@ var validator =$(".order-send").validate({
 
 	}
 });
+
+// валидация и отправка формы заказа
+var validator2=$("#order-send2");
+validator2.validate({
+	ignore: [] ,
+	rules: {
+		name: {
+			required: true
+		}
+	},
+	submitHandler: function(form) {
+		var formData=$('#order-send2').serialize();
+		$.ajax({
+			url: ajaxurl,
+			dataType: 'html',
+			type: 'POST',
+			data:formData,
+			beforeSend:function () {
+				$('button[data-fs-action=order-send]').find('.fs-preloader').fadeIn('slow');
+			}
+		})
+		.done(function(result) {
+			$('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
+			console.log(result);
+			var jsonData=JSON.parse(result);
+
+			if(jsonData.wpdb_error){
+				console.log(jsonData.wpdb_error);
+			}
+			document.location.href=jsonData.redirect;
+
+		});
+
+
+	}
+});
+
+
+
+
+
+
 
 
 
@@ -275,7 +319,7 @@ jQuery(document).ready(function($) {
 
 	$( "#slider-range" ).slider({
 		range: true,
-        min:0,
+		min:0,
 		max:fs_slider_max,
 		values: [ p_start, p_end],
 		slide: function( event, ui ) {

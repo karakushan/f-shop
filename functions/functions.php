@@ -30,45 +30,26 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
 
     if ($fs_atributes_post) {
         switch ($type) {
-            case 'option':
-            echo '<select name="'.$group.'" data-fs-element="attr" class="'.$class.'" data-product-id="'.$post_id.'">';
-            echo '<option value="">'.$option_default.'</option>';
-            foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                if (!$fs_atribute) continue;
-                echo "<option value=\"".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
-            }
-            echo '</select>';
-            break;
-            case 'list':
-            foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                if (!$fs_atribute) continue;
 
-                echo "<li>".$fs_atributes[$group]['attributes'][$key]."</li>";
-            }
-            break; 
+
             case 'radio':
             foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
                 if ($fs_atribute==0) continue;
-                  $checked=$key==0?"checked":"";
+                $checked=$key==0?"checked":"";
                 if ($fs_atributes_all[$group][$key]['type']=='image') {
                     $img_url=wp_get_attachment_url($fs_atributes_all[$group][$key]['value']);
                     echo "<li><div>". $fs_atributes_all[$group][$key]['name']."</div><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></label></li>";
                 }else{
                    echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
                }
-               
+
            }
            break;
-           case 'array':
-           return $fs_atributes_post[$group];
-           break;
+
 
 
            default:
-           foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-            if (!$fs_atribute) continue;
-            echo "<option value=\"".$fs_atributes_post[$group]['slug'].":".$key."\">".$fs_atributes[$group]['attributes'][$key]."</option>";
-        }
+
         break;
     }
 
@@ -112,40 +93,47 @@ function fs_lightslider($post_id='', $args='')
  */
 function fs_get_price($post_id='')
 {
+    $config=new \FS\FS_Config();//класс основных настроек плагина
+
+    // устанавливаем id поста
     global $post;
-    $config=new \FS\FS_Config();
-    $post_id=( empty( $post_id) ? $post->ID : (int)$post_id );
+    $post_id=empty($post_id) ? $post->ID : (int)$post_id;
 
-    //устанавливаем правильную цену
-    $price=get_post_meta( $post_id, $config->meta['price'], true );
-    $price=empty($price) ? 0 :(float)$price;
-
-    //получаем размер скидки (в процентах или в фиксированной сумме)
-    $action=get_post_meta( $post_id,$config->meta['discount'], true );
-    $action=empty($action)?0:(float)$action;
-
-    //получаем поле акционная цена, которое должно перебить автоматические акционные цены
-    $action_price=get_post_meta( $post_id,$config->meta['action_price'], true );
-    $action=empty($action_price)?0:(float)$action_price;
-
-
-
-
-    //узнаём какой тип скидки активирован в настройках (% или фикс)
+     //узнаём какой тип скидки активирован в настройках (% или фикс)
     $action_type=isset($config->options['action_count'])&&$config->options['action_count']==1?1:0;
 
-    //если цена равна нулю или скидака нет смысла делать то что в условии ниже и всёже если установлено, то корректируеми цену
+    // получаем возможные типы цен
+    $base_price=get_post_meta( $post_id, $config->meta['price'], true );//базовая и главная цена
+    $action_price=get_post_meta( $post_id,$config->meta['action_price'], true );//акионная цена
+    $action_base=get_post_meta( $post_id,$config->meta['discount'], true );//размер скидки общий для всех товаров
+
+    // создаём возможность модифицировать базовую цену через фильтры
+    $base_price=apply_filters('fs_base_price',$base_price,$post_id);
+    $price=empty($base_price) ? 0 : (float)$base_price;
+
+    // создаём возможность модифицировать акционную цену через фильтры
+    $action_price=apply_filters('fs_action_price',$action_price,$post_id);
+    $action_price=empty($action_price) ? 0 :(float)$action_price;
+
+     //получаем размер скидки из общих настроек (в процентах или в фиксированной сумме)
+    $action_base=apply_filters('fs_action_base',$action_base,$post_id);
+    $action_base=empty($action_base)?0:(float)$action_base;
+
+    //если поле акционной цены не заполнено
     if ($action_price>0) {
         $price=$action_price;
     }else{
-        if ($price>0 && $action>0){
-            if($action_type==1){
-            $price=$price-($price*$action/100);//расчёт цены если скидка в процентах, с округлением до 2 знаков
-        }else{
-            $price=$price-$action;//расчёт цены если скидка в фикс. к-ве, с округлением до 2 знаков
-        }
 
+      if ($action_base>0) {
+       if($action_type==1){
+            //расчёт цены если скидка в процентах
+        $price=$base_price-($base_price*$action_base/100);
+    }else{
+            //расчёт цены если скидка в фикс. к-ве
+        $price=$base_price-$action_base; 
+          
     }
+}
 }
 
 return $price;
@@ -333,7 +321,10 @@ function fs_base_price($post_id='',$echo=true, $wrap='<span>%s</span>')
     global $post;
     $config=new \FS\FS_Config();
     $post_id=empty($post_id) ? $post->ID : $post_id;
-    $price=get_post_meta( $post_id, 'fs_price', 1);
+
+    $price=get_post_meta( $post_id, $config->meta['price'], 1);
+     $price=apply_filters('fs_base_price', $price,$post_id);
+
     if ( $price==fs_get_price($post_id)) return;
     $price=empty($price) ? 0 : (float)$price;
     
@@ -595,3 +586,59 @@ function fs_amount_discount($product_id='',$echo=true,$wrap='<span>%s</span>'){
 
 }
 
+/**
+ * @param array $post_count
+ * @param bool $echo
+ * @return bool|string
+ */
+function fs_per_page_filter($post_count=array(), $echo=true)
+{
+    $filters=new FS\FS_Filters;
+    if (count($post_count)==0 ){
+        $post_count=array(12,24,36,48,60,100);
+    }
+    $page_filter=$filters->posts_per_page_filter($post_count);
+    if (true === $echo){
+        echo $page_filter;
+    }else{
+        return $page_filter;
+    }
+}
+
+
+/**
+ * Добавляет возможность фильтрации по определёному атрибуту
+ * @param string $group             название группы (slug)
+ * @param string $type              тип фильтра 'option' (список опций в теге "select",по умолчанию) или обычный список "ul"
+ * @param string $option_default    первая опция (текст) если выбран 2 параметр "option"
+ */
+function fs_attr_group_filter($group, $type='option', $option_default='Выберите значение')
+{
+    $fs_filter=new FS\FS_Filters;
+    echo $fs_filter->attr_group_filter($group,$type,$option_default);
+}
+
+/**
+ * @param int $price_max
+ */
+function fs_range_slider($price_max=20000)
+{
+    global $wpdb;
+    $query=$wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'fs_price' ORDER BY meta_value DESC LIMIT 1");
+    $price_max=!is_null($query)?(float)$query[0]->meta_value:(float)$price_max;
+    $curency=fs_currency();
+    $slider='
+    <div class="slider">
+        <div id="slider-range"></div>
+        <p>
+
+            <span class="fs-range-start">0 <span>'.$curency.'</span></span>
+            <span class="fs-range-finish">'.$price_max.' <span>'.$curency.'</span></span>
+        </p>
+    </div>
+    <script>
+        var fs_slider_max='.$price_max.'
+    </script>
+    ';
+    echo $slider;
+}//end range_slider()
