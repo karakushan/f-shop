@@ -1,3 +1,9 @@
+/* Можно использовать глобальный объект FastShopData
+    ajaxurl - ссылка на ajax обрабочик,
+    fs_slider_max - максимальная цена установленная на сайте
+    fs_currency - символ установленной валюты на текущий момент
+*/
+
 jQuery(function($) {
 	//добавление товара в корзину (сессию)
 	$('[data-fs-action=add-to-cart]').live('click', function(event) {
@@ -6,7 +12,7 @@ jQuery(function($) {
 		var productName=$(this).data('product-name');
 		var productObject=$(this).data('json');
 		$.ajax({
-			url: ajaxurl,
+			url: FastShopData.ajaxurl,
 			data: productObject,
 			beforeSend:function () {
 				curent.find('.fs-preloader ').fadeIn('slow');
@@ -100,7 +106,7 @@ validator.validate({
 	submitHandler: function(form) {
 		var formData=$('#order-send').serialize();
 		$.ajax({
-			url: ajaxurl,
+			url: FastShopData.ajaxurl,
 			dataType: 'html',
 			type: 'POST',
 			data:formData,
@@ -136,7 +142,7 @@ validator2.validate({
 	submitHandler: function(form) {
 		var formData=$('#order-send2').serialize();
 		$.ajax({
-			url: ajaxurl,
+			url: FastShopData.ajaxurl,
 			dataType: 'html',
 			type: 'POST',
 			data:formData,
@@ -208,7 +214,7 @@ jQuery(document).ready(function($) {
 		var productCount = $(this).val();
 
 		$.ajax({
-			url: ajaxurl,
+			url: FastShopData.ajaxurl,
 			type: 'POST',
 			dataType: 'html',
 			data: {
@@ -239,7 +245,7 @@ jQuery(document).ready(function($) {
 		var productName = $(this).data('fs-name');
 		if (confirm('Вы точно хотите удалить продукт "'+productName+'" из корзины?')) {
 			$.ajax({
-				url: ajaxurl,
+				url: FastShopData.ajaxurl,
 				type: 'POST',
 				dataType: 'html',
 				data: {
@@ -315,12 +321,12 @@ jQuery(document).ready(function($) {
 
 	var u  = new Url;
 	var p_start=u.query.price_start==undefined ? 0 : u.query.price_start;
-	var p_end=u.query.price_end==undefined ? fs_slider_max : u.query.price_end;
+	var p_end=u.query.price_end==undefined ? FastShopData.fs_slider_max : u.query.price_end;
 
-	$( "#slider-range" ).slider({
+	$( '[data-fs-element="range-slider"]' ).slider({
 		range: true,
 		min:0,
-		max:fs_slider_max,
+		max:FastShopData.fs_slider_max,
 		values: [ p_start, p_end],
 		slide: function( event, ui ) {
 			$( "#amount_show" ).html( ui.values[ 0 ] + " грн. - " + ui.values[ 1 ]+' грн.' );

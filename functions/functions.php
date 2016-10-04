@@ -119,24 +119,21 @@ function fs_get_price($post_id='')
     $action_base=apply_filters('fs_action_base',$action_base,$post_id);
     $action_base=empty($action_base)?0:(float)$action_base;
 
-    //если поле акционной цены не заполнено
+    //если поле акционной цены заполнено иначе ...
     if ($action_price>0) {
         $price=$action_price;
     }else{
-
       if ($action_base>0) {
        if($action_type==1){
             //расчёт цены если скидка в процентах
         $price=$base_price-($base_price*$action_base/100);
     }else{
             //расчёт цены если скидка в фикс. к-ве
-        $price=$base_price-$action_base; 
-          
+        $price=$base_price-$action_base;
     }
 }
 }
-
-return $price;
+return (float)$price;
 }
 
 //Отображает общую сумму продуктов с одним артикулом
@@ -177,10 +174,9 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
     $displayed_price=get_post_meta($post_id,$config->meta['displayed_price'],1);
     $displayed_price=!empty($displayed_price) ? $displayed_price : '';
     $price=fs_get_price($post_id);
-    $price=number_format($price,2,fs_option('currency_delimiter','.'),' ');
-
+    $currency_delimiter=fs_option('currency_delimiter','.');
+    $price=apply_filters('fs_price_format', $price,$currency_delimiter,' ');
     if ($displayed_price!="") {
-
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
     } else {
@@ -196,7 +192,7 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
  * @param  string  $cur_after  html после символа валюты
  * @return возвращает или показывает общую сумму с валютой
  */
-function fs_total_amount($show=true,$cur_before=' <span>',$cur_after='</span>')
+function fs_total_amount($show=true,$wrap='%s <span>%s</span>')
 {
     $price=0;
     $all_price=array();
@@ -204,20 +200,15 @@ function fs_total_amount($show=true,$cur_before=' <span>',$cur_after='</span>')
         foreach ($_SESSION['cart'] as $key => $count){
             $all_price[$key]=$count['count']*fs_get_price($key);
         }
-        $price=round(array_sum($all_price),2);
-        $price=number_format($price,2,fs_option('currency_delimiter','.'),' ');
-
+        $price=array_sum($all_price);
+        $currency_delimiter=fs_option('currency_delimiter','.');
+        $price=apply_filters('fs_price_format',$price,$currency_delimiter,' ');
     }
-
     if ($show==false) {
         return $price;
     } else {
-        echo $price;
-        echo  $cur_before;
-        echo fs_currency();
-        echo $cur_after;
+        printf($wrap,$price,fs_currency());
     }
-
 }
 
 /**
@@ -642,3 +633,19 @@ function fs_range_slider($price_max=20000)
     ';
     echo $slider;
 }//end range_slider()
+
+/**
+ * Функция получает значение максимальной цены установленной на сайте
+ * @return float|int|null|string
+ */
+function fs_price_max(){
+    global $wpdb;
+    $config=new FS\FS_Config();
+    $meta_field=$config->meta['price'];
+    $meta_value_max = $wpdb->get_var("SELECT (meta_value + 0.01 ) AS meta_values FROM $wpdb->postmeta WHERE meta_key='$meta_field' ORDER BY meta_values DESC ");
+    $meta_value_max=!is_null($meta_value_max)?(float)$meta_value_max:20000;
+    return apply_filters('fs_price_format',$meta_value_max) ;
+}
+
+
+

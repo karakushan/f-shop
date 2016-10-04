@@ -1,14 +1,8 @@
 <?php
 
-// //функция просто возвращает заданную цену
-// function fs_return_price($price,$post_id){
-//     return $price;
-// }
-
-// //Создаём стандартный фильтр для базовой цены
-// add_filter('fs_base_price','fs_return_price',10,2);
-// //Создаём стандартный фильтр для акционной цены конкретного товара
-// add_filter('fs_action_price','fs_return_price',10,2);
-// //Создаём стандартный фильтр для общей акционной цены 
-// add_filter('fs_action_base','fs_return_price',10,2);
+add_filter('fs_price_format','fs_price_format',10,3);
+function  fs_price_format($price,$delimiter='.',$thousands_separator=' '){
+    $price=number_format($price,2,$delimiter,$thousands_separator);
+return $price;
+}
 
