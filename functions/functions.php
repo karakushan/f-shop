@@ -40,20 +40,20 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
                     $img_url=wp_get_attachment_url($fs_atributes_all[$group][$key]['value']);
                     echo "<li><div>". $fs_atributes_all[$group][$key]['name']."</div><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></label></li>";
                 }else{
-                   echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
-               }
+                 echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
+             }
 
-           }
-           break;
+         }
+         break;
 
 
 
-           default:
+         default:
 
-        break;
-    }
+         break;
+     }
 
-}
+ }
 }
 
 /**
@@ -78,9 +78,9 @@ function fs_lightslider($post_id='', $args='')
         echo $args;
         echo "}; 
         jQuery(document).ready(function($) {
-           $('#product_slider').lightSlider(product_sc); 
-       });
-   </script>";
+         $('#product_slider').lightSlider(product_sc); 
+     });
+ </script>";
 
 }
 
@@ -124,37 +124,35 @@ function fs_get_price($post_id='')
         $price=$action_price;
     }else{
       if ($action_base>0) {
-       if($action_type==1){
+         if($action_type==1){
             //расчёт цены если скидка в процентах
-        $price=$base_price-($base_price*$action_base/100);
-    }else{
+            $price=$base_price-($base_price*$action_base/100);
+        }else{
             //расчёт цены если скидка в фикс. к-ве
-        $price=$base_price-$action_base;
+            $price=$base_price-$action_base;
+        }
     }
-}
 }
 return (float)$price;
 }
 
 //Отображает общую сумму продуктов с одним артикулом
 /**
- * @param $post_id
- * @param $count
+ * @param $post_id - id
+ * @param $count - к-во товаров
  * @param bool $curency
- * @param string $cur_tag_before
- * @param string $cur_tag_after
+ * @param string $wpap формат отображения цены вместе с валютой
+
  * @return int|mixed|string
  */
-function fs_row_price($post_id, $count, $curency=true, $cur_tag_before=' <span>', $cur_tag_after='</span>')
+function fs_row_price($post_id, $count, $curency=true, $wrap='%s <span>%s</span>')
 {
     global $post;
-    $post_id=( empty( $product) ? $post->ID : (int)$post_id );
+    $post_id=empty($post_id) ? $post->ID : (int)$post_id;
     $price=fs_get_price($post_id)*$count;
-    $price=number_format($price, 2, fs_option('currency_delimiter','.'), ' ');
-
     if ($curency) {
-        $cur_symb=fs_currency();
-        $price=$price.$cur_tag_before.$cur_symb.$cur_tag_after;
+        $price=apply_filters('fs_price_format',$price,fs_option('currency_delimiter','.'),' ');
+        $price=sprintf($wrap,$price,fs_currency());
     }
     return $price;
 }
@@ -180,8 +178,8 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
     } else {
-       printf($wrap,$price.' <span>'.$cur_symb.'</span>');
-   }
+     printf($wrap,$price.' <span>'.$cur_symb.'</span>');
+ }
 
 }
 
@@ -222,24 +220,24 @@ function fs_total_amount($show=true,$wrap='%s <span>%s</span>')
  */
 function fs_get_cart()
 {
-    if (!isset($_SESSION['cart'])) return;
+    if (!isset($_SESSION['cart'])) return false;
 
     $products = array();
     $cur_symb=fs_currency();
+    $currency_delimiter=fs_option('currency_delimiter','.');
     if (count($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $count){
             $price=fs_get_price($key);
+            $price_show=apply_filters('fs_price_format',$price, $currency_delimiter,' ');
             $count=(int)$count['count'];
-
             $all_price=$price*$count;
-            $all_price=number_format($all_price, 2,fs_option('currency_delimiter','.'), ' ');
+            $all_price=apply_filters('fs_price_format',$all_price, $currency_delimiter,' ');
             $products[$key]=array(
                 'id'=>$key,
                 'name'=>get_the_title($key),
                 'count'=>$count,
                 'link'=>get_permalink($key),
-
-                'price'=>$price.' <span>'.$cur_symb.'</span>',
+                'price'=> $price_show.' <span>'.$cur_symb.'</span>',
                 'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
                 );
         }
@@ -314,7 +312,7 @@ function fs_base_price($post_id='',$echo=true, $wrap='<span>%s</span>')
     $post_id=empty($post_id) ? $post->ID : $post_id;
 
     $price=get_post_meta( $post_id, $config->meta['price'], 1);
-     $price=apply_filters('fs_base_price', $price,$post_id);
+    $price=apply_filters('fs_base_price', $price,$post_id);
 
     if ( $price==fs_get_price($post_id)) return;
     $price=empty($price) ? 0 : (float)$price;
@@ -612,39 +610,38 @@ function fs_attr_group_filter($group, $type='option', $option_default='Выбе�
 /**
  * @param int $price_max
  */
-function fs_range_slider($price_max=20000)
-{
-    global $wpdb;
-    $query=$wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'fs_price' ORDER BY meta_value DESC LIMIT 1");
-    $price_max=!is_null($query)?(float)$query[0]->meta_value:(float)$price_max;
-    $curency=fs_currency();
-    $slider='
-    <div class="slider">
-        <div id="slider-range"></div>
-        <p>
+function fs_range_slider()
+{    
 
-            <span class="fs-range-start">0 <span>'.$curency.'</span></span>
-            <span class="fs-range-finish">'.$price_max.' <span>'.$curency.'</span></span>
-        </p>
-    </div>
-    <script>
-        var fs_slider_max='.$price_max.'
-    </script>
-    ';
-    echo $slider;
+    $price_max=fs_price_max();
+    $curency=fs_currency();
+    $slider='<div class="slider">
+    <div data-fs-element="range-slider" id="range-slider"></div>
+    <div class="fs-price-show">
+        <span data-fs-element="range-start">0 <span>'.$curency.'</span></span>
+        <span data-fs-element="range-end">'.$price_max.' <span>'.$curency.'</span>
+    </span>
+</div>
+</div>';
+echo $slider;
 }//end range_slider()
 
 /**
  * Функция получает значение максимальной цены установленной на сайте
  * @return float|int|null|string
  */
-function fs_price_max(){
+function fs_price_max($filter=true){
     global $wpdb;
     $config=new FS\FS_Config();
     $meta_field=$config->meta['price'];
     $meta_value_max = $wpdb->get_var("SELECT (meta_value + 0.01 ) AS meta_values FROM $wpdb->postmeta WHERE meta_key='$meta_field' ORDER BY meta_values DESC ");
     $meta_value_max=!is_null($meta_value_max)?(float)$meta_value_max:20000;
-    return apply_filters('fs_price_format',$meta_value_max) ;
+    if ($filter) {
+        $max=apply_filters('fs_price_format',$meta_value_max);
+    }else{
+        $max=$meta_value_max;
+    }
+    return $max;
 }
 
 

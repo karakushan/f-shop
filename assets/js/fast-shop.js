@@ -329,7 +329,8 @@ jQuery(document).ready(function($) {
 		max:FastShopData.fs_slider_max,
 		values: [ p_start, p_end],
 		slide: function( event, ui ) {
-			$( "#amount_show" ).html( ui.values[ 0 ] + " грн. - " + ui.values[ 1 ]+' грн.' );
+			$( '[data-fs-element="range-end"] ').html(ui.values[ 1 ]+' '+FastShopData.fs_currency );
+			$( '[data-fs-element="range-start"] ').html(ui.values[ 0 ]+' '+FastShopData.fs_currency );
 		},
 		change: function( event, ui ) {
 
@@ -342,13 +343,15 @@ jQuery(document).ready(function($) {
 
         }
     });
-	$( "#amount_show" ).html( $( "#slider-range" ).slider( "values", 0 ) +
-		" грн. " + $( "#slider-range" ).slider( "values", 1 )+" грн." );
+    $( '[data-fs-element="range-end"] ').html(p_end+' '+FastShopData.fs_currency);
+    $( '[data-fs-element="range-start"] ').html(p_start+' '+FastShopData.fs_currency);
 
+//Переадресовываем все фильтры на значение, которое они возвращают
 	$('[data-fs-action="filter"]').on('change',function (e) {
 		e.preventDefault();
 		window.location.href=$(this).val();
-
 	})
 })(jQuery)
+
+
 

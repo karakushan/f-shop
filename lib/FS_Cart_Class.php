@@ -10,8 +10,7 @@ class FS_Cart_Class
 	function __construct()
 	{
 		add_action('init', array(&$this,'fast_shop_init_session'), 1);
-		add_action ( 'wp_head', array(&$this,'my_js_variables' ));
-
+	
 		add_action('wp_ajax_add_to_cart', array(&$this,'add_to_cart_ajax'));
 		add_action('wp_ajax_nopriv_add_to_cart', array(&$this,'add_to_cart_ajax'));
 
@@ -58,13 +57,6 @@ class FS_Cart_Class
 		fs_cart_widget();
 		exit;
 
-	}
-//Установка JS глобальных переменных (путь к скрипту Аякс и проверочный код)
-	function my_js_variables(){ ?>
-		<script type="text/javascript">
-			var ajaxurl = <?php echo json_encode( admin_url( "admin-ajax.php" ) ); ?>;
-			var fs_succes=<?php echo json_encode(get_option( 'fs_success', '' )); ?>;     
-		</script><?php
 	}
 
 //Метод удаляет конкретный товар или все товары из корзины покупателя

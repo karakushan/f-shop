@@ -55,16 +55,20 @@ class FS_Init
 			wp_enqueue_style( 'font-awesome',$this->config->data['plugin_url'].'assets/fontawesome/css/font-awesome.min.css',array(),$this->config->data['plugin_ver'],'all');
 
             wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.css',array(),$this->config->data['plugin_ver'],'all');
-            wp_enqueue_script('fs-jqueryui',$this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.js',array('jquery'),null,true);
+
+            wp_enqueue_script("jquery-ui-core", array('jquery'));
+            wp_enqueue_script("jquery-ui-slider", array('jquery'));
+
+           /* wp_enqueue_script('fs-jqueryui',$this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.js',array('jquery'),null,true);*/
             wp_enqueue_script( 'jquery-validate',$this->config->data['plugin_url'].'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true);
             wp_enqueue_script( 'domurl',$this->config->data['plugin_url'].'assets/js/url.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'lightbox',$this->config->data['plugin_url'].'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'lightslider',$this->config->data['plugin_url'].'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true);
 			
-			wp_enqueue_script( 'fast-shop',$this->config->data['plugin_url'].'assets/js/fast-shop.js', array( 'jquery', 'jquery-validate','fs-jqueryui','domurl'), $this->config->data['plugin_ver'], true);
+			wp_enqueue_script( 'fast-shop',$this->config->data['plugin_url'].'assets/js/fast-shop.js', array( 'jquery', 'jquery-validate','jquery-ui-slider','domurl'), $this->config->data['plugin_ver'], true);
 			$l10n = array(
 			    'ajaxurl' =>admin_url("admin-ajax.php"),
-                'fs_slider_max'=>fs_price_max(),
+                'fs_slider_max'=>intval(fs_price_max(false)),
                 'fs_currency'=>fs_currency()
                 );
 			wp_localize_script('fast-shop', 'FastShopData', $l10n );
