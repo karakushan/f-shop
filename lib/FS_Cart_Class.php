@@ -38,7 +38,7 @@ class FS_Cart_Class
 	function add_to_cart_ajax()
 	{
 		$p_id=(int)$_REQUEST['post_id'];
-		$p_c=(int)$_REQUEST['count'];
+		$p_c=(int)$_REQUEST['attr']['count'];
 		$p_attr=esc_sql($_REQUEST['attr']);
 
 		if (isset($_SESSION['cart'][$p_id])) {

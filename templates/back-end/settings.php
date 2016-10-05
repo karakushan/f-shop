@@ -36,18 +36,20 @@
                 <p>
                     <label for="">Список переменных для использования в письмах</label><br>
                     <code>
-                        %first_name% - Имя заказчика,
-                        %last_name% - Фамилия,
+                        %fs_name% - Имя заказчика,
                         %number_products% - к-во купленных продуктов,
                         %total_amount% - общая сумма покупки,
                         %order_id% - id заказа,
                         %products_listing% - список купленных продуктов,
-                        %mail_client% - почта заказчика,
-                        %delivery_address% - адрес доставки,
-                        %delivery% - тип доставки,
-                        %customer_phone% - телефон заказчика,
-                        %comments% - комментарий заказчика,
-                        %site_name% - название сайта,
+                        %fs_email% - почта заказчика,
+                        %fs_adress% - адрес доставки,
+                        %fs_pay% - способ оплаты,
+                        %fs_city% - город
+                        %fs_delivery% - тип доставки,
+                        %fs_phone% - телефон заказчика,
+                        %fs_message% - комментарий заказчика,
+                        %site_name% - название сайта
+                        %admin_url% - адрес админки
                     </code>
                 </p>
                 <p>

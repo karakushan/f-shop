@@ -38,7 +38,7 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
                 $checked=$key==0?"checked":"";
                 if ($fs_atributes_all[$group][$key]['type']=='image') {
                     $img_url=wp_get_attachment_url($fs_atributes_all[$group][$key]['value']);
-                    echo "<li><div>". $fs_atributes_all[$group][$key]['name']."</div><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></label></li>";
+                    echo "<li><div>". $fs_atributes_all[$group][$key]['name']."</div><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
                 }else{
                  echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
              }
@@ -529,6 +529,7 @@ function fs_option($option_name,$default=''){
     $config=new \FS\FS_Config();
     $options=$config->options;
     $option=!empty($options[$option_name]) ? $options[$option_name] : $default;
+    $option=wp_unslash($option);
     return $option;
 }
 

@@ -19,19 +19,13 @@ jQuery(function($) {
 			}
 		})
 		.done(function(result) {
-			console.log(result);
+			// console.log(result);
 			$('#fs_cart_widget,.fs_cart_widget').replaceWith(result);
 			curent.find('.fs-preloader ').fadeOut('fast');
 			curent.find('.send_ok').fadeIn('slow');
 			$('#curent_product').html(productName);
 			$('#modal-product').modal();
 
-		})
-		.fail(function() {
-			console.log("error");
-		})
-		.always(function() {
-			console.log("complete");
 		});
 		
 	});
@@ -84,16 +78,6 @@ $('.down').click(function(event) {
 });
 
 
-//Плавное появление корзины при ховере
-$('.cart').mouseenter(function() {
-	$('.cart  .cart-info').fadeIn('slow');
-});
-$('.close').live('click',function() {
-
-	$('.cart .cart-info').fadeOut('fast');
-
-});
-
 var validator =$("#order-send")
 // валидация и отправка формы заказа
 validator.validate({
@@ -104,12 +88,11 @@ validator.validate({
 		}
 	},
 	submitHandler: function(form) {
-		var formData=$('#order-send').serialize();
 		$.ajax({
 			url: FastShopData.ajaxurl,
 			dataType: 'html',
 			type: 'POST',
-			data:formData,
+			data:validator.serialize(),
 			beforeSend:function () {
 				$('button[data-fs-action=order-send]').find('.fs-preloader').fadeIn('slow');
 			}
@@ -129,50 +112,6 @@ validator.validate({
 
 	}
 });
-
-// валидация и отправка формы заказа
-var validator2=$("#order-send2");
-validator2.validate({
-	ignore: [] ,
-	rules: {
-		name: {
-			required: true
-		}
-	},
-	submitHandler: function(form) {
-		var formData=$('#order-send2').serialize();
-		$.ajax({
-			url: FastShopData.ajaxurl,
-			dataType: 'html',
-			type: 'POST',
-			data:formData,
-			beforeSend:function () {
-				$('button[data-fs-action=order-send]').find('.fs-preloader').fadeIn('slow');
-			}
-		})
-		.done(function(result) {
-			$('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
-			console.log(result);
-			var jsonData=JSON.parse(result);
-
-			if(jsonData.wpdb_error){
-				console.log(jsonData.wpdb_error);
-			}
-			document.location.href=jsonData.redirect;
-
-		});
-
-
-	}
-});
-
-
-
-
-
-
-
-
 
 //Изменение к-ва добавляемых продуктов
 $('[data-fs-action=change_count]').on('change', function(event) {
@@ -317,6 +256,7 @@ jQuery(document).ready(function($) {
 	return params;
 };
 
+//слайдер диапазона цены
 (function ($) {
 
 	var u  = new Url;
