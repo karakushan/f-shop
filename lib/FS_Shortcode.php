@@ -39,7 +39,7 @@ class FS_Shortcode
 		//получаем содержимое корзины (сессии)
 		$carts=fs_get_cart();
 
-		if (count($carts)) {
+		if ($carts) {
 			if (file_exists($template_row_before)) {
 				include ($template_row_before);
 			} else {
