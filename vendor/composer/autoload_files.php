@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     '76dbbb0c1bdded5d9b8006ac921bb195' => $baseDir . '/functions/functions.php',
     'e28008c363ce0f405216ff6524a8f3fb' => $baseDir . '/functions/filters.php',
+    '1b9940facaf6a77f4663f178e9719751' => $baseDir . '/functions/attributes.php',
 );

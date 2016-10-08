@@ -1,8 +1,8 @@
 <div class="wrap fs-atributes fs-settings">
 	<h1><?php _e('Product Attributes','fast-shop') ?></h1>
 	<?php 
-	$fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array(); 
-	$fs_atr=get_option('fs-attributes')!=false?get_option('fs-attributes'):array(); 
+	$fs_atributes=fs_get_attributes_group();
+	$fs_atr=fs_get_attributes();
 	?>
 	<form action="#" method="post" id="fs_attr_form" class="fs_form">
 		<input type="hidden" name="action" value="attr_edit">

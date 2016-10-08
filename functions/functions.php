@@ -651,7 +651,7 @@ function fs_price_max($filter=true){
  * @param $s
  * @return mixed|string
  */
-function fs_translit($s) {
+function fs_transliteration($s) {
     $s = (string) $s; // преобразуем в строковое значение
     $s = strip_tags($s); // убираем HTML-теги
     $s = str_replace(array("\n", "\r"), " ", $s); // убираем перевод каретки

@@ -15,7 +15,8 @@
 		},
 		"files": [
 			"functions/functions.php",
-			"functions/filters.php"
+			"functions/filters.php",
+			"functions/attributes.php"
 		]
 	}
 }
