@@ -142,6 +142,7 @@ function checkout_form()
 
 public function order_send(){
 	$prefix='order/order-form.php';
+    $template='';
 
 	if (file_exists($this->config->data['plugin_user_template'].$prefix)) {
         $template.='<form action="#" name="order-send" id="order-send" class="order-send" method="POST">';
