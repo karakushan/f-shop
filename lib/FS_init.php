@@ -30,6 +30,7 @@ class FS_Init
 		new FS_Action_Class();
 
 
+
 		$plugin = plugin_basename(__FILE__);
 		add_filter("plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ));
 		add_action( 'plugins_loaded', array($this,'true_load_plugin_textdomain' ));

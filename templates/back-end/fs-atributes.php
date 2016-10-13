@@ -3,7 +3,11 @@
 	<?php 
 	$fs_atributes=fs_get_attributes_group();
 	$fs_atr=fs_get_attributes();
-	?>
+/*   echo "<pre>";
+    print_r($fs_atr);
+    echo "</pre>";*/
+
+    ?>
 	<form action="#" method="post" id="fs_attr_form" class="fs_form">
 		<input type="hidden" name="action" value="attr_edit">
 		<div class="fs-add-attr">
@@ -62,11 +66,12 @@
 		</div>
 	</form>
 	<h3 class="fs-section-title">Группы и свойства</h3>
-	<?php if ( $fs_atributes): ?>
+	<?php if (!empty($fs_atributes)): ?>
 		<ul class="fs-group-list">
 			<?php foreach ($fs_atributes as $key => $attr): ?>
+				<?php if (is_array($attr)) print_r($attr); ?>
 				<li><?php echo $attr.' <span>('.$key.')</span>'; ?> <a href="#" data-fs-attr-group="<?php echo $key ?>" data-name="<?php echo $attr ?>" data-fs-action="delete-attr-group">удалить группу</a>
-					<?php if (count($fs_atr[$key])): ?>
+					<?php if (isset($fs_atr[$key])): ?>
 						<ul>
 							<?php foreach ($fs_atr[$key] as $key2 => $att): ?>
 								<li><?php echo $att['name']; ?> <a href="#" data-fs-action="delete-attr-single" data-fs-attr-group="<?php echo $key ?>" data-name="<?php echo $att['name'] ?>" data-fs-attr-id="<?php echo $key2; ?>">удалить атрибут</a></li>

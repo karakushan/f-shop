@@ -1,22 +1,22 @@
 {
-	"name": "karak/fast-shop",
-	"authors": [
-		{
-			"name": "Vitaliy Karakushan",
-			"email": "karakushan@gmail.com"
-		}
-	],
-	"require": {
+    "name": "karak/fast-shop",
+    "authors": [
+        {
+            "name": "Vitaliy Karakushan",
+            "email": "karakushan@gmail.com"
+        }
+    ],
+    "require": {
 
-	},
-	"autoload": {
-		"psr-4": {
-			"FS\\": "lib/"
-		},
-		"files": [
-			"functions/functions.php",
-			"functions/filters.php",
-			"functions/attributes.php"
-		]
-	}
+    },
+    "autoload": {
+        "psr-4": {
+            "FS\\": "lib/"
+        },
+        "files": [
+            "functions/functions.php",
+            "functions/filters.php",
+            "functions/attributes.php"
+        ]
+    }
 }

@@ -1,13 +1,12 @@
 <?php
+namespace FS;
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * Created by PhpStorm.
  * User: karak
  * Date: 25.08.2016
  * Time: 20:19
  */
-
-namespace FS;
-
 
 class FS_Config
 {

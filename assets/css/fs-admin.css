@@ -147,3 +147,11 @@ ul.fs-group-list >li>span {
     letter-spacing: normal;
     font-size: 14px;
 }
+ul.fs-group-list>li {
+    display: block;
+    float: left;
+    padding: 10px;
+    border: 1px solid #a0a5aa;
+    margin:0 10px 10px 0;
+    background: #fff;
+}

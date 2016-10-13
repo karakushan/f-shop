@@ -12,7 +12,7 @@ class FS_Filters
         'price_start',
         'price_end',
         'sort_custom'
-    );
+        );
     function __construct()
     {
 
@@ -28,6 +28,7 @@ class FS_Filters
      */
     public function filter_curr_product($query)
     {
+        $config = new FS_Config;
         $validate_url=filter_var($_SERVER['REQUEST_URI'], FILTER_VALIDATE_URL);
 
         if (!$validate_url && !isset($_REQUEST['fs_filter'])) return;
@@ -44,11 +45,11 @@ class FS_Filters
 
             $query->set('post_type','product');
             $query->set('meta_query',array(
-                    array(
-                        'key'     => $this->conf->meta['price'],
-                        'value'   => array( $price_start,$price_end),
-                        'compare' => 'BETWEEN',
-                        'type'    => 'NUMERIC',
+                array(
+                    'key'     => $this->conf->meta['price'],
+                    'value'   => array( $price_start,$price_end),
+                    'compare' => 'BETWEEN',
+                    'type'    => 'NUMERIC',
                     )
                 )
 
@@ -70,10 +71,10 @@ class FS_Filters
             //сортируем по цене в возрастающем порядке
             if ($url['order_type']=='price_asc'){
                 $query->set('meta_query',array(
-                        'price'=>array(
-                            'key'     => $this->conf->meta['price'],
-                            'compare' => 'EXISTS',
-                            'type'    => 'NUMERIC',
+                    'price'=>array(
+                        'key'     => $this->conf->meta['price'],
+                        'compare' => 'EXISTS',
+                        'type'    => 'NUMERIC',
                         )
                     )
 
@@ -84,10 +85,10 @@ class FS_Filters
             //сортируем по цене в спадающем порядке
             if ($url['order_type']=='price_desc'){
                 $query->set('meta_query',array(
-                        'price'=>array(
-                            'key'     => $this->conf->meta['price'],
-                            'compare' => 'EXISTS',
-                            'type'    => 'NUMERIC',
+                    'price'=>array(
+                        'key'     => $this->conf->meta['price'],
+                        'compare' => 'EXISTS',
+                        'type'    => 'NUMERIC',
                         )
                     )
 
@@ -107,59 +108,76 @@ class FS_Filters
             }
             if ($url['order_type']=='field_action'){
                 $query->set('meta_query',array(
-                      array(
-                            'key'     => $this->conf->meta['action'],
-                            'compare' => 'EXISTS',
-                        )
+                  array(
+                    'key'     => $this->conf->meta['action'],
+                    'compare' => 'EXISTS',
                     )
+                  )
                 );
             }
 
         }
 
         //Фильтруем по свойствам (атрибутам)
-        if (isset($url['attr'])){
-
+        if (!empty($url['attr'])){
+          /*  echo "<pre>";
+            print_r($query->query);
+            echo "</pre>";*/
             global $wpdb;
-            $escl_p=array();
-            $q=get_queried_object();
-            $term_id=$q->term_id;
-            $terms_children=get_term_children($term_id,'catalog');
-            $terms_parent[]=$term_id;
-            $terms_all=array_merge($terms_parent,$terms_children);
-            $impl=implode(',',$terms_all);
-            $excludeposts = $wpdb->get_results( "SELECT * FROM $wpdb->term_relationships WHERE term_taxonomy_id IN ($impl)"  );
+            $taxonomy=$query->query['catalog'];
+            $meta_key=$config->meta['attributes'];
+            $exclude_posts=array();
+            $include_posts=array();
 
-            if ($excludeposts){
-
-                foreach ( $excludeposts as $posts) {
-                    $post_id=$posts->object_id;
-//                    echo $post_id.'<br>';
-                    if ($url['attr'])
-                        foreach ($url['attr'] as $key=>$attr) {
-                            //$key - название группы свойств
-                            // $att_key - название материала
-                            foreach ($attr as $att_key=>$att) {
-
-                                if (get_post_meta($post_id, $this->conf->meta['attributes'],false)!=false){
-                                    $post_meta=get_post_meta($post_id,$this->conf->meta['attributes'],false);
-                                    $post_meta=$post_meta[0];
-                                    $meta_value=isset($post_meta[$key][$att_key])?$post_meta[$key][$att_key]:0;
-                                    /*echo '<pre>';
-                                    print_r($post_meta);
-                                    echo '</pre>';*/
-
-                                }
-//                                echo 'Запись: '.$post_id. ', Группа: '. $key.', Название материала: '.$att_key.', Значение: '.$meta_value.'<br>';
-                            }
-
-                        }
-                    if ($meta_value==0) $escl_p[]=$post_id;
-                }
-                $query->set('post__not_in',array_unique($escl_p));
+            //  преобразовываем в массив сроку запроса
+            $build_array=array();
+            foreach ($url['attr'] as $key => $attr) {
+                $http_vars=explode('|',$attr);
+                $http_vars=array_diff($http_vars, array(''));
+                $build_array[$key]=$http_vars;
             }
+         
+            //получаем все посты категории
+            $posts = $wpdb->get_results("SELECT t1.term_id, t2.object_id  FROM $wpdb->terms AS t1, $wpdb->term_relationships AS t2 WHERE t1.slug='$taxonomy' AND t2.term_taxonomy_id=t1.term_id");
+            if (!is_null($posts)) {
+              foreach ($posts as $key => $post) {
+                $curent = $wpdb->get_row("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = '$post->object_id' AND meta_key='$meta_key'");
+                $meta_value=unserialize($curent->meta_value);
+
+                // перебираем значения масива http запроса и ищем наличие значения в массиве мета-полей 
+                if ($curent!=false || empty($meta_value)) {
+                 foreach ($build_array as $key => $builds) {
+                    if (!isset($meta_value[$key])){
+                        $exclude_posts[]=$post->object_id;
+                        continue;
+                    }else{
+                       foreach ($builds as $key2 => $build) {
+                        if (in_array($build,$meta_value[$key])) {
+                            $include_posts[]=$post->object_id; 
+                        }else{
+                            $exclude_posts[]=$post->object_id;
+                        }
+                    }
+                }
+
+            }
+        }else{
+            $exclude_posts[]=$post->object_id;
         }
-        return $query;
+
+    }
+}
+
+if ($include_posts) {
+    $query->set('post__in',$include_posts);
+} else {
+    $query->set('post__not_in',$exclude_posts);
+}
+
+
+
+}
+return $query;
     }//end filter_curr_product()
 
 
@@ -176,33 +194,33 @@ class FS_Filters
         /*        echo "<pre>";
                 print_r($fs_atributes);
                 echo "</pre>";*/
-        if (!isset($fs_atributes[$group]['attributes'])) return;
+                if (!isset($fs_atributes[$group]['attributes'])) return;
 
-        $arr_url=urldecode($_SERVER['QUERY_STRING']);
-        parse_str ($arr_url,$url);
+                $arr_url=urldecode($_SERVER['QUERY_STRING']);
+                parse_str ($arr_url,$url);
 
-        if ( $type=='option') {
-            echo '<select name="'.$group.'" data-fs-action="filter"><option value="">'.$option_default.'</option>';
-            foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
-                $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.'][]'=>$key),urldecode($_SERVER['REQUEST_URI'])));
-                if (isset($url['attr'][$group])){
-                    $selected=selected($key,$url['attr'][$group],false);
-                }else{
-                    $selected="";
+                if ( $type=='option') {
+                    echo '<select name="'.$group.'" data-fs-action="filter"><option value="">'.$option_default.'</option>';
+                    foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
+                        $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.'][]'=>$key),urldecode($_SERVER['REQUEST_URI'])));
+                        if (isset($url['attr'][$group])){
+                            $selected=selected($key,$url['attr'][$group],false);
+                        }else{
+                            $selected="";
+                        }
+                        echo '<option value="'.$redirect_url.'" '.$selected.'>'.$value.'</option>';
+                    }
+                    echo '</select>';
                 }
-                echo '<option value="'.$redirect_url.'" '.$selected.'>'.$value.'</option>';
-            }
-            echo '</select>';
-        }
-        if ($type=='list') {
-            echo '<ul>';
-            foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
-                $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.'][]'=>$key),urldecode($_SERVER['REQUEST_URI'])));
-                $class=(isset($url['attr'][$group]) && $key==$url['attr'][$group]?'class="active"':"");
-                echo '<li '.$class.'><a href="'.$redirect_url.'" data-fs-action="filter" >'.$value.'</a></li>';
-            }
-            echo '</ul>';
-        }
+                if ($type=='list') {
+                    echo '<ul>';
+                    foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
+                        $redirect_url=esc_url(add_query_arg(array('fs_filter'=>1,'attr['.$group.'][]'=>$key),urldecode($_SERVER['REQUEST_URI'])));
+                        $class=(isset($url['attr'][$group]) && $key==$url['attr'][$group]?'class="active"':"");
+                        echo '<li '.$class.'><a href="'.$redirect_url.'" data-fs-action="filter" >'.$value.'</a></li>';
+                    }
+                    echo '</ul>';
+                }
     }//end attr_group_filter()
 
     /**
