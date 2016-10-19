@@ -31,13 +31,7 @@ class FS_Images_Class
 		$galery=get_post_meta( $post_id, $this->config->meta['gallery'], false);
 		$galerys=isset($galery[0])?$galery[0]:array();
 
-		if (has_post_thumbnail( $post_id)) {
-			$atach_id = get_post_thumbnail_id($post_id);
-			$image= wp_get_attachment_image_src($atach_id, $size);
-			$image_full= wp_get_attachment_image_src( $atach_id,'full');
-
-			$images_n.= "<li data-thumb=\"$image[0]\" data-src=\"$image_full[0]\"><a href=\"$image_full[0]\"  data-lightbox=\"roadtrip\" data-title=\"".get_the_title($post_id)."\"><img src=\"$image_full[0]\" width=\"100%\"></a></li>";
-		}
+		$images_n.=apply_filters('fs_first_gallery_image',$post_id,$size);
 
 		if ($galerys) {
 			foreach ($galerys as $atach_id) {

@@ -142,7 +142,8 @@ class FS_Filters
             if (!is_null($posts)) {
               foreach ($posts as $key => $post) {
                 $curent = $wpdb->get_row("SELECT meta_value FROM $wpdb->postmeta WHERE post_id = '$post->object_id' AND meta_key='$meta_key'");
-                $meta_value=unserialize($curent->meta_value);
+                
+                $meta_value=!is_null($curent)?unserialize($curent->meta_value):'';
 
                 // перебираем значения масива http запроса и ищем наличие значения в массиве мета-полей 
                 if ($curent!=false || empty($meta_value)) {
