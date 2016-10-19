@@ -34,34 +34,36 @@ class FS_Ajax_Class
      */
     function order_send_ajax()
     {
-           if ( !wp_verify_nonce( $_REQUEST['fs_order_nonce'])) die ( 'не пройдена верификация формы nonce');
+     if ( !wp_verify_nonce( $_REQUEST['_wpnonce'])) die ( 'не пройдена верификация формы nonce');
 
-           if (isset($_REQUEST['fast-order']) && is_numeric($_REQUEST['fast-order'])){
-            $product_id=(int)$_REQUEST['fast-order'];
-            $product_count=(int)$_REQUEST['count'];
-            $order_type='form';
+     if (isset($_REQUEST['fast-order']) && is_numeric($_REQUEST['fast-order'])){
+        $product_id=(int)$_REQUEST['fast-order'];
+        $product_count=(int)$_REQUEST['count'];
+        $order_type='form';
+    }else{
+        if (empty($_SESSION['cart'])){
+            die ( 'не найдена сессия корзины');
         }else{
-            if (empty($_SESSION['cart'])){
-                die ( 'не найдена сессия корзины');
-            }else{
-                $order_type='session';
-            }
+            $order_type='session';
         }
+    }
 
-        global $wpdb;
-        $wpdb->show_errors();
+    global $wpdb;
+    $wpdb->show_errors();
 
-        $fs_config=new FS_Config();
-        $fs_delivery=new FS_Delivery_Class();
+    $fs_config=new FS_Config();
+    $fs_delivery=new FS_Delivery_Class();
 
-        $fields=array();
-        $exclude_fields=array('action','_wpnonce','_wp_http_referer');
-        if (isset($_POST)){
-            foreach ($_POST as $key=>$post_field){
-                if (in_array($key,$exclude_fields)) continue;
-                $fields['%'.$key.'%']=filter_input(INPUT_POST,$key,FILTER_SANITIZE_STRING);
-            }
+        //  предоставляем возможность разработчику использовать собственные названия полей
+    $fields=array();
+    $exclude_fields=array('action','_wpnonce','_wp_http_referer');
+    if (!empty($_POST)){
+        foreach ($_POST as $key=>$post_field){
+            if (in_array($key,$exclude_fields)) continue;
+                //   пропускаем все поля через фильтр
+            $fields['%'.$key.'%']=filter_input(INPUT_POST,$key,FILTER_SANITIZE_STRING);
         }
+    }
 
         /*
         Список основных полей для использования в письмах
@@ -105,33 +107,33 @@ class FS_Ajax_Class
 
         $products='';
 
-    $fs_att_group=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array(); 
-    $fs_att=get_option('fs-attributes')!=false?get_option('fs-attributes'):array(); 
-    
-    $atts=array();
+        $fs_att_group=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array(); 
+        $fs_att=get_option('fs-attributes')!=false?get_option('fs-attributes'):array(); 
+        
+        $atts=array();
         if ($order_type=='form'){
             $products.='<li>'.get_the_title($product_id).' - '.fs_get_price($product_id).' '.fs_currency().'('.$product_count.' шт.)</li>';
         }else{
             foreach ($_SESSION['cart'] as $key => $count) {
-               if (!empty($count['attr'])) {
-                   foreach ($count['attr'] as $att_key => $att) {
+             if (!empty($count['attr'])) {
+                 foreach ($count['attr'] as $att_key => $att) {
                     if (empty($att)) continue;
                     if ($key!='count'){
-                         $atts[]=$fs_att_group[$att_key].' - '.$fs_att[$att_key][$att]['name'];
-                    }
-                  
-                    }
-                    $count_single=$count['attr']['count'];
+                       $atts[]=$fs_att_group[$att_key].' - '.$fs_att[$att_key][$att]['name'];
+                   }
+                   
                }
+               $count_single=$count['attr']['count'];
+           }
 
-               $attributes=implode(',', $atts);
-                $products.='<li>'.get_the_title($key).' - '.fs_get_price($key).' '.fs_currency().'('.$attributes.' | '.$count_single.' шт.)</li>';
-            }
-        }
+           $attributes=implode(',', $atts);
+           $products.='<li>'.get_the_title($key).' - '.fs_get_price($key).' '.fs_currency().'('.$attributes.' | '.$count_single.' шт.)</li>';
+       }
+   }
 
 
-        $order_id=$wpdb->insert_id;
-        $_SESSION['last_order_id']=$order_id;
+   $order_id=$wpdb->insert_id;
+   $_SESSION['last_order_id']=$order_id;
         /*
          Список переменных:
          %fs_name% - Имя заказчика,
@@ -183,7 +185,13 @@ class FS_Ajax_Class
         $replace=array_values($search_replace);
 
         $user_message=str_replace($search,$replace,fs_option('customer_mail'));
-        $admin_message=str_replace($search,$replace,fs_option('admin_mail'));
+        
+        if(isset($_REQUEST['order-type']) && $_REQUEST['order-type']=='fast'){
+            $admin_message=str_replace($search,$replace,fs_option('admin_mail'));
+        }else{
+            $admin_message=str_replace($search,$replace,fs_option('admin_mail'));
+        }
+        
 
         //Отсылаем письмо с данными заказа заказчику
         $headers[] = 'Content-type: text/html; charset=utf-8';
@@ -220,20 +228,20 @@ class FS_Ajax_Class
         // print_r($_REQUEST);
         $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
         if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_edit') {
-           $fs_atributes[$_REQUEST['fs_attr_group']][]=array(
+         $fs_atributes[$_REQUEST['fs_attr_group']][]=array(
             'name'=>$_REQUEST['fs_attr_name'],
             'type'=>$_REQUEST['fs_attr_type'],
             'value'=>$_REQUEST['fs_attr_image_id']
             );
 
-           update_option('fs-attributes',$fs_atributes);
-           print_r($fs_atributes);
-       }
-       exit;
-   } 
+         update_option('fs-attributes',$fs_atributes);
+         print_r($fs_atributes);
+     }
+     exit;
+ } 
 
-   public function attr_group_edit_ajax()
-   {
+ public function attr_group_edit_ajax()
+ {
         // print_r($_REQUEST);
     $fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array();
     if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_group_edit') {
@@ -270,10 +278,10 @@ public function attr_group_remove_ajax()
       update_option('fs-attr-groups',$fs_atributes);
       echo "<option value=\"\">выберите группу</option>";
       if (!empty($fs_atributes)) {
-         foreach ($fs_atributes as $key => $value) {     
-            echo "<option value=\"$key\">$value</option>";
-        }
+       foreach ($fs_atributes as $key => $value) {     
+        echo "<option value=\"$key\">$value</option>";
     }
+}
 
 }
 exit;
@@ -283,11 +291,11 @@ public function attr_single_remove_ajax()
 {
 
     if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_single_remove') {
-     $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
-     unset($fs_atributes[$_REQUEST['attr_group']][$_REQUEST['attr_id']]);
-     update_option('fs-attributes',$fs_atributes);
- }
- exit;
+       $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
+       unset($fs_atributes[$_REQUEST['attr_group']][$_REQUEST['attr_id']]);
+       update_option('fs-attributes',$fs_atributes);
+   }
+   exit;
 }
 
 

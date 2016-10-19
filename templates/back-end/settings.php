@@ -68,6 +68,10 @@
                     <label for="admin_mail">Текст письма администратору после отправки заказа:</label><br>
                     <textarea name="fs_option[admin_mail]" id="admin_mail"  rows="10"><?php echo fs_option('admin_mail') ?></textarea>
                 </p>
+                <p>
+                    <label for="admin_mail">Текст письма администратору(быстрый заказ):</label><br>
+                    <textarea name="fs_option[admin_mail_fs]" id="admin_mail_fs"  rows="10"><?php echo fs_option('admin_mail_fs') ?></textarea>
+                </p>
             </div>
             <div id="tabs-3">
 

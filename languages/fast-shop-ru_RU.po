@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
-"POT-Creation-Date: 2016-09-12 14:03+0000\n"
-"PO-Revision-Date: 2016-09-12 14:04+0000\n"
+"POT-Creation-Date: 2016-10-19 18:38+0000\n"
+"PO-Revision-Date: 2016-10-19 18:38+0000\n"
 "Last-Translator: grand-admin <karakushan@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
@@ -22,21 +22,9 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Report-Msgid-Bugs-To: "
 
-#: lib/FS_Post_Type.php:30
-msgid "Prices"
-msgstr "Цены"
-
-#: lib/FS_Post_Type.php:37
-msgid "Attributes"
-msgstr "Свойства"
-
-#: lib/FS_Post_Type.php:44
-msgid "Gallery"
-msgstr "Галерея"
-
-#: lib/FS_Post_Type.php:51
-msgid "Discounts"
-msgstr "Акции"
+#: lib/FS_Taxonomies_Class.php:46
+msgid "Product attributes"
+msgstr "Свойства товаров"
 
 #. Plugin Name of the plugin/theme
 msgid "Fast Shop"
@@ -54,11 +42,11 @@ msgstr ""
 msgid "http://profglobal.ru/"
 msgstr ""
 
-#: functions/functions.php:234
+#: functions/functions.php:258
 msgid "Remove items"
 msgstr "Удалить позицию"
 
-#: functions/functions.php:314
+#: functions/functions.php:349
 msgid "Add to cart"
 msgstr "В корзину"
 
@@ -66,19 +54,19 @@ msgstr "В корзину"
 msgid "Select the method"
 msgstr "Выберите способ"
 
-#: lib/FS_Post_Type.php:77 lib/FS_Post_Type.php:88
+#: lib/FS_Post_Type.php:78 lib/FS_Post_Type.php:89
 msgid "Products"
 msgstr "Товары"
 
-#: lib/FS_Post_Type.php:78
+#: lib/FS_Post_Type.php:79
 msgid "product"
 msgstr "товар"
 
-#: lib/FS_Post_Type.php:79
+#: lib/FS_Post_Type.php:80
 msgid "Add product"
 msgstr "Добавить товар"
 
-#: lib/FS_Post_Type.php:81
+#: lib/FS_Post_Type.php:82
 msgid "Edit product"
 msgstr "Изменить товар"
 

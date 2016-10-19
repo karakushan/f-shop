@@ -36,7 +36,33 @@ if (!class_exists('FS_Taxonomies_Class')) {
 		'show_in_quick_edit'    => true, // по умолчанию значение show_ui
 		);	
 
-			register_taxonomy('catalog', 'product', $args );
+			register_taxonomy('catalog', 'product', $args );	
+
+			$labels_1=array(
+				'add_new_item'=>'Добавить свойство/атрибут товара или группу свойств'
+				);
+
+			$args_1 = array(
+		'label'                 => __( 'Product attributes', 'fast-shop' ), // определяется параметром $labels->name
+		'labels'=>$labels_1,
+		'public'                => true,
+		'show_ui'               => true, // равен аргументу public
+		'show_tagcloud'         => true, // равен аргументу show_ui
+		'hierarchical'          => true,
+		'show_in_nav_menus'  => true,
+		'show_tagcloud'  => true,
+		'update_count_callback' => '',
+		'rewrite' =>true,
+		'update_count_callback' => '_update_post_term_count',
+		'query_var'             => true, // название параметра запроса
+		'capabilities'          => array(),
+		'meta_box_cb'           => null, // callback функция. Отвечает за html код метабокса (с версии 3.8): post_categories_meta_box или post_tags_meta_box. Если указать false, то метабокс будет отключен вообще
+		'show_admin_column'     => true, // Позволить или нет авто-создание колонки таксономии в таблице ассоциированного типа записи. (с версии 3.5)
+		'_builtin'              => false,
+		'show_in_quick_edit'    => true, // по умолчанию значение show_ui
+		);	
+
+			register_taxonomy('product-attributes', 'product', $args_1 );
 
 		}
 
