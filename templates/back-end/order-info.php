@@ -1,25 +1,3 @@
-<style>
-	table, table td, table th {
-		border: 2px dashed rgb(241, 241, 241);
-		border-collapse: collapse;
-		padding: 6px 16px;
-		/* border-radius: 10px; */
-		background: #ccc;
-	}
-	table th{
-		background: #00b9eb;
-		font-weight: bold;
-		color: #000;
-	}
-	.all_summ {
-		text-transform: uppercase;
-		font-weight: bold;
-		font-size: 14px;
-	}
-	.all_summ td {
-		background: #B3B3B3;
-	}
-</style>
 <div class="wrap">
 	<h2>Данные заказа #<?php echo $_GET['id'] ?></h2>
 	<table>

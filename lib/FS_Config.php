@@ -13,6 +13,7 @@ class FS_Config
     public $data;
     public $meta;
     public $options;
+    public $tabs;
 
     function __construct()
     {
@@ -34,6 +35,31 @@ class FS_Config
                 '2'=>'оплачен',
                 '3'=>'отменён'
             )
+        );
+
+        //Табы отображаемые в метабоксе в редактировании товара
+        $this->tabs=array(
+            '0'=>
+                array(
+                    'title'=>'Prices',
+                    'on'=>true,
+                    'body'=>'',
+                    'template'=>''
+                ),
+            '2'=>
+                array(
+                    'title'=>'Gallery',
+                    'on'=>true,
+                    'body'=>'',
+                    'template'=>''
+                ),
+            '3'=>
+                array(
+                    'title'=>'Discounts',
+                    'on'=>true,
+                    'body'=>'',
+                    'template'=>''
+                ),
         );
 
         //Массив настроек сайта

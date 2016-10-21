@@ -25,36 +25,6 @@ class FS_Post_Type
         $this->product_id=isset($_GET['post'])?(int)$_GET['post']:0;
 
         $this->config=new FS_Config();
-        $this->tabs=array(
-            '0'=>
-                array(
-                    'title'=>'Prices',
-                    'on'=>true,
-                    'body'=>'',
-                    'template'=>''
-                ),
-            '1'=>
-                array(
-                    'title'=>'Attributes',
-                    'on'=>true,
-                    'body'=>'',
-                    'template'=>''
-                ),
-            '2'=>
-                array(
-                    'title'=>'Gallery',
-                    'on'=>true,
-                    'body'=>'',
-                    'template'=>''
-                ),
-            '3'=>
-                array(
-                    'title'=>'Discounts',
-                    'on'=>true,
-                    'body'=>'',
-                    'template'=>''
-                ),
-        );
     } // END public function __construct()
 
     /**
@@ -177,14 +147,15 @@ class FS_Post_Type
     {
         $this->product_id=$post->ID;
         echo '<div id="fs-tabs" class="fs-metabox">';
-        if ($this->tabs){
+        if (!empty($this->config->tabs) && is_array($this->config->tabs)){
             echo '<ul>';
-            foreach ($this->tabs as $key=>$tab) {
-                echo '<li><a href="#tab-'.$key.'">'.__( $tab['title'], 'fast-shop' ).'</a></li>';
+            foreach ($this->config->tabs as $key=>$tab) {
+                $title=__($tab['title'],'fast-shop');
+                echo '<li><a href="#tab-'.$key.'">'.$title.'</a></li>';
 
             }
             echo '</ul>';
-            foreach ($this->tabs as $key_body=>$tab_body) {
+            foreach ($this->config->tabs as $key_body=>$tab_body) {
 
                 $template_default = PLUGIN_PATH.'templates/back-end/metabox/tab-'.$key_body.'.php';
                 $template_file=empty($tab_body['template']) ? $template_default : $tab_body['template'];

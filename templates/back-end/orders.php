@@ -1,9 +1,11 @@
 <div class="wrap">
 	<h2><?php _e('Orders','fast-shop') ?></h2>
-	<table>
+	<table class="wp-list-table widefat fixed striped posts">
+	<thead>
 		<tr>
 			<th>#ID</th><th>Дата заказа</th><th>Телефон</th><th>Email</th><th>Способ доставки</th><th>Статус/Изменить</th><th>Сумма</th><th>Подробности</th><!-- <th>Отмена</th> -->
 		</tr>
+		</thead>
 		<?php foreach ($orders->get_orders() as $order): ?>
 			<?php $status=$orders->order_status($order->status); ?>
 			<tr>
