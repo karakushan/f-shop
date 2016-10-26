@@ -2,9 +2,93 @@
     ajaxurl - ссылка на ajax обрабочик,
     fs_slider_max - максимальная цена установленная на сайте
     fs_currency - символ установленной валюты на текущий момент
-*/
+    fs_lang - текущая локаль
+    */
 
-jQuery(function($) {
+    
+    var fs_message;
+// переводы сообщений
+var FastShopLang={
+	uk:{
+		confirm_text:"Вы точно хочете видалити позицію «%s» із списку бажань?",
+		wishText:"Товар успішно доданий в список бажань!",
+		delete_text:"Вы точно хочете видалити товар «%s» із кошика?",
+		delete_all_text:"Ви точно хочете видалити всі товари із кошика?"
+
+	},
+	ru_RU:{
+		confirm_text:"Вы точно хотите удалить позицию «%s» из списка желаний?",
+		wishText:"Товар успешно добавлен в список желаний!",
+		delete_text:"Вы точно хотите удалить продукт «%s» из корзины?",
+		delete_all_text:"Вы точно хотите удалить все товары из корзины?"
+	}
+
+}
+    //переключатель сообщений в зависимости от локали
+    switch(FastShopData.fs_lang){
+    	case "ru_RU":
+    	fs_message=FastShopLang.ru_RU;
+    	break;
+    	case "uk":
+    	fs_message=FastShopLang.uk;
+    	break;
+    	default:
+    	fs_message=FastShopLang.ru_RU;
+    }
+
+    jQuery(function($) {
+    	//удаление товара из списка желаний
+    	$('[data-fs-action="wishlist-delete-position"]').live('click', function(event) {
+    		var product_id=$(this).data('product-id'); 
+    		var product_name=$(this).data('product-name'); 
+    		var parents=$(this).parents('li');
+    		
+    		if(confirm(fs_message.confirm_text.replace('%s',product_name))){
+    			$.ajax({
+    				url: FastShopData.ajaxurl,
+    				data: {
+    					action:'fs_del_wishlist_pos',
+    					position:product_id
+    				},
+    			})
+    			.done(function(success) {
+    				var data=jQuery.parseJSON(success);
+    				$('#fs-wishlist').html(data.body);
+    			});
+    			
+    			
+    		}
+    	});
+	//добавление товара в список желаний
+	$('[data-fs-action="wishlist"]').on('click', function(event) {
+		event.preventDefault();
+		var product_id=$(this).data('product-id');
+		var curentBlock=$(this);
+		$.ajax({
+			url: FastShopData.ajaxurl,
+			data: {action: 'fs_addto_wishlist',product_id:product_id},
+			beforeSend:function () {
+				curentBlock.find('.icon').addClass('wheel');
+			}
+		})
+		.done(function(success) {
+			var data=jQuery.parseJSON(success);
+
+			$('#fs-wishlist').html(data.body);
+			curentBlock.find('.whishlist-message').fadeIn('400', function() {
+			}).text(fs_message.wishText);
+			
+			
+		}).always(function() {
+			curentBlock.find('.icon').removeClass('wheel');
+			setTimeout(function() { 
+				curentBlock.find('.whishlist-message').fadeOut(1500); 
+			}, 2500);
+		});
+		
+		
+		
+	});
 	//добавление товара в корзину (сессию)
 	$('[data-fs-action=add-to-cart]').live('click', function(event) {
 		event.preventDefault();
@@ -26,6 +110,10 @@ jQuery(function($) {
 			$('#curent_product').html(productName);
 			$('#modal-product').modal();
 
+		}).always(function(){
+			setTimeout(function() { 
+				curent.find('.send_ok').fadeOut(1500); 
+			}, 2500);
 		});
 		
 	});
@@ -182,7 +270,7 @@ jQuery(document).ready(function($) {
 		event.preventDefault();
 		var productId = $(this).data('fs-id');
 		var productName = $(this).data('fs-name');
-		if (confirm('Вы точно хотите удалить продукт "'+productName+'" из корзины?')) {
+		if (confirm(fs_message.delete_text.replace('%s',productName))) {
 			$.ajax({
 				url: FastShopData.ajaxurl,
 				type: 'POST',
@@ -210,7 +298,7 @@ jQuery(document).ready(function($) {
 	$('[data-fs-type="delete-cart"]').on('click', function(event) {
 		event.preventDefault();
 		console.log('click');
-		if (confirm('Вы точно хотите удалить все товары из корзины?')) {
+		if (confirm(fs_message.delete_all_text)) {
 			document.location.href=$(this).data('url');
 		}
 	});
@@ -283,15 +371,12 @@ jQuery(document).ready(function($) {
 
         }
     });
-    $( '[data-fs-element="range-end"] ').html(p_end+' '+FastShopData.fs_currency);
-    $( '[data-fs-element="range-start"] ').html(p_start+' '+FastShopData.fs_currency);
+	$( '[data-fs-element="range-end"] ').html(p_end+' '+FastShopData.fs_currency);
+	$( '[data-fs-element="range-start"] ').html(p_start+' '+FastShopData.fs_currency);
 
 //Переадресовываем все фильтры на значение, которое они возвращают
-	$('[data-fs-action="filter"]').on('change',function (e) {
-		e.preventDefault();
-		window.location.href=$(this).val();
-	})
+$('[data-fs-action="filter"]').on('change',function (e) {
+	e.preventDefault();
+	window.location.href=$(this).val();
+})
 })(jQuery)
-
-
-

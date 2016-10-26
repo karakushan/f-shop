@@ -2,7 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
- * 	выводит группы свойств товара в виде опций select или обычного ul списка
+ *  выводит группы свойств товара в виде опций select или обычного ul списка
  * @param  string $group   название группы свойств
  * @param  string $post_id id поста к которому нужно вывести свойства(по умолчанию текущий пост, если в цикле)
  * @param  string $type    тип вывода: 'option' - опции select, 'list' обычный список
@@ -37,8 +37,8 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
                 if ($fs_atribute==0) continue;
                 $checked=$key==0?"checked":"";
                 if ($fs_atributes_all[$group][$key]['type']=='image') {
-                    $img_url=wp_get_attachment_url($fs_atributes_all[$group][$key]['value']);
-                    echo "<li><div>". $fs_atributes_all[$group][$key]['name']."</div><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
+                    $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
+                    echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
                 }else{
                  echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
              }
@@ -645,24 +645,24 @@ function fs_price_max($filter=true){
     return $max;
 }
 
-
 /**
- * Функция транслитерации русских букв
- * @param $s
- * @return mixed|string
+ * функция отображает кнопку "добавить в список желаний"
+ * @param  integer $post_id  - id записи
+ * @param  string  $content  - внутренний html кнопки
+ * @return [type]           [description]
  */
-function fs_transliteration($s) {
-    $s = (string) $s; // преобразуем в строковое значение
-    $s = strip_tags($s); // убираем HTML-теги
-    $s = str_replace(array("\n", "\r"), " ", $s); // убираем перевод каретки
-    $s = preg_replace("/\s+/", ' ', $s); // удаляем повторяющие пробелы
-    $s = trim($s); // убираем пробелы в начале и конце строки
-    $s = function_exists('mb_strtolower') ? mb_strtolower($s) : strtolower($s); // переводим строку в нижний регистр (иногда надо задать локаль)
-    $s = strtr($s, array('а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d','е'=>'e','ё'=>'e','ж'=>'j','з'=>'z','и'=>'i','й'=>'y','к'=>'k','л'=>'l','м'=>'m','н'=>'n','о'=>'o','п'=>'p','р'=>'r','с'=>'s','т'=>'t','у'=>'u','ф'=>'f','х'=>'h','ц'=>'c','ч'=>'ch','ш'=>'sh','щ'=>'shch','ы'=>'y','э'=>'e','ю'=>'yu','я'=>'ya','ъ'=>'','ь'=>''));
-    $s = preg_replace("/[^0-9a-z-_ ]/i", "", $s); // очищаем строку от недопустимых символов
-    $s = str_replace(" ", "-", $s); // заменяем пробелы знаком минус
-    return $s; // возвращаем результат
+function fs_wishlist_button($post_id=0,$args='')
+{
+    global $post;
+    $post_id=empty($post_id)?$post->ID:$post_id;
+   // определим параметры по умолчанию
+    $defaults = array(
+        'attr' => '',
+        'content' => '',
+        );
+
+    $args = wp_parse_args( $args, $defaults );
+    extract($args);
+     
+    echo '<button data-fs-action="wishlist" '.$attr.'  data-product-id="'.$post_id.'"><span class="whishlist-message"></span>'.$content.'</button>';
 }
-
-
-

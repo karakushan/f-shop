@@ -140,6 +140,9 @@ function checkout_form()
 	}	
 }
 
+/**
+ * шорткод для отображения формы оформления заказа
+ */
 public function order_send(){
     $prefix='order/order-form.php';
     $template='';
@@ -169,4 +172,4 @@ public function order_send(){
     return $template;
 }
 
-}//end classs
+}

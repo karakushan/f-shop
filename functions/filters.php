@@ -7,7 +7,7 @@ function  fs_price_format($price,$delimiter='.',$thousands_separator=' '){
 }
 
 add_filter('fs_first_gallery_image','fs_first_image',10,2);
-function fs_first_image($post_id){
+function fs_first_image($post_id,$size){
 	$image_first='';
 	if (has_post_thumbnail( $post_id)) {
 		$atach_id = get_post_thumbnail_id($post_id);
