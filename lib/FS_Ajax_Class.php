@@ -30,7 +30,11 @@ class FS_Ajax_Class
         add_action('wp_ajax_nopriv_fs_addto_wishlist',array(&$this,'fs_addto_wishlist') );
 
         add_action('wp_ajax_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') );
-        add_action('wp_ajax_nopriv_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') );
+        add_action('wp_ajax_nopriv_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') ); 
+
+       //живой поиск по сайту
+        add_action('wp_ajax_fs_livesearch',array(&$this,'fs_livesearch') );
+        add_action('wp_ajax_nopriv_fs_livesearch',array(&$this,'fs_livesearch') );
 
     }
 
@@ -343,5 +347,27 @@ public function fs_del_wishlist_pos()
             ));
     }
     exit;
+}
+
+// живой поиск по сайту
+public function fs_livesearch()
+{
+    $search=filter_input(INPUT_POST, 's', FILTER_SANITIZE_STRING); 
+    
+    $args=array('s'=>$search,'post_type'=>'product','posts_per_page'=>40);
+    if (preg_match("/[a-z0-9_-]/",$search)) {
+       $args['meta_query'] = array(
+        array(
+            'key'     => 'al_articul',
+            'value'   => $search,
+            'compare' => 'LIKE'
+            )
+        );
+       unset($args['s']);
+   }
+   query_posts($args);
+   get_template_part('fast-shop/livesearch/livesearch'); 
+   wp_reset_query();
+   exit;
 }
 } 

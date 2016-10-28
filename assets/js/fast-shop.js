@@ -37,6 +37,38 @@ var FastShopLang={
     }
 
     jQuery(function($) {
+    	$('.search-results .close-search').live('click', function(event) {
+    		event.preventDefault();
+    		$(this).parents('.search-results').fadeOut(0);
+    	});
+		//живой поиск по сайту
+		$('#fs-livesearch').on('keyup focus click input', function(event) {
+			event.preventDefault();
+			var search_input=$(this);
+			var search=$(this).val();
+			var parents_form=search_input.parents('form');
+			var results_div=parents_form.find('.search-results');
+			if(search.length>1){
+				$.ajax({
+					url: FastShopData.ajaxurl,
+					type: 'POST',
+					data: {action: 'fs_livesearch',s:search},
+				})
+				.done(function(data) {
+					results_div.fadeIn(800).html(data);
+				})
+				.fail(function() {
+					console.log("error");
+				})
+				.always(function() {
+					console.log("complete");
+				});
+			}else{
+				results_div.fadeOut(800).html('');
+			}
+			
+			
+		});
     	//удаление товара из списка желаний
     	$('[data-fs-action="wishlist-delete-position"]').live('click', function(event) {
     		var product_id=$(this).data('product-id'); 
