@@ -253,3 +253,21 @@ li.fs-attr {
     position: relative;
     left: -1px;
 }
+.count-error {
+    position: absolute;
+    width: 233px;
+    z-index: 1;
+    bottom: 43px;
+    background: #e1e1e1;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 1;
+}
+.count-error:before {
+    position: absolute;
+    content: "";
+    border: 10px solid transparent;
+    border-top: 10px solid #e1e1e1;
+    bottom: -19px;
+    left: 16px;
+}

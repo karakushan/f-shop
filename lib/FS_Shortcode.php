@@ -157,14 +157,14 @@ public function order_send(){
     ob_end_clean();
 
     if (file_exists($this->config->data['plugin_user_template'].$prefix)) {
-        $template.='<form action="#" name="order-send" id="order-send" class="order-send" method="POST">';
-        $template.=wp_nonce_field( -1, 'fs_order_nonce', true, false );
+        $template.='<form action="#" name="fs-order-send" class="order-send" method="POST">';
+        $template.=wp_nonce_field('fast-shop');
         $template.='<input type="hidden" name="action" value="order_send">';
         $template.=$template_user_file;
         $template.='</form>';
     }else{
-        $template.='<form action="#" name="order-send" id="order-send" class="order-send" method="POST">';
-        $template.=wp_nonce_field( -1, 'fs_order_nonce', true, false );
+        $template.='<form action="#" name="fs-order-send" class="order-send" method="POST">';
+        $template.=wp_nonce_field('fast-shop');
         $template.='<input type="hidden" name="action" value="order_send">';
         $template.=$template_admin_file;
         $template.='</form>';

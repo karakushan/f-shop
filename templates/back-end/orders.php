@@ -13,16 +13,16 @@
 				<td><?php echo date('d.m.Y H:i',strtotime($order->date)) ?></td>
 				<td><?php echo $order->telephone ?></td>
 				<td><?php echo $order->email ?></td>
-				<td><?php echo $delivery->delivery[$order->delivery]['name'] ?></td>
+				<td><?php echo $order->delivery ?></td>
 				<td><select name="" id="" class="status_<?php echo $order->status ?>"  onchange="if(confirm('Вы дейтвительно хотите поменять статус заказа <?php echo $order->id ?>')){ document.location=this.value}">
 					<?php foreach ($orders->order_status as $key => $value): ?>
 						<option value="<?php echo add_query_arg(array('action'=>'edit','id'=>$order->id,'status'=>$key)) ?>" <?php selected( $key, $order->status  ); ?>><?php echo $value ?></option>
 					<?php endforeach ?>
 
 				</select></td>
-				<td><?php echo $order->summa.' '.get_option( 'currency_icon' ) ?></td>
+				<td><?php echo $order->summa.' '.fs_currency() ?></td>
 				<td><a href="<?php echo add_query_arg(array('action'=>'info','id'=>$order->id)) ?>">Подробности</a></td>
-				<!-- <td><a href="<?php echo add_query_arg(array('action'=>'cancel','id'=>$order->id)) ?>">Отмена</a></td> -->
+				
 			</tr>
 		<?php endforeach ?>
 

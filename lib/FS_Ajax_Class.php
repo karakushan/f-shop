@@ -44,7 +44,8 @@ class FS_Ajax_Class
      */
     function order_send_ajax()
     {
-       if ( !wp_verify_nonce( $_REQUEST['fs_order_nonce'])) die ( 'не пройдена верификация формы nonce');
+        $fs_config=new FS_Config();
+       if ( !wp_verify_nonce( $_REQUEST['_wpnonce'],$fs_config->data['plugin_name'])) die ( 'не пройдена верификация формы nonce');
 
        if (isset($_REQUEST['fast-order']) && is_numeric($_REQUEST['fast-order'])){
         $product_id=(int)$_REQUEST['fast-order'];
@@ -61,9 +62,10 @@ class FS_Ajax_Class
     global $wpdb;
     $wpdb->show_errors();
 
-    $fs_config=new FS_Config();
+    
     $fs_delivery=new FS_Delivery_Class();
 
+    // включаем возможность пользователям использовать собственные поля в форме заказа
     $fields=array();
     $exclude_fields=array('action','_wpnonce','_wp_http_referer');
     if (isset($_POST)){

@@ -13,14 +13,18 @@ var FastShopLang={
 		confirm_text:"Вы точно хочете видалити позицію «%s» із списку бажань?",
 		wishText:"Товар успішно доданий в список бажань!",
 		delete_text:"Вы точно хочете видалити товар «%s» із кошика?",
-		delete_all_text:"Ви точно хочете видалити всі товари із кошика?"
+		delete_all_text:"Ви точно хочете видалити всі товари із кошика?",
+		count_error:"к-сть товарів не може бути меньше 1"
+
 
 	},
 	ru_RU:{
 		confirm_text:"Вы точно хотите удалить позицию «%s» из списка желаний?",
 		wishText:"Товар успешно добавлен в список желаний!",
 		delete_text:"Вы точно хотите удалить продукт «%s» из корзины?",
-		delete_all_text:"Вы точно хотите удалить все товары из корзины?"
+		delete_all_text:"Вы точно хотите удалить все товары из корзины?",
+		count_error:"к-во товаров не может быть меньше единицы"
+
 	}
 
 }
@@ -37,11 +41,12 @@ var FastShopLang={
     }
 
     jQuery(function($) {
-    	$('.search-results .close-search').live('click', function(event) {
-    		event.preventDefault();
-    		$(this).parents('.search-results').fadeOut(0);
-    	});
+
 		//живой поиск по сайту
+        $('.search-results .close-search').live('click', function(event) {
+            event.preventDefault();
+            $(this).parents('.search-results').fadeOut(0);
+        });
 		$('#fs-livesearch').on('keyup focus click input', function(event) {
 			event.preventDefault();
 			var search_input=$(this);
@@ -53,15 +58,16 @@ var FastShopLang={
 					url: FastShopData.ajaxurl,
 					type: 'POST',
 					data: {action: 'fs_livesearch',s:search},
+					beforeSend:function () {
+						search_input.next().addClass('search-animate');
+					}
 				})
 				.done(function(data) {
 					results_div.fadeIn(800).html(data);
-				})
-				.fail(function() {
-					console.log("error");
+
 				})
 				.always(function() {
-					console.log("complete");
+					search_input.next().removeClass('search-animate');
 				});
 			}else{
 				results_div.fadeOut(800).html('');
@@ -105,12 +111,9 @@ var FastShopLang={
 		})
 		.done(function(success) {
 			var data=jQuery.parseJSON(success);
-
 			$('#fs-wishlist').html(data.body);
 			curentBlock.find('.whishlist-message').fadeIn('400', function() {
 			}).text(fs_message.wishText);
-			
-			
 		}).always(function() {
 			curentBlock.find('.icon').removeClass('wheel');
 			setTimeout(function() { 
@@ -135,12 +138,13 @@ var FastShopLang={
 			}
 		})
 		.done(function(result) {
-			// console.log(result);
 			$('#fs_cart_widget,.fs_cart_widget').replaceWith(result);
 			curent.find('.fs-preloader ').fadeOut('fast');
 			curent.find('.send_ok').fadeIn('slow');
-			$('#curent_product').html(productName);
-			$('#modal-product').modal();
+			// показываем окно с товарами если определено в  настроках
+			if(FastShopData.order_modal==1){
+				$(FastShopData.order_modal_id).modal('show');
+			}
 
 		}).always(function(){
 			setTimeout(function() { 
@@ -151,7 +155,7 @@ var FastShopLang={
 	});
 
 //прибавлем количество товара на единицу
-$('.c-up').on('click', function(event) {
+$('.c-up').on('click ', function(event) {
 	event.preventDefault();
 	var parCont=$(this).parents('.c-tovar');
 	var inputVal=parCont.find('input:first').val();
@@ -164,7 +168,7 @@ $('.c-up').on('click', function(event) {
 });	
 
 
-$('[data-fs-action=change_count]').on('change', function(event) {
+$('[data-fs-action=change_count]').on('change input', function(event) {
 	event.preventDefault();
 
 	var product=$(this).data('count-id');
@@ -198,15 +202,9 @@ $('.down').click(function(event) {
 });
 
 
-var validator =$("#order-send")
+var validator =$('form[name="fs-order-send"]')
 // валидация и отправка формы заказа
 validator.validate({
-	ignore: [] ,
-	rules: {
-		name: {
-			required: true
-		}
-	},
 	submitHandler: function(form) {
 		$.ajax({
 			url: FastShopData.ajaxurl,
@@ -222,9 +220,11 @@ validator.validate({
 			console.log(result);
 			var jsonData=JSON.parse(result);
 
+
 			if(jsonData.wpdb_error){
 				console.log(jsonData.wpdb_error);
 			}
+
 			document.location.href=jsonData.redirect;
 
 		});
@@ -267,15 +267,25 @@ jQuery(document).ready(function($) {
 
 //Изменение количества продуктов в корзине
 jQuery(document).ready(function($) {
-	$('[data-fs-type="cart-quantity"]').on('change', function(event) {
+	$('[data-fs-type="cart-quantity"]').on('change input', function(event) {
 		event.preventDefault();
 		var productId = $(this).data('fs-id');
 		var productCount = $(this).val();
 
+		//если покупатель вбил неправильное к-во товаров
+		
+			if ( !isNumeric(productCount) ||  productCount<=0) {
+				$(this).val(1);
+				productCount=1;
+				$(this).parent().css({'position':'relative'});
+				$(this).prev('.count-error').text(fs_message.count_error).fadeIn(400);
+			}else{
+				$(this).prev('.count-error').text('').fadeOut(800);
+			}
+	
 		$.ajax({
 			url: FastShopData.ajaxurl,
 			type: 'POST',
-			dataType: 'html',
 			data: {
 				action: 'update_cart',
 				product:productId,
@@ -284,12 +294,6 @@ jQuery(document).ready(function($) {
 		})
 		.done(function() {
 			location.reload();
-		})
-		.fail(function() {
-			console.log("ошибка обновления количества товаров в корзине");
-		})
-		.always(function() {
-			
 		});
 		
 
@@ -338,13 +342,24 @@ jQuery(document).ready(function($) {
 
 jQuery(document).ready(function($) {
 	//Образует js объект с данными о продукте и помещает в кнопку добавления в корзину в атрибут 'data-json'
-	$('[data-fs-element="attr"]').on('change', function(event) {
+	$('[data-fs-element="attr"]').on('change input', function(event) {
 		event.preventDefault();
 		var productId=$(this).data('product-id');
 		var cartbutton=$('#fs-atc-'+productId);
 		var productObject=cartbutton.data('json');
 		var attrName=$(this).attr('name');
 		var attrVal=$(this).val();
+		//если покупатель вбил неправильное к-во товаров
+		if($(this).attr('name')=='count'){
+			if ( !isNumeric(attrVal) ||  attrVal<=0) {
+				$(this).val(1);
+				attrVal=1;
+				$(this).parent().css({'position':'relative'});
+				$(this).prev('.count-error').text(fs_message.count_error).fadeIn(400);
+			}else{
+				$(this).prev('.count-error').text('').fadeOut(800);
+			}
+		}
 		productObject.count=attrVal;
 		productObject.attr[attrName]=attrVal;
 		var jsontostr=JSON.stringify(productObject);
@@ -412,3 +427,10 @@ $('[data-fs-action="filter"]').on('change',function (e) {
 	window.location.href=$(this).val();
 })
 })(jQuery)
+
+// проверяет является ли переменная числом
+function isNumeric(n) {
+	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+

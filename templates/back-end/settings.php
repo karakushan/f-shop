@@ -8,6 +8,7 @@
                 <li><a href="#tabs-3">Акции</a></li>
                 <li><a href="#tabs-4">Страницы</a></li>
                 <li><a href="#tabs-5">Пользователи</a></li>
+                <li><a href="#tabs-6">Сообщения</a></li>
             </ul>
             <div id="tabs-1">
                 <p>
@@ -149,6 +150,16 @@
                 <p>
                     <label for="register_user">Регистрировать пользователя при покупке</label><br>
                     <input type="checkbox" name="fs_option[register_user]" id="register_user" value="1" <?php checked(fs_option('register_user'),1) ?>>
+                </p>
+            </div> 
+            <div id="tabs-6">
+                <p>
+                    <label for="register_user">Показывать модальное окно поле добавления товара в корзину</label><br>
+                    <input type="checkbox" name="fs_option[order_modal]" id="order_modal" value="1" <?php checked(fs_option('order_modal'),1) ?>>
+                </p>
+                <p>
+                    <label for="register_user">Идентификатор модального окна</label><br>
+                    <input type="text" name="fs_option[order_modal_id]" id="order_modal_id" value="<?php echo fs_option('order_modal_id') ?>">
                 </p>
             </div>
         </div>

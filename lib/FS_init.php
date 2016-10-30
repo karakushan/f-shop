@@ -65,12 +65,15 @@ class FS_Init
             wp_enqueue_script( 'domurl',$this->config->data['plugin_url'].'assets/js/url.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'lightbox',$this->config->data['plugin_url'].'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'lightslider',$this->config->data['plugin_url'].'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true);
-			
-			wp_enqueue_script( 'fast-shop',$this->config->data['plugin_url'].'assets/js/fast-shop.js', array( 'jquery', 'jquery-validate','jquery-ui-slider','domurl'), $this->config->data['plugin_ver'], true);
+			wp_enqueue_script( 'js-cookie',$this->config->data['plugin_url'].'assets/js-cookie/src/js.cookie.js', array( 'jquery' ), null, true);
+
+			wp_enqueue_script( 'fast-shop',$this->config->data['plugin_url'].'assets/js/fast-shop.js', array( 'jquery', 'bootstrap','jquery-validate','jquery-ui-slider','domurl','js-cookie'), $this->config->data['plugin_ver'], true);
 			$l10n = array(
 			    'ajaxurl' =>admin_url("admin-ajax.php"),
                 'fs_slider_max'=>intval(fs_price_max(false)),
-                'fs_currency'=>fs_currency()
+                'fs_currency'=>fs_currency(),
+                'order_modal'=>fs_option('order_modal',0),
+                'order_modal_id'=>fs_option('order_modal_id')
                 );
 			wp_localize_script('fast-shop', 'FastShopData', $l10n );
 		}

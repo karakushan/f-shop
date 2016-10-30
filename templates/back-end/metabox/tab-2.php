@@ -1,9 +1,7 @@
 <?php  $mft=get_post_meta($post->ID, $this->config->meta['gallery'], false); ?>
 <button type="button" id="new_image">+ добавить изображение</button>
 <div class="row-images" id="mmf-1">
-
     <div class="row-images">
-        
     </div>
     <?php if ($mft): ?>
         <?php for ($i=0; $i<count($mft[0]);$i++){

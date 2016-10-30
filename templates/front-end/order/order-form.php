@@ -68,6 +68,14 @@ fs_message
 <div class="row">
 	<div class="col-md-8">
 		<div class="form-group">
+			<label for="">Адрес доставки</label>
+			<input type="text" class="form-control" name="fs_adress" required title="необходим адрес куда доставить товар">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-8">
+		<div class="form-group">
 			<label for="">Комментарий к заказу</label>
 			<textarea class="form-control" name="fs_message" ></textarea>
 		</div>

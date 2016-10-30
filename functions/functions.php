@@ -40,20 +40,20 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
                     $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
                     echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
                 }else{
-                 echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
-             }
+                   echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
+               }
 
-         }
-         break;
+           }
+           break;
 
 
 
-         default:
+           default:
 
-         break;
-     }
+           break;
+       }
 
- }
+   }
 }
 
 /**
@@ -78,9 +78,9 @@ function fs_lightslider($post_id='', $args='')
         echo $args;
         echo "}; 
         jQuery(document).ready(function($) {
-         $('#product_slider').lightSlider(product_sc); 
-     });
- </script>";
+           $('#product_slider').lightSlider(product_sc); 
+       });
+   </script>";
 
 }
 
@@ -124,14 +124,14 @@ function fs_get_price($post_id='')
         $price=$action_price;
     }else{
       if ($action_base>0) {
-         if($action_type==1){
+       if($action_type==1){
             //расчёт цены если скидка в процентах
-            $price=$base_price-($base_price*$action_base/100);
-        }else{
+        $price=$base_price-($base_price*$action_base/100);
+    }else{
             //расчёт цены если скидка в фикс. к-ве
-            $price=$base_price-$action_base;
-        }
+        $price=$base_price-$action_base;
     }
+}
 }
 return (float)$price;
 }
@@ -178,8 +178,8 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
     } else {
-     printf($wrap,$price.' <span>'.$cur_symb.'</span>');
- }
+       printf($wrap,$price.' <span>'.$cur_symb.'</span>');
+   }
 
 }
 
@@ -207,6 +207,23 @@ function fs_total_amount($show=true,$wrap='%s <span>%s</span>')
     } else {
         printf($wrap,$price,fs_currency());
     }
+}
+
+/**
+ * возвращает к-во всех товаров в корзине
+ * @return [type] [description]
+ */
+function fs_total_count()
+{
+    $count=array();
+    if (isset($_SESSION['cart'])) {
+        foreach ($_SESSION['cart'] as $key => $product){
+            $count[]=$product['count'];
+        }
+    }
+    $all_count=array_sum($count);
+    return  $all_count;
+
 }
 
 /**
@@ -300,12 +317,12 @@ function fs_product_count($show=false)
 
 //Выводит текущую цену с символом валюты без учёта скидки
 /**
- * @param string $post_id - id товара
+ * @param int $post_id - id товара
  * @param bool $echo - вывести или возвратить (по умолчанию вывести)
  * @param string $wrap - html обёртка для цены
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price($post_id='',$echo=true, $wrap='<span>%s</span>')
+function fs_base_price($post_id=0,$echo=true, $wrap='<span>%s</span>')
 {
     global $post;
     $config=new \FS\FS_Config();
@@ -316,7 +333,8 @@ function fs_base_price($post_id='',$echo=true, $wrap='<span>%s</span>')
 
     if ( $price==fs_get_price($post_id)) return;
     $price=empty($price) ? 0 : (float)$price;
-    
+
+    $price_float=$price;
 
     $price=number_format($price,2,fs_option('currency_delimiter','.'),' ');
     $cur_symb=fs_currency();
@@ -324,7 +342,7 @@ function fs_base_price($post_id='',$echo=true, $wrap='<span>%s</span>')
     if ($echo===true){
         printf($wrap,$price.' <span>'.$cur_symb.'</span>');
     }else{
-        return $price;
+        return $price_float;
     }
 }
 
@@ -456,13 +474,13 @@ function fs_quantity_product($product_id='',$type='number')
     $product_id=!empty($product_id)?$product_id : $post->ID;
     switch ($type){
         case 'number':
-        echo '<input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
         break;
         case 'text':
-        echo '<input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
         break;
         default:
-        echo '<input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
         break;
     }
 
@@ -484,17 +502,13 @@ function fs_parse_url($url='')
  * @param string $post_id
  * @return bool|mixed
  */
-function fs_action($post_id=""){
+function fs_action($post_id=0){
     global $post;
-    $post_id = (empty($post_id) ? $post->ID : (int)$post_id);
-    $config=new \FS\FS_Config();
-    $action=get_post_meta($post_id,$config->meta['action'],1);
-    $action=(empty($action)?false:true);
-    $action_auto=fs_option('action_label');
-    if ($action_auto==1) {
-        if(fs_get_price($post_id)<fs_base_price($post_id,false)){
-            $action=true;
-        }
+    $post_id = empty($post_id) ? $post->ID : (int)$post_id;
+    if(fs_base_price($post_id,false)>fs_get_price($post_id)){
+        $action=true;
+    }else{
+        $action=false;
     }
     return $action;
 }
@@ -663,6 +677,24 @@ function fs_wishlist_button($post_id=0,$args='')
 
     $args = wp_parse_args( $args, $defaults );
     extract($args);
-     
+
     echo '<button data-fs-action="wishlist" '.$attr.'  data-product-id="'.$post_id.'"><span class="whishlist-message"></span>'.$content.'</button>';
+}
+
+/**
+ * Функция транслитерации русских букв
+ * @param $s
+ * @return mixed|string
+ */
+function fs_transliteration($s) {
+    $s = (string) $s; // преобразуем в строковое значение
+    $s = strip_tags($s); // убираем HTML-теги
+    $s = str_replace(array("\n", "\r"), " ", $s); // убираем перевод каретки
+    $s = preg_replace("/\s+/", ' ', $s); // удаляем повторяющие пробелы
+    $s = trim($s); // убираем пробелы в начале и конце строки
+    $s = function_exists('mb_strtolower') ? mb_strtolower($s) : strtolower($s); // переводим строку в нижний регистр (иногда надо задать локаль)
+    $s = strtr($s, array('а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d','е'=>'e','ё'=>'e','ж'=>'j','з'=>'z','и'=>'i','й'=>'y','к'=>'k','л'=>'l','м'=>'m','н'=>'n','о'=>'o','п'=>'p','р'=>'r','с'=>'s','т'=>'t','у'=>'u','ф'=>'f','х'=>'h','ц'=>'c','ч'=>'ch','ш'=>'sh','щ'=>'shch','ы'=>'y','э'=>'e','ю'=>'yu','я'=>'ya','ъ'=>'','ь'=>''));
+    $s = preg_replace("/[^0-9a-z-_ ]/i", "", $s); // очищаем строку от недопустимых символов
+    $s = str_replace(" ", "-", $s); // заменяем пробелы знаком минус
+    return $s; // возвращаем результат
 }

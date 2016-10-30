@@ -53,7 +53,6 @@ class FS_Cart_Class
 				'attr'=>$p_attr		
 				);
 		}
-
 		fs_cart_widget();
 		exit;
 

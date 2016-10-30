@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-20 19:43+0000\n"
-"POT-Revision-Date: Thu Oct 20 2016 22:49:03 GMT+0300 (Финляндия (лето))\n"
+"POT-Creation-Date: 2016-10-21 10:02+0000\n"
+"POT-Revision-Date: Sat Oct 29 2016 18:15:43 GMT+0300 (Финляндия (лето))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -50,8 +50,13 @@ msgstr ""
 msgid "Remove items"
 msgstr ""
 
-#: ../functions/functions.php:349
+#: ../functions/functions.php:350
 msgid "Add to cart"
+msgstr ""
+
+#: ../lib/FS_Ajax_Class.php:313 ../lib/FS_Ajax_Class.php:337 ../templates/front-
+#: end/wishlist/wishlist.php:5
+msgid "Wishlist"
 msgstr ""
 
 #: ../lib/FS_Delivery_Class.php:35
@@ -120,11 +125,21 @@ msgstr ""
 msgid "Not found shipping methods"
 msgstr ""
 
+#: ../templates/front-end/order/order-form.php:41
 msgid "Choose a shipping method"
 msgstr ""
 
+#: ../templates/front-end/order/order-form.php:42
 msgid "Shipping method"
 msgstr ""
 
+#: ../templates/front-end/order/order-form.php:56
+msgid "Select a payment method"
+msgstr ""
+
+#: ../templates/front-end/order/order-form.php:57
 msgid "Type of payment"
+msgstr ""
+
+msgid "Prices"
 msgstr ""

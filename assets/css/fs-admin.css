@@ -155,3 +155,17 @@ ul.fs-group-list>li {
     margin:0 10px 10px 0;
     background: #fff;
 }
+ul.order-paggination a {
+    padding: 5px 9px;
+    background: #6e7071;
+    margin: 0 4px 0 0;
+    display: block;
+    text-decoration: none;
+    color: #fff;
+}
+ul.order-paggination li {
+    display: inline-block;
+}
+ul.order-paggination a.active {
+    background: #23282d;
+}
