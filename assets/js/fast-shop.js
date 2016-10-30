@@ -43,10 +43,10 @@ var FastShopLang={
     jQuery(function($) {
 
 		//живой поиск по сайту
-        $('.search-results .close-search').live('click', function(event) {
-            event.preventDefault();
-            $(this).parents('.search-results').fadeOut(0);
-        });
+		$('.search-results .close-search').on('click', function(event) {
+			event.preventDefault();
+			$(this).parents('.search-results').fadeOut(0);
+		});
 		$('#fs-livesearch').on('keyup focus click input', function(event) {
 			event.preventDefault();
 			var search_input=$(this);
@@ -76,7 +76,7 @@ var FastShopLang={
 			
 		});
     	//удаление товара из списка желаний
-    	$('[data-fs-action="wishlist-delete-position"]').live('click', function(event) {
+    	$('[data-fs-action="wishlist-delete-position"]').on('click', function(event) {
     		var product_id=$(this).data('product-id'); 
     		var product_name=$(this).data('product-name'); 
     		var parents=$(this).parents('li');
@@ -125,7 +125,7 @@ var FastShopLang={
 		
 	});
 	//добавление товара в корзину (сессию)
-	$('[data-fs-action=add-to-cart]').live('click', function(event) {
+	$('[data-fs-action=add-to-cart]').on('click', function(event) {
 		event.preventDefault();
 		var curent=$(this);
 		var productName=$(this).data('product-name');
@@ -274,15 +274,15 @@ jQuery(document).ready(function($) {
 
 		//если покупатель вбил неправильное к-во товаров
 		
-			if ( !isNumeric(productCount) ||  productCount<=0) {
-				$(this).val(1);
-				productCount=1;
-				$(this).parent().css({'position':'relative'});
-				$(this).prev('.count-error').text(fs_message.count_error).fadeIn(400);
-			}else{
-				$(this).prev('.count-error').text('').fadeOut(800);
-			}
-	
+		if ( !isNumeric(productCount) ||  productCount<=0) {
+			$(this).val(1);
+			productCount=1;
+			$(this).parent().css({'position':'relative'});
+			$(this).prev('.count-error').text(fs_message.count_error).fadeIn(400);
+		}else{
+			$(this).prev('.count-error').text('').fadeOut(800);
+		}
+
 		$.ajax({
 			url: FastShopData.ajaxurl,
 			type: 'POST',
@@ -426,7 +426,17 @@ $('[data-fs-action="filter"]').on('change',function (e) {
 	e.preventDefault();
 	window.location.href=$(this).val();
 })
+
+// слайдер товара
+if (typeof fs_lightslider_options!="undefined") { 
+		$('#product_slider').lightSlider(fs_lightslider_options);
+	 }
 })(jQuery)
+
+
+	
+	
+
 
 // проверяет является ли переменная числом
 function isNumeric(n) {

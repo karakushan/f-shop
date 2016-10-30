@@ -18,14 +18,13 @@ class FS_Images_Class
      * @param array $size
      * @return bool|string
      */
-    public function fs_galery_list($post_id='', $size=array(90,90))
+    public function fs_galery_list($post_id='')
     {
 
     	$images_n='';
         $gallery_image='';
     	$galerys=$this->fs_galery_images($post_id);
-    	$images_n.=apply_filters('fs_first_gallery_image',$post_id,$size);
-
+    	$images_n.=apply_filters('fs_first_gallery_image',$post_id,'full');
     	if ($galerys) {
     		foreach ($galerys as $atach_id) {
     		    if (is_numeric($atach_id)){

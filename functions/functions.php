@@ -40,49 +40,51 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
                     $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
                     echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
                 }else{
-                   echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
-               }
+                 echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
+             }
 
-           }
-           break;
+         }
+         break;
 
 
 
-           default:
+         default:
 
-           break;
-       }
+         break;
+     }
 
-   }
+ }
 }
 
 /**
- * @param string $post_id
- * @param string $args
+ * @param integer $post_id - id записи
+ * @param array $args - массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
  */
-function fs_lightslider($post_id='', $args='')
+function fs_lightslider($post_id=0, $args=array())
 {
     $galery=new FS\FS_Images_Class();
     global $post;
-    $post_id=(empty($post_id) ? $post->ID : (int)$post_id);
+    $post_id=empty($post_id) ? $post->ID : (int)$post_id;
 
-    $galery=$galery->fs_galery_list($post_id,array(90,90));
+    $default=array(
+        "gallery"=>true,
+        "item"=>1,
+        "vertical"=>false,
+        "thumbItem"=>3
+        );
+    $args=wp_parse_args($args,$default);
+
+    $galery=$galery->fs_galery_list($post_id);
     if (!$galery) {
         echo "string";
     }else{
+        echo "<script>";
+        echo "var fs_lightslider_options=".json_encode( $args);
+        echo "</script>";
         echo "<ul id=\"product_slider\">";
         echo $galery;
         echo "</ul>";
-
-        echo "<script> var product_sc={";
-        echo $args;
-        echo "}; 
-        jQuery(document).ready(function($) {
-           $('#product_slider').lightSlider(product_sc); 
-       });
-   </script>";
-
-}
+    }
 
 }
 
@@ -124,14 +126,14 @@ function fs_get_price($post_id='')
         $price=$action_price;
     }else{
       if ($action_base>0) {
-       if($action_type==1){
+         if($action_type==1){
             //расчёт цены если скидка в процентах
-        $price=$base_price-($base_price*$action_base/100);
-    }else{
+            $price=$base_price-($base_price*$action_base/100);
+        }else{
             //расчёт цены если скидка в фикс. к-ве
-        $price=$base_price-$action_base;
+            $price=$base_price-$action_base;
+        }
     }
-}
 }
 return (float)$price;
 }
@@ -178,8 +180,8 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
     } else {
-       printf($wrap,$price.' <span>'.$cur_symb.'</span>');
-   }
+     printf($wrap,$price.' <span>'.$cur_symb.'</span>');
+ }
 
 }
 
