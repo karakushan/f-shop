@@ -169,3 +169,7 @@ ul.order-paggination li {
 ul.order-paggination a.active {
     background: #23282d;
 }
+td.fs_price.column-fs_price span span {
+    font-weight: bold;
+    color: #4CAF50;
+}

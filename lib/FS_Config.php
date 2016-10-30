@@ -71,6 +71,7 @@ class FS_Config
             'price'=>'fs_price',//базовая цена
             'wholesale_price'=>'fs_wholesale_price',//цена для оптовиков
             'discount'=>'fs_discount',//размер скидки
+            'product_article'=>'fs_product_article',//размер скидки
             'availability'=>'fs_availability',//наличие на складе
             'remaining_amount'=>'remaining_amount',//к-во товаров доступных для покупки
             'action'=>'fs_actions',//включить  или выключить акцию
