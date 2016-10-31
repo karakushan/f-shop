@@ -173,3 +173,71 @@ td.fs_price.column-fs_price span span {
     font-weight: bold;
     color: #4CAF50;
 }
+.fs-selected-image {
+    width: 260px;
+    height: 179px;
+    background-size: cover;
+    margin: 0 0 10px 0;
+    border: 1px solid #b4b9be;
+    background: #fcfcfc;
+    border-radius: 2px;
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    max-width: 100%;
+}
+.delete-image {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    background: #fff;
+    line-height: 1;
+    padding: 3px 4px;
+    max-width: 100%;
+}
+.select_file {
+    display: block;
+    background: #03A9F4;
+    border: 1px solid #0097db;
+    /* height: 31px; */
+    border-radius: 2px;
+    padding: 8px 27px;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .05em;
+    color: #ffffff;
+    box-shadow: 2px 3px 8px 0px rgba(0, 0, 0, 0.36);
+    width: 262px;
+    max-width: 100%;
+}
+.delete_file {
+    display: block;
+    background: #ff4c89;
+    border: 1px solid #ff4584;
+    border-radius: 2px;
+    padding: 8px 27px;
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .05em;
+    color: #ffffff;
+    box-shadow: 2px 3px 8px 0px rgba(0, 0, 0, 0.36);
+    min-width: 262px;
+}
+.delete_file:hover {
+    background: #E91E63;
+    box-shadow: 2px 3px 8px 0px rgba(0, 0, 0, 0.36);
+    cursor: pointer;
+}
+.select_file:hover {
+    background: #0085ba;
+    box-shadow: 2px 3px 8px 0px rgba(0, 0, 0, 0.36);
+    cursor: pointer;
+}
+.fs-att-values{
+    display: none;
+}
+.fs-att-values .sp-replacer {
+    margin: 10px 0;
+}

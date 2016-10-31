@@ -79,11 +79,13 @@ class FS_Init
 		{
 			wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.css',array(),$this->config->data['plugin_ver'],'all');
 			wp_enqueue_style('font-bebas',$this->config->data['plugin_url'].'assets/fonts/BebasNeueBold/styles.css');
+			wp_enqueue_style('spectrum',$this->config->data['plugin_url'].'assets/spectrum/spectrum.css');
 			wp_enqueue_style('font-roboto','https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&subset=cyrillic');
 			wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'].'assets/css/fast-shop.css',array(),$this->config->data['plugin_ver'],'all');
 			wp_enqueue_style( 'fs-admin', $this->config->data['plugin_url'].'assets/css/fs-admin.css',array(),$this->config->data['plugin_ver'],'all');
 			wp_enqueue_script('fs-jqueryui',$this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.js',array('jquery'),null,true);
 			wp_enqueue_script( 'fs-admin',$this->config->data['plugin_url'].'assets/js/fs-admin.js', array( 'jquery','fs-library' ), null, true);
+			wp_enqueue_script( 'spectrum',$this->config->data['plugin_url'].'assets/spectrum/spectrum.js', array( 'jquery'), null, true);
 			wp_enqueue_script( 'fs-library',$this->config->data['plugin_url'].'assets/js/fs-library.js', array( 'jquery' ), null, true);
 		}
 	}
