@@ -12,13 +12,13 @@ fs_message
 */
 ?>
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<div class="form-group">
 			<label for="">Ф.И.О</label>
 			<input type="text" class="form-control" name="fs_name" required title="заполните поле">
 		</div>
 	</div>
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<div class="form-group">
 			<label for="">Телефон</label>
 			<input type="text" class="form-control" name="fs_phone" required title="заполните поле">
@@ -26,7 +26,7 @@ fs_message
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-8">
+	<div class="col-md-12">
 		<div class="form-group">
 			<label>E-mail</label>
 			<input type="email" class="form-control"  name="fs_email" required title="нужен валидный e-mail адрес">
@@ -35,7 +35,7 @@ fs_message
 
 </div>
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<div class="form-group">
 			<label for="">Выберите способ доставки</label>
 			<select class="form-control" name="fs_delivery" title="<?php _e('Choose a shipping method', 'fast-shop' ); ?>" required>
@@ -49,7 +49,7 @@ fs_message
 			</select>
 		</div>
 	</div>
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<div class="form-group">
 			<label for="">Выберите способ оплаты
 			</label>
@@ -66,7 +66,7 @@ fs_message
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-8">
+	<div class="col-md-12">
 		<div class="form-group">
 			<label for="">Адрес доставки</label>
 			<input type="text" class="form-control" name="fs_adress" required title="необходим адрес куда доставить товар">
@@ -74,7 +74,7 @@ fs_message
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-8">
+	<div class="col-md-12">
 		<div class="form-group">
 			<label for="">Комментарий к заказу</label>
 			<textarea class="form-control" name="fs_message" ></textarea>

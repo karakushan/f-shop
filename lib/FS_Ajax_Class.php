@@ -113,7 +113,21 @@ class FS_Ajax_Class
                 'summa' =>fs_total_amount(false)
                 ),
             array( '%s','%s','%d','%s','%s','%s','%s','%d')
+            ); 
+         $order_id=$wpdb->insert_id;
+
+       foreach ($_SESSION['cart'] as $post => $data) {
+        $wpdb->insert(
+            'wp_fs_order_info',
+            array(
+               'order_id'=>$order_id,
+               'post_id'=>$post,
+               'id_model'=>get_post_meta($post,'al_product_id',1),
+               'count'=>$data['count'],
+                ),
+            array('%d','%d','%d','%d')
             );
+       }
 
         $products='';
 
@@ -142,7 +156,9 @@ class FS_Ajax_Class
  }
 
 
- $order_id=$wpdb->insert_id;
+
+
+
  $_SESSION['last_order_id']=$order_id;
         /*
          Список переменных:
