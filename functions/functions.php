@@ -18,14 +18,14 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
     $fs_atributes_post=isset($fs_atributes_post[0])?$fs_atributes_post[0]:array();
     $fs_atributes_all=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
 
-   /* echo "<pre>";
+    /* echo "<pre>";
 
-    print_r($fs_atributes_post);
-    echo "</pre>"; 
-    echo "<pre>";
+     print_r($fs_atributes_post);
+     echo "</pre>";
+     echo "<pre>";
 
-    print_r($fs_atributes_all);
-    echo "</pre>";*/
+     print_r($fs_atributes_all);
+     echo "</pre>";*/
 
 
     if ($fs_atributes_post) {
@@ -33,27 +33,27 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
 
 
             case 'radio':
-            foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                if ($fs_atribute==0) continue;
-                $checked=$key==0?"checked":"";
-                if ($fs_atributes_all[$group][$key]['type']=='image') {
-                    $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
-                    echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
-                }else{
-                 echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
-             }
+                foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+                    if ($fs_atribute==0) continue;
+                    $checked=$key==0?"checked":"";
+                    if ($fs_atributes_all[$group][$key]['type']=='image') {
+                        $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
+                        echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
+                    }else{
+                        echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
+                    }
 
-         }
-         break;
+                }
+                break;
 
 
 
-         default:
+            default:
 
-         break;
-     }
+                break;
+        }
 
- }
+    }
 }
 
 /**
@@ -71,7 +71,7 @@ function fs_lightslider($post_id=0, $args=array())
         "item"=>1,
         "vertical"=>false,
         "thumbItem"=>3
-        );
+    );
     $args=wp_parse_args($args,$default);
 
     $galery=$galery->fs_galery_list($post_id);
@@ -101,7 +101,7 @@ function fs_get_price($post_id='')
     global $post;
     $post_id=empty($post_id) ? $post->ID : (int)$post_id;
 
-     //узнаём какой тип скидки активирован в настройках (% или фикс)
+    //узнаём какой тип скидки активирован в настройках (% или фикс)
     $action_type=isset($config->options['action_count'])&&$config->options['action_count']==1?1:0;
 
     // получаем возможные типы цен
@@ -117,7 +117,7 @@ function fs_get_price($post_id='')
     $action_price=apply_filters('fs_action_price',$action_price,$post_id);
     $action_price=empty($action_price) ? 0 :(float)$action_price;
 
-     //получаем размер скидки из общих настроек (в процентах или в фиксированной сумме)
+    //получаем размер скидки из общих настроек (в процентах или в фиксированной сумме)
     $action_base=apply_filters('fs_action_base',$action_base,$post_id);
     $action_base=empty($action_base)?0:(float)$action_base;
 
@@ -125,17 +125,17 @@ function fs_get_price($post_id='')
     if ($action_price>0) {
         $price=$action_price;
     }else{
-      if ($action_base>0) {
-         if($action_type==1){
-            //расчёт цены если скидка в процентах
-            $price=$base_price-($base_price*$action_base/100);
-        }else{
-            //расчёт цены если скидка в фикс. к-ве
-            $price=$base_price-$action_base;
+        if ($action_base>0) {
+            if($action_type==1){
+                //расчёт цены если скидка в процентах
+                $price=$base_price-($base_price*$action_base/100);
+            }else{
+                //расчёт цены если скидка в фикс. к-ве
+                $price=$base_price-$action_base;
+            }
         }
     }
-}
-return (float)$price;
+    return (float)$price;
 }
 
 //Отображает общую сумму продуктов с одним артикулом
@@ -180,8 +180,8 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
     } else {
-     printf($wrap,$price.' <span>'.$cur_symb.'</span>');
- }
+        printf($wrap,$price.' <span>'.$cur_symb.'</span>');
+    }
 
 }
 
@@ -192,21 +192,18 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
  * @param  string  $cur_after  html после символа валюты
  * @return возвращает или показывает общую сумму с валютой
  */
-function fs_total_amount($show=true,$wrap='%s <span>%s</span>')
+function fs_total_amount($products=array(),$show=true,$wrap='%s <span>%s</span>')
 {
-    $price=0;
     $all_price=array();
-    if (isset($_SESSION['cart'])) {
-        foreach ($_SESSION['cart'] as $key => $count){
-            $all_price[$key]=$count['count']*fs_get_price($key);
-        }
-        $price=array_sum($all_price);
-        $currency_delimiter=fs_option('currency_delimiter','.');
-        $price=apply_filters('fs_price_format',$price,$currency_delimiter,' ');
+    $products=!empty($_SESSION['cart'])?$_SESSION['cart']:$products;
+    foreach ($products as $key => $count){
+        $all_price[$key]=$count['count']*fs_get_price($key);
     }
+    $price=array_sum($all_price);
     if ($show==false) {
         return $price;
     } else {
+        $price=apply_filters('fs_price_format',$price,fs_option('currency_delimiter','.'),' ');
         printf($wrap,$price,fs_currency());
     }
 }
@@ -258,7 +255,7 @@ function fs_get_cart()
                 'link'=>get_permalink($key),
                 'price'=> $price_show.' <span>'.$cur_symb.'</span>',
                 'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
-                );
+            );
         }
     }
     return $products;
@@ -278,15 +275,15 @@ function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
     $class="class=\"$class\"";
     switch ($type){
         case 'link':
-        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
-        break;
+            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+            break;
         case 'button':
-        echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
-        break;
+            echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
+            break;
         default:
-        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
 
-        break;
+            break;
     }
 
 
@@ -298,22 +295,15 @@ function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
  * @param  boolean $show [description]
  * @return [type]        [description]
  */
-function fs_product_count($show=false)
+function fs_product_count($products=array())
 {
-    $count=0;
     $all_count=array();
-    if (isset($_SESSION['cart'])) {
-        foreach ($_SESSION['cart'] as $key => $count){
-            $all_count[$key]=$count['count'];
-        }
-        $count=array_sum($all_count);
+    $products=!empty($_SESSION['cart'])?$_SESSION['cart']:$products;
+    foreach ($products as $key => $count){
+        $all_count[]=$count['count'];
     }
-    $count=(int)$count;
-    if ($show==false) {
-        return $count;
-    } else {
-        echo $count;
-    }
+    $count=array_sum($all_count);
+    return (int)$count;
 }
 
 
@@ -476,14 +466,14 @@ function fs_quantity_product($product_id='',$type='number')
     $product_id=!empty($product_id)?$product_id : $post->ID;
     switch ($type){
         case 'number':
-        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-        break;
+            echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+            break;
         case 'text':
-        echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-        break;
+            echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+            break;
         default:
-        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-        break;
+            echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+            break;
     }
 
 }
@@ -628,7 +618,7 @@ function fs_attr_group_filter($group, $type='option', $option_default='Выбе�
  * @param int $price_max
  */
 function fs_range_slider()
-{    
+{
 
     $price_max=fs_price_max();
     $curency=fs_currency();
@@ -640,7 +630,7 @@ function fs_range_slider()
     </span>
 </div>
 </div>';
-echo $slider;
+    echo $slider;
 }//end range_slider()
 
 /**
@@ -671,11 +661,11 @@ function fs_wishlist_button($post_id=0,$args='')
 {
     global $post;
     $post_id=empty($post_id)?$post->ID:$post_id;
-   // определим параметры по умолчанию
+    // определим параметры по умолчанию
     $defaults = array(
         'attr' => '',
         'content' => '',
-        );
+    );
 
     $args = wp_parse_args( $args, $defaults );
     extract($args);

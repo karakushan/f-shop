@@ -1,5 +1,11 @@
 <?php
 namespace FS;
+
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+
+
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
@@ -44,36 +50,40 @@ class FS_Ajax_Class
      */
     function order_send_ajax()
     {
-        $fs_config=new FS_Config();
-       if ( !wp_verify_nonce( $_REQUEST['_wpnonce'],$fs_config->data['plugin_name'])) die ( 'не пройдена верификация формы nonce');
-
-       if (isset($_REQUEST['fast-order']) && is_numeric($_REQUEST['fast-order'])){
-        $product_id=(int)$_REQUEST['fast-order'];
-        $product_count=(int)$_REQUEST['count'];
-        $order_type='form';
-    }else{
-        if (empty($_SESSION['cart'])){
-            die ( 'не найдена сессия корзины');
+        if ( !wp_verify_nonce($_POST['_wpnonce'],'fast-shop')) die ( 'не пройдена верификация формы nonce');
+        $fs_products=array();
+        if (!empty($_POST['fs_cart'])){
+            if($_POST['order_type']=="single"){
+                $product_id=(int)$_POST['fs_cart']['product_id'];
+                $product_count=(int)$_POST['fs_cart']['count'];
+                $fs_products[$product_id]=array('count'=>$product_count);
+            }else{
+                $fs_products=$_POST['fs_cart'];
+            }
+            
         }else{
-            $order_type='session';
+            if (empty($_SESSION['cart'])){
+                die ( 'не найдена сессия корзины');
+            }else{
+                $fs_products=$_SESSION['cart'];
+            }
         }
-    }
+        // если корзина пуста или возникла ошибка с обработкой выходим с собщением
+        if (empty($fs_products)) die ('нет товаров в корзине!');
 
-    global $wpdb;
-    $wpdb->show_errors();
-
-    
-    $fs_delivery=new FS_Delivery_Class();
+        $fs_config=new FS_Config();
+        global $wpdb;
+        $wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
     // включаем возможность пользователям использовать собственные поля в форме заказа
-    $fields=array();
-    $exclude_fields=array('action','_wpnonce','_wp_http_referer');
-    if (isset($_POST)){
-        foreach ($_POST as $key=>$post_field){
-            if (in_array($key,$exclude_fields)) continue;
-            $fields['%'.$key.'%']=filter_input(INPUT_POST,$key,FILTER_SANITIZE_STRING);
+        $fields=array();
+        $exclude_fields=array('action','_wpnonce','_wp_http_referer');
+        if (isset($_POST)){
+            foreach ($_POST as $key=>$post_field){
+                if (in_array($key,$exclude_fields)) continue;
+                $fields['%'.$key.'%']=filter_input(INPUT_POST,$key,FILTER_SANITIZE_STRING);
+            }
         }
-    }
 
         /*
         Список основных полей для использования в письмах
@@ -97,8 +107,6 @@ class FS_Ajax_Class
         $delivery_address=filter_input(INPUT_POST,'fs_adress',FILTER_SANITIZE_STRING);
         $fs_message=filter_input(INPUT_POST,'fs_message',FILTER_SANITIZE_STRING);
 
-        $insert_products=isset($_SESSION['cart'])?serialize($_SESSION['cart']):serialize(array($product_id));
-
         //Добавляем  данные заказа в базу
         $wpdb->insert(
             $fs_config->data['table_name'],
@@ -109,57 +117,33 @@ class FS_Ajax_Class
                 'telephone' => $customer_phone,
                 'comments' =>$fs_message,
                 'delivery' =>$delivery,
-                'products' =>$insert_products,
-                'summa' =>fs_total_amount(false)
+                'products' =>serialize($fs_products),
+                'summa' =>fs_total_amount($fs_products,false)
                 ),
             array( '%s','%s','%d','%s','%s','%s','%s','%d')
             ); 
-         $order_id=$wpdb->insert_id;
+        $order_id=$wpdb->insert_id;
+        $_SESSION['last_order_id']=$order_id;
 
-       foreach ($_SESSION['cart'] as $post => $data) {
-        $wpdb->insert(
-            'wp_fs_order_info',
-            array(
-               'order_id'=>$order_id,
-               'post_id'=>$post,
-               'id_model'=>get_post_meta($post,'al_product_id',1),
-               'count'=>$data['count'],
-                ),
-            array('%d','%d','%d','%d')
-            );
+        foreach ($fs_products as $post => $data) {
+            $wpdb->insert(
+                'wp_fs_order_info',
+                array(
+                 'order_id'=>$order_id,
+                 'post_id'=>$post,
+                 'id_model'=>get_post_meta($post,'al_product_id',1),
+                 'count'=>$data['count'],
+                 ),
+                array('%d','%d','%d','%d')
+                );
+        }
+
+        $products='<ul>';
+        foreach ($fs_products as $key => $count) {
+           $products.='<li>'.get_the_title($key).' - '.fs_get_price($key).' '.fs_currency().'('.$count['count'].' шт.)</li>';
        }
+       $products.='</ul>';
 
-        $products='';
-
-        $fs_att_group=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array(); 
-        $fs_att=get_option('fs-attributes')!=false?get_option('fs-attributes'):array(); 
-
-        $atts=array();
-        if ($order_type=='form'){
-            $products.='<li>'.get_the_title($product_id).' - '.fs_get_price($product_id).' '.fs_currency().'('.$product_count.' шт.)</li>';
-        }else{
-            foreach ($_SESSION['cart'] as $key => $count) {
-               if (!empty($count['attr'])) {
-                   foreach ($count['attr'] as $att_key => $att) {
-                    if (empty($att)) continue;
-                    if ($key!='count'){
-                     $atts[]=$fs_att_group[$att_key].' - '.$fs_att[$att_key][$att]['name'];
-                 }
-
-             }
-             $count_single=$count['attr']['count'];
-         }
-
-         $attributes=implode(',', $atts);
-         $products.='<li>'.get_the_title($key).' - '.fs_get_price($key).' '.fs_currency().'('.$attributes.' | '.$count_single.' шт.)</li>';
-     }
- }
-
-
-
-
-
- $_SESSION['last_order_id']=$order_id;
         /*
          Список переменных:
          %fs_name% - Имя заказчика,
@@ -190,15 +174,15 @@ class FS_Ajax_Class
         */
         $search_replace=array(
             '%fs_name%'=>$name,
-            '%number_products%'=>fs_product_count(),
-            '%total_amount%'=>fs_total_amount(false).' '.fs_currency(),
+            '%number_products%'=>fs_product_count($fs_products),
+            '%total_amount%'=>fs_total_amount($fs_products,false).' '.fs_currency(),
             '%order_id%'=>$order_id,
             '%products_listing%'=> $products,
             '%fs_email%'=>$mail_client,
             '%fs_adress%'=>$delivery_address,
             '%fs_city%'=>$city,
             '%fs_pay%'=>$pay,
-            '%fs_delivery%'=>$fs_delivery->get_delivery($delivery),
+            '%fs_delivery%'=>$delivery,
             '%fs_phone%'=>$customer_phone,
             '%fs_message%'=>$fs_message,
             '%site_name%'=>get_bloginfo('name'),
@@ -216,15 +200,15 @@ class FS_Ajax_Class
         //Отсылаем письмо с данными заказа заказчику
         $headers[] = 'Content-type: text/html; charset=utf-8';
         $customer_mail_header=fs_option('customer_mail_header','Заказ товара на сайте «'.get_bloginfo('name').'»');
-        wp_mail($mail_client,$customer_mail_header,$user_message, $headers );
+        $mail_user_send=wp_mail($mail_client,$customer_mail_header,$user_message, $headers );
 
         //Отсылаем письмо с данными заказа админу
         $admin_email=fs_option('manager_email',get_option('admin_email'));
         $admin_mail_header=fs_option('admin_mail_header','Заказ товара на сайте «'.get_bloginfo('name').'»');
-        wp_mail($admin_email,$admin_mail_header,$admin_message, $headers );
+        $mail_admin_send=wp_mail($admin_email,$admin_mail_header,$admin_message, $headers );
 
         //Регистрируем нового пользователя
-        if (!is_user_logged_in() && fs_option('register_user')==1){
+        if (!is_user_logged_in() && $_REQUEST['fs_register_user']==1){
             require_once(ABSPATH . WPINC . '/registration.php');
             $user_id = username_exists($mail_client);
             if ( !$user_id ) {
@@ -234,7 +218,15 @@ class FS_Ajax_Class
             }
         }
         $result=array(
+//            'post_object'=>$_POST,
+        'admin_email'=>$admin_email,
+        'admin_mail_header'=>$admin_mail_header,
+        'admin_message'=>$admin_message,
+        'headers'=>$headers,
             'wpdb_error'=>$wpdb->last_error,
+            'mail_user_send'=>$mail_user_send,
+            'products'=>$fs_products,
+            'mail_admin_send'=> $mail_admin_send,
             'redirect'=>get_permalink(fs_option('page_success'))
             );
         echo json_encode($result);
@@ -248,20 +240,20 @@ class FS_Ajax_Class
         // print_r($_REQUEST);
         $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
         if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_edit') {
-           $fs_atributes[$_REQUEST['fs_attr_group']][]=array(
+         $fs_atributes[$_REQUEST['fs_attr_group']][]=array(
             'name'=>$_REQUEST['fs_attr_name'],
             'type'=>$_REQUEST['fs_attr_type'],
             'value'=>$_REQUEST['fs_attr_image_id']
             );
 
-           update_option('fs-attributes',$fs_atributes);
-           print_r($fs_atributes);
-       }
-       exit;
-   } 
+         update_option('fs-attributes',$fs_atributes);
+         print_r($fs_atributes);
+     }
+     exit;
+ } 
 
-   public function attr_group_edit_ajax()
-   {
+ public function attr_group_edit_ajax()
+ {
         // print_r($_REQUEST);
     $fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array();
     if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_group_edit') {
@@ -298,10 +290,10 @@ public function attr_group_remove_ajax()
       update_option('fs-attr-groups',$fs_atributes);
       echo "<option value=\"\">выберите группу</option>";
       if (!empty($fs_atributes)) {
-         foreach ($fs_atributes as $key => $value) {     
-            echo "<option value=\"$key\">$value</option>";
-        }
+       foreach ($fs_atributes as $key => $value) {     
+        echo "<option value=\"$key\">$value</option>";
     }
+}
 
 }
 exit;
@@ -311,11 +303,11 @@ public function attr_single_remove_ajax()
 {
 
     if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_single_remove') {
-     $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
-     unset($fs_atributes[$_REQUEST['attr_group']][$_REQUEST['attr_id']]);
-     update_option('fs-attributes',$fs_atributes);
- }
- exit;
+       $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
+       unset($fs_atributes[$_REQUEST['attr_group']][$_REQUEST['attr_id']]);
+       update_option('fs-attributes',$fs_atributes);
+   }
+   exit;
 }
 
 public function fs_addto_wishlist()
@@ -374,18 +366,18 @@ public function fs_livesearch()
     
     $args=array('s'=>$search,'post_type'=>'product','posts_per_page'=>40);
     if (preg_match("/[a-z0-9_-]/",$search)) {
-       $args['meta_query'] = array(
+     $args['meta_query'] = array(
         array(
             'key'     => 'al_articul',
             'value'   => $search,
             'compare' => 'LIKE'
             )
         );
-       unset($args['s']);
-   }
-   query_posts($args);
-   get_template_part('fast-shop/livesearch/livesearch'); 
-   wp_reset_query();
-   exit;
+     unset($args['s']);
+ }
+ query_posts($args);
+ get_template_part('fast-shop/livesearch/livesearch'); 
+ wp_reset_query();
+ exit;
 }
 } 

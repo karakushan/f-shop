@@ -41,6 +41,15 @@ var FastShopLang={
     }
 
     jQuery(function($) {
+    	// обработка кнопки быстрого заказа
+    	$('[data-fs-action="quick_order_button"]').on('click', function(event) {
+    		event.preventDefault();
+    		var pName=$(this).data('product-name');
+    		var pId=$(this).data('product-id');
+    		console.log();
+    		$('[name="fs_cart[product_name]"]').val(pName);
+    		$('[name="fs_cart[product_id]"]').val(pId);
+    	});
 
 		//живой поиск по сайту
 		$('.search-results .close-search').on('click', function(event) {
@@ -208,7 +217,6 @@ validator.validate({
 	submitHandler: function(form) {
 		$.ajax({
 			url: FastShopData.ajaxurl,
-			dataType: 'html',
 			type: 'POST',
 			data:validator.serialize(),
 			beforeSend:function () {
@@ -224,8 +232,7 @@ validator.validate({
 			if(jsonData.wpdb_error){
 				console.log(jsonData.wpdb_error);
 			}
-
-			document.location.href=jsonData.redirect;
+			if(jsonData.redirect.length>0) document.location.href=jsonData.redirect;
 
 		});
 
@@ -429,13 +436,13 @@ $('[data-fs-action="filter"]').on('change',function (e) {
 
 // слайдер товара
 if (typeof fs_lightslider_options!="undefined") { 
-		$('#product_slider').lightSlider(fs_lightslider_options);
-	 }
+	$('#product_slider').lightSlider(fs_lightslider_options);
+}
 })(jQuery)
 
 
-	
-	
+
+
 
 
 // проверяет является ли переменная числом

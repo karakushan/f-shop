@@ -143,33 +143,36 @@ function checkout_form()
 /**
  * шорткод для отображения формы оформления заказа
  */
-public function order_send(){
+public function order_send($atts){
     $prefix='order/order-form.php';
-    $template='';
+    extract( shortcode_atts( array(
+        'order_type' => 'normal',
+        'class'=>'order-send'
+        ), $atts ) );
+    $template='
+    <form action="#" name="fs-order-send" class="'.$class.'" method="POST">
+        <div class="products_wrapper"></div>
+        <input type="hidden" id="_wpnonce" name="_wpnonce" value="'.wp_create_nonce('fast-shop').'">
+        <input type="hidden" name="action" value="order_send">
+        <input type="hidden" name="order_type" value="'.$order_type.'">
+       
+        ';
 
-    ob_start();
-    include($this->config->data['plugin_template'].$prefix);
-    $template_admin_file = ob_get_contents();
-    ob_end_clean(); 
-    ob_start();
-    include($this->config->data['plugin_user_template'].$prefix);
-    $template_user_file = ob_get_contents();
-    ob_end_clean();
-
-    if (file_exists($this->config->data['plugin_user_template'].$prefix)) {
-        $template.='<form action="#" name="fs-order-send" class="order-send" method="POST">';
-        $template.=wp_nonce_field('fast-shop');
-        $template.='<input type="hidden" name="action" value="order_send">';
-        $template.=$template_user_file;
+        if (file_exists($this->config->data['plugin_user_template'].$prefix)) {
+            ob_start();
+            include($this->config->data['plugin_user_template'].$prefix);
+            $template.= ob_get_contents();
+            ob_end_clean();
+            $template.=$template_user_file;
+            
+        }else{
+            ob_start();
+            include($this->config->data['plugin_template'].$prefix);
+            $template.= ob_get_contents();
+            ob_end_clean();
+        }
         $template.='</form>';
-    }else{
-        $template.='<form action="#" name="fs-order-send" class="order-send" method="POST">';
-        $template.=wp_nonce_field('fast-shop');
-        $template.='<input type="hidden" name="action" value="order_send">';
-        $template.=$template_admin_file;
-        $template.='</form>';
+        return $template;
     }
-    return $template;
-}
 
 }
