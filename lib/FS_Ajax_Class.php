@@ -208,15 +208,21 @@ class FS_Ajax_Class
         $mail_admin_send=wp_mail($admin_email,$admin_mail_header,$admin_message, $headers );
 
         //Регистрируем нового пользователя
-        if (!is_user_logged_in() && $_REQUEST['fs_register_user']==1){
-            require_once(ABSPATH . WPINC . '/registration.php');
+        if ($_REQUEST['fs_register_user']==1){
             $user_id = username_exists($mail_client);
             if ( !$user_id ) {
                 $random_password = wp_generate_password();
                 $new_user_id= wp_create_user($mail_client, $random_password, $mail_client);
-                wp_new_user_notification( $new_user_id, $random_password);
+                $register_mail_header='Регистрация на сайте «'.get_bloginfo('name').'»';
+                $register_message='<h3>Поздравляем! Вы успешно зарегистрировались на сайте '.get_bloginfo().'.</h3> 
+               <p>Теперь вам нужно установить пароль для вашей учётной записи. </p>
+               <p>Логин: '.$mail_client.'</p>
+               <p><a href="<?php echo esc_url( wp_lostpassword_url( home_url() ) ); ?>" title="Установить пароль.">Установить пароль.</a></p>';
+                $mail_user_send=wp_mail($mail_client, $register_mail_header, $register_message,$headers);
+
             }
         }
+
         $result=array(
 //            'post_object'=>$_POST,
         'admin_email'=>$admin_email,
