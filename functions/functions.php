@@ -690,3 +690,19 @@ function fs_transliteration($s) {
     $s = str_replace(" ", "-", $s); // заменяем пробелы знаком минус
     return $s; // возвращаем результат
 }
+
+/**
+ * Подключает шаблон $template из директории темы, если шаблон остсуствует ищет в папке "/templates/front-end/" плагина
+ * @param $template - название папки и шаблона без расширения
+ */
+function fs_frontend_template($template){
+    $template_plugin=PLUGIN_PATH.'/templates/front-end/'.$template.'.php';
+    $template_theme=TEMPLATEPATH.'/fast-shop/'.$template.'.php';
+    if (file_exists($template_theme)){
+        include ($template_theme);
+    }elseif(file_exists($template_plugin)){
+        include ($template_plugin);
+    }else{
+        exit('файл шаблона '.$template.' не найден в функции '.__FUNCTION__);
+    }
+}
