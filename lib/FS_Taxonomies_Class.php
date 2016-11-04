@@ -176,16 +176,16 @@ if (!class_exists('FS_Taxonomies_Class')) {
 
 
         function  add_product_attr_fields($term){
-            $att_type=get_term_meta($term->term_id,'fs_att_type',1);
-            $display_color= $att_type=='color'?'style="display:block"':'';
-            $display_image= $att_type=='image'?'style="display:block"':'';
+
+            $display_color='style="display:none"';
+            $display_image='style="display:none"';
             echo '<div class="form-field term-parent-wrap" >
 			<label for="fs_att_type">Тип атрибута</label>
 			
 				<select name="fast-shop[fs_att_type]" id="fs_att_type" class="postform">
-				<option value="text" '.selected('text', $att_type,0).'>текст</option>
-				<option value="color" '.selected('color', $att_type,0).'>цвет</option>
-				<option value="image" '.selected('image', $att_type,0).'>изображение</option>
+				<option value="text">текст</option>
+				<option value="color">цвет</option>
+				<option value="image">изображение</option>
                 </select>
                 <p class="description">Товары могут иметь разные свойства. Здесь вы можете выбрать какой тип свойства нужен.</p>
 							
@@ -194,19 +194,19 @@ if (!class_exists('FS_Taxonomies_Class')) {
 			<label>Значение цвета </label>
 			
 	
-               <input type="text"  name="fast-shop[fs_att_color_value]" value="'.get_term_meta($term->term_id,'fs_att_color_value',1).'" class="fs-color-select">
+               <input type="text"  name="fast-shop[fs_att_color_value]" value="" class="fs-color-select">
 							
 		</div>';
-            $att_image=get_term_meta($term->term_id,'fs_att_image_value',1)!='' ? wp_get_attachment_url(get_term_meta($term->term_id,'fs_att_image_value',1)) : '';
-            $display_button=!empty($att_image)?'block':'none';
-            $display_text=!empty($att_image)?'изменить изображение':'выбрать изображение';
+
+            $display_button="'block':'none'";
+            $display_text='выбрать изображение';
             echo '<div class="form-field term-parent-wrap  fs-att-values" '.$display_image.' id="fs-att-image">
 			<label>Изображение</label>
 			<div class="fs-fields-container">
-			<div class="fs-selected-image" style=" background-image: url('.$att_image.');"></div>
+			<div class="fs-selected-image" style=" background-image: url();"></div>
 			
 				<button type="button" class="select_file">'.$display_text.'</button>
-               <input type="hidden"  name="fast-shop[fs_att_image_value]" value="'.get_term_meta($term->term_id,'fs_att_image_value',1).'" class="fs-image-select">
+               <input type="hidden"  name="fast-shop[fs_att_image_value]" value="" class="fs-image-select">
 						<button type="button" class="delete_file" style="display:'. $display_button.'">удалить изображение</button>	
 							</div>
 							
