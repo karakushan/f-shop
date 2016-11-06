@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-21 10:02+0000\n"
-"PO-Revision-Date: Sat Oct 29 2016 18:11:37 GMT+0300 (Финляндия (лето))\n"
+"PO-Revision-Date: Sun Nov 06 2016 16:02:04 GMT+0200 (Финляндия (зима))\n"
 "Last-Translator: grand-admin <karakushan@gmail.com>\n"
 "Language-Team: \n"
 "Language: Russian\n"
@@ -41,14 +41,88 @@ msgstr ""
 msgid "http://profglobal.ru"
 msgstr ""
 
-#: ../lib/FS_Ajax_Class.php:313 ../lib/FS_Ajax_Class.php:337 ../templates/front-
+#: ../lib/FS_Ajax_Class.php:323 ../lib/FS_Ajax_Class.php:347 ../templates/front-
 #: end/wishlist/wishlist.php:5
 msgid "Wishlist"
-msgstr ""
+msgstr "Список желаний"
 
 #: ../lib/FS_Post_Type.php:75 ../lib/FS_Post_Types.php:64
 msgid "Здесь размещены товары вашего сайта."
 msgstr ""
+
+#: ../templates/front-end/auth/login.php:6 ../templates/front-end/auth/login.php:7
+msgid "Email or login"
+msgstr "Email или логин"
+
+#: ../templates/front-end/auth/login.php:7 ../templates/front-end/auth/login.php:11
+msgid "required"
+msgstr "обязательно"
+
+#: ../templates/front-end/auth/login.php:10 ../templates/front-end/auth/login.php:
+#: 11 ../templates/front-end/auth/register.php:14
+msgid "Password"
+msgstr "Пароль"
+
+#: ../templates/front-end/auth/login.php:16
+msgid "Remember me"
+msgstr "Запомнить меня"
+
+#: ../templates/front-end/auth/login.php:21
+msgid "Sign in"
+msgstr "Войти"
+
+#: ../templates/front-end/auth/profile.php:6
+msgid "Full Name"
+msgstr "Фамилия Имя Отчество"
+
+#: ../templates/front-end/auth/profile.php:7 ../templates/front-end/auth/profile.
+#: php:11 ../templates/front-end/auth/profile.php:15
+msgid "required field"
+msgstr "обязательное поле"
+
+#: ../templates/front-end/auth/profile.php:10
+msgid "Phone"
+msgstr "Телефон"
+
+#: ../templates/front-end/auth/profile.php:14
+msgid "Email"
+msgstr "E-mail"
+
+#: ../templates/front-end/auth/profile.php:18
+msgid "Login"
+msgstr "Логин"
+
+#: ../templates/front-end/auth/profile.php:22
+msgid "New password"
+msgstr "Новый пароль"
+
+#: ../templates/front-end/auth/profile.php:26
+msgid "Repeat password"
+msgstr "Повтор пароля"
+
+#: ../templates/front-end/auth/profile.php:43
+msgid "Shipping address"
+msgstr "Адрес доставки"
+
+#: ../templates/front-end/auth/profile.php:47
+msgid "Payment method"
+msgstr "Способ оплаты"
+
+#: ../templates/front-end/auth/profile.php:57
+msgid "Save"
+msgstr "Сохранить"
+
+#: ../templates/front-end/auth/register.php:13
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: ../templates/front-end/auth/register.php:15
+msgid "Remember Me"
+msgstr "Запомнить меня"
+
+#: ../templates/front-end/auth/register.php:16
+msgid "Log In"
+msgstr "Вход"
 
 #. Description of the plugin/theme
 msgid ""
@@ -58,11 +132,11 @@ msgstr ""
 "Это плагин позволяет в короткое время создать полноценный магазин на любом "
 "шаблоне Wordpress."
 
-#: ../functions/functions.php:258
+#: ../functions/functions.php:274
 msgid "Remove items"
 msgstr "Удалить позицию"
 
-#: ../functions/functions.php:350
+#: ../functions/functions.php:363
 msgid "Add to cart"
 msgstr "В корзину"
 
@@ -128,18 +202,19 @@ msgstr "Добавление способа доставки"
 msgid "Not found shipping methods"
 msgstr "Нет ни одного способа доставки"
 
-#: ../templates/front-end/order/order-form.php:41
-msgid "Choose a shipping method"
-msgstr "Выберите способ доставки"
-
-#: ../templates/front-end/order/order-form.php:42
+#: ../templates/front-end/auth/profile.php:31 ../templates/front-end/order/order-
+#: form.php:59
 msgid "Shipping method"
 msgstr "Способ  доставки"
 
-#: ../templates/front-end/order/order-form.php:56
+#: ../templates/front-end/order/order-form.php:58
+msgid "Choose a shipping method"
+msgstr "Выберите способ доставки"
+
+#: ../templates/front-end/order/order-form.php:73
 msgid "Select a payment method"
 msgstr "Выберите способ оплаты"
 
-#: ../templates/front-end/order/order-form.php:57
+#: ../templates/front-end/order/order-form.php:74
 msgid "Type of payment"
 msgstr "Способ оплаты"

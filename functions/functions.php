@@ -28,29 +28,29 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
      echo "</pre>";*/
 
 
-    if ($fs_atributes_post) {
+     if ($fs_atributes_post) {
         switch ($type) {
 
 
             case 'radio':
-                foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                    if ($fs_atribute==0) continue;
-                    $checked=$key==0?"checked":"";
-                    if ($fs_atributes_all[$group][$key]['type']=='image') {
-                        $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
-                        echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
-                    }else{
-                        echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
-                    }
-
+            foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+                if ($fs_atribute==0) continue;
+                $checked=$key==0?"checked":"";
+                if ($fs_atributes_all[$group][$key]['type']=='image') {
+                    $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
+                    echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
+                }else{
+                    echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
                 }
-                break;
+
+            }
+            break;
 
 
 
             default:
 
-                break;
+            break;
         }
 
     }
@@ -71,7 +71,7 @@ function fs_lightslider($post_id=0, $args=array())
         "item"=>1,
         "vertical"=>false,
         "thumbItem"=>3
-    );
+        );
     $args=wp_parse_args($args,$default);
 
     $galery=$galery->fs_galery_list($post_id);
@@ -255,7 +255,7 @@ function fs_get_cart()
                 'link'=>get_permalink($key),
                 'price'=> $price_show.' <span>'.$cur_symb.'</span>',
                 'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
-            );
+                );
         }
     }
     return $products;
@@ -275,15 +275,15 @@ function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
     $class="class=\"$class\"";
     switch ($type){
         case 'link':
-            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
-            break;
+        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+        break;
         case 'button':
-            echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
-            break;
+        echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
+        break;
         default:
-            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
 
-            break;
+        break;
     }
 
 
@@ -298,9 +298,13 @@ function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
 function fs_product_count($products=array())
 {
     $all_count=array();
-    $products=!empty($_SESSION['cart'])?$_SESSION['cart']:$products;
-    foreach ($products as $key => $count){
-        $all_count[]=$count['count'];
+    if (!empty($_SESSION['cart']) || !is_array($products)){
+        $products=isset($_SESSION['cart'])?$_SESSION['cart']:array();
+    }
+    if (count($products)){
+        foreach ($products as $key => $count){
+            $all_count[$key]=$count['count'];
+        }
     }
     $count=array_sum($all_count);
     return (int)$count;
@@ -466,14 +470,14 @@ function fs_quantity_product($product_id='',$type='number')
     $product_id=!empty($product_id)?$product_id : $post->ID;
     switch ($type){
         case 'number':
-            echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-            break;
+        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        break;
         case 'text':
-            echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-            break;
+        echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        break;
         default:
-            echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-            break;
+        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        break;
     }
 
 }
@@ -630,7 +634,7 @@ function fs_range_slider()
     </span>
 </div>
 </div>';
-    echo $slider;
+echo $slider;
 }//end range_slider()
 
 /**
@@ -665,7 +669,7 @@ function fs_wishlist_button($post_id=0,$args='')
     $defaults = array(
         'attr' => '',
         'content' => '',
-    );
+        );
 
     $args = wp_parse_args( $args, $defaults );
     extract($args);
@@ -695,14 +699,65 @@ function fs_transliteration($s) {
  * Подключает шаблон $template из директории темы, если шаблон остсуствует ищет в папке "/templates/front-end/" плагина
  * @param $template - название папки и шаблона без расширения
  */
-function fs_frontend_template($template){
+function fs_frontend_template($template,$args=array()){
+    extract(wp_parse_args($args,array(
+        'user'=>wp_get_current_user()
+        )));
+
     $template_plugin=PLUGIN_PATH.'/templates/front-end/'.$template.'.php';
     $template_theme=TEMPLATEPATH.'/fast-shop/'.$template.'.php';
+    ob_start();
     if (file_exists($template_theme)){
         include ($template_theme);
     }elseif(file_exists($template_plugin)){
         include ($template_plugin);
     }else{
-        exit('файл шаблона '.$template.' не найден в функции '.__FUNCTION__);
+        echo 'файл шаблона '.$template.' не найден в функции '.__FUNCTION__;
     }
+    $template=ob_get_clean();
+    ob_end_flush();
+    return apply_filters('fs_frontend_template',$template);
+}
+
+/**
+ * Получает шаблон формы входа
+ * @return mixed|void
+ */
+function fs_login_form(){
+    ob_start();
+    $template=fs_frontend_template('auth/login');
+    return apply_filters('fs_login_form',$template);
+}
+
+/**
+ * Получает шаблон формы регистрации
+ * @return mixed|void
+ */
+function fs_register_form(){
+    ob_start();
+    $template=fs_frontend_template('auth/register');
+    return apply_filters('fs_register_form',$template);
+}
+
+/**
+ * Получает шаблон формы входа
+ * @return mixed|void
+ */
+function fs_user_cabinet(){
+    $template= fs_frontend_template('auth/cabinet');;
+    return apply_filters('fs_user_cabinet',$template);
+}
+
+function fs_page_content(){
+    if (empty($_GET['fs-page'])) $page='profile';
+    $page= filter_input(INPUT_GET, 'fs-page', FILTER_SANITIZE_URL);
+    $template='';
+    $pages=array('profile','conditions');
+    if(in_array($page,$pages)){
+        $template=fs_frontend_template('auth/'.$page);
+    } else{
+        $template=fs_frontend_template('auth/profile');
+    }
+   
+    echo $template;
 }

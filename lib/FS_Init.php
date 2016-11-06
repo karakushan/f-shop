@@ -25,9 +25,9 @@ class FS_Init
 		new FS_Cart_Class();
 		new FS_Orders_Class();
 		new FS_Images_Class();
-		new FS_Delivery_Class();
 		new FS_Taxonomies_Class();
 		new FS_Action_Class();
+        new FS_Users_Class();
 
 
 

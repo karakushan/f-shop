@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-21 10:02+0000\n"
-"POT-Revision-Date: Sat Oct 29 2016 18:15:43 GMT+0300 (Финляндия (лето))\n"
+"POT-Revision-Date: Sun Nov 06 2016 15:58:33 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -46,15 +46,15 @@ msgstr ""
 msgid "http://profglobal.ru"
 msgstr ""
 
-#: ../functions/functions.php:258
+#: ../functions/functions.php:274
 msgid "Remove items"
 msgstr ""
 
-#: ../functions/functions.php:350
+#: ../functions/functions.php:363
 msgid "Add to cart"
 msgstr ""
 
-#: ../lib/FS_Ajax_Class.php:313 ../lib/FS_Ajax_Class.php:337 ../templates/front-
+#: ../lib/FS_Ajax_Class.php:323 ../lib/FS_Ajax_Class.php:347 ../templates/front-
 #: end/wishlist/wishlist.php:5
 msgid "Wishlist"
 msgstr ""
@@ -84,12 +84,12 @@ msgid "Здесь размещены товары вашего сайта."
 msgstr ""
 
 #: ../lib/FS_Settings_Class.php:66 ../lib/FS_Settings_Class.php:67 ..
-#: templates/back-end/orders.php:2
+#: /templates/back-end/orders.php:2
 msgid "Orders"
 msgstr ""
 
 #: ../lib/FS_Settings_Class.php:76 ../lib/FS_Settings_Class.php:77 ..
-#: templates/back-end/settings.php:2
+#: /templates/back-end/settings.php:2
 msgid "Store settings"
 msgstr ""
 
@@ -125,21 +125,93 @@ msgstr ""
 msgid "Not found shipping methods"
 msgstr ""
 
-#: ../templates/front-end/order/order-form.php:41
-msgid "Choose a shipping method"
+#: ../templates/front-end/auth/login.php:6 ../templates/front-end/auth/login.php:7
+msgid "Email or login"
 msgstr ""
 
-#: ../templates/front-end/order/order-form.php:42
+#: ../templates/front-end/auth/login.php:7 ../templates/front-end/auth/login.php:11
+msgid "required"
+msgstr ""
+
+#: ../templates/front-end/auth/login.php:10 ../templates/front-end/auth/login.php:
+#: 11 ../templates/front-end/auth/register.php:14
+msgid "Password"
+msgstr ""
+
+#: ../templates/front-end/auth/login.php:16
+msgid "Remember me"
+msgstr ""
+
+#: ../templates/front-end/auth/login.php:21
+msgid "Sign in"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:6
+msgid "Full Name"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:7 ../templates/front-end/auth/profile.
+#: php:11 ../templates/front-end/auth/profile.php:15
+msgid "required field"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:10
+msgid "Phone"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:14
+msgid "Email"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:18
+msgid "Login"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:22
+msgid "New password"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:26
+msgid "Repeat password"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:31 ../templates/front-end/order/order-
+#: form.php:59
 msgid "Shipping method"
 msgstr ""
 
-#: ../templates/front-end/order/order-form.php:56
+#: ../templates/front-end/auth/profile.php:43
+msgid "Shipping address"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:47
+msgid "Payment method"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:57
+msgid "Save"
+msgstr ""
+
+#: ../templates/front-end/auth/register.php:13
+msgid "Username"
+msgstr ""
+
+#: ../templates/front-end/auth/register.php:15
+msgid "Remember Me"
+msgstr ""
+
+#: ../templates/front-end/auth/register.php:16
+msgid "Log In"
+msgstr ""
+
+#: ../templates/front-end/order/order-form.php:58
+msgid "Choose a shipping method"
+msgstr ""
+
+#: ../templates/front-end/order/order-form.php:73
 msgid "Select a payment method"
 msgstr ""
 
-#: ../templates/front-end/order/order-form.php:57
+#: ../templates/front-end/order/order-form.php:74
 msgid "Type of payment"
-msgstr ""
-
-msgid "Prices"
 msgstr ""

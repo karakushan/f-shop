@@ -1,11 +1,5 @@
 <?php
 namespace FS;
-
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-
-
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
@@ -17,30 +11,29 @@ class FS_Ajax_Class
 
     function __construct()
     {
+        //  обработка формы заказа
         add_action('wp_ajax_order_send',array(&$this,'order_send_ajax') );
         add_action('wp_ajax_nopriv_order_send',array(&$this,'order_send_ajax') );
 
-        add_action('wp_ajax_attr_edit',array(&$this,'attr_edit_ajax') );
-        add_action('wp_ajax_nopriv_attr_edit',array(&$this,'attr_edit_ajax') );
-
-        add_action('wp_ajax_attr_group_edit',array(&$this,'attr_group_edit_ajax') );
-        add_action('wp_ajax_nopriv_attr_group_edit',array(&$this,'attr_group_edit_ajax') );
-
-        add_action('wp_ajax_attr_group_remove',array(&$this,'attr_group_remove_ajax') );
-        add_action('wp_ajax_nopriv_attr_group_remove',array(&$this,'attr_group_remove_ajax') );
-
-        add_action('wp_ajax_attr_single_remove',array(&$this,'attr_single_remove_ajax') );
-        add_action('wp_ajax_nopriv_attr_single_remove',array(&$this,'attr_single_remove_ajax') );
-
+        //  добавление в список желаний
         add_action('wp_ajax_fs_addto_wishlist',array(&$this,'fs_addto_wishlist') );
         add_action('wp_ajax_nopriv_fs_addto_wishlist',array(&$this,'fs_addto_wishlist') );
 
+        // удаление из списка желаний
         add_action('wp_ajax_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') );
         add_action('wp_ajax_nopriv_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') ); 
 
-       //живой поиск по сайту
+       //   живой поиск по сайту
         add_action('wp_ajax_fs_livesearch',array(&$this,'fs_livesearch') );
         add_action('wp_ajax_nopriv_fs_livesearch',array(&$this,'fs_livesearch') );
+
+        //  редактирование профиля пользователя
+        add_action('wp_ajax_fs_profile_edit',array(&$this,'fs_profile_edit') );
+        add_action('wp_ajax_nopriv_fs_profile_edit',array(&$this,'fs_profile_edit') );
+
+        //  создание профиля пользователя
+        add_action('wp_ajax_fs_profile_create',array(&$this,'fs_profile_create') );
+        add_action('wp_ajax_nopriv_fs_profile_create',array(&$this,'fs_profile_create') );
 
     }
 
@@ -215,9 +208,9 @@ class FS_Ajax_Class
                 $new_user_id= wp_create_user($mail_client, $random_password, $mail_client);
                 $register_mail_header='Регистрация на сайте «'.get_bloginfo('name').'»';
                 $register_message='<h3>Поздравляем! Вы успешно зарегистрировались на сайте '.get_bloginfo().'.</h3> 
-               <p>Теперь вам нужно установить пароль для вашей учётной записи. </p>
-               <p>Логин: '.$mail_client.'</p>
-               <p><a href="<?php echo esc_url( wp_lostpassword_url( home_url() ) ); ?>" title="Установить пароль.">Установить пароль.</a></p>';
+                <p>Теперь вам нужно установить пароль для вашей учётной записи. </p>
+                <p>Логин: '.$mail_client.'</p>
+                <p><a href="<?php echo esc_url( wp_lostpassword_url( home_url() ) ); ?>" title="Установить пароль.">Установить пароль.</a></p>';
                 $mail_user_send=wp_mail($mail_client, $register_mail_header, $register_message,$headers);
 
             }
@@ -225,10 +218,10 @@ class FS_Ajax_Class
 
         $result=array(
 //            'post_object'=>$_POST,
-        'admin_email'=>$admin_email,
-        'admin_mail_header'=>$admin_mail_header,
-        'admin_message'=>$admin_message,
-        'headers'=>$headers,
+            'admin_email'=>$admin_email,
+            'admin_mail_header'=>$admin_mail_header,
+            'admin_message'=>$admin_message,
+            'headers'=>$headers,
             'wpdb_error'=>$wpdb->last_error,
             'mail_user_send'=>$mail_user_send,
             'products'=>$fs_products,
@@ -241,149 +234,145 @@ class FS_Ajax_Class
         exit;
     }
 
-    public function attr_edit_ajax()
+
+
+
+
+
+
+
+
+    public function fs_addto_wishlist()
     {
-        // print_r($_REQUEST);
-        $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
-        if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_edit') {
-         $fs_atributes[$_REQUEST['fs_attr_group']][]=array(
-            'name'=>$_REQUEST['fs_attr_name'],
-            'type'=>$_REQUEST['fs_attr_type'],
-            'value'=>$_REQUEST['fs_attr_image_id']
-            );
+        $res='';
+        $product_id=(int)$_REQUEST['product_id'];
 
-         update_option('fs-attributes',$fs_atributes);
-         print_r($fs_atributes);
-     }
-     exit;
- } 
-
- public function attr_group_edit_ajax()
- {
-        // print_r($_REQUEST);
-    $fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array();
-    if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_group_edit') {
-        if (!empty($_REQUEST['slug']) || !empty($_REQUEST['name'])){
-            $fs_atributes[$_REQUEST['slug']]=$_REQUEST['name'];
-        } 
-        $fs_atributes=array_diff($fs_atributes, array(''));
-        update_option('fs-attr-groups',$fs_atributes);
-
-        if (!empty($fs_atributes)) {
-            $count=count($fs_atributes);
-            echo "<option value=\"\">выберите группу</option>";
-            $count_inc=0;
-            foreach ($fs_atributes as $key => $value) {
-                $count_inc++;
-                if ( $count==$count_inc) {
-                    echo "<option value=\"$key\" selected>$value</option>";
-                } else {
-                    echo "<option value=\"$key\">$value</option>";
-                }
-                
-                
+        $_SESSION['fs_user_settings']['fs_wishlist'][$product_id]= $product_id;
+        if(!empty($_SESSION['fs_user_settings']['fs_wishlist'])){
+            $wishlist=$_SESSION['fs_user_settings']['fs_wishlist'];
+            $count=count($wishlist);
+            $res.= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>'.$count.'</span></a><ul class="fs-wishlist-listing">
+            <li class="wishlist-header">'.__('Wishlist','cube44').': <i class="fa fa-times-circle" aria-hidden="true"></i></li>';
+            foreach ($_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value) { 
+                $res.= "<li><i class=\"fa fa-trash\" aria-hidden=\"true\" data-fs-action=\"wishlist-delete-position\" data-product-id=\"$key\" data-product-name=\"".get_the_title($key)."\" ></i> <a href=\"".get_permalink($key)."\">".get_the_title($key)."</a></li>";
             }
+            $res.='</ul>';
         }
+        if (!empty($res)) {
+            echo json_encode(array(
+                'body'=>$res,
+                'type'=>'success'
+                ));
+        }
+        exit;    
     }
-    exit;
-}
 
-public function attr_group_remove_ajax()
-{
-    $fs_atributes=get_option('fs-attr-groups')!=false?get_option('fs-attr-groups'):array();
-    if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_group_remove') {
-      unset( $fs_atributes[$_REQUEST['attr']]);
-      update_option('fs-attr-groups',$fs_atributes);
-      echo "<option value=\"\">выберите группу</option>";
-      if (!empty($fs_atributes)) {
-       foreach ($fs_atributes as $key => $value) {     
-        echo "<option value=\"$key\">$value</option>";
-    }
-}
-
-}
-exit;
-}
-
-public function attr_single_remove_ajax()
-{
-
-    if (isset($_REQUEST['action']) && $_REQUEST['action']=='attr_single_remove') {
-       $fs_atributes=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
-       unset($fs_atributes[$_REQUEST['attr_group']][$_REQUEST['attr_id']]);
-       update_option('fs-attributes',$fs_atributes);
-   }
-   exit;
-}
-
-public function fs_addto_wishlist()
-{
-    $res='';
-    $product_id=(int)$_REQUEST['product_id'];
-
-    $_SESSION['fs_user_settings']['fs_wishlist'][$product_id]= $product_id;
-    if(!empty($_SESSION['fs_user_settings']['fs_wishlist'])){
-        $wishlist=$_SESSION['fs_user_settings']['fs_wishlist'];
+    public function fs_del_wishlist_pos()
+    {
+        $product_id=(int)$_REQUEST['position'];
+        $res='';
+        unset($_SESSION['fs_user_settings']['fs_wishlist'][$product_id]);
+        $wishlist=!empty($_SESSION['fs_user_settings']['fs_wishlist'])?$_SESSION['fs_user_settings']['fs_wishlist']:array();
         $count=count($wishlist);
-        $res.= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>'.$count.'</span></a><ul class="fs-wishlist-listing">
+        $class=$count==0?'':'wishlist-show';
+        $res.= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>'.$count.'</span></a><ul class="fs-wishlist-listing '.$class.'">
         <li class="wishlist-header">'.__('Wishlist','cube44').': <i class="fa fa-times-circle" aria-hidden="true"></i></li>';
         foreach ($_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value) { 
             $res.= "<li><i class=\"fa fa-trash\" aria-hidden=\"true\" data-fs-action=\"wishlist-delete-position\" data-product-id=\"$key\" data-product-name=\"".get_the_title($key)."\" ></i> <a href=\"".get_permalink($key)."\">".get_the_title($key)."</a></li>";
         }
         $res.='</ul>';
-    }
-    if (!empty($res)) {
-        echo json_encode(array(
-            'body'=>$res,
-            'type'=>'success'
-            ));
-    }
-    exit;    
-}
 
-public function fs_del_wishlist_pos()
-{
-    $product_id=(int)$_REQUEST['position'];
-    $res='';
-    unset($_SESSION['fs_user_settings']['fs_wishlist'][$product_id]);
-    $wishlist=!empty($_SESSION['fs_user_settings']['fs_wishlist'])?$_SESSION['fs_user_settings']['fs_wishlist']:array();
-    $count=count($wishlist);
-    $class=$count==0?'':'wishlist-show';
-    $res.= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>'.$count.'</span></a><ul class="fs-wishlist-listing '.$class.'">
-    <li class="wishlist-header">'.__('Wishlist','cube44').': <i class="fa fa-times-circle" aria-hidden="true"></i></li>';
-    foreach ($_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value) { 
-        $res.= "<li><i class=\"fa fa-trash\" aria-hidden=\"true\" data-fs-action=\"wishlist-delete-position\" data-product-id=\"$key\" data-product-name=\"".get_the_title($key)."\" ></i> <a href=\"".get_permalink($key)."\">".get_the_title($key)."</a></li>";
+        if (!empty($res)) {
+            echo json_encode(array(
+                'body'=>$res,
+                'type'=>'success'
+                ));
+        }
+        exit;
     }
-    $res.='</ul>';
-    
-    if (!empty($res)) {
+
+// живой поиск по сайту
+    public function fs_livesearch()
+    {
+        $search=filter_input(INPUT_POST, 's', FILTER_SANITIZE_STRING); 
+
+        $args=array('s'=>$search,'post_type'=>'product','posts_per_page'=>40);
+        if (preg_match("/[a-z0-9_-]/",$search)) {
+         $args['meta_query'] = array(
+            array(
+                'key'     => 'al_articul',
+                'value'   => $search,
+                'compare' => 'LIKE'
+                )
+            );
+         unset($args['s']);
+     }
+     query_posts($args);
+     get_template_part('fast-shop/livesearch/livesearch'); 
+     wp_reset_query();
+     exit;
+ }
+
+// редактирование профиля пользователя
+ public function fs_profile_edit()
+ {
+    if (!wp_verify_nonce($_POST['_wpnonce'],'fast-shop')) exit('неправильный проверочный код nonce');
+    if (empty($_POST['fs-form'])) exit('форма не передала никаких данных');
+    $user=wp_get_current_user();
+    $post_data=array_map('trim',$_POST['fs-form']);
+    foreach ($post_data as $meta_key => $meta_value) {
+        update_user_meta($user->ID,$meta_key,$meta_value) ;
+    }
+    $user_id = wp_update_user( array( 
+        'ID' =>$user->ID,
+        'user_pass' => filter_input(INPUT_POST,'fs-password',FILTER_SANITIZE_STRING),
+        'user_email' => filter_input(INPUT_POST,'fs-email',FILTER_SANITIZE_EMAIL)
+        ) );
+    if (is_wp_error($user_id)) {
+        $errors=$user_id->get_error_message();
         echo json_encode(array(
-            'body'=>$res,
-            'type'=>'success'
+            'status'=>0,
+            'message'=>$errors
             ));
+        exit;
     }
+    echo json_encode(array(
+        'status'=>1,
+        'message'=>'Ваши данные успешно обновились!'
+        ));
     exit;
 }
 
-// живой поиск по сайту
-public function fs_livesearch()
+// создание профиля пользователя
+public function fs_profile_create()
 {
-    $search=filter_input(INPUT_POST, 's', FILTER_SANITIZE_STRING); 
-    
-    $args=array('s'=>$search,'post_type'=>'product','posts_per_page'=>40);
-    if (preg_match("/[a-z0-9_-]/",$search)) {
-     $args['meta_query'] = array(
-        array(
-            'key'     => 'al_articul',
-            'value'   => $search,
-            'compare' => 'LIKE'
-            )
-        );
-     unset($args['s']);
- }
- query_posts($args);
- get_template_part('fast-shop/livesearch/livesearch'); 
- wp_reset_query();
- exit;
+    if (!wp_verify_nonce($_POST['_wpnonce'],'fast-shop')) exit('неправильный проверочный код nonce');
+    if (empty($_POST['fs-form'])) exit('форма не передала никаких данных');
+
+    $user_id = wp_insert_user( array( 
+        'user_pass' => filter_input(INPUT_POST,'fs-password',FILTER_SANITIZE_STRING),
+        'user_email' => filter_input(INPUT_POST,'fs-email',FILTER_SANITIZE_EMAIL),
+        'user_login' => filter_input(INPUT_POST,'fs-login',FILTER_SANITIZE_STRING),
+        'show_admin_bar_front'=>false
+        ) );
+    if (is_wp_error($user_id)) {
+        $errors=$user_id->get_error_message();
+        echo json_encode(array(
+            'status'=>0,
+            'message'=>$errors
+            ));
+        exit;
+    }else{
+     $post_data=array_map('trim',$_POST['fs-form']);
+     foreach ($post_data as $meta_key => $meta_value) {
+        update_user_meta($user_id,$meta_key,$meta_value) ;
+    }
+    echo json_encode(array(
+        'status'=>1,
+        'redirect'=>'/opt/',
+        'message'=>'Поздравляем! Вы успешно прошли регистрацию. Сейчас вы будете перенаправленны для входа на сайт.'
+        )); 
+}
+exit;
 }
 } 

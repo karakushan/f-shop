@@ -240,6 +240,135 @@ validator.validate({
 	}
 });
 
+// валидация формы редактирования личных данных
+var userInfoEdit=$('form[name="fs-profile-edit"]');
+userInfoEdit.validate({
+	rules:{
+		"fs-password":{
+			minlength: 6
+		},
+		"fs-repassword":{
+			equalTo:"#fs-password"
+		}
+	},
+	messages:{
+		"fs-repassword":{
+			equalTo:"пароль и повтор пароля не совпадают"
+		},
+		"fs-password":{
+			minlength: "минимальная длина 6 символов"
+		},
+	},
+	submitHandler: function(form) {
+		$.ajax({
+			url: FastShopData.ajaxurl,
+			type: 'POST',
+			data:userInfoEdit.serialize(),
+			beforeSend:function () {
+				userInfoEdit.find('.fs-preloader').fadeIn();
+			}
+		})
+		.done(function(result) {
+			userInfoEdit.find('.fs-preloader').fadeOut();
+			var data=JSON.parse(result);
+			if (data.status==1) {
+				userInfoEdit.find('.form-info').removeClass('bg-danger').addClass('bg-success').show().text(data.message);
+				setTimeout(function() {
+					userInfoEdit.find('.form-info').fadeOut(800);
+				},3000);
+
+			}else{
+				userInfoEdit.find('.form-info').removeClass('bg-success').addClass('bg-danger').show().text(data.message);
+				setTimeout(function() {
+					userInfoEdit.find('.form-info').fadeOut(800);
+					
+				},3000);
+
+			}
+			
+		});
+	}
+});
+
+// регистрация пользователя
+var userProfileCreate=$('form[name="fs-profile-create"]');
+userProfileCreate.validate({
+	rules:{
+		"fs-password":{
+			minlength: 6
+		},
+		"fs-repassword":{
+			equalTo:"#fs-password"
+		}
+	},
+	messages:{
+		"fs-repassword":{
+			equalTo:"пароль и повтор пароля не совпадают"
+		},
+		"fs-password":{
+			minlength: "минимальная длина 6 символов"
+		},
+	},
+	submitHandler: function(form) {
+		$.ajax({
+			url: FastShopData.ajaxurl,
+			type: 'POST',
+			data:userProfileCreate.serialize(),
+			beforeSend:function () {
+				userProfileCreate.find('.fs-preloader').fadeIn();
+			}
+		})
+		.done(function(result) {
+			userProfileCreate.find('.fs-preloader').fadeOut();
+			var data=JSON.parse(result);
+			if (data.status==1) {
+				userProfileCreate.find('.form-info').removeClass('bg-danger').addClass('bg-success').show().text(data.message);
+				setTimeout(function() {
+					userProfileCreate.find('.form-info').fadeOut(800);
+					location.href=data.redirect;
+				},3000);
+
+			}else{
+				userProfileCreate.find('.form-info').removeClass('bg-success').addClass('bg-danger').show().text(data.message);
+				setTimeout(function() {
+					userProfileCreate.find('.form-info').fadeOut(800);
+					
+				},3000);
+
+			}
+			
+		});
+	}
+});
+
+// авторизация пользователя
+var loginForm=$('form[name="fs-login"]');
+loginForm.validate({
+	submitHandler: function(form) {
+		$.ajax({
+			url: FastShopData.ajaxurl,
+			type: 'POST',
+			data:loginForm.serialize(),
+			beforeSend:function () {
+				loginForm.find('.fs-preloader').fadeIn();
+			}
+		})
+		.done(function(result) {
+			var data=JSON.parse(result);
+				loginForm.find('.fs-preloader').fadeOut();
+
+			if(data.status==0){
+				loginForm.find('.form-info-login').addClass('form-error text-danger').html(data.error);
+			}else{
+				location.reload();
+			}
+
+		});
+
+
+	}
+});
+
 //Изменение к-ва добавляемых продуктов
 $('[data-fs-action=change_count]').on('change', function(event) {
 	event.preventDefault();

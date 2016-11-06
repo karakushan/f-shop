@@ -271,3 +271,20 @@ li.fs-attr {
     bottom: -19px;
     left: 16px;
 }
+.fs-login-form {
+    width: 410px;
+    margin: 35px 0;
+    border: 1px solid #e8e8e8;
+    padding: 16px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+.form-info.form-error {
+    color: red;
+    margin: 0 0 16px 0;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.42);
+    font-size: 0.9em;
+}
+.form-header {
+    margin: 0 0 10px 0;
+}
