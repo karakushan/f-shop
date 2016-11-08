@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-21 10:02+0000\n"
-"POT-Revision-Date: Sun Nov 06 2016 15:58:33 GMT+0200 (Финляндия (зима))\n"
+"POT-Revision-Date: Mon Nov 07 2016 12:03:42 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -54,13 +54,9 @@ msgstr ""
 msgid "Add to cart"
 msgstr ""
 
-#: ../lib/FS_Ajax_Class.php:323 ../lib/FS_Ajax_Class.php:347 ../templates/front-
+#: ../lib/FS_Ajax_Class.php:247 ../lib/FS_Ajax_Class.php:271 ../templates/front-
 #: end/wishlist/wishlist.php:5
 msgid "Wishlist"
-msgstr ""
-
-#: ../lib/FS_Delivery_Class.php:35
-msgid "Select the method"
 msgstr ""
 
 #: ../lib/FS_Post_Type.php:48 ../lib/FS_Post_Type.php:59
@@ -134,7 +130,7 @@ msgid "required"
 msgstr ""
 
 #: ../templates/front-end/auth/login.php:10 ../templates/front-end/auth/login.php:
-#: 11 ../templates/front-end/auth/register.php:14
+#: 11 ../templates/front-end/auth/register.php:29
 msgid "Password"
 msgstr ""
 
@@ -142,76 +138,91 @@ msgstr ""
 msgid "Remember me"
 msgstr ""
 
-#: ../templates/front-end/auth/login.php:21
-msgid "Sign in"
+#: ../templates/front-end/auth/login.php:22
+msgid "Log"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:6
+#: ../templates/front-end/auth/profile.php:8 ../templates/front-end/auth/register.
+#: php:8
 msgid "Full Name"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:7 ../templates/front-end/auth/profile.
-#: php:11 ../templates/front-end/auth/profile.php:15
+#: ../templates/front-end/auth/profile.php:9 ../templates/front-end/auth/profile.
+#: php:13 ../templates/front-end/auth/register.php:9 ../templates/front-
+#: end/auth/register.php:14 ../templates/front-end/auth/register.php:25 ..
+#: /templates/front-end/auth/register.php:30
 msgid "required field"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:10
+#: ../templates/front-end/auth/profile.php:12 ../templates/front-
+#: end/auth/register.php:13
 msgid "Phone"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:14
+#: ../templates/front-end/auth/profile.php:16 ../templates/front-
+#: end/auth/register.php:18
 msgid "Email"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:18
+#: ../templates/front-end/auth/profile.php:17 ../templates/front-
+#: end/auth/register.php:19
+msgid "enter a valid email"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:20 ../templates/front-
+#: end/auth/register.php:24
 msgid "Login"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:22
+#: ../templates/front-end/auth/profile.php:24
 msgid "New password"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:26
+#: ../templates/front-end/auth/profile.php:28 ../templates/front-
+#: end/auth/register.php:34
 msgid "Repeat password"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:31 ../templates/front-end/order/order-
-#: form.php:59
+#: ../templates/front-end/auth/profile.php:33 ../templates/front-
+#: end/auth/register.php:40 ../templates/front-end/order/order-form.php:44
 msgid "Shipping method"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:43
+#: ../templates/front-end/auth/profile.php:45 ../templates/front-
+#: end/auth/register.php:52 ../templates/front-end/order/order-form.php:71
+msgid "City"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:49 ../templates/front-
+#: end/auth/register.php:56
 msgid "Shipping address"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:47
+#: ../templates/front-end/auth/profile.php:53 ../templates/front-
+#: end/auth/register.php:60
 msgid "Payment method"
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:57
+#: ../templates/front-end/auth/profile.php:63
 msgid "Save"
 msgstr ""
 
-#: ../templates/front-end/auth/register.php:13
-msgid "Username"
+#: ../templates/front-end/auth/register.php:35
+msgid "password and repeat password must match"
 msgstr ""
 
-#: ../templates/front-end/auth/register.php:15
-msgid "Remember Me"
+#: ../templates/front-end/auth/register.php:70
+msgid "Send"
 msgstr ""
 
-#: ../templates/front-end/auth/register.php:16
-msgid "Log In"
-msgstr ""
-
-#: ../templates/front-end/order/order-form.php:58
+#: ../templates/front-end/order/order-form.php:43
 msgid "Choose a shipping method"
 msgstr ""
 
-#: ../templates/front-end/order/order-form.php:73
+#: ../templates/front-end/order/order-form.php:58
 msgid "Select a payment method"
 msgstr ""
 
-#: ../templates/front-end/order/order-form.php:74
+#: ../templates/front-end/order/order-form.php:59
 msgid "Type of payment"
 msgstr ""

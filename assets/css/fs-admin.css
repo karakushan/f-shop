@@ -156,18 +156,21 @@ ul.fs-group-list>li {
     background: #fff;
 }
 ul.order-paggination a {
-    padding: 5px 9px;
-    background: #6e7071;
-    margin: 0 4px 0 0;
+    padding: 7px 13px;
+    background: #0066cc;
+    margin: 12px 4px 0 0;
     display: block;
     text-decoration: none;
     color: #fff;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.48);
+    border-radius: 2px;
 }
 ul.order-paggination li {
     display: inline-block;
 }
-ul.order-paggination a.active {
-    background: #23282d;
+ul.order-paggination a.active,
+ul.order-paggination a:hover {
+    background: #333;
 }
 td.fs_price.column-fs_price span span {
     font-weight: bold;
@@ -241,3 +244,125 @@ td.fs_price.column-fs_price span span {
 .fs-att-values .sp-replacer {
     margin: 10px 0;
 }
+
+
+#fs-table {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #036;
+}
+
+#fs-table caption {
+    font-size: 48px;
+    color: #036;
+    font-weight: bolder;
+    font-variant: small-caps;
+}
+
+#fs-table th {
+    font-size: 12px;
+    color: #FFF;
+    background-color: #06C;
+    padding: 8px 4px;
+    border-bottom: 1px solid #015ebc;
+}
+
+#fs-table table {
+    margin: 0;
+    padding: 0;
+    border-collapse: collapse;
+    border: 1px solid #06C;
+    width: 100%
+}
+
+#fs-table th a:link, #fs-table th a:visited {
+    color: #FFF;
+    text-decoration: none;
+    border-left: 5px solid #FFF;
+    padding-left: 3px;
+}
+
+#fs-table th a:hover, #fs-table th a:active {
+    color: #F90;
+    text-decoration: line-through;
+    border-left: 5px solid #F90;
+    padding-left: 3px;
+}
+
+#fs-table tbody th:hover {
+    background-image: url(../img/tbody_hover.gif);
+    background-position: bottom;
+    background-repeat: repeat-x;
+}
+
+#fs-table td {
+    background-color: #f2f2f2;
+    padding: 4px;
+    font-size: 12px;
+    text-align: center;
+}
+
+#fs-table td:hover {
+    background-color: #f8f8f8;
+
+}
+
+#fs-table td a:link, #fs-table td a:visited {
+    color: #039;
+    text-decoration: none;
+    border-left: 3px solid #039;
+    padding-left: 3px;
+}
+.fs-order-info{
+    max-width: 640px;
+}
+
+#fs-table td a:hover, #fs-table td a:active {
+    color: #06C;
+    text-decoration: line-through;
+    border-left: 3px solid #06C;
+    padding-left: 3px;
+}
+.fs-content-wrapper {
+    margin: 22px 0 0 0;
+}
+
+#fs-table th {
+    text-align: left;
+}
+
+#fs-table tr {
+    border-bottom: 1px solid #CCC;
+}
+
+#fs-table thead th {
+    background-image: url(../img/thead_back.gif);
+    background-repeat: repeat-x;
+    background-color: #06C;
+    height: 30px;
+    font-size: 18px;
+    text-align: center;
+    text-shadow: #333 2px 2px;
+    border: 2px;
+}
+
+#fs-table tfoot th {
+    background-image: url(../img/tfoot_back.gif);
+    background-repeat: repeat-x;
+    background-color: #036;
+    height: 30px;
+    font-size: 28px;
+    text-align: center;
+    text-shadow: #333 2px 2px;
+}
+
+#fs-table tfoot td {
+    background-image: url(../img/tfoot_back.gif);
+    background-repeat: repeat-x;
+    background-color: #036;
+    color: FFF;
+    height: 30px;
+    font-size: 24px;
+    text-align: left;
+    text-shadow: #333 2px 2px;
+}
+

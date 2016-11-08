@@ -1,15 +1,17 @@
 <div class="wrap">
-	<h2><?php _e('Orders','fast-shop') ?></h2>
-	<table class="wp-list-table widefat fixed striped posts">
+	<h1><?php _e('Orders','fast-shop') ?></h1>
+	<div id="fs-table" class="fs-content-wrapper">
+	<table>
 	<thead>
 		<tr>
-			<th>#ID</th><th>Дата заказа</th><th>Телефон</th><th>Email</th><th>Способ доставки</th><th>Статус/Изменить</th><th>Сумма</th><th>Подробности</th><!-- <th>Отмена</th> -->
+			<th scope="col">#ID</th><th scope="col">Дата заказа</th><th scope="col">Телефон</th><th scope="col">Email</th><th scope="col">Способ доставки</th><th scope="col">Статус/Изменить</th><th scope="col">Сумма</th><th scope="col">Подробности</th><!-- <th>Отмена</th> -->
 		</tr>
 		</thead>
+		<tbody>
 		<?php foreach ($orders->get_orders() as $order): ?>
 			<?php $status=$orders->order_status($order->status); ?>
 			<tr>
-				<td><?php echo $order->id ?></td>
+				<th scope="row"><a href="<?php echo add_query_arg(array('action'=>'info','id'=>$order->id)) ?>"><?php echo $order->id ?></a></th>
 				<td><?php echo date('d.m.Y H:i',strtotime($order->date)) ?></td>
 				<td><?php echo $order->telephone ?></td>
 				<td><?php echo $order->email ?></td>
@@ -25,7 +27,9 @@
 				
 			</tr>
 		<?php endforeach ?>
-
+		</tbody>
+<tfoot><tr><th scope="row"><?php _e( 'Total', 'fast-shop' ); ?></th><td colspan="7">67 <?php _e( 'orders', 'fast-shop' ); ?></td></tr></tfoot>
 	</table>
+	</div>
 	<?php $orders->order_pagination('order-paggination') ?>
 </div>

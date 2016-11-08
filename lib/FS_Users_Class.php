@@ -41,8 +41,16 @@ class FS_Users_Class
         }
 
 // Авторизуем
-        $auth = wp_authenticate( $username, $password );
+        $user=get_user_by('login',$username);
+        if(!in_array('wholesale_buyer', $user->roles)){
+            echo json_encode(array(
+                'status'=>0,
+                'redirect'=>false,
+                'error'=>'К сожалению вы не входите  в категорию "оптовый покупатель".'));
+            exit;
+        }
 
+        $auth = wp_authenticate( $username, $password );
 // Проверка ошибок
         if ( is_wp_error( $auth ) ) {
             echo json_encode(array('status'=>0,'redirect'=>false,'error'=>$auth->get_error_message()));

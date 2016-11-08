@@ -20,6 +20,7 @@ class FS_Shortcode
         add_shortcode('fs_checkout', array(&$this, 'checkout_form'));
         add_shortcode('fs_order_send', array(&$this, 'order_send'));
         add_shortcode('fs_user_cabinet', array(&$this, 'user_cabinet'));
+        add_shortcode('fs_single_order', array(&$this, 'single_order'));
 
 
     }
@@ -87,58 +88,58 @@ class FS_Shortcode
         $order_info = $order->get_order($order_id);
 
         $info = "<table>
-    	<tr>
-    		<th>Ваше имя</th><td>" . $order_info->name . "</td>
-    	</tr>
-    	<tr>
-    		<th>Электронная почта </th><td>" . $order_info->email . "</td>
-    	</tr>
-    	<tr>
-    		<th>Номер телефона </th><td>" . $order_info->telephone . "</td>
-    	</tr>
-    	<tr>
-    		<th>Способ доставки</th><td>" . $delivery->get_delivery($order_info->delivery) . "</td>
-    	</tr>
-    	<tr>
-    		<th>Общая сумма</th><td>" . $order_info->summa . " " . get_option('currency_icon', '$') . "</td>
-    	</tr>
-    	<tr>
-    		<th>Статус</th><td>" . $order->order_status[$order_info->status] . "</td>
-    	</tr>
-    </table>";
-        return $info;
+        <tr>
+          <th>Ваше имя</th><td>" . $order_info->name . "</td>
+      </tr>
+      <tr>
+          <th>Электронная почта </th><td>" . $order_info->email . "</td>
+      </tr>
+      <tr>
+          <th>Номер телефона </th><td>" . $order_info->telephone . "</td>
+      </tr>
+      <tr>
+          <th>Способ доставки</th><td>" . $delivery->get_delivery($order_info->delivery) . "</td>
+      </tr>
+      <tr>
+          <th>Общая сумма</th><td>" . $order_info->summa . " " . get_option('currency_icon', '$') . "</td>
+      </tr>
+      <tr>
+          <th>Статус</th><td>" . $order->order_status[$order_info->status] . "</td>
+      </tr>
+  </table>";
+  return $info;
 
-    }
+}
 
 //Возвращает id последнего заказа
-    public function last_order_id()
-    {
-        $order_id = $_SESSION['last_order_id'];
+public function last_order_id()
+{
+    $order_id = $_SESSION['last_order_id'];
 
-        if (!is_numeric($order_id) || empty($order_id)) {
-            return 0;
-        } else {
-            return $order_id;
-        }
+    if (!is_numeric($order_id) || empty($order_id)) {
+        return 0;
+    } else {
+        return $order_id;
     }
+}
 
-    public function review_form()
-    {
-        global $fs_config;
-        require $fs_config['plugin_path'] . 'templates/back-end/review-form.php';
-    }
+public function review_form()
+{
+    global $fs_config;
+    require $fs_config['plugin_path'] . 'templates/back-end/review-form.php';
+}
 
-    function checkout_form()
-    {
-        global $fs_config;
-        $checkout_form_theme = TEMPLATEPATH . '/fast-shop/checkout/checkout.php';
-        $checkout_form_plugin = $fs_config['plugin_path'] . 'templates/front-end/checkout/checkout.php';
-        if (file_exists($checkout_form_theme)) {
-            include($checkout_form_theme);
-        } else {
-            include($checkout_form_plugin);
-        }
+function checkout_form()
+{
+    global $fs_config;
+    $checkout_form_theme = TEMPLATEPATH . '/fast-shop/checkout/checkout.php';
+    $checkout_form_plugin = $fs_config['plugin_path'] . 'templates/front-end/checkout/checkout.php';
+    if (file_exists($checkout_form_theme)) {
+        include($checkout_form_theme);
+    } else {
+        include($checkout_form_plugin);
     }
+}
 
     /**
      * шорткод для отображения формы оформления заказа
@@ -149,48 +150,63 @@ class FS_Shortcode
         extract(shortcode_atts(array(
             'order_type' => 'normal',
             'class' => 'order-send'
-        ), $atts));
+            ), $atts));
         $template = '
-    <form action="#" name="fs-order-send" class="' . $class . '" method="POST">
-        <div class="products_wrapper"></div>
-        <input type="hidden" id="_wpnonce" name="_wpnonce" value="' . wp_create_nonce('fast-shop') . '">
-        <input type="hidden" name="action" value="order_send">
-        <input type="hidden" name="order_type" value="' . $order_type . '">
-       
-        ';
+        <form action="#" name="fs-order-send" class="' . $class . '" method="POST">
+            <div class="products_wrapper"></div>
+            <input type="hidden" id="_wpnonce" name="_wpnonce" value="' . wp_create_nonce('fast-shop') . '">
+            <input type="hidden" name="action" value="order_send">
+            <input type="hidden" name="order_type" value="' . $order_type . '">
 
-        if (file_exists($this->config->data['plugin_user_template'] . $prefix)) {
-            ob_start();
-            include($this->config->data['plugin_user_template'] . $prefix);
-            $template .= ob_get_contents();
-            ob_end_clean();
-            $template .= $template_user_file;
+            ';
 
-        } else {
-            ob_start();
-            include($this->config->data['plugin_template'] . $prefix);
-            $template .= ob_get_contents();
-            ob_end_clean();
-        }
-        $template .= '</form>';
-        return $template;
-    }
+            if (file_exists($this->config->data['plugin_user_template'] . $prefix)) {
+                ob_start();
+                include($this->config->data['plugin_user_template'] . $prefix);
+                $template .= ob_get_contents();
+                ob_end_clean();
+                $template .= $template_user_file;
 
-    function user_cabinet()
-    {
-
-        if (is_user_logged_in()) {
-            $temp=fs_user_cabinet();
-        } else {
-            if (isset($_GET['fs-page']) && $_GET['fs-page']=='register') {
-               $temp=fs_register_form();
-            }else{
-                $temp=fs_login_form();
+            } else {
+                ob_start();
+                include($this->config->data['plugin_template'] . $prefix);
+                $template .= ob_get_contents();
+                ob_end_clean();
             }
-
-            
+            $template .= '</form>';
+            return $template;
         }
-        return $temp;
-    }
 
-}
+        function user_cabinet()
+        {
+            $user=wp_get_current_user();
+            if (is_user_logged_in() && in_array('wholesale_buyer', $user->roles)) {
+                $temp=fs_user_cabinet();
+            } else {
+
+                if (isset($_GET['fs-page']) && $_GET['fs-page']=='register') {
+                    if (is_user_logged_in()) {
+                        $temp=fs_login_form();
+                    }else{
+                        $temp=fs_register_form();
+                    }
+                }else{
+                    $temp=fs_login_form();
+                }
+
+
+            }
+            return $temp;
+        }
+
+        public function single_order($args)
+        {
+            $args=shortcode_atts(array(
+                'product_id'=>0,
+                'class'=>''
+                ),$args);
+            $template=fs_frontend_template('order/single-order',$args);
+            return $template;
+        }
+
+    }

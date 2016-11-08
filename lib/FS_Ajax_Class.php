@@ -201,7 +201,7 @@ class FS_Ajax_Class
         $mail_admin_send=wp_mail($admin_email,$admin_mail_header,$admin_message, $headers );
 
         //Регистрируем нового пользователя
-        if ($_REQUEST['fs_register_user']==1){
+        if (isset($_REQUEST['fs_register_user']) && $_REQUEST['fs_register_user']==1){
             $user_id = username_exists($mail_client);
             if ( !$user_id ) {
                 $random_password = wp_generate_password();
@@ -233,14 +233,6 @@ class FS_Ajax_Class
         unset($_SESSION['cart']);
         exit;
     }
-
-
-
-
-
-
-
-
 
     public function fs_addto_wishlist()
     {
@@ -349,10 +341,13 @@ public function fs_profile_create()
     if (!wp_verify_nonce($_POST['_wpnonce'],'fast-shop')) exit('неправильный проверочный код nonce');
     if (empty($_POST['fs-form'])) exit('форма не передала никаких данных');
 
+    $login=filter_input(INPUT_POST,'fs-login',FILTER_SANITIZE_STRING);
+    $email=filter_input(INPUT_POST,'fs-email',FILTER_SANITIZE_EMAIL);
+
     $user_id = wp_insert_user( array( 
         'user_pass' => filter_input(INPUT_POST,'fs-password',FILTER_SANITIZE_STRING),
-        'user_email' => filter_input(INPUT_POST,'fs-email',FILTER_SANITIZE_EMAIL),
-        'user_login' => filter_input(INPUT_POST,'fs-login',FILTER_SANITIZE_STRING),
+        'user_email' => $email,
+        'user_login' =>  $login,
         'show_admin_bar_front'=>false
         ) );
     if (is_wp_error($user_id)) {
@@ -370,8 +365,20 @@ public function fs_profile_create()
     echo json_encode(array(
         'status'=>1,
         'redirect'=>'/opt/',
-        'message'=>'Поздравляем! Вы успешно прошли регистрацию. Сейчас вы будете перенаправленны для входа на сайт.'
+        'message'=>'Поздравляем! Вы успешно прошли регистрацию. Теперь ваш профиль должен быть подтверждённым администратором сайта. Если проверка будет пройдена вы будете  переведены в категорию "оптовые покупатели".'
         )); 
+
+// отсылаем письма
+    $headers[] = 'Content-type: text/html; charset=utf-8';
+    // пользователю
+    $user_mail_header='Регистрация на сайте «'.get_bloginfo('name').'»';
+    $user_message='<h3>Поздравляем!</h3><p>Вы успешно прошли регистрацию на сайте. Теперь ваш профиль должен быть подтверждённым администратором сайта. Если проверка будет пройдена вы будете  переведены в категорию "оптовые покупатели".</p>';
+    $mail_user_send=wp_mail($email,$user_mail_header,$user_message, $headers ); 
+
+// админу
+    $admin_mail_header='Регистрация на сайте «'.get_bloginfo('name').'»';
+    $admin_message='<h3>На вашем сайте новый пользователь '. $login.'!</h3><p>Вам необходимо проверить данные и перевести в категорию пользователей "Оптовые покуптели". Также не забудьте уведомить пользователя об этом.</p>';
+    $mail_user_send=wp_mail(get_bloginfo('admin_email'),$admin_mail_header,$admin_message, $headers );
 }
 exit;
 }

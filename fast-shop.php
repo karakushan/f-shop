@@ -39,6 +39,9 @@ define('PLUGIN_URL',plugin_dir_url( __FILE__ ));
 
 new FS\FS_Init;
 
+
+
+
 /**
  * Activate the plugin
  */

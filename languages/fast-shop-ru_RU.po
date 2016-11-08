@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-21 10:02+0000\n"
-"PO-Revision-Date: Sun Nov 06 2016 18:49:51 GMT+0200 (Финляндия (зима))\n"
+"PO-Revision-Date: Tue Nov 08 2016 09:42:42 GMT+0200 (Финляндия (зима))\n"
 "Last-Translator: grand-admin <karakushan@gmail.com>\n"
 "Language-Team: \n"
 "Language: Russian\n"
@@ -45,13 +45,13 @@ msgstr ""
 msgid "Здесь размещены товары вашего сайта."
 msgstr ""
 
-#: ../templates/front-end/auth/profile.php:17
-msgid "enter a valid email"
-msgstr ""
+#: ../templates/back-end/orders.php:31
+msgid "Total"
+msgstr "Всего"
 
-#: ../templates/front-end/auth/profile.php:45
-msgid "City"
-msgstr "Город"
+#: ../templates/back-end/orders.php:31
+msgid "orders"
+msgstr "заказов"
 
 #. Description of the plugin/theme
 msgid ""
@@ -69,14 +69,10 @@ msgstr "Удалить позицию"
 msgid "Add to cart"
 msgstr "В корзину"
 
-#: ../lib/FS_Ajax_Class.php:251 ../lib/FS_Ajax_Class.php:275 ../templates/front-
+#: ../lib/FS_Ajax_Class.php:247 ../lib/FS_Ajax_Class.php:271 ../templates/front-
 #: end/wishlist/wishlist.php:5
 msgid "Wishlist"
 msgstr "Список желаний"
-
-#: ../lib/FS_Delivery_Class.php:35
-msgid "Select the method"
-msgstr "Выберите способ"
 
 #: ../lib/FS_Post_Type.php:48 ../lib/FS_Post_Type.php:59
 msgid "Products"
@@ -145,7 +141,7 @@ msgid "required"
 msgstr "обязательно"
 
 #: ../templates/front-end/auth/login.php:10 ../templates/front-end/auth/login.php:
-#: 11 ../templates/front-end/auth/register.php:14
+#: 11 ../templates/front-end/auth/register.php:29
 msgid "Password"
 msgstr "Пароль"
 
@@ -153,28 +149,39 @@ msgstr "Пароль"
 msgid "Remember me"
 msgstr "Запомнить меня"
 
-#: ../templates/front-end/auth/login.php:21
-msgid "Sign in"
-msgstr "Войти"
+#: ../templates/front-end/auth/login.php:22
+msgid "Log"
+msgstr "Вход"
 
-#: ../templates/front-end/auth/profile.php:8
+#: ../templates/front-end/auth/profile.php:8 ../templates/front-end/auth/register.
+#: php:8
 msgid "Full Name"
 msgstr "Фамилия Имя Отчество"
 
 #: ../templates/front-end/auth/profile.php:9 ../templates/front-end/auth/profile.
-#: php:13
+#: php:13 ../templates/front-end/auth/register.php:9 ../templates/front-
+#: end/auth/register.php:14 ../templates/front-end/auth/register.php:25 ..
+#: templates/front-end/auth/register.php:30
 msgid "required field"
 msgstr "обязательное поле"
 
-#: ../templates/front-end/auth/profile.php:12
+#: ../templates/front-end/auth/profile.php:12 ../templates/front-
+#: end/auth/register.php:13
 msgid "Phone"
 msgstr "Телефон"
 
-#: ../templates/front-end/auth/profile.php:16
+#: ../templates/front-end/auth/profile.php:16 ../templates/front-
+#: end/auth/register.php:18
 msgid "Email"
 msgstr "E-mail"
 
-#: ../templates/front-end/auth/profile.php:20
+#: ../templates/front-end/auth/profile.php:17 ../templates/front-
+#: end/auth/register.php:19
+msgid "enter a valid email"
+msgstr "введите валидный e-mail "
+
+#: ../templates/front-end/auth/profile.php:20 ../templates/front-
+#: end/auth/register.php:24
 msgid "Login"
 msgstr "Логин"
 
@@ -182,20 +189,28 @@ msgstr "Логин"
 msgid "New password"
 msgstr "Новый пароль"
 
-#: ../templates/front-end/auth/profile.php:28
+#: ../templates/front-end/auth/profile.php:28 ../templates/front-
+#: end/auth/register.php:34
 msgid "Repeat password"
 msgstr "Повтор пароля"
 
-#: ../templates/front-end/auth/profile.php:33 ../templates/front-end/order/order-
-#: form.php:59
+#: ../templates/front-end/auth/profile.php:33 ../templates/front-
+#: end/auth/register.php:40 ../templates/front-end/order/order-form.php:44
 msgid "Shipping method"
 msgstr "Способ  доставки"
 
-#: ../templates/front-end/auth/profile.php:49
+#: ../templates/front-end/auth/profile.php:45 ../templates/front-
+#: end/auth/register.php:52 ../templates/front-end/order/order-form.php:71
+msgid "City"
+msgstr "Город"
+
+#: ../templates/front-end/auth/profile.php:49 ../templates/front-
+#: end/auth/register.php:56
 msgid "Shipping address"
 msgstr "Адрес доставки"
 
-#: ../templates/front-end/auth/profile.php:53
+#: ../templates/front-end/auth/profile.php:53 ../templates/front-
+#: end/auth/register.php:60
 msgid "Payment method"
 msgstr "Способ оплаты"
 
@@ -203,26 +218,22 @@ msgstr "Способ оплаты"
 msgid "Save"
 msgstr "Сохранить"
 
-#: ../templates/front-end/auth/register.php:13
-msgid "Username"
-msgstr "Имя пользователя"
+#: ../templates/front-end/auth/register.php:35
+msgid "password and repeat password must match"
+msgstr "пароль и повтор пароля должны совпадать"
 
-#: ../templates/front-end/auth/register.php:15
-msgid "Remember Me"
-msgstr "Запомнить меня"
+#: ../templates/front-end/auth/register.php:70
+msgid "Send"
+msgstr "Отправить"
 
-#: ../templates/front-end/auth/register.php:16
-msgid "Log In"
-msgstr "Вход"
-
-#: ../templates/front-end/order/order-form.php:58
+#: ../templates/front-end/order/order-form.php:43
 msgid "Choose a shipping method"
 msgstr "Выберите способ доставки"
 
-#: ../templates/front-end/order/order-form.php:73
+#: ../templates/front-end/order/order-form.php:58
 msgid "Select a payment method"
 msgstr "Выберите способ оплаты"
 
-#: ../templates/front-end/order/order-form.php:74
+#: ../templates/front-end/order/order-form.php:59
 msgid "Type of payment"
 msgstr "Способ оплаты"

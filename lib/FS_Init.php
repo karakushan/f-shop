@@ -7,9 +7,9 @@ class FS_Init
 {
 	public $config;
 
-    public function __construct()
+	public function __construct()
 	{
-       $this->config=new FS_Config();
+		$this->config=new FS_Config();
 
 		add_action( 'wp_enqueue_scripts',array(&$this,'fast_shop_scripts' ) );
 		add_action( 'admin_enqueue_scripts',array(&$this,'fast_shop_admin_scripts' ) );
@@ -27,7 +27,7 @@ class FS_Init
 		new FS_Images_Class();
 		new FS_Taxonomies_Class();
 		new FS_Action_Class();
-        new FS_Users_Class();
+		new FS_Users_Class();
 
 
 
@@ -35,6 +35,7 @@ class FS_Init
 		add_filter("plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ));
 		add_action( 'plugins_loaded', array($this,'true_load_plugin_textdomain' ));
 
+		
 		} // END public function __construct
 
 		function true_load_plugin_textdomain() {
@@ -55,23 +56,23 @@ class FS_Init
 			wp_enqueue_style( 'lightbox', $this->config->data['plugin_url'].'assets/lightbox2/dist/css/lightbox.min.css',array(),$this->config->data['plugin_ver'],'all');			
 			wp_enqueue_style( 'font-awesome',$this->config->data['plugin_url'].'assets/fontawesome/css/font-awesome.min.css',array(),$this->config->data['plugin_ver'],'all');
 
-            wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.css',array(),$this->config->data['plugin_ver'],'all');
+			wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'].'assets/jquery-ui-1.12.0/jquery-ui.min.css',array(),$this->config->data['plugin_ver'],'all');
 
-            wp_enqueue_script("jquery-ui-core", array('jquery'));
-            wp_enqueue_script("jquery-ui-slider", array('jquery'));
+			wp_enqueue_script("jquery-ui-core", array('jquery'));
+			wp_enqueue_script("jquery-ui-slider", array('jquery'));
 
-            wp_enqueue_script( 'jquery-validate',$this->config->data['plugin_url'].'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true);
-            wp_enqueue_script( 'domurl',$this->config->data['plugin_url'].'assets/js/url.min.js', array( 'jquery' ), null, true);
+			wp_enqueue_script( 'jquery-validate',$this->config->data['plugin_url'].'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true);
+			wp_enqueue_script( 'domurl',$this->config->data['plugin_url'].'assets/js/url.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'lightbox',$this->config->data['plugin_url'].'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'lightslider',$this->config->data['plugin_url'].'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true);
-			wp_enqueue_script( 'fast-shop',$this->config->data['plugin_url'].'assets/js/fast-shop.js', array( 'jquery'), $this->config->data['plugin_ver'], true);
+			wp_enqueue_script( 'fast-shop',$this->config->data['plugin_url'].'assets/js/fast-shop.js', array( 'jquery','bootstrap'), $this->config->data['plugin_ver'], true);
 			$l10n = array(
-			    'ajaxurl' =>admin_url("admin-ajax.php"),
-                'fs_slider_max'=>intval(fs_price_max(false)),
-                'fs_currency'=>fs_currency(),
-                'order_modal'=>fs_option('order_modal',0),
-                'order_modal_id'=>fs_option('order_modal_id')
-                );
+				'ajaxurl' =>admin_url("admin-ajax.php"),
+				'fs_slider_max'=>intval(fs_price_max(false)),
+				'fs_currency'=>fs_currency(),
+				'order_modal'=>fs_option('order_modal',0),
+				'order_modal_id'=>fs_option('order_modal_id')
+				);
 			wp_localize_script('fast-shop', 'FastShopData', $l10n );
 		}
 

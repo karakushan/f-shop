@@ -32,7 +32,7 @@
 
     <div class="col-md-6">
         <label for="fs-repassword"><?php _e('Repeat password','fast-shop') ?></label>
-        <input type="password" name="fs-repassword" class="form-control" id="fs-repassword" required>
+        <input type="password" name="fs-repassword" class="form-control" id="fs-repassword" title="<?php _e('password and repeat password must match','fast-shop') ?>" required>
     </div>
 </div>
 <h3 class="form-block-t">Дополнительная информация</h3> 
@@ -67,5 +67,5 @@
         <?php endif ?>
     </select>
 </div>
-<button type="submit" class="button-t1"><?php _e('Save','fast-shop') ?> <img src="/wp-content/plugins/fast-shop/assets/img/heart.svg" alt="preloader" class="fs-preloader"></button>
+<button type="submit" class="button-t1"><?php _e('Send','fast-shop') ?> <img src="/wp-content/plugins/fast-shop/assets/img/heart.svg" alt="preloader" class="fs-preloader"></button>
 </form>

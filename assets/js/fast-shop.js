@@ -211,9 +211,45 @@ $('.down').click(function(event) {
 });
 
 
-var validator =$('form[name="fs-order-send"]')
+var validator =$('form[name="fs-order-send"]');
+var tabClick=false;
+$('[data-toggle="tab"]').on('click', function(event) {
+	event.preventDefault();
+
+	var activeTab=$(this).attr('href');
+	$(activeTab).find('form[name="fs-order-send"]').validate({
+	ignore: [],
+	submitHandler: function(form) {
+		$.ajax({
+			url: FastShopData.ajaxurl,
+			type: 'POST',
+			data:validator.serialize(),
+			beforeSend:function () {
+				$('button[data-fs-action=order-send]').find('.fs-preloader').fadeIn('slow');
+			}
+		})
+		.done(function(result) {
+			$('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
+			console.log(result);
+			var jsonData=JSON.parse(result);
+
+
+			if(jsonData.wpdb_error){
+				console.log(jsonData.wpdb_error);
+			}
+			if(jsonData.redirect.length>0) document.location.href=jsonData.redirect;
+
+		});
+
+
+	}
+});
+
+});
+
 // валидация и отправка формы заказа
 validator.validate({
+	ignore: [],
 	submitHandler: function(form) {
 		$.ajax({
 			url: FastShopData.ajaxurl,
