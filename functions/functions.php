@@ -75,17 +75,12 @@ function fs_lightslider($post_id=0, $args=array())
     $args=wp_parse_args($args,$default);
 
     $galery=$galery->fs_galery_list($post_id);
-    if (!$galery) {
-        echo "string";
-    }else{
-        echo "<script>";
-        echo "var fs_lightslider_options=".json_encode( $args);
-        echo "</script>";
-        echo "<ul id=\"product_slider\">";
-        echo $galery;
-        echo "</ul>";
-    }
-
+    echo "<script>";
+    echo "var fs_lightslider_options=".json_encode( $args);
+    echo "</script>";
+    echo "<ul id=\"product_slider\">";
+    echo $galery;
+    echo "</ul>";
 }
 
 //Получает текущую цену с учётом скидки
@@ -714,8 +709,8 @@ function fs_frontend_template($template,$args=array()){
     }else{
         echo 'файл шаблона '.$template.' не найден в функции '.__FUNCTION__;
     }
-    $template=ob_get_clean();
-    ob_end_flush();
+    $template=ob_get_contents();
+    if (ob_get_length()){ ob_end_clean();  ob_end_flush(); } 
     return apply_filters('fs_frontend_template',$template);
 }
 
@@ -724,7 +719,7 @@ function fs_frontend_template($template,$args=array()){
  * @return mixed|void
  */
 function fs_login_form(){
-    ob_start();
+   
     $template=fs_frontend_template('auth/login');
     return apply_filters('fs_login_form',$template);
 }
@@ -734,7 +729,7 @@ function fs_login_form(){
  * @return mixed|void
  */
 function fs_register_form(){
-    ob_start();
+  
     $template=fs_frontend_template('auth/register');
     return apply_filters('fs_register_form',$template);
 }
@@ -758,6 +753,28 @@ function fs_page_content(){
     } else{
         $template=fs_frontend_template('auth/profile');
     }
-   
+    
     echo $template;
+}
+
+/**
+ * Отображает кнопку быстрого заказа с модальным окном Bootstrap
+ * @param int $post_id
+ * @param array $attr
+ */
+function fs_quick_order_button($post_id=0, $attr=array()){
+    global $post;
+    $attr=wp_parse_args($attr,array(
+        'data-toggle'=>"modal",
+        'href'=>'#fast-order'
+        ));
+    $str_att=array();
+    if ($attr){
+        foreach ($attr as $key=>$at) {
+            $str_att[]=sanitize_key($key).'="'.$at.'"';
+        }
+    }
+    $post_id=empty($post_id) ? $post->ID : $post_id;
+    $impl_attr=implode(' ', $str_att);
+    echo '<button data-fs-action="quick_order_button" data-product-id="'.$post_id.'" data-product-name="'.get_the_title($post_id).'" '.$impl_attr.'>Заказать</button>';
 }

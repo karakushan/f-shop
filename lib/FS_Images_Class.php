@@ -11,7 +11,34 @@ class FS_Images_Class
 	function __construct()
 	{
 		$this->config=new FS_Config();
-	}
+        add_action('init',array($this,'register_product_g_thumbnail'));
+
+    }
+
+    public function register_product_g_thumbnail()
+    {
+     if ( function_exists( 'add_image_size' ) ) {
+        $width=fs_option('gallery_img_width',300);
+        $height=fs_option('gallery_img_height',400);
+        switch(fs_option('cutting_photos')){
+            case 'cut_width_height':
+            add_image_size( 'fs_gallery_big', $width, $height,true); 
+            break;
+            case 'cut_no':
+            add_image_size( 'fs_gallery_big', $width, $height,false); 
+            break;
+            case 'cut_width':
+            add_image_size( 'fs_gallery_big', $width, 9999,true); 
+            break;
+            case 'cut_height':
+            add_image_size( 'fs_gallery_big', 9999, $height,true); 
+            break;
+            default:
+            add_image_size( 'fs_gallery_big', $width, $height,false); 
+            break;
+        }
+    }
+}
 
     /**
      * @param string $post_id
@@ -23,25 +50,24 @@ class FS_Images_Class
 
     	$images_n='';
         $gallery_image='';
-    	$galerys=$this->fs_galery_images($post_id);
-    	$images_n.=apply_filters('fs_first_gallery_image',$post_id,'full');
-    	if ($galerys) {
-    		foreach ($galerys as $atach_id) {
-    		    if (is_numeric($atach_id)){
-                    $gallery_image= wp_get_attachment_url( $atach_id);
-                }else{
-                    $gallery_image=$atach_id;
-                }
-    			$images_n.= "<li data-thumb=\"$gallery_image\" data-src=\"$gallery_image\"><a href=\"$gallery_image\" data-lightbox=\"roadtrip\" data-title=\"".get_the_title($post_id)."\"><img src=\"$gallery_image\" width=\"100%\"></a></li>";
-    		}
-    	}
+        $width=fs_option('gallery_img_width',300);
+        $height=fs_option('gallery_img_height',400);
+        $image_placeholder=fs_option('image_placeholder','holder.js/'.$width.'x'.$height);
+        $galerys=$this->fs_galery_images($post_id);
+        $images_n.=apply_filters('fs_first_gallery_image',$post_id,'fs_gallery_big');
+        if ($galerys) {
+          foreach ($galerys as $atach_id) {
+            $image= wp_get_attachment_image_src($atach_id,'fs_gallery_big');
+            $image_full= wp_get_attachment_image_src( $atach_id,'full');
 
-    	if ($images_n=='' || empty($galerys)) {
-    		return false;
-    	}else{
-    		return $images_n;
-    	}
-    }	
+            $images_n.= "<li data-thumb=\"$image[0]\" data-src=\"$image_full[0]\"><a href=\"$image_full[0]\" data-lightbox=\"roadtrip\" data-title=\"".get_the_title($post_id)."\"><img src=\"$image[0]\" width=\"100%\"></a></li>";
+        }
+    }
+    if (empty($images_n)) {
+        $images_n.= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\"><img src=\"$image_placeholder\" width=\"100%\"></li>";
+    }
+    return $images_n;
+}	
 
 /**
  * получаем url изображений галереи в массиве
@@ -55,12 +81,7 @@ public function fs_galery_images($post_id=0)
 	global $post;
 	$post_id=!empty($post_id)?(int)$post_id:$post->ID;
 	$gallery=get_post_meta( $post_id, 'fs_galery', false);
-	$gallery=!empty($gallery)?$gallery[0]:array();
-	if ($gallery) {
-		foreach ($gallery as $img) {
-			$images[]=wp_get_attachment_url($img);
-		}
-	}
+	$images=!empty($gallery)?$gallery[0]:array();
 	return apply_filters('fs_galery_images',$images,$post_id);
 }
 

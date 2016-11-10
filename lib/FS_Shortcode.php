@@ -205,8 +205,15 @@ function checkout_form()
                 'product_id'=>0,
                 'class'=>''
                 ),$args);
-            $template=fs_frontend_template('order/single-order',$args);
-            return $template;
-        }
+            $template = '
+            <form action="#" name="fs-order-send" class="' . $args['class'] . '" method="POST">
+                <div class="products_wrapper"></div>
+                <input type="hidden" id="_wpnonce" name="_wpnonce" value="' . wp_create_nonce('fast-shop') . '">
+                <input type="hidden" name="action" value="order_send">
+                <input type="hidden" name="order_type" value="single">';
+                $template.=fs_frontend_template('order/single-order',$args);
+                 $template.= '</form>';
+                return $template;
+            }
 
-    }
+        }

@@ -9,6 +9,7 @@
                 <li><a href="#tabs-4">Страницы</a></li>
                 <li><a href="#tabs-5">Пользователи</a></li>
                 <li><a href="#tabs-6">Сообщения</a></li>
+                <li><a href="#tabs-7">Галерея</a></li>
             </ul>
             <div id="tabs-1">
                 <p>
@@ -160,6 +161,39 @@
                 <p>
                     <label for="register_user">Идентификатор модального окна</label><br>
                     <input type="text" name="fs_option[order_modal_id]" id="order_modal_id" value="<?php echo fs_option('order_modal_id') ?>">
+                </p>
+            </div>
+            <div id="tabs-7">
+                <h2>Настройки галереи в карточке товара</h2>
+                <h3>Большое изображение</h3>
+               
+                <p>
+                    <label for="gallery_img_width">Ширина изображения</label><br>
+                    <input type="text" name="fs_option[gallery_img_width]"  id="gallery_img_width" value="<?php echo fs_option('gallery_img_width') ?>">
+                </p>
+                 <p>
+                    <label for="gallery_img_height">Высота изображения</label><br>
+                    <input type="text" name="fs_option[gallery_img_height]"  id="gallery_img_height" value="<?php echo fs_option('gallery_img_height') ?>">
+                </p>
+                <p>
+                    <label for="image_placeholder">Заглушка изображения</label><br>
+                    <input type="text" name="fs_option[image_placeholder]"  id="image_placeholder" value="<?php echo fs_option('image_placeholder') ?>">
+                </p>
+                <p>
+
+                    <input type="radio" name="fs_option[cutting_photos]" id="cutting_photos1" value="cut_width_height" <?php checked(fs_option('cutting_photos'),'cut_width_height') ?>> <label for="cutting_photos1">Обрезать фотографию по ширине и высоте</label>
+                </p>
+                <p>
+
+                    <input type="radio" name="fs_option[cutting_photos]" id="cutting_photos2" value="cut_height" <?php checked(fs_option('cutting_photos'),'cut_height') ?>>  <label for="cutting_photos2">Изображение на всю ширину, обрезать по высоте</label>
+                </p> 
+                <p>
+
+                    <input type="radio" name="fs_option[cutting_photos]" id="cutting_photos3" value="cut_width" <?php checked(fs_option('cutting_photos'),'cut_width') ?>>  <label for="cutting_photos3">Изображение на всю высоту, обрезать по ширине</label>
+                </p>
+                <p>
+
+                    <input type="radio" name="fs_option[cutting_photos]" id="cutting_photos4" value="cut_no" <?php checked(fs_option('cutting_photos'),'cut_no') ?>>  <label for="cutting_photos4">Не обрезать фото, выводить как есть</label>
                 </p>
             </div>
         </div>
