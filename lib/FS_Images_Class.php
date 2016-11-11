@@ -41,15 +41,16 @@ class FS_Images_Class
 }
 
     /**
-     * @param string $post_id
+     * @param int $post_id
      * @param array $size
      * @return bool|string
      */
-    public function fs_galery_list($post_id='')
+    public function fs_galery_list($post_id=0)
     {
-
     	$images_n='';
         $gallery_image='';
+        global $post;
+        $post_id=empty($post_id) ? $post->ID : $post_id;
         $width=fs_option('gallery_img_width',300);
         $height=fs_option('gallery_img_height',400);
         $image_placeholder=fs_option('image_placeholder','holder.js/'.$width.'x'.$height);
@@ -63,10 +64,12 @@ class FS_Images_Class
             $images_n.= "<li data-thumb=\"$image[0]\" data-src=\"$image_full[0]\"><a href=\"$image_full[0]\" data-lightbox=\"roadtrip\" data-title=\"".get_the_title($post_id)."\"><img src=\"$image[0]\" width=\"100%\"></a></li>";
         }
     }
+
     if (empty($images_n)) {
         $images_n.= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\"><img src=\"$image_placeholder\" width=\"100%\"></li>";
     }
-    return $images_n;
+ 
+    return apply_filters('fs_galery_list',$images_n,$post_id);
 }	
 
 /**

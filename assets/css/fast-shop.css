@@ -175,25 +175,24 @@ li.fs-attr {
 .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
 .fs-option input[type="submit"] {
     margin: 15px 0 0 0;
-    background: #46b450;
-
+    background: #0073aa;
     color: #fff;
-    padding: 17px 22px;
-    border: 1px solid #237b27;
+    padding: 8px 28px;
+    border: 1px solid #0073aa;
     text-transform: uppercase;
-    border-radius: 4px;
+    border-radius: -1px;
     line-height: 1em;
     font-size: 12px;
     letter-spacing: .1em;
     -webkit-transition: all .4s;
-    -moz-transition:all .4s;
+    -moz-transition: all .4s;
     -ms-transition: all .4s;
     -o-transition: all .4s;
     transition: all .4s;
 }
 .fs-option input[type="submit"]:hover{
-    background: #438543;
-    cursor: pointer;
+    background: #06628e;
+    cursor: pointer; 
 }
 .fs-option textarea{
     width: 100%;
@@ -212,17 +211,15 @@ li.fs-attr {
 .fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-nav {
     float: left;
     width: 10em;
-    background: #23282d;
-    border-radius: 4px 0 0 4px;
-    border-right: 1px solid #32373c;
+    background: #f1f1f1;
 }
 .fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-nav li {
     clear: left;
     width: 100%;
     margin: 0.2em 0;
-    border: 1px solid #32373c;
-    border-width: 1px 0 1px 1px;
-    border-radius: 4px 0 0 4px;
+    border: 1px solid #0073aa;
+    border-width: 1px 0 0px 1px;
+    border-radius: 0;
     overflow: hidden;
     position: relative;
     right: -2px;
@@ -241,10 +238,7 @@ li.fs-attr {
 .fs-option label span {
     font-weight: normal;
 }
-.fast-shop-settings .ui-tabs.ui-tabs-vertical {
 
-    width: 70em;
-}
 .fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-panel {
     float: left;
     width: 47em;

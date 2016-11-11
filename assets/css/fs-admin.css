@@ -365,4 +365,16 @@ td.fs_price.column-fs_price span span {
     text-align: left;
     text-shadow: #333 2px 2px;
 }
+.fs-option h2{
+    text-transform: uppercase;
+    border-bottom: 3px solid #ddd;
+    padding: 0 0 10px 0px;
+    margin: 0 0 25px 0;
+    letter-spacing: .1em;
+    font-weight: 700;
+}
+.fast-shop-settings .ui-tabs.ui-tabs-vertical {
+    width: 774px;
+    max-width: 100%;
+} 
 
