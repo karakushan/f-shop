@@ -130,7 +130,7 @@ class FS_Post_Type
         // Add this metabox to every selected post
         add_meta_box(
             sprintf('wp_plugin_template_%s_section', self::POST_TYPE),
-            'Данные товара',
+           __('Product settings','fast-shop') ,
             array(&$this, 'add_inner_meta_boxes'),
             self::POST_TYPE
         );
@@ -150,9 +150,7 @@ class FS_Post_Type
         if (!empty($this->config->tabs) && is_array($this->config->tabs)){
             echo '<ul>';
             foreach ($this->config->tabs as $key=>$tab) {
-                $title=__($tab['title'],'fast-shop');
-                echo '<li><a href="#tab-'.$key.'">'.$title.'</a></li>';
-
+                echo '<li><a href="#tab-'.$key.'">'.__($tab['title'],'fast-shop').'</a></li>';
             }
             echo '</ul>';
             foreach ($this->config->tabs as $key_body=>$tab_body) {

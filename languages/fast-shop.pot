@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-21 10:02+0000\n"
-"POT-Revision-Date: Sat Nov 12 2016 14:00:59 GMT+0200 (Финляндия (зима))\n"
+"POT-Revision-Date: Sat Nov 12 2016 16:11:17 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -59,7 +59,19 @@ msgstr ""
 msgid "Wishlist"
 msgstr ""
 
-#: ../lib/FS_Filters.php:36
+#: ../lib/FS_Config.php:44
+msgid "Prices"
+msgstr ""
+
+#: ../lib/FS_Config.php:51
+msgid "Gallery"
+msgstr ""
+
+#: ../lib/FS_Config.php:58
+msgid "Discounts"
+msgstr ""
+
+#: ../lib/FS_Filters.php:37
 msgid "Product category"
 msgstr ""
 
@@ -81,6 +93,10 @@ msgstr ""
 
 #: ../lib/FS_Post_Type.php:75 ../lib/FS_Post_Types.php:64
 msgid "Здесь размещены товары вашего сайта."
+msgstr ""
+
+#: ../lib/FS_Post_Type.php:133
+msgid "Product settings"
 msgstr ""
 
 #: ../lib/FS_Settings_Class.php:66 ../lib/FS_Settings_Class.php:67 ..
@@ -123,6 +139,50 @@ msgstr ""
 
 #: ../lib/FS_Taxonomies_Class.php:108
 msgid "Not found shipping methods"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-0.php:2
+msgid "Price"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-0.php:7
+msgid "Article"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-0.php:12
+msgid "Promotional price"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-0.php:17
+msgid "Wholesale price"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-0.php:23
+msgid "The displayed price"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-0.php:29
+msgid "Instock"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-2.php:2
+msgid "add image"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-2.php:13
+msgid "Download"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-2.php:14
+msgid "to remove"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-3.php:2
+msgid "Enable/disable label stock on the website"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-3.php:10
+msgid "The link to the promotions page"
 msgstr ""
 
 #: ../templates/back-end/orders.php:31

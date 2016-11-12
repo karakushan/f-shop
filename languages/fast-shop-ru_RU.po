@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-21 10:02+0000\n"
-"PO-Revision-Date: Sat Nov 12 2016 14:01:18 GMT+0200 (Финляндия (зима))\n"
+"PO-Revision-Date: Sat Nov 12 2016 16:11:38 GMT+0200 (Финляндия (зима))\n"
 "Last-Translator: grand-admin <karakushan@gmail.com>\n"
 "Language-Team: \n"
 "Language: Russian\n"
@@ -41,13 +41,13 @@ msgstr ""
 msgid "http://profglobal.ru"
 msgstr ""
 
-#: ../lib/FS_Filters.php:36
-msgid "Product category"
-msgstr "Категории товаров"
-
 #: ../lib/FS_Post_Type.php:75 ../lib/FS_Post_Types.php:64
 msgid "Здесь размещены товары вашего сайта."
 msgstr ""
+
+#: ../templates/back-end/metabox/tab-0.php:29
+msgid "Instock"
+msgstr "Наличие на складе"
 
 #. Description of the plugin/theme
 msgid ""
@@ -70,6 +70,22 @@ msgstr "В корзину"
 msgid "Wishlist"
 msgstr "Список желаний"
 
+#: ../lib/FS_Config.php:44
+msgid "Prices"
+msgstr "Цены"
+
+#: ../lib/FS_Config.php:51
+msgid "Gallery"
+msgstr "Галерея"
+
+#: ../lib/FS_Config.php:58
+msgid "Discounts"
+msgstr "Скидки и акции"
+
+#: ../lib/FS_Filters.php:37
+msgid "Product category"
+msgstr "Категории товаров"
+
 #: ../lib/FS_Post_Type.php:48 ../lib/FS_Post_Type.php:59
 msgid "Products"
 msgstr "Товары"
@@ -85,6 +101,10 @@ msgstr "Добавить товар"
 #: ../lib/FS_Post_Type.php:52
 msgid "Edit product"
 msgstr "Изменить товар"
+
+#: ../lib/FS_Post_Type.php:133
+msgid "Product settings"
+msgstr "Настройки товара"
 
 #: ../lib/FS_Settings_Class.php:66 ../lib/FS_Settings_Class.php:67 ..
 #: templates/back-end/orders.php:2
@@ -127,6 +147,46 @@ msgstr "Добавление способа доставки"
 #: ../lib/FS_Taxonomies_Class.php:108
 msgid "Not found shipping methods"
 msgstr "Нет ни одного способа доставки"
+
+#: ../templates/back-end/metabox/tab-0.php:2
+msgid "Price"
+msgstr "Цена"
+
+#: ../templates/back-end/metabox/tab-0.php:7
+msgid "Article"
+msgstr "Артикул"
+
+#: ../templates/back-end/metabox/tab-0.php:12
+msgid "Promotional price"
+msgstr "Акционая цена"
+
+#: ../templates/back-end/metabox/tab-0.php:17
+msgid "Wholesale price"
+msgstr "Оптовая цена"
+
+#: ../templates/back-end/metabox/tab-0.php:23
+msgid "The displayed price"
+msgstr "Отображаемая цена"
+
+#: ../templates/back-end/metabox/tab-2.php:2
+msgid "add image"
+msgstr "добавить изображение"
+
+#: ../templates/back-end/metabox/tab-2.php:13
+msgid "Download"
+msgstr "Скачать"
+
+#: ../templates/back-end/metabox/tab-2.php:14
+msgid "to remove"
+msgstr "удалить"
+
+#: ../templates/back-end/metabox/tab-3.php:2
+msgid "Enable/disable label stock on the website"
+msgstr "Включить\\выключить метку акции на сайте"
+
+#: ../templates/back-end/metabox/tab-3.php:10
+msgid "The link to the promotions page"
+msgstr "Ссылка на страницу акции"
 
 #: ../templates/back-end/orders.php:31
 msgid "Total"

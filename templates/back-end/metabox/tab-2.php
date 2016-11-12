@@ -1,5 +1,5 @@
 <?php  $mft=get_post_meta($post->ID, $this->config->meta['gallery'], false); ?>
-<button type="button" id="new_image">+ добавить изображение</button>
+<button type="button" id="new_image">+ <?php _e( 'add image', 'fast-shop' ) ?></button>
 <div class="row-images" id="mmf-1">
     <div class="row-images">
     </div>
@@ -10,8 +10,8 @@
             <div class="mmf-image" >
                 <img src="<?php echo $src ?>" alt="" width="164" height="133" class="image-preview">
                 <input type="hidden" name="fs_galery[]" value="<?php echo $mft[0][$i] ?>" class="img-url">
-                <button type="button" class="upload-mft">Загрузить</button>
-                <button type="button" class="remove-tr" onclick="btn_view(this)">удалить</button>
+                <button type="button" class="upload-mft"><?php _e( 'Download', 'fast-shop' ) ?></button>
+                <button type="button" class="remove-tr" onclick="btn_view(this)"><?php _e( 'to remove', 'fast-shop' ) ?></button>
             </div>
             <?php
         } ?>

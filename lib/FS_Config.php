@@ -41,21 +41,21 @@ class FS_Config
         $this->tabs=array(
             '0'=>
                 array(
-                    'title'=>'Prices',
+                    'title'=>__('Prices','fast-shop'),
                     'on'=>true,
                     'body'=>'',
                     'template'=>''
                 ),
             '2'=>
                 array(
-                    'title'=>'Gallery',
+                    'title'=>__('Gallery','fast-shop'),
                     'on'=>true,
                     'body'=>'',
                     'template'=>''
                 ),
             '3'=>
                 array(
-                    'title'=>'Discounts',
+                    'title'=>__('Discounts','fast-shop'),
                     'on'=>true,
                     'body'=>'',
                     'template'=>''
@@ -73,15 +73,13 @@ class FS_Config
             'discount'=>'fs_discount',//размер скидки
             'product_article'=>'fs_product_article',//размер скидки
             'availability'=>'fs_availability',//наличие на складе
-            'remaining_amount'=>'remaining_amount',//к-во товаров доступных для покупки
+            'remaining_amount'=>'remaining_amount',//запас товаров на складе
             'action'=>'fs_actions',//включить  или выключить акцию
             'action_page'=>'fs_page_action',//сылка на страницу описывающую акцию на товар
             'action_price'=>'fs_action_price',//акционная цена, перебивает цену поставленнуюю полем 'discount'
             'displayed_price'=>'fs_displayed_price',//тображаемая цена
             'attributes'=>'fs_attributes_post',//атрибуты товара
             'gallery'=>'fs_galery',//галерея
-            'fs_gallery_path'=>'fs_gallery_path'//ссылка на папку с изображениями
-
         );
     }
 
