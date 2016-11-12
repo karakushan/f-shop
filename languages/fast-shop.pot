@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-21 10:02+0000\n"
-"POT-Revision-Date: Tue Nov 08 2016 09:42:12 GMT+0200 (Финляндия (зима))\n"
+"POT-Revision-Date: Sat Nov 12 2016 14:00:59 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -46,17 +46,21 @@ msgstr ""
 msgid "http://profglobal.ru"
 msgstr ""
 
-#: ../functions/functions.php:274
+#: ../functions/functions.php:269
 msgid "Remove items"
 msgstr ""
 
-#: ../functions/functions.php:363
+#: ../functions/functions.php:358
 msgid "Add to cart"
 msgstr ""
 
 #: ../lib/FS_Ajax_Class.php:247 ../lib/FS_Ajax_Class.php:271 ../templates/front-
 #: end/wishlist/wishlist.php:5
 msgid "Wishlist"
+msgstr ""
+
+#: ../lib/FS_Filters.php:36
+msgid "Product category"
 msgstr ""
 
 #: ../lib/FS_Post_Type.php:48 ../lib/FS_Post_Type.php:59

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-21 10:02+0000\n"
-"PO-Revision-Date: Tue Nov 08 2016 09:42:42 GMT+0200 (Финляндия (зима))\n"
+"PO-Revision-Date: Sat Nov 12 2016 14:01:18 GMT+0200 (Финляндия (зима))\n"
 "Last-Translator: grand-admin <karakushan@gmail.com>\n"
 "Language-Team: \n"
 "Language: Russian\n"
@@ -41,17 +41,13 @@ msgstr ""
 msgid "http://profglobal.ru"
 msgstr ""
 
+#: ../lib/FS_Filters.php:36
+msgid "Product category"
+msgstr "Категории товаров"
+
 #: ../lib/FS_Post_Type.php:75 ../lib/FS_Post_Types.php:64
 msgid "Здесь размещены товары вашего сайта."
 msgstr ""
-
-#: ../templates/back-end/orders.php:31
-msgid "Total"
-msgstr "Всего"
-
-#: ../templates/back-end/orders.php:31
-msgid "orders"
-msgstr "заказов"
 
 #. Description of the plugin/theme
 msgid ""
@@ -61,11 +57,11 @@ msgstr ""
 "Это плагин позволяет в короткое время создать полноценный магазин на любом "
 "шаблоне Wordpress."
 
-#: ../functions/functions.php:274
+#: ../functions/functions.php:269
 msgid "Remove items"
 msgstr "Удалить позицию"
 
-#: ../functions/functions.php:363
+#: ../functions/functions.php:358
 msgid "Add to cart"
 msgstr "В корзину"
 
@@ -131,6 +127,14 @@ msgstr "Добавление способа доставки"
 #: ../lib/FS_Taxonomies_Class.php:108
 msgid "Not found shipping methods"
 msgstr "Нет ни одного способа доставки"
+
+#: ../templates/back-end/orders.php:31
+msgid "Total"
+msgstr "Всего"
+
+#: ../templates/back-end/orders.php:31
+msgid "orders"
+msgstr "заказов"
 
 #: ../templates/front-end/auth/login.php:6 ../templates/front-end/auth/login.php:7
 msgid "Email or login"

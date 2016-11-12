@@ -65,7 +65,7 @@ class FS_Init
 			wp_enqueue_script( 'domurl',$this->config->data['plugin_url'].'assets/js/url.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'lightbox',$this->config->data['plugin_url'].'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true);
 			wp_enqueue_script( 'lightslider',$this->config->data['plugin_url'].'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true);
-			wp_enqueue_script( 'fast-shop',$this->config->data['plugin_url'].'assets/js/fast-shop.js', array( 'jquery'), $this->config->data['plugin_ver'], true);
+			wp_enqueue_script( 'fast-shop',$this->config->data['plugin_url'].'assets/js/fast-shop.js', array( 'jquery','bootstrap'), $this->config->data['plugin_ver'], true);
 			$l10n = array(
 				'ajaxurl' =>admin_url("admin-ajax.php"),
 				'fs_slider_max'=>intval(fs_price_max(false)),
