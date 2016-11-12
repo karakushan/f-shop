@@ -18,16 +18,16 @@ class FS_Filters
 
         $this->conf=new FS_Config();
         add_action('pre_get_posts',array($this,'filter_curr_product'));
-        add_action('pre_get_posts',array($this,'filter_by_query'));
+
         add_shortcode( 'fs_range_slider', array($this,'range_slider'));
 
         // фильтр по категориям товаров в админке
-
-        add_action( 'restrict_manage_posts',array($this,'ba_admin_posts_filter_restrict_manage_posts'));
+        add_action( 'restrict_manage_posts',array($this,'category_filter_admin'));
 
     }
 
-    function ba_admin_posts_filter_restrict_manage_posts()
+// фильтр по категориям товаров в админке
+    function category_filter_admin()
     {
       global $typenow;
       global $wp_query;
@@ -36,7 +36,7 @@ class FS_Filters
       $terms=get_terms('catalog',array('hide_empty'=>false));
       $select_name=__( 'Product category', 'fast-shop' );
       if ($terms) {
-          echo "<select name=\"catalog\">";
+          echo "<select name=\"catalog\" id=\"fs-category-filter\">";
           echo "<option value=\"\">$select_name</option>";
           foreach ($terms as $key => $term) {
             echo "<option value=\"$term->slug\" ".selected($term->slug,$get_parr,0).">$term->name</option>";
@@ -212,13 +212,4 @@ class FS_Filters
         return $filter;
     }
 
-    /**
-     * фильтрирует посты методом pre_get_posts, берёт данные из адресной строки,
-     * сработает только при наличии параметра fs_filter
-     * @param $query
-     */
-    public function filter_by_query($query){
-
-
-    }
 }
