@@ -1,0 +1,303 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Fast Shop\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-10-21 10:02+0000\n"
+"PO-Revision-Date: Sat Nov 12 2016 16:11:36 GMT+0200 (Финляндия (зима))\n"
+"Last-Translator: grand-admin <karakushan@gmail.com>\n"
+"Language-Team: \n"
+"Language: Russian\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
+"n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Loco - https://localise.biz/\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: fast-shop.php\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
+"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
+"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Loco-Target-Locale: ru_RU"
+
+#. Plugin Name of the plugin/theme
+msgid "Fast Shop"
+msgstr ""
+
+#. URI of the plugin
+msgid "http://profglobal.ru/fast-shop"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Vitaliy Karakushan"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://profglobal.ru"
+msgstr ""
+
+#: ../lib/FS_Post_Type.php:75 ../lib/FS_Post_Types.php:64
+msgid "Здесь размещены товары вашего сайта."
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-0.php:29
+msgid "Instock"
+msgstr "Наличие на складе"
+
+#. Description of the plugin/theme
+msgid ""
+"The plugin will help in the creation of any online store without changing "
+"your template."
+msgstr ""
+"Это плагин позволяет в короткое время создать полноценный магазин на любом "
+"шаблоне Wordpress."
+
+#: ../functions/functions.php:269
+msgid "Remove items"
+msgstr "Удалить позицию"
+
+#: ../functions/functions.php:358
+msgid "Add to cart"
+msgstr "В корзину"
+
+#: ../lib/FS_Ajax_Class.php:247 ../lib/FS_Ajax_Class.php:271 ../templates/front-
+#: end/wishlist/wishlist.php:5
+msgid "Wishlist"
+msgstr "Список желаний"
+
+#: ../lib/FS_Config.php:44
+msgid "Prices"
+msgstr "Цены"
+
+#: ../lib/FS_Config.php:51
+msgid "Gallery"
+msgstr "Галерея"
+
+#: ../lib/FS_Config.php:58
+msgid "Discounts"
+msgstr "Скидки и акции"
+
+#: ../lib/FS_Filters.php:37
+msgid "Product category"
+msgstr "Категории товаров"
+
+#: ../lib/FS_Post_Type.php:48 ../lib/FS_Post_Type.php:59
+msgid "Products"
+msgstr "Товары"
+
+#: ../lib/FS_Post_Type.php:49
+msgid "product"
+msgstr "товар"
+
+#: ../lib/FS_Post_Type.php:50
+msgid "Add product"
+msgstr "Добавить товар"
+
+#: ../lib/FS_Post_Type.php:52
+msgid "Edit product"
+msgstr "Изменить товар"
+
+#: ../lib/FS_Post_Type.php:133
+msgid "Product settings"
+msgstr "Настройки товара"
+
+#: ../lib/FS_Settings_Class.php:66 ../lib/FS_Settings_Class.php:67 ..
+#: templates/back-end/orders.php:2
+msgid "Orders"
+msgstr "Заказы"
+
+#: ../lib/FS_Settings_Class.php:76 ../lib/FS_Settings_Class.php:77 ..
+#: templates/back-end/settings.php:2
+msgid "Store settings"
+msgstr "Настройки магазина"
+
+#: ../lib/FS_Taxonomies_Class.php:20
+msgid "Product categories"
+msgstr "Категории товара"
+
+#: ../lib/FS_Taxonomies_Class.php:46
+msgid "Product attributes"
+msgstr "Свойства товаров"
+
+#: ../lib/FS_Taxonomies_Class.php:79
+msgid "Payment methods"
+msgstr "Способы оплаты"
+
+#: ../lib/FS_Taxonomies_Class.php:81
+msgid "To add a payment method"
+msgstr "Добавление способа оплаты"
+
+#: ../lib/FS_Taxonomies_Class.php:82
+msgid "There are no available payment methods"
+msgstr "Нет ни одного способа оплаты"
+
+#: ../lib/FS_Taxonomies_Class.php:105
+msgid "Delivery methods"
+msgstr "Способы доставки"
+
+#: ../lib/FS_Taxonomies_Class.php:107
+msgid "To add a shipping method"
+msgstr "Добавление способа доставки"
+
+#: ../lib/FS_Taxonomies_Class.php:108
+msgid "Not found shipping methods"
+msgstr "Нет ни одного способа доставки"
+
+#: ../templates/back-end/metabox/tab-0.php:2
+msgid "Price"
+msgstr "Цена"
+
+#: ../templates/back-end/metabox/tab-0.php:7
+msgid "Article"
+msgstr "Артикул"
+
+#: ../templates/back-end/metabox/tab-0.php:12
+msgid "Promotional price"
+msgstr "Акционая цена"
+
+#: ../templates/back-end/metabox/tab-0.php:17
+msgid "Wholesale price"
+msgstr "Оптовая цена"
+
+#: ../templates/back-end/metabox/tab-0.php:23
+msgid "The displayed price"
+msgstr "Отображаемая цена"
+
+#: ../templates/back-end/metabox/tab-2.php:2
+msgid "add image"
+msgstr "добавить изображение"
+
+#: ../templates/back-end/metabox/tab-2.php:13
+msgid "Download"
+msgstr "Скачать"
+
+#: ../templates/back-end/metabox/tab-2.php:14
+msgid "to remove"
+msgstr "удалить"
+
+#: ../templates/back-end/metabox/tab-3.php:2
+msgid "Enable/disable label stock on the website"
+msgstr "Включить\\выключить метку акции на сайте"
+
+#: ../templates/back-end/metabox/tab-3.php:10
+msgid "The link to the promotions page"
+msgstr "Ссылка на страницу акции"
+
+#: ../templates/back-end/orders.php:31
+msgid "Total"
+msgstr "Всего"
+
+#: ../templates/back-end/orders.php:31
+msgid "orders"
+msgstr "заказов"
+
+#: ../templates/front-end/auth/login.php:6 ../templates/front-end/auth/login.php:7
+msgid "Email or login"
+msgstr "Email или логин"
+
+#: ../templates/front-end/auth/login.php:7 ../templates/front-end/auth/login.php:11
+msgid "required"
+msgstr "обязательно"
+
+#: ../templates/front-end/auth/login.php:10 ../templates/front-end/auth/login.php:
+#: 11 ../templates/front-end/auth/register.php:29
+msgid "Password"
+msgstr "Пароль"
+
+#: ../templates/front-end/auth/login.php:16
+msgid "Remember me"
+msgstr "Запомнить меня"
+
+#: ../templates/front-end/auth/login.php:22
+msgid "Log"
+msgstr "Вход"
+
+#: ../templates/front-end/auth/profile.php:8 ../templates/front-end/auth/register.
+#: php:8
+msgid "Full Name"
+msgstr "Фамилия Имя Отчество"
+
+#: ../templates/front-end/auth/profile.php:9 ../templates/front-end/auth/profile.
+#: php:13 ../templates/front-end/auth/register.php:9 ../templates/front-
+#: end/auth/register.php:14 ../templates/front-end/auth/register.php:25 ..
+#: templates/front-end/auth/register.php:30
+msgid "required field"
+msgstr "обязательное поле"
+
+#: ../templates/front-end/auth/profile.php:12 ../templates/front-
+#: end/auth/register.php:13
+msgid "Phone"
+msgstr "Телефон"
+
+#: ../templates/front-end/auth/profile.php:16 ../templates/front-
+#: end/auth/register.php:18
+msgid "Email"
+msgstr "E-mail"
+
+#: ../templates/front-end/auth/profile.php:17 ../templates/front-
+#: end/auth/register.php:19
+msgid "enter a valid email"
+msgstr "введите валидный e-mail "
+
+#: ../templates/front-end/auth/profile.php:20 ../templates/front-
+#: end/auth/register.php:24
+msgid "Login"
+msgstr "Логин"
+
+#: ../templates/front-end/auth/profile.php:24
+msgid "New password"
+msgstr "Новый пароль"
+
+#: ../templates/front-end/auth/profile.php:28 ../templates/front-
+#: end/auth/register.php:34
+msgid "Repeat password"
+msgstr "Повтор пароля"
+
+#: ../templates/front-end/auth/profile.php:33 ../templates/front-
+#: end/auth/register.php:40 ../templates/front-end/order/order-form.php:44
+msgid "Shipping method"
+msgstr "Способ  доставки"
+
+#: ../templates/front-end/auth/profile.php:45 ../templates/front-
+#: end/auth/register.php:52 ../templates/front-end/order/order-form.php:71
+msgid "City"
+msgstr "Город"
+
+#: ../templates/front-end/auth/profile.php:49 ../templates/front-
+#: end/auth/register.php:56
+msgid "Shipping address"
+msgstr "Адрес доставки"
+
+#: ../templates/front-end/auth/profile.php:53 ../templates/front-
+#: end/auth/register.php:60
+msgid "Payment method"
+msgstr "Способ оплаты"
+
+#: ../templates/front-end/auth/profile.php:63
+msgid "Save"
+msgstr "Сохранить"
+
+#: ../templates/front-end/auth/register.php:35
+msgid "password and repeat password must match"
+msgstr "пароль и повтор пароля должны совпадать"
+
+#: ../templates/front-end/auth/register.php:70
+msgid "Send"
+msgstr "Отправить"
+
+#: ../templates/front-end/order/order-form.php:43
+msgid "Choose a shipping method"
+msgstr "Выберите способ доставки"
+
+#: ../templates/front-end/order/order-form.php:58
+msgid "Select a payment method"
+msgstr "Выберите способ оплаты"
+
+#: ../templates/front-end/order/order-form.php:59
+msgid "Type of payment"
+msgstr "Способ оплаты"
