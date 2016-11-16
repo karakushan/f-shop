@@ -405,7 +405,7 @@ function fs_cart_widget()
         $template=$template_theme;
 
     }
-    echo "<div id=\"fs_cart_widget\" class=\"fs_cart_widget\">";
+    echo "<div data-fs-element=\"cart-widget\">";
     require $template;
     echo "</div>";
 }

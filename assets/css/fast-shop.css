@@ -272,6 +272,7 @@ li.fs-attr {
     padding: 16px;
     border-radius: 4px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
 }
 .form-info.form-error {
     color: red;

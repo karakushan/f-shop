@@ -52,11 +52,11 @@ var FastShopLang={
     	});
 
 		//живой поиск по сайту
-		$('.search-results .close-search').on('click', function(event) {
+		$('form[name="live-search"]').on('click','.close-search', function(event) {
 			event.preventDefault();
 			$(this).parents('.search-results').fadeOut(0);
 		});
-		$('#fs-livesearch').on('keyup focus click input', function(event) {
+		$('form[name="live-search"] input[name="s"]').on('keyup focus click input', function(event) {
 			event.preventDefault();
 			var search_input=$(this);
 			var search=$(this).val();
@@ -147,7 +147,7 @@ var FastShopLang={
 			}
 		})
 		.done(function(result) {
-			$('#fs_cart_widget,.fs_cart_widget').replaceWith(result);
+			$('#fs_cart_widget,.fs_cart_widget,[data-fs-element="cart-widget"]').replaceWith(result);
 			curent.find('.fs-preloader ').fadeOut('fast');
 			curent.find('.send_ok').fadeIn('slow');
 			// показываем окно с товарами если определено в  настроках
