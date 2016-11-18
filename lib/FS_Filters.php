@@ -24,11 +24,21 @@ class FS_Filters
         // фильтр по категориям товаров в админке
         add_action( 'restrict_manage_posts',array($this,'category_filter_admin'));
 
+        add_action( 'template_redirect',array($this,'redirect_per_page' ));
+
     }
 
-// фильтр по категориям товаров в админке
-    function category_filter_admin()
+    public function redirect_per_page()
     {
+        if (isset($_GET['paged'])) {   
+           wp_redirect( remove_query_arg('paged'));
+           exit();
+       }
+   }
+
+// фильтр по категориям товаров в админке
+   function category_filter_admin()
+   {
       global $typenow;
       global $wp_query;
       $get_parr=isset($_GET['catalog']) ? $_GET['catalog'] : '';
@@ -82,8 +92,13 @@ class FS_Filters
 
         //Фильтрируем по к-во выводимых постов на странице
         if (isset($url['per_page'])){
-            $per_page=(int)$url['per_page'];
+            $per_page=$url['per_page'];
             $_SESSION['fs_user_settings']['per_page']=$per_page;
+        }
+
+        //Устаноавливаем страницу пагинации
+        if (isset($url['paged'])){
+            $query->set('paged',$url['paged']);
         }
 
         // выполняем сортировку
@@ -125,6 +140,7 @@ class FS_Filters
                     'type'    => 'DECIMAL',
                     );
                 break;
+                
 
             }
         }
@@ -203,7 +219,7 @@ class FS_Filters
         if(count($post_count)){
             $filter = '<select name="post_count" onchange="document.location=this.options[this.selectedIndex].value">';
             foreach ($post_count as $key => $count) {
-                $filter.= '<option value="'.add_query_arg(array("fs_filter"=>$nonce,"per_page"=>$count)).'" '.selected($count,$req,false).'>'.$count.'</option>';
+                $filter.= '<option value="'.add_query_arg(array("fs_filter"=>$nonce,"per_page"=>$count,'paged'=>1)).'" '.selected($count,$req,false).'>'.$count.'</option>';
             }
             $filter.= '</select>';
         }else{
