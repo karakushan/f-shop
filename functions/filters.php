@@ -1,8 +1,10 @@
 <?php
 //фильтр преобразует необработанную цену в формат денег
-add_filter('fs_price_format','fs_price_format',10,3);
-function  fs_price_format($price,$delimiter='.',$thousands_separator=' '){
-	$price=number_format($price,0,$delimiter,$thousands_separator);
+add_filter('fs_price_format','fs_price_format',10);
+function  fs_price_format($price){
+    $cents=fs_option('price_cents')==1?2:0;
+    $delimiter=fs_option('currency_delimiter','.');
+	$price=number_format($price,$cents,$delimiter,' ');
 	return $price;
 }
 

@@ -6,22 +6,15 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  */
 class FS_Settings_Class
 {
-
     protected $config;
 
     public function __construct()
     {
-        // register actions
         add_action('admin_init', array(&$this, 'admin_init'));
         add_action('admin_menu', array(&$this, 'add_menu'));
-
-
         $this->config=new FS_Config();
     }
 
-    /**
-     * hook into WP's admin_init action hook
-     */
     public function admin_init()
     {
         if (isset($_POST['fs_save_options'])){
@@ -44,11 +37,9 @@ class FS_Settings_Class
         }
 
 
-    } // END public static function activate
-
+    }
     public function settings_section_wp_plugin_template()
     {
-        // Think of this as help text for the section.
         echo 'Определите настройки вашего магазина.';
     }
 

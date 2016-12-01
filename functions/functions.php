@@ -148,7 +148,7 @@ function fs_row_price($post_id, $count, $curency=true, $wrap='%s <span>%s</span>
     $post_id=empty($post_id) ? $post->ID : (int)$post_id;
     $price=fs_get_price($post_id)*$count;
     if ($curency) {
-        $price=apply_filters('fs_price_format',$price,fs_option('currency_delimiter','.'),' ');
+        $price=apply_filters('fs_price_format',$price);
         $price=sprintf($wrap,$price,fs_currency());
     }
     return $price;
@@ -169,8 +169,7 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
     $displayed_price=get_post_meta($post_id,$config->meta['displayed_price'],1);
     $displayed_price=!empty($displayed_price) ? $displayed_price : '';
     $price=fs_get_price($post_id);
-    $currency_delimiter=fs_option('currency_delimiter','.');
-    $price=apply_filters('fs_price_format', $price,$currency_delimiter,' ');
+    $price=apply_filters('fs_price_format', $price);
     if ($displayed_price!="") {
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
@@ -198,7 +197,7 @@ function fs_total_amount($products=array(),$show=true,$wrap='%s <span>%s</span>'
     if ($show==false) {
         return $price;
     } else {
-        $price=apply_filters('fs_price_format',$price,fs_option('currency_delimiter','.'),' ');
+        $price=apply_filters('fs_price_format',$price);
         printf($wrap,$price,fs_currency());
     }
 }
@@ -235,14 +234,13 @@ function fs_get_cart()
 
     $products = array();
     $cur_symb=fs_currency();
-    $currency_delimiter=fs_option('currency_delimiter','.');
     if (count($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $count){
             $price=fs_get_price($key);
-            $price_show=apply_filters('fs_price_format',$price, $currency_delimiter,' ');
+            $price_show=apply_filters('fs_price_format',$price);
             $count=(int)$count['count'];
             $all_price=$price*$count;
-            $all_price=apply_filters('fs_price_format',$all_price, $currency_delimiter,' ');
+            $all_price=apply_filters('fs_price_format',$all_price);
             $products[$key]=array(
                 'id'=>$key,
                 'name'=>get_the_title($key),
@@ -280,8 +278,6 @@ function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
 
         break;
     }
-
-
 }
 
 
@@ -318,18 +314,13 @@ function fs_base_price($post_id=0,$echo=true, $wrap='<span>%s</span>')
     global $post;
     $config=new \FS\FS_Config();
     $post_id=empty($post_id) ? $post->ID : $post_id;
-
     $price=get_post_meta( $post_id, $config->meta['price'], 1);
     $price=apply_filters('fs_base_price', $price,$post_id);
-
     if ( $price==fs_get_price($post_id)) return;
     $price=empty($price) ? 0 : (float)$price;
-
     $price_float=$price;
-
-    $price=number_format($price,2,fs_option('currency_delimiter','.'),' ');
+    $price=apply_filters('fs_price_format',$price);
     $cur_symb=fs_currency();
-
     if ($echo===true){
         printf($wrap,$price.' <span>'.$cur_symb.'</span>');
     }else{
@@ -506,7 +497,7 @@ function fs_action($post_id=0){
 
 
 /**
- * Возвращает массив просмотренных товаров или записейr
+ * Возвращает массив просмотренных товаров или записей
  * @return array
  */
 function fs_user_viewed(){
@@ -665,11 +656,8 @@ function fs_wishlist_button($post_id=0,$args='')
         'attr' => '',
         'content' => '',
         );
-
     $args = wp_parse_args( $args, $defaults );
-    extract($args);
-
-    echo '<button data-fs-action="wishlist" '.$attr.'  data-product-id="'.$post_id.'"><span class="whishlist-message"></span>'.$content.'</button>';
+    echo '<button data-fs-action="wishlist" '.$args['attr'].'  data-product-id="'.$post_id.'"><span class="whishlist-message"></span>'.$args['content'].'</button>';
 }
 
 /**
@@ -699,7 +687,7 @@ function fs_frontend_template($template,$args=array()){
         'user'=>wp_get_current_user()
         )));
 
-    $template_plugin=PLUGIN_PATH.'/templates/front-end/'.$template.'.php';
+    $template_plugin=FS_PLUGIN_PATH.'/templates/front-end/'.$template.'.php';
     $template_theme=TEMPLATEPATH.'/fast-shop/'.$template.'.php';
     ob_start();
     if (file_exists($template_theme)){

@@ -24,7 +24,7 @@
                 </p>
                 <p>
                     <label for="currency_delimiter">Использовать копейки</label><br>
-                    <input type="checkbox" name="fs_option[price_cents]" value="1">
+                    <input type="checkbox" name="fs_option[price_cents]" value="1" <?php checked(fs_option('price_cents'),1) ?>>
 
                 </p>
             </div>

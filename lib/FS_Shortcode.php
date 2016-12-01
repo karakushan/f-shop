@@ -34,15 +34,15 @@ class FS_Shortcode
 
 
         $template_row_before = TEMPLATEPATH . '/fast-shop/cart/product-row-before.php';
-        $plugin_row_before = PLUGIN_PATH . 'templates/front-end/cart/product-row-before.php';
+        $plugin_row_before = FS_PLUGIN_PATH . 'templates/front-end/cart/product-row-before.php';
 
         $template_row = TEMPLATEPATH . '/fast-shop/cart/product-row.php';
-        $plugin_row = PLUGIN_PATH . 'templates/front-end/cart/product-row.php';
+        $plugin_row = FS_PLUGIN_PATH . 'templates/front-end/cart/product-row.php';
 
         $template_row_after = TEMPLATEPATH . '/fast-shop/cart/product-row-after.php';
-        $plugin_row_after = PLUGIN_PATH . 'templates/front-end/cart/product-row-after.php';
+        $plugin_row_after = FS_PLUGIN_PATH . 'templates/front-end/cart/product-row-after.php';
 
-        $template_none_plugin = PLUGIN_PATH . 'templates/front-end/cart/cart-empty.php';
+        $template_none_plugin = FS_PLUGIN_PATH . 'templates/front-end/cart/cart-empty.php';
         $template_none_theme = TEMPLATEPATH . '/fast-shop/cart/cart-empty.php';
         //получаем содержимое корзины (сессии)
         $carts = fs_get_cart();

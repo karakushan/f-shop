@@ -155,7 +155,7 @@ class FS_Post_Type
             echo '</ul>';
             foreach ($this->config->tabs as $key_body=>$tab_body) {
 
-                $template_default = PLUGIN_PATH.'templates/back-end/metabox/tab-'.$key_body.'.php';
+                $template_default = FS_PLUGIN_PATH.'templates/back-end/metabox/tab-'.$key_body.'.php';
                 $template_file=empty($tab_body['template']) ? $template_default : $tab_body['template'];
                
 
