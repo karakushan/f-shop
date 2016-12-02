@@ -76,7 +76,7 @@ class FS_Config
             'discount'=>'fs_discount',//размер скидки
             'product_article'=>'fs_product_article',//размер скидки
             'availability'=>'fs_availability',//наличие на складе
-            'remaining_amount'=>'remaining_amount',//запас товаров на складе
+            'remaining_amount'=>'fs_remaining_amount',//запас товаров на складе
             'action'=>'fs_actions',//включить  или выключить акцию
             'action_page'=>'fs_page_action',//сылка на страницу описывающую акцию на товар
             'action_price'=>'fs_action_price',//акционная цена, перебивает цену поставленнуюю полем 'discount'

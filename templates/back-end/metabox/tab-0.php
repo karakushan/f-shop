@@ -26,6 +26,8 @@
 </p>
 
 
-<p> <label for="fs_availability"><?php _e( 'Instock', 'fast-shop' ) ?></label><br>
-    <?php $fs_availability=(!get_post_meta($post->ID,'fs_availability',1)?0:1); ?>
-    <input type="checkbox" id="fs_availability" name="fs_availability" <?php checked( 1,$fs_availability); ?> value="1" /></p>
+<p> <label for="fs_remaining_amount"><?php _e( 'Запас товара на складе', 'fast-shop' ) ?></label><br>
+    <?php $amount=get_post_meta($post->ID, 'fs_remaining_amount', true);
+    $amount=empty($amount)?0:$amount;
+    ?>
+    <input type="text" id="fs_remaining_amount" name="fs_remaining_amount"  value="<?php echo $amount ?>" /></p>

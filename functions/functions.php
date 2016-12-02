@@ -439,8 +439,8 @@ function fs_aviable_product($post_id='', $aviable_text='', $no_aviable_text='')
     global $post;
     $config=new FS\FS_Config;
     $product_id=empty($post_id) ? $post->ID : (int)$post_id;
-    $availability=get_post_meta($product_id,$config->meta['availability'],true);
-    $aviable=$availability==1?$aviable_text:$no_aviable_text;
+    $availability=get_post_meta($product_id,$config->meta['remaining_amount'],true);
+    $aviable=($availability<1 || empty($availability)) ? $no_aviable_text : $aviable_text;
     echo $aviable;
 }
 
