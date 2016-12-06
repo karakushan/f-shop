@@ -15,6 +15,9 @@ class FS_Export_Class
 
     function products_to_yml(){
         $xml=new DomDocument('1.0',get_bloginfo('charset'));
+        $gallery=new \FS\FS_Images_Class;
+
+        $upload_dir=wp_upload_dir('shop');
         $xml->formatOutput = true;
         /*yml_catalog*/
         $yml_catalog=$xml->createElement('yml_catalog');
@@ -32,7 +35,110 @@ class FS_Export_Class
         /*yml_catalog->shop->url*/
         $shop_url=$xml->createElement('url',get_bloginfo('url'));
         $shop->appendChild($shop_url);
+        /*yml_catalog->shop->currencies*/
+        $currencies=$xml->createElement('currencies');
+        $shop->appendChild($currencies);
+        /*yml_catalog->shop->currencies->currency*/
+        $currency=$xml->createElement('currency');
+        $currency->setAttribute("id",'UAH');
+        $currency->setAttribute('rate','1');
+        $currencies->appendChild($currency);
 
-        $xml->save($_SERVER['DOCUMENT_ROOT'].'/products.xml');
+        //  КАТЕГОРИИ
+        /*yml_catalog->shop->currencies*/
+        $categories=$xml->createElement('categories');
+        $shop->appendChild($categories);   
+        /*yml_catalog->shop->category*/
+        $terms=get_terms(array('taxonomy'=>'catalog','hide_empty'=>false));
+        if ($terms) {
+            foreach ($terms as $key => $term) {
+                $category=$xml->createElement('category',$term->name);
+                $category->setAttribute("id",$term->term_id);
+                if ($term->parent) {
+                 $category->setAttribute("parentId",$term->parent);
+             }
+             $categories->appendChild($category);
+         }
+     }
+
+        //  ТОВАРЫ
+     /*yml_catalog->shop->offers*/
+     $offers=$xml->createElement('offers');
+     $shop->appendChild($offers); 
+
+     $posts=get_posts(array('post_type'=>'product','posts_per_page'=>-1));
+     if ($posts) {
+      foreach ($posts as $key => $post) { setup_postdata($post);
+        /*yml_catalog->shop->offers->offer*/
+        $offer=$xml->createElement('offer');
+        $offer->setAttribute("id",$post->ID);
+        $offer->setAttribute("available",'true');
+        $offers->appendChild($offer);
+        /*yml_catalog->shop->offers->offer->url*/
+        $url=$xml->createElement('url',get_permalink($post->ID));
+        $offer->appendChild($url);  
+        /*yml_catalog->shop->offers->offer->price*/
+        $price_format=fs_get_price($post->ID);
+        $price=$xml->createElement('price',round($price_format));
+        $offer->appendChild($price);  
+        /*yml_catalog->shop->offers->offer->currencyId*/
+        $currencyId=$xml->createElement('currencyId','UAH');
+        $offer->appendChild($currencyId); 
+        /*yml_catalog->shop->offers->offer->name*/
+        $name=$xml->createElement('name',get_the_title($post->ID));
+        $offer->appendChild($name);  
+        /*yml_catalog->shop->offers->offer->description*/
+        $description=$xml->createElement('description',sanitize_text_field($post->post_content));
+        $offer->appendChild($description); 
+        /*yml_catalog->shop->offers->offer->oldprice*/
+        $old_price=fs_base_price($post->ID,false);
+        if (!empty($old_price)) {
+            $oldprice=$xml->createElement('oldprice',round($old_price));
+            $offer->appendChild($oldprice); 
+        }
+
+        /*yml_catalog->shop->offers->offer->categoryId*/
+        $product_terms=get_the_terms($post->ID,'catalog');
+        if ( $product_terms) {
+            foreach ($product_terms as $key => $product_term) {
+                $categoryId=$xml->createElement('categoryId',$product_term->term_id);
+                $offer->appendChild($categoryId);
+            }
+        }
+        /*yml_catalog->shop->offers->offer->param*/
+        $product_attributes=get_the_terms($post->ID,'product-attributes');
+        if ( $product_attributes) {
+            foreach ($product_attributes as $key => $product_attribut) {
+                $parent_name = get_term_field( 'name', $product_attribut->parent,'product-attributes');
+                if (!is_wp_error( $parent_name)) {
+                    $param=$xml->createElement('param',$product_attribut->name);
+                    $parent_name = get_term_field( 'name', $product_attribut->parent,'product-attributes');
+                    $param->setAttribute("name",$parent_name);
+                    $offer->appendChild( $param);
+                }
+
+            }
+        }
+        /*yml_catalog->shop->offers->offer->picture*/
+        $gallery_images=$gallery->fs_galery_images($post->ID);
+        if (!empty($gallery_images)) {
+            foreach ($gallery_images as $key => $gallery_image) {
+                if (is_numeric( $gallery_image)) {
+                    $picture=$xml->createElement('picture',wp_get_attachment_url($gallery_image));
+                }else{
+                    $picture=$xml->createElement('picture',get_bloginfo('url').$gallery_image);
+                }
+                $offer->appendChild($picture); 
+            }
+        }
+
     }
+}
+
+        //  сохраняем результат
+if ($xml->save($upload_dir['path'].'/products.yml')!=false) {
+    return $upload_dir['url'].'/products.yml';
+}
+
+}
 }
