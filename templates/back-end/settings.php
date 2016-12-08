@@ -1,15 +1,16 @@
 <div class="wrap fast-shop-settings">
     <h2><?php _e('Store settings','fast-shop') ?></h2>
-    <form action="<?php echo wp_nonce_url($_SERVER['REQUEST_URI'],'fs_nonce'); ?>" method="post" class="fs-option">
+    <form action="<?php echo wp_nonce_url('/wp-admin/edit.php?post_type=product&page=fast-shop-settings','fs_nonce'); ?>" method="post" class="fs-option">
         <div id="fs-options-tabs">
             <ul>
-                <li><a href="#tabs-1">Общие настройки</a></li>
-                <li><a href="#tabs-2">Письма</a></li>
-                <li><a href="#tabs-3">Акции</a></li>
-                <li><a href="#tabs-4">Страницы</a></li>
-                <li><a href="#tabs-5">Пользователи</a></li>
-                <li><a href="#tabs-6">Сообщения</a></li>
-                <li><a href="#tabs-7">Галерея</a></li>
+                <li><a href="#tabs-1"><?php _e( 'General', 'fast-shop' ); ?></a></li>
+                <li><a href="#tabs-2"><?php _e( 'Letters', 'fast-shop' ); ?></a></li>
+                <li><a href="#tabs-3"><?php _e( 'Stock', 'fast-shop' ); ?></a></li>
+                <li><a href="#tabs-4"><?php _e( 'Page', 'fast-shop' ); ?></a></li>
+                <li><a href="#tabs-5"><?php _e( 'Users', 'fast-shop' ); ?></a></li>
+                <li><a href="#tabs-6"><?php _e( 'Messages', 'fast-shop' ); ?></a></li>
+                <li><a href="#tabs-7"><?php _e( 'Gallery', 'fast-shop' ); ?></a></li>
+                <li><a href="#tabs-8"><?php _e( 'Export', 'fast-shop' ); ?></a></li>
             </ul>
             <div id="tabs-1">
                 <p>
@@ -166,12 +167,12 @@
             <div id="tabs-7">
                 <h2>Настройки галереи в карточке товара</h2>
                 <h3>Большое изображение</h3>
-               
+
                 <p>
                     <label for="gallery_img_width">Ширина изображения</label><br>
                     <input type="text" name="fs_option[gallery_img_width]"  id="gallery_img_width" value="<?php echo fs_option('gallery_img_width') ?>">
                 </p>
-                 <p>
+                <p>
                     <label for="gallery_img_height">Высота изображения</label><br>
                     <input type="text" name="fs_option[gallery_img_height]"  id="gallery_img_height" value="<?php echo fs_option('gallery_img_height') ?>">
                 </p>
@@ -195,6 +196,38 @@
 
                     <input type="radio" name="fs_option[cutting_photos]" id="cutting_photos4" value="cut_no" <?php checked(fs_option('cutting_photos'),'cut_no') ?>>  <label for="cutting_photos4">Не обрезать фото, выводить как есть</label>
                 </p>
+            </div>
+            <div id="tabs-8">
+                <h2><?php _e('Settings export and import of goods', 'fast-shop' ); ?></h2>
+                <p>
+                    <label for="company_name">Название компании</label><br>
+                    <input type="text" name="fs_option[company_name]"  id="company_name" value="<?php echo fs_option('company_name',get_bloginfo('name')) ?>">
+                </p>
+                <p>
+                    <label for="export_format">Формат экспорта</label><br>
+                    <input type="text" name="fs_option[export_format]"  id="export_format" value="<?php echo fs_option('export_format','xml') ?>">
+                </p>
+                <p>
+                    <label for="export_shedule">Автоматический экспорт</label><br>
+                    <select name="fs_option[export_shedule]" id="export_shedule">
+                        <option value="">Никогда</option>
+                        <?php $schedules = wp_get_schedules(); ?>
+                        <?php if ($schedules): ?>
+                            <?php foreach ($schedules as $key => $schedule): ?>
+                                <option value="<?php echo $key ?>" <?php selected($key,fs_option('export_shedule','')) ?>><?php echo $schedule['display'] ?></option>
+                            <?php endforeach ?>
+                        <?php endif ?>
+                    </select>
+                </p>
+                <p>
+                <a href="<?php echo wp_nonce_url(add_query_arg(array('fs_action'=>'export_yml')),'fs_action'); ?>" class="fs-btn fs-btn-green ">Запустить экпорт</a>
+                </p>
+                <p>
+                    <?php $upload_dir=wp_upload_dir('shop');
+                    $format=fs_option('export_format','xml'); ?>
+                    <a href="<?php echo $upload_dir['url'].'products.'.$format ?>" class="fs-btn" download>Скачать базу товаров</a>
+                </p>
+                
             </div>
         </div>
         <input type="submit" name="fs_save_options" value="Сохранить">

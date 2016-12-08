@@ -1,8 +1,6 @@
 <?php
 namespace FS;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-
 class FS_Post_Type
 {
     const POST_TYPE	= "product";

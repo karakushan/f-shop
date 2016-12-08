@@ -98,11 +98,11 @@ div#fs_select_image {
 
 }
 .fs_form label{
-   color: #373035;
-   font-family: "Bebas Neue";
-   font-weight: bold;
-   font-size: 14px;
-   letter-spacing: 0.075em;
+ color: #373035;
+ font-family: "Bebas Neue";
+ font-weight: bold;
+ font-size: 14px;
+ letter-spacing: 0.075em;
 }
 .fs_form  input[type="submit"] {
     background: #cf0052;
@@ -369,12 +369,33 @@ td.fs_price.column-fs_price span span {
     text-transform: uppercase;
     border-bottom: 3px solid #ddd;
     padding: 0 0 10px 0px;
-    margin: 0 0 25px 0;
+    margin: 0 0 12px 0;
     letter-spacing: .1em;
     font-weight: 700;
 }
 .fast-shop-settings .ui-tabs.ui-tabs-vertical {
     width: 774px;
     max-width: 100%;
+}
+.fs-btn {
+    display: inline-block;
+    padding: 4px 9px;
+    border: 1px solid #555;
+    text-decoration: none;
+    background: #d54e21;
+    color: #ffffff!important;
+    border-radius: 2px;
+    border-bottom: 2px solid #000;
 } 
+.fs-btn:hover {
+    background: #ec5726;
+}
+
+.fs-btn.fs-btn-green {
+    background: #008f1b;
+} 
+.fs-btn.fs-btn-green:hover {
+    background: #00A61B;
+} 
+
 
