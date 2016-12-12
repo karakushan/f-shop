@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-06 15:27+0000\n"
-"PO-Revision-Date: 2016-12-06 15:29+0000\n"
+"POT-Creation-Date: 2016-12-11 18:47+0000\n"
+"PO-Revision-Date: 2016-12-11 18:47+0000\n"
 "Last-Translator: grand-admin <info@grand-present.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
@@ -25,17 +25,9 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Loco-Target-Locale: ru_RU"
 
-#: lib/FS_Export_Class.php:146
-msgid "Update/create database was successful!"
-msgstr "Обновление создание базы закончилось успехом!"
-
-#: lib/FS_Export_Class.php:150
-msgid "An error occurred during the process of database updates!"
-msgstr "Произошла непредвиденная ошибка в процессе обновления/создания базы!"
-
-#: templates/back-end/settings.php:6
-msgid "General"
-msgstr "Главные"
+#: templates/back-end/orders.php:43
+msgid "At the current time you have no order."
+msgstr "В текущее время у вас нет ни одного заказа."
 
 #: templates/back-end/metabox/tab-0.php:29
 msgid "Запас товара на складе"
@@ -76,6 +68,14 @@ msgstr "Галерея"
 #: lib/FS_Config.php:61
 msgid "Discounts"
 msgstr "Скидки и акции"
+
+#: lib/FS_Export_Class.php:146
+msgid "Update/create database was successful!"
+msgstr "Обновление создание базы закончилось успехом!"
+
+#: lib/FS_Export_Class.php:150
+msgid "An error occurred during the process of database updates!"
+msgstr "Произошла непредвиденная ошибка в процессе обновления/создания базы!"
 
 #: lib/FS_Filters.php:47
 msgid "Product category"
@@ -143,13 +143,21 @@ msgstr "Добавление способа доставки"
 msgid "Not found shipping methods"
 msgstr "Нет ни одного способа доставки"
 
-#: templates/back-end/orders.php:31
+#: templates/back-end/orders.php:36
 msgid "Total"
 msgstr "Всего"
 
-#: templates/back-end/orders.php:31
-msgid "orders"
-msgstr "заказов"
+#: templates/back-end/orders.php:37
+#, php-format
+msgid "1 order"
+msgid_plural "%s orders"
+msgstr[0] "1 заказ"
+msgstr[1] "%s заказа"
+msgstr[2] "%s заказов"
+
+#: templates/back-end/settings.php:6
+msgid "General"
+msgstr "Главные"
 
 #: templates/back-end/settings.php:7
 msgid "Letters"

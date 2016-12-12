@@ -180,6 +180,36 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
 }
 
 /**
+ * Выводит текущую оптовую цену с учётом скидки вместе с валютой сайта
+ * @param string $post_id  - id товара
+ * @param string $wrap     - html обёртка для цены
+ */
+function fs_the_wholesale_price(int $post_id=0,$wrap="<span>%s</span>")
+{
+    $price=fs_get_wholesale_price($post_id);
+//    $price=apply_filters('fs_price_format', $price);
+    printf($wrap,$price.' <span>'.fs_currency().'</span>');
+}
+
+/**
+ * Получает текущую оптовую цену с учётом скидки
+ * @param string $post_id  - id товара
+ * @return float price      - значение цены
+ */
+function fs_get_wholesale_price(int $post_id=0){
+ global $post;
+ $config=new \FS\FS_Config();
+ $post_id=$post_id==0 ? $post->ID : $post_id;
+ $old_price=get_post_meta($post_id,$config->meta['wholesale_price'],1);
+ $new_price=get_post_meta($post_id,$config->meta['wholesale_price_action'],1);
+ $price=!empty($new_price) ? (float) $new_price : (float) $old_price;
+ if (empty($price)) {
+    $price=0;
+}
+return $price;
+}
+
+/**
  * Получает общую сумму всех продуктов в корзине
  * @param  boolean $show       показывать (по умолчанию) или возвращать
  * @param  string  $cur_before html перед символом валюты
@@ -707,7 +737,7 @@ function fs_frontend_template($template,$args=array()){
  * @return mixed|void
  */
 function fs_login_form(){
-   
+
     $template=fs_frontend_template('auth/login');
     return apply_filters('fs_login_form',$template);
 }
@@ -717,7 +747,7 @@ function fs_login_form(){
  * @return mixed|void
  */
 function fs_register_form(){
-  
+
     $template=fs_frontend_template('auth/register');
     return apply_filters('fs_register_form',$template);
 }
@@ -765,4 +795,17 @@ function fs_quick_order_button($post_id=0, $attr=array()){
     $post_id=empty($post_id) ? $post->ID : $post_id;
     $impl_attr=implode(' ', $str_att);
     echo '<button data-fs-action="quick_order_button" data-product-id="'.$post_id.'" data-product-name="'.get_the_title($post_id).'" '.$impl_attr.'>Заказать</button>';
+}
+
+/**
+ * получает артикул товара по переданному id поста
+ * @param  int|integer $product_id - id поста
+ * @return  string                 - артикул товара
+ */
+function fs_product_code(int $product_id=0){
+    global $post;
+    $config=new \FS\FS_Config();
+    $product_id=$product_id==0 ? $post->ID : $product_id;
+    $articul=get_post_meta($product_id,$config->meta['product_article'],1);
+    return  $articul;
 }

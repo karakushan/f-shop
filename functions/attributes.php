@@ -42,6 +42,7 @@ function fs_current_screen_attributes($parent_term_id){
             )
         )
     ));
+
     $ids=$posts->posts;
     $obj_terms=array();
     $terms=wp_get_object_terms($ids, 'product-attributes');

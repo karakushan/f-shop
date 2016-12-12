@@ -21,27 +21,27 @@ class FS_Settings_Class
             if( !wp_verify_nonce( $_GET['_wpnonce'], 'fs_nonce' ) ) return;
             $options=$_POST['fs_option'];
             if ($options){
-               $upd=update_option('fs_option',$options);
-                if ($upd){
-                    add_action('admin_notices', function(){
-                        echo '<div class="updated is-dismissible"><p>Настройки обновлены</p></div>';
-                    });
-                }else{
-                    add_action('admin_notices', function(){
-                        echo '<div class="notice notice-warning is-dismissible"><p>Страница перезагружена, но настройки не обновлялись.</p></div>';
-                    });
-                }
-
+             $upd=update_option('fs_option',$options);
+             if ($upd){
+                add_action('admin_notices', function(){
+                    echo '<div class="updated is-dismissible"><p>Настройки обновлены</p></div>';
+                });
+            }else{
+                add_action('admin_notices', function(){
+                    echo '<div class="notice notice-warning is-dismissible"><p>Страница перезагружена, но настройки не обновлялись.</p></div>';
+                });
             }
 
         }
 
+    }
 
-    }
-    public function settings_section_wp_plugin_template()
-    {
-        echo 'Определите настройки вашего магазина.';
-    }
+
+}
+public function settings_section_wp_plugin_template()
+{
+    echo 'Определите настройки вашего магазина.';
+}
 
     /**
      * add a menu
@@ -52,24 +52,24 @@ class FS_Settings_Class
              'Магазин', 'Магазин', 'manage_options', 'fast-shop','' , 'dashicons-products', 9
              );*/
         // Add a page to manage this plugin's settings
-        add_submenu_page(
-            'edit.php?post_type=product',
-            __('Orders','fast-shop'),
-            __('Orders','fast-shop'),
-            'manage_options',
-            'fast-shop-orders',
-            array(&$this, 'fast_shop_orders')
-        );
+             add_submenu_page(
+                'edit.php?post_type=product',
+                __('Orders','fast-shop'),
+                __('Orders','fast-shop'),
+                'manage_options',
+                'fast-shop-orders',
+                array(&$this, 'fast_shop_orders')
+                );
 
         // Add a page to manage this plugin's settings
-        add_submenu_page(
-            'edit.php?post_type=product',
-            __('Store settings','fast-shop'),
-            __('Store settings','fast-shop'),
-            'manage_options',
-            'fast-shop-settings',
-            array(&$this, 'plugin_settings_page')
-        );
+             add_submenu_page(
+                'edit.php?post_type=product',
+                __('Store settings','fast-shop'),
+                __('Store settings','fast-shop'),
+                'manage_options',
+                'fast-shop-settings',
+                array(&$this, 'plugin_settings_page')
+                );
     } // END public function add_menu()
 
     /**
@@ -78,57 +78,47 @@ class FS_Settings_Class
     public function plugin_settings_page()
     {
 
-       $config=new FS_Config();
+     $config=new FS_Config();
         // шаблон страницы настроек магазина
-        include($this->config->data['plugin_path'].'/templates/back-end/settings.php');
-    }
+     include($this->config->data['plugin_path'].'/templates/back-end/settings.php');
+ }
 
-    public function fast_shop_admin_menu()
-    {
-        $page=$_GET['page'];
-        $template=$this->config->data['plugin_path'].'templates/back-end/'.$page.'.php';
-        switch ($page) {
-            case 'fs-atributes':
-                require_once $template;
-                break;
+ public function fast_shop_admin_menu()
+ {
+    $page=$_GET['page'];
+    $template=$this->config->data['plugin_path'].'templates/back-end/'.$page.'.php';
+    switch ($page) {
+        case 'fs-atributes':
+        require_once $template;
+        break;
 
-            default:
+        default:
                 # code...
-                break;
-        }
+        break;
     }
+}
 
-    //Визуальное отображение контента на странице настройки доставки
-    public function fast_shop_delivery()
-    {
 
-        $delivery=new FS_Delivery_Class();
-        $delivery->add_delivery();
-        $fs_delivery=$delivery->delivery;
-
-        // шаблон  страницы настроек доставки
-        include($this->config->data['plugin_path'].'/templates/back-end/delivery.php');
-    }
 
     /**
      *
      */
     public function fast_shop_orders()
     {
-
+        global $wpdb; 
         $orders=new FS_Orders_Class();
-        $delivery=new FS_Delivery_Class();
         $action=!empty($_GET['action'])? $_GET['action']:'' ;
+        $orders_count = $wpdb->get_var("SELECT COUNT(*) FROM ".$wpdb->prefix."fs_orders");
         switch ($action) {
             case 'info':
-                $order_info=$orders->get_order(esc_sql($_GET['id'] ));
-                $products=unserialize($order_info->products);
-                include ($this->config->data['plugin_path'].'templates/back-end/order-info.php');
-                break;
+            $order_info=$orders->get_order(esc_sql($_GET['id'] ));
+            $products=unserialize($order_info->products);
+            include ($this->config->data['plugin_path'].'templates/back-end/order-info.php');
+            break;
 
             default:
-                include ($this->config->data['plugin_path'].'templates/back-end/orders.php');
-                break;
+            include ($this->config->data['plugin_path'].'templates/back-end/orders.php');
+            break;
         }
 
 

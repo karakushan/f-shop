@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-06 15:27+0000\n"
+"POT-Creation-Date: 2016-12-11 18:47+0000\n"
 "POT-Revision-Date: Sat Nov 12 2016 16:11:17 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -117,12 +117,19 @@ msgstr ""
 msgid "Not found shipping methods"
 msgstr ""
 
-#: templates/back-end/orders.php:31
+#: templates/back-end/orders.php:36
 msgid "Total"
 msgstr ""
 
-#: templates/back-end/orders.php:31
-msgid "orders"
+#: templates/back-end/orders.php:37
+#, php-format
+msgid "1 order"
+msgid_plural "%s orders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/back-end/orders.php:43
+msgid "At the current time you have no order."
 msgstr ""
 
 #: templates/back-end/settings.php:6

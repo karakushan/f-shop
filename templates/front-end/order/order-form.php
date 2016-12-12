@@ -69,7 +69,7 @@ fs_message
 </div>
 <div class="form-group">
         <label for="fs-city"><?php _e('City','fast-shop') ?></label>
-        <input type="text" name="fs-form[fs-city]"  class="form-control" id="fs-city" value="<?php echo  get_user_meta($user->ID,'fs-city',1) ?>">
+        <input type="text" name="fs_city"  class="form-control" id="fs-city" value="<?php echo  get_user_meta($user->ID,'fs-city',1) ?>">
     </div>
 <div class="row">
 	<div class="col-md-12">

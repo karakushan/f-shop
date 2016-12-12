@@ -7,20 +7,24 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class FS_Orders_Class
 {
 	public $order_status;
-    private $config;
+	private $config;
 	
 	function __construct()
 	{
 		add_action( 'init',array(&$this, 'order_status_change'));
-        $this->config=new FS_Config();
-        $this->order_status=$this->config->data['order_statuses'];
+		$this->config=new FS_Config();
+		$this->order_status=$this->config->data['order_statuses'];
+
+		//  ajax очистка базы заказов
+        add_action('wp_ajax_admin_truncate_orders',array(&$this,'admin_truncate_orders') );
+        add_action('wp_ajax_nopriv_admin_truncate_orders',array(&$this,'admin_truncate_orders') );
 	}
 
 	//Получаем все заказы в виде объекта
 	public function get_orders()
 	{
 		global $wpdb;
-        $table_name= $this->config->data['table_name'];
+		$table_name= $this->config->data['table_name'];
 
 		$per_page=15;
 		if (isset($_SESSION['pagination'])) {
@@ -121,4 +125,24 @@ class FS_Orders_Class
 				}
 			}
 		}
-	} ?>
+
+		//  делает очистку страницы заказов
+		public function admin_truncate_orders()
+		{
+			global $wpdb;
+			if ($wpdb->query("TRUNCATE TABLE wp_fs_orders") && $wpdb->query("TRUNCATE TABLE wp_fs_order_info")) {
+				echo json_encode(array(
+					'status'=>true,
+					'action'=>'refresh',
+					'message'=>'Операция прошла успешно!',
+					));
+			}else{
+				echo json_encode(array(
+					'status'=>false,
+					'action'=>'',
+					'message'=>'Возникла ошибка с удалением базы заказов.',
+					));
+			}
+			exit;
+		}
+	}

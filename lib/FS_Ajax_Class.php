@@ -14,26 +14,15 @@ class FS_Ajax_Class
         //  обработка формы заказа
         add_action('wp_ajax_order_send',array(&$this,'order_send_ajax') );
         add_action('wp_ajax_nopriv_order_send',array(&$this,'order_send_ajax') );
-
         //  добавление в список желаний
         add_action('wp_ajax_fs_addto_wishlist',array(&$this,'fs_addto_wishlist') );
         add_action('wp_ajax_nopriv_fs_addto_wishlist',array(&$this,'fs_addto_wishlist') );
-
         // удаление из списка желаний
         add_action('wp_ajax_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') );
-        add_action('wp_ajax_nopriv_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') ); 
-
+        add_action('wp_ajax_nopriv_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') );
        //   живой поиск по сайту
         add_action('wp_ajax_fs_livesearch',array(&$this,'fs_livesearch') );
         add_action('wp_ajax_nopriv_fs_livesearch',array(&$this,'fs_livesearch') );
-
-        //  редактирование профиля пользователя
-        add_action('wp_ajax_fs_profile_edit',array(&$this,'fs_profile_edit') );
-        add_action('wp_ajax_nopriv_fs_profile_edit',array(&$this,'fs_profile_edit') );
-
-        //  создание профиля пользователя
-        add_action('wp_ajax_fs_profile_create',array(&$this,'fs_profile_create') );
-        add_action('wp_ajax_nopriv_fs_profile_create',array(&$this,'fs_profile_create') );
 
     }
 
@@ -45,6 +34,12 @@ class FS_Ajax_Class
     {
         if ( !wp_verify_nonce($_POST['_wpnonce'],'fast-shop')) die ( 'не пройдена верификация формы nonce');
         $fs_products=array();
+        $user=wp_get_current_user();
+        if ($user->ID==0){
+            $user_login='пользователь не авторизован';
+        }else{
+            $user_login=$user->user_login;
+        }
         if (!empty($_POST['fs_cart'])){
             if($_POST['order_type']=="single"){
                 $product_id=(int)$_POST['fs_cart']['product_id'];
@@ -131,11 +126,10 @@ class FS_Ajax_Class
                 );
         }
 
-        $products='<ul>';
-        foreach ($fs_products as $key => $count) {
-           $products.='<li>'.get_the_title($key).' - '.fs_get_price($key).' '.fs_currency().'('.$count['count'].' шт.)</li>';
+        $products='';
+        foreach ($fs_products as $id =>$product) {
+            $products.=fs_frontend_template('order/products-list',array('id'=>$id,'product'=>$product));
        }
-       $products.='</ul>';
 
         /*
          Список переменных:
@@ -152,6 +146,7 @@ class FS_Ajax_Class
          %fs_phone% - телефон заказчика,
          %fs_message% - комментарий заказчика,
          %site_name% - название сайта
+         %site_url% - адрес сайта
         */
          
         /*
@@ -167,8 +162,11 @@ class FS_Ajax_Class
         */
         $search_replace=array(
             '%fs_name%'=>$name,
+            '%fs_login%'=>$user_login,
+            '%date%'=>date('d.m.Y H:i'),
             '%number_products%'=>fs_product_count($fs_products),
             '%total_amount%'=>fs_total_amount($fs_products,false).' '.fs_currency(),
+            '%total_amount_opt%'=>fs_total_amount($fs_products,false).' '.fs_currency(),
             '%order_id%'=>$order_id,
             '%products_listing%'=> $products,
             '%fs_email%'=>$mail_client,
@@ -179,6 +177,7 @@ class FS_Ajax_Class
             '%fs_phone%'=>$customer_phone,
             '%fs_message%'=>$fs_message,
             '%site_name%'=>get_bloginfo('name'),
+            '%site_url%'=>get_bloginfo('url'),
             '%admin_url%'=>get_admin_url()
             );
 
@@ -304,82 +303,4 @@ class FS_Ajax_Class
      wp_reset_query();
      exit;
  }
-
-// редактирование профиля пользователя
- public function fs_profile_edit()
- {
-    if (!wp_verify_nonce($_POST['_wpnonce'],'fast-shop')) exit('неправильный проверочный код nonce');
-    if (empty($_POST['fs-form'])) exit('форма не передала никаких данных');
-    $user=wp_get_current_user();
-    $post_data=array_map('trim',$_POST['fs-form']);
-    foreach ($post_data as $meta_key => $meta_value) {
-        update_user_meta($user->ID,$meta_key,$meta_value) ;
-    }
-    $user_id = wp_update_user( array( 
-        'ID' =>$user->ID,
-        'user_pass' => filter_input(INPUT_POST,'fs-password',FILTER_SANITIZE_STRING),
-        'user_email' => filter_input(INPUT_POST,'fs-email',FILTER_SANITIZE_EMAIL)
-        ) );
-    if (is_wp_error($user_id)) {
-        $errors=$user_id->get_error_message();
-        echo json_encode(array(
-            'status'=>0,
-            'message'=>$errors
-            ));
-        exit;
-    }
-    echo json_encode(array(
-        'status'=>1,
-        'message'=>'Ваши данные успешно обновились!'
-        ));
-    exit;
-}
-
-// создание профиля пользователя
-public function fs_profile_create()
-{
-    if (!wp_verify_nonce($_POST['_wpnonce'],'fast-shop')) exit('неправильный проверочный код nonce');
-    if (empty($_POST['fs-form'])) exit('форма не передала никаких данных');
-
-    $login=filter_input(INPUT_POST,'fs-login',FILTER_SANITIZE_STRING);
-    $email=filter_input(INPUT_POST,'fs-email',FILTER_SANITIZE_EMAIL);
-
-    $user_id = wp_insert_user( array( 
-        'user_pass' => filter_input(INPUT_POST,'fs-password',FILTER_SANITIZE_STRING),
-        'user_email' => $email,
-        'user_login' =>  $login,
-        'show_admin_bar_front'=>false
-        ) );
-    if (is_wp_error($user_id)) {
-        $errors=$user_id->get_error_message();
-        echo json_encode(array(
-            'status'=>0,
-            'message'=>$errors
-            ));
-        exit;
-    }else{
-     $post_data=array_map('trim',$_POST['fs-form']);
-     foreach ($post_data as $meta_key => $meta_value) {
-        update_user_meta($user_id,$meta_key,$meta_value) ;
-    }
-    echo json_encode(array(
-        'status'=>1,
-        'redirect'=>'/opt/',
-        'message'=>'Поздравляем! Вы успешно прошли регистрацию. Теперь ваш профиль должен быть подтверждённым администратором сайта. Если проверка будет пройдена вы будете  переведены в категорию "оптовые покупатели".'
-        )); 
-
-// отсылаем письма
-    $headers[] = 'Content-type: text/html; charset=utf-8';
-    // пользователю
-    $user_mail_header='Регистрация на сайте «'.get_bloginfo('name').'»';
-    $user_message='<h3>Поздравляем!</h3><p>Вы успешно прошли регистрацию на сайте. Теперь ваш профиль должен быть подтверждённым администратором сайта. Если проверка будет пройдена вы будете  переведены в категорию "оптовые покупатели".</p>';
-    $mail_user_send=wp_mail($email,$user_mail_header,$user_message, $headers ); 
-
-// админу
-    $admin_mail_header='Регистрация на сайте «'.get_bloginfo('name').'»';
-    $admin_message='<h3>На вашем сайте новый пользователь '. $login.'!</h3><p>Вам необходимо проверить данные и перевести в категорию пользователей "Оптовые покуптели". Также не забудьте уведомить пользователя об этом.</p>';
-    $mail_user_send=wp_mail(get_bloginfo('admin_email'),$admin_mail_header,$admin_message, $headers );
-}
-exit;
-}
 } 

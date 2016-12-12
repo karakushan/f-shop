@@ -123,8 +123,8 @@ function btn_view(e) {
 jQuery(document).ready(function($) {
     // вкладки на странице настроек товара
     $( "#fs-tabs" ).tabs( {
-       active   : $.cookie('postactivetab'),
-       activate : function( event, ui ){
+     active   : $.cookie('postactivetab'),
+     activate : function( event, ui ){
         $.cookie( 'postactivetab', ui.newTab.index(),{
             expires : 10
         });
@@ -141,6 +141,48 @@ jQuery(document).ready(function($) {
 }).addClass( "ui-tabs-vertical ui-helper-clearfix" );
     $( "#fs-options-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
     $(".fs-metabox input[type='radio']").checkboxradio();
+
+    //действия в админке
+    $('[data-fs-action*=admin_]').on('click',function(event) {
+        event.preventDefault();
+        var thisButton=$(this);
+        var buttonContent=$(this).text();
+        var buttonPreloader='<img src="/wp-content/plugins/fast-shop/assets/img/preloader-1.svg">';
+
+        if ($(this).data('fs-confirm').length>0) {
+            if (confirm($(this).data('fs-confirm'))) {
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    beforeSend:function() {
+                        thisButton.find('div').remove();
+                        thisButton.html(buttonPreloader+buttonContent);
+                    },
+                    data: {action:$(this).data('fs-action')},
+                })
+                .done(function(result) {
+                 result=jQuery.parseJSON(result);
+                 thisButton.find('img').fadeOut(600).remove();
+                 if (result.status==true) {
+                    thisButton.html('<div class="success">'+result.message+'</div>'+buttonContent);
+                    if (result.action=='refresh') {
+                        setTimeout(function(){ location.reload();  },2000);
+                    }
+                }else{
+                    thisButton.html('<div class="error">'+result.message+'</div>'+buttonContent);
+                }
+            })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+            }
+        }
+        
+    });
 });
 
 

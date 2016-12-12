@@ -445,7 +445,6 @@ jQuery(document).ready(function($) {
 		var productCount = $(this).val();
 
 		//если покупатель вбил неправильное к-во товаров
-		
 		if ( !isNumeric(productCount) ||  productCount<=0) {
 			$(this).val(1);
 			productCount=1;

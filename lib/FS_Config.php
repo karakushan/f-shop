@@ -70,11 +70,12 @@ class FS_Config
 
 
         //Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
-        $this->meta=array(
+        $meta=array(
             'price'=>'fs_price',//базовая цена
-            'wholesale_price'=>'fs_wholesale_price',//цена для оптовиков
+            'wholesale_price'=>'fs_wholesale_price', //цена для оптовиков
+            'wholesale_price_action'=>'fs_wholesale_price_act', //цена для оптовиков акционная
             'discount'=>'fs_discount',//размер скидки
-            'product_article'=>'fs_product_article',//размер скидки
+            'product_article'=>'fs_articul',//акртикул
             'availability'=>'fs_availability',//наличие на складе
             'remaining_amount'=>'fs_remaining_amount',//запас товаров на складе
             'action'=>'fs_actions',//включить  или выключить акцию
@@ -84,6 +85,7 @@ class FS_Config
             'attributes'=>'fs_attributes_post',//атрибуты товара
             'gallery'=>'fs_galery',//галерея
         );
+        $this->meta=apply_filters('fs_post_meta',$meta);
     }
 
 }

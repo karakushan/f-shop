@@ -28,9 +28,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-/*ini_set('error_reporting', E_ALL);
+ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);*/
+ini_set('display_startup_errors', 1);
 
 require_once __DIR__.'/vendor/autoload.php';
 

@@ -31,43 +31,38 @@ class FS_Filters
     public function redirect_per_page()
     {
         if (isset($_GET['paged'])) {   
-           wp_redirect( remove_query_arg('paged'));
-           exit();
-       }
-   }
+         wp_redirect( remove_query_arg('paged'));
+         exit();
+     }
+ }
 
 // фильтр по категориям товаров в админке
-   function category_filter_admin()
-   {
-      global $typenow;
-      global $wp_query;
-      $get_parr=isset($_GET['catalog']) ? $_GET['catalog'] : '';
-      if ($typenow!='product') return;
-      $terms=get_terms('catalog',array('hide_empty'=>false));
-      $select_name=__( 'Product category', 'fast-shop' );
-      if ($terms) {
-          echo "<select name=\"catalog\" id=\"fs-category-filter\">";
-          echo "<option value=\"\">$select_name</option>";
-          foreach ($terms as $key => $term) {
-            echo "<option value=\"$term->slug\" ".selected($term->slug,$get_parr,0).">$term->name</option>";
-        }
-        echo "</select>";
+ function category_filter_admin()
+ {
+  global $typenow;
+  global $wp_query;
+  $get_parr=isset($_GET['catalog']) ? $_GET['catalog'] : '';
+  if ($typenow!='product') return;
+  $terms=get_terms('catalog',array('hide_empty'=>false));
+  $select_name=__( 'Product category', 'fast-shop' );
+  if ($terms) {
+      echo "<select name=\"catalog\" id=\"fs-category-filter\">";
+      echo "<option value=\"\">$select_name</option>";
+      foreach ($terms as $key => $term) {
+        echo "<option value=\"$term->slug\" ".selected($term->slug,$get_parr,0).">$term->name</option>";
     }
+    echo "</select>";
+}
 
 }
 
     /**
      * @param $query
      */
-    public function filter_curr_product($query)
-    {
-        if (
-            empty($_REQUEST['fs_filter'])
-            || !wp_verify_nonce($_REQUEST['fs_filter'],'fast-shop')
-            || !$query->is_main_query()
-            ) return;
+    public function filter_curr_product($query) {
+        if (!isset($_REQUEST['fs_filter']) || !wp_verify_nonce($_REQUEST['fs_filter'],'fast-shop') || !$query->is_main_query()) return;
 
-            $config = new FS_Config;
+        $config = new FS_Config;
         $tax_query=array();
         $meta_query=array();
         $orderby=array();
