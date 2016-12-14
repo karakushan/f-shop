@@ -20,7 +20,7 @@ class FS_Ajax_Class
         // удаление из списка желаний
         add_action('wp_ajax_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') );
         add_action('wp_ajax_nopriv_fs_del_wishlist_pos',array(&$this,'fs_del_wishlist_pos') );
-       //   живой поиск по сайту
+        //   живой поиск по сайту
         add_action('wp_ajax_fs_livesearch',array(&$this,'fs_livesearch') );
         add_action('wp_ajax_nopriv_fs_livesearch',array(&$this,'fs_livesearch') );
 
@@ -48,7 +48,7 @@ class FS_Ajax_Class
             }else{
                 $fs_products=$_POST['fs_cart'];
             }
-            
+
         }else{
             if (empty($_SESSION['cart'])){
                 die ( 'не найдена сессия корзины');
@@ -63,7 +63,7 @@ class FS_Ajax_Class
         global $wpdb;
         $wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
-    // включаем возможность пользователям использовать собственные поля в форме заказа
+        // включаем возможность пользователям использовать собственные поля в форме заказа
         $fields=array();
         $exclude_fields=array('action','_wpnonce','_wp_http_referer');
         if (isset($_POST)){
@@ -107,9 +107,9 @@ class FS_Ajax_Class
                 'delivery' =>$delivery,
                 'products' =>serialize($fs_products),
                 'summa' =>fs_total_amount($fs_products,false)
-                ),
+            ),
             array( '%s','%s','%d','%s','%s','%s','%s','%d')
-            ); 
+        );
         $order_id=$wpdb->insert_id;
         $_SESSION['last_order_id']=$order_id;
 
@@ -117,19 +117,19 @@ class FS_Ajax_Class
             $wpdb->insert(
                 'wp_fs_order_info',
                 array(
-                 'order_id'=>$order_id,
-                 'post_id'=>$post,
-                 'id_model'=>get_post_meta($post,'al_product_id',1),
-                 'count'=>$data['count'],
-                 ),
+                    'order_id'=>$order_id,
+                    'post_id'=>$post,
+                    'id_model'=>get_post_meta($post,'al_product_id',1),
+                    'count'=>$data['count'],
+                ),
                 array('%d','%d','%d','%d')
-                );
+            );
         }
 
         $products='';
         foreach ($fs_products as $id =>$product) {
             $products.=fs_frontend_template('order/products-list',array('id'=>$id,'product'=>$product));
-       }
+        }
 
         /*
          Список переменных:
@@ -148,7 +148,7 @@ class FS_Ajax_Class
          %site_name% - название сайта
          %site_url% - адрес сайта
         */
-         
+
         /*
         Список основных полей для использования в письмах
         fs_name
@@ -165,8 +165,8 @@ class FS_Ajax_Class
             '%fs_login%'=>$user_login,
             '%date%'=>date('d.m.Y H:i'),
             '%number_products%'=>fs_product_count($fs_products),
-            '%total_amount%'=>fs_total_amount($fs_products,false).' '.fs_currency(),
-            '%total_amount_opt%'=>fs_total_amount($fs_products,false).' '.fs_currency(),
+            '%total_amount%'=>fs_total_amount($fs_products,false),
+            '%fs_wholesale_amount%'=>fs_total_wholesale_amount($fs_products,false),
             '%order_id%'=>$order_id,
             '%products_listing%'=> $products,
             '%fs_email%'=>$mail_client,
@@ -179,7 +179,7 @@ class FS_Ajax_Class
             '%site_name%'=>get_bloginfo('name'),
             '%site_url%'=>get_bloginfo('url'),
             '%admin_url%'=>get_admin_url()
-            );
+        );
 
         //Производим замену в отсылаемих письмах
         $search_replace=$fields+$search_replace;
@@ -188,6 +188,7 @@ class FS_Ajax_Class
 
         $user_message=str_replace($search,$replace,fs_option('customer_mail'));
         $admin_message=str_replace($search,$replace,fs_option('admin_mail'));
+
 
         //Отсылаем письмо с данными заказа заказчику
         $headers[] = 'Content-type: text/html; charset=utf-8';
@@ -226,7 +227,7 @@ class FS_Ajax_Class
             'products'=>$fs_products,
             'mail_admin_send'=> $mail_admin_send,
             'redirect'=>get_permalink(fs_option('page_success'))
-            );
+        );
         echo json_encode($result);
 
         unset($_SESSION['cart']);
@@ -244,7 +245,7 @@ class FS_Ajax_Class
             $count=count($wishlist);
             $res.= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>'.$count.'</span></a><ul class="fs-wishlist-listing">
             <li class="wishlist-header">'.__('Wishlist','cube44').': <i class="fa fa-times-circle" aria-hidden="true"></i></li>';
-            foreach ($_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value) { 
+            foreach ($_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value) {
                 $res.= "<li><i class=\"fa fa-trash\" aria-hidden=\"true\" data-fs-action=\"wishlist-delete-position\" data-product-id=\"$key\" data-product-name=\"".get_the_title($key)."\" ></i> <a href=\"".get_permalink($key)."\">".get_the_title($key)."</a></li>";
             }
             $res.='</ul>';
@@ -253,9 +254,9 @@ class FS_Ajax_Class
             echo json_encode(array(
                 'body'=>$res,
                 'type'=>'success'
-                ));
+            ));
         }
-        exit;    
+        exit;
     }
 
     public function fs_del_wishlist_pos()
@@ -268,7 +269,7 @@ class FS_Ajax_Class
         $class=$count==0?'':'wishlist-show';
         $res.= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>'.$count.'</span></a><ul class="fs-wishlist-listing '.$class.'">
         <li class="wishlist-header">'.__('Wishlist','cube44').': <i class="fa fa-times-circle" aria-hidden="true"></i></li>';
-        foreach ($_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value) { 
+        foreach ($_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value) {
             $res.= "<li><i class=\"fa fa-trash\" aria-hidden=\"true\" data-fs-action=\"wishlist-delete-position\" data-product-id=\"$key\" data-product-name=\"".get_the_title($key)."\" ></i> <a href=\"".get_permalink($key)."\">".get_the_title($key)."</a></li>";
         }
         $res.='</ul>';
@@ -277,7 +278,7 @@ class FS_Ajax_Class
             echo json_encode(array(
                 'body'=>$res,
                 'type'=>'success'
-                ));
+            ));
         }
         exit;
     }
@@ -285,22 +286,34 @@ class FS_Ajax_Class
 // живой поиск по сайту
     public function fs_livesearch()
     {
-        $search=filter_input(INPUT_POST, 's', FILTER_SANITIZE_STRING); 
-
-        $args=array('s'=>$search,'post_type'=>'product','posts_per_page'=>40);
-        if (preg_match("/[a-z0-9_-]/",$search)) {
-         $args['meta_query'] = array(
-            array(
-                'key'     => 'al_articul',
-                'value'   => $search,
-                'compare' => 'LIKE'
+        $config=new FS_Config();
+        $search=sanitize_text_field($_POST['s']);
+        $args=array(
+            's'=>$search,
+            'post_type'=>'product',
+            'posts_per_page'=>40
+        );
+        $query=query_posts($args);
+        if ($query){
+            get_template_part('fast-shop/livesearch/livesearch');
+            wp_reset_query();
+        }else{
+            $args2=array(
+                'post_type'=>'product',
+                'posts_per_page'=>40,
+                'meta_query'=> array(
+                    'relation'=>'OR',
+                    array(
+                        'key'     =>$config->meta['product_article'],
+                        'value'   => $search,
+                        'compare' => 'LIKE'
+                    )
                 )
             );
-         unset($args['s']);
-     }
-     query_posts($args);
-     get_template_part('fast-shop/livesearch/livesearch'); 
-     wp_reset_query();
-     exit;
- }
+            query_posts($args2);
+            get_template_part('fast-shop/livesearch/livesearch');
+            wp_reset_query();
+        }
+        exit;
+    }
 } 

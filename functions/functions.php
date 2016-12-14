@@ -12,45 +12,25 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
     global $post;
     $config=new \FS\FS_Config();
     $post_id=(empty($post_id) ? $post->ID : (int)$post_id);
-
     $fs_atributes_post=get_post_meta($post_id,$config->meta['attributes'],false);
-
     $fs_atributes_post=isset($fs_atributes_post[0])?$fs_atributes_post[0]:array();
     $fs_atributes_all=get_option('fs-attributes')!=false?get_option('fs-attributes'):array();
-
-    /* echo "<pre>";
-
-     print_r($fs_atributes_post);
-     echo "</pre>";
-     echo "<pre>";
-
-     print_r($fs_atributes_all);
-     echo "</pre>";*/
-
-
-     if ($fs_atributes_post) {
+    if ($fs_atributes_post) {
         switch ($type) {
-
-
             case 'radio':
-            foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                if ($fs_atribute==0) continue;
-                $checked=$key==0?"checked":"";
-                if ($fs_atributes_all[$group][$key]['type']=='image') {
-                    $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
-                    echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
-                }else{
-                    echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
+                foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+                    if ($fs_atribute==0) continue;
+                    $checked=$key==0?"checked":"";
+                    if ($fs_atributes_all[$group][$key]['type']=='image') {
+                        $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
+                        echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
+                    }else{
+                        echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
+                    }
                 }
-
-            }
-            break;
-
-
-
+                break;
             default:
-
-            break;
+                break;
         }
 
     }
@@ -71,7 +51,7 @@ function fs_lightslider($post_id=0, $args=array())
         "item"=>1,
         "vertical"=>false,
         "thumbItem"=>3
-        );
+    );
     $args=wp_parse_args($args,$default);
 
     $galery=$galery->fs_galery_list($post_id);
@@ -187,7 +167,7 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
 function fs_the_wholesale_price(int $post_id=0,$wrap="<span>%s</span>")
 {
     $price=fs_get_wholesale_price($post_id);
-//    $price=apply_filters('fs_price_format', $price);
+    $price=apply_filters('fs_price_format', $price);
     printf($wrap,$price.' <span>'.fs_currency().'</span>');
 }
 
@@ -197,16 +177,16 @@ function fs_the_wholesale_price(int $post_id=0,$wrap="<span>%s</span>")
  * @return float price      - значение цены
  */
 function fs_get_wholesale_price(int $post_id=0){
- global $post;
- $config=new \FS\FS_Config();
- $post_id=$post_id==0 ? $post->ID : $post_id;
- $old_price=get_post_meta($post_id,$config->meta['wholesale_price'],1);
- $new_price=get_post_meta($post_id,$config->meta['wholesale_price_action'],1);
- $price=!empty($new_price) ? (float) $new_price : (float) $old_price;
- if (empty($price)) {
-    $price=0;
-}
-return $price;
+    global $post;
+    $config=new \FS\FS_Config();
+    $post_id=$post_id==0 ? $post->ID : $post_id;
+    $old_price=get_post_meta($post_id,$config->meta['wholesale_price'],1);
+    $new_price=get_post_meta($post_id,$config->meta['wholesale_price_action'],1);
+    $price=!empty($new_price) ? (float) $new_price : (float) $old_price;
+    if (empty($price)) {
+        $price=0;
+    }
+    return $price;
 }
 
 /**
@@ -224,11 +204,41 @@ function fs_total_amount($products=array(),$show=true,$wrap='%s <span>%s</span>'
         $all_price[$key]=$count['count']*fs_get_price($key);
     }
     $price=array_sum($all_price);
+    $price=apply_filters('fs_price_format',$price);
+    $price=sprintf($wrap,$price,fs_currency());
     if ($show==false) {
         return $price;
     } else {
-        $price=apply_filters('fs_price_format',$price);
-        printf($wrap,$price,fs_currency());
+        echo $price;
+    }
+}
+
+
+
+/**
+ * выводит или отдаёт общую сумму всех товаров по оптовой цене
+ * @param bool $echo - выводить или возвращать (по умолчанию показывать)
+ * @param string $wrap - обёртка для выводимой цены
+ * @return mixed|number|void
+ */
+function fs_total_wholesale_amount($products=array(),$echo=true, $wrap='%s <span>%s</span>')
+{
+    $all_price=array();
+    if (empty($products) && !empty($_SESSION['cart'])){
+        $products=$_SESSION['cart'];
+    }
+    if ($products){
+        foreach ($products as $key => $count){
+            $all_price[$key]=$count['count']*fs_get_wholesale_price($key);
+        }
+    }
+    $amount=array_sum($all_price);
+    $amount=apply_filters('fs_price_format', $amount);
+    $amount=sprintf($wrap,$amount,fs_currency());
+    if ($echo) {
+        echo $amount;
+    } else {
+        return $amount;
     }
 }
 
@@ -278,7 +288,7 @@ function fs_get_cart()
                 'link'=>get_permalink($key),
                 'price'=> $price_show.' <span>'.$cur_symb.'</span>',
                 'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
-                );
+            );
         }
     }
     return $products;
@@ -298,15 +308,15 @@ function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
     $class="class=\"$class\"";
     switch ($type){
         case 'link':
-        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
-        break;
+            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+            break;
         case 'button':
-        echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
-        break;
+            echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
+            break;
         default:
-        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
 
-        break;
+            break;
     }
 }
 
@@ -486,14 +496,14 @@ function fs_quantity_product($product_id='',$type='number')
     $product_id=!empty($product_id)?$product_id : $post->ID;
     switch ($type){
         case 'number':
-        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-        break;
+            echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+            break;
         case 'text':
-        echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-        break;
+            echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+            break;
         default:
-        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-        break;
+            echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+            break;
     }
 
 }
@@ -650,7 +660,7 @@ function fs_range_slider()
     </span>
 </div>
 </div>';
-echo $slider;
+    echo $slider;
 }//end range_slider()
 
 /**
@@ -685,7 +695,7 @@ function fs_wishlist_button($post_id=0,$args='')
     $defaults = array(
         'attr' => '',
         'content' => '',
-        );
+    );
     $args = wp_parse_args( $args, $defaults );
     echo '<button data-fs-action="wishlist" '.$args['attr'].'  data-product-id="'.$post_id.'"><span class="whishlist-message"></span>'.$args['content'].'</button>';
 }
@@ -715,7 +725,7 @@ function fs_transliteration($s) {
 function fs_frontend_template($template,$args=array()){
     extract(wp_parse_args($args,array(
         'user'=>wp_get_current_user()
-        )));
+    )));
 
     $template_plugin=FS_PLUGIN_PATH.'/templates/front-end/'.$template.'.php';
     $template_theme=TEMPLATEPATH.'/fast-shop/'.$template.'.php';
@@ -728,7 +738,7 @@ function fs_frontend_template($template,$args=array()){
         echo 'файл шаблона '.$template.' не найден в функции '.__FUNCTION__;
     }
     $template=ob_get_contents();
-    if (ob_get_length()){ ob_end_clean();  ob_end_flush(); } 
+    if (ob_get_length()){ ob_end_clean();  ob_end_flush(); }
     return apply_filters('fs_frontend_template',$template);
 }
 
@@ -771,7 +781,7 @@ function fs_page_content(){
     } else{
         $template=fs_frontend_template('auth/profile');
     }
-    
+
     echo $template;
 }
 
@@ -785,7 +795,7 @@ function fs_quick_order_button($post_id=0, $attr=array()){
     $attr=wp_parse_args($attr,array(
         'data-toggle'=>"modal",
         'href'=>'#fast-order'
-        ));
+    ));
     $str_att=array();
     if ($attr){
         foreach ($attr as $key=>$at) {

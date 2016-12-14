@@ -87,13 +87,33 @@ class FS_Orders_Class
 
 
 	//Получаем объект одного заказа
-	public function get_order($id='')
+	public function get_order(int $id)
 	{
 		global $wpdb;
-		$table_name=$this->config->data['table_name'];
-		$res=$wpdb->get_row("SELECT * FROM $table_name WHERE id =$id");
-		return $res;
+		$table_name=$this->config->data['table_order_item'];
+		$res=$wpdb->get_results("SELECT * FROM $table_name WHERE order_id ='$id'");
+            return $res;
 	}
+
+    /**
+     * подсчитывает общую сумму товаров в одном заказе
+     * @param $products - список товаров в объекте
+     * @return float $items_sum - стоимость всех товаров
+     */
+    public function fs_order_total(int $order_id){
+        $item=array();
+        $currency=fs_currency();
+        $products=$this->get_order($order_id);
+        if ($products){
+            foreach ($products as $product) {
+                $item[$product->post_id]=$product->count*fs_get_price($product->post_id);
+            }
+            $items_sum=array_sum($item);
+        }
+        $items_sum=apply_filters('fs_price_format',$items_sum);
+        $items_sum=$items_sum.' '.$currency;
+        return $items_sum;
+    }
 
 	public function order_status_change()
 	{

@@ -3,30 +3,30 @@
 	<div id="fs-table" class="fs-content-wrapper fs-order-info" >
 		<table>
 			<thead>
-				<tr>
-					<th>Список товаров</th>
-					<th>Количество</th>
-					<th>Цена</th>
-				
-				</tr>
+			<tr>
+				<th>#ID товара</th>
+				<th>Название товара</th>
+				<th>Артикул</th>
+				<th>Количество</th>
+				<th>Цена</th>
+			</tr>
 			</thead>
-			<?php foreach ($products as $key => $value): ?>
-
-
+			<?php foreach ($products as $key => $order): ?>
 				<tr>
-					<td><a href="<?php echo get_permalink($key) ?>" target="_blank"><?php echo get_the_title($key); ?></a></td>
-					<td><?php echo $value['count'] ?></td>
-					<td><?php fs_the_price($key)?></td>
-
+					<td><a href="<?php echo admin_url('post.php?post='.$order->post_id.'&action=edit') ?>" title="ссылка на редактирование товара"><?php echo $order->post_id ?></a></td>
+					<td><a href="<?php echo get_permalink($order->post_id) ?>" target="_blank" title="смотреть товар на сайте"><?php echo get_the_title($order->post_id); ?></a></td>
+					<td><?php echo fs_product_code($order->post_id) ?></td>
+					<td><?php echo $order->count ?></td>
+					<td><?php fs_the_price($order->post_id)?></td>
 				</tr>
 			<?php endforeach ?>
 			<tr class="all_summ">
-				<td colspan="2">Общая сумма</td>
-				<td><?php echo $order_info->summa.' '.get_option( 'currency_icon' ) ?></td>
+				<td colspan="4">Общая сумма</td>
+				<td><?php echo $orders->fs_order_total($_GET['id']) ?></td>
 			</tr>
 
 
 		</table>
 	</div>
-</form>
+	</form>
 </div>
