@@ -18,19 +18,19 @@ function fs_attr_group($group,$post_id="",$type='option',$option_default='',$cla
     if ($fs_atributes_post) {
         switch ($type) {
             case 'radio':
-                foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
-                    if ($fs_atribute==0) continue;
-                    $checked=$key==0?"checked":"";
-                    if ($fs_atributes_all[$group][$key]['type']=='image') {
-                        $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
-                        echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
-                    }else{
-                        echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
-                    }
+            foreach ($fs_atributes_post[$group] as $key => $fs_atribute) {
+                if ($fs_atribute==0) continue;
+                $checked=$key==0?"checked":"";
+                if ($fs_atributes_all[$group][$key]['type']=='image') {
+                    $img_url=wp_get_attachment_thumb_url($fs_atributes_all[$group][$key]['value']);
+                    echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
+                }else{
+                    echo "<li><label>". $fs_atributes_all[$group][$key]['name']."</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
                 }
-                break;
+            }
+            break;
             default:
-                break;
+            break;
         }
 
     }
@@ -51,7 +51,7 @@ function fs_lightslider($post_id=0, $args=array())
         "item"=>1,
         "vertical"=>false,
         "thumbItem"=>3
-    );
+        );
     $args=wp_parse_args($args,$default);
 
     $galery=$galery->fs_galery_list($post_id);
@@ -123,11 +123,31 @@ function fs_get_price($post_id=0,$filter=true)
 
  * @return int|mixed|string
  */
-function fs_row_price($post_id, $count, $curency=true, $wrap='%s <span>%s</span>')
+function fs_row_price($post_id, $count, $curency=true, $wrap='%s <span>%s</span>',$filter=true)
 {
     global $post;
     $post_id=empty($post_id) ? $post->ID : (int)$post_id;
-    $price=fs_get_price($post_id)*$count;
+    $price=fs_get_price($post_id,$filter)*$count;
+    if ($curency) {
+        $price=apply_filters('fs_price_format',$price);
+        $price=sprintf($wrap,$price,fs_currency());
+    }
+    return $price;
+}
+
+/**
+ * получает цену сумму товаров одного наименования (позиции)
+ * @param  [type]  $post_id [description]
+ * @param  [type]  $count   [description]
+ * @param  boolean $curency [description]
+ * @param  string  $wrap    [description]
+ * @return [type]           [description]
+ */
+function fs_row_wholesale_price($post_id, $count, $curency=true, $wrap='%s <span>%s</span>')
+{
+    global $post;
+    $post_id=empty($post_id) ? $post->ID : (int)$post_id;
+    $price=fs_get_wholesale_price($post_id)*$count;
     if ($curency) {
         $price=apply_filters('fs_price_format',$price);
         $price=sprintf($wrap,$price,fs_currency());
@@ -181,7 +201,7 @@ function fs_get_wholesale_price($post_id=0){
     $config=new \FS\FS_Config();
     global $post;
     $post_id=empty($post_id) ? $post->ID : (int)$post_id;
-   
+
     $old_price=get_post_meta($post_id,$config->meta['wholesale_price'],1);
     $new_price=get_post_meta($post_id,$config->meta['wholesale_price_action'],1);
     $price=!empty($new_price) ? (float) $new_price : (float) $old_price;
@@ -312,7 +332,7 @@ function fs_get_cart()
                 'link'=>get_permalink($key),
                 'price'=> $price_show.' <span>'.$cur_symb.'</span>',
                 'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
-            );
+                );
         }
     }
     return $products;
@@ -332,15 +352,15 @@ function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
     $class="class=\"$class\"";
     switch ($type){
         case 'link':
-            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
-            break;
+        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+        break;
         case 'button':
-            echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
-            break;
+        echo '<button type="button" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</button>';
+        break;
         default:
-            echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
+        echo '<a href="#" '.$class.' '.$title.'  data-fs-type="product-delete" data-fs-id="'.$product_id.'" data-fs-name="'.get_the_title($product_id).'">'.$text.'</a>';
 
-            break;
+        break;
     }
 }
 
@@ -520,14 +540,14 @@ function fs_quantity_product($product_id='',$type='number')
     $product_id=!empty($product_id)?$product_id : $post->ID;
     switch ($type){
         case 'number':
-            echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-            break;
+        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        break;
         case 'text':
-            echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-            break;
+        echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        break;
         default:
-            echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-            break;
+        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
+        break;
     }
 
 }
@@ -684,7 +704,7 @@ function fs_range_slider()
     </span>
 </div>
 </div>';
-    echo $slider;
+echo $slider;
 }//end range_slider()
 
 /**
@@ -719,7 +739,7 @@ function fs_wishlist_button($post_id=0,$args='')
     $defaults = array(
         'attr' => '',
         'content' => '',
-    );
+        );
     $args = wp_parse_args( $args, $defaults );
     echo '<button data-fs-action="wishlist" '.$args['attr'].'  data-product-id="'.$post_id.'"><span class="whishlist-message"></span>'.$args['content'].'</button>';
 }
@@ -749,7 +769,7 @@ function fs_transliteration($s) {
 function fs_frontend_template($template,$args=array()){
     extract(wp_parse_args($args,array(
         'user'=>wp_get_current_user()
-    )));
+        )));
 
     $template_plugin=FS_PLUGIN_PATH.'/templates/front-end/'.$template.'.php';
     $template_theme=TEMPLATEPATH.'/fast-shop/'.$template.'.php';
@@ -818,7 +838,7 @@ function fs_quick_order_button($post_id=0, $attr=array()){
     $attr=wp_parse_args($attr,array(
         'data-toggle'=>"modal",
         'href'=>'#fast-order'
-    ));
+        ));
     $str_att=array();
     if ($attr){
         foreach ($attr as $key=>$at) {

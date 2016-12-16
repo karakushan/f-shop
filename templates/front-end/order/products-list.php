@@ -5,4 +5,7 @@
 	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo $product['count'] ?> шт.</td>
 	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php fs_the_wholesale_price($id) ?></td>
 	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo number_format(fs_get_price($id,false), 2, ',', ' '); ?> <?php echo fs_currency() ?></td>
+	
+	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo fs_row_wholesale_price($id,$product['count'])?></td>
+	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo fs_row_price($id,$product['count'],true,'%s <span>%s</span>',false) ?></td>
 </tr>
