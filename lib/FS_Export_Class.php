@@ -82,8 +82,8 @@ class FS_Export_Class
     $url=$xml->createElement('url',get_permalink($post->ID));
     $offer->appendChild($url);  
     /*yml_catalog->shop->offers->offer->price*/
-    $price_format=fs_get_price($post->ID);
-    $price=$xml->createElement('price',round($price_format));
+    $price_format=fs_get_wholesale_price($post->ID);
+    $price=$xml->createElement('price', number_format($price_format, 2, '.', ''));
     $offer->appendChild($price);  
     /*yml_catalog->shop->offers->offer->currencyId*/
     $currencyId=$xml->createElement('currencyId','UAH');
@@ -130,7 +130,7 @@ class FS_Export_Class
             if (is_numeric( $gallery_image)) {
                 $picture=$xml->createElement('picture',wp_get_attachment_url($gallery_image));
             }else{
-                $picture=$xml->createElement('picture',get_bloginfo('url').$gallery_image);
+                $picture=$xml->createElement('picture',esc_url(get_bloginfo('url').$gallery_image));
             }
             $offer->appendChild($picture); 
         }

@@ -107,9 +107,9 @@ class FS_Ajax_Class
                 'delivery' =>$delivery,
                 'products' =>serialize($fs_products),
                 'summa' =>fs_total_amount($fs_products,false)
-            ),
+                ),
             array( '%s','%s','%d','%s','%s','%s','%s','%d')
-        );
+            );
         $order_id=$wpdb->insert_id;
         $_SESSION['last_order_id']=$order_id;
 
@@ -121,23 +121,28 @@ class FS_Ajax_Class
                     'post_id'=>$post,
                     'id_model'=>get_post_meta($post,'al_product_id',1),
                     'count'=>$data['count'],
-                ),
+                    ),
                 array('%d','%d','%d','%d')
-            );
+                );
         }
 
+        // фильтр для замены листинга товаров для пользователей
         $products='';
-        foreach ($fs_products as $id =>$product) {
-            $products.=fs_frontend_template('order/products-list',array('id'=>$id,'product'=>$product));
-        }
-
+        $products=apply_filters('fs_order_product_list',$products,$fs_products);
+        // фильтр для замены листинга товаров для админа
+        $products_admin='';
+        $products_admin=apply_filters('fs_order_product_list_admin',$products_admin,$fs_products);
         /*
          Список переменных:
          %fs_name% - Имя заказчика,
          %number_products% - к-во купленных продуктов,
          %total_amount% - общая сумма покупки,
+         %fs_wholesale_amount% - общая сумма покупки для оптовых пользователей,
+         %total_amount_admin% - общая сумма покупки, по базовой цене, без
          %order_id% - id заказа,
          %products_listing% - список купленных продуктов,
+         %products_listing_admin% - список купленных продуктов для администратора,
+         %fs_login% - логин если пользователь авторизован.
          %fs_email% - почта заказчика,
          %fs_adress% - адрес доставки,
          %fs_pay% - способ оплаты,
@@ -147,6 +152,7 @@ class FS_Ajax_Class
          %fs_message% - комментарий заказчика,
          %site_name% - название сайта
          %site_url% - адрес сайта
+         %admin_url% - адрес админки
         */
 
         /*
@@ -166,9 +172,11 @@ class FS_Ajax_Class
             '%date%'=>date('d.m.Y H:i'),
             '%number_products%'=>fs_product_count($fs_products),
             '%total_amount%'=>fs_total_amount($fs_products,false),
+            '%total_amount_admin%'=>fs_total_amount_filtering($fs_products=array(),false),
             '%fs_wholesale_amount%'=>fs_total_wholesale_amount($fs_products,false),
             '%order_id%'=>$order_id,
             '%products_listing%'=> $products,
+            '%products_listing_admin%'=> $products_admin,
             '%fs_email%'=>$mail_client,
             '%fs_adress%'=>$delivery_address,
             '%fs_city%'=>$city,
@@ -179,16 +187,24 @@ class FS_Ajax_Class
             '%site_name%'=>get_bloginfo('name'),
             '%site_url%'=>get_bloginfo('url'),
             '%admin_url%'=>get_admin_url()
-        );
+            );
 
-        //Производим замену в отсылаемих письмах
+        $search_replace=apply_filters('fs_mail_template_var',$search_replace);
+
+        // Производим замену в отсылаемих письмах
         $search_replace=$fields+$search_replace;
         $search=array_keys($search_replace);
         $replace=array_values($search_replace);
 
-        $user_message=str_replace($search,$replace,fs_option('customer_mail'));
-        $admin_message=str_replace($search,$replace,fs_option('admin_mail'));
-
+        // текст письма заказчику
+        $user_message=fs_option('customer_mail');
+        $user_message=apply_filters('fs_order_user_message',$user_message);
+        $user_message=str_replace($search,$replace, $user_message);
+        // текст письма админу
+        $admin_message=fs_option('admin_mail');
+        $admin_message=apply_filters('fs_order_admin_message',$admin_message);
+        $admin_message=str_replace($search,$replace,$admin_message);
+        
 
         //Отсылаем письмо с данными заказа заказчику
         $headers[] = 'Content-type: text/html; charset=utf-8';
@@ -227,7 +243,7 @@ class FS_Ajax_Class
             'products'=>$fs_products,
             'mail_admin_send'=> $mail_admin_send,
             'redirect'=>get_permalink(fs_option('page_success'))
-        );
+            );
         echo json_encode($result);
 
         unset($_SESSION['cart']);
@@ -254,7 +270,7 @@ class FS_Ajax_Class
             echo json_encode(array(
                 'body'=>$res,
                 'type'=>'success'
-            ));
+                ));
         }
         exit;
     }
@@ -278,7 +294,7 @@ class FS_Ajax_Class
             echo json_encode(array(
                 'body'=>$res,
                 'type'=>'success'
-            ));
+                ));
         }
         exit;
     }
@@ -292,7 +308,7 @@ class FS_Ajax_Class
             's'=>$search,
             'post_type'=>'product',
             'posts_per_page'=>40
-        );
+            );
         $query=query_posts($args);
         if ($query){
             get_template_part('fast-shop/livesearch/livesearch');
@@ -307,9 +323,9 @@ class FS_Ajax_Class
                         'key'     =>$config->meta['product_article'],
                         'value'   => $search,
                         'compare' => 'LIKE'
+                        )
                     )
-                )
-            );
+                );
             query_posts($args2);
             get_template_part('fast-shop/livesearch/livesearch');
             wp_reset_query();

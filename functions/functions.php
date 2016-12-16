@@ -65,10 +65,11 @@ function fs_lightslider($post_id=0, $args=array())
 
 //Получает текущую цену с учётом скидки
 /**
- * @param string $post_id
- * @return int|mixed
+ * @param int $post_id - id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
+ * @param boolean $filter - включить или отключить фильтры типа add_filter дя получения базовой цены (по умолчанию включены)
+ * @return float $price - значение цены
  */
-function fs_get_price($post_id='')
+function fs_get_price($post_id=0,$filter=true)
 {
     $config=new \FS\FS_Config();//класс основных настроек плагина
 
@@ -85,15 +86,15 @@ function fs_get_price($post_id='')
     $action_base=get_post_meta( $post_id,$config->meta['discount'], true );//размер скидки общий для всех товаров
 
     // создаём возможность модифицировать базовую цену через фильтры
-    $base_price=apply_filters('fs_base_price',$base_price,$post_id);
+    if ($filter) $base_price=apply_filters('fs_base_price',$base_price,$post_id);
     $price=empty($base_price) ? 0 : (float)$base_price;
 
     // создаём возможность модифицировать акционную цену через фильтры
-    $action_price=apply_filters('fs_action_price',$action_price,$post_id);
+    if ($filter) $action_price=apply_filters('fs_action_price',$action_price,$post_id);
     $action_price=empty($action_price) ? 0 :(float)$action_price;
 
     //получаем размер скидки из общих настроек (в процентах или в фиксированной сумме)
-    $action_base=apply_filters('fs_action_base',$action_base,$post_id);
+    if ($filter) $action_base=apply_filters('fs_action_base',$action_base,$post_id);
     $action_base=empty($action_base)?0:(float)$action_base;
 
     //если поле акционной цены заполнено иначе ...
@@ -176,10 +177,11 @@ function fs_the_wholesale_price(int $post_id=0,$wrap="<span>%s</span>")
  * @param string $post_id  - id товара
  * @return float price      - значение цены
  */
-function fs_get_wholesale_price(int $post_id=0){
-    global $post;
+function fs_get_wholesale_price($post_id=0){
     $config=new \FS\FS_Config();
-    $post_id=$post_id==0 ? $post->ID : $post_id;
+    global $post;
+    $post_id=empty($post_id) ? $post->ID : (int)$post_id;
+   
     $old_price=get_post_meta($post_id,$config->meta['wholesale_price'],1);
     $new_price=get_post_meta($post_id,$config->meta['wholesale_price_action'],1);
     $price=!empty($new_price) ? (float) $new_price : (float) $old_price;
@@ -213,7 +215,29 @@ function fs_total_amount($products=array(),$show=true,$wrap='%s <span>%s</span>'
     }
 }
 
-
+/**
+ * Получает общую сумму всех продуктов в корзине
+ * @param  boolean $show       показывать (по умолчанию) или возвращать
+ * @param  string  $cur_before html перед символом валюты
+ * @param  string  $cur_after  html после символа валюты
+ * @return возвращает или показывает общую сумму с валютой
+ */
+function fs_total_amount_filtering($products=array(),$show=true,$wrap='%s <span>%s</span>',$filter=false)
+{
+    $all_price=array();
+    $products=!empty($_SESSION['cart'])?$_SESSION['cart']:$products;
+    foreach ($products as $key => $count){
+        $all_price[$key]=$count['count']*fs_get_price($key,$filter);
+    }
+    $price=array_sum($all_price);
+    $price=apply_filters('fs_price_format',$price);
+    $price=sprintf($wrap,$price,fs_currency());
+    if ($show==false) {
+        return $price;
+    } else {
+        echo $price;
+    }
+}
 
 /**
  * выводит или отдаёт общую сумму всех товаров по оптовой цене
@@ -737,8 +761,7 @@ function fs_frontend_template($template,$args=array()){
     }else{
         echo 'файл шаблона '.$template.' не найден в функции '.__FUNCTION__;
     }
-    $template=ob_get_contents();
-    if (ob_get_length()){ ob_end_clean();  ob_end_flush(); }
+    $template=ob_get_clean();
     return apply_filters('fs_frontend_template',$template);
 }
 

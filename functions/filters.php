@@ -2,8 +2,8 @@
 //фильтр преобразует необработанную цену в формат денег
 add_filter('fs_price_format','fs_price_format',10,2);
 function  fs_price_format($price,$delimiter=''){
-    $cents=fs_option('price_cents')==1?2:0;
-    $delimiter=!empty($delimiter)?$delimiter:fs_option('currency_delimiter','.');
+	$cents=fs_option('price_cents')==1?2:0;
+	$delimiter=!empty($delimiter)?$delimiter:fs_option('currency_delimiter','.');
 	$price=number_format($price,$cents,$delimiter,' ');
 	return $price;
 }
@@ -53,4 +53,27 @@ function add_views_sortable_column($sortable_columns){
 	$sortable_columns['fs_price'] = 'fs_price_fs_price';
 
 	return $sortable_columns;
+}
+
+// позволяет изменить листинг товаров в заказе
+add_filter('fs_order_product_list','fs_order_product_list',10,2);
+function fs_order_product_list($products,$fs_products)
+{
+	if ($fs_products) {
+		foreach ($fs_products as $id =>$product) {
+			$products.=fs_frontend_template('order/products-list',array('id'=>$id,'product'=>$product));
+		}
+	}
+	return $products;
+}
+// позволяет изменить листинг товаров в заказе
+add_filter('fs_order_product_list_admin','fs_order_product_list_admin',10,2);
+function fs_order_product_list_admin($products,$fs_products)
+{
+	if ($fs_products) {
+		foreach ($fs_products as $id =>$product) {
+			$products.=fs_frontend_template('order/products-list',array('id'=>$id,'product'=>$product));
+		}
+	}
+	return $products;
 }
