@@ -90,7 +90,10 @@ class FS_Export_Class
     $offer->appendChild($currencyId); 
     /*yml_catalog->shop->offers->offer->name*/
     $name=$xml->createElement('name',get_the_title($post->ID));
-    $offer->appendChild($name);  
+    $offer->appendChild($name);   
+    /*yml_catalog->shop->offers->offer->vendorCode*/
+    $vendorCode=$xml->createElement('vendorCode',fs_product_code($post->ID));
+    $offer->appendChild($vendorCode);  
     /*yml_catalog->shop->offers->offer->description*/
     $description=$xml->createElement('description',sanitize_text_field($post->post_content));
     $offer->appendChild($description); 
