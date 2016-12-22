@@ -73,9 +73,11 @@ class FS_Export_Class
  $posts=get_posts(array('post_type'=>'product','posts_per_page'=>-1));
  if ($posts) {
   foreach ($posts as $key => $post) { setup_postdata($post);
+    $offer_id=apply_filters('fs_product_id',$post->ID);
     /*yml_catalog->shop->offers->offer*/
     $offer=$xml->createElement('offer');
-    $offer->setAttribute("id",$post->ID);
+
+    $offer->setAttribute("id",$offer_id);
     $offer->setAttribute("available",'true');
     $offers->appendChild($offer);
     /*yml_catalog->shop->offers->offer->url*/
