@@ -208,6 +208,7 @@ class FS_Ajax_Class
 
         //Отсылаем письмо с данными заказа заказчику
         $headers[] = 'Content-type: text/html; charset=utf-8';
+        $headers[] = 'From: '.fs_option('name_sender',get_bloginfo('name')).' <'.fs_option('email_sender',get_bloginfo('admin_email')).'>';
         $customer_mail_header=fs_option('customer_mail_header','Заказ товара на сайте «'.get_bloginfo('name').'»');
         $mail_user_send=wp_mail($mail_client,$customer_mail_header,$user_message, $headers );
 

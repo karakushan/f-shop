@@ -37,6 +37,14 @@
 
                 </p>
                 <p>
+                    <label for="email_sender">Email отправителя писем (используется в заголовке письма, должен совпадать с доменом сайта)</label><br>
+                    <input type="email" name="fs_option[email_sender]"  id="email_sender" value="<?php echo fs_option('email_sender',get_bloginfo('admin_email')) ?>">
+                </p>
+                <p>
+                    <label for="name_sender">Название отправителя писем (спользуется в заголовке письма, 2-3 слова не больше, на латиннице)</label><br>
+                    <input type="text" name="fs_option[name_sender]"  id="name_sender" value="<?php echo fs_option('name_sender',get_bloginfo('name')) ?>">
+                </p>
+                <p>
                     <label for="">Список переменных для использования в письмах</label><br>
                     <code>
                         %fs_name% - Имя заказчика,
