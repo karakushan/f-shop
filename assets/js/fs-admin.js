@@ -123,13 +123,14 @@ function btn_view(e) {
 jQuery(document).ready(function($) {
     // вкладки на странице настроек товара
     $( "#fs-tabs" ).tabs( {
-     active   : $.cookie('postactivetab'),
-     activate : function( event, ui ){
+       active   : $.cookie('postactivetab'),
+       activate : function( event, ui ){
         $.cookie( 'postactivetab', ui.newTab.index(),{
             expires : 10
         });
     }
-});
+}).addClass( "ui-tabs-vertical ui-helper-clearfix" );
+    $( "#fs-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
     // вкладки на странице настроек магазина
     $( "#fs-options-tabs" ).tabs({
       active   : $.cookie('activetab'),
@@ -161,9 +162,9 @@ jQuery(document).ready(function($) {
                     data: {action:$(this).data('fs-action')},
                 })
                 .done(function(result) {
-                 result=jQuery.parseJSON(result);
-                 thisButton.find('img').fadeOut(600).remove();
-                 if (result.status==true) {
+                   result=jQuery.parseJSON(result);
+                   thisButton.find('img').fadeOut(600).remove();
+                   if (result.status==true) {
                     thisButton.html('<div class="success">'+result.message+'</div>'+buttonContent);
                     if (result.action=='refresh') {
                         setTimeout(function(){ location.reload();  },2000);

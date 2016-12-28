@@ -10,7 +10,7 @@
             <div class="mmf-image" >
                 <img src="<?php echo $src ?>" alt="" width="164" height="133" class="image-preview">
                 <input type="hidden" name="fs_galery[]" value="<?php echo $mft[0][$i] ?>" class="img-url">
-                <button type="button" class="upload-mft"><?php _e( 'Download', 'fast-shop' ) ?></button>
+                <button type="button" class="upload-mft"><?php _e( 'Choose', 'fast-shop' ) ?></button>
                 <button type="button" class="remove-tr" onclick="btn_view(this)"><?php _e( 'to remove', 'fast-shop' ) ?></button>
             </div>
             <?php

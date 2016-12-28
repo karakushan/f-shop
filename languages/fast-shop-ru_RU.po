@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-11 18:47+0000\n"
-"PO-Revision-Date: 2016-12-11 18:47+0000\n"
-"Last-Translator: grand-admin <info@grand-present.com>\n"
+"POT-Creation-Date: 2016-12-28 14:49+0000\n"
+"PO-Revision-Date: 2016-12-28 14:49+0000\n"
+"Last-Translator: cdma@admin <cdma@admin.com.ua>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -25,11 +25,15 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Loco-Target-Locale: ru_RU"
 
-#: templates/back-end/orders.php:43
-msgid "At the current time you have no order."
-msgstr "В текущее время у вас нет ни одного заказа."
+#: lib/FS_Config.php:62
+msgid "Other"
+msgstr "Другое"
 
-#: templates/back-end/metabox/tab-0.php:29
+#: templates/back-end/metabox/tab-2.php:13
+msgid "Choose"
+msgstr "Выбрать"
+
+#: templates/back-end/metabox/tab-3.php:6
 msgid "Запас товара на складе"
 msgstr ""
 
@@ -49,31 +53,27 @@ msgstr ""
 msgid "http://profglobal.ru/"
 msgstr ""
 
-#: functions/functions.php:267
+#: functions/functions.php:351
 msgid "Remove items"
 msgstr "Удалить позицию"
 
-#: functions/functions.php:349
+#: functions/functions.php:433
 msgid "Add to cart"
 msgstr "В корзину"
 
-#: lib/FS_Config.php:47
+#: lib/FS_Config.php:48
 msgid "Prices"
 msgstr "Цены"
 
-#: lib/FS_Config.php:54 templates/back-end/settings.php:12
+#: lib/FS_Config.php:55 templates/back-end/settings.php:12
 msgid "Gallery"
 msgstr "Галерея"
 
-#: lib/FS_Config.php:61
-msgid "Discounts"
-msgstr "Скидки и акции"
-
-#: lib/FS_Export_Class.php:146
+#: lib/FS_Export_Class.php:151
 msgid "Update/create database was successful!"
 msgstr "Обновление создание базы закончилось успехом!"
 
-#: lib/FS_Export_Class.php:150
+#: lib/FS_Export_Class.php:155
 msgid "An error occurred during the process of database updates!"
 msgstr "Произошла непредвиденная ошибка в процессе обновления/создания базы!"
 
@@ -97,7 +97,7 @@ msgstr "Добавить товар"
 msgid "Edit product"
 msgstr "Изменить товар"
 
-#: lib/FS_Post_Type.php:131
+#: lib/FS_Post_Type.php:133
 msgid "Product settings"
 msgstr "Настройки товара"
 
@@ -143,17 +143,21 @@ msgstr "Добавление способа доставки"
 msgid "Not found shipping methods"
 msgstr "Нет ни одного способа доставки"
 
-#: templates/back-end/orders.php:36
+#: templates/back-end/orders.php:32
 msgid "Total"
 msgstr "Всего"
 
-#: templates/back-end/orders.php:37
+#: templates/back-end/orders.php:33
 #, php-format
 msgid "1 order"
 msgid_plural "%s orders"
 msgstr[0] "1 заказ"
 msgstr[1] "%s заказа"
 msgstr[2] "%s заказов"
+
+#: templates/back-end/orders.php:38
+msgid "At the current time you have no order."
+msgstr "В текущее время у вас нет ни одного заказа."
 
 #: templates/back-end/settings.php:6
 msgid "General"
@@ -183,27 +187,19 @@ msgstr "Сообщения"
 msgid "Export"
 msgstr "Экспорт"
 
-#: templates/back-end/settings.php:201
+#: templates/back-end/settings.php:209
 msgid "Settings export and import of goods"
 msgstr "Настройки экспорта и импорта товаров"
 
-#: templates/back-end/metabox/tab-0.php:2
+#: templates/back-end/metabox/tab-0.php:3
 msgid "Price"
 msgstr "Цена"
 
-#: templates/back-end/metabox/tab-0.php:7
-msgid "Article"
-msgstr "Артикул"
-
-#: templates/back-end/metabox/tab-0.php:12
+#: templates/back-end/metabox/tab-0.php:9
 msgid "Promotional price"
 msgstr "Акционая цена"
 
-#: templates/back-end/metabox/tab-0.php:17
-msgid "Wholesale price"
-msgstr "Оптовая цена"
-
-#: templates/back-end/metabox/tab-0.php:23
+#: templates/back-end/metabox/tab-0.php:14
 msgid "The displayed price"
 msgstr "Отображаемая цена"
 
@@ -211,21 +207,13 @@ msgstr "Отображаемая цена"
 msgid "add image"
 msgstr "добавить изображение"
 
-#: templates/back-end/metabox/tab-2.php:13
-msgid "Download"
-msgstr "Скачать"
-
 #: templates/back-end/metabox/tab-2.php:14
 msgid "to remove"
 msgstr "удалить"
 
 #: templates/back-end/metabox/tab-3.php:2
-msgid "Enable/disable label stock on the website"
-msgstr "Включить\\выключить метку акции на сайте"
-
-#: templates/back-end/metabox/tab-3.php:10
-msgid "The link to the promotions page"
-msgstr "Ссылка на страницу акции"
+msgid "Article"
+msgstr "Артикул"
 
 #: templates/front-end/auth/login.php:6 templates/front-end/auth/login.php:7
 msgid "Email or login"

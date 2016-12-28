@@ -55,7 +55,7 @@ class FS_Post_Type
                     'not_found_in_trash' => '',
                     'parent_item_colon'  => '',
                     'menu_name'          =>__( 'Products', 'fast-shop' ),
-                ),
+                    ),
                 'public' => true,
                 'show_in_menu' =>true,
                 'publicly_queryable' => true,
@@ -74,9 +74,9 @@ class FS_Post_Type
 
                 'supports' => array(
                     'title', 'editor', 'excerpt','thumbnail','comments'
-                ),
-            )
-        );
+                    ),
+                )
+            );
     }
 
     /**
@@ -91,21 +91,23 @@ class FS_Post_Type
         {
             foreach(@$this->config->meta as $field_name)
             {
-                // Update the post's meta field
-                switch ($field_name) {
-                    case 'fs_price':
-                        $price=(float)str_replace(array(','),array('.'), $_POST[$field_name]);
+                if(!isset($_POST[$field_name])) continue;
+                $field_value=$_POST[$field_name];
+                if (empty($field_value)) {
+                    // удалем поле если значение пустое
+                    delete_post_meta($post_id, $field_name);
+                }else{
+                    switch ($field_name) {
+                        case 'fs_price':
+                        $price=(float)str_replace(array(','),array('.'),$field_value);
                         update_post_meta($post_id, $field_name,$price);
                         break;
-
-                    default:
-                        if (!empty($_POST[$field_name])){
-                            update_post_meta($post_id, $field_name, $_POST[$field_name]);
-                        }else{
-                            delete_post_meta($post_id, $field_name);
-                        }
+                        default:
+                        update_post_meta($post_id, $field_name,$field_value);
                         break;
+                    }
                 }
+
             }
         }
         // if($_POST['post_type'] == self::POST_TYPE && current_user_can('edit_post', $post_id))
@@ -127,11 +129,11 @@ class FS_Post_Type
     {
         // Add this metabox to every selected post
         add_meta_box(
-            sprintf('wp_plugin_template_%s_section', self::POST_TYPE),
-           __('Product settings','fast-shop') ,
+            sprintf('fast_shop_%s_metabox', self::POST_TYPE),
+            __('Product settings','fast-shop') ,
             array(&$this, 'add_inner_meta_boxes'),
             self::POST_TYPE
-        );
+            );
 
         // Add this metabox to every selected post
 
@@ -155,7 +157,7 @@ class FS_Post_Type
 
                 $template_default = FS_PLUGIN_PATH.'templates/back-end/metabox/tab-'.$key_body.'.php';
                 $template_file=empty($tab_body['template']) ? $template_default : $tab_body['template'];
-               
+
 
                 echo '<div id="tab-'.$key_body.'">';
                 if (empty($tab_body['body'])){

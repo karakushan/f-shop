@@ -156,9 +156,6 @@ input[name="count-ch"] {
 .fs-metabox td {
     padding: 2px 8px;
 }
-.fs-metabox label {
-    font-weight: bold;
-}
 li.fs-attr {
     margin-bottom: 6px;
     display: block;

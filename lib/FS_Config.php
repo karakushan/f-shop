@@ -59,8 +59,8 @@ class FS_Config
                 ),
             '3'=>
                 array(
-                    'title'=>__('Discounts','fast-shop'),
-                    'on'=>true,
+                    'title'=>__('Other','fast-shop'),
+                    'on'=>false,
                     'body'=>'',
                     'template'=>''
                 ),
@@ -76,7 +76,7 @@ class FS_Config
             'wholesale_price'=>'fs_wholesale_price', //цена для оптовиков
             'wholesale_price_action'=>'fs_wholesale_price_act', //цена для оптовиков акционная
             'discount'=>'fs_discount',//размер скидки
-            'product_article'=>'fs_articul',//акртикул
+            'product_article'=>'fs_articul',//артикул
             'availability'=>'fs_availability',//наличие на складе
             'remaining_amount'=>'fs_remaining_amount',//запас товаров на складе
             'action'=>'fs_actions',//включить  или выключить акцию

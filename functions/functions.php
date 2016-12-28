@@ -862,3 +862,17 @@ function fs_product_code(int $product_id=0){
     $articul=get_post_meta($product_id,$config->meta['product_article'],1);
     return  $articul;
 }
+
+/**
+ * возвращает количество или запас товаров на складе (если значение пустое выводится 1)
+ * @param  int|integer $product_id - id товара (записи wordpress)
+ * @return int|integer                  запас товаров на складе
+ */
+function fs_remaining_amount(int $product_id=0){
+    global $post;
+    $config=new FS\FS_Config();
+    $meta_field=$config->meta['remaining_amount'];
+    $amount=get_post_meta($post->ID,$meta_field, true);
+    $amount=($amount==='') ? '' : (int)$amount;
+    return $amount; 
+}
