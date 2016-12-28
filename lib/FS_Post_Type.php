@@ -93,20 +93,17 @@ class FS_Post_Type
             {
                 if(!isset($_POST[$field_name])) continue;
                 $field_value=$_POST[$field_name];
-                if (empty($field_value)) {
-                    // удалем поле если значение пустое
-                    delete_post_meta($post_id, $field_name);
-                }else{
-                    switch ($field_name) {
-                        case 'fs_price':
-                        $price=(float)str_replace(array(','),array('.'),$field_value);
-                        update_post_meta($post_id, $field_name,$price);
-                        break;
-                        default:
-                        update_post_meta($post_id, $field_name,$field_value);
-                        break;
-                    }
+                
+                switch ($field_name) {
+                    case 'fs_price':
+                    $price=(float)str_replace(array(','),array('.'),$field_value);
+                    update_post_meta($post_id, $field_name,$price);
+                    break;
+                    default:
+                    update_post_meta($post_id, $field_name,$field_value);
+                    break;
                 }
+                
 
             }
         }

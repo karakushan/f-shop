@@ -642,7 +642,7 @@ td.fs_price.column-fs_price span span
 }
 #fast_shop_product_metabox .fs-metabox {
     border: 1px solid #ddd;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.84);
     color: #333;
     padding: 7px;
     box-sizing: border-box;
