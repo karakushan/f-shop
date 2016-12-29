@@ -122,9 +122,29 @@ button.remove-tr {
 .send_ok {
     display: none;
     position: absolute;
-    left: 116px;
-    top: 2px;
-    color: #208e2b;
+    left: -160px;
+    top: 1px;
+    color: #ffffff;
+    width: 160px;
+    background: rgba(0, 135, 3, 0.93);
+    font-size: 14px;
+    height: 39px;
+    border: 1px solid rgb(60, 118, 61);
+    text-align: center;
+    margin: 0px 46px 0 -8px;
+    box-shadow: 1px 2px 0px 0px rgb(4, 53, 5);
+    line-height: 40px;
+
+}
+.send_ok:after {
+    content: "";
+    position: absolute;
+    color: #3c763d;
+    right: -16px;
+    top: 11px;
+    font-size: 18px;
+    border: 8px solid transparent;
+    border-left: 8px solid;
 }
 .count_wrap {
     position: relative;

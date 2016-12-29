@@ -595,10 +595,10 @@ td.fs_price.column-fs_price span span
 }
 .fs-metabox.ui-tabs-vertical .ui-tabs-nav
 {
-    float:left;
-
-    width:190px;
-    padding:.2em .1em .2em .2em;
+    float: left;
+    width: 190px;
+    padding: .2em .1em .2em .2em;
+    background: none;
 }
 .fs-metabox.ui-tabs-vertical .ui-tabs-nav li
 {
@@ -629,6 +629,7 @@ td.fs_price.column-fs_price span span
     text-transform:uppercase;
 
     color:#32373c;
+    padding: 9px 12px;
 }
 .fs-metabox.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active
 {
@@ -647,6 +648,7 @@ td.fs_price.column-fs_price span span
     padding: 7px;
     box-sizing: border-box;
     border-radius: 0;
+    width: auto;
 }
 .fs-metabox input:focus
 {

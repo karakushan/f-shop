@@ -422,7 +422,7 @@ function fs_base_price($post_id=0,$echo=true, $wrap='<span>%s</span>')
  * @param  string $send_icon [html код иконки успешного добавления в корзину]
  * @param string $json
  */
-function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon='',$json='')
+function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon='<i class="fa fa-check" aria-hidden="true"></i>',$json='')
 {
     global $post;
     $post_id=empty($post_id) ? $post->ID : $post_id;
@@ -442,7 +442,7 @@ function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon=
 
     $json=json_encode($js);
 
-    echo "<button data-fs-action=\"add-to-cart\" data-product-id=\"$post_id\" data-product-name=\"".get_the_title($post_id)."\" data-json='".$json."' $attr id=\"fs-atc-$post_id\">$label <div class=\"send_ok\">$send_icon</div><span class=\"fs-preloader\">$preloader</span></button> ";
+    echo "<button data-fs-action=\"add-to-cart\" data-product-id=\"$post_id\" data-product-name=\"".get_the_title($post_id)."\" data-json='".$json."' $attr id=\"fs-atc-$post_id\">$label <span class=\"send_ok\">$send_icon</span><span class=\"fs-preloader\">$preloader</span></button> ";
 }
 
 //Отображает кнопку сабмита формы заказа

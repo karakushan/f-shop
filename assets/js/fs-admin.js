@@ -130,6 +130,7 @@ jQuery(document).ready(function($) {
         });
     }
 }).addClass( "ui-tabs-vertical ui-helper-clearfix" );
+    
     $( "#fs-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
     // вкладки на странице настроек магазина
     $( "#fs-options-tabs" ).tabs({

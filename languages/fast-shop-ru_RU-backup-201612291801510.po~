@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-11 18:47+0000\n"
-"PO-Revision-Date: 2016-12-11 18:47+0000\n"
-"Last-Translator: grand-admin <info@grand-present.com>\n"
+"POT-Creation-Date: 2016-12-29 18:00+0000\n"
+"PO-Revision-Date: 2016-12-29 18:00+0000\n"
+"Last-Translator: cdma@admin <cdma@admin.com.ua>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -25,11 +25,15 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Loco-Target-Locale: ru_RU"
 
-#: templates/back-end/orders.php:43
-msgid "At the current time you have no order."
-msgstr "В текущее время у вас нет ни одного заказа."
+#: functions/attributes.php:154
+msgid "In stock"
+msgstr "В наличии"
 
-#: templates/back-end/metabox/tab-0.php:29
+#: functions/attributes.php:155
+msgid "Not available"
+msgstr "Нет в наличии"
+
+#: templates/back-end/metabox/tab-3.php:6
 msgid "Запас товара на складе"
 msgstr ""
 
@@ -49,31 +53,56 @@ msgstr ""
 msgid "http://profglobal.ru/"
 msgstr ""
 
-#: functions/functions.php:267
+#: functions/actions.php:37 functions/actions.php:58
+#: templates/front-end/order/order-form.php:43
+msgid "Choose a shipping method"
+msgstr "Выберите способ доставки"
+
+#: functions/functions.php:351
 msgid "Remove items"
 msgstr "Удалить позицию"
 
-#: functions/functions.php:349
+#: functions/functions.php:433
 msgid "Add to cart"
 msgstr "В корзину"
 
-#: lib/FS_Config.php:47
+#: lib/FS_Config.php:48
+msgid "Product categories"
+msgstr "Категории товара"
+
+#: lib/FS_Config.php:53
+msgid "Payment methods"
+msgstr "Способы оплаты"
+
+#: lib/FS_Config.php:57
+msgid "Delivery methods"
+msgstr "Способы доставки"
+
+#: lib/FS_Config.php:61
+msgid "Product attributes"
+msgstr "Свойства товаров"
+
+#: lib/FS_Config.php:65
+msgid "Manufacturers"
+msgstr "Производители"
+
+#: lib/FS_Config.php:75
 msgid "Prices"
 msgstr "Цены"
 
-#: lib/FS_Config.php:54 templates/back-end/settings.php:12
+#: lib/FS_Config.php:82 templates/back-end/settings.php:12
 msgid "Gallery"
 msgstr "Галерея"
 
-#: lib/FS_Config.php:61
-msgid "Discounts"
-msgstr "Скидки и акции"
+#: lib/FS_Config.php:89
+msgid "Other"
+msgstr "Другое"
 
-#: lib/FS_Export_Class.php:146
+#: lib/FS_Export_Class.php:151
 msgid "Update/create database was successful!"
 msgstr "Обновление создание базы закончилось успехом!"
 
-#: lib/FS_Export_Class.php:150
+#: lib/FS_Export_Class.php:155
 msgid "An error occurred during the process of database updates!"
 msgstr "Произошла непредвиденная ошибка в процессе обновления/создания базы!"
 
@@ -97,7 +126,7 @@ msgstr "Добавить товар"
 msgid "Edit product"
 msgstr "Изменить товар"
 
-#: lib/FS_Post_Type.php:131
+#: lib/FS_Post_Type.php:130
 msgid "Product settings"
 msgstr "Настройки товара"
 
@@ -111,49 +140,21 @@ msgstr "Заказы"
 msgid "Store settings"
 msgstr "Настройки магазина"
 
-#: lib/FS_Taxonomies_Class.php:20
-msgid "Product categories"
-msgstr "Категории товара"
-
-#: lib/FS_Taxonomies_Class.php:46
-msgid "Product attributes"
-msgstr "Свойства товаров"
-
-#: lib/FS_Taxonomies_Class.php:79
-msgid "Payment methods"
-msgstr "Способы оплаты"
-
-#: lib/FS_Taxonomies_Class.php:81
-msgid "To add a payment method"
-msgstr "Добавление способа оплаты"
-
-#: lib/FS_Taxonomies_Class.php:82
-msgid "There are no available payment methods"
-msgstr "Нет ни одного способа оплаты"
-
-#: lib/FS_Taxonomies_Class.php:105
-msgid "Delivery methods"
-msgstr "Способы доставки"
-
-#: lib/FS_Taxonomies_Class.php:107
-msgid "To add a shipping method"
-msgstr "Добавление способа доставки"
-
-#: lib/FS_Taxonomies_Class.php:108
-msgid "Not found shipping methods"
-msgstr "Нет ни одного способа доставки"
-
-#: templates/back-end/orders.php:36
+#: templates/back-end/orders.php:32
 msgid "Total"
 msgstr "Всего"
 
-#: templates/back-end/orders.php:37
+#: templates/back-end/orders.php:33
 #, php-format
 msgid "1 order"
 msgid_plural "%s orders"
 msgstr[0] "1 заказ"
 msgstr[1] "%s заказа"
 msgstr[2] "%s заказов"
+
+#: templates/back-end/orders.php:38
+msgid "At the current time you have no order."
+msgstr "В текущее время у вас нет ни одного заказа."
 
 #: templates/back-end/settings.php:6
 msgid "General"
@@ -183,27 +184,19 @@ msgstr "Сообщения"
 msgid "Export"
 msgstr "Экспорт"
 
-#: templates/back-end/settings.php:201
+#: templates/back-end/settings.php:209
 msgid "Settings export and import of goods"
 msgstr "Настройки экспорта и импорта товаров"
 
-#: templates/back-end/metabox/tab-0.php:2
+#: templates/back-end/metabox/tab-0.php:3
 msgid "Price"
 msgstr "Цена"
 
-#: templates/back-end/metabox/tab-0.php:7
-msgid "Article"
-msgstr "Артикул"
-
-#: templates/back-end/metabox/tab-0.php:12
+#: templates/back-end/metabox/tab-0.php:9
 msgid "Promotional price"
 msgstr "Акционая цена"
 
-#: templates/back-end/metabox/tab-0.php:17
-msgid "Wholesale price"
-msgstr "Оптовая цена"
-
-#: templates/back-end/metabox/tab-0.php:23
+#: templates/back-end/metabox/tab-0.php:14
 msgid "The displayed price"
 msgstr "Отображаемая цена"
 
@@ -212,20 +205,16 @@ msgid "add image"
 msgstr "добавить изображение"
 
 #: templates/back-end/metabox/tab-2.php:13
-msgid "Download"
-msgstr "Скачать"
+msgid "Choose"
+msgstr "Выбрать"
 
 #: templates/back-end/metabox/tab-2.php:14
 msgid "to remove"
 msgstr "удалить"
 
 #: templates/back-end/metabox/tab-3.php:2
-msgid "Enable/disable label stock on the website"
-msgstr "Включить\\выключить метку акции на сайте"
-
-#: templates/back-end/metabox/tab-3.php:10
-msgid "The link to the promotions page"
-msgstr "Ссылка на страницу акции"
+msgid "Article"
+msgstr "Артикул"
 
 #: templates/front-end/auth/login.php:6 templates/front-end/auth/login.php:7
 msgid "Email or login"
@@ -324,10 +313,6 @@ msgstr "пароль и повтор пароля должны совпадат�
 #: templates/front-end/auth/register.php:70
 msgid "Send"
 msgstr "Отправить"
-
-#: templates/front-end/order/order-form.php:43
-msgid "Choose a shipping method"
-msgstr "Выберите способ доставки"
 
 #: templates/front-end/order/order-form.php:58
 msgid "Select a payment method"

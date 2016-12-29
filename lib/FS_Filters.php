@@ -126,18 +126,45 @@ class FS_Filters
                 case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
                 $orderby[]='title';
                 $order='DESC';
+                break; 
+                case 'date_desc': 
+                $orderby[]='date';
+                $order='DESC';
+                break;
+                case 'date_asc': 
+                $orderby[]='date';
+                $order='ASC';
                 break;
                 case 'field_action': //сортируем по наличию акции
                 $meta_query['action_price']=array(
                     'key'     => $this->conf->meta['action_price'],
-                    'compare' => '>',
-                    'value'=>0,
-                    'type'    => 'DECIMAL',
+                    'compare' => '!=',
+                    'value'=>''
                     );
                 break;
                 
 
             }
+        }
+
+        if (!empty($_REQUEST['aviable'])) {
+            switch ($_REQUEST['aviable']) {
+                case 'aviable':
+                $meta_query['aviable']=array(
+                    'key'     => $this->conf->meta['remaining_amount'],
+                    'compare' => '!=',
+                    'value'=>'0'
+                    );
+                break; 
+                case 'not_available':
+                $meta_query['aviable']=array(
+                    'key'     => $this->conf->meta['remaining_amount'],
+                    'compare' => '==',
+                    'value'=>'0'
+                    );
+                break;
+            }
+
         }
 
         //Фильтруем по свойствам (атрибутам)
@@ -152,11 +179,28 @@ class FS_Filters
             $query->query_vars['tax_query'] = $query->tax_query->queries;
         }
 
-        $query->set('posts_per_page',$per_page);
-        $query->set('meta_query',$meta_query);
-        $query->set('orderby',implode(' ',$orderby));
-        $query->set( 'order',$order);
-        return $query;
+        //Фильтруем по производителям 
+        if (!empty($_REQUEST['tax-manufacturers'])){
+            $manufacturers=array();
+            if (is_array($_REQUEST['tax-manufacturers'])) {
+             $manufacturers=array_values($_REQUEST['tax-manufacturers']);
+         }else{
+             $manufacturers[]=(int) $_REQUEST['tax-manufacturers'];
+
+         }
+         $tax_query[] = array(
+            'taxonomy' => 'manufacturers',
+            'field' => 'id',
+            'terms' =>$manufacturers,
+            );
+     }
+
+     $query->set('posts_per_page',$per_page);
+     $query->set('meta_query',$meta_query);
+     $query->set('tax_query',$tax_query);
+     $query->set('orderby',implode(' ',$orderby));
+     $query->set( 'order',$order);
+     return $query;
     }//end filter_curr_product()
 
 

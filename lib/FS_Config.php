@@ -14,6 +14,7 @@ class FS_Config
     public $meta;
     public $options;
     public $tabs;
+    public $taxonomies;
 
     /**
      * FS_Config constructor.
@@ -38,33 +39,59 @@ class FS_Config
                 '1'=>'в ожидании оплаты',
                 '2'=>'оплачен',
                 '3'=>'отменён'
-            )
-        );
+                )
+            );
+
+        // Список зарегистрирвоанных служебных таксономий
+        $taxonomies=array(
+            'catalog'=>array(
+                'label'=>__( 'Product categories', 'fast-shop' ),
+                'metabox'=>null
+                )
+            ,
+            'fs-payment-methods'=>array(
+                'label'=>__( 'Payment methods', 'fast-shop' ),
+                'metabox'=>false
+                ),
+            'fs-delivery-methods'=>array(
+                'label'=>__( 'Delivery methods', 'fast-shop' ),
+                'metabox'=>false
+                ),
+            'product-attributes'=>array(
+                'label'=>__( 'Product attributes', 'fast-shop' ),
+                'metabox'=>null
+                ),
+            'manufacturers'=>array(
+                'label'=>__( 'Manufacturers', 'fast-shop' ),
+                'metabox'=>null
+                )
+            );
+        $this->taxonomies=apply_filters('fs_taxonomies',$taxonomies);
 
         //Табы отображаемые в метабоксе в редактировании товара
         $this->tabs=array(
             '0'=>
-                array(
-                    'title'=>__('Prices','fast-shop'),
-                    'on'=>true,
-                    'body'=>'',
-                    'template'=>''
+            array(
+                'title'=>__('Prices','fast-shop'),
+                'on'=>true,
+                'body'=>'',
+                'template'=>''
                 ),
             '2'=>
-                array(
-                    'title'=>__('Gallery','fast-shop'),
-                    'on'=>true,
-                    'body'=>'',
-                    'template'=>''
+            array(
+                'title'=>__('Gallery','fast-shop'),
+                'on'=>true,
+                'body'=>'',
+                'template'=>''
                 ),
             '3'=>
-                array(
-                    'title'=>__('Other','fast-shop'),
-                    'on'=>false,
-                    'body'=>'',
-                    'template'=>''
+            array(
+                'title'=>__('Other','fast-shop'),
+                'on'=>false,
+                'body'=>'',
+                'template'=>''
                 ),
-        );
+            );
 
         //Массив настроек сайта
         $this->options=get_option('fs_option',array());
@@ -85,7 +112,7 @@ class FS_Config
             'displayed_price'=>'fs_displayed_price',//тображаемая цена
             'attributes'=>'fs_attributes_post',//атрибуты товара
             'gallery'=>'fs_galery',//галерея
-        );
+            );
         $this->meta=apply_filters('fs_post_meta',$meta);
     }
 

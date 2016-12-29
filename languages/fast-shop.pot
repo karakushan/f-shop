@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 14:49+0000\n"
+"POT-Creation-Date: 2016-12-29 18:01+0000\n"
 "POT-Revision-Date: Sat Nov 12 2016 16:11:17 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -23,6 +23,19 @@ msgstr ""
 "esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2"
 
+#: functions/actions.php:37 functions/actions.php:58
+#: templates/front-end/order/order-form.php:43
+msgid "Choose a shipping method"
+msgstr ""
+
+#: functions/attributes.php:154
+msgid "in stock"
+msgstr ""
+
+#: functions/attributes.php:155
+msgid "not available"
+msgstr ""
+
 #: functions/functions.php:351
 msgid "Remove items"
 msgstr ""
@@ -32,14 +45,34 @@ msgid "Add to cart"
 msgstr ""
 
 #: lib/FS_Config.php:48
+msgid "Product categories"
+msgstr ""
+
+#: lib/FS_Config.php:53
+msgid "Payment methods"
+msgstr ""
+
+#: lib/FS_Config.php:57
+msgid "Delivery methods"
+msgstr ""
+
+#: lib/FS_Config.php:61
+msgid "Product attributes"
+msgstr ""
+
+#: lib/FS_Config.php:65
+msgid "Manufacturers"
+msgstr ""
+
+#: lib/FS_Config.php:75
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:55 templates/back-end/settings.php:12
+#: lib/FS_Config.php:82 templates/back-end/settings.php:12
 msgid "Gallery"
 msgstr ""
 
-#: lib/FS_Config.php:62
+#: lib/FS_Config.php:89
 msgid "Other"
 msgstr ""
 
@@ -71,7 +104,7 @@ msgstr ""
 msgid "Edit product"
 msgstr ""
 
-#: lib/FS_Post_Type.php:133
+#: lib/FS_Post_Type.php:130
 msgid "Product settings"
 msgstr ""
 
@@ -83,38 +116,6 @@ msgstr ""
 #: lib/FS_Settings_Class.php:67 lib/FS_Settings_Class.php:68
 #: templates/back-end/settings.php:2
 msgid "Store settings"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:20
-msgid "Product categories"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:46
-msgid "Product attributes"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:79
-msgid "Payment methods"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:81
-msgid "To add a payment method"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:82
-msgid "There are no available payment methods"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:105
-msgid "Delivery methods"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:107
-msgid "To add a shipping method"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:108
-msgid "Not found shipping methods"
 msgstr ""
 
 #: templates/back-end/orders.php:32
@@ -292,10 +293,6 @@ msgstr ""
 
 #: templates/front-end/auth/register.php:70
 msgid "Send"
-msgstr ""
-
-#: templates/front-end/order/order-form.php:43
-msgid "Choose a shipping method"
 msgstr ""
 
 #: templates/front-end/order/order-form.php:58
