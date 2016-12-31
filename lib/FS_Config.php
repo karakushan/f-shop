@@ -15,7 +15,7 @@ class FS_Config
     public $options;
     public $tabs;
     public $taxonomies;
-    public $prices;
+    public static $prices;
 
     /**
      * FS_Config constructor.
@@ -119,7 +119,7 @@ class FS_Config
         $this->meta=apply_filters('fs_post_meta',$meta);
 
            //  устанавливаем основные типы цен
-        $prices=array(
+        self::$prices=array(
             'price'=>array(
                 'name'=>__( 'The base price', 'fast-shop' ),
                 'meta_key'=>$this->meta['price'],
@@ -136,7 +136,6 @@ class FS_Config
                 'description'=> __( 'example: "from %d %c for a couple" (%d - replaced with the price of %s on currency)', 'fast-shop' )
                 )
             );
-        $this->prices=apply_filters('fs_prices',$prices);
     }
 
 }

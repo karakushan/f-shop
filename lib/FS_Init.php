@@ -15,19 +15,20 @@ class FS_Init
 		add_action( 'admin_enqueue_scripts',array(&$this,'fast_shop_admin_scripts' ) );
 
 		// Инициализация классов Fast Shop
-		new FS_Settings_Class();
-		new FS_Ajax_Class();
-		new FS_Shortcode();
-		new FS_Rating_Class();	
-		new FS_Post_Type();
-		new FS_Post_Types();
-		new FS_Filters();
-		new FS_Cart_Class();
-		new FS_Orders_Class();
-		new FS_Images_Class();
-		new FS_Taxonomies_Class();
-		new FS_Action_Class();
-		new FS_Users_Class();
+		
+		new FS_Settings_Class;
+		new FS_Ajax_Class;
+		new FS_Shortcode;
+		new FS_Rating_Class;	
+		new FS_Post_Type;
+		new FS_Post_Types;
+		new FS_Filters;
+		new FS_Cart_Class;
+		new FS_Orders_Class;
+		new FS_Images_Class;
+		new FS_Taxonomies_Class;
+		new FS_Action_Class;
+		new FS_Users_Class;
 
 
 

@@ -876,3 +876,22 @@ function fs_remaining_amount(int $product_id=0){
     $amount=($amount==='') ? '' : (int)$amount;
     return $amount; 
 }
+
+/**
+ * возвращает все зарегистрированные типы цен
+ * @return array -  массив всех зарегистрированных цен
+ */
+function fs_get_all_prices(){
+    $config_prices=\FS\FS_Config::$prices;
+    $prices=apply_filters('fs_prices',$config_prices);
+    return $prices;
+}
+
+
+function fs_get_type_price(int $product_id=0,$price_type='price'){
+    global $post;
+    $post_id=empty($post_id)?$post->ID:$post_id;
+    $prices=fs_get_all_prices();
+    $price=get_post_meta($post_id,$prices['$price_type']['meta_key'],1);
+    return (float) $price;
+}
