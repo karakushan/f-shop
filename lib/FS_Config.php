@@ -15,6 +15,7 @@ class FS_Config
     public $options;
     public $tabs;
     public $taxonomies;
+    public $prices;
 
     /**
      * FS_Config constructor.
@@ -68,6 +69,8 @@ class FS_Config
             );
         $this->taxonomies=apply_filters('fs_taxonomies',$taxonomies);
 
+
+
         //Табы отображаемые в метабоксе в редактировании товара
         $this->tabs=array(
             '0'=>
@@ -100,6 +103,7 @@ class FS_Config
         //Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
         $meta=array(
             'price'=>'fs_price',//базовая цена
+            'action_price'=>'fs_action_price',//акционная цена, перебивает цену 
             'wholesale_price'=>'fs_wholesale_price', //цена для оптовиков
             'wholesale_price_action'=>'fs_wholesale_price_act', //цена для оптовиков акционная
             'discount'=>'fs_discount',//размер скидки
@@ -107,13 +111,32 @@ class FS_Config
             'availability'=>'fs_availability',//наличие на складе
             'remaining_amount'=>'fs_remaining_amount',//запас товаров на складе
             'action'=>'fs_actions',//включить  или выключить акцию
-            'action_page'=>'fs_page_action',//сылка на страницу описывающую акцию на товар
-            'action_price'=>'fs_action_price',//акционная цена, перебивает цену поставленнуюю полем 'discount'
+            'action_page'=>'fs_page_action',//ссылка на страницу описывающую акцию на товарпоставленнуюю полем 'discount'
             'displayed_price'=>'fs_displayed_price',//тображаемая цена
             'attributes'=>'fs_attributes_post',//атрибуты товара
             'gallery'=>'fs_galery',//галерея
             );
         $this->meta=apply_filters('fs_post_meta',$meta);
+
+           //  устанавливаем основные типы цен
+        $prices=array(
+            'price'=>array(
+                'name'=>__( 'The base price', 'fast-shop' ),
+                'meta_key'=>$this->meta['price'],
+                'description'=> __( 'This is the main type prices', 'fast-shop' )
+                ),
+            'action_price'=>array(
+                'name'=>__( 'Promotional price', 'fast-shop' ),
+                'meta_key'=>$this->meta['action_price'],
+                'description'=> __( 'This type of price interrupts the base price', 'fast-shop' )
+                ),
+            'displayed_price'=>array(
+                'name'=>__( 'The displayed price', 'fast-shop' ),
+                'meta_key'=>$this->meta['displayed_price'],
+                'description'=> __( 'example: "from %d %c for a couple" (%d - replaced with the price of %s on currency)', 'fast-shop' )
+                )
+            );
+        $this->prices=apply_filters('fs_prices',$prices);
     }
 
 }

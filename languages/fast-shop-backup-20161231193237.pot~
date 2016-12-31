@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-29 18:00+0000\n"
+"POT-Creation-Date: 2016-12-31 17:23+0000\n"
 "POT-Revision-Date: Sat Nov 12 2016 16:11:17 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -29,11 +29,11 @@ msgid "Choose a shipping method"
 msgstr ""
 
 #: functions/attributes.php:154
-msgid "In stock"
+msgid "in stock"
 msgstr ""
 
 #: functions/attributes.php:155
-msgid "Not available"
+msgid "not available"
 msgstr ""
 
 #: functions/functions.php:351
@@ -44,36 +44,63 @@ msgstr ""
 msgid "Add to cart"
 msgstr ""
 
-#: lib/FS_Config.php:48
+#: lib/FS_Config.php:49
 msgid "Product categories"
 msgstr ""
 
-#: lib/FS_Config.php:53
+#: lib/FS_Config.php:54
 msgid "Payment methods"
 msgstr ""
 
-#: lib/FS_Config.php:57
+#: lib/FS_Config.php:58
 msgid "Delivery methods"
 msgstr ""
 
-#: lib/FS_Config.php:61
+#: lib/FS_Config.php:62
 msgid "Product attributes"
 msgstr ""
 
-#: lib/FS_Config.php:65
+#: lib/FS_Config.php:66
 msgid "Manufacturers"
 msgstr ""
 
-#: lib/FS_Config.php:75
+#: lib/FS_Config.php:78
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:82 templates/back-end/settings.php:12
+#: lib/FS_Config.php:85 templates/back-end/settings.php:12
 msgid "Gallery"
 msgstr ""
 
-#: lib/FS_Config.php:89
+#: lib/FS_Config.php:92
 msgid "Other"
+msgstr ""
+
+#: lib/FS_Config.php:124
+msgid "The base price"
+msgstr ""
+
+#: lib/FS_Config.php:126
+msgid "This is the main type prices"
+msgstr ""
+
+#: lib/FS_Config.php:129
+msgid "Promotional price"
+msgstr ""
+
+#: lib/FS_Config.php:131
+msgid "This type of price interrupts the base price"
+msgstr ""
+
+#: lib/FS_Config.php:134
+msgid "The displayed price"
+msgstr ""
+
+#: lib/FS_Config.php:136
+#, php-format
+msgid ""
+"example: \"from %d %c for a couple\" (%d - replaced with the price of %s on "
+"currency)"
 msgstr ""
 
 #: lib/FS_Export_Class.php:151
@@ -163,18 +190,6 @@ msgstr ""
 
 #: templates/back-end/settings.php:209
 msgid "Settings export and import of goods"
-msgstr ""
-
-#: templates/back-end/metabox/tab-0.php:3
-msgid "Price"
-msgstr ""
-
-#: templates/back-end/metabox/tab-0.php:9
-msgid "Promotional price"
-msgstr ""
-
-#: templates/back-end/metabox/tab-0.php:14
-msgid "The displayed price"
 msgstr ""
 
 #: templates/back-end/metabox/tab-2.php:2

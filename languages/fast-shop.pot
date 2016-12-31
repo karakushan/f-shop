@@ -1,10 +1,11 @@
+# Loco Gettext template
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-29 18:01+0000\n"
-"POT-Revision-Date: Sat Nov 12 2016 16:11:17 GMT+0200 (Финляндия (зима))\n"
+"POT-Creation-Date: 2016-12-31 17:23+0000\n"
+"POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -23,288 +24,12 @@ msgstr ""
 "esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2"
 
-#: functions/actions.php:37 functions/actions.php:58
-#: templates/front-end/order/order-form.php:43
-msgid "Choose a shipping method"
-msgstr ""
-
-#: functions/attributes.php:154
-msgid "in stock"
-msgstr ""
-
-#: functions/attributes.php:155
-msgid "not available"
-msgstr ""
-
-#: functions/functions.php:351
-msgid "Remove items"
-msgstr ""
-
-#: functions/functions.php:433
-msgid "Add to cart"
-msgstr ""
-
-#: lib/FS_Config.php:48
-msgid "Product categories"
-msgstr ""
-
-#: lib/FS_Config.php:53
-msgid "Payment methods"
-msgstr ""
-
-#: lib/FS_Config.php:57
-msgid "Delivery methods"
-msgstr ""
-
-#: lib/FS_Config.php:61
-msgid "Product attributes"
-msgstr ""
-
-#: lib/FS_Config.php:65
-msgid "Manufacturers"
-msgstr ""
-
-#: lib/FS_Config.php:75
-msgid "Prices"
-msgstr ""
-
-#: lib/FS_Config.php:82 templates/back-end/settings.php:12
-msgid "Gallery"
-msgstr ""
-
-#: lib/FS_Config.php:89
-msgid "Other"
-msgstr ""
-
-#: lib/FS_Export_Class.php:151
-msgid "Update/create database was successful!"
-msgstr ""
-
-#: lib/FS_Export_Class.php:155
-msgid "An error occurred during the process of database updates!"
-msgstr ""
-
-#: lib/FS_Filters.php:47
-msgid "Product category"
-msgstr ""
-
-#: lib/FS_Post_Type.php:46 lib/FS_Post_Type.php:57
-msgid "Products"
-msgstr ""
-
-#: lib/FS_Post_Type.php:47
-msgid "product"
-msgstr ""
-
-#: lib/FS_Post_Type.php:48
-msgid "Add product"
-msgstr ""
-
-#: lib/FS_Post_Type.php:50
-msgid "Edit product"
-msgstr ""
-
-#: lib/FS_Post_Type.php:130
-msgid "Product settings"
-msgstr ""
-
-#: lib/FS_Settings_Class.php:57 lib/FS_Settings_Class.php:58
-#: templates/back-end/orders.php:2
-msgid "Orders"
-msgstr ""
-
-#: lib/FS_Settings_Class.php:67 lib/FS_Settings_Class.php:68
-#: templates/back-end/settings.php:2
-msgid "Store settings"
-msgstr ""
-
-#: templates/back-end/orders.php:32
-msgid "Total"
-msgstr ""
-
-#: templates/back-end/orders.php:33
-#, php-format
-msgid "1 order"
-msgid_plural "%s orders"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/back-end/orders.php:38
-msgid "At the current time you have no order."
-msgstr ""
-
-#: templates/back-end/settings.php:6
-msgid "General"
-msgstr ""
-
-#: templates/back-end/settings.php:7
-msgid "Letters"
-msgstr ""
-
-#: templates/back-end/settings.php:8
-msgid "Stock"
-msgstr ""
-
-#: templates/back-end/settings.php:9
-msgid "Page"
-msgstr ""
-
-#: templates/back-end/settings.php:10
-msgid "Users"
-msgstr ""
-
-#: templates/back-end/settings.php:11
-msgid "Messages"
-msgstr ""
-
-#: templates/back-end/settings.php:13
-msgid "Export"
-msgstr ""
-
-#: templates/back-end/settings.php:209
-msgid "Settings export and import of goods"
-msgstr ""
-
-#: templates/back-end/metabox/tab-0.php:3
-msgid "Price"
-msgstr ""
-
-#: templates/back-end/metabox/tab-0.php:9
-msgid "Promotional price"
-msgstr ""
-
-#: templates/back-end/metabox/tab-0.php:14
-msgid "The displayed price"
-msgstr ""
-
-#: templates/back-end/metabox/tab-2.php:2
-msgid "add image"
-msgstr ""
-
-#: templates/back-end/metabox/tab-2.php:13
-msgid "Choose"
-msgstr ""
-
-#: templates/back-end/metabox/tab-2.php:14
-msgid "to remove"
-msgstr ""
-
-#: templates/back-end/metabox/tab-3.php:2
-msgid "Article"
-msgstr ""
-
-#: templates/back-end/metabox/tab-3.php:6
-msgid "Запас товара на складе"
-msgstr ""
-
-#: templates/front-end/auth/login.php:6 templates/front-end/auth/login.php:7
-msgid "Email or login"
-msgstr ""
-
-#: templates/front-end/auth/login.php:7 templates/front-end/auth/login.php:11
-msgid "required"
-msgstr ""
-
-#: templates/front-end/auth/login.php:10 templates/front-end/auth/login.php:11
-#: templates/front-end/auth/register.php:29
-msgid "Password"
-msgstr ""
-
-#: templates/front-end/auth/login.php:16
-msgid "Remember me"
-msgstr ""
-
-#: templates/front-end/auth/login.php:22
-msgid "Log"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:8
-#: templates/front-end/auth/register.php:8
-msgid "Full Name"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:9
-#: templates/front-end/auth/profile.php:13
-#: templates/front-end/auth/register.php:9
-#: templates/front-end/auth/register.php:14
-#: templates/front-end/auth/register.php:25
-#: templates/front-end/auth/register.php:30
-msgid "required field"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:12
-#: templates/front-end/auth/register.php:13
-msgid "Phone"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:16
-#: templates/front-end/auth/register.php:18
-msgid "Email"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:17
-#: templates/front-end/auth/register.php:19
-msgid "enter a valid email"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:20
-#: templates/front-end/auth/register.php:24
-msgid "Login"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:24
-msgid "New password"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:28
-#: templates/front-end/auth/register.php:34
-msgid "Repeat password"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:33
-#: templates/front-end/auth/register.php:40
-#: templates/front-end/order/order-form.php:44
-msgid "Shipping method"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:45
-#: templates/front-end/auth/register.php:52
-#: templates/front-end/order/order-form.php:71
-msgid "City"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:49
-#: templates/front-end/auth/register.php:56
-msgid "Shipping address"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:53
-#: templates/front-end/auth/register.php:60
-msgid "Payment method"
-msgstr ""
-
-#: templates/front-end/auth/profile.php:63
-msgid "Save"
-msgstr ""
-
-#: templates/front-end/auth/register.php:35
-msgid "password and repeat password must match"
-msgstr ""
-
-#: templates/front-end/auth/register.php:70
-msgid "Send"
-msgstr ""
-
-#: templates/front-end/order/order-form.php:58
-msgid "Select a payment method"
-msgstr ""
-
-#: templates/front-end/order/order-form.php:59
-msgid "Type of payment"
-msgstr ""
-
 #. Name of the plugin
 msgid "Fast Shop"
+msgstr ""
+
+#. URI of the plugin
+msgid "http://profglobal.ru/fast-shop"
 msgstr ""
 
 #. Description of the plugin
@@ -313,14 +38,310 @@ msgid ""
 "your template."
 msgstr ""
 
-#. URI of the plugin
-msgid "http://profglobal.ru/fast-shop/"
-msgstr ""
-
 #. Author of the plugin
 msgid "Vitaliy Karakushan"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "http://profglobal.ru/"
+msgid "http://profglobal.ru"
+msgstr ""
+
+#: ../functions/actions.php:37 ../functions/actions.php:58 ../templates/front-
+#: end/order/order-form.php:43
+msgid "Choose a shipping method"
+msgstr ""
+
+#: ../functions/attributes.php:154
+msgid "in stock"
+msgstr ""
+
+#: ../functions/attributes.php:155
+msgid "not available"
+msgstr ""
+
+#: ../functions/functions.php:351
+msgid "Remove items"
+msgstr ""
+
+#: ../functions/functions.php:433
+msgid "Add to cart"
+msgstr ""
+
+#: ../lib/FS_Ajax_Class.php:264 ../lib/FS_Ajax_Class.php:288 ../templates/front-
+#: end/wishlist/wishlist.php:5
+msgid "Wishlist"
+msgstr ""
+
+#: ../lib/FS_Config.php:49
+msgid "Product categories"
+msgstr ""
+
+#: ../lib/FS_Config.php:54
+msgid "Payment methods"
+msgstr ""
+
+#: ../lib/FS_Config.php:58
+msgid "Delivery methods"
+msgstr ""
+
+#: ../lib/FS_Config.php:62
+msgid "Product attributes"
+msgstr ""
+
+#: ../lib/FS_Config.php:66
+msgid "Manufacturers"
+msgstr ""
+
+#: ../lib/FS_Config.php:78
+msgid "Prices"
+msgstr ""
+
+#: ../lib/FS_Config.php:85 ../templates/back-end/settings.php:12
+msgid "Gallery"
+msgstr ""
+
+#: ../lib/FS_Config.php:92
+msgid "Other"
+msgstr ""
+
+#: ../lib/FS_Config.php:124
+msgid "The base price"
+msgstr ""
+
+#: ../lib/FS_Config.php:126
+msgid "This is the main type prices"
+msgstr ""
+
+#: ../lib/FS_Config.php:129
+msgid "Promotional price"
+msgstr ""
+
+#: ../lib/FS_Config.php:131
+msgid "This type of price interrupts the base price"
+msgstr ""
+
+#: ../lib/FS_Config.php:134
+msgid "The displayed price"
+msgstr ""
+
+#: ../lib/FS_Config.php:136
+#, php-format
+msgid ""
+"example: \"from %d %c for a couple\" (%d - replaced with the price of %s on "
+"currency)"
+msgstr ""
+
+#: ../lib/FS_Export_Class.php:151
+msgid "Update/create database was successful!"
+msgstr ""
+
+#: ../lib/FS_Export_Class.php:155
+msgid "An error occurred during the process of database updates!"
+msgstr ""
+
+#: ../lib/FS_Filters.php:47
+msgid "Product category"
+msgstr ""
+
+#: ../lib/FS_Post_Type.php:46 ../lib/FS_Post_Type.php:57
+msgid "Products"
+msgstr ""
+
+#: ../lib/FS_Post_Type.php:47
+msgid "product"
+msgstr ""
+
+#: ../lib/FS_Post_Type.php:48
+msgid "Add product"
+msgstr ""
+
+#: ../lib/FS_Post_Type.php:50
+msgid "Edit product"
+msgstr ""
+
+#: ../lib/FS_Post_Type.php:73 ../lib/FS_Post_Types.php:64
+msgid "Здесь размещены товары вашего сайта."
+msgstr ""
+
+#: ../lib/FS_Post_Type.php:130
+msgid "Product settings"
+msgstr ""
+
+#: ../lib/FS_Settings_Class.php:57 ../lib/FS_Settings_Class.php:58 ..
+#: /templates/back-end/orders.php:2
+msgid "Orders"
+msgstr ""
+
+#: ../lib/FS_Settings_Class.php:67 ../lib/FS_Settings_Class.php:68 ..
+#: /templates/back-end/settings.php:2
+msgid "Store settings"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-2.php:2
+msgid "add image"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-2.php:13
+msgid "Choose"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-2.php:14
+msgid "to remove"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-3.php:2
+msgid "Article"
+msgstr ""
+
+#: ../templates/back-end/metabox/tab-3.php:6
+msgid "Запас товара на складе"
+msgstr ""
+
+#: ../templates/back-end/orders.php:32
+msgid "Total"
+msgstr ""
+
+#: ../templates/back-end/orders.php:33
+#, php-format
+msgid "1 order"
+msgid_plural "%s orders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../templates/back-end/orders.php:38
+msgid "At the current time you have no order."
+msgstr ""
+
+#: ../templates/back-end/settings.php:6
+msgid "General"
+msgstr ""
+
+#: ../templates/back-end/settings.php:7
+msgid "Letters"
+msgstr ""
+
+#: ../templates/back-end/settings.php:8
+msgid "Stock"
+msgstr ""
+
+#: ../templates/back-end/settings.php:9
+msgid "Page"
+msgstr ""
+
+#: ../templates/back-end/settings.php:10
+msgid "Users"
+msgstr ""
+
+#: ../templates/back-end/settings.php:11
+msgid "Messages"
+msgstr ""
+
+#: ../templates/back-end/settings.php:13
+msgid "Export"
+msgstr ""
+
+#: ../templates/back-end/settings.php:209
+msgid "Settings export and import of goods"
+msgstr ""
+
+#: ../templates/front-end/auth/login.php:6 ../templates/front-end/auth/login.php:7
+msgid "Email or login"
+msgstr ""
+
+#: ../templates/front-end/auth/login.php:7 ../templates/front-end/auth/login.php:11
+msgid "required"
+msgstr ""
+
+#: ../templates/front-end/auth/login.php:10 ../templates/front-end/auth/login.php:
+#: 11 ../templates/front-end/auth/register.php:29
+msgid "Password"
+msgstr ""
+
+#: ../templates/front-end/auth/login.php:16
+msgid "Remember me"
+msgstr ""
+
+#: ../templates/front-end/auth/login.php:22
+msgid "Log"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:8 ../templates/front-end/auth/register.
+#: php:8
+msgid "Full Name"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:9 ../templates/front-end/auth/profile.
+#: php:13 ../templates/front-end/auth/register.php:9 ../templates/front-
+#: end/auth/register.php:14 ../templates/front-end/auth/register.php:25 ..
+#: /templates/front-end/auth/register.php:30
+msgid "required field"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:12 ../templates/front-
+#: end/auth/register.php:13
+msgid "Phone"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:16 ../templates/front-
+#: end/auth/register.php:18
+msgid "Email"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:17 ../templates/front-
+#: end/auth/register.php:19
+msgid "enter a valid email"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:20 ../templates/front-
+#: end/auth/register.php:24
+msgid "Login"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:24
+msgid "New password"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:28 ../templates/front-
+#: end/auth/register.php:34
+msgid "Repeat password"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:33 ../templates/front-
+#: end/auth/register.php:40 ../templates/front-end/order/order-form.php:44
+msgid "Shipping method"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:45 ../templates/front-
+#: end/auth/register.php:52 ../templates/front-end/order/order-form.php:71
+msgid "City"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:49 ../templates/front-
+#: end/auth/register.php:56
+msgid "Shipping address"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:53 ../templates/front-
+#: end/auth/register.php:60
+msgid "Payment method"
+msgstr ""
+
+#: ../templates/front-end/auth/profile.php:63
+msgid "Save"
+msgstr ""
+
+#: ../templates/front-end/auth/register.php:35
+msgid "password and repeat password must match"
+msgstr ""
+
+#: ../templates/front-end/auth/register.php:70
+msgid "Send"
+msgstr ""
+
+#: ../templates/front-end/order/order-form.php:58
+msgid "Select a payment method"
+msgstr ""
+
+#: ../templates/front-end/order/order-form.php:59
+msgid "Type of payment"
 msgstr ""

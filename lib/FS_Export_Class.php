@@ -100,11 +100,11 @@ class FS_Export_Class
     $description=$xml->createElement('description',sanitize_text_field($post->post_content));
     $offer->appendChild($description); 
     /*yml_catalog->shop->offers->offer->oldprice*/
-    $old_price=fs_base_price($post->ID,false);
+    /*$old_price=fs_base_price($post->ID,false);
     if (!empty($old_price)) {
         $oldprice=$xml->createElement('oldprice',round($old_price));
         $offer->appendChild($oldprice); 
-    }
+    }*/
 
     /*yml_catalog->shop->offers->offer->categoryId*/
     $product_terms=get_the_terms($post->ID,'catalog');
