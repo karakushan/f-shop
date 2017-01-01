@@ -890,8 +890,8 @@ function fs_get_all_prices(){
 
 function fs_get_type_price(int $product_id=0,$price_type='price'){
     global $post;
-    $post_id=empty($post_id)?$post->ID:$post_id;
+    $product_id=empty($product_id)?$post->ID:$product_id;
     $prices=fs_get_all_prices();
-    $price=get_post_meta($post_id,$prices['$price_type']['meta_key'],1);
-    return (float) $price;
+    $price=get_post_meta($product_id,$prices[$price_type]['meta_key'],1);
+    return (float)$price;
 }
