@@ -330,8 +330,9 @@ function fs_get_cart()
                 'name'=>get_the_title($key),
                 'count'=>$count,
                 'link'=>get_permalink($key),
-                'price'=> $price_show.' <span>'.$cur_symb.'</span>',
-                'all_price'=>$all_price.' <span>'.$cur_symb.'</span>'
+                'price'=> $price_show,
+                'all_price'=>$all_price,
+                'currency'=>fs_currency()
                 );
         }
     }
@@ -449,6 +450,11 @@ function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon=
 function fs_order_send($label='Отправить заказ',$attr='',$preloader='<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
 {
     echo "<button type=\"submit\" $attr data-fs-action=\"order-send\">$label <span class=\"fs-preloader\">$preloader</span></button>";
+}
+
+function fs_order_send_form(){
+    $form=new \FS\FS_Shortcode;
+    echo $form->order_send();
 }
 
 //Получает количество просмотров статьи

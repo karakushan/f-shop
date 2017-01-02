@@ -30,7 +30,7 @@ class FS_Config
             'plugin_url'=>FS_PLUGIN_URL,
             'plugin_ver'=>'1.0',
             'plugin_name'=>'fast-shop',
-            'plugin_user_template'=>FS_PLUGIN_PATH.'/fast-shop/',
+            'plugin_user_template'=>get_template_directory().'/fast-shop/',
             'plugin_template'=>FS_PLUGIN_PATH.'templates/front-end/',
             'plugin_settings'=>'fast-shop-settings',
             'table_name'=>$wpdb->prefix."fs_orders",

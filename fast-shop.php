@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Fast Shop
-Plugin URI: http://profglobal.ru/fast-shop/
+Plugin URI: https://fast-shop.profglobal.ru
 Description:  The plugin will help in the creation of any online store without changing your template.
 Version: 1.0.1
 Author: Vitaliy Karakushan
-Author URI: http://profglobal.ru/
+Author URI: https://fast-shop.profglobal.ru
 License: GPL2
 Domain: fast-shop
 */
