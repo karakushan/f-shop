@@ -91,13 +91,11 @@ public function get_order_data(int $order_id)
 	return $res;
 }
 
-
-
-	//Получаем объект одного заказа
+//Получаем объект одного заказа
 public function get_order(int $id)
 {
 	global $wpdb;
-	$table_name=$this->config->data['table_name'];
+	$table_name=$this->config->data['table_order_item'];
 	$res=$wpdb->get_results("SELECT * FROM $table_name WHERE order_id ='$id'");
 	return $res;
 }

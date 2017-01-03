@@ -52,24 +52,24 @@ class FS_Settings_Class
              'Магазин', 'Магазин', 'manage_options', 'fast-shop','' , 'dashicons-products', 9
              );*/
         // Add a page to manage this plugin's settings
-        add_submenu_page(
-            'edit.php?post_type=product',
-            __('Orders','fast-shop'),
-            __('Orders','fast-shop'),
-            'manage_options',
-            'fast-shop-orders',
-            array(&$this, 'fast_shop_orders')
-        );
+             add_submenu_page(
+                'edit.php?post_type=product',
+                __('Orders','fast-shop'),
+                __('Orders','fast-shop'),
+                'manage_options',
+                'fast-shop-orders',
+                array(&$this, 'fast_shop_orders')
+                );
 
         // Add a page to manage this plugin's settings
-        add_submenu_page(
-            'edit.php?post_type=product',
-            __('Store settings','fast-shop'),
-            __('Store settings','fast-shop'),
-            'manage_options',
-            'fast-shop-settings',
-            array(&$this, 'plugin_settings_page')
-        );
+             add_submenu_page(
+                'edit.php?post_type=product',
+                __('Store settings','fast-shop'),
+                __('Store settings','fast-shop'),
+                'manage_options',
+                'fast-shop-settings',
+                array(&$this, 'plugin_settings_page')
+                );
     } // END public function add_menu()
 
     /**
@@ -89,12 +89,12 @@ class FS_Settings_Class
         $template=$this->config->data['plugin_path'].'templates/back-end/'.$page.'.php';
         switch ($page) {
             case 'fs-atributes':
-                require_once $template;
-                break;
+            require_once $template;
+            break;
 
             default:
                 # code...
-                break;
+            break;
         }
     }
     /**
@@ -110,13 +110,14 @@ class FS_Settings_Class
         $orders_count = $wpdb->get_var("SELECT COUNT(*) FROM  $table");
         switch ($action) {
             case 'info':
-                $products=$orders->get_order((int)$_GET['id'] );
-                include ($this->config->data['plugin_path'].'templates/back-end/order-info.php');
-                break;
+            $order_id=(int)$_GET['id'];
+            $products=$orders->get_order($order_id);
+            include ($this->config->data['plugin_path'].'templates/back-end/order-info.php');
+            break;
 
             default:
-                include ($this->config->data['plugin_path'].'templates/back-end/orders.php');
-                break;
+            include ($this->config->data['plugin_path'].'templates/back-end/orders.php');
+            break;
         }
 
 

@@ -22,7 +22,7 @@
 			<?php endforeach ?>
 			<tr class="all_summ">
 				<td colspan="4">Общая сумма</td>
-				<td><?php echo $orders->fs_order_total($_GET['id']) ?></td>
+				<td><?php echo $orders->fs_order_total($order_id) ?></td>
 			</tr>
 
 

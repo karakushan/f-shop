@@ -24,7 +24,7 @@
 								<?php endforeach ?>
 
 							</select></td>
-						<td><?php echo $orders->fs_order_total($order->id) ?></td>
+						<td><?php echo apply_filters('fs_price_format',$order->summa).' '.fs_currency(); ?></td>
 						<td><a href="<?php echo add_query_arg(array('action'=>'info','id'=>$order->id)) ?>">Подробности</a></td>
 					</tr>
 				<?php endforeach ?>
