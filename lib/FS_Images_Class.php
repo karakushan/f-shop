@@ -78,7 +78,7 @@ class FS_Images_Class
  * 
  * @return array          список url в массиве
  */
-public function fs_galery_images($post_id=0)
+public  function fs_galery_images($post_id=0)
 {
 	$images=array();
 	global $post;

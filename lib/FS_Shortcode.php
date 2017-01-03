@@ -17,6 +17,7 @@ class FS_Shortcode
         add_shortcode('fs_cart_widget', array(&$this, 'cart_widget'));
         add_shortcode('fs_order_info', array(&$this, 'single_order_info'));
         add_shortcode('fs_last_order_id', array(&$this, 'last_order_id'));
+        add_shortcode('fs_last_order_amount', array(&$this, 'last_order_amount'));
         add_shortcode('fs_review_form', array(&$this, 'review_form'));
         add_shortcode('fs_checkout', array(&$this, 'checkout_form'));
         add_shortcode('fs_order_send', array(&$this, 'order_send'));
@@ -127,14 +128,20 @@ public function cart_widget()
 //Возвращает id последнего заказа
 public function last_order_id()
 {
-    $order_id = $_SESSION['last_order_id'];
-
-    if (!is_numeric($order_id) || empty($order_id)) {
-        return 0;
-    } else {
-        return $order_id;
-    }
+    $order_id = empty($_SESSION['last_order_id']) ?  0 : (int) $_SESSION['last_order_id'];
+    return $order_id;
 }
+
+public function last_order_amount()
+{
+    $order_id = empty($_SESSION['last_order_id']) ?  0 : (int) $_SESSION['last_order_id'];
+    $order=new \FS\FS_Orders_Class;
+    $order_info=$order->get_order_data($order_id);
+    $summa=(float)  $order_info->summa;
+    $summa=apply_filters('fs_price_format',$summa);
+    return  $summa;
+}
+
 
 public function review_form()
 {
@@ -174,13 +181,13 @@ function checkout_form()
             ';
             if (file_exists($this->config->data['plugin_user_template'] . $prefix)) {
 
-               ob_start();
-               include($this->config->data['plugin_user_template'] . $prefix);
-               $template .= ob_get_contents();
-               ob_end_clean();
-               
+             ob_start();
+             include($this->config->data['plugin_user_template'] . $prefix);
+             $template .= ob_get_contents();
+             ob_end_clean();
 
-           }else{
+
+         }else{
             ob_start();
             include($this->config->data['plugin_template'] . $prefix);
             $template .= ob_get_contents();

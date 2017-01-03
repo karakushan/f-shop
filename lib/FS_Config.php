@@ -33,6 +33,7 @@ class FS_Config
             'plugin_user_template'=>get_template_directory().'/fast-shop/',
             'plugin_template'=>FS_PLUGIN_PATH.'templates/front-end/',
             'plugin_settings'=>'fast-shop-settings',
+            'table_orders'=>$wpdb->prefix."fs_orders",
             'table_name'=>$wpdb->prefix."fs_orders",
             'table_order_item'=>$wpdb->prefix."fs_order_info",
             'order_statuses'=>array(

@@ -16,8 +16,8 @@ class FS_Orders_Class
 		$this->order_status=$this->config->data['order_statuses'];
 
 		//  ajax очистка базы заказов
-        add_action('wp_ajax_admin_truncate_orders',array(&$this,'admin_truncate_orders') );
-        add_action('wp_ajax_nopriv_admin_truncate_orders',array(&$this,'admin_truncate_orders') );
+		add_action('wp_ajax_admin_truncate_orders',array(&$this,'admin_truncate_orders') );
+		add_action('wp_ajax_nopriv_admin_truncate_orders',array(&$this,'admin_truncate_orders') );
 	}
 
 	//Получаем все заказы в виде объекта
@@ -25,21 +25,15 @@ class FS_Orders_Class
 	{
 		global $wpdb;
 		$table_name= $this->config->data['table_name'];
-
 		$per_page=15;
 		if (isset($_SESSION['pagination'])) {
 			$per_page=$_SESSION['pagination'];
 		}
-		
 		$offset=1;
 		if (isset($_GET['tab'])) {
 			$offset=$_GET['tab'];
 		}
-
 		$offset=$offset*$per_page-$per_page;
-
-		
-
 		$results=$wpdb->get_results("SELECT * FROM  $table_name ORDER BY id DESC LIMIT $offset,$per_page");
 		return $results;
 	}
@@ -84,16 +78,29 @@ class FS_Orders_Class
 		return $res;
 	}	
 
+/**
+ * возвращает общую информацию о заказе
+ * @param  int    $order_id [description]
+ * @return object           все данные заказа  $order_id
+ */
+public function get_order_data(int $order_id)
+{
+	global $wpdb;
+	$table_name=$this->config->data['table_orders'];
+	$res=$wpdb->get_row("SELECT * FROM $table_name WHERE id ='$order_id'");
+	return $res;
+}
+
 
 
 	//Получаем объект одного заказа
-	public function get_order(int $id)
-	{
-		global $wpdb;
-		$table_name=$this->config->data['table_order_item'];
-		$res=$wpdb->get_results("SELECT * FROM $table_name WHERE order_id ='$id'");
-            return $res;
-	}
+public function get_order(int $id)
+{
+	global $wpdb;
+	$table_name=$this->config->data['table_name'];
+	$res=$wpdb->get_results("SELECT * FROM $table_name WHERE order_id ='$id'");
+	return $res;
+}
 
     /**
      * подсчитывает общую сумму товаров в одном заказе
@@ -101,44 +108,44 @@ class FS_Orders_Class
      * @return float $items_sum - стоимость всех товаров
      */
     public function fs_order_total(int $order_id){
-        $item=array();
-        $currency=fs_currency();
-        $products=$this->get_order($order_id);
-        if ($products){
-            foreach ($products as $product) {
-                $item[$product->post_id]=$product->count*fs_get_price($product->post_id);
-            }
-            $items_sum=array_sum($item);
-        }
-        $items_sum=apply_filters('fs_price_format',$items_sum);
-        $items_sum=$items_sum.' '.$currency;
-        return $items_sum;
+    	$item=array();
+    	$currency=fs_currency();
+    	$products=$this->get_order($order_id);
+    	if ($products){
+    		foreach ($products as $product) {
+    			$item[$product->post_id]=$product->count*fs_get_price($product->post_id);
+    		}
+    		$items_sum=array_sum($item);
+    	}
+    	$items_sum=apply_filters('fs_price_format',$items_sum);
+    	$items_sum=$items_sum.' '.$currency;
+    	return $items_sum;
     }
 
-	public function order_status_change()
-	{
-		global $wpdb;
-		$upd=false;
-		$table_name=$this->config->data['table_name'];
-		if (isset($_GET['action']) && $_GET['action']=='edit') {
-			if(isset($_GET['id']) || isset($_GET['status'])){
-				$upd=$wpdb->update( 
-					$table_name,
-					array( 'status'=>$_GET['status']),
-					array( 'id' => $_GET['id'] ),
-					array( '%d' ),
-					array( '%d' )
-					);
-			}
+    public function order_status_change()
+    {
+    	global $wpdb;
+    	$upd=false;
+    	$table_name=$this->config->data['table_name'];
+    	if (isset($_GET['action']) && $_GET['action']=='edit') {
+    		if(isset($_GET['id']) || isset($_GET['status'])){
+    			$upd=$wpdb->update( 
+    				$table_name,
+    				array( 'status'=>$_GET['status']),
+    				array( 'id' => $_GET['id'] ),
+    				array( '%d' ),
+    				array( '%d' )
+    				);
+    		}
 
-			if ($upd) {
-				$status=$this->order_status($_GET['status']);
-				$order=$this->get_order($_GET['id'] );
-				$user_mesage='Статус заказа #'.$_GET['id'].' изменён на "'.$status.'". ';
-				if ($_GET['status']==1) {
-					$user_mesage.="Вы можете оплатить заказ сейчас если выбрали способ оплаты \"предоплата\" или в момент получения заказа";
-				}
-				$subject='Уведомление о изменении статуса заказа  #'.$_GET['id'];
+    		if ($upd) {
+    			$status=$this->order_status($_GET['status']);
+    			$order=$this->get_order($_GET['id'] );
+    			$user_mesage='Статус заказа #'.$_GET['id'].' изменён на "'.$status.'". ';
+    			if ($_GET['status']==1) {
+    				$user_mesage.="Вы можете оплатить заказ сейчас если выбрали способ оплаты \"предоплата\" или в момент получения заказа";
+    			}
+    			$subject='Уведомление о изменении статуса заказа  #'.$_GET['id'];
 				 $headers[] = 'Content-type: text/html; charset=utf-8'; // в виде массива
 				 wp_mail( $order->email,$subject,$user_mesage, $headers );
 				 wp_redirect(remove_query_arg( array('action','id','status')));

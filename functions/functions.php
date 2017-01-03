@@ -901,3 +901,23 @@ function fs_get_type_price(int $product_id=0,$price_type='price'){
     $price=get_post_meta($product_id,$prices[$price_type]['meta_key'],1);
     return (float)$price;
 }
+
+/**
+ * получаем url изображений галереи товара
+ * @param  int|integer $product_id [description]
+ * @return [type]                  [description]
+ */
+function fs_gallery_images_url(int $product_id=0)
+{
+    global $post;
+    $product_id=empty($product_id) ?  $post->ID : $product_id;
+    $gallery=new \FS\FS_Images_Class;
+    $gallery_images= $gallery->fs_galery_images($product_id);
+    $images=array();
+    if (is_array($gallery_images)) {
+       foreach ($gallery_images as $key => $gallery_image) {
+            $images[]=wp_get_attachment_url( $gallery_image);
+       }
+    }
+    return $images;
+}
