@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-04 09:59+0000\n"
-"PO-Revision-Date: 2017-01-04 10:00+0000\n"
+"PO-Revision-Date: 2017-01-04 09:59+0000\n"
 "Last-Translator: cdma@admin <cdma@admin.com.ua>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
@@ -31,7 +31,11 @@ msgstr ""
 
 #: templates/back-end/metabox/tab-4.php:2
 msgid "Related products"
-msgstr "Связанные товары"
+msgstr ""
+
+#: templates/back-end/metabox/tab-4.php:5
+msgid "Select a category"
+msgstr "Выберите категорию"
 
 #. Plugin Name of the plugin/theme
 msgid "Fast Shop"
@@ -237,10 +241,6 @@ msgstr "удалить"
 #: templates/back-end/metabox/tab-3.php:2
 msgid "Article"
 msgstr "Артикул"
-
-#: templates/back-end/metabox/tab-4.php:5
-msgid "Select a category"
-msgstr "Выберите категорию"
 
 #: templates/front-end/auth/login.php:6 templates/front-end/auth/login.php:7
 msgid "Email or login"

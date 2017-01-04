@@ -123,8 +123,8 @@ function btn_view(e) {
 jQuery(document).ready(function($) {
     // вкладки на странице настроек товара
     $( "#fs-tabs" ).tabs( {
-       active   : $.cookie('postactivetab'),
-       activate : function( event, ui ){
+     active   : $.cookie('postactivetab'),
+     activate : function( event, ui ){
         $.cookie( 'postactivetab', ui.newTab.index(),{
             expires : 10
         });
@@ -163,9 +163,9 @@ jQuery(document).ready(function($) {
                     data: {action:$(this).data('fs-action')},
                 })
                 .done(function(result) {
-                   result=jQuery.parseJSON(result);
-                   thisButton.find('img').fadeOut(600).remove();
-                   if (result.status==true) {
+                 result=jQuery.parseJSON(result);
+                 thisButton.find('img').fadeOut(600).remove();
+                 if (result.status==true) {
                     thisButton.html('<div class="success">'+result.message+'</div>'+buttonContent);
                     if (result.action=='refresh') {
                         setTimeout(function(){ location.reload();  },2000);
@@ -183,6 +183,45 @@ jQuery(document).ready(function($) {
                 
             }
         }
+        
+    });
+    $('[data-fs-action="enabled-select"]').on('click', function(event) {
+        event.preventDefault();
+        $(this).next().fadeIn();
+    });    
+    $('#tab-4').on('change','[data-fs-action="select_related"]', function(event) {
+        event.preventDefault();
+        var thisVal=$(this).val();
+        var text;
+        $(this).find('option').each(function(index, el) {
+            if (thisVal==$(this).attr('value')) {
+               text =$(this).text();
+            }
+         
+            
+        });
+        $('#tab-4 .related-wrap').append('<li class="single-rel"><span>'+text+'</span> <button type="button" data-fs-action="delete_parents" class="related-delete" data-target=".single-rel">удалить</button><input type="hidden" name="fs_related_products[]" value="'+thisVal+'"></li>');
+        $(this).fadeOut().remove();
+
+    });
+    $('body').on('click', '[data-fs-action="delete_parents"]', function(event) {
+       $(this).parents($(this).data('target')).remove();
+   });
+    // получаем посты термина во вкладке связанные в редактировании товара
+    $('#tab-4').on('change','[data-fs-action="get_taxonomy_posts"]',function(event) {
+        var term=$(this).val();
+        var thisSel=$(this);
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {action: 'fs_get_taxonomy_posts','term_id':term},
+        })
+        .done(function(data) {
+            var json=$.parseJSON(data);
+            thisSel.prop('selectedIndex',0);
+            thisSel.hide();
+            thisSel.parent().append(json.body);
+        });
         
     });
 });

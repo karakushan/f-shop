@@ -74,27 +74,30 @@ class FS_Config
 
         //Табы отображаемые в метабоксе в редактировании товара
         $this->tabs=array(
-            '0'=>
-            array(
+            '0'=>array(
                 'title'=>__('Prices','fast-shop'),
                 'on'=>true,
                 'body'=>'',
                 'template'=>''
                 ),
-            '2'=>
-            array(
+            '2'=> array(
                 'title'=>__('Gallery','fast-shop'),
                 'on'=>true,
                 'body'=>'',
                 'template'=>''
                 ),
-            '3'=>
-            array(
+            '3'=>array(
                 'title'=>__('Other','fast-shop'),
                 'on'=>false,
                 'body'=>'',
                 'template'=>''
                 ),
+            '4'=>array(
+                'title'=>__('Associated','fast-shop'),
+                'on'=>false,
+                'body'=>'',
+                'template'=>''
+                )
             );
 
         //Массив настроек сайта
@@ -116,6 +119,7 @@ class FS_Config
             'displayed_price'=>'fs_displayed_price',//тображаемая цена
             'attributes'=>'fs_attributes_post',//атрибуты товара
             'gallery'=>'fs_galery',//галерея
+            'related_products'=>'fs_related_products',//галерея
             );
         $this->meta=apply_filters('fs_post_meta',$meta);
 

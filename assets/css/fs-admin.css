@@ -717,7 +717,7 @@ td.fs_price.column-fs_price span span
 .fs-metabox.ui-tabs-vertical .ui-tabs-panel
 {
     float: left;
-    width: auto;
+    width: 62%;
     padding: 15px;
     border: 1px solid #0cbc3f;
     margin: 3px 0 0px 0;
@@ -753,4 +753,35 @@ button.upload-mft {
 
     color:#23282d;
     background:#ddd;
+}
+.add-rell {
+    width: 100%;
+    height: 31px;
+    max-width: 156px;
+    background: #0c96ae;
+    border: none;
+    margin: 10px 0;
+    color: #fff;
+    text-transform: uppercase;
+}
+.add-related-sect select {
+    width: 100%;
+    max-width: 242px;
+    height: 33px;
+    padding: 0 9px;
+}
+.related-delete{
+    margin: 0 0 0 12px;
+    background: #cd4343;
+    color: #fff;
+    padding: 3px 10px;
+    border: 1px solid #cd3838;
+    border-radius: 3px;
+    line-height: 1;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .1em;
+}
+.related-wrap li {
+    margin-bottom: 15px;
 }

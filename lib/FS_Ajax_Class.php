@@ -24,6 +24,10 @@ class FS_Ajax_Class
         add_action('wp_ajax_fs_livesearch',array(&$this,'fs_livesearch') );
         add_action('wp_ajax_nopriv_fs_livesearch',array(&$this,'fs_livesearch') );
 
+        //  получение связанных постов категории
+        add_action('wp_ajax_fs_get_taxonomy_posts',array(&$this,'get_taxonomy_posts') );
+        add_action('wp_ajax_nopriv_fs_get_taxonomy_posts',array(&$this,'get_taxonomy_posts') );
+
     }
 
 
@@ -333,4 +337,32 @@ class FS_Ajax_Class
         }
         exit;
     }
+
+//  возвражает список постов определёного термина
+    public function get_taxonomy_posts()
+    {
+        $term_id=(int) $_POST['term_id'];
+        $body='';
+        $posts=get_posts(array('post_type'=>'product','posts_per_page'=>-1,
+            'tax_query'=>
+            array(
+                array(
+                    'taxonomy'=>'catalog',
+                    'field'=>'term_id',
+                    'terms'=>$term_id
+                    )
+                )
+            ));
+        if ($posts) {
+            $body.='<select data-fs-action="select_related">';
+               $body.='<option value="">Выберите товар</option>';
+
+            foreach ($posts as $key => $post) {
+               $body.='<option value="'.$post->ID.'">'.$post->post_title.'</option>';
+           }
+           $body.='</select>';
+       }
+       echo json_encode(array('body'=>$body));
+       exit;
+   }
 } 

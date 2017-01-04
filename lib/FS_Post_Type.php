@@ -91,13 +91,20 @@ class FS_Post_Type
         {
             foreach(@$this->config->meta as $field_name)
             {
-                if(!isset($_POST[$field_name])) continue;
+                // if(!isset($_POST[$field_name])) continue;
                 $field_value=$_POST[$field_name];
                 
                 switch ($field_name) {
                     case 'fs_price':
                     $price=(float)str_replace(array(','),array('.'),$field_value);
                     update_post_meta($post_id, $field_name,$price);
+                    break; 
+                    case 'fs_related_products':
+                    if(empty( $field_value)){
+                        delete_post_meta($post_id, $field_name);
+                    }else{
+                        update_post_meta($post_id, $field_name,$field_value);
+                    }
                     break;
                     default:
                     update_post_meta($post_id, $field_name,$field_value);

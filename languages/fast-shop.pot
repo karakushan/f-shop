@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-31 18:40+0000\n"
+"POT-Creation-Date: 2017-01-04 09:59+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -36,31 +36,31 @@ msgstr ""
 msgid "not available"
 msgstr ""
 
-#: functions/functions.php:351
+#: functions/functions.php:352
 msgid "Remove items"
 msgstr ""
 
-#: functions/functions.php:433
+#: functions/functions.php:434
 msgid "Add to cart"
 msgstr ""
 
-#: lib/FS_Config.php:49
+#: lib/FS_Config.php:50
 msgid "Product categories"
 msgstr ""
 
-#: lib/FS_Config.php:54
+#: lib/FS_Config.php:55
 msgid "Payment methods"
 msgstr ""
 
-#: lib/FS_Config.php:58
+#: lib/FS_Config.php:59
 msgid "Delivery methods"
 msgstr ""
 
-#: lib/FS_Config.php:62
+#: lib/FS_Config.php:63
 msgid "Product attributes"
 msgstr ""
 
-#: lib/FS_Config.php:66
+#: lib/FS_Config.php:67
 msgid "Manufacturers"
 msgstr ""
 
@@ -68,46 +68,50 @@ msgstr ""
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:85 templates/back-end/settings.php:12
+#: lib/FS_Config.php:84 templates/back-end/settings.php:12
 msgid "Gallery"
 msgstr ""
 
-#: lib/FS_Config.php:92
+#: lib/FS_Config.php:90
 msgid "Other"
 msgstr ""
 
-#: lib/FS_Config.php:124
+#: lib/FS_Config.php:96
+msgid "Associated"
+msgstr ""
+
+#: lib/FS_Config.php:128
 msgid "The base price"
 msgstr ""
 
-#: lib/FS_Config.php:126
+#: lib/FS_Config.php:130
 msgid "This is the main type prices"
 msgstr ""
 
-#: lib/FS_Config.php:129
+#: lib/FS_Config.php:133
 msgid "Promotional price"
 msgstr ""
 
-#: lib/FS_Config.php:131
+#: lib/FS_Config.php:135
 msgid "This type of price interrupts the base price"
 msgstr ""
 
-#: lib/FS_Config.php:134
+#: lib/FS_Config.php:138
 msgid "The displayed price"
 msgstr ""
 
-#: lib/FS_Config.php:136
+#: lib/FS_Config.php:140
 #, php-format
 msgid ""
 "example: \"from %d %c for a couple\" (%d - replaced with the price of %s on "
 "currency)"
 msgstr ""
 
-#: lib/FS_Export_Class.php:151
+#: lib/FS_Export_Class.php:163
 msgid "Update/create database was successful!"
 msgstr ""
 
-#: lib/FS_Export_Class.php:155
+#: lib/FS_Export_Class.php:167
 msgid "An error occurred during the process of database updates!"
 msgstr ""
 
@@ -210,6 +214,14 @@ msgstr ""
 
 #: templates/back-end/metabox/tab-3.php:6
 msgid "Запас товара на складе"
+msgstr ""
+
+#: templates/back-end/metabox/tab-4.php:2
+msgid "Related products"
+msgstr ""
+
+#: templates/back-end/metabox/tab-4.php:5
+msgid "Select a category"
 msgstr ""
 
 #: templates/front-end/auth/login.php:6 templates/front-end/auth/login.php:7
@@ -329,13 +341,10 @@ msgid ""
 msgstr ""
 
 #. URI of the plugin
-msgid "http://profglobal.ru/fast-shop/"
+#. Author URI of the plugin
+msgid "https://fast-shop.profglobal.ru"
 msgstr ""
 
 #. Author of the plugin
 msgid "Vitaliy Karakushan"
-msgstr ""
-
-#. Author URI of the plugin
-msgid "http://profglobal.ru/"
 msgstr ""
