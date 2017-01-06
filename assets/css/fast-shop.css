@@ -300,3 +300,6 @@ li.fs-attr {
 .form-header {
     margin: 0 0 10px 0;
 }
+.lSSlideOuter .lSPager.lSGallery img {
+    margin: 0 auto;
+}

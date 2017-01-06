@@ -7,36 +7,32 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class FS_Images_Class
 {
 	protected $config;
-	
-	function __construct()
-	{
-		$this->config=new FS_Config();
-        add_action('init',array($this,'register_product_g_thumbnail'));
+    public $image_big_width=330;// ширина большого изображения слайдера
+    public $image_big_height=330;// высота большого изображения слайдера
+    public $image_small_width=108; // ширина маленького изображения слайдера
+    public $image_small_height=108;// высота маленького изображения слайдера
+    public $image_big_name='fs_gallery_big';// название большого изображения слайдера
+    public $image_small_name='fs_gallery_small';// название маленького изображения слайдера
+    public $image_crop=false;// использовать мягкое кадрирование
 
-    }
-
-    public function register_product_g_thumbnail()
+    function __construct()
     {
-     if ( function_exists( 'add_image_size' ) ) {
-        $width=fs_option('gallery_img_width',300);
-        $height=fs_option('gallery_img_height',400);
-        switch(fs_option('cutting_photos')){
-            case 'cut_width_height':
-            add_image_size( 'fs_gallery_big', $width, $height,true); 
-            break;
-            case 'cut_no':
-            add_image_size( 'fs_gallery_big', $width, $height,false); 
-            break;
-            case 'cut_width':
-            add_image_size( 'fs_gallery_big', $width, 9999,true); 
-            break;
-            case 'cut_height':
-            add_image_size( 'fs_gallery_big', 9999, $height,true); 
-            break;
-            default:
-            add_image_size( 'fs_gallery_big', $width, $height,false); 
-            break;
-        }
+      $this->config=new FS_Config();
+      // хук для регистрации размеров изображений для галереи
+      add_action('init',array($this,'register_product_g_thumbnail'));
+      //  получаем зарегистрированные размеры изобраений
+      $this->image_big_width=fs_option('gallery_big_width',$this->image_big_width);
+      $this->image_big_height=fs_option('gallery_big_height',$this->image_big_height);
+      $this->image_small_width=fs_option('gallery_small_width',$this->image_small_width);
+      $this->image_small_height=fs_option('gallery_small_height',$this->image_small_height);
+  }
+
+  public function register_product_g_thumbnail()
+  {
+    if ( function_exists( 'add_image_size' ) ) {
+    //  регистрируем два типа изображений: большое - и маленькое слайдера 
+        add_image_size( $this->image_big_name, $this->image_big_width,$this->image_big_height,$this->image_crop); 
+        add_image_size( $this->image_small_name, $this->image_small_width,$this->image_small_height,$this->image_crop); 
     }
 }
 
@@ -55,21 +51,58 @@ class FS_Images_Class
         $height=fs_option('gallery_img_height',400);
         $image_placeholder=fs_option('image_placeholder','holder.js/'.$width.'x'.$height);
         $galerys=$this->fs_galery_images($post_id);
-        $images_n.=apply_filters('fs_first_gallery_image',$post_id,'fs_gallery_big');
+        $images_n='';
+        // получаем первое изображение галереи из установленной миниатюры поста
+        if (has_post_thumbnail( $post_id)) {
+            $atach_id = get_post_thumbnail_id($post_id);
+            $image_big= wp_get_attachment_image_src($atach_id,$this->image_big_name);
+            $image_small= wp_get_attachment_image_src($atach_id,$this->image_small_name);
+            $image_full= wp_get_attachment_image_src( $atach_id,'full');
+            $images_n.= "<li data-thumb=\"$image_small[0]\" data-src=\"$image_full[0]\" style=\"text-align:center\"><a href=\"$image_full[0]\" data-lightbox=\"roadtrip\" data-title=\"".get_the_title($post_id)."\"><img src=\"$image_big[0]\" height=\"$this->image_big_height\"></a></li>";
+        }
         if ($galerys) {
           foreach ($galerys as $atach_id) {
-            $image= wp_get_attachment_image_src($atach_id,'fs_gallery_big');
+            $image_big= wp_get_attachment_image_src($atach_id,$this->image_big_name);
+            $image_small= wp_get_attachment_image_src($atach_id,$this->image_small_name);
             $image_full= wp_get_attachment_image_src( $atach_id,'full');
 
-            $images_n.= "<li data-thumb=\"$image[0]\" data-src=\"$image_full[0]\"><a href=\"$image_full[0]\" data-lightbox=\"roadtrip\" data-title=\"".get_the_title($post_id)."\"><img src=\"$image[0]\" width=\"100%\"></a></li>";
+            $images_n.= "<li data-thumb=\"$image_small[0]\" data-src=\"$image_full[0]\" style=\"text-align:center\"><a href=\"$image_full[0]\" data-lightbox=\"roadtrip\" data-title=\"".get_the_title($post_id)."\"><img src=\"$image_big[0]\" height=\"$this->image_big_height\"></a></li>";
         }
     }
 
     if (empty($images_n)) {
         $images_n.= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\"><img src=\"$image_placeholder\" width=\"100%\"></li>";
     }
- 
+
     return apply_filters('fs_galery_list',$images_n,$post_id);
+}
+
+/**
+ * @param integer $post_id - id записи
+ * @param array $args - массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
+ */
+public function lightslider($post_id=0, $args=array())
+{
+    $default=array(
+        "gallery"=>true,
+        "item"=>1,
+        "vertical"=>false,
+        "thumbItem"=>3
+        );
+    $args=wp_parse_args($args,$default);
+    $galery=$this->fs_galery_list($post_id);
+    echo "<style>";
+    echo ".lSSlideOuter .lSPager.lSGallery img {
+        height: ".$this->image_small_height."px;
+    }";
+
+    echo "</style>";
+    echo "<script>";
+    echo "var fs_lightslider_options=".json_encode( $args);
+    echo "</script>";
+    echo "<ul id=\"product_slider\">";
+    echo $galery;
+    echo "</ul>";
 }	
 
 /**

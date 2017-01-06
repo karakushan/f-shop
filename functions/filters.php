@@ -8,27 +8,6 @@ function  fs_price_format($price,$delimiter=''){
 	return $price;
 }
 
-add_filter('fs_first_gallery_image','fs_first_image',10,2);
-function fs_first_image($post_id,$size){
-	$image_first='';
-	if (has_post_thumbnail( $post_id)) {
-		$atach_id = get_post_thumbnail_id($post_id);
-		$image= wp_get_attachment_image_src($atach_id, $size);
-		$image_full= wp_get_attachment_image_src( $atach_id,'full');
-		$image_first= "<li data-thumb=\"$image[0]\" data-src=\"$image_full[0]\"><a href=\"$image_full[0]\"  data-lightbox=\"roadtrip\" data-title=\"".get_the_title($post_id)."\"><img src=\"$image[0]\" width=\"100%\"></a></li>";
-	}
-	return $image_first;
-}
-
-/*add_action('in_admin_header', 'my_get_current_screen');
-function my_get_current_screen(){
-    $screen_info = get_current_screen();
-
-    echo '<pre>';
-    print_r($screen_info);
-    echo '</pre>';
-}*/
-
 // создаем новую колонку
 add_filter('manage_edit-product_columns', 'add_views_column', 4);
 function add_views_column( $columns ){
@@ -55,27 +34,48 @@ function add_views_sortable_column($sortable_columns){
 	return $sortable_columns;
 }
 
-// позволяет изменить листинг товаров в заказе
-add_filter('fs_order_product_list','fs_order_product_list',10,2);
-function fs_order_product_list($products,$fs_products)
+/**
+ * подготовка письма для отсылки пользователя
+ * берёт шаблон из папки /wp-content/plugins/fast-shop/templates/front-end/mail/mail-user.php
+ * заменяет в нём переменные %products_listing% и  %mail_body%
+ * %products_listing% - листинг купленных товаров
+ * %mail_body% - письмо составленное администратором в админке для пользователя
+ */
+add_filter('fs_order_user_message','fs_order_user_message');
+function fs_order_user_message($fs_products)
 {
+	$products='';
 	if ($fs_products) {
 		foreach ($fs_products as $id =>$product) {
-			$products.=fs_frontend_template('order/products-list',array('id'=>$id,'product'=>$product));
+			$products.=fs_frontend_template('mail/products-listing',array('id'=>$id,'product'=>$product));
 		}
 	}
-	return $products;
+	$message_body=fs_option('customer_mail');
+	$full_template=fs_frontend_template('mail/mail-user');
+	$template=str_replace(array('%products_listing%','%mail_body%'),array($products,$message_body),$full_template);
+	return $template;
 }
-// позволяет изменить листинг товаров в заказе
-add_filter('fs_order_product_list_admin','fs_order_product_list_admin',10,2);
-function fs_order_product_list_admin($products,$fs_products)
+
+/**
+ * подготовка письма для отсылки администратору
+ * берёт шаблон из папки /wp-content/plugins/fast-shop/templates/front-end/mail/mail-admin.php
+ * заменяет в нём переменные %products_listing% и  %mail_body%
+ * %products_listing% - листинг купленных товаров
+ * %mail_body% - письмо составленное администратором в админке для менеджера или себя
+ */
+add_filter('fs_order_admin_message','fs_order_admin_message');
+function fs_order_admin_message($fs_products)
 {
+	$products='';
 	if ($fs_products) {
 		foreach ($fs_products as $id =>$product) {
-			$products.=fs_frontend_template('order/products-list',array('id'=>$id,'product'=>$product));
+			$products.=fs_frontend_template('mail/products-listing',array('id'=>$id,'product'=>$product));
 		}
 	}
-	return $products;
+	$message_body=fs_option('admin_mail');
+	$full_template=fs_frontend_template('mail/mail-admin');
+	$template=str_replace(array('%products_listing%','%mail_body%'),array($products,$message_body),$full_template);
+	return $template;
 }
 
 

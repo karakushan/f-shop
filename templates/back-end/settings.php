@@ -35,6 +35,11 @@
                     <label for="manager_email">Куда отправлять письма <span>(по умолчанию почта админа, можно настроить несколько адресов разделив запятой):</span></label><br>
                     <input type="text" name="fs_option[manager_email]" id="manager_email" value="<?php echo fs_option('manager_email',get_option('admin_email')) ?>">
 
+                </p> 
+                <p>
+                    <label for="site_logo">Ссылка на логотип сайта в письме <span>отображается в  верхней части письма</span></label><br>
+                    <input type="text" name="fs_option[site_logo]" id="site_logo" value="<?php echo fs_option('site_logo') ?>">
+
                 </p>
                 <p>
                     <label for="email_sender">Email отправителя писем <span>(используется в заголовке письма, должен совпадать с доменом сайта)</span></label><br>
@@ -48,7 +53,6 @@
                     <label for="">Список переменных для использования в письмах</label><br>
                     <code>
                         %fs_name% - Имя заказчика,
-                        %number_products% - к-во купленных продуктов,
                         %total_amount% - общая сумма покупки,
                         %order_id% - id заказа,
                         %products_listing% - список купленных продуктов,
@@ -79,10 +83,7 @@
                     <label for="admin_mail">Текст письма администратору после отправки заказа:</label><br>
                     <textarea name="fs_option[admin_mail]" id="admin_mail"  rows="10"><?php echo fs_option('admin_mail') ?></textarea>
                 </p>
-                <p>
-                    <label for="admin_mail">Текст письма администратору(быстрый заказ):</label><br>
-                    <textarea name="fs_option[admin_mail_fs]" id="admin_mail_fs"  rows="10"><?php echo fs_option('admin_mail_fs') ?></textarea>
-                </p>
+                
             </div>
             <div id="tabs-3">
 
@@ -174,36 +175,32 @@
             </div>
             <div id="tabs-7">
                 <h2>Настройки галереи в карточке товара</h2>
+                <p>Внимание! Для работы слайдера необходимо, чтобы ваша тема поддерживала загрузку миниатюр.</p>
+                <p>
+                    <label for="image_placeholder">Заглушка изображения <span>отображается если галерея не загружена</span></label><br>
+                    <input type="text" name="fs_option[image_placeholder]"  id="image_placeholder" value="<?php echo fs_option('image_placeholder') ?>">
+                </p>
                 <h3>Большое изображение</h3>
 
                 <p>
-                    <label for="gallery_img_width">Ширина изображения</label><br>
-                    <input type="text" name="fs_option[gallery_img_width]"  id="gallery_img_width" value="<?php echo fs_option('gallery_img_width') ?>">
+                    <label for="gallery_img_width">Ширина большого изображения</label><br>
+                    <input type="text" name="fs_option[gallery_big_width]"  id="gallery_img_width" value="<?php echo fs_option('gallery_big_width') ?>">
                 </p>
                 <p>
-                    <label for="gallery_img_height">Высота изображения</label><br>
-                    <input type="text" name="fs_option[gallery_img_height]"  id="gallery_img_height" value="<?php echo fs_option('gallery_img_height') ?>">
+                    <label for="gallery_img_height">Высота большого изображения</label><br>
+                    <input type="text" name="fs_option[gallery_big_height]"  id="gallery_img_height" value="<?php echo fs_option('gallery_big_height') ?>">
                 </p>
-                <p>
-                    <label for="image_placeholder">Заглушка изображения</label><br>
-                    <input type="text" name="fs_option[image_placeholder]"  id="image_placeholder" value="<?php echo fs_option('image_placeholder') ?>">
-                </p>
-                <p>
 
-                    <input type="radio" name="fs_option[cutting_photos]" id="cutting_photos1" value="cut_width_height" <?php checked(fs_option('cutting_photos'),'cut_width_height') ?>> <label for="cutting_photos1">Обрезать фотографию по ширине и высоте</label>
+                <h3>Маленькие изображения</h3>
+                <p>
+                <label for="gallery_img_width">Ширина маленького изображения</label><br>
+                    <input type="text" name="fs_option[gallery_small_width]"  id="gallery_img_width" value="<?php echo fs_option('gallery_small_width') ?>">
                 </p>
                 <p>
-
-                    <input type="radio" name="fs_option[cutting_photos]" id="cutting_photos2" value="cut_height" <?php checked(fs_option('cutting_photos'),'cut_height') ?>>  <label for="cutting_photos2">Изображение на всю ширину, обрезать по высоте</label>
-                </p> 
-                <p>
-
-                    <input type="radio" name="fs_option[cutting_photos]" id="cutting_photos3" value="cut_width" <?php checked(fs_option('cutting_photos'),'cut_width') ?>>  <label for="cutting_photos3">Изображение на всю высоту, обрезать по ширине</label>
+                <label for="gallery_img_height">Высота маленького изображения</label><br>
+                    <input type="text" name="fs_option[gallery_small_height]"  id="gallery_img_height" value="<?php echo fs_option('gallery_small_height') ?>">
                 </p>
-                <p>
 
-                    <input type="radio" name="fs_option[cutting_photos]" id="cutting_photos4" value="cut_no" <?php checked(fs_option('cutting_photos'),'cut_no') ?>>  <label for="cutting_photos4">Не обрезать фото, выводить как есть</label>
-                </p>
             </div>
             <div id="tabs-8">
                 <h2><?php _e('Settings export and import of goods', 'fast-shop' ); ?></h2>
@@ -228,7 +225,7 @@
                     </select>
                 </p>
                 <p>
-                <a href="<?php echo wp_nonce_url(add_query_arg(array('fs_action'=>'export_yml')),'fs_action'); ?>" class="fs-btn fs-btn-green ">Запустить экпорт</a>
+                    <a href="<?php echo wp_nonce_url(add_query_arg(array('fs_action'=>'export_yml')),'fs_action'); ?>" class="fs-btn fs-btn-green ">Запустить экпорт</a>
                 </p>
                 <p>
                     <?php $upload_dir=wp_upload_dir('shop');

@@ -130,12 +130,6 @@ class FS_Ajax_Class
                 );
         }
 
-        // фильтр для замены листинга товаров для пользователей
-        $products='';
-        $products=apply_filters('fs_order_product_list',$products,$fs_products);
-        // фильтр для замены листинга товаров для админа
-        $products_admin='';
-        $products_admin=apply_filters('fs_order_product_list_admin',$products_admin,$fs_products);
         /*
          Список переменных:
          %fs_name% - Имя заказчика,
@@ -175,21 +169,20 @@ class FS_Ajax_Class
             '%fs_login%'=>$user_login,
             '%date%'=>date('d.m.Y H:i'),
             '%number_products%'=>fs_product_count($fs_products),
-            '%total_amount%'=>fs_total_amount($fs_products,false),
-            '%total_amount_admin%'=>fs_total_amount_filtering($fs_products=array(),false),
-            '%fs_wholesale_amount%'=>fs_total_wholesale_amount($fs_products,false),
+            '%total_amount%'=>apply_filters('fs_price_format',fs_total_amount($fs_products,false)).' '.fs_currency(),
             '%order_id%'=>$order_id,
-            '%products_listing%'=> $products,
-            '%products_listing_admin%'=> $products_admin,
             '%fs_email%'=>$mail_client,
             '%fs_adress%'=>$delivery_address,
             '%fs_city%'=>$city,
+            '%fs_currency%'=>fs_currency(),
             '%fs_pay%'=>$pay,
             '%fs_delivery%'=>$delivery,
             '%fs_phone%'=>$customer_phone,
             '%fs_message%'=>$fs_message,
             '%site_name%'=>get_bloginfo('name'),
             '%site_url%'=>get_bloginfo('url'),
+            '%site_description%'=>get_bloginfo('description'),
+            '%site_logo%'=>fs_option('site_logo'),
             '%admin_url%'=>get_admin_url()
             );
 
@@ -201,12 +194,11 @@ class FS_Ajax_Class
         $replace=array_values($search_replace);
 
         // текст письма заказчику
-        $user_message=fs_option('customer_mail');
-        $user_message=apply_filters('fs_order_user_message',$user_message);
+        $user_message=apply_filters('fs_order_user_message',$fs_products);
         $user_message=str_replace($search,$replace, $user_message);
+        
         // текст письма админу
-        $admin_message=fs_option('admin_mail');
-        $admin_message=apply_filters('fs_order_admin_message',$admin_message);
+        $admin_message=apply_filters('fs_order_admin_message',$fs_products);
         $admin_message=str_replace($search,$replace,$admin_message);
         
 
@@ -342,8 +334,9 @@ class FS_Ajax_Class
     public function get_taxonomy_posts()
     {
         $term_id=(int) $_POST['term_id'];
+        $post_id=(int) $_POST['post'];
         $body='';
-        $posts=get_posts(array('post_type'=>'product','posts_per_page'=>-1,
+        $posts=get_posts(array('post_type'=>'product','posts_per_page'=>-1,'post__not_in'=>array($post_id),
             'tax_query'=>
             array(
                 array(
@@ -353,16 +346,17 @@ class FS_Ajax_Class
                     )
                 )
             ));
+        
+        $body.='<select data-fs-action="select_related">';
+        $body.='<option value="">Выберите товар</option>';
         if ($posts) {
-            $body.='<select data-fs-action="select_related">';
-               $body.='<option value="">Выберите товар</option>';
-
             foreach ($posts as $key => $post) {
-               $body.='<option value="'.$post->ID.'">'.$post->post_title.'</option>';
-           }
-           $body.='</select>';
-       }
-       echo json_encode(array('body'=>$body));
-       exit;
-   }
+             $body.='<option value="'.$post->ID.'">'.$post->post_title.'</option>';
+         }
+     }
+     $body.='</select>';
+
+     echo json_encode(array('body'=>$body));
+     exit;
+ }
 } 
