@@ -35,7 +35,7 @@ function add_views_sortable_column($sortable_columns){
 }
 
 /**
- * подготовка письма для отсылки пользователя
+ * подготовка письма для отсылки пользователю
  * берёт шаблон из папки /wp-content/plugins/fast-shop/templates/front-end/mail/mail-user.php
  * заменяет в нём переменные %products_listing% и  %mail_body%
  * %products_listing% - листинг купленных товаров

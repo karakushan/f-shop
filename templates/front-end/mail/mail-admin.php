@@ -6,7 +6,7 @@
 			<div style="color: #e1fbff; font-family:Arial;font-size: 16px;margin: 0 0 13px 0">%site_description%</div>
 		</div>
 		<div style="background: #fff;padding: 46px 30px">
-			<div style="font-family:Arial;text-align: center;font-size: 16px;text-transform: uppercase;color: #12353b;font-weight: bold;margin: 0 0 40px 0; ">На вашем сайте появился новый заказ %order_id%</div>
+			<div style="font-family:Arial;text-align: center;font-size: 16px;text-transform: uppercase;color: #12353b;font-weight: bold;margin: 0 0 40px 0; ">На вашем сайте появился новый заказ №%order_id%</div>
 			<table width="100%" style="border-collapse: collapse; " cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
