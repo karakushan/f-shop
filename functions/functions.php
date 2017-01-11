@@ -919,19 +919,23 @@ function fs_get_related_products(int $product_id=0,array $args=array()){
   global $post;
   $product_id=empty($product_id) ?  $post->ID : $product_id;
   $config=new \FS\FS_Config;
+  $posts=new stdClass; 
   $products=get_post_meta($product_id,$config->meta['related_products'],false);
-  $products=array_unique($products[0]);
-  $default=array(
-    'post_type'=>'product',
-    'post__in'=>$products,
-    'post__not_in'=>array($product_id)
-    );
-  $args=wp_parse_args($args,$default);
-  $posts=new WP_Query($args);
-  if ($posts->post_count==0) {
-    $terms=get_the_terms( $product_id,'catalog');
-    $term_ids=array();
-    if ( $terms) {
+  if (!empty($products[0]) && is_array($products[0])) {
+      $products=array_unique($products[0]);
+      $default=array(
+        'post_type'=>'product',
+        'post__in'=>$products,
+        'post__not_in'=>array($product_id)
+        );
+      $args=wp_parse_args($args,$default);
+      $posts=new WP_Query($args);
+  }
+
+  if(empty($posts->post_count)){
+     $terms=get_the_terms( $product_id,'catalog');
+     $term_ids=array();
+     if ( $terms) {
         foreach ($terms as $key =>$term) {
          $term_ids[]=$term->term_id;
      }
@@ -946,6 +950,5 @@ function fs_get_related_products(int $product_id=0,array $args=array()){
         )
     ));
 }
-
 return $posts;
 }

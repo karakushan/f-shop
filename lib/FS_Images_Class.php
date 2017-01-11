@@ -7,9 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class FS_Images_Class
 {
 	protected $config;
-    public $image_big_width=330;// ширина большого изображения слайдера
+    public $image_big_width=9999;// ширина большого изображения слайдера
     public $image_big_height=330;// высота большого изображения слайдера
-    public $image_small_width=108; // ширина маленького изображения слайдера
+    public $image_small_width=9999; // ширина маленького изображения слайдера
     public $image_small_height=108;// высота маленького изображения слайдера
     public $image_big_name='fs_gallery_big';// название большого изображения слайдера
     public $image_small_name='fs_gallery_small';// название маленького изображения слайдера
@@ -91,12 +91,6 @@ public function lightslider($post_id=0, $args=array())
         );
     $args=wp_parse_args($args,$default);
     $galery=$this->fs_galery_list($post_id);
-    echo "<style>";
-    echo ".lSSlideOuter .lSPager.lSGallery img {
-        height: ".$this->image_small_height."px;
-    }";
-
-    echo "</style>";
     echo "<script>";
     echo "var fs_lightslider_options=".json_encode( $args);
     echo "</script>";
