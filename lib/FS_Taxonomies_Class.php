@@ -33,7 +33,7 @@ if (!class_exists('FS_Taxonomies_Class')) {
                 'query_var'             => true, // название параметра запроса
                 'capabilities'          => array(),
                 'meta_box_cb'           => $taxonomy['metabox'],
-                'show_admin_column'     => true, // Позволить или нет авто-создание колонки таксономии в таблице ассоциированного типа записи. (с версии 3.5)
+                'show_admin_column'     => $taxonomy['show_admin_column'], // Позволить или нет авто-создание колонки таксономии в таблице ассоциированного типа записи. (с версии 3.5)
                 '_builtin'              => false,
                 'show_in_quick_edit'    => true, // по умолчанию значение show_ui
                 );

@@ -1,19 +1,25 @@
-<?php  $mft=get_post_meta($post->ID, $this->config->meta['gallery'], false); ?>
-<button type="button" id="new_image">+ <?php _e( 'add image', 'fast-shop' ) ?></button>
-<div class="row-images" id="mmf-1">
-    <div class="row-images">
+<h3>Галерея товара</h3>
+<p>Для выбора нескольких изображений одновременно, из медиа-библиотеки,  нажмите "Ctrl" на клавиатуре и кликните по выбираемым изображениям.</p>
+<div class="fs-field-row clearfix">
+    <button type="button" class="fs-button" id="fs-add-gallery">Добавить изображения</button>
+</div>
+<?php $fs_gallery=get_post_meta($post->ID, $this->config->meta['gallery'], false);
+if (!empty($fs_gallery[0])) {
+   $gallery=$fs_gallery[0];
+}else{
+   $gallery=array();
+} ?>
+<div class="fs-field-row fs-gallery clearfix">
+    <div class="fs-grid" id="fs-gallery-wrapper">
+    <?php if($gallery) ?>
+            <?php foreach ($gallery as $key => $img): ?>
+                <?php $image_attributes = wp_get_attachment_image_src( $img, 'full');
+                $src = $image_attributes[0]; ?>
+                <div class="fs-col-4">
+                    <div class="fs-remove-img"></div>
+                    <input type="hidden" name="fs_galery[]" value="<?php echo $img ?>">
+                    <img src="<?php echo $src ?>" alt="fs gallery image #<?php echo $img ?>">
+                </div>
+            <?php endforeach ?>
     </div>
-    <?php if ($mft): ?>
-        <?php for ($i=0; $i<count($mft[0]);$i++){
-            $image_attributes = wp_get_attachment_image_src( $mft[0][$i], array(164, 133) );
-            $src = $image_attributes[0]; ?>
-            <div class="mmf-image" >
-                <img src="<?php echo $src ?>" alt="" width="164" height="133" class="image-preview">
-                <input type="hidden" name="fs_galery[]" value="<?php echo $mft[0][$i] ?>" class="img-url">
-                <button type="button" class="upload-mft"><?php _e( 'Choose', 'fast-shop' ) ?></button>
-                <button type="button" class="remove-tr" onclick="btn_view(this)"><?php _e( 'to remove', 'fast-shop' ) ?></button>
-            </div>
-            <?php
-        } ?>
-    <?php endif; ?>
 </div>

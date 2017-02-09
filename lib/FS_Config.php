@@ -48,24 +48,29 @@ class FS_Config
         $taxonomies=array(
             'catalog'=>array(
                 'label'=>__( 'Product categories', 'fast-shop' ),
-                'metabox'=>null
+                'metabox'=>null,
+                'show_admin_column'=>true
                 )
             ,
             'fs-payment-methods'=>array(
                 'label'=>__( 'Payment methods', 'fast-shop' ),
-                'metabox'=>false
+                'metabox'=>false,
+                'show_admin_column'=>false
                 ),
             'fs-delivery-methods'=>array(
                 'label'=>__( 'Delivery methods', 'fast-shop' ),
-                'metabox'=>false
+                'metabox'=>false,
+                'show_admin_column'=>false
                 ),
             'product-attributes'=>array(
                 'label'=>__( 'Product attributes', 'fast-shop' ),
-                'metabox'=>null
+                'metabox'=>null,
+                'show_admin_column'=>false
                 ),
             'manufacturers'=>array(
                 'label'=>__( 'Manufacturers', 'fast-shop' ),
-                'metabox'=>null
+                'metabox'=>null,
+                'show_admin_column'=>false
                 )
             );
         $this->taxonomies=apply_filters('fs_taxonomies',$taxonomies);
@@ -88,7 +93,7 @@ class FS_Config
                 ),
             '3'=>array(
                 'title'=>__('Other','fast-shop'),
-                'on'=>false,
+                'on'=>true,
                 'body'=>'',
                 'template'=>''
                 ),
@@ -128,16 +133,19 @@ class FS_Config
             'price'=>array(
                 'name'=>__( 'The base price', 'fast-shop' ),
                 'meta_key'=>$this->meta['price'],
+                'on'=>true,
                 'description'=> __( 'This is the main type prices', 'fast-shop' )
                 ),
             'action_price'=>array(
                 'name'=>__( 'Promotional price', 'fast-shop' ),
                 'meta_key'=>$this->meta['action_price'],
+                'on'=>true,
                 'description'=> __( 'This type of price interrupts the base price', 'fast-shop' )
                 ),
             'displayed_price'=>array(
                 'name'=>__( 'The displayed price', 'fast-shop' ),
                 'meta_key'=>$this->meta['displayed_price'],
+                'on'=>false,
                 'description'=> __( 'example: "from %d %c for a couple" (%d - replaced with the price of %s on currency)', 'fast-shop' )
                 )
             );

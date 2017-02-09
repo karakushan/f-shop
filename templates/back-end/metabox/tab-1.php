@@ -1,3 +1,63 @@
+
+                
+                
+                <h3>Галерея товара</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem eveniet dicta, accusantium!</p>
+                <div class="fs-field-row clearfix">
+                    <button type="button" class="fs-button" id="fs-add-gallery">Добавить изображения</button>
+                </div>
+                <div class="fs-field-row fs-gallery clearfix">
+                    <div class="fs-grid">
+                        <div class="fs-col-4">
+                            <div class="fs-remove-img"></div>
+                            <input type="hidden" name="">
+                            <img src="img/image.svg" alt="">
+                        </div>
+                        <div class="fs-col-4">
+                            <div class="fs-remove-img"></div>
+                            <input type="hidden" name="">
+                            <img src="img/image.svg" alt="">
+                        </div><div class="fs-col-4">
+                            <div class="fs-remove-img"></div>
+                            <input type="hidden" name="">
+                            <img src="img/image.svg" alt="">
+                        </div>
+                        <div class="fs-col-4">
+                            <div class="fs-remove-img"></div>
+                            <input type="hidden" name="">
+                            <img src="img/image.svg" alt="">
+                        </div>
+                        
+                    </div>
+                    <div class="fs-grid">
+                        <div class="fs-col-4">
+                            <div class="fs-remove-img"></div>
+                            <input type="hidden" name="">
+                            <img src="img/image.svg" alt="">
+                        </div>
+                        <div class="fs-col-4">
+                            <div class="fs-remove-img"></div>
+                            <input type="hidden" name="">
+                            <img src="img/image.svg" alt="">
+                        </div><div class="fs-col-4">
+                            <div class="fs-remove-img"></div>
+                            <input type="hidden" name="">
+                            <img src="img/image.svg" alt="">
+                        </div>
+                        <div class="fs-col-4">
+                            <div class="fs-remove-img"></div>
+                            <input type="hidden" name="">
+                            <img src="img/image.svg" alt="">
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                
+                
+
+
+            
 <?php
 $fs_attr_post=get_post_meta($post->ID,'fs_attributes_post',false);
 print_r($fs_attr_post); ?>

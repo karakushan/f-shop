@@ -39,7 +39,7 @@ define('FS_PLUGIN_URL',plugin_dir_url( __FILE__ ));
 
 if (class_exists('\FS\FS_Init')) {
     new \FS\FS_Init;
-    
+
     function fs_activate(){
         global $wpdb;
         $config=new FS\FS_Config();
@@ -67,7 +67,7 @@ if (class_exists('\FS\FS_Init')) {
 
 
             dbDelta($sql);
-        }  
+        }
 
         if($wpdb->get_var("SHOW TABLES LIKE 'wp_fs_order_info'") != 'wp_fs_order_info'){
             $sql2 = "CREATE TABLE `wp_fs_order_info` (
@@ -85,7 +85,7 @@ if (class_exists('\FS\FS_Init')) {
         }
         add_role('wholesale_buyer', 'Оптовый покупатель', array( 'read' => true, 'level_0' => true ) );
 
-    } 
+    }
     function fs_deactivate()
     {
     // Do nothing

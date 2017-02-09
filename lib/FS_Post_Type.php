@@ -91,23 +91,31 @@ class FS_Post_Type
         {
             foreach(@$this->config->meta as $field_name)
             {
-                // if(!isset($_POST[$field_name])) continue;
-                $field_value=$_POST[$field_name];
-                
                 switch ($field_name) {
                     case 'fs_price':
-                    $price=(float)str_replace(array(','),array('.'),$field_value);
+                    $price=(float)str_replace(array(','),array('.'), sanitize_text_field( $_POST[$field_name]));
                     update_post_meta($post_id, $field_name,$price);
                     break; 
                     case 'fs_related_products':
                     if(empty( $field_value)){
                         delete_post_meta($post_id, $field_name);
                     }else{
-                        update_post_meta($post_id, $field_name,$field_value);
+                        update_post_meta($post_id, $field_name,sanitize_text_field( $_POST[$field_name]));
                     }
-                    break;
+                    break; 
                     default:
-                    update_post_meta($post_id, $field_name,$field_value);
+                    if (empty($_POST[$field_name])) {
+                        delete_post_meta($post_id, $field_name);
+                    }else{
+                        if (is_array($_POST[$field_name])) {
+
+                            $field_sanitize=array_map('sanitize_text_field',$_POST[$field_name]);
+                            $field_sanitize=array_unique($field_sanitize);
+                            update_post_meta($post_id, $field_name,$field_sanitize);
+                        }else{
+                            update_post_meta($post_id, $field_name,sanitize_text_field( $_POST[$field_name])); 
+                        }
+                    }
                     break;
                 }
                 
@@ -150,34 +158,66 @@ class FS_Post_Type
     public function add_inner_meta_boxes($post)
     {
         $this->product_id=$post->ID;
-        echo '<div id="fs-tabs" class="fs-metabox">';
+        $cookie=isset($_COOKIE['fs_active_tab']) ? $_COOKIE['fs_active_tab'] : NULL;
+        echo '<div class="fs-metabox" id="fs-metabox">';
+
         if (!empty($this->config->tabs) && is_array($this->config->tabs)){
             echo '<ul>';
             foreach ($this->config->tabs as $key=>$tab) {
-                echo '<li><a href="#tab-'.$key.'">'.__($tab['title'],'fast-shop').'</a></li>';
-            }
-            echo '</ul>';
-            foreach ($this->config->tabs as $key_body=>$tab_body) {
-
-                $template_default = FS_PLUGIN_PATH.'templates/back-end/metabox/tab-'.$key_body.'.php';
-                $template_file=empty($tab_body['template']) ? $template_default : $tab_body['template'];
-
-
-                echo '<div id="tab-'.$key_body.'">';
-                if (empty($tab_body['body'])){
-                    if (file_exists($template_file)){
-                        include($template_file);
+                if (!$tab['on'])  continue;
+                if ($cookie) {
+                    if ($cookie==$key) {
+                        $class='class="fs-link-active"';
+                    }else{
+                        $class='';
                     }
                 }else{
-                    echo $tab_body['body'];
+                   if ($key==0) {
+                    $class='class="fs-link-active"';
+                }else{
+                    $class='';
                 }
-                echo '</div>';
-
             }
-
+            echo '<li '.$class.'><a href="#tab-'.$key.'" data-tab="'.$key.'">'.__($tab['title'],'fast-shop').'</a></li>';
         }
-        echo '</div>';
+        echo '</ul>';
+        echo "<div class=\"fs-tabs\">";
+        foreach ($this->config->tabs as $key_body=>$tab_body) {
+            if (!$tab_body['on'])  continue;
+            if ($cookie) {
+             if ($key_body==$cookie) {
+                $class_tab='fs-tab-active';
+            }else{
+                $class_tab='';
+            }
+        }else{
+           if ($key_body==0) {
+            $class_tab='fs-tab-active';
+        }else{
+            $class_tab='';
+        }
     }
+
+    $template_default = FS_PLUGIN_PATH.'templates/back-end/metabox/tab-'.$key_body.'.php';
+    $template_file=empty($tab_body['template']) ? $template_default : $tab_body['template'];
+
+    echo '<div class="fs-tab '.$class_tab.'" id="tab-'.$key_body.'">';
+    if (empty($tab_body['body'])){
+        if (file_exists($template_file)){
+            include($template_file);
+        }
+    }else{
+        echo $tab_body['body'];
+    }
+    echo '</div>';
+
+}
+echo "</div>";
+echo '<div class="clearfix"></div>';
+
+}
+echo '</div>';
+}
 
 
 
