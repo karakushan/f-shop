@@ -10,7 +10,7 @@ class FS_Cart_Class
 	function __construct()
 	{
 		add_action('init', array(&$this,'fast_shop_init_session'), 1);
-	
+
 		add_action('wp_ajax_add_to_cart', array(&$this,'add_to_cart_ajax'));
 		add_action('wp_ajax_nopriv_add_to_cart', array(&$this,'add_to_cart_ajax'));
 
@@ -32,25 +32,48 @@ class FS_Cart_Class
 	function fast_shop_init_session()
 	{
 		@session_start();
+
+		// регистриуем глобальную переменную
+		global $cart;
+		if (!empty($_SESSION['cart'])) {
+			foreach ($_SESSION['cart'] as $key => $count){
+				if ($key==0) continue;
+				$price=fs_get_price($key);
+				$price_show=apply_filters('fs_price_format',$price);
+				$count=(int)$count['count'];
+				$all_price=$price*$count;
+				$all_price=apply_filters('fs_price_format',$all_price);
+
+				$cart[$key]=array(
+					'id'=>$key,
+					'name'=>get_the_title($key),
+					'count'=>$count,
+					'link'=>get_permalink($key),
+					'price'=> $price_show,
+					'all_price'=>$all_price,
+					'currency'=>fs_currency()
+					);
+			}
+		}
+
 	}
 
 	// ajax обработка добавления в корзину
 	function add_to_cart_ajax()
 	{
-		$p_id=(int)$_REQUEST['post_id'];
-		$p_c=(int)$_REQUEST['attr']['count'];
-		$p_attr=esc_sql($_REQUEST['attr']);
-
-		if (isset($_SESSION['cart'][$p_id])) {
-			$count=$_SESSION['cart'][$p_id]['count'];
-			$_SESSION['cart'][$p_id]=array(
-				'count'=>$count+$p_c,
-				'attr'=>$p_attr	
+		$product_id=(int)$_REQUEST['post_id'];
+		$attr=array_map('sanitize_text_field',$_REQUEST['attr']);
+		$count=(int)$attr['count'];
+		if (isset($_SESSION['cart'][$product_id])) {
+			$count_sess=$_SESSION['cart'][$product_id]['count'];
+			$_SESSION['cart'][$product_id]=array(
+				'count'=>$count_sess+$count,
+				'attr'=>$attr	
 				);
 		}else{
-			$_SESSION['cart'][$p_id]=array(
-				'count'=>$p_c,
-				'attr'=>$p_attr		
+			$_SESSION['cart'][$product_id]=array(
+				'count'=>$count,
+				'attr'=>$attr		
 				);
 		}
 		fs_cart_widget();

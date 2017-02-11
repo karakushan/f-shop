@@ -60,7 +60,7 @@ function fs_get_price($post_id=0,$filter=true)
 
     // устанавливаем id поста
     global $post;
-    $post_id=empty($post_id) ? $post->ID : (int)$post_id;
+    $post_id=empty($post_id) && isset($post) ? $post->ID : (int)$post_id;
 
     //узнаём какой тип скидки активирован в настройках (% или фикс)
     $action_type=isset($config->options['action_count'])&&$config->options['action_count']==1?1:0;
@@ -206,7 +206,9 @@ function fs_get_wholesale_price($post_id=0){
  */
 function fs_total_amount($products=array(),$show=true,$wrap='%s <span>%s</span>')
 {
+
     $all_price=array();
+    $price='';
     $products=!empty($_SESSION['cart'])?$_SESSION['cart']:$products;
     foreach ($products as $key => $count){
         $all_price[$key]=$count['count']*fs_get_price($key);
@@ -216,10 +218,11 @@ function fs_total_amount($products=array(),$show=true,$wrap='%s <span>%s</span>'
     if ($show==false) {
         return $price;
     } else {
-     $price=apply_filters('fs_price_format',$price);
-     $price=sprintf($wrap,$price,fs_currency());
-     echo $price;
- }
+       $price=apply_filters('fs_price_format',$price);
+       $price=sprintf($wrap,$price,fs_currency());
+       echo $price;
+   }
+   
 }
 
 /**
@@ -277,7 +280,7 @@ function fs_total_wholesale_amount($products=array(),$echo=true, $wrap='%s <span
  * возвращает к-во всех товаров в корзине
  * @return [type] [description]
  */
-function fs_total_count()
+function fs_total_count($echo=true)
 {
     $count=array();
     if (isset($_SESSION['cart'])) {
@@ -286,8 +289,11 @@ function fs_total_count()
         }
     }
     $all_count=array_sum($count);
-    return  $all_count;
-
+    if ($echo) {
+        echo $all_count;
+    }else{
+        return  $all_count;
+    }
 }
 
 /**
@@ -307,6 +313,7 @@ function fs_get_cart()
     $cur_symb=fs_currency();
     if (count($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $count){
+            if ($key==0) continue;
             $price=fs_get_price($key);
             $price_show=apply_filters('fs_price_format',$price);
             $count=(int)$count['count'];
@@ -323,6 +330,7 @@ function fs_get_cart()
                 );
         }
     }
+
     return $products;
 }
 
@@ -354,11 +362,12 @@ function fs_delete_position($product_id,$text='&#10005;',$type='link',$class='')
 
 
 /**
- * Получает к-во всех товаров в корзине
- * @param  boolean $show [description]
+ * Выводит к-во всех товаров в корзине
+ * @param  array $products  список товаров, по умолчанию $_SESSION['cart']
+ * @param  boolean $echo выводить результат или возвращать, по умолчанию выводить
  * @return [type]        [description]
  */
-function fs_product_count($products=array())
+function fs_product_count($products=array(),$echo=true)
 {
     $all_count=array();
     if (!empty($_SESSION['cart']) || !is_array($products)){
@@ -370,7 +379,12 @@ function fs_product_count($products=array())
         }
     }
     $count=array_sum($all_count);
-    return (int)$count;
+    $count=(int)$count;
+    if ($echo) {
+        echo $count;
+    } else {
+     return $count;
+ }
 }
 
 
@@ -403,16 +417,17 @@ function fs_base_price($post_id=0,$echo=true, $wrap='<span>%s</span>')
 
 /**
  * [Отображает кнопку "в корзину" со всеми необходимыми атрибутамии]
- * @param  string $post_id [id поста (оставьте пустым в цикле wordpress)]
+ * @param  int $post_id [id поста (оставьте пустым в цикле wordpress)]
  * @param  string $label [надпись на кнопке]
- * @param  string $attr [атрибуты тега button такие как класс и прочее]
+ * @param  array $attr [атрибуты тега button такие как класс и прочее]
  * @param  string $preloader [html код прелоадера]
  * @param  string $send_icon [html код иконки успешного добавления в корзину]
  * @param string $json
  */
-function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon='<i class="fa fa-check" aria-hidden="true"></i>',$json='')
+function fs_add_to_cart($post_id=0,$label='',$attr=array(),$preloader='',$send_icon='<i class="fa fa-check" aria-hidden="true"></i>',$json='')
 {
     global $post;
+    $atributes=array();
     $post_id=empty($post_id) ? $post->ID : $post_id;
 
     if ($preloader=='') $preloader='<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>';
@@ -420,17 +435,21 @@ function fs_add_to_cart($post_id='',$label='',$attr='',$preloader='',$send_icon=
     if ($label=='') {
         $label=__( 'Add to cart', 'fast-shop' );
     }
-
     //Добавляем к json свои значения
-    $js=json_decode($json,true);
-    $js['post_id']=$post_id;
-    $js['action']='add_to_cart';
-    $js['count']=1;
-    $js['attr']=array('count'=>1);
+    $attr_json=json_encode(array('count'=>1));
 
-    $json=json_encode($js);
+    $attr_set=array(
+        'data-action'=>'add-to-cart',
+        'data-product-id'=>$post_id,
+        'data-product-name'=>get_the_title($post_id),
+        'id'=>'fs-atc-'.$post_id,
+        'data-attr'=>$attr_json
+        );
 
-    echo "<button data-fs-action=\"add-to-cart\" data-product-id=\"$post_id\" data-product-name=\"".get_the_title($post_id)."\" data-json='".$json."' $attr id=\"fs-atc-$post_id\">$label <span class=\"send_ok\">$send_icon</span><span class=\"fs-preloader\">$preloader</span></button> ";
+    $atributes=fs_parse_attr($attr,$attr_set);
+
+    $button="<button $atributes >$label <span class=\"send_ok\">$send_icon</span><span class=\"fs-preloader\">$preloader</span></button> ";
+    echo apply_filters('fs_add_to_cart',$button);
 }
 
 //Отображает кнопку сабмита формы заказа
@@ -463,7 +482,7 @@ function fs_post_views($post_id='')
 
  * @return показывает виджет корзины
  */
-function fs_cart_widget()
+function fs_cart_widget($attr=array())
 {
 
     $template_theme=TEMPLATEPATH.'/fast-shop/cart-widget/widget.php';
@@ -471,9 +490,12 @@ function fs_cart_widget()
 
     if (file_exists($template_theme)) {
         $template=$template_theme;
-
     }
-    echo "<div data-fs-element=\"cart-widget\">";
+    $attr_set=array(
+        'data-fs-element'=>'cart-widget'
+        );
+    $attr=fs_parse_attr($attr,$attr_set);
+    echo "<div  $attr>";
     require $template;
     echo "</div>";
 }
@@ -523,26 +545,23 @@ function fs_aviable_product($post_id='', $aviable_text='', $no_aviable_text='')
 
 /**
  * Отоюражает поле для ввода количества добавляемых продуктов в корзину
- * @param  string $product_id - id продукта
- * @param string $type - тип поля input type="number" (по умолчанию) или input type="text"
+ * @param  int $product_id - id продукта
  *
  */
-function fs_quantity_product($product_id='',$type='number')
+function fs_quantity_product($product_id=0,$echo=true)
 {
     global $post;
     $product_id=!empty($product_id)?$product_id : $post->ID;
-    switch ($type){
-        case 'number':
-        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-        break;
-        case 'text':
-        echo '<div class="count-error" style="display: none"></div><input type="text" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-        break;
-        default:
-        echo '<div class="count-error" style="display: none"></div><input type="number" name="count"  value="1" min="1" data-fs-element="attr" data-product-id="'.$product_id.'">';
-        break;
-    }
-
+    $quantity_el='<div class="fs-quantity-product">
+    <button type="button" class="plus" data-fs-count="pluss">+</button> 
+    <input type="text" name="" value="1" data-fs-action="change_count" data-fs-product-id="'.$product_id.'"> 
+    <button type="button" class="minus" data-fs-count="minus">-</button> </div>';
+    $quantity_el=apply_filters('fs_quantity_product',$quantity_el);
+    if ($echo) {
+       echo  $quantity_el;
+   }else{
+    return $quantity_el;
+}
 }
 
 /**
@@ -856,9 +875,9 @@ function fs_product_code(int $product_id=0,$wrap=''){
     $articul=get_post_meta($product_id,$config->meta['product_article'],1);
     if(empty($articul)) return;
     if ($wrap) {
-     $articul=sprintf($wrap,$articul);
- }
- return  $articul;
+       $articul=sprintf($wrap,$articul);
+   }
+   return  $articul;
 }
 
 /**
@@ -907,7 +926,7 @@ function fs_gallery_images_url(int $product_id=0)
     $gallery_images= $gallery->fs_galery_images($product_id);
     $images=array();
     if (is_array($gallery_images)) {
-       foreach ($gallery_images as $key => $gallery_image) {
+     foreach ($gallery_images as $key => $gallery_image) {
         $images[]=wp_get_attachment_url( $gallery_image);
     }
 }
@@ -938,14 +957,14 @@ function fs_get_related_products(int $product_id=0,array $args=array()){
   }
 
   if(empty($posts->post_count)){
-   $terms=get_the_terms( $product_id,'catalog');
-   $term_ids=array();
-   if ( $terms) {
-    foreach ($terms as $key =>$term) {
-       $term_ids[]=$term->term_id;
-   }
-}
-$posts=new WP_Query(array(
+     $terms=get_the_terms( $product_id,'catalog');
+     $term_ids=array();
+     if ( $terms) {
+        foreach ($terms as $key =>$term) {
+         $term_ids[]=$term->term_id;
+     }
+ }
+ $posts=new WP_Query(array(
     'post_type'=>'product',
     'posts_per_page'=>4,
     'tax_query'=>array(
@@ -981,4 +1000,21 @@ function fs_change_price_percent($product_id=0,$wrap=''){
         }
     }
     return $change_price;
+}
+
+/**
+ * производит очистку и форматирование атрибутов в строку
+ * служебная функция
+ * @param  array  $attr    атрибуты переданные в функцию
+ * @param  array  $default  атрибуты функции по умолчанию
+ * @return [type]          строка атрибутов
+ */
+function fs_parse_attr($attr=array(),$default=array()){
+    $attr=array_merge($attr,$default);
+    $attr=array_map('esc_attr',$attr);
+    foreach ($attr as $key => $att) {
+        $atributes[]=$key.'="'.$att.'"';
+    }
+    $atributes=implode(' ',$atributes);
+    return $atributes;
 }
