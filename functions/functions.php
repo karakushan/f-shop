@@ -147,7 +147,7 @@ function fs_row_wholesale_price($post_id, $count, $curency=true, $wrap='%s <span
  * @param string $post_id  - id товара
  * @param string $wrap     - html обёртка для цены
  */
-function fs_the_price($post_id='',$wrap="<span>%s</span>")
+function fs_the_price($post_id=0,$wrap="%s <span>%s</span>")
 {
     global $post;
     $config=new \FS\FS_Config();
@@ -161,7 +161,7 @@ function fs_the_price($post_id='',$wrap="<span>%s</span>")
         $displayed_price=str_replace('%d', '%01.2f', $displayed_price);
         printf($displayed_price,$price,$cur_symb);
     } else {
-        printf($wrap,$price.' <span>'.$cur_symb.'</span>');
+        printf($wrap,$price,$cur_symb);
     }
 
 }
@@ -216,10 +216,10 @@ function fs_total_amount($products=array(),$show=true,$wrap='%s <span>%s</span>'
     if ($show==false) {
         return $price;
     } else {
-       $price=apply_filters('fs_price_format',$price);
-       $price=sprintf($wrap,$price,fs_currency());
-       echo $price;
-   }
+     $price=apply_filters('fs_price_format',$price);
+     $price=sprintf($wrap,$price,fs_currency());
+     echo $price;
+ }
 }
 
 /**
@@ -846,14 +846,19 @@ function fs_quick_order_button($post_id=0, $attr=array()){
 /**
  * получает артикул товара по переданному id поста
  * @param  int|integer $product_id - id поста
+ * @param  string $wrap - html обёртка для артикула (по умолчанию нет)
  * @return  string                 - артикул товара
  */
-function fs_product_code(int $product_id=0){
+function fs_product_code(int $product_id=0,$wrap=''){
     global $post;
     $config=new \FS\FS_Config();
     $product_id=$product_id==0 ? $post->ID : $product_id;
     $articul=get_post_meta($product_id,$config->meta['product_article'],1);
-    return  $articul;
+    if(empty($articul)) return;
+    if ($wrap) {
+     $articul=sprintf($wrap,$articul);
+ }
+ return  $articul;
 }
 
 /**
@@ -902,7 +907,7 @@ function fs_gallery_images_url(int $product_id=0)
     $gallery_images= $gallery->fs_galery_images($product_id);
     $images=array();
     if (is_array($gallery_images)) {
-     foreach ($gallery_images as $key => $gallery_image) {
+       foreach ($gallery_images as $key => $gallery_image) {
         $images[]=wp_get_attachment_url( $gallery_image);
     }
 }
@@ -933,14 +938,14 @@ function fs_get_related_products(int $product_id=0,array $args=array()){
   }
 
   if(empty($posts->post_count)){
-     $terms=get_the_terms( $product_id,'catalog');
-     $term_ids=array();
-     if ( $terms) {
-        foreach ($terms as $key =>$term) {
-         $term_ids[]=$term->term_id;
-     }
- }
- $posts=new WP_Query(array(
+   $terms=get_the_terms( $product_id,'catalog');
+   $term_ids=array();
+   if ( $terms) {
+    foreach ($terms as $key =>$term) {
+       $term_ids[]=$term->term_id;
+   }
+}
+$posts=new WP_Query(array(
     'post_type'=>'product',
     'posts_per_page'=>4,
     'tax_query'=>array(
@@ -951,4 +956,29 @@ function fs_get_related_products(int $product_id=0,array $args=array()){
     ));
 }
 return $posts;
+}
+
+function fs_change_price_percent($product_id=0,$wrap=''){
+    global $post;
+    $product_id=empty($product_id) ?  $post->ID : $product_id;
+    $change_price=0;
+    $config=new FS\FS_Config;
+     // получаем возможные типы цен
+    $base_price=get_post_meta( $product_id, $config->meta['price'], true );//базовая и главная цена
+    $base_price=(float) $base_price;
+    $action_price=get_post_meta( $product_id,$config->meta['action_price'], true );//акионная цена
+    $action_price=(float) $action_price;
+    if (!empty($action_price) && !empty($base_price) && $action_price<$base_price){
+
+        $change_price=($base_price-$action_price)/$base_price*100;
+        $change_price=round($change_price);
+    }
+    if (!empty($wrap)) {
+        if ($change_price==0) {
+            $change_price='';
+        }else{
+            $change_price=sprintf($wrap,$change_price);
+        }
+    }
+    return $change_price;
 }
