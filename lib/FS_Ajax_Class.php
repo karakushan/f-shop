@@ -249,26 +249,16 @@ class FS_Ajax_Class
 
     public function fs_addto_wishlist()
     {
-        $res='';
         $product_id=(int)$_REQUEST['product_id'];
-
-        $_SESSION['fs_user_settings']['fs_wishlist'][$product_id]= $product_id;
-        if(!empty($_SESSION['fs_user_settings']['fs_wishlist'])){
-            $wishlist=$_SESSION['fs_user_settings']['fs_wishlist'];
-            $count=count($wishlist);
-            $res.= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>'.$count.'</span></a><ul class="fs-wishlist-listing">
-            <li class="wishlist-header">'.__('Wishlist','cube44').': <i class="fa fa-times-circle" aria-hidden="true"></i></li>';
-            foreach ($_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value) {
-                $res.= "<li><i class=\"fa fa-trash\" aria-hidden=\"true\" data-fs-action=\"wishlist-delete-position\" data-product-id=\"$key\" data-product-name=\"".get_the_title($key)."\" ></i> <a href=\"".get_permalink($key)."\">".get_the_title($key)."</a></li>";
-            }
-            $res.='</ul>';
-        }
-        if (!empty($res)) {
-            echo json_encode(array(
-                'body'=>$res,
-                'type'=>'success'
-                ));
-        }
+        $_SESSION['fs_wishlist'][$product_id]= $product_id;
+        ob_start();
+        fs_wishlist_widget(array(),false);
+        $widget=ob_get_clean();
+        echo json_encode(array(
+            'body'=>$widget,
+            'type'=>'success'
+            ));
+        
         exit;
     }
 
@@ -351,12 +341,12 @@ class FS_Ajax_Class
         $body.='<option value="">Выберите товар</option>';
         if ($posts) {
             foreach ($posts as $key => $post) {
-             $body.='<option value="'.$post->ID.'">'.$post->post_title.'</option>';
-         }
-     }
-     $body.='</select>';
+               $body.='<option value="'.$post->ID.'">'.$post->post_title.'</option>';
+           }
+       }
+       $body.='</select>';
 
-     echo json_encode(array('body'=>$body));
-     exit;
- }
+       echo json_encode(array('body'=>$body));
+       exit;
+   }
 } 

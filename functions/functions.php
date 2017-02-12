@@ -218,11 +218,11 @@ function fs_total_amount($products=array(),$show=true,$wrap='%s <span>%s</span>'
     if ($show==false) {
         return $price;
     } else {
-       $price=apply_filters('fs_price_format',$price);
-       $price=sprintf($wrap,$price,fs_currency());
-       echo $price;
-   }
-   
+     $price=apply_filters('fs_price_format',$price);
+     $price=sprintf($wrap,$price,fs_currency());
+     echo $price;
+ }
+
 }
 
 /**
@@ -382,8 +382,8 @@ function fs_product_count($products=array(),$echo=true)
     if ($echo) {
         echo $count;
     } else {
-     return $count;
- }
+       return $count;
+   }
 }
 
 
@@ -557,8 +557,8 @@ function fs_quantity_product($product_id=0,$echo=true)
     <button type="button" class="minus" data-fs-count="minus" data-target="#product-quantify-'.$product_id.'">-</button> </div>';
     $quantity_el=apply_filters('fs_quantity_product',$quantity_el);
     if ($echo) {
-       echo  $quantity_el;
-   }else{
+     echo  $quantity_el;
+ }else{
     return $quantity_el;
 }
 }
@@ -739,20 +739,30 @@ function fs_price_max($filter=true){
 /**
  * функция отображает кнопку "добавить в список желаний"
  * @param  integer $post_id  - id записи
- * @param  string  $content  - внутренний html кнопки
+ * @param  array  $args  - дополнительные аргументы массивом
  * @return [type]           [description]
  */
 function fs_wishlist_button($post_id=0,$args='')
 {
     global $post;
-    $post_id=empty($post_id)?$post->ID:$post_id;
+    $post_id=empty($post_id) ? $post->ID : $post_id;
     // определим параметры по умолчанию
     $defaults = array(
         'attr' => '',
-        'content' => '',
+        'content' => __('add to wish list','fast-shop'),
+        'type'=>'button'
         );
     $args = wp_parse_args( $args, $defaults );
-    echo '<button data-fs-action="wishlist" '.$args['attr'].'  data-product-id="'.$post_id.'"><span class="whishlist-message"></span>'.$args['content'].'</button>';
+    switch ($args['type']) {
+        case 'link':
+        echo '<a  data-fs-action="wishlist" '.$args['attr'].' data-name="'.get_the_title($post_id).'"  data-product-id="'.$post_id.'"><span class="whishlist-message"></span>'.$args['content'].'</a>';
+        break;
+        
+        default:
+        echo '<button data-fs-action="wishlist" '.$args['attr'].'  data-product-id="'.$post_id.'" data-name="'.get_the_title($post_id).'"><span class="whishlist-message"></span>'.$args['content'].'</button>';
+        break;
+    }
+
 }
 
 /**
@@ -874,9 +884,9 @@ function fs_product_code(int $product_id=0,$wrap=''){
     $articul=get_post_meta($product_id,$config->meta['product_article'],1);
     if(empty($articul)) return;
     if ($wrap) {
-       $articul=sprintf($wrap,$articul);
-   }
-   return  $articul;
+     $articul=sprintf($wrap,$articul);
+ }
+ return  $articul;
 }
 
 /**
@@ -926,7 +936,7 @@ function fs_gallery_images_url(int $product_id=0)
     $gallery_images= $gallery->fs_galery_images($product_id);
     $images=array();
     if (is_array($gallery_images)) {
-     foreach ($gallery_images as $key => $gallery_image) {
+       foreach ($gallery_images as $key => $gallery_image) {
         $images[]=wp_get_attachment_url( $gallery_image);
     }
 }
@@ -957,14 +967,14 @@ function fs_get_related_products(int $product_id=0,array $args=array()){
   }
 
   if(empty($posts->post_count)){
-     $terms=get_the_terms( $product_id,'catalog');
-     $term_ids=array();
-     if ( $terms) {
-        foreach ($terms as $key =>$term) {
-         $term_ids[]=$term->term_id;
-     }
- }
- $posts=new WP_Query(array(
+   $terms=get_the_terms( $product_id,'catalog');
+   $term_ids=array();
+   if ( $terms) {
+    foreach ($terms as $key =>$term) {
+       $term_ids[]=$term->term_id;
+   }
+}
+$posts=new WP_Query(array(
     'post_type'=>'product',
     'posts_per_page'=>4,
     'tax_query'=>array(
@@ -1017,4 +1027,43 @@ function fs_parse_attr($attr=array(),$default=array()){
     }
     $atributes=implode(' ',$atributes);
     return $atributes;
+}
+
+/**
+ * возвращает список желаний
+ * @return array список желаний
+ */
+function fs_get_wishlist(){
+    $wishlist=!empty($_SESSION['fs_wishlist'])? $_SESSION['fs_wishlist'] : array();
+    $wishlist_count=count($wishlist);
+    $wishlist=array(
+        'count'=>$wishlist_count,
+        'page'=>get_permalink(fs_option('page_whishlist')),
+        'products'=>$wishlist
+        );
+    return $wishlist; 
+}
+
+/**
+ * отображает список желаний
+ * @param  array $html_attr  массив html атрибутов для дива обёртки
+ * @param  dool $wrap  выводить ли стандартную обёртку для элеменнтов
+ * @return [type]       [description]
+ */
+function fs_wishlist_widget($html_attr,$wrap=true){
+    $template_theme=TEMPLATEPATH.'/fast-shop/wishlist/wishlist.php';
+    $template=plugin_dir_path( __FILE__ ).'templates/front-end/wishlist/wishlist.php';
+
+    if (file_exists($template_theme)) {
+        $template=$template_theme;
+    }
+    $attr_set=array(
+        'data-fs-element'=>'whishlist-widget'
+        );
+
+    $html_attr=fs_parse_attr($html_attr,$attr_set);
+
+    if ($wrap)  echo "<div  $html_attr>";
+    require $template;
+    if ($wrap)  echo "</div>";
 }

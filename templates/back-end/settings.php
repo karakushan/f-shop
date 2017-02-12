@@ -5,10 +5,10 @@
             <ul>
                 <li><a href="#tabs-1"><?php _e( 'General', 'fast-shop' ); ?></a></li>
                 <li><a href="#tabs-2"><?php _e( 'Letters', 'fast-shop' ); ?></a></li>
-                <li><a href="#tabs-3"><?php _e( 'Stock', 'fast-shop' ); ?></a></li>
+                <!-- <li><a href="#tabs-3"><?php _e( 'Stock', 'fast-shop' ); ?></a></li> -->
                 <li><a href="#tabs-4"><?php _e( 'Page', 'fast-shop' ); ?></a></li>
                 <li><a href="#tabs-5"><?php _e( 'Users', 'fast-shop' ); ?></a></li>
-                <li><a href="#tabs-6"><?php _e( 'Messages', 'fast-shop' ); ?></a></li>
+                <!-- <li><a href="#tabs-6"><?php _e( 'Messages', 'fast-shop' ); ?></a></li> -->
                 <li><a href="#tabs-7"><?php _e( 'Gallery', 'fast-shop' ); ?></a></li>
                 <li><a href="#tabs-8"><?php _e( 'Export', 'fast-shop' ); ?></a></li>
             </ul>
@@ -85,28 +85,28 @@
                 </p>
                 
             </div>
-            <div id="tabs-3">
-
-                <p>
-                    <label for="action_pcount">К-во товаров при которых активируется скидка:</label><br>
-                    <input type="number" min="1" name="fs_option[action_pcount]" id="action_pcount" value="<?php echo fs_option('action_pcount') ?>">
-                </p>
-                <p>
-                    <label>Акционная скидка считается в :</label><br>
-                    <label class="label-light"> <input type="radio" name="fs_option[action_count]" id="action_count1" value="0" <?php checked('0',fs_option('action_count')) ?> <?php checked('',fs_option('action_count')) ?>>в фиксированом к-ве</label><br>
-                    <label class="label-light"><input type="radio" name="fs_option[action_count]" id="action_count2" value="1" <?php checked('1',fs_option('action_count')) ?>>в процентах</label>
-                </p>
-                <p>
-                    <label for="action_summa">Размер скидки <span>(действует глобально, по всему сайту)</span></label><br>
-                    <input type="number" min="1" name="fs_option[action_summa]" id="action_summa" value="<?php echo fs_option('action_summa') ?>">
-                </p>
-                <p>
-                    <label for="action_label">Включать отметку акция атоматически <span>(надпись акция включится без отметки чекбокса, при наличии акционной цены)</span></label><br>
-                    <input type="checkbox" name="fs_option[action_label]" value="1" <?php checked(1,fs_option('action_label')) ?>>
-
-                </p>
-
-            </div>
+         <!--    <div id="tabs-3">
+         
+             <p>
+                 <label for="action_pcount">К-во товаров при которых активируется скидка:</label><br>
+                 <input type="number" min="1" name="fs_option[action_pcount]" id="action_pcount" value="<?php echo fs_option('action_pcount') ?>">
+             </p>
+             <p>
+                 <label>Акционная скидка считается в :</label><br>
+                 <label class="label-light"> <input type="radio" name="fs_option[action_count]" id="action_count1" value="0" <?php checked('0',fs_option('action_count')) ?> <?php checked('',fs_option('action_count')) ?>>в фиксированом к-ве</label><br>
+                 <label class="label-light"><input type="radio" name="fs_option[action_count]" id="action_count2" value="1" <?php checked('1',fs_option('action_count')) ?>>в процентах</label>
+             </p>
+             <p>
+                 <label for="action_summa">Размер скидки <span>(действует глобально, по всему сайту)</span></label><br>
+                 <input type="number" min="1" name="fs_option[action_summa]" id="action_summa" value="<?php echo fs_option('action_summa') ?>">
+             </p>
+             <p>
+                 <label for="action_label">Включать отметку акция атоматически <span>(надпись акция включится без отметки чекбокса, при наличии акционной цены)</span></label><br>
+                 <input type="checkbox" name="fs_option[action_label]" value="1" <?php checked(1,fs_option('action_label')) ?>>
+         
+             </p>
+         
+         </div> -->
             <div id="tabs-4">
                 <p>
                     <label for="page_cart">Страница корзины:</label><br>
@@ -155,6 +155,22 @@
                         <?php endif; ?>
                     </select>
 
+                </p> 
+                <p>
+                    <label for="page_cart">Страница списка желаний:</label><br>
+                    <?php
+                    $query=new WP_Query(array('post_type'=>'page','posts_per_page'=>-1)); ?>
+
+                    <select name="fs_option[page_whishlist]" id="page_whishlist">
+                        <option value="">Выберите страницу</option>
+                        <?php  if ( $query->have_posts() ) : ?>
+                            <?php  while ($query->have_posts() ) : $query->the_post(); ?>
+                                <option value="<?php the_ID() ?>" <?php if (get_post_status(get_the_ID())!='publish') echo 'disabled' ?> <?php selected(get_the_ID(),fs_option('page_whishlist')) ?> ><?php the_title() ?></option>
+                            <?php endwhile; wp_reset_query(); ?>
+                        <?php else: ?>
+                        <?php endif; ?>
+                    </select>
+
                 </p>
             </div>
             <div id="tabs-5">
@@ -163,16 +179,16 @@
                     <input type="checkbox" name="fs_option[register_user]" id="register_user" value="1" <?php checked(fs_option('register_user'),1) ?>>
                 </p>
             </div> 
-            <div id="tabs-6">
-                <p>
-                    <label for="register_user">Показывать модальное окно поле добавления товара в корзину</label><br>
-                    <input type="checkbox" name="fs_option[order_modal]" id="order_modal" value="1" <?php checked(fs_option('order_modal'),1) ?>>
-                </p>
-                <p>
-                    <label for="register_user">Идентификатор модального окна</label><br>
-                    <input type="text" name="fs_option[order_modal_id]" id="order_modal_id" value="<?php echo fs_option('order_modal_id') ?>">
-                </p>
-            </div>
+           <!--  <div id="tabs-6">
+               <p>
+                   <label for="register_user">Показывать модальное окно поле добавления товара в корзину</label><br>
+                   <input type="checkbox" name="fs_option[order_modal]" id="order_modal" value="1" <?php checked(fs_option('order_modal'),1) ?>>
+               </p>
+               <p>
+                   <label for="register_user">Идентификатор модального окна</label><br>
+                   <input type="text" name="fs_option[order_modal_id]" id="order_modal_id" value="<?php echo fs_option('order_modal_id') ?>">
+               </p>
+           </div> -->
             <div id="tabs-7">
                 <h2>Настройки галереи в карточке товара</h2>
                 <p>Внимание! Для работы слайдера необходимо, чтобы ваша тема поддерживала загрузку миниатюр.</p>
