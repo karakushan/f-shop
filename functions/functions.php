@@ -310,7 +310,6 @@ function fs_get_cart()
     if (!isset($_SESSION['cart'])) return false;
 
     $products = array();
-    $cur_symb=fs_currency();
     if (count($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $count){
             if ($key==0) continue;
@@ -553,9 +552,9 @@ function fs_quantity_product($product_id=0,$echo=true)
     global $post;
     $product_id=!empty($product_id)?$product_id : $post->ID;
     $quantity_el='<div class="fs-quantity-product">
-    <button type="button" class="plus" data-fs-count="pluss">+</button> 
-    <input type="text" name="" value="1" data-fs-action="change_count" data-fs-product-id="'.$product_id.'"> 
-    <button type="button" class="minus" data-fs-count="minus">-</button> </div>';
+    <button type="button" class="plus" data-fs-count="pluss" data-target="#product-quantify-'.$product_id.'">+</button> 
+    <input type="text" name="" value="1" data-fs-action="change_count" id="product-quantify-'.$product_id.'" data-fs-product-id="'.$product_id.'"> 
+    <button type="button" class="minus" data-fs-count="minus" data-target="#product-quantify-'.$product_id.'">-</button> </div>';
     $quantity_el=apply_filters('fs_quantity_product',$quantity_el);
     if ($echo) {
        echo  $quantity_el;
@@ -887,9 +886,10 @@ function fs_product_code(int $product_id=0,$wrap=''){
  */
 function fs_remaining_amount(int $product_id=0){
     global $post;
+    $product_id=!empty($product_id) ? $product_id : $post->ID;
     $config=new FS\FS_Config();
     $meta_field=$config->meta['remaining_amount'];
-    $amount=get_post_meta($post->ID,$meta_field, true);
+    $amount=get_post_meta($product_id,$meta_field, true);
     $amount=($amount==='') ? '' : (int)$amount;
     return $amount; 
 }

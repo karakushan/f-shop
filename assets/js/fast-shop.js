@@ -365,7 +365,7 @@ loginForm.validate({
 // Квантификатор товара
 jQuery(document).ready(function($) {
 	$('[data-fs-count="minus"]').on('click', function () {
-		var $input = $('[data-fs-action="change_count"]').first();
+		var $input =$($(this).data('target'));
 		var count = parseInt($input.val()) - 1;
 		count = count < 1 ? 1 : count;
 		$input.val(count);
@@ -373,17 +373,18 @@ jQuery(document).ready(function($) {
 		return false;
 	});
 	$('[data-fs-count="pluss"]').click(function () {
-		var $input = $('[data-fs-action=change_count]').first();
+		var $input =$($(this).data('target'));
 		$input.val(parseInt($input.val()) + 1);
 		$input.change();
 		return false;
 	});
 	//Изменение к-ва добавляемых продуктов
-	$('[data-fs-action="change_count"]').on('change', function(event) {
+	$('[data-fs-action="change_count"]').on('change input', function(event) {
 		event.preventDefault();
 		/* Act on the event */
 		var productId=$(this).data('fs-product-id');
 		var count=$(this).val();
+		if (count<1) { $(this).val(1); count=1;  }
 		var cartButton=$('#fs-atc-'+productId);
 		var cartButtonAttr=cartButton.data('attr');
 		cartButtonAttr.count=count;
@@ -401,7 +402,7 @@ jQuery(document).ready(function($) {
 jQuery(document).ready(function($) {
 	$('[data-fs-type="cart-quantity"]').on('change input', function(event) {
 		event.preventDefault();
-		var productId = $(this).data('fs-id');
+		var productId = $(this).data('product-id');
 		var productCount = $(this).val();
 
 		//если покупатель вбил неправильное к-во товаров

@@ -21,9 +21,6 @@ class FS_Cart_Class
 		//Удаление товара из корзины ajax
 		add_action('wp_ajax_delete_product', array(&$this,'delete_product_ajax'));
 		add_action('wp_ajax_nopriv_delete_product', array(&$this,'delete_product_ajax'));
-
-		
-		
 	}
 
 
@@ -32,29 +29,6 @@ class FS_Cart_Class
 	function fast_shop_init_session()
 	{
 		@session_start();
-
-		// регистриуем глобальную переменную
-		global $cart;
-		if (!empty($_SESSION['cart'])) {
-			foreach ($_SESSION['cart'] as $key => $count){
-				if ($key==0) continue;
-				$price=fs_get_price($key);
-				$price_show=apply_filters('fs_price_format',$price);
-				$count=(int)$count['count'];
-				$all_price=$price*$count;
-				$all_price=apply_filters('fs_price_format',$all_price);
-
-				$cart[$key]=array(
-					'id'=>$key,
-					'name'=>get_the_title($key),
-					'count'=>$count,
-					'link'=>get_permalink($key),
-					'price'=> $price_show,
-					'all_price'=>$all_price,
-					'currency'=>fs_currency()
-					);
-			}
-		}
 
 	}
 
@@ -76,7 +50,9 @@ class FS_Cart_Class
 				'attr'=>$attr		
 				);
 		}
-		fs_cart_widget();
+
+		fs_cart_widget(array('class'=>'cart'));
+
 		exit;
 
 	}
