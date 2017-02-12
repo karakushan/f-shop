@@ -429,7 +429,7 @@ function fs_add_to_cart($post_id=0,$label='',$attr=array(),$preloader='',$send_i
     $atributes=array();
     $post_id=empty($post_id) ? $post->ID : $post_id;
 
-    if ($preloader=='') $preloader='<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>';
+    if ($preloader=='') $preloader='<img src="'.FS_PLUGIN_URL.'assets/img/preloader-1.svg" alt="preloader">';
 
     if ($label=='') {
         $label=__( 'Add to cart', 'fast-shop' );

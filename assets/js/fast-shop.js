@@ -140,9 +140,11 @@ var FastShopLang={
 		var productName=$(this).data('product-name');
 		var product_id=curent.data('product-id');
 		var product_name=curent.data('product-name');
+		var attr=curent.data('attr');
+
 		var productObject={
 			"action": 'add_to_cart',
-			"attr": curent.data('attr'),
+			"attr": attr,
 			'post_id': product_id
 		};
 		$.ajax({
@@ -156,12 +158,14 @@ var FastShopLang={
 			
 
 			$('#fs_cart_widget,.fs_cart_widget,[data-fs-element="cart-widget"]').replaceWith(result);
-			curent.find('.fs-preloader ').fadeOut('fast');
-			// создаём событие
-			var add_to_cart = new CustomEvent("fs_add_to_cart", {
-				detail: { id: product_id,name:product_name}
+			curent.find('.fs-preloader ').fadeOut('fast',function(){
+				// создаём событие
+				var add_to_cart = new CustomEvent("fs_add_to_cart", {
+					detail: { id: product_id,name:product_name,attr:attr}
+				});
+				document.dispatchEvent(add_to_cart);
 			});
-			document.dispatchEvent(add_to_cart);
+			
 		});
 		
 	});

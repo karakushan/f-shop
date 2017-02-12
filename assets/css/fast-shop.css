@@ -109,9 +109,10 @@ button.remove-tr {
 }
 .fs-preloader {
     position: absolute;
-    left: 42px;
-    top: 10px;
-    display: none;
+    left: 71px;
+    top: 0px;
+    display: none; 
+    width: 33px;
 }
 [data-fs-action="order-send"] .fs-preloader {
     position: absolute;
