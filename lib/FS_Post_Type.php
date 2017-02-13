@@ -58,6 +58,7 @@ class FS_Post_Type
                     ),
                 'public' => true,
                 'show_in_menu' =>true,
+                'yarpp_support' => true,
                 'publicly_queryable' => true,
                 'show_ui' => true,
                 'capability_type' => 'post',
@@ -74,7 +75,7 @@ class FS_Post_Type
 
                 'supports' => array(
                     'title', 'editor', 'excerpt','thumbnail','comments'
-                    ),
+                    )
                 )
             );
     }
@@ -172,7 +173,7 @@ class FS_Post_Type
                         $class='';
                     }
                 }else{
-                   if ($key==0) {
+                 if ($key==0) {
                     $class='class="fs-link-active"';
                 }else{
                     $class='';
@@ -185,13 +186,13 @@ class FS_Post_Type
         foreach ($this->config->tabs as $key_body=>$tab_body) {
             if (!$tab_body['on'])  continue;
             if ($cookie) {
-             if ($key_body==$cookie) {
+               if ($key_body==$cookie) {
                 $class_tab='fs-tab-active';
             }else{
                 $class_tab='';
             }
         }else{
-           if ($key_body==0) {
+         if ($key_body==0) {
             $class_tab='fs-tab-active';
         }else{
             $class_tab='';
