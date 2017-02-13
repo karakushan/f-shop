@@ -34,32 +34,18 @@ class FS_Ajax_Class
     /**
      *Отправка заказа в базу, на почту админа и заказчика
      */
-    function order_send_ajax()
-    {
+    function order_send_ajax(){
         if ( !wp_verify_nonce($_POST['_wpnonce'],'fast-shop')) die ( 'не пройдена верификация формы nonce');
-        $fs_products=array();
+
+        $fs_products=$_SESSION['cart'];
+
         $user=wp_get_current_user();
         if ($user->ID==0){
             $user_login='пользователь не авторизован';
         }else{
             $user_login=$user->user_login;
         }
-        if (!empty($_POST['fs_cart'])){
-            if($_POST['order_type']=="single"){
-                $product_id=(int)$_POST['fs_cart']['product_id'];
-                $product_count=(int)$_POST['fs_cart']['count'];
-                $fs_products[$product_id]=array('count'=>$product_count);
-            }else{
-                $fs_products=$_POST['fs_cart'];
-            }
 
-        }else{
-            if (empty($_SESSION['cart'])){
-                die ( 'не найдена сессия корзины');
-            }else{
-                $fs_products=$_SESSION['cart'];
-            }
-        }
         // если корзина пуста или возникла ошибка с обработкой выходим с собщением
         if (empty($fs_products)) die ('нет товаров в корзине!');
 
@@ -99,6 +85,8 @@ class FS_Ajax_Class
         $delivery_address=filter_input(INPUT_POST,'fs_adress',FILTER_SANITIZE_STRING);
         $fs_message=filter_input(INPUT_POST,'fs_message',FILTER_SANITIZE_STRING);
 
+
+
         //Добавляем  данные заказа в базу
         $wpdb->insert(
             $fs_config->data['table_name'],
@@ -116,6 +104,8 @@ class FS_Ajax_Class
             );
         $order_id=$wpdb->insert_id;
         $_SESSION['last_order_id']=$order_id;
+
+
 
         foreach ($fs_products as $post => $data) {
             $wpdb->insert(
@@ -164,11 +154,12 @@ class FS_Ajax_Class
         fs_adress
         fs_message
         */
+
         $search_replace=array(
             '%fs_name%'=>$name,
             '%fs_login%'=>$user_login,
             '%date%'=>date('d.m.Y H:i'),
-            '%number_products%'=>fs_product_count($fs_products),
+            '%number_products%'=>fs_product_count($fs_products,false),
             '%total_amount%'=>apply_filters('fs_price_format',fs_total_amount($fs_products,false)).' '.fs_currency(),
             '%order_id%'=>$order_id,
             '%fs_email%'=>$mail_client,
@@ -229,22 +220,32 @@ class FS_Ajax_Class
             }
         }
 
-        $result=array(
-//            'post_object'=>$_POST,
-            'admin_email'=>$admin_email,
-            'admin_mail_header'=>$admin_mail_header,
-            'admin_message'=>$admin_message,
-            'headers'=>$headers,
-            'wpdb_error'=>$wpdb->last_error,
-            'mail_user_send'=>$mail_user_send,
-            'products'=>$fs_products,
-            'mail_admin_send'=> $mail_admin_send,
-            'redirect'=>get_permalink(fs_option('page_success'))
-            );
-        echo json_encode($result);
 
-        unset($_SESSION['cart']);
-        exit;
+
+        if (!empty($wpdb->last_error)) {
+            $success=false;
+            echo $wpdb->last_error;
+        }else{
+            $success=true;
+            $result=array(
+                'success'=>$success,
+//                'admin_email'=>$admin_email,
+                // 'admin_mail_header'=>$admin_mail_header,
+                // 'admin_message'=>$admin_message,
+                // 'headers'=>$headers,
+//                'mail_user_send'=>$mail_user_send,
+                'products'=>$fs_products,
+                'order_id'=>$order_id,
+//                'mail_admin_send'=> $mail_admin_send,
+                'redirect'=>get_permalink(fs_option('page_success'))
+                );
+            $json=json_encode($result);
+            echo $json;
+
+        }
+        if ($success) unset($_SESSION['cart']);
+        exit();
+
     }
 
     public function fs_addto_wishlist()
@@ -341,12 +342,12 @@ class FS_Ajax_Class
         $body.='<option value="">Выберите товар</option>';
         if ($posts) {
             foreach ($posts as $key => $post) {
-               $body.='<option value="'.$post->ID.'">'.$post->post_title.'</option>';
-           }
-       }
-       $body.='</select>';
+             $body.='<option value="'.$post->ID.'">'.$post->post_title.'</option>';
+         }
+     }
+     $body.='</select>';
 
-       echo json_encode(array('body'=>$body));
-       exit;
-   }
+     echo json_encode(array('body'=>$body));
+     exit;
+ }
 } 

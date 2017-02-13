@@ -171,44 +171,8 @@ var FastShopLang={
 	});
 
 
-
-	var validator =$('form[name="fs-order-send"]');
-	var tabClick=false;
-	$('[data-toggle="tab"]').on('click', function(event) {
-		event.preventDefault();
-
-		var activeTab=$(this).attr('href');
-		$(activeTab).find('form[name="fs-order-send"]').validate({
-			ignore: [],
-			submitHandler: function(form) {
-				$.ajax({
-					url: FastShopData.ajaxurl,
-					type: 'POST',
-					data:validator.serialize(),
-					beforeSend:function () {
-						$('button[data-fs-action=order-send]').find('.fs-preloader').fadeIn('slow');
-					}
-				})
-				.done(function(result) {
-					$('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
-					console.log(result);
-					var jsonData=JSON.parse(result);
-
-
-					if(jsonData.wpdb_error){
-						console.log(jsonData.wpdb_error);
-					}
-					if(jsonData.redirect.length>0) document.location.href=jsonData.redirect;
-
-				});
-
-
-			}
-		});
-
-	});
-
 // валидация и отправка формы заказа
+var validator =$('form[name="fs-order-send"]');
 validator.validate({
 	ignore: [],
 	submitHandler: function(form) {
@@ -220,17 +184,21 @@ validator.validate({
 				$('button[data-fs-action=order-send]').find('.fs-preloader').fadeIn('slow');
 			}
 		})
-		.done(function(result) {
+		.done(function(response) {
 			$('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
-			console.log(result);
-			var jsonData=JSON.parse(result);
-
-
-			if(jsonData.wpdb_error){
-				console.log(jsonData.wpdb_error);
+			if(response) {
+				try {
+					var jsonData= JSON.parse(response);
+					// создаём событие
+					var send_order = new CustomEvent("fs_send_order", {
+						detail: { order_id: jsonData.order_id}
+					});
+					document.dispatchEvent(send_order);
+					if(jsonData.redirect!=false) document.location.href=jsonData.redirect;
+				} catch(e) {
+					console.log(response);
+				}
 			}
-			if(jsonData.redirect.length>0) document.location.href=jsonData.redirect;
-
 		});
 
 
