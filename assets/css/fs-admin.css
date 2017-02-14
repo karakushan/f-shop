@@ -417,10 +417,7 @@ td.fs_price.column-fs_price span span
     color:#039;
     border-left:3px solid #039;
 }
-.fs-order-info
-{
-    max-width:640px;
-}
+
 
 #fs-table td a:hover,
 #fs-table td a:active
@@ -584,6 +581,9 @@ td.fs_price.column-fs_price span span
     left:-39px;
 
     width:30px;
+}
+#fs-order-info table{
+    width: auto;
 }
 
 

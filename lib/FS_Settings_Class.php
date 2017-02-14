@@ -111,7 +111,11 @@ class FS_Settings_Class
         switch ($action) {
             case 'info':
             $order_id=(int)$_GET['id'];
-            $products=$orders->get_order($order_id);
+            $order=$orders->get_order($order_id);
+            if (!$order) {
+                exit('невозможно получить данные заказа');
+            }
+            $products=unserialize( $order->products);
             include ($this->config->data['plugin_path'].'templates/back-end/order-info.php');
             break;
 

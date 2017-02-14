@@ -95,71 +95,64 @@ public function cart_widget()
     {
         if ($order_id == '') $order_id = $_SESSION['last_order_id'];
 
-        if (!is_numeric($order_id)) return;
+        if (!isset($_SESSION['last_order_id']))  return;
+
+        $order_id=(int)$_SESSION['last_order_id'];
 
         $order = new FS_Orders_Class();
         $delivery = new FS_Delivery_Class();
         $order_info = $order->get_order($order_id);
 
-        $info = "<table>
-        <tr>
-          <th>Ваше имя</th><td>" . $order_info->name . "</td>
-      </tr>
-      <tr>
-          <th>Электронная почта </th><td>" . $order_info->email . "</td>
-      </tr>
-      <tr>
-          <th>Номер телефона </th><td>" . $order_info->telephone . "</td>
-      </tr>
-      <tr>
-          <th>Способ доставки</th><td>" . $delivery->get_delivery($order_info->delivery) . "</td>
-      </tr>
-      <tr>
-          <th>Общая сумма</th><td>" . $order_info->summa . " " . get_option('currency_icon', '$') . "</td>
-      </tr>
-      <tr>
-          <th>Статус</th><td>" . $order->order_status[$order_info->status] . "</td>
-      </tr>
-  </table>";
-  return $info;
+        $template_plugin=FS_PLUGIN_PATH . 'templates/front-end/shortcode/fs-order-info.php';
+        $template_theme=TEMPLATEPATH . '/fast-shop/shortcode/fs-order-info.php';
+        
+        ob_start();
+        if (file_exists($template_theme)) {
+            include($template_theme);
+        } else {
+            include ($template_plugin);
+        }
+        $code=ob_get_clean();
+        
+        return $code;
 
-}
+    }
 
 //Возвращает id последнего заказа
-public function last_order_id()
-{
-    $order_id = empty($_SESSION['last_order_id']) ?  0 : (int) $_SESSION['last_order_id'];
-    return $order_id;
-}
-
-public function last_order_amount()
-{
-    $order_id = empty($_SESSION['last_order_id']) ?  0 : (int) $_SESSION['last_order_id'];
-    $order=new \FS\FS_Orders_Class;
-    $order_info=$order->get_order_data($order_id);
-    $summa=(float)  $order_info->summa;
-    $summa=apply_filters('fs_price_format',$summa);
-    return  $summa;
-}
-
-
-public function review_form()
-{
-    global $fs_config;
-    require $fs_config['plugin_path'] . 'templates/back-end/review-form.php';
-}
-
-function checkout_form()
-{
-    global $fs_config;
-    $checkout_form_theme = TEMPLATEPATH . '/fast-shop/checkout/checkout.php';
-    $checkout_form_plugin = $fs_config['plugin_path'] . 'templates/front-end/checkout/checkout.php';
-    if (file_exists($checkout_form_theme)) {
-        include($checkout_form_theme);
-    } else {
-        include($checkout_form_plugin);
+    public function last_order_id()
+    {
+        $order_id = empty($_SESSION['last_order_id']) ?  0 : (int) $_SESSION['last_order_id'];
+        return $order_id;
     }
-}
+
+    public function last_order_amount()
+    {
+        $order_id = empty($_SESSION['last_order_id']) ?  0 : (int) $_SESSION['last_order_id'];
+        $order=new \FS\FS_Orders_Class;
+        $order_info=$order->get_order_data($order_id);
+        $summa=(float)  $order_info->summa;
+        $summa=apply_filters('fs_price_format',$summa);
+        return  $summa;
+    }
+
+
+    public function review_form()
+    {
+        global $fs_config;
+        require $fs_config['plugin_path'] . 'templates/back-end/review-form.php';
+    }
+
+    function checkout_form()
+    {
+        global $fs_config;
+        $checkout_form_theme = TEMPLATEPATH . '/fast-shop/checkout/checkout.php';
+        $checkout_form_plugin = $fs_config['plugin_path'] . 'templates/front-end/checkout/checkout.php';
+        if (file_exists($checkout_form_theme)) {
+            include($checkout_form_theme);
+        } else {
+            include($checkout_form_plugin);
+        }
+    }
 
     /**
      * шорткод для отображения формы оформления заказа

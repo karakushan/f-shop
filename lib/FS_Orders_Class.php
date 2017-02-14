@@ -95,8 +95,25 @@ public function get_order_data(int $order_id)
 public function get_order(int $id)
 {
 	global $wpdb;
-	$table_name=$this->config->data['table_order_item'];
-	$res=$wpdb->get_results("SELECT * FROM $table_name WHERE order_id ='$id'");
+	$table_name=$this->config->data['table_orders'];
+	$res=$wpdb->get_row("SELECT * FROM $table_name WHERE id ='$id'");
+	if (!is_null($res)) {
+        $user = get_user_by('id', $res->user_id);
+        $res->user_name=$user->display_name;
+        $res->email=$user->user_email;
+        $res->city=get_user_meta($res->user_id,'city',1);
+        $res->telephone=get_user_meta($res->user_id,'phone',1);
+		$res->payment_id=$res->payment;
+		$res->delivery_id=$res->delivery;
+		$res->delivery_name='не определено';
+		$res->payment_name='не определено';
+		if(!is_wp_error(get_term_field('name',$res->delivery))){
+			$res->delivery_name=get_term_field('name',$res->delivery);
+		}
+		if(!is_wp_error(get_term_field('name',$res->payment))){
+			$res->payment_name=get_term_field('name',$res->payment);
+		}
+	}
 	return $res;
 }
 
