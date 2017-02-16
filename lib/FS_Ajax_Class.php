@@ -245,7 +245,7 @@ class FS_Ajax_Class
             echo $json;
 
         }
-        if ($success) unset($_SESSION['cart']);
+        unset($_SESSION['cart']);
         exit();
 
     }

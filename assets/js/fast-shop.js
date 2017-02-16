@@ -280,6 +280,7 @@ userProfileCreate.validate({
 			type: 'POST',
 			data:userProfileCreate.serialize(),
 			beforeSend:function () {
+                userProfileCreate.find('.form-info').html('').fadeOut();
 				userProfileCreate.find('.fs-preloader').fadeIn();
 			}
 		})
@@ -287,20 +288,17 @@ userProfileCreate.validate({
 			userProfileCreate.find('.fs-preloader').fadeOut();
 			var data=JSON.parse(result);
 			if (data.status==1) {
-				userProfileCreate.find('.form-info').removeClass('bg-danger').addClass('bg-success').show().text(data.message);
-				setTimeout(function() {
-					userProfileCreate.find('.form-info').fadeOut(800);
-					location.href=data.redirect;
-				},3000);
-
+				userProfileCreate.find('.form-info').removeClass('bg-danger').addClass('bg-success').fadeIn().html(data.message);
+                // если операция прошла успешно - очищаем поля
+				userProfileCreate.find('input').each(function () {
+					if($(this).attr('type')!='hidden') {
+						$(this).val('');
+					}
+                });
 			}else{
-				userProfileCreate.find('.form-info').removeClass('bg-success').addClass('bg-danger').show().text(data.message);
-				setTimeout(function() {
-					userProfileCreate.find('.form-info').fadeOut(800);
-					
-				},3000);
-
+				userProfileCreate.find('.form-info').removeClass('bg-success').addClass('bg-danger').fadeIn().html(data.message);
 			}
+
 			
 		});
 	}
@@ -315,15 +313,18 @@ loginForm.validate({
 			type: 'POST',
 			data:loginForm.serialize(),
 			beforeSend:function () {
+                loginForm.find('.form-info').fadeOut().removeClass('bg-danger').html('');
 				loginForm.find('.fs-preloader').fadeIn();
 			}
 		})
 		.done(function(result) {
 			var data=JSON.parse(result);
-			loginForm.find('.fs-preloader').fadeOut();
+            console.log(data)
+
+            loginForm.find('.fs-preloader').fadeOut();
 
 			if(data.status==0){
-				loginForm.find('.form-info-login').addClass('form-error text-danger').html(data.error);
+				loginForm.find('.form-info').addClass('bg-danger').fadeIn().html(data.error);
 			}else{
 				location.reload();
 			}

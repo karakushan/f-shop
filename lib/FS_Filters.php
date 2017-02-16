@@ -31,28 +31,28 @@ class FS_Filters
     public function redirect_per_page()
     {
         if (isset($_GET['paged'])) {   
-           wp_redirect( remove_query_arg('paged'));
-           exit();
-       }
-   }
+         wp_redirect( remove_query_arg('paged'));
+         exit();
+     }
+ }
 
 // фильтр по категориям товаров в админке
-   function category_filter_admin()
-   {
-      global $typenow;
-      global $wp_query;
-      $get_parr=isset($_GET['catalog']) ? $_GET['catalog'] : '';
-      if ($typenow!='product') return;
-      $terms=get_terms('catalog',array('hide_empty'=>false));
-      $select_name=__( 'Product category', 'fast-shop' );
-      if ($terms) {
-          echo "<select name=\"catalog\" id=\"fs-category-filter\">";
-          echo "<option value=\"\">$select_name</option>";
-          foreach ($terms as $key => $term) {
-            echo "<option value=\"$term->slug\" ".selected($term->slug,$get_parr,0).">$term->name</option>";
-        }
-        echo "</select>";
+ function category_filter_admin()
+ {
+  global $typenow;
+  global $wp_query;
+  $get_parr=isset($_GET['catalog']) ? $_GET['catalog'] : '';
+  if ($typenow!='product') return;
+  $terms=get_terms('catalog',array('hide_empty'=>false));
+  $select_name=__( 'Product category', 'fast-shop' );
+  if ($terms) {
+      echo "<select name=\"catalog\" id=\"fs-category-filter\">";
+      echo "<option value=\"\">$select_name</option>";
+      foreach ($terms as $key => $term) {
+        echo "<option value=\"$term->slug\" ".selected($term->slug,$get_parr,0).">$term->name</option>";
     }
+    echo "</select>";
+}
 
 }
 
@@ -60,7 +60,7 @@ class FS_Filters
      * @param $query
      */
     public function filter_curr_product($query) {
-       if ($query->is_search()) {
+     if ($query->is_search()) {
         $query->set('post_type','product');
     } 
     if (!isset($_REQUEST['fs_filter']) || !wp_verify_nonce($_REQUEST['fs_filter'],'fast-shop') || !$query->is_main_query()) return;
@@ -186,25 +186,25 @@ class FS_Filters
         if (!empty($_REQUEST['tax-manufacturers'])){
             $manufacturers=array();
             if (is_array($_REQUEST['tax-manufacturers'])) {
-               $manufacturers=array_values($_REQUEST['tax-manufacturers']);
-           }else{
-               $manufacturers[]=(int) $_REQUEST['tax-manufacturers'];
+             $manufacturers=array_values($_REQUEST['tax-manufacturers']);
+         }else{
+             $manufacturers[]=(int) $_REQUEST['tax-manufacturers'];
 
-           }
-           $tax_query[] = array(
+         }
+         $tax_query[] = array(
             'taxonomy' => 'manufacturers',
             'field' => 'id',
             'terms' =>$manufacturers,
             );
-       }
+     }
 
-       
-       $query->set('posts_per_page',$per_page);
-       $query->set('meta_query',$meta_query);
-       $query->set('tax_query',$tax_query);
-       $query->set('orderby',implode(' ',$orderby));
-       $query->set( 'order',$order);
-       return $query;
+
+     $query->set('posts_per_page',$per_page);
+     $query->set('meta_query',$meta_query);
+     $query->set('tax_query',$tax_query);
+     $query->set('orderby',implode(' ',$orderby));
+     $query->set( 'order',$order);
+     return $query;
     }//end filter_curr_product()
 
 
@@ -255,20 +255,20 @@ class FS_Filters
      * @param  [array] $post_count массив к-ва выводимых записей например array(10,20,30,40)
      * @return [type]             html код селекта с опциями
      */
-    public function posts_per_page_filter($post_count)
+    public function posts_per_page_filter($post_count=array(),$attr)
     {
         $req=isset($_REQUEST['per_page']) ? $_REQUEST['per_page'] : get_option("posts_per_page");
         $nonce=wp_create_nonce('fast-shop');
-        if(count($post_count)){
-            $filter = '<select name="post_count" onchange="document.location=this.options[this.selectedIndex].value">';
-            foreach ($post_count as $key => $count) {
-                $filter.= '<option value="'.add_query_arg(array("fs_filter"=>$nonce,"per_page"=>$count,'paged'=>1)).'" '.selected($count,$req,false).'>'.$count.'</option>';
-            }
-            $filter.= '</select>';
-        }else{
-            $filter = false;
-        }
-        return $filter;
+        $attr=fs_parse_attr($attr);
+        $filter = '<select name="post_count" '.$attr.' onchange="document.location=this.options[this.selectedIndex].value">';
+        if($post_count){
+         foreach ($post_count as $key => $count) {
+            $filter.= '<option value="'.add_query_arg(array("fs_filter"=>$nonce,"per_page"=>$count,'paged'=>1)).'" '.selected($count,$req,false).'>'.$count.'</option>';
+        } 
     }
+
+    $filter.= '</select>';
+    return $filter;
+}
 
 }

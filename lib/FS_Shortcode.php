@@ -23,6 +23,7 @@ class FS_Shortcode
         add_shortcode('fs_order_send', array(&$this, 'order_send'));
         add_shortcode('fs_user_cabinet', array(&$this, 'user_cabinet'));
         add_shortcode('fs_single_order', array(&$this, 'single_order'));
+        add_shortcode('fs_register_form', 'fs_register_form');
 
 
     }

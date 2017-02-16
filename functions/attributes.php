@@ -105,10 +105,21 @@ function fs_taxonomy_select_filter($taxonomy='catalog',$first_option='сдела
 return $filter;
 }
 
-// select фильтр сортировки по разным параметрам
-function fs_types_sort_filter($first_option='сделайте выбор'){
+
+/**
+ * выводит фильтр сортировки по разным параметрам
+ * @param  [type] $attr          дополниетльные атрибуты html тега
+ * @return [type]               выводит html элемент типа select
+ */
+function fs_types_sort_filter($attr){
     $filter='';
     $order_types=array(
+        'date_desc'=>array(
+            'name'=>'сначала новые'
+            ), 
+        'date_asc'=>array(
+            'name'=>'сначала старые'
+            ),
         'price_asc'=>array(
             'name'=>'цена по возрастанию'
             ),
@@ -119,20 +130,18 @@ function fs_types_sort_filter($first_option='сделайте выбор'){
             'name'=>'по алфавиту'
             ),
         'name_desc'=>array(
-            'name'=>'по алфавиту в обратном порядке'
-            ), 
-        'date_desc'=>array(
-            'name'=>'последние опубликованные'
-            ), 
-        'date_asc'=>array(
-            'name'=>'давнее опубликованные'
+            'name'=>'по алфавиту назад'
+            ),
+        'aviable'=>array(
+            'name'=>'по наличию'
             )
-
         );
 
+    $attr=fs_parse_attr($attr);
+
     if ( $order_types) {
-        $filter.='<select name="order_type" data-fs-action="filter">';
-        $filter.='<option value="'.remove_query_arg(array('order_type')).'">'.$first_option.'</option>';
+        $filter.='<select name="order_type" data-fs-action="filter" '.$attr.'>';
+
         foreach ($order_types as $key =>  $order_type) {
           if(isset($_GET['order_type'])){
             $selected=selected( $key,$_GET['order_type'],0);
@@ -144,7 +153,7 @@ function fs_types_sort_filter($first_option='сделайте выбор'){
  $filter.='</select>';
 }
 
-return $filter;
+echo  $filter;
 }
 
 // селект фильтр для фильтрования товаров по наличию
@@ -168,5 +177,19 @@ function fs_aviable_select_filter($first_option='сделайте выбор'){
  $filter.='</select>';
 }
 return $filter;
+}
+
+/**
+ * @param array $interval  массив содержащий  интервалы выводимых товаров на странице
+ * @return  выводит переключатель к-ва товаров
+ */
+function fs_per_page_filter($interval=array(),$attr=array())
+{
+    $filters=new FS\FS_Filters;
+    if (empty($interval)){
+        $interval=array(12,24,36,48,60,100);
+    }
+    $page_filter=$filters->posts_per_page_filter($interval,$attr);
+    echo $page_filter;
 }
 
