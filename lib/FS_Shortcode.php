@@ -1,9 +1,9 @@
 <?php
 namespace FS;
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 /**
-* Класс шорткодов магазина
-*/
+ * Класс шорткодов магазина
+ */
 class FS_Shortcode
 {
 
@@ -24,21 +24,22 @@ class FS_Shortcode
         add_shortcode('fs_user_cabinet', array(&$this, 'user_cabinet'));
         add_shortcode('fs_single_order', array(&$this, 'single_order'));
         add_shortcode('fs_register_form', 'fs_register_form');
+        add_shortcode('fs_user_info',array($this, 'user_info'));
 
 
     }
 
-/**
- * виджет корзины товаров
- * @return [type] [description]
- */
-public function cart_widget()
-{
-    ob_start();
-    fs_cart_widget();
-    $widget=ob_get_clean();
-    return $widget;
-}
+    /**
+     * виджет корзины товаров
+     * @return [type] [description]
+     */
+    public function cart_widget()
+    {
+        ob_start();
+        fs_cart_widget();
+        $widget = ob_get_clean();
+        return $widget;
+    }
 
     //Шорткод для отображения купленных товаров и оформления покупки
     /**
@@ -96,25 +97,25 @@ public function cart_widget()
     {
         if ($order_id == '') $order_id = $_SESSION['last_order_id'];
 
-        if (!isset($_SESSION['last_order_id']))  return;
+        if (!isset($_SESSION['last_order_id'])) return;
 
-        $order_id=(int)$_SESSION['last_order_id'];
+        $order_id = (int)$_SESSION['last_order_id'];
 
         $order = new FS_Orders_Class();
         $delivery = new FS_Delivery_Class();
         $order_info = $order->get_order($order_id);
 
-        $template_plugin=FS_PLUGIN_PATH . 'templates/front-end/shortcode/fs-order-info.php';
-        $template_theme=TEMPLATEPATH . '/fast-shop/shortcode/fs-order-info.php';
-        
+        $template_plugin = FS_PLUGIN_PATH . 'templates/front-end/shortcode/fs-order-info.php';
+        $template_theme = TEMPLATEPATH . '/fast-shop/shortcode/fs-order-info.php';
+
         ob_start();
         if (file_exists($template_theme)) {
             include($template_theme);
         } else {
-            include ($template_plugin);
+            include($template_plugin);
         }
-        $code=ob_get_clean();
-        
+        $code = ob_get_clean();
+
         return $code;
 
     }
@@ -122,18 +123,18 @@ public function cart_widget()
 //Возвращает id последнего заказа
     public function last_order_id()
     {
-        $order_id = empty($_SESSION['last_order_id']) ?  0 : (int) $_SESSION['last_order_id'];
+        $order_id = empty($_SESSION['last_order_id']) ? 0 : (int)$_SESSION['last_order_id'];
         return $order_id;
     }
 
     public function last_order_amount()
     {
-        $order_id = empty($_SESSION['last_order_id']) ?  0 : (int) $_SESSION['last_order_id'];
-        $order=new \FS\FS_Orders_Class;
-        $order_info=$order->get_order_data($order_id);
-        $summa=(float)  $order_info->summa;
-        $summa=apply_filters('fs_price_format',$summa);
-        return  $summa;
+        $order_id = empty($_SESSION['last_order_id']) ? 0 : (int)$_SESSION['last_order_id'];
+        $order = new \FS\FS_Orders_Class;
+        $order_info = $order->get_order_data($order_id);
+        $summa = (float)$order_info->summa;
+        $summa = apply_filters('fs_price_format', $summa);
+        return $summa;
     }
 
 
@@ -158,13 +159,13 @@ public function cart_widget()
     /**
      * шорткод для отображения формы оформления заказа
      */
-    public function order_send($atts=array())
+    public function order_send($atts = array())
     {
         $prefix = 'order/order-form.php';
         extract(shortcode_atts(array(
             'order_type' => 'normal',
             'class' => 'order-send'
-            ), $atts));
+        ), $atts));
         $template = '
         <form action="#" name="fs-order-send" class="' . $class . '" method="POST">
             <div class="products_wrapper"></div>
@@ -173,15 +174,15 @@ public function cart_widget()
             <input type="hidden" name="order_type" value="' . $order_type . '">
 
             ';
-            if (file_exists($this->config->data['plugin_user_template'] . $prefix)) {
+        if (file_exists($this->config->data['plugin_user_template'] . $prefix)) {
 
-             ob_start();
-             include($this->config->data['plugin_user_template'] . $prefix);
-             $template .= ob_get_contents();
-             ob_end_clean();
+            ob_start();
+            include($this->config->data['plugin_user_template'] . $prefix);
+            $template .= ob_get_contents();
+            ob_end_clean();
 
 
-         }else{
+        } else {
             ob_start();
             include($this->config->data['plugin_template'] . $prefix);
             $template .= ob_get_contents();
@@ -193,19 +194,19 @@ public function cart_widget()
 
     function user_cabinet()
     {
-        $user=wp_get_current_user();
+        $user = wp_get_current_user();
         if (is_user_logged_in() && in_array('wholesale_buyer', $user->roles)) {
-            $temp=fs_user_cabinet();
+            $temp = fs_user_cabinet();
         } else {
 
-            if (isset($_GET['fs-page']) && $_GET['fs-page']=='register') {
+            if (isset($_GET['fs-page']) && $_GET['fs-page'] == 'register') {
                 if (is_user_logged_in()) {
-                    $temp=fs_login_form();
-                }else{
-                    $temp=fs_register_form();
+                    $temp = fs_login_form();
+                } else {
+                    $temp = fs_register_form();
                 }
-            }else{
-                $temp=fs_login_form();
+            } else {
+                $temp = fs_login_form();
             }
 
 
@@ -215,19 +216,24 @@ public function cart_widget()
 
     public function single_order($args)
     {
-        $args=shortcode_atts(array(
-            'product_id'=>0,
-            'class'=>''
-            ),$args);
+        $args = shortcode_atts(array(
+            'product_id' => 0,
+            'class' => ''
+        ), $args);
         $template = '
         <form action="#" name="fs-order-send" class="' . $args['class'] . '" method="POST">
             <div class="products_wrapper"></div>
             <input type="hidden" id="_wpnonce" name="_wpnonce" value="' . wp_create_nonce('fast-shop') . '">
             <input type="hidden" name="action" value="order_send">
             <input type="hidden" name="order_type" value="single">';
-            $template.=fs_frontend_template('order/single-order',$args);
-            $template.= '</form>';
-            return $template;
-        }
-
+        $template .= fs_frontend_template('order/single-order', $args);
+        $template .= '</form>';
+        return $template;
     }
+
+   function user_info()
+    {
+        $template = fs_frontend_template('cabinet/personal-info',array(),true);
+        return $template;
+    }
+}
