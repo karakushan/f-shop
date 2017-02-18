@@ -172,6 +172,38 @@
                     </select>
 
                 </p>
+                <p>
+                    <label for="page_cart">Страница личного кабинета:</label><br>
+                    <?php
+                    $query=new WP_Query(array('post_type'=>'page','posts_per_page'=>-1)); ?>
+
+                    <select name="fs_option[page_cabinet]" id="page_whishlist">
+                        <option value="">Выберите страницу</option>
+                        <?php  if ( $query->have_posts() ) : ?>
+                            <?php  while ($query->have_posts() ) : $query->the_post(); ?>
+                                <option value="<?php the_ID() ?>" <?php if (get_post_status(get_the_ID())!='publish') echo 'disabled' ?> <?php selected(get_the_ID(),fs_option('page_cabinet')) ?> ><?php the_title() ?></option>
+                            <?php endwhile; wp_reset_query(); ?>
+                        <?php else: ?>
+                        <?php endif; ?>
+                    </select>
+
+                </p>
+                <p>
+                    <label for="page_cart">Страница авторизации:</label><br>
+                    <?php
+                    $query=new WP_Query(array('post_type'=>'page','posts_per_page'=>-1)); ?>
+
+                    <select name="fs_option[page_auth]" id="page_whishlist">
+                        <option value="">Выберите страницу</option>
+                        <?php  if ( $query->have_posts() ) : ?>
+                            <?php  while ($query->have_posts() ) : $query->the_post(); ?>
+                                <option value="<?php the_ID() ?>" <?php if (get_post_status(get_the_ID())!='publish') echo 'disabled' ?> <?php selected(get_the_ID(),fs_option('page_auth')) ?> ><?php the_title() ?></option>
+                            <?php endwhile; wp_reset_query(); ?>
+                        <?php else: ?>
+                        <?php endif; ?>
+                    </select>
+
+                </p>
             </div>
             <div id="tabs-5">
                 <p>

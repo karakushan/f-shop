@@ -780,8 +780,10 @@ function fs_transliteration($s)
  */
 function fs_frontend_template($template, $args = array(), $cap = false)
 {
+    global $wpdb;
     extract(wp_parse_args($args, array()));
-    $user = fs_get_current_user();
+
+
     if ($cap && !$user->exists()) return 'У вас нет доступа к данной функции';
     $template_plugin = FS_PLUGIN_PATH . '/templates/front-end/' . $template . '.php';
     $template_theme = TEMPLATEPATH . '/fast-shop/' . $template . '.php';
@@ -1092,3 +1094,19 @@ function fs_wishlist_widget($html_attr, $wrap = true)
     require $template;
     if ($wrap) echo "</div>";
 }
+
+/**
+ * @param int $order_id - id заказа
+ * @return bool|object возвращает объект с данными заказа или false
+ */
+function fs_get_order($order_id = 0)
+{
+    $order = false;
+    if ($order_id) {
+        $orders = new \FS\FS_Orders_Class();
+        $order = $orders->get_order($order_id);
+    }
+    return $order;
+}
+
+

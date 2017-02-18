@@ -24,7 +24,8 @@ class FS_Shortcode
         add_shortcode('fs_user_cabinet', array(&$this, 'user_cabinet'));
         add_shortcode('fs_single_order', array(&$this, 'single_order'));
         add_shortcode('fs_register_form', 'fs_register_form');
-        add_shortcode('fs_user_info',array($this, 'user_info'));
+        add_shortcode('fs_user_info', array($this, 'user_info'));
+        add_shortcode('fs_user_orders', array($this, 'user_orders'));
 
 
     }
@@ -231,9 +232,21 @@ class FS_Shortcode
         return $template;
     }
 
-   function user_info()
+    function user_info()
     {
-        $template = fs_frontend_template('cabinet/personal-info',array(),true);
+        global $wpdb;
+        $user = fs_get_current_user();
+        $template = fs_frontend_template('cabinet/personal-info', array('user'=>$user), true);
+        return $template;
+    }
+
+    function user_orders()
+    {
+        global $wpdb;
+        $user = fs_get_current_user();
+        $orders = $wpdb->get_results("SELECT * FROM wp_fs_orders WHERE user_id='" . $user->ID . "' ORDER by id DESC");
+
+        $template = fs_frontend_template('cabinet/orders', array('user'=>$user,'orders'=>$orders), true);
         return $template;
     }
 }

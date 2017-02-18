@@ -116,7 +116,7 @@ class FS_Users_Class
             $json = json_encode(array(
                 'status' => 1,
                 'redirect' => '',
-                'message' => 'Поздравляем! Вы успешно зарегистрированны!'
+                'message' => 'Поздравляем! Вы успешно зарегистрированны! <a href="'.esc_url(get_permalink(fs_option('page_auth'))).'">Выполнить вход</a>'
             ));
 
             // отсылаем письма

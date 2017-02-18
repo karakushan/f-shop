@@ -1,4 +1,5 @@
 <h2>Регистрация нового пользователя</h2>
+<p>Уже зарегистрированны? <a href="'.esc_url(get_permalink(fs_option('page_auth'))).'">Выполнить вход</a></p>
 <form  action="" name="fs-profile-create" method="post">
     <p class="form-info"></p>
     <?php wp_nonce_field('fast-shop') ?>
