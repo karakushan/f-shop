@@ -778,13 +778,12 @@ function fs_transliteration($s)
  * Подключает шаблон $template из директории темы, если шаблон остсуствует ищет в папке "/templates/front-end/" плагина
  * @param $template - название папки и шаблона без расширения
  */
-function fs_frontend_template($template, $args = array(), $cap = false)
+function fs_frontend_template($template, $args = array())
 {
     global $wpdb;
     extract(wp_parse_args($args, array()));
 
 
-    if ($cap && !$user->exists()) return 'У вас нет доступа к данной функции';
     $template_plugin = FS_PLUGIN_PATH . '/templates/front-end/' . $template . '.php';
     $template_theme = TEMPLATEPATH . '/fast-shop/' . $template . '.php';
     ob_start();
@@ -803,11 +802,14 @@ function fs_get_current_user()
 {
     $user = wp_get_current_user();
     if ($user->exists()) {
+        $profile_update = empty($user->profile_update) ? strtotime($user->user_registered) : $user->profile_update;
         $user->email = $user->user_email;
         $user->phone = get_user_meta($user->ID, 'phone', 1);
         $user->city = get_user_meta($user->ID, 'city', 1);
         $user->adress = get_user_meta($user->ID, 'adress', 1);
         $user->birth_day = get_user_meta($user->ID, 'birth_day', 1);
+        $user->profile_update = $profile_update;
+        $user->gender = get_user_meta($user->ID, 'gender', 1);
     }
     return $user;
 }

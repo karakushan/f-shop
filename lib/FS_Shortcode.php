@@ -1,5 +1,7 @@
 <?php
 namespace FS;
+use ES_LIB\ES_config;
+
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 /**
  * Класс шорткодов магазина
@@ -26,6 +28,7 @@ class FS_Shortcode
         add_shortcode('fs_register_form', 'fs_register_form');
         add_shortcode('fs_user_info', array($this, 'user_info'));
         add_shortcode('fs_user_orders', array($this, 'user_orders'));
+        add_shortcode('fs_profile_edit', array($this, 'profile_edit'));
 
 
     }
@@ -236,7 +239,7 @@ class FS_Shortcode
     {
         global $wpdb;
         $user = fs_get_current_user();
-        $template = fs_frontend_template('cabinet/personal-info', array('user'=>$user), true);
+        $template = fs_frontend_template('cabinet/personal-info', array('user' => $user), true);
         return $template;
     }
 
@@ -246,7 +249,20 @@ class FS_Shortcode
         $user = fs_get_current_user();
         $orders = $wpdb->get_results("SELECT * FROM wp_fs_orders WHERE user_id='" . $user->ID . "' ORDER by id DESC");
 
-        $template = fs_frontend_template('cabinet/orders', array('user'=>$user,'orders'=>$orders), true);
+        $template = fs_frontend_template('cabinet/orders', array('user' => $user, 'orders' => $orders), true);
+        return $template;
+    }
+
+    function profile_edit()
+    {
+        $user = fs_get_current_user();
+        $attr = array(
+            'name' => 'fs-profile-edit',
+            'method' => 'post'
+        );
+        $template = apply_filters('fs_form_header', $attr,'fs_profile_edit');
+        $template.= fs_frontend_template('cabinet/profile-edit', array('user' => $user,'field'=>FS_Config::$user_meta));
+        $template.= apply_filters('fs_form_bottom','');
         return $template;
     }
 }

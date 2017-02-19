@@ -34,16 +34,16 @@ class FS_Users_Class
     {
         $username = sanitize_text_field($_POST['username']);
         $password = sanitize_text_field($_POST['password']);
-        $referer=esc_url($_POST['_wp_http_referer']);
+        $referer = esc_url($_POST['_wp_http_referer']);
 
-        if (!wp_verify_nonce($_POST['_wpnonce'])){
+        if (!wp_verify_nonce($_POST['_wpnonce'])) {
             echo json_encode(array('status' => 0, 'redirect' => false, 'error' => 'Неправильный проверочный код. Обратитесь к администратору сайта!'));
             exit;
         }
 
 //        если отправляющий форму авторизован, то выходим отправив сообщение об ошибке
         if (is_user_logged_in()) {
-            echo json_encode(array('status' => 0, 'redirect' => false, 'error' => 'Вы уже авторизованны на сайте. <a href="'.wp_logout_url($referer).'">Выход</a>'));
+            echo json_encode(array('status' => 0, 'redirect' => false, 'error' => 'Вы уже авторизованны на сайте. <a href="' . wp_logout_url($referer) . '">Выход</a>'));
             exit;
         }
 
@@ -116,7 +116,7 @@ class FS_Users_Class
             $json = json_encode(array(
                 'status' => 1,
                 'redirect' => '',
-                'message' => 'Поздравляем! Вы успешно зарегистрированны! <a href="'.esc_url(get_permalink(fs_option('page_auth'))).'">Выполнить вход</a>'
+                'message' => 'Поздравляем! Вы успешно зарегистрированны! <a href="' . esc_url(get_permalink(fs_option('page_auth'))) . '">Выполнить вход</a>'
             ));
 
             // отсылаем письма
@@ -144,26 +144,57 @@ class FS_Users_Class
 // редактирование профиля пользователя
     public function fs_profile_edit()
     {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'fast-shop')) exit('неправильный проверочный код nonce');
-        if (empty($_POST['fs-form'])) exit('форма не передала никаких данных');
+        if (!wp_verify_nonce($_POST['_wpnonce'], 'fast-shop') || empty($_POST['fs']) || !is_user_logged_in()
+        ) exit('форма не прошла проверку безопасности в ' . __FUNCTION__);
+
         $user = wp_get_current_user();
-        $post_data = array_map('trim', $_POST['fs-form']);
-        foreach ($post_data as $meta_key => $meta_value) {
-            update_user_meta($user->ID, $meta_key, $meta_value);
+
+        foreach (FS_Config::$user_meta as $meta_key => $meta_field) {
+            $name = $meta_field['name'];
+            $value = sanitize_text_field($_POST['fs'][$name]);
+
+            if (empty($value)) {
+                delete_user_meta($user->ID, '$meta_key');
+                continue;
+            }
+
+            switch ($meta_key) {
+                case 'display_name':
+                    $update_user = wp_update_user(array(
+                        'ID' => $user->ID,
+                        'display_name' => $value
+                    ));
+                    if (is_wp_error($update_user)) {
+                        $errors = $update_user->get_error_message();
+                        echo json_encode(array(
+                            'status' => 0,
+                            'message' => $errors
+                        ));
+                        exit;
+                    }
+                    break;
+                case 'user_email':
+                    $update_user = wp_update_user(array(
+                        'ID' => $user->ID,
+                        'user_email' => sanitize_email($_POST['fs'][$name])
+                    ));
+                    if (is_wp_error($update_user)) {
+                        $errors = $update_user->get_error_message();
+                        echo json_encode(array(
+                            'status' => 0,
+                            'message' => $errors
+                        ));
+                        exit;
+                    }
+                    break;
+                default:
+                    update_user_meta($user->ID, $meta_key, $value);
+                    break;
+
+            }
+
         }
-        $user_id = wp_update_user(array(
-            'ID' => $user->ID,
-            'user_pass' => filter_input(INPUT_POST, 'fs-password', FILTER_SANITIZE_STRING),
-            'user_email' => filter_input(INPUT_POST, 'fs-email', FILTER_SANITIZE_EMAIL)
-        ));
-        if (is_wp_error($user_id)) {
-            $errors = $user_id->get_error_message();
-            echo json_encode(array(
-                'status' => 0,
-                'message' => $errors
-            ));
-            exit;
-        }
+
         echo json_encode(array(
             'status' => 1,
             'message' => 'Ваши данные успешно обновились!'
