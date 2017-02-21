@@ -14,7 +14,7 @@ class FS_Config
     public $options;
     public $tabs;
     public $taxonomies;
-    public static $user_meta=array();
+    public static $user_meta = array();
     public static $prices;
 
     /**
@@ -107,7 +107,7 @@ class FS_Config
 
 
         //Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
-        $meta = array(
+      $this->meta = array(
             'price' => 'fs_price',//базовая цена
             'action_price' => 'fs_action_price',//акционная цена, перебивает цену
             'wholesale_price' => 'fs_wholesale_price', //цена для оптовиков
@@ -123,7 +123,6 @@ class FS_Config
             'gallery' => 'fs_galery',//галерея
             'related_products' => 'fs_related_products',//галерея
         );
-        $this->meta = apply_filters('fs_post_meta', $meta);
 
         //  устанавливаем основные типы цен
         self::$prices = array(
@@ -147,18 +146,18 @@ class FS_Config
             )
         );
 
-        self::$user_meta=array(
-            'display_name'=>array('label'=>'Отображаемое имя','name'=>'display_name'),
-            'user_email'=>array('label'=>'E-mail','name'=>'user_email'),
-            'phone'=>array('label'=>'Телефон','name'=>'phone'),
-            'birth_day'=>array('label'=>'Дата рождения','name'=>'birth_day'),
-            'gender'=>array('label'=>'Пол','name'=>'gender'),
-            'state'=>array('label'=>'Штат/Область','name'=>'state'),
-            'country'=>array('label'=>'Страна','name'=>'country'),
-            'city'=>array('label'=>'Город','name'=>'city'),
-            'adress'=>array('label'=>'Адрес','name'=>'adress'),
-            'location'=>array('label'=>'Позиция на карте','name'=>'location'),
-            'profile_update'=>array('label'=>'Дата обновления','name'=>'profile_update')
+        self::$user_meta = array(
+            'display_name' => array('label' => 'Отображаемое имя', 'name' => 'display_name'),
+            'user_email' => array('label' => 'E-mail', 'name' => 'user_email'),
+            'phone' => array('label' => 'Телефон', 'name' => 'phone'),
+            'birth_day' => array('label' => 'Дата рождения', 'name' => 'birth_day'),
+            'gender' => array('label' => 'Пол', 'name' => 'gender'),
+            'state' => array('label' => 'Штат/Область', 'name' => 'state'),
+            'country' => array('label' => 'Страна', 'name' => 'country'),
+            'city' => array('label' => 'Город', 'name' => 'city'),
+            'adress' => array('label' => 'Адрес', 'name' => 'adress'),
+            'location' => array('label' => 'Позиция на карте', 'name' => 'location'),
+            'profile_update' => array('label' => 'Дата обновления', 'name' => 'profile_update')
         );
     }
 
