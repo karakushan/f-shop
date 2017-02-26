@@ -302,9 +302,11 @@ function fs_total_count($echo = true)
  * @return массив элементов корзины в виде:
  *         'id' - id товара,
  *         'name' - название товара,
+ *         'link'- ссылка на кароточку товара
  *         'count' - количество единиц одного продукта,
  *         'price' - цена за единицу,
- *         'all_price' - общая цена
+ *         'all_price' - общая цена товаров с одним id
+ *         'currency' - валюта магазина
  */
 function fs_get_cart()
 {
@@ -313,7 +315,8 @@ function fs_get_cart()
     $products = array();
     if (count($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $count) {
-            if ($key == 0) continue;
+            $post=get_post($key);
+            if (is_null($post)) continue;
             $price = fs_get_price($key);
             $price_show = apply_filters('fs_price_format', $price);
             $count = (int)$count['count'];
@@ -673,14 +676,14 @@ function fs_delete_cart($type = 'button', $args = array())
     $args = wp_parse_args($args, $default);
 
     $class = 'class="' . sanitize_html_class($args['class']) . '"';
-    $url= wp_nonce_url(add_query_arg(array("fs_action" => "delete-cart")), "fs_action");
+    $url = wp_nonce_url(add_query_arg(array("fs_action" => "delete-cart")), "fs_action");
 
     switch ($type) {
         case 'button':
-            echo '<button ' . $class . ' data-fs-type="delete-cart" data-url="' . $url. '">' . $args['text'] . '</button> ';
+            echo '<button ' . $class . ' data-fs-type="delete-cart" data-url="' . $url . '">' . $args['text'] . '</button> ';
             break;
         case 'link':
-            echo '<a href="'.$url.'" ' . $class . ' data-fs-type="delete-cart" data-url="' .$url . '">' . $args['text'] . '</a> ';
+            echo '<a href="' . $url . '" ' . $class . ' data-fs-type="delete-cart" data-url="' . $url . '">' . $args['text'] . '</a> ';
             break;
     }
 }
@@ -1142,6 +1145,38 @@ function fs_get_order($order_id = 0)
         $order = $orders->get_order($order_id);
     }
     return $order;
+}
+
+/**
+ * функция выводит набор html элементов для изменения колиества единицы товара в корзине
+ * @param array $elements массив элеметов и их атрибутов
+ */
+function fs_cart_product_change($product_id,$count,$elements = array())
+{
+    if (empty($elements)) {
+        $elements = array(
+            'pluss' => array('class' => 'pluss'),
+            'input' => array('class' => 'fs-pc-count', 'name' => 'fs-pc-count'),
+            'minus' => array('class' => 'minus')
+        );
+    }
+    $html = '';
+    if ($elements) {
+        foreach ($elements as $key=>$element) {
+            switch ($key) {
+                case 'pluss':
+                    $html .= '<button type="button" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '" class="' . esc_attr($element['class']) . '"></button>';
+                    break;
+                case 'input':
+                    $html .= '<input type="text" class="' . esc_attr($element['class']) . '" data-fs-type="cart-quantity" data-product-id="' . $product_id . '" id="product-quantify-' . $product_id . '" name="' . esc_attr($element['name']) . '" value="'.$count.'"/>';
+                    break;
+                case 'minus':
+                    $html .= '<button type="button" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '" class="' . esc_attr($element['class']) . '"></button>';
+                    break;
+            }
+        }
+    }
+    echo apply_filters('fs_cart_product_change', $html);
 }
 
 
