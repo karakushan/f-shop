@@ -561,7 +561,7 @@ function fs_quantity_product($product_id = 0, $elements = array())
         );
     }
     $quantity_el .= '<div class="fs-quantity-product">';
-    foreach ($elements as $key=>$element) {
+    foreach ($elements as $key => $element) {
         switch ($key) {
             case 'pluss':
                 $quantity_el .= '    <button type="button" class="plus" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '">' . $element['text'] . '</button> ';
@@ -657,14 +657,32 @@ function fs_products_loop()
     }
 }
 
+
 /**
- * Эта функция выводит кнопку удаления всех товаров в корзине
- * @param string $text - надпись на кнопке (мультиязык)
- * @param string $class - класс присваемый кнопке
+ * Функция выводит кнопку для удаления всех товаров из корзины
+ * @param string $type тип html элемента, по умолчанию button
+ * @param array $args дополнительные аргументы (class,text)
  */
-function fs_delete_cart($text = 'Remove all items', $class = '')
+function fs_delete_cart($type = 'button', $args = array())
 {
-    echo '<button class="' . sanitize_html_class($class, '') . '" data-fs-type="delete-cart" data-url="' . wp_nonce_url(add_query_arg(array("fs_action" => "delete-cart")), "fs_action") . '">' . __($text, 'fast-shop') . '</button> ';
+    $default = array(
+        'class' => 'fs-delete-items',
+        'text' => __('Remove all items', 'fast-shop')
+
+    );
+    $args = wp_parse_args($args, $default);
+
+    $class = 'class="' . sanitize_html_class($args['class']) . '"';
+    $url= wp_nonce_url(add_query_arg(array("fs_action" => "delete-cart")), "fs_action");
+
+    switch ($type) {
+        case 'button':
+            echo '<button ' . $class . ' data-fs-type="delete-cart" data-url="' . $url. '">' . $args['text'] . '</button> ';
+            break;
+        case 'link':
+            echo '<a href="'.$url.'" ' . $class . ' data-fs-type="delete-cart" data-url="' .$url . '">' . $args['text'] . '</a> ';
+            break;
+    }
 }
 
 /**
