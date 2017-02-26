@@ -544,24 +544,39 @@ function fs_aviable_product($post_id = '', $aviable_text = '', $no_aviable_text 
 }
 
 /**
- * Отоюражает поле для ввода количества добавляемых продуктов в корзину
+ * Отображает поле для ввода количества добавляемых продуктов в корзину
  * @param  int $product_id - id продукта
- *
+ * @param array $elements массив html элементов и их атрибуты
  */
-function fs_quantity_product($product_id = 0, $echo = true)
+function fs_quantity_product($product_id = 0, $elements = array())
 {
     global $post;
     $product_id = !empty($product_id) ? $product_id : $post->ID;
-    $quantity_el = '<div class="fs-quantity-product">
-    <button type="button" class="plus" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '">+</button> 
-    <input type="text" name="" value="1" data-fs-action="change_count" id="product-quantify-' . $product_id . '" data-fs-product-id="' . $product_id . '"> 
-    <button type="button" class="minus" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '">-</button> </div>';
-    $quantity_el = apply_filters('fs_quantity_product', $quantity_el);
-    if ($echo) {
-        echo $quantity_el;
-    } else {
-        return $quantity_el;
+    $quantity_el = '';
+    if (empty($elements)) {
+        $elements = array(
+            'pluss' => array('class' => 'plus', 'text' => ''),
+            'input' => array('class' => 'quantify-input', 'value' => 1),
+            'minus' => array('class' => 'minus', 'text' => '')
+        );
     }
+    $quantity_el .= '<div class="fs-quantity-product">';
+    foreach ($elements as $key=>$element) {
+        switch ($key) {
+            case 'pluss':
+                $quantity_el .= '    <button type="button" class="plus" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '">' . $element['text'] . '</button> ';
+                break;
+            case 'minus':
+                $quantity_el .= '<button type="button" class="minus" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '">' . $element['text'] . '</button> </div>';
+                break;
+            case 'input':
+                $quantity_el .= '<input type="text" name="" value="1" data-fs-action="change_count" id="product-quantify-' . $product_id . '" data-fs-product-id="' . $product_id . '">';
+                break;
+        }
+
+    }
+    $quantity_el .= '</div>';
+    echo apply_filters('fs_quantity_product', $quantity_el);
 }
 
 /**
