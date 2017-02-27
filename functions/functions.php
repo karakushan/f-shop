@@ -315,7 +315,7 @@ function fs_get_cart()
     $products = array();
     if (count($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $count) {
-            $post=get_post($key);
+            $post = get_post($key);
             if (is_null($post)) continue;
             $price = fs_get_price($key);
             $price_show = apply_filters('fs_price_format', $price);
@@ -455,16 +455,37 @@ function fs_add_to_cart($post_id = 0, $label = '', $attr = array(), $preloader =
     echo apply_filters('fs_add_to_cart', $button);
 }
 
-//Отображает кнопку сабмита формы заказа
-function fs_order_send($label = 'Отправить заказ', $attr = '', $preloader = '<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
+/**
+ * Отображает кнопку сабмита формы заказа
+ * @param string $label надпись на кнопке
+ * @param string $type тип кнопки (button,input)
+ * @param string $class атрибут класса кнопки
+ */
+function fs_order_send($label = 'Отправить заказ', $type = "button", $class = "fs-order-send")
 {
-    echo "<button type=\"submit\" $attr data-fs-action=\"order-send\">$label <span class=\"fs-preloader\">$preloader</span></button>";
+    if (!empty($class)) $class = 'class="' . esc_attr($class) . '"';
+    switch ($type) {
+        case 'button':
+            echo "<button type=\"submit\" $class data-fs-action=\"order-send\">$label</button>";
+            break;
+        case 'input':
+            echo "<input type=\"submit\" $class data-fs-action=\"order-send\" value=\"$label\">";
+            break;
+        default:
+            echo "<button type=\"submit\" $class data-fs-action=\"order-send\">$label</button>";
+            break;
+    }
+
 }
 
-function fs_order_send_form()
+/**
+ * функция выводит форму заказа товара
+ * @param $atts атрибуты тега form
+ */
+function fs_order_send_form($atts)
 {
     $form = new \FS\FS_Shortcode;
-    echo $form->order_send();
+    echo $form->order_send($atts);
 }
 
 //Получает количество просмотров статьи
@@ -1151,7 +1172,7 @@ function fs_get_order($order_id = 0)
  * функция выводит набор html элементов для изменения колиества единицы товара в корзине
  * @param array $elements массив элеметов и их атрибутов
  */
-function fs_cart_product_change($product_id,$count,$elements = array())
+function fs_cart_product_change($product_id, $count, $elements = array())
 {
     if (empty($elements)) {
         $elements = array(
@@ -1162,13 +1183,13 @@ function fs_cart_product_change($product_id,$count,$elements = array())
     }
     $html = '';
     if ($elements) {
-        foreach ($elements as $key=>$element) {
+        foreach ($elements as $key => $element) {
             switch ($key) {
                 case 'pluss':
                     $html .= '<button type="button" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '" class="' . esc_attr($element['class']) . '"></button>';
                     break;
                 case 'input':
-                    $html .= '<input type="text" class="' . esc_attr($element['class']) . '" data-fs-type="cart-quantity" data-product-id="' . $product_id . '" id="product-quantify-' . $product_id . '" name="' . esc_attr($element['name']) . '" value="'.$count.'"/>';
+                    $html .= '<input type="text" class="' . esc_attr($element['class']) . '" data-fs-type="cart-quantity" data-product-id="' . $product_id . '" id="product-quantify-' . $product_id . '" name="' . esc_attr($element['name']) . '" value="' . $count . '"/>';
                     break;
                 case 'minus':
                     $html .= '<button type="button" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '" class="' . esc_attr($element['class']) . '"></button>';
@@ -1177,6 +1198,33 @@ function fs_cart_product_change($product_id,$count,$elements = array())
         }
     }
     echo apply_filters('fs_cart_product_change', $html);
+}
+
+/**
+ * @param $field_name
+ * @param $attr
+ */
+function fs_form_field($field_name, $attr = array())
+{
+    $forms = new \FS\FS_Form_Class;
+    $field = $forms->form_field($field_name, $attr);
+    echo $field;
+}
+
+/**
+ * Функция добавляет префиксы к значениям массива (служебная функция)
+ * @param $mail_keys массив значений
+ * @return array массив значений с префиксами типа %key%
+ */
+function fs_mail_keys($mail_keys)
+{
+    $keys = array();
+    if ($mail_keys) {
+        foreach ($mail_keys as $c=>$mail_key) {
+            $keys[$c] = '%' . $mail_key . '%';
+        }
+    }
+    return $keys;
 }
 
 

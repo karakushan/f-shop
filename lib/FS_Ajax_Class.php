@@ -36,22 +36,24 @@ class FS_Ajax_Class
     function order_send_ajax()
     {
         if (!wp_verify_nonce($_POST['_wpnonce'], 'fast-shop')) die ('не пройдена верификация формы nonce');
-
         $fs_products = $_SESSION['cart'];
-
         $fs_config = new FS_Config();
         global $wpdb;
         $wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
         //Производим очистку полученных данных с формы заказа
-        $name = filter_input(INPUT_POST, 'fs_name', FILTER_SANITIZE_STRING);
-        $mail_client = filter_input(INPUT_POST, 'fs_email', FILTER_SANITIZE_EMAIL);
-        $city = filter_input(INPUT_POST, 'fs_city', FILTER_SANITIZE_STRING);
-        $delivery = filter_input(INPUT_POST, 'fs_delivery', FILTER_SANITIZE_STRING);
-        $pay = filter_input(INPUT_POST, 'fs_pay', FILTER_SANITIZE_STRING);
-        $customer_phone = filter_input(INPUT_POST, 'fs_phone', FILTER_SANITIZE_NUMBER_INT);
-        $delivery_info = filter_input(INPUT_POST, 'fs_delivery_info', FILTER_SANITIZE_STRING);
-        $fs_message = filter_input(INPUT_POST, 'fs_message', FILTER_SANITIZE_STRING);
+        $form_fields = FS_Config::$form_fields;
+        $sanitize_field = array();
+        if ($form_fields) {
+            foreach ($form_fields as $field_name => $form_field) {
+                if ($form_field['type'] == 'email') {
+                    $sanitize_field[$field_name] = sanitize_email($_POST[$field_name]);
+                } else {
+                    $sanitize_field[$field_name] = sanitize_text_field($_POST[$field_name]);
+                }
+
+            }
+        }
 
         // устанавливаем заголовки
         $headers[] = 'Content-type: text/html; charset=utf-8';
@@ -59,157 +61,37 @@ class FS_Ajax_Class
 
         // проверяем существование пользователя
         $user_id = 0;
-        $register_user=false;
         if (is_user_logged_in()) {
             $user = wp_get_current_user();
             $user_id = $user->ID;
-            $user_login = $user->user_login;
-        }else {
-            if ($user = get_user_by('email', $mail_client)) {
-                $user_id = $user->ID;
-                $user_login = $user->user_login;
-            }
         }
 
-        //Регистрируем нового пользователя
-        if (!$user_id) {
-            $random_password = wp_generate_password();
-            $user_id = wp_create_user($mail_client, $random_password, $mail_client);
-            $register_mail_header = 'Регистрация на сайте «' . get_bloginfo('name') . '»';
-            $register_message = '<h3>Поздравляем! Вы успешно зарегистрировались на сайте ' . get_bloginfo() . '.</h3> 
-            <p>Теперь вам нужно установить пароль для вашей учётной записи. </p>
-            <p>Логин: ' . $mail_client . '</p>
-            <p><a href="<?php echo esc_url( wp_lostpassword_url( home_url() ) ); ?>" title="Установить пароль.">Установить пароль.</a></p>';
-            $mail_user_send = wp_mail($mail_client, $register_mail_header, $register_message, $headers);
-
-            if (!is_wp_error($user_id)) {
-                $user = get_user_by('id', $user_id);
-                $user_id = $user->ID;
-                $user_login = $user->user_login;
-                $user_data=array('ID' => $user_id,'display_name'=>$name,'role'=>'client');
-                // добавляем роль клиента
-                wp_update_user($user_data);
-                update_user_meta($user_id, 'city', $city);
-                update_user_meta($user_id, 'phone', $customer_phone);
-            }else{
-                exit('Пользователь существует');
-            }
-        }
-
-        // включаем возможность пользователям использовать собственные поля в форме заказа
-        $fields = array();
-        $exclude_fields = array('action', '_wpnonce', '_wp_http_referer');
-        if (isset($_POST)) {
-            foreach ($_POST as $key => $post_field) {
-                if (in_array($key, $exclude_fields)) continue;
-                $fields['%' . $key . '%'] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
-            }
-        }
-
-        /*
-        Список основных полей для использования в письмах
-        fs_name
-        fs_email
-        fs_city
-        fs_delivery
-        fs_pay
-        fs_phone
-        fs_adress
-        fs_message
-        */
         //Добавляем  данные заказа в базу
         $wpdb->insert(
-            $fs_config->data['table_name'],
+            $fs_config->data['table_orders'],
             array(
                 'user_id' => $user_id,
                 'status' => 0,
-                'comments' => $fs_message,
-                'delivery' => $delivery,
-                'delivery_info' => $delivery_info,
-                'payment' => $pay,
+                'comments' => $sanitize_field['fs_comment'],
+                'delivery' => $sanitize_field['fs_delivery_methods'],
+                'address' => $sanitize_field['fs_adress'],
+                'payment' => $sanitize_field['fs_payment_methods'],
                 'products' => serialize($fs_products),
                 'summa' => fs_total_amount($fs_products, false),
-                'formdata' => serialize($_POST)
-            ),
-            array(
-                '%d',//user_id
-                '%d',//status
-                '%s',//comments
-                '%d',//delivery
-                '%s',//delivery_info
-                '%d',//payment
-                '%s',//products
-                '%f',//summa
-                '%s'//formdata
+                'formdata' => serialize($_POST),
+                'email' => $sanitize_field['fs_email'],
+                'city' => $sanitize_field['fs_city'],
+                'phone' => $sanitize_field['fs_phone'],
+                'first_name' => $sanitize_field['fs_first_name'],
+                'last_name' => $sanitize_field['fs_last_name'],
+                'delivery_number' => $sanitize_field['fs_delivery_number'],
             )
         );
         $order_id = $wpdb->insert_id;
         $_SESSION['last_order_id'] = $order_id;
 
-        /*
-         Список переменных:
-         %fs_name% - Имя заказчика,
-         %number_products% - к-во купленных продуктов,
-         %total_amount% - общая сумма покупки,
-         %fs_wholesale_amount% - общая сумма покупки для оптовых пользователей,
-         %total_amount_admin% - общая сумма покупки, по базовой цене, без
-         %order_id% - id заказа,
-         %products_listing% - список купленных продуктов,
-         %products_listing_admin% - список купленных продуктов для администратора,
-         %fs_login% - логин если пользователь авторизован.
-         %fs_email% - почта заказчика,
-         %fs_adress% - адрес доставки,
-         %fs_pay% - способ оплаты,
-         %fs_city% - город
-         %fs_delivery% - тип доставки,
-         %fs_delivery_info%- дополнительная информация о доставке
-         %fs_phone% - телефон заказчика,
-         %fs_message% - комментарий заказчика,
-         %site_name% - название сайта
-         %site_url% - адрес сайта
-         %admin_url% - адрес админки
-        */
-
-        /*
-        Список основных полей для использования в письмах
-        fs_name
-        fs_email
-        fs_city
-        fs_delivery
-        fs_pay
-        fs_phone
-        fs_adress
-        fs_message
-        */
-
-        $search_replace = array(
-            '%fs_name%' => $name,
-            '%fs_login%' => $user_login,
-            '%date%' => date('d.m.Y H:i'),
-            '%number_products%' => fs_product_count($fs_products, false),
-            '%total_amount%' => apply_filters('fs_price_format', fs_total_amount($fs_products, false)) . ' ' . fs_currency(),
-            '%order_id%' => $order_id,
-            '%fs_email%' => $mail_client,
-            '%fs_city%' => $city,
-            '%fs_currency%' => fs_currency(),
-            '%fs_pay%' => $pay,
-            '%fs_delivery%' => $delivery,
-            '%fs_delivery_info%' => $delivery_info,
-            '%fs_phone%' => $customer_phone,
-            '%fs_message%' => $fs_message,
-            '%site_name%' => get_bloginfo('name'),
-            '%site_url%' => get_bloginfo('url'),
-            '%site_description%' => get_bloginfo('description'),
-            '%site_logo%' => fs_option('site_logo'),
-            '%admin_url%' => get_admin_url()
-        );
-
-        $search_replace = apply_filters('fs_mail_template_var', $search_replace);
-
-        // Производим замену в отсылаемих письмах
-        $search_replace = $fields + $search_replace;
-        $search = array_keys($search_replace);
-        $replace = array_values($search_replace);
+        $search = array_map('fs_mail_keys', array_keys($sanitize_field));
+        $replace = array_values($sanitize_field);
 
         // текст письма заказчику
         $user_message = apply_filters('fs_order_user_message', $fs_products);
@@ -219,24 +101,22 @@ class FS_Ajax_Class
         $admin_message = apply_filters('fs_order_admin_message', $fs_products);
         $admin_message = str_replace($search, $replace, $admin_message);
 
-
         //Отсылаем письмо с данными заказа заказчику
         $customer_mail_header = fs_option('customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo('name') . '»');
-        $mail_user_send = wp_mail($mail_client, $customer_mail_header, $user_message, $headers);
+        wp_mail($sanitize_field['fs_email'], $customer_mail_header, $user_message, $headers);
 
         //Отсылаем письмо с данными заказа админу
         $admin_email = fs_option('manager_email', get_option('admin_email'));
         $admin_mail_header = fs_option('admin_mail_header', 'Заказ товара на сайте «' . get_bloginfo('name') . '»');
-        $mail_admin_send = wp_mail($admin_email, $admin_mail_header, $admin_message, $headers);
+        wp_mail($admin_email, $admin_mail_header, $admin_message, $headers);
 
 
         if (!empty($wpdb->last_error)) {
-            $success = false;
             echo $wpdb->last_error;
         } else {
-            $success = true;
+
             $result = array(
-                'success' => $success,
+                'success' => true,
                 'products' => $fs_products,
                 'order_id' => $order_id,
                 'redirect' => get_permalink(fs_option('page_success'))

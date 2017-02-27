@@ -24,7 +24,7 @@ class FS_Orders_Class
     public function get_orders()
     {
         global $wpdb;
-        $table_name = $this->config->data['table_name'];
+        $table_name = $this->config->data['table_orders'];
         $per_page = 15;
         if (isset($_SESSION['pagination'])) {
             $per_page = $_SESSION['pagination'];
@@ -42,7 +42,7 @@ class FS_Orders_Class
     public function order_pagination($class = '')
     {
         global $wpdb;
-        $table_name = $this->config->data['table_name'];
+        $table_name = $this->config->data['table_orders'];
         $per_page = 15;
         if (isset($_SESSION['pagination'])) {
             $per_page = $_SESSION['pagination'];
@@ -118,28 +118,22 @@ class FS_Orders_Class
     {
         global $wpdb;
         $table_name = $this->config->data['table_orders'];
-        $res = $wpdb->get_row("SELECT * FROM $table_name WHERE id ='$id'");
-        if (!is_null($res)) {
-            $user = get_user_by('id', $res->user_id);
-            $res->user_name = $user->display_name;
-            $res->email = $user->user_email;
-            $res->city = get_user_meta($res->user_id, 'city', 1);
-            $res->telephone = get_user_meta($res->user_id, 'phone', 1);
-            $res->payment_id = $res->payment;
-            $res->delivery_id = $res->delivery;
-            $res->delivery_name = 'не определено';
-            $res->payment_name = 'не определено';
-            $res->products = unserialize($res->products);
-            $res->status = $this->order_status($res->status);
-            $res->date = strtotime($res->date);
-            if (!is_wp_error(get_term_field('name', $res->delivery))) {
-                $res->delivery_name = get_term_field('name', $res->delivery);
+        $order = $wpdb->get_row("SELECT * FROM $table_name WHERE id ='$id'");
+        if (!is_null($order)) {
+            $user = get_user_by('id', $order->user_id);
+            $order->user = $user;
+            $order->delivery_name = 'не определено';
+            $order->payment_name = 'не определено';
+            $order->products = unserialize($order->products);
+            $order->status = $this->order_status($order->status);
+            if (!is_wp_error(get_term_field('name', $order->delivery))) {
+                $order->delivery_name = get_term_field('name', $order->delivery);
             }
-            if (!is_wp_error(get_term_field('name', $res->payment))) {
-                $res->payment_name = get_term_field('name', $res->payment);
+            if (!is_wp_error(get_term_field('name', $order->payment))) {
+                $order->payment_name = get_term_field('name', $order->payment);
             }
         }
-        return $res;
+        return $order;
     }
 
     /**

@@ -16,6 +16,7 @@ class FS_Config
     public $taxonomies;
     public static $user_meta = array();
     public static $prices;
+    public static $form_fields;
 
     /**
      * FS_Config constructor.
@@ -159,6 +160,21 @@ class FS_Config
             'location' => array('label' => 'Позиция на карте', 'name' => 'location'),
             'profile_update' => array('label' => 'Дата обновления', 'name' => 'profile_update')
         );
+
+        self::$form_fields=array(
+          'fs_email'=>array('type'=>'email','label'=>'Ваш email','required'=>true),
+          'fs_first_name'=>array('type'=>'text','label'=>'Ваше имя','required'=>true),
+          'fs_last_name'=>array('type'=>'text','label'=>'Ваша фамилия','required'=>true),
+          'fs_phone'=>array('type'=>'tel','label'=>'Телефон','required'=>true),
+          'fs_city'=>array('type'=>'text','label'=>'Город','required'=>true),
+          'fs_adress'=>array('type'=>'text','label'=>'Адрес доставки','required'=>false),
+          'fs_delivery_number'=>array('type'=>'text','label'=>'Номер отделения','required'=>false),
+          'fs_delivery_methods'=>array('type'=>'radio','label'=>'Способ доставки','required'=>true),
+          'fs_payment_methods'=>array('type'=>'radio','label'=>'Способ оплаты','required'=>true),
+          'fs_comment'=>array('type'=>'text','label'=>'Комментарий','required'=>false),
+        );
     }
+
+
 
 }
