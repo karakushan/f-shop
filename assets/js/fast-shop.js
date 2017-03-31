@@ -133,11 +133,46 @@ jQuery(function ($) {
             });
     });
 
+    // изменяем атрибуты товара по изменению input radio
+    $('[data-action="change-attr"]').on('change', function () {
+        var target = $(this).data('target');
+        var productId = $(this).data('product-id');
+        var attrObj = $('#fs-atc-' + productId).data('attr');
+        $(target).val($(this).val());
+        attrObj.terms = [];
+        var checked=true;
+        $('[name="fs-attr"]').each(function (index) {
+            if ($(this).val() != '') {
+                attrObj.terms[index]=$(this).val();
+            }else{
+                checked=false;
+            }
+        });
+        $('#fs-atc-' + productId).attr('data-attr',JSON.stringify(attrObj));
+        if(checked){
+            $('#fs-attr-change .fs-group-info').fadeIn().html('Теперь можно добавить в корзину!')
+        }
+
+    })
+
     //добавление товара в корзину (сессию)
     $('[data-action=add-to-cart]').on('click', function (event) {
         event.preventDefault();
+
+        // проверяем выбрал ли пользователь обязательные атибуты товара, например размер
+        var fsAttrReq = true;
+        $('[name="fs-attr"]').each(function () {
+            if ($(this).val() == '') {
+                fsAttrReq = false;
+                // создаём событие
+                var no_selected_attr = new CustomEvent("fs_no_selected_attr");
+                document.dispatchEvent(no_selected_attr);
+            }
+        });
+
+        if (!fsAttrReq) return fsAttrReq;
+
         var curent = $(this);
-        var productName = $(this).data('product-name');
         var product_id = curent.data('product-id');
         var product_name = curent.data('product-name');
         var attr = curent.data('attr');
@@ -151,7 +186,14 @@ jQuery(function ($) {
             url: FastShopData.ajaxurl,
             data: productObject,
             beforeSend: function () {
+                // создаём событие
+                var before_add_product = new CustomEvent("fs_before_add_product", {
+                    detail: {id: product_id, name: product_name, attr: attr, success: true}
+                });
+                document.dispatchEvent(before_add_product);
                 curent.find('.fs-preloader ').fadeIn('slow');
+                console.log(before_add_product.success);
+                return before_add_product.success;
             }
         })
             .done(function (result) {
@@ -244,7 +286,7 @@ jQuery(function ($) {
                     }
                     setTimeout(function () {
                         userInfoEdit.find('.fs-form-info').fadeOut('slow').removeClass('fs-error fs-success').html();
-                    },5000)
+                    }, 5000)
                 });
         }
     });

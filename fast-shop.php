@@ -26,24 +26,33 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if (!defined('ABSPATH')) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
+
+
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define('FS_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('FS_PLUGIN_URL', plugin_dir_url(__FILE__));
+define( 'FS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
-if (class_exists('\FS\FS_Init')) {
-    new \FS\FS_Init;
+if ( class_exists( '\FS\FS_Init' ) ) {
+	new \FS\FS_Init;
 
-    function fs_activate()
-    {
-        global $wpdb;
-        $config = new FS\FS_Config();
-        $table_name = $config->data['table_name'];
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-            $sql = "CREATE TABLE $table_name
+	if ( $fs_option['debug'] ) {
+		ini_set( 'error_reporting', E_ALL );
+		ini_set( 'display_errors', 1 );
+		ini_set( 'display_startup_errors', 1 );
+	}
+
+	function fs_activate() {
+		global $wpdb;
+		$config     = new FS\FS_Config();
+		$table_name = $config->data['table_name'];
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) {
+			$sql = "CREATE TABLE $table_name
             ( 
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`user_id` INT(11) NULL DEFAULT NULL,
@@ -62,20 +71,19 @@ if (class_exists('\FS\FS_Init')) {
             COLLATE='utf8_general_ci'
             ENGINE=InnoDB
             ";
-            dbDelta($sql);
-        }
-        add_role('client', __('Client','fast-shop'), array('read' => true, 'level_0' => true));
+			dbDelta( $sql );
+		}
+		add_role( 'client', __( 'Client', 'fast-shop' ), array( 'read' => true, 'level_0' => true ) );
 
-    }
+	}
 
-    function fs_deactivate()
-    {
-        // Do nothing
-    } // END public static function deactivate
+	function fs_deactivate() {
+		// Do nothing
+	} // END public static function deactivate
 
 // Installation and uninstallation hooks
-    register_activation_hook(__FILE__, 'fs_activate');
-    register_deactivation_hook(__FILE__, 'fs_deactivate');
+	register_activation_hook( __FILE__, 'fs_activate' );
+	register_deactivation_hook( __FILE__, 'fs_deactivate' );
 }
 
 

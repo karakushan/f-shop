@@ -24,7 +24,7 @@ class FS_Orders_Class
     public function get_orders()
     {
         global $wpdb;
-        $table_name = $this->config->data['table_name'];
+        $table_name = $this->config->data['table_orders'];
         $per_page = 15;
         if (isset($_SESSION['pagination'])) {
             $per_page = $_SESSION['pagination'];
@@ -42,7 +42,7 @@ class FS_Orders_Class
     public function order_pagination($class = '')
     {
         global $wpdb;
-        $table_name = $this->config->data['table_name'];
+        $table_name = $this->config->data['table_orders'];
         $per_page = 15;
         if (isset($_SESSION['pagination'])) {
             $per_page = $_SESSION['pagination'];
@@ -114,7 +114,7 @@ class FS_Orders_Class
     }
 
 //Получаем объект одного заказа
-    public function get_order(int $id)
+    public function get_order($id=0)
     {
         global $wpdb;
         $table_name = $this->config->data['table_orders'];
@@ -167,7 +167,7 @@ class FS_Orders_Class
     {
         global $wpdb;
         $upd = false;
-        $table_name = $this->config->data['table_name'];
+        $table_name = $this->config->data['table_orders'];
         if (isset($_GET['action']) && $_GET['action'] == 'edit') {
             if (isset($_GET['id']) || isset($_GET['status'])) {
                 $upd = $wpdb->update(

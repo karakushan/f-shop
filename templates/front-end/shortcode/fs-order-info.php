@@ -6,7 +6,7 @@
         </li>
         <li>
             Ваше имя 
-            <span><?php echo $order_info->name; ?></span>
+            <span><?php echo $order_info->user_name; ?></span>
         </li>
         <li>
             Электронная почта 

@@ -13,6 +13,8 @@
 						<th style="    border: 1px solid #12353b;
 						padding: 7px;">Товар</th>
 						<th style="    border: 1px solid #12353b;
+						padding: 7px;">Фото</th>
+						<th style="    border: 1px solid #12353b;
 						padding: 7px;">Артикул</th>
 
 						<th style="    border: 1px solid #12353b;
@@ -28,7 +30,7 @@
 				<tbody>
 					%products_listing%
 					<tr>
-						<td colspan="6" style="text-align: right; font-size: 18px;border: 1px solid #12353b; padding: 7px;text-align: center;">Общая сумма покупки: <strong>%total_amount%</strong></td> </tr>
+						<td colspan="7" style="text-align: right; font-size: 18px;border: 1px solid #12353b; padding: 7px;text-align: center;">Общая сумма покупки: <strong>%total_amount%</strong></td> </tr>
 				</tbody>
 			</table>
 			%mail_body%

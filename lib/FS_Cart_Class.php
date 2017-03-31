@@ -36,18 +36,18 @@ class FS_Cart_Class
 	function add_to_cart_ajax()
 	{
 		$product_id=(int)$_REQUEST['post_id'];
-		$attr=array_map('sanitize_text_field',$_REQUEST['attr']);
-		$count=(int)$attr['count'];
+        $attr=isset($_REQUEST['attr']['terms']) ? $_REQUEST['attr']['terms'] : array();
+		$count=(int)$_REQUEST['attr']['count'];
 		if (isset($_SESSION['cart'][$product_id])) {
 			$count_sess=$_SESSION['cart'][$product_id]['count'];
 			$_SESSION['cart'][$product_id]=array(
 				'count'=>$count_sess+$count,
-				'attr'=>$attr	
+				'attr'=>$attr
 				);
 		}else{
 			$_SESSION['cart'][$product_id]=array(
 				'count'=>$count,
-				'attr'=>$attr		
+				'attr'=>$attr
 				);
 		}
 
