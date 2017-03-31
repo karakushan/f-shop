@@ -223,7 +223,7 @@ jQuery(function ($) {
                 type: 'POST',
                 data: validator.serialize(),
                 beforeSend: function () {
-                    $('button[data-fs-action=order-send]').find('.fs-preloader').fadeIn('slow');
+                    $('[data-fs-action="order-send"]').html('<img src="/wp-content/plugins/fast-shop/assets/img/ajax-loader.gif" alt="preloader">');
                 }
             })
                 .done(function (response) {
@@ -237,6 +237,7 @@ jQuery(function ($) {
                             });
                             document.dispatchEvent(send_order);
                             if (jsonData.redirect != false) document.location.href = jsonData.redirect;
+                            $('[data-fs-action="order-send"]').html('Отправлено');
                         } catch (e) {
                             console.log(response);
                         }

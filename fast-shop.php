@@ -46,6 +46,7 @@ if ( class_exists( '\FS\FS_Init' ) ) {
 		ini_set( 'display_startup_errors', 1 );
 	}
 
+<<<<<<< HEAD
 	function fs_activate() {
 		global $wpdb;
 		$config     = new FS\FS_Config();
@@ -53,27 +54,49 @@ if ( class_exists( '\FS\FS_Init' ) ) {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) {
 			$sql = "CREATE TABLE $table_name
+=======
+    function fs_activate()
+    {
+        global $wpdb;
+        $config = new FS\FS_Config();
+        $table_name = $config->data['table_orders'];
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+            $sql = "CREATE TABLE $table_name
+>>>>>>> a70d177fce0e15de09b4cf118d30e2ed05c3336a
             ( 
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`user_id` INT(11) NULL DEFAULT NULL,
-	`status` INT(11) NULL DEFAULT NULL,
-	`products` TEXT NULL,
-	`payment` INT(11) NOT NULL DEFAULT '0',
-	`delivery` INT(11) NULL DEFAULT NULL,
-	`delivery_info` VARCHAR(255) NULL DEFAULT NULL,
-	`summa` FLOAT NULL DEFAULT NULL,
-	`comments` TEXT NULL,
+	`user_id` INT(11) NOT NULL,
+	`first_name` VARCHAR(50) NOT NULL,
+	`last_name` VARCHAR(50) NOT NULL,
+	`summa` FLOAT NOT NULL DEFAULT '0',
+	`status` INT(11) NOT NULL DEFAULT '0',
+	`products` TEXT NOT NULL,
+	`payment` INT(11) NOT NULL,
+	`delivery` INT(11) NOT NULL,
+	`address` VARCHAR(255) NOT NULL,
+	`city` VARCHAR(255) NOT NULL,
+	`email` VARCHAR(50) NOT NULL,
+	`comments` TEXT NOT NULL,
 	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`formdata` TEXT NULL,
+	`phone` VARCHAR(50) NOT NULL,
+	`delivery_number` VARCHAR(50) NOT NULL,
+	`formdata` TEXT NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `id` (`id`)
             )
             COLLATE='utf8_general_ci'
             ENGINE=InnoDB
             ";
+<<<<<<< HEAD
 			dbDelta( $sql );
 		}
 		add_role( 'client', __( 'Client', 'fast-shop' ), array( 'read' => true, 'level_0' => true ) );
+=======
+            dbDelta($sql);
+        }
+        add_role('client', __('Client', 'fast-shop'), array('read' => true, 'level_0' => true));
+>>>>>>> a70d177fce0e15de09b4cf118d30e2ed05c3336a
 
 	}
 

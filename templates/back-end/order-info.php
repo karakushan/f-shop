@@ -11,7 +11,7 @@
 				<th>Цена</th>
 			</tr>
 		</thead>
-		<?php foreach ($products as $key => $o): ?>
+		<?php foreach ($order->products as $key => $o): ?>
 			<tr>
 				<td><a href="<?php echo admin_url('post.php?post='.$key.'&action=edit') ?>" title="ссылка на редактирование товара"><?php echo $key ?></a></td>
 				<td><a href="<?php echo get_permalink($key) ?>" target="_blank" title="смотреть товар на сайте"><?php echo get_the_title($key); ?></a></td>
@@ -31,13 +31,13 @@
 			<th>#ID пользователя</th><td><?php echo $order->user_id ?></td>
 		</tr>
 		<tr>
-			<th>Имя</th><td><?php echo $order->user_name; ?></td>
+			<th>Имя</th><td><?php echo $order->first_name; ?></td>
 		</tr>
         <tr>
 			<th>Email</th><td><?php echo $order->email; ?></td>
 		</tr>
 		<tr>
-			<th>Телефон</th><td><?php echo $order->telephone; ?></td>
+			<th>Телефон</th><td><?php echo $order->phone; ?></td>
 		</tr>
 		<tr>
 			<th>Город </th><td><?php echo $order->city; ?></td>
@@ -46,7 +46,7 @@
 			<th>Способ доставки</th><td><?php echo $order->delivery_name; ?></td>
 		</tr>
 		<tr>
-			<th>№ отделения</th><td><?php echo $order->delivery_info; ?></td>
+			<th>№ отделения</th><td><?php echo $order->delivery_number; ?></td>
 		</tr>
 		<tr>
 			<th>Способ оплаты</th><td><?php echo $order->payment_name; ?></td>

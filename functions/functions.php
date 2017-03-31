@@ -1207,7 +1207,6 @@ function fs_get_order( $order_id = 0 ) {
 
 function fs_get_delivery( $delivery_id ) {
 	$name = get_term_field( 'name', $delivery_id, 'fs-delivery-methods' );
-
 	return $name;
 }
 

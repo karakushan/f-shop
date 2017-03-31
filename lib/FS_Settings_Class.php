@@ -106,7 +106,7 @@ class FS_Settings_Class
         $config=new FS_Config();
         $orders=new FS_Orders_Class();
         $action=!empty($_GET['action'])? $_GET['action']:'' ;
-        $table=$config->data['table_name'];
+        $table=$config->data['table_orders'];
         $orders_count = $wpdb->get_var("SELECT COUNT(*) FROM  $table");
         switch ($action) {
             case 'info':
@@ -115,7 +115,6 @@ class FS_Settings_Class
             if (!$order) {
                 exit('невозможно получить данные заказа');
             }
-            $products=unserialize( $order->products);
             include ($this->config->data['plugin_path'].'templates/back-end/order-info.php');
             break;
 

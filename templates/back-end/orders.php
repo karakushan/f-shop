@@ -6,7 +6,7 @@
 			<table>
 				<thead>
 				<tr>
-					<th scope="col">#ID</th><th scope="col">Дата заказа</th><th scope="col">Телефон</th><th scope="col">Email</th><th scope="col">Статус/Изменить</th><th scope="col">Сумма</th><th scope="col">Подробности</th><!-- <th>Отмена</th> -->
+					<th scope="col">#ID</th><th scope="col">Дата заказа</th><th scope="col">Имя</th><th scope="col">Телефон</th><th scope="col">Email</th><th scope="col">Статус/Изменить</th><th scope="col">Сумма</th><th scope="col">Подробности</th><!-- <th>Отмена</th> -->
 				</tr>
 				</thead>
 				<tbody>
@@ -18,7 +18,8 @@
 					<tr>
 						<th scope="row"><a href="<?php echo add_query_arg(array('action'=>'info','id'=>$order->id)) ?>"><?php echo $order->id ?></a></th>
 						<td><?php echo date('d.m.Y H:i',strtotime($order->date)) ?></td>
-						<td><?php echo $order->telephone ?></td>
+						<td><?php echo $order->first_name ?></td>
+                        <td><?php echo $order->phone ?></td>
 						<td><?php echo $order->email ?></td>
 					
 						<td><select name="" id="" class="status_<?php echo $order->status ?>"  onchange="if(confirm('Вы дейтвительно хотите поменять статус заказа <?php echo $order->id ?>')){ document.location=this.value}">

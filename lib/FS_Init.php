@@ -109,8 +109,8 @@ class FS_Init
      */
     function redirect_users()
     {
-        if (is_page(fs_option('page_cabinet')) && !is_user_logged_in()){
+       /* if (is_page(fs_option('page_cabinet')) && !is_user_logged_in()){
             wp_redirect(get_permalink(fs_option('page_auth')));
-        }
+        }*/
     }
 }

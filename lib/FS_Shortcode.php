@@ -162,6 +162,8 @@ class FS_Shortcode
 
     /**
      * шорткод для отображения формы оформления заказа
+     * @param array $atts атрибуты тега form
+     * @return string
      */
     public function order_send($atts = array())
     {
