@@ -3,42 +3,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
-/**
- *  выводит группы свойств товара в виде опций select или обычного ul списка
- *
- * @param  string $group название группы свойств
- * @param  string $post_id id поста к которому нужно вывести свойства(по умолчанию текущий пост, если в цикле)
- * @param  string $type тип вывода: 'option' - опции select, 'list' обычный список
- *
- * @return  выводит или группу опций или маркированый список
- */
-function fs_attr_group( $group, $post_id = "", $type = 'option', $option_default = '', $class = 'form-control' ) {
-	global $post;
-	$config            = new \FS\FS_Config();
-	$post_id           = ( empty( $post_id ) ? $post->ID : (int) $post_id );
-	$fs_atributes_post = get_post_meta( $post_id, $config->meta['attributes'], false );
-	$fs_atributes_post = isset( $fs_atributes_post[0] ) ? $fs_atributes_post[0] : array();
-	$fs_atributes_all  = get_option( 'fs-attributes' ) != false ? get_option( 'fs-attributes' ) : array();
-	if ( $fs_atributes_post ) {
-		switch ( $type ) {
-			case 'radio':
-				foreach ( $fs_atributes_post[ $group ] as $key => $fs_atribute ) {
-					if ( $fs_atribute == 0 ) {
-						continue;
-					}
-					$checked = $key == 0 ? "checked" : "";
-					if ( $fs_atributes_all[ $group ][ $key ]['type'] == 'image' ) {
-						$img_url = wp_get_attachment_thumb_url( $fs_atributes_all[ $group ][ $key ]['value'] );
-						echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group\" value=\"$key\" data-fs-element=\"attr\" data-product-id=\"$post_id\" $checked></label></li>";
-					} else {
-						echo "<li><label>" . $fs_atributes_all[ $group ][ $key ]['name'] . "</label><input type=\"radio\" name=\"$group\" value=\"$key\" $checked></li>";
-					}
-				}
-				break;
-			default:
-				break;
-		}
 
+function fs_dropdown_attr_group( $group_id = 0, $post_id = 0, $args = array() ) {
+
+	if ( empty( $post_id ) ) {
+		global $post;
+		$post_id = $post->ID;
+	}
+	$args  = wp_parse_args( $args, array(
+		'class' => ''
+	) );
+	$class = ! empty( $args['class'] ) ? 'class="' . $args['class'] . '"' : '';
+	$terms = get_the_terms( $post_id, 'product-attributes' );
+
+	if ( $terms ) {
+		echo '<select name="' . $group_id . '" ' . $class . ' data-fs-element="attr" data-product-id="' . $post_id . '">';
+		echo '<option value="">Выберите</option>';
+		foreach ( $terms as $term ) {
+			if ( $term->parent == $group_id ) {
+				echo '<option value="' . $term->term_id . '">' . $term->name . '</option>';
+			}
+		}
+		echo '<select>';
 	}
 }
 
@@ -454,37 +440,37 @@ function fs_base_price( $post_id = 0, $echo = true, $wrap = '<span>%s</span>' ) 
  *
  * @param  int $post_id [id поста (оставьте пустым в цикле wordpress)]
  * @param  string $label [надпись на кнопке]
- * @param  array $attr [атрибуты тега button такие как класс и прочее]
- * @param  string $preloader [html код прелоадера]
- * @param  string $send_icon [html код иконки успешного добавления в корзину]
- * @param string $json
+ * @param  array $attr дополнительные атрибуты
  */
-function fs_add_to_cart( $post_id = 0, $label = '', $attr = array(), $preloader = '', $send_icon = '<i class="fa fa-check" aria-hidden="true"></i>', $json = '' ) {
+function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	global $post;
-	$atributes = array();
-	$post_id   = empty( $post_id ) ? $post->ID : $post_id;
+	$post_id = empty( $post_id ) ? $post->ID : $post_id;
 
-	if ( $preloader == '' ) {
-		$preloader = '<img src="' . FS_PLUGIN_URL . 'assets/img/preloader-1.svg" alt="preloader">';
-	}
+	$attr = wp_parse_args( $attr,
+		array(
+			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
+			'preloader' => '',
+			'class'     => ''
+		)
+	);
 
-	if ( $label == '' ) {
+	if ( empty( $label ) ) {
 		$label = __( 'Add to cart', 'fast-shop' );
 	}
-	//Добавляем к json свои значения
-	$attr_json = json_encode( array( 'count' => 1 ) );
 
-	$attr_set = array(
+	//Добавляем к json свои значения
+	$attr_json = json_encode( $attr['json'] );
+
+	$attr_set   = array(
+		'type'              => 'button',
 		'data-action'       => 'add-to-cart',
 		'data-product-id'   => $post_id,
 		'data-product-name' => get_the_title( $post_id ),
 		'id'                => 'fs-atc-' . $post_id,
 		'data-attr'         => $attr_json
 	);
-
-	$atributes = fs_parse_attr( $attr, $attr_set );
-
-	$button = "<button $atributes >$label <span class=\"send_ok\">$send_icon</span><span class=\"fs-preloader\">$preloader</span></button> ";
+	$attributes = fs_parse_attr( array(), $attr_set );
+	$button     = '<button ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '</button>';
 	echo apply_filters( 'fs_add_to_cart', $button );
 }
 
@@ -1207,7 +1193,37 @@ function fs_get_order( $order_id = 0 ) {
 
 function fs_get_delivery( $delivery_id ) {
 	$name = get_term_field( 'name', $delivery_id, 'fs-delivery-methods' );
+
 	return $name;
 }
+
+/**
+ * Функция выводе одно поле формы заказа
+ *
+ * @param $field название поля, атрибут name
+ * @param array $args массив аргументов типа класс, тип, обязательность заполнения, title
+ */
+function fs_form_field( $field, $args = array() ) {
+	$default  = array(
+		'type'     => 'text',
+		'class'    => '',
+		'required' => true,
+		'title'    => __( 'required field', 'fast-shop' )
+	);
+	$args     = wp_parse_args( $args, $default );
+	$class    = ! empty( $args['class'] ) ? 'class="' . sanitize_html_class( $args['class'] ) . '"' : '';
+	$title    = ! empty( $args['title'] ) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
+	$required = ! empty( $args['required'] ) ? 'required' : '';
+	switch ( $args['type'] ) {
+		case 'text':
+			echo ' <input type="text" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '> ';
+			break;
+		case 'textarea':
+			echo '<textarea name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '></textarea>';
+			break;
+	}
+
+}
+
 
 

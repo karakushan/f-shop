@@ -140,6 +140,10 @@ button.remove-tr {
     left: auto;
 }
 
+[data-fs-element="cart-widget"]{
+    display: inline;
+}
+
 .send_ok {
     display: none;
     position: absolute;
