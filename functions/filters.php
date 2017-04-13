@@ -37,57 +37,6 @@ function add_views_sortable_column( $sortable_columns ) {
 }
 
 /**
- * подготовка письма для отсылки пользователю
- * берёт шаблон из папки /wp-content/plugins/fast-shop/templates/front-end/mail/mail-user.php
- * заменяет в нём переменные %products_listing% и  %mail_body%
- * %products_listing% - листинг купленных товаров
- * %mail_body% - письмо составленное администратором в админке для пользователя
- */
-add_filter( 'fs_order_user_message', 'fs_order_user_message' );
-function fs_order_user_message( $fs_products ) {
-	$products = '';
-	if ( $fs_products ) {
-		foreach ( $fs_products as $id => $product ) {
-			$products .= fs_frontend_template( 'mail/products-listing', array( 'id' => $id, 'product' => $product ) );
-		}
-	}
-	$message_body  = fs_option( 'customer_mail' );
-	$full_template = fs_frontend_template( 'mail/mail-user' );
-	$template      = str_replace( array( '%products_listing%', '%mail_body%' ), array(
-		$products,
-		$message_body
-	), $full_template );
-
-	return $template;
-}
-
-/**
- * подготовка письма для отсылки администратору
- * берёт шаблон из папки /wp-content/plugins/fast-shop/templates/front-end/mail/mail-admin.php
- * заменяет в нём переменные %products_listing% и  %mail_body%
- * %products_listing% - листинг купленных товаров
- * %mail_body% - письмо составленное администратором в админке для менеджера или себя
- */
-add_filter( 'fs_order_admin_message', 'fs_order_admin_message' );
-function fs_order_admin_message( $fs_products ) {
-	$products = '';
-	if ( $fs_products ) {
-		foreach ( $fs_products as $id => $product ) {
-			$products .= fs_frontend_template( 'mail/products-listing', array( 'id' => $id, 'product' => $product ) );
-		}
-	}
-	$message_body  = fs_option( 'admin_mail' );
-	$full_template = fs_frontend_template( 'mail/mail-admin' );
-	$template      = str_replace( array( '%products_listing%', '%mail_body%' ), array(
-		$products,
-		$message_body
-	), $full_template );
-
-	return $template;
-}
-
-
-/**
  * Фильтр возвращает тег формы и скрытые поля необходимые для безопасности
  *
  * @param array $attr массив атрибутов тега form

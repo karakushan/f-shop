@@ -22,30 +22,30 @@ class FS_Migrate_Class {
 		$fs_atributes = get_option( 'fs-attr-group' );
 		global $post;
 
-
 		if ( ! empty( $fs_atributes ) ) {
 			foreach ( $fs_atributes as $k => $att ) {
-
-				$term = term_exists( $att['slug'], 'product-attributes' );
-				if ( ! $term ) {
-					$args     = array(
-						'alias_of'    => '',
+//  ищем родительский термин среди уже существующих
+				$term_parent = term_exists( $k, 'product-attributes' );
+//				если $term_parent возвратило 0 значит термина не существует, добавляем его
+				if ( ! $term_parent ) {
+					$args        = array(
+						'alias_of'    => $k,
 						'description' => '',
 						'parent'      => 0,
 						'slug'        => $att['slug'],
 					);
-					$ins_term = wp_insert_term( $att['title'], 'product-attributes', $args );
-					if ( is_wp_error( $ins_term ) ) {
-						update_option( 'fs_last_error', $ins_term->get_error_message() );
+					$term_parent = wp_insert_term( $att['title'], 'product-attributes', $args );
+					if ( is_wp_error( $term_parent ) ) {
+						update_option( 'fs_last_error', $term_parent->get_error_message() );
 					}
 				}
-
+// добавляем детей родительского термина
 				if ( ! empty( $att['attributes'] ) ) {
 					foreach ( $att['attributes'] as $att_key => $attribute ) {
 						$args_child     = array(
-							'alias_of'    => '',
+							'alias_of'    => $att_key,
 							'description' => '',
-							'parent'      => $term['term_id'],
+							'parent'      => $term_parent['term_id'],
 							'slug'        => $att_key,
 						);
 						$ins_term_child = wp_insert_term( $attribute, 'product-attributes', $args_child );

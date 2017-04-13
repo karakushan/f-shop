@@ -105,9 +105,6 @@ class FS_Post_Type
                     }
                     break; 
                     default:
-                    if (empty($_POST[$field_name])) {
-                        delete_post_meta($post_id, $field_name);
-                    }else{
                         if (is_array($_POST[$field_name])) {
 
                             $field_sanitize=array_map('sanitize_text_field',$_POST[$field_name]);
@@ -116,7 +113,6 @@ class FS_Post_Type
                         }else{
                             update_post_meta($post_id, $field_name,sanitize_text_field( $_POST[$field_name])); 
                         }
-                    }
                     break;
                 }
                 

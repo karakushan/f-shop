@@ -340,6 +340,7 @@ function fs_get_cart() {
 				'id'        => $key,
 				'name'      => get_the_title( $key ),
 				'count'     => $c,
+				'thumb'     => get_the_post_thumbnail_url( $key,'full' ),
 				'attr'      => $attr,
 				'link'      => get_permalink( $key ),
 				'price'     => $price_show,
@@ -546,19 +547,26 @@ function fs_checkout_url( $show = true ) {
 }
 
 
-//Показывает наличие продукта
 /**
- * @param string $post_id
- * @param string $aviable_text
- * @param string $no_aviable_text
+ * Функция поверяет наличие товара на складе
+ *
+ * @param int $post_id id записи
+ *
+ * @return bool  true - товар есть на складе, false - нет
  */
-function fs_aviable_product( $post_id = '', $aviable_text = '', $no_aviable_text = '' ) {
+function fs_aviable_product( $post_id = 0 ) {
 	global $post;
 	$config       = new FS\FS_Config;
 	$product_id   = empty( $post_id ) ? $post->ID : (int) $post_id;
 	$availability = get_post_meta( $product_id, $config->meta['remaining_amount'], true );
-	$aviable      = ( $availability < 1 || empty( $availability ) ) ? $no_aviable_text : $aviable_text;
-	echo $aviable;
+
+	if ( $availability == '' || $availability > 0 ) {
+		$aviable = true;
+	} else {
+		$aviable = false;
+	}
+
+	return $aviable;
 }
 
 /**
@@ -1193,7 +1201,11 @@ function fs_get_order( $order_id = 0 ) {
 
 function fs_get_delivery( $delivery_id ) {
 	$name = get_term_field( 'name', $delivery_id, 'fs-delivery-methods' );
+	return $name;
+}
 
+function fs_get_payment( $payment_id ) {
+	$name = get_term_field( 'name',$payment_id, 'fs-payment-methods' );
 	return $name;
 }
 
@@ -1223,6 +1235,24 @@ function fs_form_field( $field, $args = array() ) {
 			break;
 	}
 
+}
+
+/**
+ * создаёт переменные в письмах из массива ключей
+ *
+ * @param array $keys - ключи массива
+ *
+ * @return array массив из значений типа %variable%
+ */
+function fs_mail_keys( $keys = array() ) {
+	$email_variable = array();
+	if ( $keys ) {
+		foreach ( $keys as $key=>$value ) {
+			$email_variable[] = '%' . $key . '%';
+		}
+	}
+
+	return $email_variable;
 }
 
 
