@@ -93,6 +93,7 @@ class FS_Ajax_Class {
 		$sanitize_field['order_id'] = $order_id;
 		$sanitize_field['fs_delivery_methods'] = fs_get_delivery($sanitize_field['fs_delivery_methods']);
 		$sanitize_field['fs_payment_methods'] = fs_get_payment($sanitize_field['fs_payment_methods']);
+		$sanitize_field['fs_admin_message'] = fs_option('');
 
 		$_SESSION['last_order_id']  = $order_id;
 

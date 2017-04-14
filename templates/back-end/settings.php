@@ -59,67 +59,86 @@
                            value="<?php echo fs_option( 'name_sender', get_bloginfo( 'name' ) ) ?>">
                 </p>
                 <p>
-                    <label for="">Список переменных для использования в письмах</label><br>
-                    <code>
-                        %fs_name% - Имя заказчика,
-                        %total_amount% - общая сумма покупки,
-                        %order_id% - id заказа,
-                        %products_listing% - список купленных продуктов,
-                        %fs_email% - почта заказчика,
-                        %fs_adress% - адрес доставки,
-                        %fs_pay% - способ оплаты,
-                        %fs_city% - город
-                        %fs_delivery% - тип доставки,
-                        %fs_phone% - телефон заказчика,
-                        %fs_message% - комментарий заказчика,
-                        %site_name% - название сайта
-                        %admin_url% - адрес админки
-                    </code>
-                </p>
-                <p>
                     <label for="customer_mail_header">Заголовок письма заказчику:</label><br>
                     <input type="text" name="fs_option[customer_mail_header]" id="customer_mail_header"
                            value="<?php echo fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' ); ?>">
                 </p>
                 <p>
                     <label for="customer_mail">Текст письма заказчику после отправки заказа:</label><br>
-                    <textarea name="fs_option[customer_mail]" id="customer_mail"
-                              rows="10"><?php echo fs_option( 'customer_mail' ) ?></textarea>
+					<?php wp_editor( fs_option( 'customer_mail' ), 'customer_mail', array(
+						'wpautop'          => 1,
+						'media_buttons'    => 1,
+						'textarea_name'    => 'fs_option[customer_mail]',
+						'textarea_rows'    => 8,
+						'tabindex'         => null,
+						'editor_css'       => '',
+						'editor_class'     => '',
+						'teeny'            => 0,
+						'dfw'              => 0,
+						'tinymce'          => 1,
+						'quicktags'        => 1,
+						'drag_drop_upload' => false
+					) ) ?>
                 </p>
                 <p>
-                    <label for="admin_mail_header">Заголовок письма администратору:</label><br>
-                    <input type="text" name="fs_option[admin_mail_header]" id="admin_mail_header"
-                           value="<?php echo fs_option( 'admin_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' ); ?>">
+                    <label for="mail_social">Блок соц сетей:</label><br>
+
+					<?php
+					$social_def = '<a href=""><img width="44" height="47"src="http://s3.amazonaws.com/swu-filepicker/k8D8A7SLRuetZspHxsJk_social_08.gif" alt="twitter"/></a>
+                                            <a href=""><img width="38" height="47" src="http://s3.amazonaws.com/swu-filepicker/LMPMj7JSRoCWypAvzaN3_social_09.gif" alt="facebook"/></a>
+                                            <a href=""><img width="40" height="47" src="http://s3.amazonaws.com/swu-filepicker/hR33ye5FQXuDDarXCGIW_social_10.gif"
+                                                            alt="rss"/></a>';
+					wp_editor( fs_option( 'mail_social', $social_def ), 'mail_social', array(
+						'wpautop'          => 1,
+						'media_buttons'    => 1,
+						'textarea_name'    => 'fs_option[mail_social]',
+						'textarea_rows'    => 4,
+						'tabindex'         => null,
+						'editor_css'       => '',
+						'editor_class'     => '',
+						'teeny'            => 0,
+						'dfw'              => 0,
+						'tinymce'          => 1,
+						'quicktags'        => 1,
+						'drag_drop_upload' => false
+					) ) ?>
+                </p>
+                <p>
+                    <label for="form_footer_text">Текст внизу письма:</label><br>
+					<?php wp_editor( fs_option( 'form_footer_text' ), 'form_footer_text', array(
+						'wpautop'          => 1,
+						'media_buttons'    => 1,
+						'textarea_name'    => 'fs_option[form_footer_text]',
+						'textarea_rows'    => 5,
+						'tabindex'         => null,
+						'editor_css'       => '',
+						'editor_class'     => '',
+						'teeny'            => 0,
+						'dfw'              => 0,
+						'tinymce'          => 1,
+						'quicktags'        => 1,
+						'drag_drop_upload' => false
+					) ) ?>
                 </p>
                 <p>
                     <label for="admin_mail">Текст письма администратору после отправки заказа:</label><br>
-                    <textarea name="fs_option[admin_mail]" id="admin_mail"
-                              rows="10"><?php echo fs_option( 'admin_mail' ) ?></textarea>
+					<?php wp_editor( fs_option( 'admin_mail' ), 'admin_mail', array(
+						'wpautop'          => 1,
+						'media_buttons'    => 1,
+						'textarea_name'    => 'fs_option[admin_mail]',
+						'textarea_rows'    => 8,
+						'tabindex'         => null,
+						'editor_css'       => '',
+						'editor_class'     => '',
+						'teeny'            => 0,
+						'dfw'              => 0,
+						'tinymce'          => 1,
+						'quicktags'        => 1,
+						'drag_drop_upload' => false
+					) ) ?>
                 </p>
 
             </div>
-            <!--    <div id="tabs-3">
-         
-             <p>
-                 <label for="action_pcount">К-во товаров при которых активируется скидка:</label><br>
-                 <input type="number" min="1" name="fs_option[action_pcount]" id="action_pcount" value="<?php echo fs_option( 'action_pcount' ) ?>">
-             </p>
-             <p>
-                 <label>Акционная скидка считается в :</label><br>
-                 <label class="label-light"> <input type="radio" name="fs_option[action_count]" id="action_count1" value="0" <?php checked( '0', fs_option( 'action_count' ) ) ?> <?php checked( '', fs_option( 'action_count' ) ) ?>>в фиксированом к-ве</label><br>
-                 <label class="label-light"><input type="radio" name="fs_option[action_count]" id="action_count2" value="1" <?php checked( '1', fs_option( 'action_count' ) ) ?>>в процентах</label>
-             </p>
-             <p>
-                 <label for="action_summa">Размер скидки <span>(действует глобально, по всему сайту)</span></label><br>
-                 <input type="number" min="1" name="fs_option[action_summa]" id="action_summa" value="<?php echo fs_option( 'action_summa' ) ?>">
-             </p>
-             <p>
-                 <label for="action_label">Включать отметку акция атоматически <span>(надпись акция включится без отметки чекбокса, при наличии акционной цены)</span></label><br>
-                 <input type="checkbox" name="fs_option[action_label]" value="1" <?php checked( 1, fs_option( 'action_label' ) ) ?>>
-         
-             </p>
-         
-         </div> -->
             <div id="tabs-4">
                 <p>
                     <label for="page_cart">Страница корзины:</label><br>
@@ -237,16 +256,6 @@
                            value="1" <?php checked( fs_option( 'register_user' ), 1 ) ?>>
                 </p>
             </div>
-            <!--  <div id="tabs-6">
-               <p>
-                   <label for="register_user">Показывать модальное окно поле добавления товара в корзину</label><br>
-                   <input type="checkbox" name="fs_option[order_modal]" id="order_modal" value="1" <?php checked( fs_option( 'order_modal' ), 1 ) ?>>
-               </p>
-               <p>
-                   <label for="register_user">Идентификатор модального окна</label><br>
-                   <input type="text" name="fs_option[order_modal_id]" id="order_modal_id" value="<?php echo fs_option( 'order_modal_id' ) ?>">
-               </p>
-           </div> -->
             <div id="tabs-7">
                 <h2>Настройки галереи в карточке товара</h2>
                 <p>Внимание! Для работы слайдера необходимо, чтобы ваша тема поддерживала загрузку миниатюр.</p>

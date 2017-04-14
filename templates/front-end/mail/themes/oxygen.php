@@ -325,29 +325,17 @@
                                     <tr>
                                         <td class="pull-left mobile-header-padding-left"
                                             style="vertical-align: middle;">
-
-
-											<?php if ( has_custom_logo() ): ?>
-												<?php the_custom_logo() ?>
+											<?php if ( fs_option( 'site_logo' ) ): ?>
+												<?php echo fs_option( 'site_logo' ) ?>
 											<?php else: ?>
-                                                <a href="<?php esc_url( get_bloginfo( 'url' ) ) ?>">
-                                                    <img width="137"
-                                                         height="47"
-                                                         src="http://s3.amazonaws.com/swu-filepicker/0zxBZVuORSxdc9ZCqotL_logo_03.gif"
-                                                         alt="logo"></a>
+                                                <a href="<?php echo esc_url( get_bloginfo( 'url' ) ) ?>">
+                                                    <span style="font-size: 20px; font-weight: bold;color: #4d4d4d;"><?php echo fs_option( 'name_sender', get_bloginfo( 'name' ) ) ?></span>
+                                                </a>
 											<?php endif; ?>
 
                                         </td>
                                         <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
-                                            <a href=""><img width="44" height="47"
-                                                            src="http://s3.amazonaws.com/swu-filepicker/k8D8A7SLRuetZspHxsJk_social_08.gif"
-                                                            alt="twitter"/></a>
-                                            <a href=""><img width="38" height="47"
-                                                            src="http://s3.amazonaws.com/swu-filepicker/LMPMj7JSRoCWypAvzaN3_social_09.gif"
-                                                            alt="facebook"/></a>
-                                            <a href=""><img width="40" height="47"
-                                                            src="http://s3.amazonaws.com/swu-filepicker/hR33ye5FQXuDDarXCGIW_social_10.gif"
-                                                            alt="rss"/></a>
+											<?php echo fs_option( 'mail_social' ) ?>
                                         </td>
                                     </tr>
                                 </table>
@@ -388,8 +376,9 @@
                                         <?php _e('My Account','fast-shop')  ?>
                                     </center>
                                 </v:roundrect>
-                                <![endif]--><a href="http://"
-                                               style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;"><?php _e( 'My Account', 'fast-shop' ) ?> </a>
+                                <![endif]--><!--<a
+                                        href="<?php /*echo esc_url( get_permalink( fs_option( 'page_cabinet' ) ) ) */?>"
+                                        style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;"><?php /*_e( 'My Account', 'fast-shop' ) */?> </a>-->
                             </div>
                         </td>
                     </tr>
@@ -479,7 +468,7 @@
                                                     <tr>
                                                         <td class="mobile-hide-img">
                                                             <a href="<?php echo $p['link'] ?>">
-                                                                <img width="110" height="92"
+                                                                <img width="110"
                                                                      src="<?php echo $p['thumb'] ?>"
                                                                      alt="<?php echo $p['name'] ?>"></a>
                                                         </td>
@@ -500,7 +489,7 @@
 												<?php echo $p['count'] ?>
                                             </td>
                                             <td class="item-col">
-												<?php echo $p['all_price'] ?> <?php echo $p['currency'] ?>
+												<?php echo $p['all_price'] ?><?php echo $p['currency'] ?>
                                             </td>
                                         </tr>
 									<?php endforeach; ?>
@@ -515,16 +504,18 @@
                                     </td>
                                     <td class="item-col quantity"
                                         style="text-align:right; padding-right: 10px; border-top: 1px solid #cccccc;">
-                                        <span class="total-space"><?php _e('Subtotal','fast-shop') ?></span> <br/>
-                                        <span class="total-space"><?php _e('Tax','fast-shop') ?></span> <br/>
-                                        <span class="total-space"><?php _e('Shipping','fast-shop') ?></span> <br/>
-                                        <span class="total-space" style="font-weight: bold; color: #4d4d4d"><?php _e('Total','fast-shop') ?></span>
+                                        <span class="total-space"><?php _e( 'Subtotal', 'fast-shop' ) ?></span> <br/>
+                                        <span class="total-space"><?php _e( 'Tax', 'fast-shop' ) ?></span> <br/>
+                                        <span class="total-space"><?php _e( 'Shipping', 'fast-shop' ) ?></span> <br/>
+                                        <span class="total-space"
+                                              style="font-weight: bold; color: #4d4d4d"><?php _e( 'Total', 'fast-shop' ) ?></span>
                                     </td>
                                     <td class="item-col price" style="text-align: left; border-top: 1px solid #cccccc;">
                                         <span class="total-space"><?php fs_total_amount() ?></span> <br/>
-                                        <span class="total-space">0 <?php fs_currency() ?></span> <br/>
-                                        <span class="total-space">0 <?php fs_currency() ?></span> <br/>
-                                        <span class="total-space" style="font-weight:bold; color: #4d4d4d"><?php fs_total_amount() ?></span>
+                                        <span class="total-space">0 <?php echo fs_currency() ?></span> <br/>
+                                        <span class="total-space">0 <?php echo fs_currency() ?></span> <br/>
+                                        <span class="total-space"
+                                              style="font-weight:bold; color: #4d4d4d"><?php fs_total_amount() ?></span>
                                     </td>
                                 </tr>
                             </table>
@@ -540,9 +531,7 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td style="padding: 25px 0 25px">
-                            <strong>Awesome Inc</strong><br/>
-                            1234 Awesome St <br/>
-                            Wonderland <br/><br/>
+							<?php echo fs_option( 'form_footer_text' ) ?>
                         </td>
                     </tr>
                 </table>
