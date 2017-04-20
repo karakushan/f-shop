@@ -1,290 +1,313 @@
 <?php
+
 namespace FS;
 /**
  * Class FS_Filters
  * @package FS
  */
-class FS_Filters
-{
-    protected $conf;
-    private $exclude = array(
-        'fs_filter',
-        'price_start',
-        'price_end',
-        'sort_custom'
-    );
+class FS_Filters {
+	protected $conf;
+	private $exclude = array(
+		'fs_filter',
+		'price_start',
+		'price_end',
+		'sort_custom'
+	);
 
-    function __construct()
-    {
+	function __construct() {
 
-        $this->conf = new FS_Config();
-        add_action('pre_get_posts', array($this, 'filter_curr_product'));
+		$this->conf = new FS_Config();
+		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ) );
 
-        add_shortcode('fs_range_slider', array($this, 'range_slider'));
+		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
 
-        // фильтр по категориям товаров в админке
-        add_action('restrict_manage_posts', array($this, 'category_filter_admin'));
+		// фильтр по категориям товаров в админке
+		add_action( 'restrict_manage_posts', array( $this, 'category_filter_admin' ) );
 
-        add_action('template_redirect', array($this, 'redirect_per_page'));
+		add_action( 'template_redirect', array( $this, 'redirect_per_page' ) );
 
-    }
+	}
 
-    public function redirect_per_page()
-    {
-        if (isset($_GET['paged'])) {
-            wp_redirect(remove_query_arg('paged'));
-            exit();
-        }
-    }
+	public function redirect_per_page() {
+		if ( isset( $_GET['paged'] ) ) {
+			wp_redirect( remove_query_arg( 'paged' ) );
+			exit();
+		}
+	}
 
 // фильтр по категориям товаров в админке
-    function category_filter_admin()
-    {
-        global $typenow;
-        global $wp_query;
-        $get_parr = isset($_GET['catalog']) ? $_GET['catalog'] : '';
-        if ($typenow != 'product') return;
-        $terms = get_terms('catalog', array('hide_empty' => false));
-        $select_name = __('Product category', 'fast-shop');
-        if ($terms) {
-            echo "<select name=\"catalog\" id=\"fs-category-filter\">";
-            echo "<option value=\"\">$select_name</option>";
-            foreach ($terms as $key => $term) {
-                echo "<option value=\"$term->slug\" " . selected($term->slug, $get_parr, 0) . ">$term->name</option>";
-            }
-            echo "</select>";
-        }
+	function category_filter_admin() {
+		global $typenow;
+		global $wp_query;
+		$get_parr = isset( $_GET['catalog'] ) ? $_GET['catalog'] : '';
+		if ( $typenow != 'product' ) {
+			return;
+		}
+		$terms       = get_terms( 'catalog', array( 'hide_empty' => false ) );
+		$select_name = __( 'Product category', 'fast-shop' );
+		if ( $terms ) {
+			echo "<select name=\"catalog\" id=\"fs-category-filter\">";
+			echo "<option value=\"\">$select_name</option>";
+			foreach ( $terms as $key => $term ) {
+				echo "<option value=\"$term->slug\" " . selected( $term->slug, $get_parr, 0 ) . ">$term->name</option>";
+			}
+			echo "</select>";
+		}
 
-    }
+	}
 
-    /**
-     * @param $query
-     */
-    public function filter_curr_product($query)
-    {
-        if ($query->is_search){
-            $query->set('post_type','product');
-        }
-        if (!isset($_REQUEST['fs_filter']) || !$query->is_main_query()) return $query;
+	/**
+	 * @param $query
+	 */
+	public function filter_curr_product( $query ) {
+		if ( is_admin() ) {
+			return;
+		}
+		if ( $query->is_search ) {
+			$query->set( 'post_type', 'product' );
+		}
+		if ( ! isset( $_REQUEST['fs_filter'] ) || ! $query->is_main_query() ) {
+			return $query;
+		}
 
-        if (!wp_verify_nonce($_REQUEST['fs_filter'], 'fast-shop')) exit('ошибка безопасности');
+		if ( ! wp_verify_nonce( $_REQUEST['fs_filter'], 'fast-shop' ) ) {
+			exit( 'ошибка безопасности' );
+		}
 
-        $config = new FS_Config;
-
-
-        $meta_query = array();
-        $orderby = array();
-        $order = '';
-        $tax_query = array();
-        $per_page = get_option("posts_per_page");
-        $arr_url = urldecode($_SERVER['QUERY_STRING']);
-        parse_str($arr_url, $url);
-
-        //Фильтрируем по значениям диапазона цен
-        if (isset($url['price_start']) && isset($url['price_end'])) {
-
-            $price_start = !empty($url['price_start']) ? (int)$url['price_start'] : 0;
-            $price_end = !empty($url['price_end']) ? (int)$url['price_end'] : 99999999999999999;
-            $meta_query['price_interval'] =
-                array(
-                    'key' => $this->conf->meta['price'],
-                    'value' => array($price_start, $price_end),
-                    'compare' => 'BETWEEN',
-                    'type' => 'NUMERIC',
-                );
-        }
-
-        //Фильтрируем по к-во выводимых постов на странице
-        if (isset($url['per_page'])) {
-            $per_page = $url['per_page'];
-            $_SESSION['fs_user_settings']['per_page'] = $per_page;
-        }
-
-        //Устаноавливаем страницу пагинации
-        if (isset($url['paged'])) {
-            $query->set('paged', $url['paged']);
-        }
-
-        // выполняем сортировку
-        if (isset($url['order_type'])) {
-
-            switch ($url['order_type']) {
-                case 'price_asc': //сортируем по цене в возрастающем порядке
-
-                    $meta_query['price'] = array(
-                        'key' => $this->conf->meta['price'],
-                        'compare' => 'EXISTS',
-                        'type' => 'NUMERIC',
-                    );
-                    $orderby[] = 'price';
-                    $order = 'ASC';
-                    break;
-                case 'price_desc': //сортируем по цене в спадающем порядке
-                    $meta_query['price'] = array(
-                        'key' => $this->conf->meta['price'],
-                        'compare' => 'EXISTS',
-                        'type' => 'NUMERIC',
-                    );
-                    $orderby[] = 'price';
-                    $order = 'DESC';
-                    break;
-                case 'name_asc': //сортируем по названию по алфавиту
-                    $orderby[] = 'title';
-                    $order = 'ASC';
-                    break;
-                case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
-                    $orderby[] = 'title';
-                    $order = 'DESC';
-                    break;
-                case 'date_desc':
-                    $orderby[] = 'date';
-                    $order = 'DESC';
-                    break;
-                case 'date_asc':
-                    $orderby[] = 'date';
-                    $order = 'ASC';
-                    break;
-                case 'field_action': //сортируем по наличию акции
-                    $meta_query['action_price'] = array(
-                        'key' => $this->conf->meta['action_price'],
-                        'compare' => '!=',
-                        'value' => ''
-                    );
-                    break;
+		$config = new FS_Config;
 
 
-            }
-        }
+		$meta_query = array();
+		$orderby    = array();
+		$order      = '';
+		$tax_query  = array();
+		$per_page   = get_option( "posts_per_page" );
+		$arr_url    = urldecode( $_SERVER['QUERY_STRING'] );
+		parse_str( $arr_url, $url );
 
-        if (!empty($_REQUEST['aviable'])) {
-            switch ($_REQUEST['aviable']) {
-                case 'aviable':
-                    $meta_query['aviable'] = array(
-                        'key' => $this->conf->meta['remaining_amount'],
-                        'compare' => '!=',
-                        'value' => '0'
-                    );
-                    break;
-                case 'not_available':
-                    $meta_query['aviable'] = array(
-                        'key' => $this->conf->meta['remaining_amount'],
-                        'compare' => '==',
-                        'value' => '0'
-                    );
-                    break;
-            }
+		//Фильтрируем по значениям диапазона цен
+		if ( isset( $url['price_start'] ) && isset( $url['price_end'] ) ) {
 
-        }
+			$price_start                  = ! empty( $url['price_start'] ) ? (int) $url['price_start'] : 0;
+			$price_end                    = ! empty( $url['price_end'] ) ? (int) $url['price_end'] : 99999999999999999;
+			$meta_query['price_interval'] =
+				array(
+					'key'     => $this->conf->meta['price'],
+					'value'   => array( $price_start, $price_end ),
+					'compare' => 'BETWEEN',
+					'type'    => 'NUMERIC',
+				);
+		}
 
-        if (!empty($_REQUEST['filter_by'])){
-            switch ($_REQUEST['filter_by']){
-                case 'field_action' :
-                    $meta_query['action_price'] = array(
-                        'key' => $this->conf->meta['action_price'],
-                        'compare' => 'EXISTS'
+		//Фильтрируем по к-во выводимых постов на странице
+		if ( isset( $url['per_page'] ) ) {
+			$per_page                                 = $url['per_page'];
+			$_SESSION['fs_user_settings']['per_page'] = $per_page;
+		}
 
-                    );
-                    break;
-            }
-        }
+		//Устаноавливаем страницу пагинации
+		if ( isset( $url['paged'] ) ) {
+			$query->set( 'paged', $url['paged'] );
+		}
+
+		// выполняем сортировку
+		if ( isset( $url['order_type'] ) ) {
+
+			switch ( $url['order_type'] ) {
+				case 'price_asc': //сортируем по цене в возрастающем порядке
+
+					$meta_query['price'] = array(
+						'key'     => $this->conf->meta['price'],
+						'compare' => 'EXISTS',
+						'type'    => 'NUMERIC',
+					);
+					$orderby[]           = 'price';
+					$order               = 'ASC';
+					break;
+				case 'price_desc': //сортируем по цене в спадающем порядке
+					$meta_query['price'] = array(
+						'key'     => $this->conf->meta['price'],
+						'compare' => 'EXISTS',
+						'type'    => 'NUMERIC',
+					);
+					$orderby[]           = 'price';
+					$order               = 'DESC';
+					break;
+				case 'name_asc': //сортируем по названию по алфавиту
+					$orderby[] = 'title';
+					$order     = 'ASC';
+					break;
+				case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
+					$orderby[] = 'title';
+					$order     = 'DESC';
+					break;
+				case 'date_desc':
+					$orderby[] = 'date';
+					$order     = 'DESC';
+					break;
+				case 'date_asc':
+					$orderby[] = 'date';
+					$order     = 'ASC';
+					break;
+				case 'field_action': //сортируем по наличию акции
+					$meta_query['action_price'] = array(
+						'key'     => $this->conf->meta['action_price'],
+						'compare' => '!=',
+						'value'   => ''
+					);
+					break;
 
 
-        //Фильтруем по свойствам (атрибутам)
-        if (!empty($_REQUEST['attributes'])) {
-            $tax_query[] = array(
-                'taxonomy' => 'product-attributes',
-                'field' => 'id',
-                'terms' => array_values($_REQUEST['attributes']),
-                'operator' => 'IN'
-            );
-        }
+			}
+		}
 
-        //Фильтруем по производителям 
-        if (!empty($_REQUEST['tax-manufacturers'])) {
-            $manufacturers = array();
-            if (is_array($_REQUEST['tax-manufacturers'])) {
-                $manufacturers = array_values($_REQUEST['tax-manufacturers']);
-            } else {
-                $manufacturers[] = (int)$_REQUEST['tax-manufacturers'];
+		if ( ! empty( $_REQUEST['aviable'] ) ) {
+			switch ( $_REQUEST['aviable'] ) {
+				case 'aviable':
+					$meta_query['aviable'] = array(
+						'key'     => $this->conf->meta['remaining_amount'],
+						'compare' => '!=',
+						'value'   => '0'
+					);
+					break;
+				case 'not_available':
+					$meta_query['aviable'] = array(
+						'key'     => $this->conf->meta['remaining_amount'],
+						'compare' => '==',
+						'value'   => '0'
+					);
+					break;
+			}
 
-            }
-            $tax_query[] = array(
-                'taxonomy' => 'manufacturers',
-                'field' => 'id',
-                'terms' => $manufacturers,
-            );
-        }
+		}
+
+		if ( ! empty( $_REQUEST['filter_by'] ) ) {
+			switch ( $_REQUEST['filter_by'] ) {
+				case 'field_action' :
+					$meta_query['action_price'] = array(
+						'key'     => $this->conf->meta['action_price'],
+						'compare' => 'EXISTS'
+
+					);
+					break;
+			}
+		}
 
 
-        $query->set('posts_per_page', $per_page);
-        if (!empty($meta_query)) $query->set('meta_query', $meta_query);
-        if (!empty($tax_query)) $query->set('tax_query', $tax_query);
-        $query->set('orderby', implode(' ', $orderby));
-        $query->set('order', $order);
-        return $query;
-    }//end filter_curr_product()
+		//Фильтруем по свойствам (атрибутам)
+		if ( ! empty( $_REQUEST['attributes'] ) ) {
+			$tax_query[] = array(
+				'taxonomy' => 'product-attributes',
+				'field'    => 'id',
+				'terms'    => array_values( $_REQUEST['attributes'] ),
+				'operator' => 'IN'
+			);
+		}
+
+		//Фильтруем по производителям
+		if ( ! empty( $_REQUEST['tax-manufacturers'] ) ) {
+			$manufacturers = array();
+			if ( is_array( $_REQUEST['tax-manufacturers'] ) ) {
+				$manufacturers = array_values( $_REQUEST['tax-manufacturers'] );
+			} else {
+				$manufacturers[] = (int) $_REQUEST['tax-manufacturers'];
+
+			}
+			$tax_query[] = array(
+				'taxonomy' => 'manufacturers',
+				'field'    => 'id',
+				'terms'    => $manufacturers,
+			);
+		}
 
 
-    /**
-     * @param $group
-     * @param string $type
-     * @param string $option_default
-     */
-    public function attr_group_filter($group, $type = 'option', $option_default = 'Выберите значение')
-    {
+		$query->set( 'posts_per_page', $per_page );
+		if ( ! empty( $meta_query ) ) {
+			$query->set( 'meta_query', $meta_query );
+		}
+		if ( ! empty( $tax_query ) ) {
+			$query->set( 'tax_query', $tax_query );
+		}
+		$query->set( 'orderby', implode( ' ', $orderby ) );
+		$query->set( 'order', $order );
 
-        $fs_atributes = get_option('fs-attr-group');
-        /*        echo "<pre>";
-                print_r($fs_atributes);
-                echo "</pre>";*/
-        if (!isset($fs_atributes[$group]['attributes'])) return;
+		return $query;
+	}//end filter_curr_product()
 
-        $arr_url = urldecode($_SERVER['QUERY_STRING']);
-        parse_str($arr_url, $url);
 
-        if ($type == 'option') {
-            echo '<select name="' . $group . '" data-fs-action="filter"><option value="">' . $option_default . '</option>';
-            foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
-                $redirect_url = esc_url(add_query_arg(array('fs_filter' => 1, 'attr[' . $group . '][]' => $key), urldecode($_SERVER['REQUEST_URI'])));
-                if (isset($url['attr'][$group])) {
-                    $selected = selected($key, $url['attr'][$group], false);
-                } else {
-                    $selected = "";
-                }
-                echo '<option value="' . $redirect_url . '" ' . $selected . '>' . $value . '</option>';
-            }
-            echo '</select>';
-        }
-        if ($type == 'list') {
-            echo '<ul>';
-            foreach ($fs_atributes[$group]['attributes'] as $key => $value) {
-                $redirect_url = esc_url(add_query_arg(array('fs_filter' => 1, 'attr[' . $group . '][]' => $key), urldecode($_SERVER['REQUEST_URI'])));
-                $class = (isset($url['attr'][$group]) && $key == $url['attr'][$group] ? 'class="active"' : "");
-                echo '<li ' . $class . '><a href="' . $redirect_url . '" data-fs-action="filter" >' . $value . '</a></li>';
-            }
-            echo '</ul>';
-        }
-    }//end attr_group_filter()
+	/**
+	 * @param $group
+	 * @param string $type
+	 * @param string $option_default
+	 */
+	public function attr_group_filter( $group, $type = 'option', $option_default = 'Выберите значение' ) {
 
-    /**
-     * метод позволяет вывести поле типа select  для изменения к-ва выводимых постов на странице
-     * @param  [array] $post_count массив к-ва выводимых записей например array(10,20,30,40)
-     * @return [type]             html код селекта с опциями
-     */
-    public function posts_per_page_filter($post_count = array(), $attr)
-    {
-        $req = isset($_REQUEST['per_page']) ? $_REQUEST['per_page'] : get_option("posts_per_page");
-        $nonce = wp_create_nonce('fast-shop');
-        $attr = fs_parse_attr($attr);
-        $filter = '<select name="post_count" ' . $attr . ' onchange="document.location=this.options[this.selectedIndex].value">';
-        if ($post_count) {
-            foreach ($post_count as $key => $count) {
-                $filter .= '<option value="' . add_query_arg(array("fs_filter" => $nonce, "per_page" => $count, 'paged' => 1)) . '" ' . selected($count, $req, false) . '>' . $count . '</option>';
-            }
-        }
+		$fs_atributes = get_option( 'fs-attr-group' );
+		/*        echo "<pre>";
+				print_r($fs_atributes);
+				echo "</pre>";*/
+		if ( ! isset( $fs_atributes[ $group ]['attributes'] ) ) {
+			return;
+		}
 
-        $filter .= '</select>';
-        return $filter;
-    }
+		$arr_url = urldecode( $_SERVER['QUERY_STRING'] );
+		parse_str( $arr_url, $url );
+
+		if ( $type == 'option' ) {
+			echo '<select name="' . $group . '" data-fs-action="filter"><option value="">' . $option_default . '</option>';
+			foreach ( $fs_atributes[ $group ]['attributes'] as $key => $value ) {
+				$redirect_url = esc_url( add_query_arg( array(
+					'fs_filter'              => 1,
+					'attr[' . $group . '][]' => $key
+				), urldecode( $_SERVER['REQUEST_URI'] ) ) );
+				if ( isset( $url['attr'][ $group ] ) ) {
+					$selected = selected( $key, $url['attr'][ $group ], false );
+				} else {
+					$selected = "";
+				}
+				echo '<option value="' . $redirect_url . '" ' . $selected . '>' . $value . '</option>';
+			}
+			echo '</select>';
+		}
+		if ( $type == 'list' ) {
+			echo '<ul>';
+			foreach ( $fs_atributes[ $group ]['attributes'] as $key => $value ) {
+				$redirect_url = esc_url( add_query_arg( array(
+					'fs_filter'              => 1,
+					'attr[' . $group . '][]' => $key
+				), urldecode( $_SERVER['REQUEST_URI'] ) ) );
+				$class        = ( isset( $url['attr'][ $group ] ) && $key == $url['attr'][ $group ] ? 'class="active"' : "" );
+				echo '<li ' . $class . '><a href="' . $redirect_url . '" data-fs-action="filter" >' . $value . '</a></li>';
+			}
+			echo '</ul>';
+		}
+	}//end attr_group_filter()
+
+	/**
+	 * метод позволяет вывести поле типа select  для изменения к-ва выводимых постов на странице
+	 *
+	 * @param  [array] $post_count массив к-ва выводимых записей например array(10,20,30,40)
+	 *
+	 * @return [type]             html код селекта с опциями
+	 */
+	public function posts_per_page_filter( $post_count = array(), $attr ) {
+		$req    = isset( $_REQUEST['per_page'] ) ? $_REQUEST['per_page'] : get_option( "posts_per_page" );
+		$nonce  = wp_create_nonce( 'fast-shop' );
+		$attr   = fs_parse_attr( $attr );
+		$filter = '<select name="post_count" ' . $attr . ' onchange="document.location=this.options[this.selectedIndex].value">';
+		if ( $post_count ) {
+			foreach ( $post_count as $key => $count ) {
+				$filter .= '<option value="' . add_query_arg( array(
+						"fs_filter" => $nonce,
+						"per_page"  => $count,
+						'paged'     => 1
+					) ) . '" ' . selected( $count, $req, false ) . '>' . $count . '</option>';
+			}
+		}
+
+		$filter .= '</select>';
+
+		return $filter;
+	}
 
 }
