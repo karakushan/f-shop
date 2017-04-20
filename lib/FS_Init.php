@@ -71,6 +71,7 @@ class FS_Init {
 		$l10n      = array(
 			'ajaxurl'           => admin_url( "admin-ajax.php" ),
 			'fs_slider_max'     => $price_max,
+			'fs_nonce'          => wp_create_nonce( 'fast-shop' ),
 			'fs_currency'       => fs_currency(),
 			'fs_slider_val_min' => ! empty( $_REQUEST['price_start'] ) ? (int) $_REQUEST['price_start'] : 0,
 			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : $price_max

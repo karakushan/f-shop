@@ -226,6 +226,7 @@ class FS_Filters {
 			$query->set( 'meta_query', $meta_query );
 		}
 		if ( ! empty( $tax_query ) ) {
+			$tax_query = array_merge( $query->tax_query->queries, $tax_query );
 			$query->set( 'tax_query', $tax_query );
 		}
 		$query->set( 'orderby', implode( ' ', $orderby ) );
@@ -241,43 +242,39 @@ class FS_Filters {
 	 * @param string $option_default
 	 */
 	public function attr_group_filter( $group, $type = 'option', $option_default = 'Выберите значение' ) {
+//		получаем группу атрибутов
+		$fs_atributes = get_terms( array(
+			'parent'     => $group,
+			'taxonomy'   => 'product-attributes',
+			'hide_empty' => false
+		) );
 
-		$fs_atributes = get_option( 'fs-attr-group' );
-		/*        echo "<pre>";
-				print_r($fs_atributes);
-				echo "</pre>";*/
-		if ( ! isset( $fs_atributes[ $group ]['attributes'] ) ) {
-			return;
-		}
 
 		$arr_url = urldecode( $_SERVER['QUERY_STRING'] );
 		parse_str( $arr_url, $url );
 
 		if ( $type == 'option' ) {
-			echo '<select name="' . $group . '" data-fs-action="filter"><option value="">' . $option_default . '</option>';
-			foreach ( $fs_atributes[ $group ]['attributes'] as $key => $value ) {
-				$redirect_url = esc_url( add_query_arg( array(
-					'fs_filter'              => 1,
-					'attr[' . $group . '][]' => $key
-				), urldecode( $_SERVER['REQUEST_URI'] ) ) );
-				if ( isset( $url['attr'][ $group ] ) ) {
-					$selected = selected( $key, $url['attr'][ $group ], false );
-				} else {
-					$selected = "";
-				}
-				echo '<option value="' . $redirect_url . '" ' . $selected . '>' . $value . '</option>';
+			echo '<select name="attributes" data-fs-action="filter"><option value="' . remove_query_arg( array(
+					'attributes'
+				) ) . '">' . $option_default . '</option>';
+			foreach ( $fs_atributes as $key => $att ) {
+				$redirect_url = add_query_arg( array(
+					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
+					'attributes' => array( $att->slug => $att->term_id )
+				) );
+				echo '<option  value="' . $redirect_url . '" ' . selected( $url['attributes'][ $att->slug ], $att->term_id, 0 ) . '>' . $att->name . '</option>';
 			}
 			echo '</select>';
 		}
 		if ( $type == 'list' ) {
 			echo '<ul>';
-			foreach ( $fs_atributes[ $group ]['attributes'] as $key => $value ) {
-				$redirect_url = esc_url( add_query_arg( array(
-					'fs_filter'              => 1,
-					'attr[' . $group . '][]' => $key
-				), urldecode( $_SERVER['REQUEST_URI'] ) ) );
-				$class        = ( isset( $url['attr'][ $group ] ) && $key == $url['attr'][ $group ] ? 'class="active"' : "" );
-				echo '<li ' . $class . '><a href="' . $redirect_url . '" data-fs-action="filter" >' . $value . '</a></li>';
+			foreach ( $fs_atributes as $key => $att ) {
+				$redirect_url = add_query_arg( array(
+					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
+					'attributes' => array( $att->slug => $att->term_id )
+				) );
+
+				echo '<li><a href="' . $redirect_url . '" data-fs-action="filter" >' . $att->name . '</a></li>';
 			}
 			echo '</ul>';
 		}

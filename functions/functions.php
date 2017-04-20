@@ -340,7 +340,7 @@ function fs_get_cart() {
 				'id'        => $key,
 				'name'      => get_the_title( $key ),
 				'count'     => $c,
-				'thumb'     => get_the_post_thumbnail_url( $key,'full' ),
+				'thumb'     => get_the_post_thumbnail_url( $key, 'full' ),
 				'attr'      => $attr,
 				'link'      => get_permalink( $key ),
 				'price'     => $price_show,
@@ -415,7 +415,7 @@ function fs_product_count( $products = array(), $echo = true ) {
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price( $post_id = 0, $echo = true, $wrap = '<span>%s</span>' ) {
+function fs_base_price( $post_id = 0, $echo = true, $wrap = '%s <span>%s</span>' ) {
 	global $post;
 	$config  = new \FS\FS_Config();
 	$post_id = empty( $post_id ) ? $post->ID : $post_id;
@@ -428,8 +428,8 @@ function fs_base_price( $post_id = 0, $echo = true, $wrap = '<span>%s</span>' ) 
 	$price_float = $price;
 	$price       = apply_filters( 'fs_price_format', $price );
 	$cur_symb    = fs_currency();
-	if ( $echo === true ) {
-		printf( $wrap, $price . ' <span>' . $cur_symb . '</span>' );
+	if ( $echo) {
+		printf( $wrap, $price, $cur_symb );
 	} else {
 		return $price_float;
 	}
@@ -1201,11 +1201,13 @@ function fs_get_order( $order_id = 0 ) {
 
 function fs_get_delivery( $delivery_id ) {
 	$name = get_term_field( 'name', $delivery_id, 'fs-delivery-methods' );
+
 	return $name;
 }
 
 function fs_get_payment( $payment_id ) {
-	$name = get_term_field( 'name',$payment_id, 'fs-payment-methods' );
+	$name = get_term_field( 'name', $payment_id, 'fs-payment-methods' );
+
 	return $name;
 }
 
@@ -1230,6 +1232,9 @@ function fs_form_field( $field, $args = array() ) {
 		case 'text':
 			echo ' <input type="text" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '> ';
 			break;
+		case 'email':
+			echo ' <input type="email" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '> ';
+			break;
 		case 'textarea':
 			echo '<textarea name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '></textarea>';
 			break;
@@ -1247,7 +1252,7 @@ function fs_form_field( $field, $args = array() ) {
 function fs_mail_keys( $keys = array() ) {
 	$email_variable = array();
 	if ( $keys ) {
-		foreach ( $keys as $key=>$value ) {
+		foreach ( $keys as $key => $value ) {
 			$email_variable[] = '%' . $key . '%';
 		}
 	}

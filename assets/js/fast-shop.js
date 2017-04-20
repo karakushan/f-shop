@@ -555,7 +555,7 @@ var addUrlParam = function (search, key, val) {
         },
         change: function (event, ui) {
 
-            u.query.fs_filter = 1;
+            u.query.fs_filter = FastShopData.fs_nonce;
             u.query.price_start = ui.values[0];
             u.query.price_end = ui.values[1];
             // console.log(u.toString());

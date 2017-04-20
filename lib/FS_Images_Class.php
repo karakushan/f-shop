@@ -56,19 +56,18 @@ class FS_Images_Class {
 		$alt               = get_the_title( $post_id );
 		// получаем первое изображение галереи из установленной миниатюры поста
 		if ( has_post_thumbnail( $post_id ) ) {
-			$atach_id    = get_post_thumbnail_id( $post_id );
-			$image_big   = wp_get_attachment_image_src( $atach_id, $this->image_big_name );
-			$image_small = wp_get_attachment_image_src( $atach_id, $this->image_small_name );
-			$image_full  = wp_get_attachment_image_src( $atach_id, 'full' );
-			$images_n    .= "<li data-thumb=\"$image_small[0]\" data-src=\"$image_full[0]\" style=\"text-align:center\"><a href=\"$image_full[0]\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image_big[0]\" alt=\"$alt\"></a></li>";
+
+			$image    = get_the_post_thumbnail_url( $post_id, 'full' );
+			$images_n .= "<li data-thumb=\"$image\" style=\"background - image:url( $image )\" data-src=\"$image\" style=\"text-align:center\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\"></a></li>";
 		}
 		if ( $galerys ) {
 			foreach ( $galerys as $atach_id ) {
-				$image_big   = wp_get_attachment_image_src( $atach_id, $this->image_big_name );
-				$image_small = wp_get_attachment_image_src( $atach_id, $this->image_small_name );
-				$image_full  = wp_get_attachment_image_src( $atach_id, 'full' );
-
-				$images_n .= "<li data-thumb=\"$image_small[0]\" data-src=\"$image_full[0]\" style=\"text-align:center\"><a href=\"$image_full[0]\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image_big[0]\" alt=\"$alt\"></a></li>";
+				$image = wp_get_attachment_image_src( $atach_id, 'full' );
+				if ( ! $image ) {
+					continue;
+				}
+				$image    = $image[0];
+				$images_n .= "<li data-thumb=\"$image\" style=\"background-image:url($image)\" data-src=\"$image\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\"></a></li>";
 			}
 		}
 
