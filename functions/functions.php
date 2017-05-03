@@ -39,6 +39,23 @@ function fs_lightslider( $post_id = 0, $args = array() ) {
 	$galery->lightslider( $post_id, $args );
 }
 
+/**
+ * Возвращает массив изображений галереи товара
+ * @param int $post_id - id поста
+ * @param bool $thumbnail - включать ли миниатюру поста в список
+ *
+ * @return array
+ */
+function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
+	global $post;
+	$post_id = empty( $post_id ) ? $post->ID : (int) $post_id;
+	$galery  = new FS\FS_Images_Class();
+	$images  = $galery->fs_galery_images( $post_id, $thumbnail );
+
+	return $images;
+}
+
+
 //Получает текущую цену с учётом скидки
 /**
  * @param int $post_id - id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
@@ -428,7 +445,7 @@ function fs_base_price( $post_id = 0, $echo = true, $wrap = '%s <span>%s</span>'
 	$price_float = $price;
 	$price       = apply_filters( 'fs_price_format', $price );
 	$cur_symb    = fs_currency();
-	if ( $echo) {
+	if ( $echo ) {
 		printf( $wrap, $price, $cur_symb );
 	} else {
 		return $price_float;
