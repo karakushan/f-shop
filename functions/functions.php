@@ -41,6 +41,7 @@ function fs_lightslider( $post_id = 0, $args = array() ) {
 
 /**
  * Возвращает массив изображений галереи товара
+ *
  * @param int $post_id - id поста
  * @param bool $thumbnail - включать ли миниатюру поста в список
  *
@@ -1235,25 +1236,27 @@ function fs_get_payment( $payment_id ) {
  * @param array $args массив аргументов типа класс, тип, обязательность заполнения, title
  */
 function fs_form_field( $field, $args = array() ) {
-	$default  = array(
-		'type'     => 'text',
-		'class'    => '',
-		'required' => true,
-		'title'    => __( 'required field', 'fast-shop' )
+	$default     = array(
+		'type'        => 'text',
+		'class'       => '',
+		'required'    => true,
+		'title'       => __( 'required field', 'fast-shop' ),
+		'placeholder' => ''
 	);
-	$args     = wp_parse_args( $args, $default );
-	$class    = ! empty( $args['class'] ) ? 'class="' . sanitize_html_class( $args['class'] ) . '"' : '';
-	$title    = ! empty( $args['title'] ) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
-	$required = ! empty( $args['required'] ) ? 'required' : '';
+	$args        = wp_parse_args( $args, $default );
+	$class       = ! empty( $args['class'] ) ? 'class="' . sanitize_html_class( $args['class'] ) . '"' : '';
+	$title       = ! empty( $args['title'] ) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
+	$placeholder = ! empty( $args['placeholder'] ) ? 'placeholder="' . esc_html( $args['placeholder'] ) . '"' : '';
+	$required    = ! empty( $args['required'] ) ? 'required' : '';
 	switch ( $args['type'] ) {
 		case 'text':
-			echo ' <input type="text" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '> ';
+			echo ' <input type="text" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . '> ';
 			break;
 		case 'email':
-			echo ' <input type="email" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '> ';
+			echo ' <input type="email" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '> ';
 			break;
 		case 'textarea':
-			echo '<textarea name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '></textarea>';
+			echo '<textarea name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '></textarea>';
 			break;
 	}
 
