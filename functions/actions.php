@@ -73,27 +73,7 @@ function fs_payment_shortcode_handler( $tag ) {
 	return $field;
 }
 
-/**
- *  возвращает шаблон письма пользователю
- */
-add_action( 'fs_order_user_message', 'fs_order_user_message' );
-function fs_order_user_message() {
-	$default_template = 'oxygen';
-	$template         = fs_frontend_template( 'mail/themes/' . $default_template );
 
-	return $template;
-}
-
-/**
- * возвращает шаблон письма администратору
- */
-add_action( 'fs_order_admin_message', 'fs_order_admin_message' );
-function fs_order_admin_message( $fs_products ) {
-	$default_template = 'oxygen';
-	$template         = fs_frontend_template( 'mail/themes/' . $default_template );
-
-	return $template;
-}
 
 
 

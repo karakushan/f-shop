@@ -4102,8 +4102,7 @@ if ( $.fn.jquery.substring( 0, 3 ) === "1.7" ) {
 	};
 }
 
-;
-/*!
+    /*!
  * jQuery UI Keycode 1.12.0
  * http://jqueryui.com
  *

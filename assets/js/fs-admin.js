@@ -55,7 +55,7 @@ jQuery(function($){
             $(button).text('изменить изображение');
             wp.media.editor.send.attachment = send_attachment_bkp;
             button.parents('.fs-fields-container').find('.delete_file').fadeIn(400);
-        }
+        };
 
         return false;
     });
@@ -87,7 +87,7 @@ jQuery(function($){
 
             $(button).prev().val(attachment.id);
             wp.media.editor.send.attachment = send_attachment_bkp;
-        }
+        };
         wp.media.editor.open(button);
         return false;
     });

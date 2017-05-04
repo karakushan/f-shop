@@ -28,7 +28,7 @@ var FastShopLang = {
 
     }
 
-}
+};
 //переключатель сообщений в зависимости от локали
 switch (FastShopData.fs_lang) {
     case "ru_RU":
@@ -153,7 +153,7 @@ jQuery(function ($) {
             $('#fs-attr-change .fs-group-info').fadeIn().html('Теперь можно добавить в корзину!')
         }
 
-    })
+    });
 
     //добавление товара в корзину (сессию)
     $('[data-action=add-to-cart]').on('click', function (event) {
@@ -356,7 +356,7 @@ jQuery(function ($) {
             })
                 .done(function (result) {
                     var data = JSON.parse(result);
-                    console.log(data)
+                    console.log(data);
 
                     loginForm.find('.fs-preloader').fadeOut();
 
@@ -571,7 +571,7 @@ var addUrlParam = function (search, key, val) {
     $('[data-fs-action="filter"]').on('change', function (e) {
         e.preventDefault();
         window.location.href = $(this).val();
-    })
+    });
 
 // слайдер товара
     if (typeof fs_lightslider_options != "undefined") {
@@ -582,7 +582,7 @@ var addUrlParam = function (search, key, val) {
     document.addEventListener("fs_before_add_product", function (event) {
         // действие которое инициирует событие, здесь может быть любой ваш код
         var button = event.detail.button;
-        button.html('<img src="/wp-content/plugins/fast-shop/assets/img/ajax-loader.gif" alt="preloader">')
+        button.html('<img src="/wp-content/plugins/fast-shop/assets/img/ajax-loader.gif" alt="preloader">');
         event.preventDefault();
     }, false);
     // Событие срабатывает когда товар добавлен в корзину
@@ -593,7 +593,7 @@ var addUrlParam = function (search, key, val) {
         event.preventDefault();
     }, false);
 
-})(jQuery)
+})(jQuery);
 
 // проверяет является ли переменная числом
 function isNumeric(n) {

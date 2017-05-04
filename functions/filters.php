@@ -104,6 +104,30 @@ function fs_form_bottom( $form_bottom ) {
 
 }
 
+/**
+ *  фильтр для создания шаблона письма пользователю
+ */
+add_filter( 'fs_order_user_message', 'fs_order_user_message',10,1 );
+function fs_order_user_message($template='') {
+	$default_template = 'oxygen';
+	if (empty($template)){
+		$template         = fs_frontend_template( 'mail/themes/' . $default_template );
+	}
+	return $template;
+}
+
+/**
+ *  фильтр для создания шаблона письма администратору
+ */
+add_filter( 'fs_order_admin_message', 'fs_order_admin_message',10,1 );
+function fs_order_admin_message($template='') {
+	$default_template = 'oxygen';
+	if (empty($template)){
+		$template         = fs_frontend_template( 'mail/themes/' . $default_template );
+	}
+	return $template;
+}
+
 
 
 

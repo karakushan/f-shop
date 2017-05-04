@@ -49,13 +49,15 @@ class FS_Ajax_Class {
 		if ( $form_fields ) {
 			foreach ( $form_fields as $field_name => $form_field ) {
 				if ( empty( $_POST[ $field_name ] ) ) {
-					$_POST[ $field_name ] = '';
-				}
-				if ( $form_field['type'] == 'email' ) {
-					$sanitize_field[ $field_name ] = sanitize_email( $_POST[ $field_name ] );
+					$sanitize_field[ $field_name ] = '-';
 				} else {
-					$sanitize_field[ $field_name ] = sanitize_text_field( $_POST[ $field_name ] );
+					if ( $form_field['type'] == 'email' ) {
+						$sanitize_field[ $field_name ] = sanitize_email( $_POST[ $field_name ] );
+					} else {
+						$sanitize_field[ $field_name ] = sanitize_text_field( $_POST[ $field_name ] );
+					}
 				}
+
 
 			}
 		}
@@ -104,11 +106,11 @@ class FS_Ajax_Class {
 		$replace = array_values( $sanitize_field );
 
 		// текст письма заказчику
-		$user_message = apply_filters( 'fs_order_user_message','' );
+		$user_message = apply_filters( 'fs_order_user_message' );
 		$user_message = str_replace( $search, $replace, $user_message );
 
 		// текст письма админу
-		$admin_message = apply_filters( 'fs_order_admin_message','' );
+		$admin_message = apply_filters( 'fs_order_admin_message' );
 		$admin_message = str_replace( $search, $replace, $admin_message );
 
 		//Отсылаем письмо с данными заказа заказчику

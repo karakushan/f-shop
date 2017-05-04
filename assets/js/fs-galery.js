@@ -12,7 +12,7 @@ jQuery(function($){
 
 	 		$(button).prev().val(attachment.id);
 	 		wp.media.editor.send.attachment = send_attachment_bkp;
-	 	}
+	 	};
 	 	wp.media.editor.open(button);
 	 	return false;    
 	 });
