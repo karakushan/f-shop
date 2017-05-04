@@ -48,6 +48,9 @@ class FS_Ajax_Class {
 		$sanitize_field = array();
 		if ( $form_fields ) {
 			foreach ( $form_fields as $field_name => $form_field ) {
+				if ( empty( $_POST[ $field_name ] ) ) {
+					$_POST[ $field_name ] = '';
+				}
 				if ( $form_field['type'] == 'email' ) {
 					$sanitize_field[ $field_name ] = sanitize_email( $_POST[ $field_name ] );
 				} else {
@@ -89,23 +92,23 @@ class FS_Ajax_Class {
 				'delivery_number' => $sanitize_field['fs_delivery_number'],
 			)
 		);
-		$order_id                   = $wpdb->insert_id;
-		$sanitize_field['order_id'] = $order_id;
-		$sanitize_field['fs_delivery_methods'] = fs_get_delivery($sanitize_field['fs_delivery_methods']);
-		$sanitize_field['fs_payment_methods'] = fs_get_payment($sanitize_field['fs_payment_methods']);
-		$sanitize_field['fs_admin_message'] = fs_option('');
+		$order_id                              = $wpdb->insert_id;
+		$sanitize_field['order_id']            = $order_id;
+		$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
+		$sanitize_field['fs_payment_methods']  = fs_get_payment( $sanitize_field['fs_payment_methods'] );
+		$sanitize_field['fs_admin_message']    = fs_option( '' );
 
-		$_SESSION['last_order_id']  = $order_id;
+		$_SESSION['last_order_id'] = $order_id;
 
-		$search  = fs_mail_keys($sanitize_field);
+		$search  = fs_mail_keys( $sanitize_field );
 		$replace = array_values( $sanitize_field );
 
 		// текст письма заказчику
-		$user_message = apply_filters( 'fs_order_user_message' );
+		$user_message = apply_filters( 'fs_order_user_message','' );
 		$user_message = str_replace( $search, $replace, $user_message );
 
 		// текст письма админу
-		$admin_message = apply_filters( 'fs_order_admin_message' );
+		$admin_message = apply_filters( 'fs_order_admin_message','' );
 		$admin_message = str_replace( $search, $replace, $admin_message );
 
 		//Отсылаем письмо с данными заказа заказчику

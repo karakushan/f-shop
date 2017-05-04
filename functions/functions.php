@@ -1239,24 +1239,37 @@ function fs_form_field( $field, $args = array() ) {
 	$default     = array(
 		'type'        => 'text',
 		'class'       => '',
+		'checked'     => '',
+		'id'          => '',
 		'required'    => true,
 		'title'       => __( 'required field', 'fast-shop' ),
-		'placeholder' => ''
+		'placeholder' => '',
+		'value'       => '',
+
 	);
 	$args        = wp_parse_args( $args, $default );
 	$class       = ! empty( $args['class'] ) ? 'class="' . sanitize_html_class( $args['class'] ) . '"' : '';
+	$id          = ! empty( $args['id'] ) ? 'id="' . sanitize_html_class( $args['id'] ) . '"' : '';
 	$title       = ! empty( $args['title'] ) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
 	$placeholder = ! empty( $args['placeholder'] ) ? 'placeholder="' . esc_html( $args['placeholder'] ) . '"' : '';
+	$value       = ! empty( $args['value'] ) ? 'value="' . esc_html( $args['value'] ) . '"' : '';
+	$checked     = ! empty( $args['checked'] ) ? 'checked="' . esc_html( $args['checked'] ) . '"' : '';
 	$required    = ! empty( $args['required'] ) ? 'required' : '';
 	switch ( $args['type'] ) {
 		case 'text':
-			echo ' <input type="text" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . '> ';
+			echo ' <input type="text" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 			break;
 		case 'email':
-			echo ' <input type="email" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '> ';
+			echo ' <input type="email" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+			break;
+		case 'tel':
+			echo ' <input type="tel" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+			break;
+		case 'radio':
+			echo ' <input type="radio" name="' . $field . '"  ' . $checked . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 			break;
 		case 'textarea':
-			echo '<textarea name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '></textarea>';
+			echo '<textarea name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
 			break;
 	}
 
