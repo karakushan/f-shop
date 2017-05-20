@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-14 05:51+0000\n"
+"POT-Creation-Date: 2017-05-20 13:35+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -35,19 +35,31 @@ msgstr ""
 msgid "not available"
 msgstr ""
 
-#: functions/functions.php:365
+#: functions/filters.php:17
+msgid "Price"
+msgstr ""
+
+#: functions/filters.php:18
+msgid "Photo"
+msgstr ""
+
+#: functions/filters.php:37
+msgid "no photo"
+msgstr ""
+
+#: functions/functions.php:383
 msgid "Remove items"
 msgstr ""
 
-#: functions/functions.php:459
+#: functions/functions.php:477
 msgid "Add to cart"
 msgstr ""
 
-#: functions/functions.php:773
+#: functions/functions.php:791
 msgid "add to wish list"
 msgstr ""
 
-#: functions/functions.php:1223 templates/front-end/auth/profile.php:9
+#: functions/functions.php:1245 templates/front-end/auth/profile.php:9
 #: templates/front-end/auth/profile.php:13
 #: templates/front-end/auth/register.php:10
 #: templates/front-end/auth/register.php:15
@@ -59,63 +71,43 @@ msgstr ""
 msgid "required field"
 msgstr ""
 
-#: lib/FS_Config.php:49
-msgid "Product categories"
-msgstr ""
-
-#: lib/FS_Config.php:55
-msgid "Payment methods"
-msgstr ""
-
-#: lib/FS_Config.php:60
-msgid "Delivery methods"
-msgstr ""
-
-#: lib/FS_Config.php:65
-msgid "Product attributes"
-msgstr ""
-
-#: lib/FS_Config.php:70
-msgid "Manufacturers"
-msgstr ""
-
-#: lib/FS_Config.php:81
+#: lib/FS_Config.php:51
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:87 templates/back-end/settings.php:13
+#: lib/FS_Config.php:57 templates/back-end/settings.php:13
 msgid "Gallery"
 msgstr ""
 
-#: lib/FS_Config.php:93
+#: lib/FS_Config.php:63
 msgid "Other"
 msgstr ""
 
-#: lib/FS_Config.php:99
+#: lib/FS_Config.php:69
 msgid "Associated"
 msgstr ""
 
-#: lib/FS_Config.php:131
+#: lib/FS_Config.php:115
 msgid "The base price"
 msgstr ""
 
-#: lib/FS_Config.php:134
+#: lib/FS_Config.php:118
 msgid "This is the main type prices"
 msgstr ""
 
-#: lib/FS_Config.php:137
+#: lib/FS_Config.php:121
 msgid "Promotional price"
 msgstr ""
 
-#: lib/FS_Config.php:140
+#: lib/FS_Config.php:124
 msgid "This type of price interrupts the base price"
 msgstr ""
 
-#: lib/FS_Config.php:143
+#: lib/FS_Config.php:127
 msgid "The displayed price"
 msgstr ""
 
-#: lib/FS_Config.php:146
+#: lib/FS_Config.php:130
 #, php-format
 msgid ""
 "example: \"from %d %c for a couple\" (%d - replaced with the price of %s on "
@@ -130,11 +122,11 @@ msgstr ""
 msgid "An error occurred during the process of database updates!"
 msgstr ""
 
-#: lib/FS_Filters.php:48
+#: lib/FS_Filters.php:47 lib/FS_Taxonomies_Class.php:38
 msgid "Product category"
 msgstr ""
 
-#: lib/FS_Init.php:154
+#: lib/FS_Init.php:155
 msgid "Client"
 msgstr ""
 
@@ -168,9 +160,58 @@ msgstr ""
 msgid "Store settings"
 msgstr ""
 
+#: lib/FS_Taxonomies_Class.php:35 lib/FS_Taxonomies_Class.php:37
+#: lib/FS_Taxonomies_Class.php:39 lib/FS_Taxonomies_Class.php:40
+#: lib/FS_Taxonomies_Class.php:41 lib/FS_Taxonomies_Class.php:42
+#: lib/FS_Taxonomies_Class.php:44 lib/FS_Taxonomies_Class.php:46
+#: lib/FS_Taxonomies_Class.php:47
+msgid "Product categories"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:43
+msgid "Category editing"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:45
+msgid "Add category"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:54 lib/FS_Taxonomies_Class.php:56
+msgid "Payment methods"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:57 templates/front-end/auth/profile.php:53
+#: templates/front-end/auth/register.php:61
+msgid "Payment method"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:58
+msgid "Add a payment method"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:64 lib/FS_Taxonomies_Class.php:66
+msgid "Delivery methods"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:67
+msgid "Delivery method"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:68
+msgid "Add a delivery method"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:74
+msgid "Product attributes"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:80
+msgid "Manufacturers"
+msgstr ""
+
 #: templates/back-end/orders.php:36
-#: templates/front-end/mail/themes/oxygen.php:468
-#: templates/front-end/mail/themes/oxygen.php:521
+#: templates/front-end/mail/themes/oxygen.php:457
+#: templates/front-end/mail/themes/oxygen.php:511
 msgid "Total"
 msgstr ""
 
@@ -217,7 +258,7 @@ msgstr ""
 msgid "Developer"
 msgstr ""
 
-#: templates/back-end/settings.php:286
+#: templates/back-end/settings.php:295
 msgid "Settings export and import of goods"
 msgstr ""
 
@@ -307,11 +348,6 @@ msgstr ""
 msgid "Shipping address"
 msgstr ""
 
-#: templates/front-end/auth/profile.php:53
-#: templates/front-end/auth/register.php:61
-msgid "Payment method"
-msgstr ""
-
 #: templates/front-end/auth/profile.php:63
 msgid "Save"
 msgstr ""
@@ -328,44 +364,43 @@ msgstr ""
 msgid "Order on the site"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:371
+#: templates/front-end/mail/themes/oxygen.php:359
 msgid "Thank you for your order!"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:388
-#: templates/front-end/mail/themes/oxygen.php:392
+#: templates/front-end/mail/themes/oxygen.php:376
 msgid "My Account"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:408
+#: templates/front-end/mail/themes/oxygen.php:397
 msgid "Shipping and payment"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:430
+#: templates/front-end/mail/themes/oxygen.php:419
 msgid "Date Ordered"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:433
+#: templates/front-end/mail/themes/oxygen.php:422
 msgid "Order"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:461
+#: templates/front-end/mail/themes/oxygen.php:450
 msgid "Item"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:464
+#: templates/front-end/mail/themes/oxygen.php:453
 msgid "Qty"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:518
+#: templates/front-end/mail/themes/oxygen.php:507
 msgid "Subtotal"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:519
+#: templates/front-end/mail/themes/oxygen.php:508
 msgid "Tax"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:520
+#: templates/front-end/mail/themes/oxygen.php:509
 msgid "Shipping"
 msgstr ""
 

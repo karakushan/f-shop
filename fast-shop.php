@@ -37,7 +37,8 @@ define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 if ( ! class_exists( '\FS\FS_Init', false ) ) {
 
-	$fs_init = new \FS\FS_Init;
+	$fs_init              = new \FS\FS_Init;
+	$GLOBALS['fs_config'] = new FS\FS_Config();
 
 	if ( $fs_option['debug'] ) {
 		ini_set( 'error_reporting', E_ALL );
