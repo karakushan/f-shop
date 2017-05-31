@@ -16,9 +16,11 @@ class FS_Config {
 	public $meta;
 	public $options;
 	public $tabs;
+	public $taxonomies;
 	public static $user_meta = array();
 	public static $prices;
 	public static $form_fields;
+
 	/**
 	 * FS_Config constructor.
 	 */
@@ -26,9 +28,8 @@ class FS_Config {
 		global $wpdb;
 
 
-
 		//Массив общих настроек плагина. При изменении настройки все настройки меняются глобально.
-		$this->data = array(
+		$data       = array(
 			'plugin_path'          => FS_PLUGIN_PATH,
 			'plugin_url'           => FS_PLUGIN_URL,
 			'plugin_ver'           => '1.0',
@@ -37,6 +38,8 @@ class FS_Config {
 			'plugin_template'      => FS_PLUGIN_PATH . 'templates/front-end/',
 			'plugin_settings'      => 'fast-shop-settings',
 			'table_orders'         => $wpdb->prefix . "fs_orders",
+			'post_type'            => 'product',
+			'product_taxonomy'     => 'catalog',
 			'order_statuses'       => array(
 				'0' => 'ожидает подтверждения',
 				'1' => 'в ожидании оплаты',
@@ -44,7 +47,8 @@ class FS_Config {
 				'3' => 'отменён'
 			)
 		);
-
+		$this->data = apply_filters( 'fs_data', $data );
+		
 		//Табы отображаемые в метабоксе в редактировании товара
 		$this->tabs = array(
 			'0' => array(
@@ -78,7 +82,7 @@ class FS_Config {
 
 
 		//Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
-		$this->meta = array(
+		$meta = array(
 			'price'                  => 'fs_price',
 			//базовая цена
 			'action_price'           => 'fs_action_price',
@@ -108,6 +112,8 @@ class FS_Config {
 			'related_products'       => 'fs_related_products',
 			//галерея
 		);
+
+		$this->meta = apply_filters( 'fs_meta', $meta );
 
 		//  устанавливаем основные типы цен
 		self::$prices = array(
@@ -158,7 +164,6 @@ class FS_Config {
 			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
 		);
 	}
-
 
 
 }

@@ -11,27 +11,17 @@ if ( ! class_exists( 'FS_Taxonomies_Class' ) ) {
 	 */
 	class FS_Taxonomies_Class {
 
+		public $config;
+		public $product_taxonomy;
+
 		function __construct() {
-			add_action( 'init', array( &$this, 'create_taxonomy' ), 0 );
+			add_action( 'init', array( $this, 'create_taxonomy' ));
 		}
 
 		function create_taxonomy() {
-			if ( $this->taxonomies() ) {
-				foreach ( $this->taxonomies() as $key => $taxonomy ) {
-					register_taxonomy( $key, 'product', $taxonomy );
-				}
-			}
-
-			add_action( "product-attributes_edit_form_fields", array( $this, 'edit_product_attr_fields' ) );
-			add_action( "product-attributes_add_form_fields", array( $this, 'add_product_attr_fields' ) );
-			add_action( "create_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
-			add_action( "edited_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
-
-		}
-
-		public function taxonomies() {
+			$this->config           = new FS_Config();
 			$taxonomies = array(
-				'catalog'             => array(
+				$this->config->data['product_taxonomy'] => array(
 					'label'        => __( 'Product categories', 'fast-shop' ),
 					'labels'       => array(
 						'name'              => __( 'Product categories', 'fast-shop' ),
@@ -50,7 +40,7 @@ if ( ! class_exists( 'FS_Taxonomies_Class' ) ) {
 					'hierarchical' => true,
 				)
 			,
-				'fs-payment-methods'  => array(
+				'fs-payment-methods'    => array(
 					'label'             => __( 'Payment methods', 'fast-shop' ),
 					'labels'            => array(
 						'name'          => __( 'Payment methods', 'fast-shop' ),
@@ -60,7 +50,7 @@ if ( ! class_exists( 'FS_Taxonomies_Class' ) ) {
 					'metabox'           => false,
 					'show_admin_column' => false
 				),
-				'fs-delivery-methods' => array(
+				'fs-delivery-methods'   => array(
 					'label'             => __( 'Delivery methods', 'fast-shop' ),
 					'labels'            => array(
 						'name'          => __( 'Delivery methods', 'fast-shop' ),
@@ -70,7 +60,7 @@ if ( ! class_exists( 'FS_Taxonomies_Class' ) ) {
 					'metabox'           => false,
 					'show_admin_column' => false
 				),
-				'product-attributes'  => array(
+				'product-attributes'    => array(
 					'label'             => __( 'Product attributes', 'fast-shop' ),
 					'labels'            => array(
 						'name'          => __( 'Product attributes', 'fast-shop' ),
@@ -83,7 +73,19 @@ if ( ! class_exists( 'FS_Taxonomies_Class' ) ) {
 				)
 			);
 
-			return apply_filters( 'fs_taxonomies', $taxonomies );
+			$taxonomies = apply_filters( 'fs_taxonomies', $taxonomies );
+
+			if ( $taxonomies ) {
+				foreach ( $taxonomies as $key => $taxonomy ) {
+					register_taxonomy( $key, 'product', $taxonomy );
+				}
+			}
+
+			add_action( "product-attributes_edit_form_fields", array( $this, 'edit_product_attr_fields' ) );
+			add_action( "product-attributes_add_form_fields", array( $this, 'add_product_attr_fields' ) );
+			add_action( "create_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
+			add_action( "edited_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
+
 		}
 
 		function edit_product_attr_fields( $term ) {
