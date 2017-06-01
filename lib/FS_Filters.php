@@ -6,17 +6,15 @@ namespace FS;
  * @package FS
  */
 class FS_Filters {
-	protected $conf;
 	private $exclude = array(
 		'fs_filter',
 		'price_start',
 		'price_end',
 		'sort_custom'
 	);
-
 	function __construct() {
 
-		$this->conf = new FS_Config();
+
 		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ) );
 
 		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
@@ -75,8 +73,6 @@ class FS_Filters {
 		}
 
 		$config = new FS_Config;
-
-
 		$meta_query = array();
 		$orderby    = array();
 		$order      = '';
@@ -92,7 +88,7 @@ class FS_Filters {
 			$price_end                    = ! empty( $url['price_end'] ) ? (int) $url['price_end'] : 99999999999999999;
 			$meta_query['price_interval'] =
 				array(
-					'key'     => $this->conf->meta['price'],
+					'key'     => $config->meta['price'],
 					'value'   => array( $price_start, $price_end ),
 					'compare' => 'BETWEEN',
 					'type'    => 'NUMERIC',
@@ -105,7 +101,7 @@ class FS_Filters {
 			$_SESSION['fs_user_settings']['per_page'] = $per_page;
 		}
 
-		//Устаноавливаем страницу пагинации
+		//Устанавливаем страницу пагинации
 		if ( isset( $url['paged'] ) ) {
 			$query->set( 'paged', $url['paged'] );
 		}
@@ -117,7 +113,7 @@ class FS_Filters {
 				case 'price_asc': //сортируем по цене в возрастающем порядке
 
 					$meta_query['price'] = array(
-						'key'     => $this->conf->meta['price'],
+						'key'     => $config->meta['price'],
 						'compare' => 'EXISTS',
 						'type'    => 'NUMERIC',
 					);
@@ -126,7 +122,7 @@ class FS_Filters {
 					break;
 				case 'price_desc': //сортируем по цене в спадающем порядке
 					$meta_query['price'] = array(
-						'key'     => $this->conf->meta['price'],
+						'key'     => $config->meta['price'],
 						'compare' => 'EXISTS',
 						'type'    => 'NUMERIC',
 					);
@@ -151,7 +147,7 @@ class FS_Filters {
 					break;
 				case 'field_action': //сортируем по наличию акции
 					$meta_query['action_price'] = array(
-						'key'     => $this->conf->meta['action_price'],
+						'key'     => $config->meta['action_price'],
 						'compare' => '!=',
 						'value'   => ''
 					);
@@ -165,14 +161,14 @@ class FS_Filters {
 			switch ( $_REQUEST['aviable'] ) {
 				case 'aviable':
 					$meta_query['aviable'] = array(
-						'key'     => $this->conf->meta['remaining_amount'],
+						'key'     => $config->meta['remaining_amount'],
 						'compare' => '!=',
 						'value'   => '0'
 					);
 					break;
 				case 'not_available':
 					$meta_query['aviable'] = array(
-						'key'     => $this->conf->meta['remaining_amount'],
+						'key'     => $config->meta['remaining_amount'],
 						'compare' => '==',
 						'value'   => '0'
 					);
@@ -185,7 +181,7 @@ class FS_Filters {
 			switch ( $_REQUEST['filter_by'] ) {
 				case 'field_action' :
 					$meta_query['action_price'] = array(
-						'key'     => $this->conf->meta['action_price'],
+						'key'     => $config->meta['action_price'],
 						'compare' => 'EXISTS'
 
 					);
