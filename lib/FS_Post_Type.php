@@ -141,7 +141,9 @@ class FS_Post_Type
             sprintf('fast_shop_%s_metabox', self::POST_TYPE),
             __('Product settings','fast-shop') ,
             array(&$this, 'add_inner_meta_boxes'),
-            self::POST_TYPE
+            self::POST_TYPE,
+	        'normal',
+	        'high'
             );
 
         // Add this metabox to every selected post

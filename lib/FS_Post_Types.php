@@ -69,4 +69,4 @@ class FS_Post_Types
 	}
 
 
-} ?>
+}

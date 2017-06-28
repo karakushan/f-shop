@@ -14,8 +14,8 @@ add_filter( 'manage_edit-product_columns', 'add_views_column', 4 );
 function add_views_column( $columns ) {
 	$num         = 2; // после какой по счету колонки вставлять новые
 	$new_columns = array(
-		'fs_price' => __('Price','fast-shop'),
-		'fs_photo' => __('Photo','fast-shop'),
+		'fs_price' => __( 'Price', 'fast-shop' ),
+		'fs_photo' => __( 'Photo', 'fast-shop' ),
 	);
 
 	return array_slice( $columns, 0, $num ) + $new_columns + array_slice( $columns, $num );
@@ -30,14 +30,12 @@ function fill_views_column( $colname, $post_id ) {
 		echo $price . ' ' . fs_currency();
 	}
 	if ( $colname === 'fs_photo' ) {
-
+		$sizes = fs_get_image_sizes();
 		if ( has_post_thumbnail() ) {
-			echo '<div class="fs_admin_col_photo" style="background-image:url(' . get_the_post_thumbnail_url( $post_id, 'full' ) . ')"></div>';
+			the_post_thumbnail( 'thumbnail' );
 		} else {
-			echo '<div class="fs_admin_col_photo " >' . __( 'no photo', 'fast-shop' ) . '</div>';
+			echo '<div class="fs_admin_col_photo " style="width:'.$sizes['thumbnail']['width'].'px;height:'.$sizes['thumbnail']['height'].'px;">' . __( 'no photo', 'fast-shop' ) . '</div>';
 		}
-
-
 	}
 }
 
@@ -107,24 +105,26 @@ function fs_form_bottom( $form_bottom ) {
 /**
  *  фильтр для создания шаблона письма пользователю
  */
-add_filter( 'fs_order_user_message', 'fs_order_user_message',10,1 );
-function fs_order_user_message($template='') {
+add_filter( 'fs_order_user_message', 'fs_order_user_message', 10, 1 );
+function fs_order_user_message( $template = '' ) {
 	$default_template = 'oxygen';
-	if (empty($template)){
-		$template         = fs_frontend_template( 'mail/themes/' . $default_template );
+	if ( empty( $template ) ) {
+		$template = fs_frontend_template( 'mail/themes/' . $default_template );
 	}
+
 	return $template;
 }
 
 /**
  *  фильтр для создания шаблона письма администратору
  */
-add_filter( 'fs_order_admin_message', 'fs_order_admin_message',10,1 );
-function fs_order_admin_message($template='') {
+add_filter( 'fs_order_admin_message', 'fs_order_admin_message', 10, 1 );
+function fs_order_admin_message( $template = '' ) {
 	$default_template = 'oxygen';
-	if (empty($template)){
-		$template         = fs_frontend_template( 'mail/themes/' . $default_template );
+	if ( empty( $template ) ) {
+		$template = fs_frontend_template( 'mail/themes/' . $default_template );
 	}
+
 	return $template;
 }
 

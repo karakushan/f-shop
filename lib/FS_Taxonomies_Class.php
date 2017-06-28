@@ -15,12 +15,12 @@ if ( ! class_exists( 'FS_Taxonomies_Class' ) ) {
 		public $product_taxonomy;
 
 		function __construct() {
-			add_action( 'init', array( $this, 'create_taxonomy' ));
+			add_action( 'init', array( $this, 'create_taxonomy' ) );
 		}
 
 		function create_taxonomy() {
-			$this->config           = new FS_Config();
-			$taxonomies = array(
+			$this->config = new FS_Config();
+			$taxonomies   = array(
 				$this->config->data['product_taxonomy'] => array(
 					'label'        => __( 'Product categories', 'fast-shop' ),
 					'labels'       => array(
@@ -40,33 +40,48 @@ if ( ! class_exists( 'FS_Taxonomies_Class' ) ) {
 					'hierarchical' => true,
 				)
 			,
-				'fs-payment-methods'    => array(
+				'fs-payment-methods'                    => array(
 					'label'             => __( 'Payment methods', 'fast-shop' ),
 					'labels'            => array(
 						'name'          => __( 'Payment methods', 'fast-shop' ),
 						'singular_name' => __( 'Payment method', 'fast-shop' ),
 						'add_new_item'  => __( 'Add a payment method', 'fast-shop' ),
 					),
+					//					исключаем категории из лицевой части
+					"public"             => false,
+					"show_ui"            => true,
+					"publicly_queryable" => false,
+
 					'metabox'           => false,
 					'show_admin_column' => false
 				),
-				'fs-delivery-methods'   => array(
-					'label'             => __( 'Delivery methods', 'fast-shop' ),
-					'labels'            => array(
+				'fs-delivery-methods'                   => array(
+					'label'              => __( 'Delivery methods', 'fast-shop' ),
+					'labels'             => array(
 						'name'          => __( 'Delivery methods', 'fast-shop' ),
 						'singular_name' => __( 'Delivery method', 'fast-shop' ),
 						'add_new_item'  => __( 'Add a delivery method', 'fast-shop' ),
 					),
-					'metabox'           => false,
-					'show_admin_column' => false
+//					исключаем категории из лицевой части
+					"public"             => false,
+					"show_ui"            => true,
+					"publicly_queryable" => false,
+
+					'metabox'            => false,
+					'show_admin_column'  => false
 				),
-				'product-attributes'    => array(
+				'product-attributes'                    => array(
 					'label'             => __( 'Product attributes', 'fast-shop' ),
 					'labels'            => array(
 						'name'          => __( 'Product attributes', 'fast-shop' ),
 						'singular_name' => __( 'Product attributes', 'fast-shop' ),
 						'add_new_item'  => __( 'Add property / group of properties', 'fast-shop' ),
 					),
+					//					исключаем категории из лицевой части
+					"public"             => false,
+					"show_ui"            => true,
+					"publicly_queryable" => false,
+
 					'metabox'           => null,
 					'show_admin_column' => false,
 					'hierarchical'      => true
