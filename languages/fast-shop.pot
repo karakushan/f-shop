@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-20 13:38+0000\n"
+"POT-Creation-Date: 2017-06-28 17:49+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -25,6 +25,18 @@ msgstr ""
 
 #: functions/actions.php:44 functions/actions.php:66
 msgid "Choose a shipping method"
+msgstr ""
+
+#: functions/actions.php:99
+msgid "Views"
+msgstr ""
+
+#: functions/actions.php:106
+msgid "It looks like your site has not been visited yet."
+msgstr ""
+
+#: functions/actions.php:114
+msgid "Popular items"
 msgstr ""
 
 #: functions/attributes.php:169
@@ -59,55 +71,53 @@ msgstr ""
 msgid "add to wish list"
 msgstr ""
 
-#: functions/functions.php:1245 templates/front-end/auth/profile.php:9
+#: functions/functions.php:1257 templates/front-end/auth/profile.php:9
 #: templates/front-end/auth/profile.php:13
 #: templates/front-end/auth/register.php:10
 #: templates/front-end/auth/register.php:15
 #: templates/front-end/auth/register.php:26
 #: templates/front-end/auth/register.php:31
-#: templates/front-end/cabinet/profile-edit.php:12
-#: templates/front-end/cabinet/profile-edit.php:18
-#: templates/front-end/cabinet/profile-edit.php:42
+#: templates/front-end/cabinet/profile-edit.php:19
 msgid "required field"
 msgstr ""
 
-#: lib/FS_Config.php:51
+#: lib/FS_Config.php:55
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:57 templates/back-end/settings.php:13
+#: lib/FS_Config.php:61 templates/back-end/settings.php:13
 msgid "Gallery"
 msgstr ""
 
-#: lib/FS_Config.php:63
+#: lib/FS_Config.php:67
 msgid "Other"
 msgstr ""
 
-#: lib/FS_Config.php:69
+#: lib/FS_Config.php:73
 msgid "Associated"
 msgstr ""
 
-#: lib/FS_Config.php:115
+#: lib/FS_Config.php:121
 msgid "The base price"
 msgstr ""
 
-#: lib/FS_Config.php:118
+#: lib/FS_Config.php:124
 msgid "This is the main type prices"
 msgstr ""
 
-#: lib/FS_Config.php:121
+#: lib/FS_Config.php:127
 msgid "Promotional price"
 msgstr ""
 
-#: lib/FS_Config.php:124
+#: lib/FS_Config.php:130
 msgid "This type of price interrupts the base price"
 msgstr ""
 
-#: lib/FS_Config.php:127
+#: lib/FS_Config.php:133
 msgid "The displayed price"
 msgstr ""
 
-#: lib/FS_Config.php:130
+#: lib/FS_Config.php:136
 #, php-format
 msgid ""
 "example: \"from %d %c for a couple\" (%d - replaced with the price of %s on "
@@ -122,7 +132,7 @@ msgstr ""
 msgid "An error occurred during the process of database updates!"
 msgstr ""
 
-#: lib/FS_Filters.php:47 lib/FS_Taxonomies_Class.php:38
+#: lib/FS_Filters.php:45 lib/FS_Taxonomies_Class.php:28
 msgid "Product category"
 msgstr ""
 
@@ -160,44 +170,44 @@ msgstr ""
 msgid "Store settings"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:35 lib/FS_Taxonomies_Class.php:37
-#: lib/FS_Taxonomies_Class.php:39 lib/FS_Taxonomies_Class.php:40
-#: lib/FS_Taxonomies_Class.php:41 lib/FS_Taxonomies_Class.php:42
-#: lib/FS_Taxonomies_Class.php:44 lib/FS_Taxonomies_Class.php:46
-#: lib/FS_Taxonomies_Class.php:47
+#: lib/FS_Taxonomies_Class.php:25 lib/FS_Taxonomies_Class.php:27
+#: lib/FS_Taxonomies_Class.php:29 lib/FS_Taxonomies_Class.php:30
+#: lib/FS_Taxonomies_Class.php:31 lib/FS_Taxonomies_Class.php:32
+#: lib/FS_Taxonomies_Class.php:34 lib/FS_Taxonomies_Class.php:36
+#: lib/FS_Taxonomies_Class.php:37
 msgid "Product categories"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:43
+#: lib/FS_Taxonomies_Class.php:33
 msgid "Category editing"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:45
+#: lib/FS_Taxonomies_Class.php:35
 msgid "Add category"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:54 lib/FS_Taxonomies_Class.php:56
+#: lib/FS_Taxonomies_Class.php:44 lib/FS_Taxonomies_Class.php:46
 msgid "Payment methods"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:57 templates/front-end/auth/profile.php:53
+#: lib/FS_Taxonomies_Class.php:47 templates/front-end/auth/profile.php:53
 #: templates/front-end/auth/register.php:61
 msgid "Payment method"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:58
+#: lib/FS_Taxonomies_Class.php:48
 msgid "Add a payment method"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:64 lib/FS_Taxonomies_Class.php:66
+#: lib/FS_Taxonomies_Class.php:59 lib/FS_Taxonomies_Class.php:61
 msgid "Delivery methods"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:67
+#: lib/FS_Taxonomies_Class.php:62
 msgid "Delivery method"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:68
+#: lib/FS_Taxonomies_Class.php:63
 msgid "Add a delivery method"
 msgstr ""
 

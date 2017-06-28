@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,400i,700,700i&subset=cyrillic');
 
+@import "mixins";
+
 .fs-add-attr {
     margin: 20px 0 0 0;
     padding: 10px 30px;
@@ -577,6 +579,9 @@ td.fs_photo.column-fs_photo {
     justify-content: center;
     font-size: 1.5em;
     background-color: #f7f7f7;
+}
+.fsdw_popular {
+    width: 100%;
 }
 
 

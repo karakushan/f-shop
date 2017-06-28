@@ -73,6 +73,47 @@ function fs_payment_shortcode_handler( $tag ) {
 	return $field;
 }
 
+// Регистрация виджета консоли вывода популярных товаров
+add_action( 'wp_dashboard_setup', 'fs_dashboard_widgets' );
+// Выводит контент
+function fs_popular_db_widget( $post, $callback_args ) {
+	$popular = new WP_Query( array(
+		'post_type'      => 'product',
+		'posts_per_page' => 5,
+		'orderby'        => 'meta_value',
+		'meta_key'       => 'views'
+	) );
+	if ( $popular->have_posts() ) {
+		echo '<table class="fsdw_popular">';
+		while ( $popular->have_posts() ) {
+			$popular->the_post();
+			$thumbmail = get_the_post_thumbnail( $post->ID, array( 50, 50 ) );
+			$title     = get_the_title( $post->ID );
+			$link      = get_the_permalink( $post->ID );
+			$views     = get_post_meta( $post->ID, 'views', true );
+			$views     = intval( $views );
+			$price     = fs_get_price( $post->ID );
+			echo '<tr>';
+			echo '<td>' . $thumbmail . '</td>';
+			echo '<td><a href="' . $link . '" target="_blank">' . $title . '</a></br>
+			<span><i>'.__('Views','fast-shop').': </i>' . $views . '</span></td>';
+			echo '<td>';
+			fs_the_price( $post->ID );
+			echo '</td>';
+			echo '</tr>';
+		}
+	} else {
+		echo '<p>' . __( 'It looks like your site has not been visited yet.', 'fast-shop' ) . '</p>';
+	}
+	wp_reset_query();
+	echo '</table>';
+}
+
+// Используется в хуке
+function fs_dashboard_widgets() {
+	wp_add_dashboard_widget( 'dashboard_widget', __('Popular items','fast-shop'), 'fs_popular_db_widget' );
+}
+
 
 
 
