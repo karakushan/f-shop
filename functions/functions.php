@@ -708,7 +708,7 @@ function fs_delete_cart( $text = 'Remove all items', $class = '' ) {
  *
  * @return выводит или возвращает скидку если таковая имеется или пустая строка
  */
-function fs_amount_discount( $product_id = '', $echo = true, $wrap = '<span>%s</span>' ) {
+function fs_amount_discount( $product_id = 0, $echo = true, $wrap = '<span>%s</span>' ) {
 	global $post;
 	$config          = new FS\FS_Config;
 	$product_id      = empty( $product_id ) ? $post->ID : $product_id;
@@ -1110,7 +1110,12 @@ function fs_get_related_products( $product_id = 0, array $args = array() ) {
 	return $posts;
 }
 
-function fs_change_price_percent( $product_id = 0, $wrap = '' ) {
+/**
+ * @param int $product_id
+ *
+ * @return float|int|string
+ */
+function fs_change_price_percent( $product_id = 0 ) {
 	global $post;
 	$product_id   = empty( $product_id ) ? $post->ID : $product_id;
 	$change_price = 0;
@@ -1125,15 +1130,22 @@ function fs_change_price_percent( $product_id = 0, $wrap = '' ) {
 		$change_price = ( $base_price - $action_price ) / $base_price * 100;
 		$change_price = round( $change_price );
 	}
-	if ( ! empty( $wrap ) ) {
-		if ( $change_price == 0 ) {
-			$change_price = '';
-		} else {
-			$change_price = sprintf( $wrap, $change_price );
-		}
-	}
 
 	return $change_price;
+}
+
+/**
+ * Выводит скидку на товар в процентах
+ *
+ * @param int $product_id - ID товара(записи)
+ * @param string $wrap - html теги, обёртка для скидки
+ */
+function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
+	$discount = fs_change_price_percent( $product_id );
+	if ( $discount > 0 ) {
+		printf( $wrap, $discount, '%' );
+	}
+
 }
 
 /**
@@ -1300,22 +1312,22 @@ function fs_mail_keys( $keys = array() ) {
  * @uses   get_intermediate_image_sizes()
  *
  * @param  boolean [$unset_disabled = true] Удалить из списка размеры с 0 высотой и шириной?
+ *
  * @return array Данные всех размеров.
  */
 function fs_get_image_sizes( $unset_disabled = true ) {
-	$wais = & $GLOBALS['_wp_additional_image_sizes'];
+	$wais = &$GLOBALS['_wp_additional_image_sizes'];
 
 	$sizes = array();
 
 	foreach ( get_intermediate_image_sizes() as $_size ) {
-		if ( in_array( $_size, array('thumbnail', 'medium', 'medium_large', 'large') ) ) {
+		if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
 			$sizes[ $_size ] = array(
 				'width'  => get_option( "{$_size}_size_w" ),
 				'height' => get_option( "{$_size}_size_h" ),
 				'crop'   => (bool) get_option( "{$_size}_crop" ),
 			);
-		}
-		elseif ( isset( $wais[$_size] ) ) {
+		} elseif ( isset( $wais[ $_size ] ) ) {
 			$sizes[ $_size ] = array(
 				'width'  => $wais[ $_size ]['width'],
 				'height' => $wais[ $_size ]['height'],
@@ -1324,8 +1336,9 @@ function fs_get_image_sizes( $unset_disabled = true ) {
 		}
 
 		// size registered, but has 0 width and height
-		if( $unset_disabled && ($sizes[ $_size ]['width'] == 0) && ($sizes[ $_size ]['height'] == 0) )
+		if ( $unset_disabled && ( $sizes[ $_size ]['width'] == 0 ) && ( $sizes[ $_size ]['height'] == 0 ) ) {
 			unset( $sizes[ $_size ] );
+		}
 	}
 
 	return $sizes;
