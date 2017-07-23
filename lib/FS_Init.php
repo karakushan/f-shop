@@ -32,8 +32,8 @@ class FS_Init {
 		new FS_Api_Class();
 
 
-		$plugin = plugin_basename( __FILE__ );
-		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
+
+		add_filter( "plugin_action_links_".FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
 
 
@@ -45,7 +45,7 @@ class FS_Init {
 
 	// Add the settings link to the plugins page
 	function plugin_settings_link( $links ) {
-		$settings_link = '<a href="admin.php?page=fast-shop-settings">Настройки</a>';
+		$settings_link = '<a href="edit.php?post_type=product&page=fast-shop-settings">'.__('Settings').'</a>';
 		array_unshift( $links, $settings_link );
 
 		return $links;

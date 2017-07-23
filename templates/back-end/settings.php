@@ -10,9 +10,8 @@
                 <li><a href="#tabs-4"><?php _e( 'Page', 'fast-shop' ); ?></a></li>
                 <li><a href="#tabs-5"><?php _e( 'Users', 'fast-shop' ); ?></a></li>
                 <!-- <li><a href="#tabs-6"><?php _e( 'Messages', 'fast-shop' ); ?></a></li> -->
-                <li><a href="#tabs-7"><?php _e( 'Gallery', 'fast-shop' ); ?></a></li>
+                <!--<li><a href="#tabs-7"><?php /*_e( 'Gallery', 'fast-shop' ); */?></a></li>-->
                 <li><a href="#tabs-8"><?php _e( 'Export', 'fast-shop' ); ?></a></li>
-                <li><a href="#tabs-9"><?php _e( 'Developer', 'fast-shop' ); ?></a></li>
             </ul>
             <div id="tabs-1">
                 <p>
@@ -256,41 +255,7 @@
                            value="1" <?php checked( fs_option( 'register_user' ), 1 ) ?>>
                 </p>
             </div>
-            <div id="tabs-7">
-                <h2>Настройки галереи в карточке товара</h2>
-                <p>Внимание! Для работы слайдера необходимо, чтобы ваша тема поддерживала загрузку миниатюр.</p>
-                <p>
-                    <label for="image_placeholder">Заглушка изображения
-                        <span>отображается если галерея не загружена</span></label><br>
-                    <input type="text" name="fs_option[image_placeholder]" id="image_placeholder"
-                           value="<?php echo fs_option( 'image_placeholder' ) ?>">
-                </p>
-                <h3>Большое изображение</h3>
 
-                <p>
-                    <label for="gallery_img_width">Ширина большого изображения</label><br>
-                    <input type="text" name="fs_option[gallery_big_width]" id="gallery_img_width"
-                           value="<?php echo fs_option( 'gallery_big_width' ) ?>">
-                </p>
-                <p>
-                    <label for="gallery_img_height">Высота большого изображения</label><br>
-                    <input type="text" name="fs_option[gallery_big_height]" id="gallery_img_height"
-                           value="<?php echo fs_option( 'gallery_big_height' ) ?>">
-                </p>
-
-                <h3>Маленькие изображения</h3>
-                <p>
-                    <label for="gallery_img_width">Ширина маленького изображения</label><br>
-                    <input type="text" name="fs_option[gallery_small_width]" id="gallery_img_width"
-                           value="<?php echo fs_option( 'gallery_small_width' ) ?>">
-                </p>
-                <p>
-                    <label for="gallery_img_height">Высота маленького изображения</label><br>
-                    <input type="text" name="fs_option[gallery_small_height]" id="gallery_img_height"
-                           value="<?php echo fs_option( 'gallery_small_height' ) ?>">
-                </p>
-
-            </div>
             <div id="tabs-8">
                 <h2><?php _e( 'Settings export and import of goods', 'fast-shop' ); ?></h2>
                 <p>
@@ -326,13 +291,6 @@
                         базу товаров</a>
                 </p>
 
-            </div>
-            <div id="tabs-9">
-                <p>
-                    <label for="register_user">Включить режим разработки</label><br>
-                    <input type="checkbox" name="fs_option[debug]" id="register_user"
-                           value="1" <?php checked( fs_option( 'debug' ), 1 ) ?>>
-                </p>
             </div>
         </div>
         <input type="submit" name="fs_save_options" value="Сохранить">
