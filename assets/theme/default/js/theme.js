@@ -35,8 +35,8 @@ function open_media_window() {
         this.window.on('select', function() {
         	var images = self.window.state().get('selection').toJSON();
         	for(var key in images){
-        		if (images[key].type!='image') continue; 
-        		var image='<div class="fs-col-4"> <div class="fs-remove-img"></div> <input type="hidden" name="fs_galery[]" value="'+images[key].id+'"> <img src="'+images[key].url+'" alt="fs gallery image #'+images[key].id+'"> </div>'; 
+        		if (images[key].type!='image') continue;
+        		var image='<div class="fs-col-4"> <div class="fs-remove-img"></div> <input type="hidden" name="fs_galery[]" value="'+images[key].id+'"> <img src="'+images[key].url+'" alt="fs gallery image #'+images[key].id+'"> </div>';
         		$('#fs-gallery-wrapper').append(image);
         		console.log(images[key]);
         	}

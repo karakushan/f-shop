@@ -93,6 +93,7 @@ class FS_Init {
 		wp_enqueue_script( 'spectrum', $this->config->data['plugin_url'] . 'assets/js/spectrum.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'js-cookie', $this->config->data['plugin_url'] . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'fs-library', $this->config->data['plugin_url'] . 'assets/js/fs-library.js', array( 'jquery' ), null, true );
+
 		wp_enqueue_script( 'fs-admin', $this->config->data['plugin_url'] . 'assets/js/fs-admin.js', array(
 			'jquery',
 			'fs-library',

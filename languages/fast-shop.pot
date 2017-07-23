@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-28 17:49+0000\n"
+"POT-Creation-Date: 2017-07-23 11:41+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -85,7 +85,7 @@ msgstr ""
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:61 templates/back-end/settings.php:13
+#: lib/FS_Config.php:61
 msgid "Gallery"
 msgstr ""
 
@@ -156,13 +156,26 @@ msgstr ""
 msgid "Edit product"
 msgstr ""
 
-#: lib/FS_Post_Type.php:142
-msgid "Product settings"
-msgstr ""
-
+#: lib/FS_Post_Type.php:90 lib/FS_Post_Type.php:101
 #: lib/FS_Settings_Class.php:57 lib/FS_Settings_Class.php:58
 #: templates/back-end/orders.php:2
 msgid "Orders"
+msgstr ""
+
+#: lib/FS_Post_Type.php:91 templates/front-end/mail/themes/oxygen.php:422
+msgid "Order"
+msgstr ""
+
+#: lib/FS_Post_Type.php:92
+msgid "Add Order"
+msgstr ""
+
+#: lib/FS_Post_Type.php:94
+msgid "Edit order"
+msgstr ""
+
+#: lib/FS_Post_Type.php:184
+msgid "Product settings"
 msgstr ""
 
 #: lib/FS_Settings_Class.php:67 lib/FS_Settings_Class.php:68
@@ -220,6 +233,15 @@ msgstr ""
 msgid "Add property / group of properties"
 msgstr ""
 
+#: lib/FS_Taxonomies_Class.php:100 lib/FS_Taxonomies_Class.php:102
+#: lib/FS_Taxonomies_Class.php:103
+msgid "Order statuses"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:104
+msgid "Add status"
+msgstr ""
+
 #: templates/back-end/orders.php:36
 #: templates/front-end/mail/themes/oxygen.php:457
 #: templates/front-end/mail/themes/oxygen.php:511
@@ -265,11 +287,7 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#: templates/back-end/settings.php:15
-msgid "Developer"
-msgstr ""
-
-#: templates/back-end/settings.php:295
+#: templates/back-end/settings.php:260
 msgid "Settings export and import of goods"
 msgstr ""
 
@@ -391,10 +409,6 @@ msgstr ""
 msgid "Date Ordered"
 msgstr ""
 
-#: templates/front-end/mail/themes/oxygen.php:422
-msgid "Order"
-msgstr ""
-
 #: templates/front-end/mail/themes/oxygen.php:450
 msgid "Item"
 msgstr ""
@@ -427,7 +441,7 @@ msgstr ""
 
 #. URI of the plugin
 #. Author URI of the plugin
-msgid "https://fast-shop.profglobal.ru"
+msgid "https://f-shop.top/"
 msgstr ""
 
 #. Author of the plugin

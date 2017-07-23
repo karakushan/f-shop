@@ -2,10 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-28 17:51+0000\n"
+"POT-Creation-Date: 2017-07-23 11:50+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2017-06-28 18:18+0000\n"
-"Last-Translator: print-shirt <karakushan@gmail.com>\n"
+"PO-Revision-Date: 2017-07-23 11:51+0000\n"
+"Last-Translator: sharf-admin <karakushan@gmail.com>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -23,13 +23,30 @@ msgstr ""
 "esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2"
 
+#: lib/FS_Post_Type.php:92
+msgid "Add Order"
+msgstr "Створити замовлення"
+
+#: lib/FS_Post_Type.php:94
+msgid "Edit order"
+msgstr "Змінити замовлення"
+
+#: lib/FS_Taxonomies_Class.php:100 lib/FS_Taxonomies_Class.php:102
+#: lib/FS_Taxonomies_Class.php:103
+msgid "Order statuses"
+msgstr "Статуси замовлень"
+
+#: lib/FS_Taxonomies_Class.php:104
+msgid "Add status"
+msgstr "Додати статус"
+
 #. Name of the plugin
 msgid "Fast Shop"
 msgstr ""
 
 #. URI of the plugin
 #. Author URI of the plugin
-msgid "https://fast-shop.profglobal.ru"
+msgid "https://f-shop.top/"
 msgstr ""
 
 #: functions/actions.php:44 functions/actions.php:66
@@ -94,7 +111,7 @@ msgstr "обов'язкове поле"
 msgid "Prices"
 msgstr "Ціни"
 
-#: lib/FS_Config.php:61 templates/back-end/settings.php:13
+#: lib/FS_Config.php:61
 msgid "Gallery"
 msgstr "Галерея"
 
@@ -169,14 +186,19 @@ msgstr "Додати товар"
 msgid "Edit product"
 msgstr "Редагувати товар"
 
-#: lib/FS_Post_Type.php:142
-msgid "Product settings"
-msgstr "Налаштування товару"
-
+#: lib/FS_Post_Type.php:90 lib/FS_Post_Type.php:101
 #: lib/FS_Settings_Class.php:57 lib/FS_Settings_Class.php:58
 #: templates/back-end/orders.php:2
 msgid "Orders"
 msgstr "Замовлення"
+
+#: lib/FS_Post_Type.php:91 templates/front-end/mail/themes/oxygen.php:422
+msgid "Order"
+msgstr "Замовлення"
+
+#: lib/FS_Post_Type.php:184
+msgid "Product settings"
+msgstr "Налаштування товару"
 
 #: lib/FS_Settings_Class.php:67 lib/FS_Settings_Class.php:68
 #: templates/back-end/settings.php:2
@@ -279,11 +301,7 @@ msgstr "Повідомлення"
 msgid "Export"
 msgstr "Експорт"
 
-#: templates/back-end/settings.php:15
-msgid "Developer"
-msgstr "Розробник"
-
-#: templates/back-end/settings.php:295
+#: templates/back-end/settings.php:260
 msgid "Settings export and import of goods"
 msgstr "Налаштування експорту та імпорту товарів"
 
@@ -404,10 +422,6 @@ msgstr "Доставка та оплата"
 #: templates/front-end/mail/themes/oxygen.php:419
 msgid "Date Ordered"
 msgstr "Дата замовлення"
-
-#: templates/front-end/mail/themes/oxygen.php:422
-msgid "Order"
-msgstr "Замовлення"
 
 #: templates/front-end/mail/themes/oxygen.php:450
 msgid "Item"

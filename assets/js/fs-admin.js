@@ -225,6 +225,9 @@ jQuery(document).ready(function($) {
         });
         
     });
+
+    $( ".fs-sortable-items" ).sortable();
+
 });
 
 
