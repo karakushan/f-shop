@@ -644,13 +644,16 @@ function fs_action( $post_id = 0 ) {
 
 
 /**
- * Возвращает массив просмотренных товаров или записей
+ * Возвращает объект просмотренных товаров или записей
  * @return array
  */
 function fs_user_viewed() {
 	$viewed = isset( $_SESSION['fs_user_settings']['viewed_product'] ) ? $_SESSION['fs_user_settings']['viewed_product'] : array();
-
-	return $viewed;
+	$posts  = new stdClass();
+	if ( ! empty( $viewed ) ) {
+		$posts=new WP_Query(array('post_type'=>'product','post__in'=>$viewed));
+	}
+	return $posts;
 }
 
 /**

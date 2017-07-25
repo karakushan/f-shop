@@ -49,5 +49,7 @@ class FS_Action_Class {
 		add_action( 'fs_product_code', 'fs_product_code', 10, 3 );
 		/* отображение базовой цены без учёта скидки */
 		add_action( 'fs_base_price','fs_base_price', 10, 3 );
+		/* отображение скидки в процентах */
+		add_action( 'fs_discount_percent','fs_discount_percent', 10, 2 );
 	}
 }
