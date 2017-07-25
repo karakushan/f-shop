@@ -2,7 +2,7 @@
 
 namespace FS;
 /**
- *  Обработка POST или GET запросов
+ *  Класс для регистрации событий плагина
  */
 class FS_Action_Class {
 
@@ -36,9 +36,18 @@ class FS_Action_Class {
 
 	}
 
-//	регистрирует акции и хуки плагина
+
+	/**
+	 *Функция регистрирует хуки-события плагина
+	 */
 	function register_plugin_action() {
-//		отображение кнопки добавления в корзину
-		add_action( 'fs_atc_action', 'fs_add_to_cart', 10, 3 );
+		/* отображение кнопки добавления в корзину */
+		add_action( 'fs_add_to_cart', 'fs_add_to_cart', 10, 3 );
+		/* отображение фактической цены */
+		add_action( 'fs_the_price', 'fs_the_price', 10, 2 );
+		/* отображение артикула товара */
+		add_action( 'fs_product_code', 'fs_product_code', 10, 3 );
+		/* отображение базовой цены без учёта скидки */
+		add_action( 'fs_base_price','fs_base_price', 10, 3 );
 	}
 }

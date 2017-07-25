@@ -79,23 +79,9 @@ function fs_get_price( $post_id = 0, $filter = true ) {
 	$action_price = get_post_meta( $post_id, $config->meta['action_price'], true );//акионная цена
 	$action_base  = get_post_meta( $post_id, $config->meta['discount'], true );//размер скидки общий для всех товаров
 
-	// создаём возможность модифицировать базовую цену через фильтры
-	if ( $filter ) {
-		$base_price = apply_filters( 'fs_base_price', $base_price, $post_id );
-	}
-	$price = empty( $base_price ) ? 0 : (float) $base_price;
-
-	// создаём возможность модифицировать акционную цену через фильтры
-	if ( $filter ) {
-		$action_price = apply_filters( 'fs_action_price', $action_price, $post_id );
-	}
+	$price        = empty( $base_price ) ? 0 : (float) $base_price;
 	$action_price = empty( $action_price ) ? 0 : (float) $action_price;
-
-	//получаем размер скидки из общих настроек (в процентах или в фиксированной сумме)
-	if ( $filter ) {
-		$action_base = apply_filters( 'fs_action_base', $action_base, $post_id );
-	}
-	$action_base = empty( $action_base ) ? 0 : (float) $action_base;
+	$action_base  = empty( $action_base ) ? 0 : (float) $action_base;
 
 	//если поле акционной цены заполнено иначе ...
 	if ( $action_price > 0 ) {
@@ -438,7 +424,6 @@ function fs_base_price( $post_id = 0, $echo = true, $wrap = '%s <span>%s</span>'
 	$config  = new \FS\FS_Config();
 	$post_id = empty( $post_id ) ? $post->ID : $post_id;
 	$price   = get_post_meta( $post_id, $config->meta['price'], 1 );
-	$price   = apply_filters( 'fs_base_price', $price, $post_id );
 	if ( $price == fs_get_price( $post_id ) ) {
 		return;
 	}
@@ -469,12 +454,20 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		array(
 			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
 			'preloader' => '',
-			'class'     => ''
+			'class'     => '',
+			'type'      => 'button'
 		)
 	);
 
+	/*
+	Устанавливаем правильную, локализированную надпись на кнопке "В корзину"
+	с возможность установки собственного перевода
+	 */
 	if ( empty( $label ) ) {
 		$label = __( 'Add to cart', 'fast-shop' );
+	} else {
+		$my_theme = wp_get_theme();
+		$label    = __( $label, $my_theme->get( 'TextDomain' ) );
 	}
 
 	//Добавляем к json свои значения
@@ -489,8 +482,18 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		'data-attr'         => $attr_json
 	);
 	$attributes = fs_parse_attr( array(), $attr_set );
-	$button     = '<button ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '</button>';
-	echo apply_filters( 'fs_add_to_cart', $button );
+
+	/* позволяем устанавливать разные html элементы в качестве кнопки */
+	switch ( $attr['type'] ) {
+		case 'link':
+			$button = '<a href="#" ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '</a>';
+			break;
+		default:
+			$button = '<button ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '</button>';
+			break;
+	}
+
+	echo apply_filters( 'fs_add_to_cart_filter', $button );
 }
 
 //Отображает кнопку сабмита формы заказа
@@ -982,22 +985,26 @@ function fs_quick_order_button( $post_id = 0, $attr = array() ) {
  *
  * @param  int|integer $product_id - id поста
  * @param  string $wrap - html обёртка для артикула (по умолчанию нет)
+ * @param bool $echo возвращать или выводить, по умолчанию возвращать
  *
- * @return  string                 - артикул товара
+ * @return string - артикул товара
  */
-function fs_product_code( $product_id = 0, $wrap = '' ) {
+function fs_product_code( $product_id = 0, $wrap = '%s', $echo = false ) {
 	global $post;
 	$config     = new \FS\FS_Config();
 	$product_id = $product_id == 0 ? $post->ID : $product_id;
 	$articul    = get_post_meta( $product_id, $config->meta['product_article'], 1 );
 	if ( empty( $articul ) ) {
-		return;
+		$articul = $product_id;
 	}
 	if ( $wrap ) {
 		$articul = sprintf( $wrap, $articul );
 	}
-
-	return $articul;
+	if ( $echo ) {
+		echo $articul;
+	} else {
+		return $articul;
+	}
 }
 
 /**
