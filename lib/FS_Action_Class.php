@@ -51,5 +51,11 @@ class FS_Action_Class {
 		add_action( 'fs_base_price','fs_base_price', 10, 3 );
 		/* отображение скидки в процентах */
 		add_action( 'fs_discount_percent','fs_discount_percent', 10, 2 );
+		/* выводит select для сортировки по параметрам (обычно применяется в каталоге или на страницах категорий) */
+		add_action( 'fs_types_sort_filter','fs_types_sort_filter', 10, 1 );
+		/* выводит select для указания к-ва выводимых постов на странице (обычно применяется в каталоге или на страницах категорий) */
+		add_action( 'fs_per_page_filter','fs_per_page_filter', 10,2 );
+		/* выводит фильтр для сортировки по атрибутам */
+		add_action( 'fs_attr_filter','fs_attr_filter', 10,2 );
 	}
 }

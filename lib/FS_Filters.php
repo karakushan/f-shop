@@ -245,7 +245,6 @@ class FS_Filters {
 			'hide_empty' => false
 		) );
 
-
 		$arr_url = urldecode( $_SERVER['QUERY_STRING'] );
 		parse_str( $arr_url, $url );
 

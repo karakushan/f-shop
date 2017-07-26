@@ -550,8 +550,10 @@ var addUrlParam = function (search, key, val) {
         max: FastShopData.fs_slider_max,
         values: [p_start, p_end],
         slide: function (event, ui) {
-            $('[data-fs-element="range-end"] ').html(ui.values[1] + ' ' + FastShopData.fs_currency);
+            $('[data-fs-element="range-end"] ').html('<span>' + ui.values[1] + '</span> ' + FastShopData.fs_currency);
             $('[data-fs-element="range-start"] ').html(ui.values[0] + ' ' + FastShopData.fs_currency);
+            $("#slider-range > .ui-slider-handle:nth-child(2)").html('<span><span class="val">' + ui.values[0] + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
+            $("#slider-range > .ui-slider-handle:nth-child(3)").html('<span><span class="val">' + ui.values[1] + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
         },
         change: function (event, ui) {
 
@@ -567,10 +569,23 @@ var addUrlParam = function (search, key, val) {
     $('[data-fs-element="range-end"] ').html(p_end + ' ' + FastShopData.fs_currency);
     $('[data-fs-element="range-start"] ').html(p_start + ' ' + FastShopData.fs_currency);
 
+    $("#slider-range > .ui-slider-handle:nth-child(2)").html('<span><span class="val">' + p_start + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
+    $("#slider-range > .ui-slider-handle:nth-child(3)").html('<span><span class="val">' + p_end + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
+    $("#minPrice .val").html(p_start + ' ' + FastShopData.fs_currency);
+    $("#maxPrice .val").html(p_end + ' ' + FastShopData.fs_currency);
+
 //Переадресовываем все фильтры на значение, которое они возвращают
     $('[data-fs-action="filter"]').on('change', function (e) {
         e.preventDefault();
-        window.location.href = $(this).val();
+        if ($(this).attr('type') == 'checkbox') {
+            if ($(this).prop('checked')) {
+                window.location.href = $(this).val();
+            } else {
+                window.location.href = $(this).data('fs-redirect');
+            }
+        } else {
+            window.location.href = $(this).val();
+        }
     });
 
 // слайдер товара
