@@ -34,7 +34,7 @@ function fill_views_column( $colname, $post_id ) {
 		if ( has_post_thumbnail() ) {
 			the_post_thumbnail( 'thumbnail' );
 		} else {
-			echo '<div class="fs_admin_col_photo " style="width:'.$sizes['thumbnail']['width'].'px;height:'.$sizes['thumbnail']['height'].'px;">' . __( 'no photo', 'fast-shop' ) . '</div>';
+			echo '<div class="fs_admin_col_photo " style="width:' . $sizes['thumbnail']['width'] . 'px;height:' . $sizes['thumbnail']['height'] . 'px;">' . __( 'no photo', 'fast-shop' ) . '</div>';
 		}
 	}
 }
@@ -43,18 +43,18 @@ function fill_views_column( $colname, $post_id ) {
 add_filter( 'pre_get_posts', 'fs_sort_admin_by', 30 );
 function fs_sort_admin_by( $object ) {
 //	эсли это не админка или нет параметра orderby то выходим из функции
-	if ( ! is_admin() || empty( $_GET['orderby'] ) && (string) $_GET['post_type'] != 'product' ) {
+	if ( ! is_admin() || empty( $_GET['orderby'] ) && isset( $_GET['post_type'] ) && $_GET['post_type'] != 'product' ) {
 		return;
 	}
 //	сортируем по цене
-	if ( $_GET['orderby'] == 'fs_price' ) {
+	if ( ! empty( $_GET['orderby'] ) && $_GET['orderby'] == 'fs_price' ) {
 		$config = new \FS\FS_Config();
 		$object->set( 'orderby', 'meta_value_num' );
 		$object->set( 'meta_key', $config->meta['price'] );
 		$object->set( 'order', (string) $_GET['order'] );
 
 	} //	сортируем по дате
-	elseif ( $_GET['orderby'] == 'date' ) {
+	elseif (! empty( $_GET['orderby'] ) && $_GET['orderby'] == 'date' ) {
 		$object->set( 'orderby', 'date' );
 		$object->set( 'order', (string) $_GET['order'] );
 	}//	сортируем по умолчанию по  дате

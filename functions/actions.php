@@ -76,23 +76,31 @@ function fs_payment_shortcode_handler( $tag ) {
 // Регистрация виджета консоли вывода популярных товаров
 add_action( 'wp_dashboard_setup', 'fs_dashboard_widgets' );
 // Выводит контент
-function fs_popular_db_widget( $post, $callback_args ) {
+function fs_popular_db_widget() {
 	$popular = new WP_Query( array(
 		'post_type'      => 'product',
 		'posts_per_page' => 5,
-		'orderby'        => 'meta_value',
-		'meta_key'       => 'views'
+		'meta_query'=>array(
+			'views'=>array(
+				'key'       => 'views',
+				'type'=>'NUMERIC'
+			)
+
+		),
+		'orderby'        => 'views',
+		'order'=>'DESC'
+
 	) );
 	if ( $popular->have_posts() ) {
 		echo '<table class="fsdw_popular">';
 		while ( $popular->have_posts() ) {
 			$popular->the_post();
+			global $post;
 			$thumbmail = get_the_post_thumbnail( $post->ID, array( 50, 50 ) );
 			$title     = get_the_title( $post->ID );
 			$link      = get_the_permalink( $post->ID );
 			$views     = get_post_meta( $post->ID, 'views', true );
 			$views     = intval( $views );
-			$price     = fs_get_price( $post->ID );
 			echo '<tr>';
 			echo '<td>' . $thumbmail . '</td>';
 			echo '<td><a href="' . $link . '" target="_blank">' . $title . '</a></br>
