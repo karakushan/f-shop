@@ -36,8 +36,12 @@ class FS_Taxonomies_Class {
 					'new_item_name'     => __( 'Product categories', 'fast-shop' ),
 					'menu_name'         => __( 'Product categories', 'fast-shop' ),
 				),
-				'metabox'      => null,
+				'metabox'      => true,
 				'hierarchical' => true,
+				"public"             => true,
+				"show_ui"            => true,
+				"publicly_queryable" => true,
+				'show_admin_column' => true,
 			)
 		,
 			'fs-payment-methods'                    => array(
@@ -78,12 +82,12 @@ class FS_Taxonomies_Class {
 					'add_new_item'  => __( 'Add property / group of properties', 'fast-shop' ),
 				),
 				//					исключаем категории из лицевой части
-				"public"             => false,
+				"public"             => true,
 				"show_ui"            => true,
-				"publicly_queryable" => false,
+				"publicly_queryable" => true,
 
 				'metabox'           => null,
-				'show_admin_column' => false,
+				'show_admin_column' => true,
 				'hierarchical'      => true
 			)
 		);

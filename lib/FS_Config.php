@@ -87,29 +87,29 @@ class FS_Config {
 			//базовая цена
 			'action_price'           => 'fs_action_price',
 			//акционная цена, перебивает цену
-			'wholesale_price'        => 'fs_wholesale_price',
+			//'wholesale_price'        => 'fs_wholesale_price',
 			//цена для оптовиков
-			'wholesale_price_action' => 'fs_wholesale_price_act',
+			//'wholesale_price_action' => 'fs_wholesale_price_act',
 			//цена для оптовиков акционная
-			'discount'               => 'fs_discount',
+			//'discount'               => 'fs_discount',
 			//размер скидки
 			'product_article'        => 'fs_articul',
 			//артикул
-			'availability'           => 'fs_availability',
+			//'availability'           => 'fs_availability',
 			//наличие на складе
 			'remaining_amount'       => 'fs_remaining_amount',
 			//запас товаров на складе
-			'action'                 => 'fs_actions',
+			//'action'                 => 'fs_actions',
 			//включить  или выключить акцию
-			'action_page'            => 'fs_page_action',
+			//'action_page'            => 'fs_page_action',
 			//ссылка на страницу описывающую акцию на товарпоставленнуюю полем 'discount'
-			'displayed_price'        => 'fs_displayed_price',
+			//'displayed_price'        => 'fs_displayed_price',
 			//тображаемая цена
-			'attributes'             => 'fs_attributes_post',
+			//'attributes'             => 'fs_attributes_post',
 			//атрибуты товара
 			'gallery'                => 'fs_galery',
 			//галерея
-			'related_products'       => 'fs_related_products',
+			//'related_products'       => 'fs_related_products',
 			//галерея
 		);
 
@@ -129,12 +129,12 @@ class FS_Config {
 				'on'          => true,
 				'description' => __( 'This type of price interrupts the base price', 'fast-shop' )
 			),
-			'displayed_price' => array(
+			/*'displayed_price' => array(
 				'name'        => __( 'The displayed price', 'fast-shop' ),
 				'meta_key'    => $this->meta['displayed_price'],
 				'on'          => false,
 				'description' => __( 'example: "from %d %c for a couple" (%d - replaced with the price of %s on currency)', 'fast-shop' )
-			)
+			)*/
 		);
 
 		self::$user_meta = array(

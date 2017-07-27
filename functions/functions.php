@@ -77,25 +77,12 @@ function fs_get_price( $post_id = 0, $filter = true ) {
 	// получаем возможные типы цен
 	$base_price   = get_post_meta( $post_id, $config->meta['price'], true );//базовая и главная цена
 	$action_price = get_post_meta( $post_id, $config->meta['action_price'], true );//акионная цена
-	$action_base  = get_post_meta( $post_id, $config->meta['discount'], true );//размер скидки общий для всех товаров
-
 	$price        = empty( $base_price ) ? 0 : (float) $base_price;
 	$action_price = empty( $action_price ) ? 0 : (float) $action_price;
-	$action_base  = empty( $action_base ) ? 0 : (float) $action_base;
 
-	//если поле акционной цены заполнено иначе ...
+	//если поле акционной цены заполнено возвращаем его
 	if ( $action_price > 0 ) {
 		$price = $action_price;
-	} else {
-		if ( $action_base > 0 ) {
-			if ( $action_type == 1 ) {
-				//расчёт цены если скидка в процентах
-				$price = $base_price - ( $base_price * $action_base / 100 );
-			} else {
-				//расчёт цены если скидка в фикс. к-ве
-				$price = $base_price - $action_base;
-			}
-		}
 	}
 
 	return (float) $price;
@@ -154,20 +141,11 @@ function fs_row_wholesale_price( $post_id, $count, $curency = true, $wrap = '%s 
  */
 function fs_the_price( $post_id = 0, $wrap = "%s <span>%s</span>" ) {
 	global $post;
-	$config          = new \FS\FS_Config();
-	$cur_symb        = fs_currency();
-	$post_id         = empty( $post_id ) ? $post->ID : $post_id;
-	$displayed_price = get_post_meta( $post_id, $config->meta['displayed_price'], 1 );
-	$displayed_price = ! empty( $displayed_price ) ? $displayed_price : '';
-	$price           = fs_get_price( $post_id );
-	$price           = apply_filters( 'fs_price_format', $price );
-	if ( $displayed_price != "" ) {
-		$displayed_price = str_replace( '%d', '%01.2f', $displayed_price );
-		printf( $displayed_price, $price, $cur_symb );
-	} else {
-		printf( $wrap, $price, $cur_symb );
-	}
-
+	$cur_symb = fs_currency();
+	$post_id  = empty( $post_id ) ? $post->ID : $post_id;
+	$price    = fs_get_price( $post_id );
+	$price    = apply_filters( 'fs_price_format', $price );
+	printf( $wrap, $price, $cur_symb );
 }
 
 /**
@@ -651,8 +629,9 @@ function fs_user_viewed() {
 	$viewed = isset( $_SESSION['fs_user_settings']['viewed_product'] ) ? $_SESSION['fs_user_settings']['viewed_product'] : array();
 	$posts  = new stdClass();
 	if ( ! empty( $viewed ) ) {
-		$posts=new WP_Query(array('post_type'=>'product','post__in'=>$viewed));
+		$posts = new WP_Query( array( 'post_type' => 'product', 'post__in' => $viewed ) );
 	}
+
 	return $posts;
 }
 
