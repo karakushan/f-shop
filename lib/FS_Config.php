@@ -109,7 +109,7 @@ class FS_Config {
 			//атрибуты товара
 			'gallery'                => 'fs_galery',
 			//галерея
-			//'related_products'       => 'fs_related_products',
+			'related_products'       => 'fs_related_products',
 			//галерея
 		);
 
