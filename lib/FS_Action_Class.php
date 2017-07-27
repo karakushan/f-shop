@@ -57,5 +57,7 @@ class FS_Action_Class {
 		add_action( 'fs_per_page_filter','fs_per_page_filter', 10,2 );
 		/* выводит фильтр для сортировки по атрибутам */
 		add_action( 'fs_attr_filter','fs_attr_filter', 10,2 );
+		/* выводит корзину в определёном месте */
+		add_action( 'fs_cart_widget','fs_cart_widget', 10,1 );
 	}
 }

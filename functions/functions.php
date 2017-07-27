@@ -327,6 +327,7 @@ function fs_get_cart() {
 				'link'      => get_permalink( $key ),
 				'price'     => $price_show,
 				'all_price' => $all_price,
+				'code'      => fs_product_code( $key ),
 				'currency'  => fs_currency()
 			);
 		}
