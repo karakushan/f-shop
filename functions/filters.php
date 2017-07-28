@@ -96,30 +96,6 @@ function shiba_add_quick_edit( $column_name, $post_type ) {
 	}
 }
 
-/* Хук осуществляет поиск по метаполям */
-add_filter('posts_join', 'segnalazioni_search_join' );
-function segnalazioni_search_join ($join){
-	if (!isset($_GET['s']))  return $join;
-	global $pagenow, $wpdb;
-	// I want the filter only when performing a search on edit page of Custom Post Type named "segnalazioni"
-	if ( is_admin() && $pagenow=='edit.php' && $_GET['post_type']=='product' && $_GET['s'] != '') {
-		$join .='LEFT JOIN '.$wpdb->postmeta. ' ON '. $wpdb->posts . '.ID = ' . $wpdb->postmeta . '.post_id ';
-	}
-	return $join;
-}
-add_filter( 'posts_where', 'segnalazioni_search_where' );
-function segnalazioni_search_where( $where ){
-  if (!isset($_GET['s']))  return $where;
-	global $pagenow, $wpdb;
-	// I want the filter only when performing a search on edit page of Custom Post Type named "segnalazioni"
-	if ( is_admin() && $pagenow=='edit.php' && $_GET['post_type']=='product' && $_GET['s'] != '') {
-		$where = preg_replace(
-			"/\(\s*".$wpdb->posts.".post_title\s+LIKE\s*(\'[^\']+\')\s*\)/",
-			"(".$wpdb->posts.".post_title LIKE $1) OR (".$wpdb->postmeta.".meta_value LIKE $1)", $where );
-	}
-	return $where;
-}
-
 // изменяем запрос при сортировке колонки
 add_filter( 'pre_get_posts', 'fs_sort_admin_by', 30 );
 function fs_sort_admin_by( $object ) {
