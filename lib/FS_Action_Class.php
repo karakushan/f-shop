@@ -63,5 +63,7 @@ class FS_Action_Class {
 		add_action( 'fs_cart_quantity', 'fs_cart_quantity', 10, 3 );
 		/* Выводит кнопку для удаления всех товаров в корзине */
 		add_action( 'fs_delete_cart', 'fs_delete_cart', 10, 2 );
+		/* Выводит общую сумму всех товаров в корзине */
+		add_action( 'fs_total_amount', 'fs_total_amount', 10, 3 );
 	}
 }

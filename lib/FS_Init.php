@@ -31,11 +31,8 @@ class FS_Init {
 		new FS_Users_Class;
 		new FS_Api_Class();
 
-
 		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
-
-
 	} // END public function __construct
 
 	function true_load_plugin_textdomain() {
@@ -55,12 +52,10 @@ class FS_Init {
 		wp_enqueue_style( 'lightslider', $this->config->data['plugin_url'] . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/css/lightbox.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'font-awesome', $this->config->data['plugin_url'] . 'assets/fontawesome/css/font-awesome.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-
 		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 
 		wp_enqueue_script( "jquery-ui-core", array( 'jquery' ) );
 		wp_enqueue_script( "jquery-ui-slider", array( 'jquery' ) );
-
 		wp_enqueue_script( 'jquery-validate', $this->config->data['plugin_url'] . 'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'domurl', $this->config->data['plugin_url'] . 'assets/js/url.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true );
@@ -79,8 +74,6 @@ class FS_Init {
 	}
 
 	public function fast_shop_admin_scripts() {
-
-
 		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'font-bebas', $this->config->data['plugin_url'] . 'assets/fonts/BebasNeueBold/styles.css' );
 		wp_enqueue_style( 'spectrum', $this->config->data['plugin_url'] . 'assets/css/spectrum.css' );
@@ -110,58 +103,13 @@ class FS_Init {
 		wp_enqueue_script( 'fs-theme-' . $fs_theme, $this->config->data['plugin_url'] . 'assets/theme/' . $fs_theme . '/js/theme.js', array( 'jquery' ), null, true );
 	}
 
-
-	/**
-	 *Переадресовываем неавторизованных пользователей со страницы кабинета
-	 */
-	function redirect_users() {
-		/* if (is_page(fs_option('page_cabinet')) && !is_user_logged_in()){
-			 wp_redirect(get_permalink(fs_option('page_auth')));
-		 }*/
-	}
-
 	/**
 	 *Функция срабатывает один раз при активации плагина
 	 */
 	function fs_activate() {
-//		создаём таблицу заказов
-		global $wpdb;
-		$table_name = $this->config->data['table_orders'];
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) {
-			$sql = "CREATE TABLE $table_name
-            ( 
-	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`user_id` INT(11) NOT NULL,
-	`first_name` VARCHAR(50) NOT NULL,
-	`last_name` VARCHAR(50) NOT NULL,
-	`summa` FLOAT NOT NULL DEFAULT '0',
-	`status` INT(11) NOT NULL DEFAULT '0',
-	`products` TEXT NOT NULL,
-	`payment` INT(11) NOT NULL,
-	`delivery` INT(11) NOT NULL,
-	`address` VARCHAR(255) NOT NULL,
-	`city` VARCHAR(255) NOT NULL,
-	`email` VARCHAR(50) NOT NULL,
-	`comments` TEXT NOT NULL,
-	`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`phone` VARCHAR(50) NOT NULL,
-	`delivery_number` VARCHAR(50) NOT NULL,
-	`formdata` TEXT NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE INDEX `id` (`id`)
-            )
-            COLLATE='utf8_general_ci'
-            ENGINE=InnoDB
-            ";
-
-			dbDelta( $sql );
-		}
 		add_role( 'client', __( 'Client', 'fast-shop' ), array( 'read' => true, 'level_0' => true ) );
-
 	}
 
 	function fs_deactivate() {
-
 	}
 }
