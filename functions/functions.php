@@ -601,19 +601,22 @@ function fs_cart_quantity( $product_id, $value, $args = array() ) {
 	$value      = intval( $value );
 	$product_id = intval( $product_id );
 	$args       = wp_parse_args( $args, array(
-		'position' => '%pluss% %input% %minus%',
-		'pluss'    => array( 'class' => 'pluss', 'content' => '+' ),
-		'minus'    => array( 'class' => 'minus', 'content' => '-' ),
-		'input'    => array( 'class' => 'fs-cart-quantity' )
+		'wrapper_class' => 'fs-qty-wrapper',
+		'position'      => '%pluss% %input% %minus%',
+		'pluss'         => array( 'class' => 'fs-pluss', 'content' => '+' ),
+		'minus'         => array( 'class' => 'fs-minus', 'content' => '-' ),
+		'input'         => array( 'class' => 'fs-cart-quantity' )
 	) );
-	$pluss      = '<button type="button" class="' . $args['pluss']['class'] . '" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '">' . $args['pluss']['content'] . '</button> ';
-	$minus      = '<button type="button" class="' . $args['minus']['class'] . '" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '">' . $args['minus']['content'] . '</button> </div>';
-	$input      = '<input type="text" name="" value="' . $value . '" class="' . $args['input']['class'] . '" data-fs-type="cart-quantity" id="product-quantify-' . $product_id . '" data-product-id="' . $product_id . '">';
-	$quantity   = str_replace( array( '%pluss%', '%minus%', '%input%' ), array(
+
+	$pluss    = '<button type="button" class="' . $args['pluss']['class'] . '" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '">' . $args['pluss']['content'] . '</button> ';
+	$minus    = '<button type="button" class="' . $args['minus']['class'] . '" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '">' . $args['minus']['content'] . '</button> </div>';
+	$input    = '<input type="text" name="" value="' . $value . '" class="' . $args['input']['class'] . '" data-fs-type="cart-quantity" id="product-quantify-' . $product_id . '" data-product-id="' . $product_id . '">';
+	$quantity = str_replace( array( '%pluss%', '%minus%', '%input%' ), array(
 		$pluss,
 		$minus,
 		$input
 	), $args['position'] );
+	$quantity = '<div class="' . $args['wrapper_class']. '">' . $quantity . '</div>';
 	echo $quantity;
 }
 

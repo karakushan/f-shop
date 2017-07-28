@@ -32,8 +32,7 @@ class FS_Init {
 		new FS_Api_Class();
 
 
-
-		add_filter( "plugin_action_links_".FS_BASENAME, array( $this, 'plugin_settings_link' ) );
+		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
 
 
@@ -45,7 +44,7 @@ class FS_Init {
 
 	// Add the settings link to the plugins page
 	function plugin_settings_link( $links ) {
-		$settings_link = '<a href="edit.php?post_type=product&page=fast-shop-settings">'.__('Settings').'</a>';
+		$settings_link = '<a href="edit.php?post_type=product&page=fast-shop-settings">' . __( 'Settings' ) . '</a>';
 		array_unshift( $links, $settings_link );
 
 		return $links;
@@ -94,10 +93,11 @@ class FS_Init {
 		wp_enqueue_script( 'js-cookie', $this->config->data['plugin_url'] . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'fs-library', $this->config->data['plugin_url'] . 'assets/js/fs-library.js', array( 'jquery' ), null, true );
 
-		if (!empty($_GET['post_type']) && $_GET['post_type']=='product'){
-			wp_enqueue_script( 'fs-quick-edit', $this->config->data['plugin_url'] . 'assets/js/quick-edit.js',  array( 'jquery' ), null, true );
+		$screen = get_current_screen();
+		if ( $screen->id == 'edit-product' ) {
+			wp_enqueue_script( 'fs-quick-edit', $this->config->data['plugin_url'] . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
 		}
-		
+
 		wp_enqueue_script( 'fs-admin', $this->config->data['plugin_url'] . 'assets/js/fs-admin.js', array(
 			'jquery',
 			'fs-library',
