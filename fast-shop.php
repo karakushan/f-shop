@@ -51,8 +51,4 @@ if ( FS_DEBUG === true ) {
 if ( ! class_exists( '\FS\FS_Init', false ) ) {
 	$fs_init              = new \FS\FS_Init;
 	$GLOBALS['fs_config'] = new FS\FS_Config();
-
-	// хуки срабатывают в момент активации и деактивации плагина
-	register_activation_hook( __FILE__, array( $fs_init, 'fs_activate' ) );
-	register_deactivation_hook( __FILE__, array( $fs_init, 'fs_deactivate' ) );
 }

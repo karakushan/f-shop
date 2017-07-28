@@ -48,7 +48,7 @@ class FS_Config {
 			)
 		);
 		$this->data = apply_filters( 'fs_data', $data );
-		
+
 		//Табы отображаемые в метабоксе в редактировании товара
 		$this->tabs = array(
 			'0' => array(
@@ -83,9 +83,9 @@ class FS_Config {
 
 		//Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
 		$meta = array(
-			'price'                  => 'fs_price',
+			'price'            => 'fs_price',
 			//базовая цена
-			'action_price'           => 'fs_action_price',
+			'action_price'     => 'fs_action_price',
 			//акционная цена, перебивает цену
 			//'wholesale_price'        => 'fs_wholesale_price',
 			//цена для оптовиков
@@ -93,11 +93,11 @@ class FS_Config {
 			//цена для оптовиков акционная
 			//'discount'               => 'fs_discount',
 			//размер скидки
-			'product_article'        => 'fs_articul',
+			'product_article'  => 'fs_articul',
 			//артикул
 			//'availability'           => 'fs_availability',
 			//наличие на складе
-			'remaining_amount'       => 'fs_remaining_amount',
+			'remaining_amount' => 'fs_remaining_amount',
 			//запас товаров на складе
 			//'action'                 => 'fs_actions',
 			//включить  или выключить акцию
@@ -107,9 +107,9 @@ class FS_Config {
 			//тображаемая цена
 			//'attributes'             => 'fs_attributes_post',
 			//атрибуты товара
-			'gallery'                => 'fs_galery',
+			'gallery'          => 'fs_galery',
 			//галерея
-			'related_products'       => 'fs_related_products',
+			'related_products' => 'fs_related_products',
 			//галерея
 		);
 
@@ -117,13 +117,13 @@ class FS_Config {
 
 		//  устанавливаем основные типы цен
 		self::$prices = array(
-			'price'           => array(
+			'price'        => array(
 				'name'        => __( 'The base price', 'fast-shop' ),
 				'meta_key'    => $this->meta['price'],
 				'on'          => true,
 				'description' => __( 'This is the main type prices', 'fast-shop' )
 			),
-			'action_price'    => array(
+			'action_price' => array(
 				'name'        => __( 'Promotional price', 'fast-shop' ),
 				'meta_key'    => $this->meta['action_price'],
 				'on'          => true,
@@ -163,6 +163,53 @@ class FS_Config {
 			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'required' => true ),
 			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
 		);
+	}
+
+	public static function default_order_statuses() {
+		$order_statuses = array(
+			'new'          => array(
+				'name'        => 'Новый',
+				'description' => 'Обо всех заказах со статусом “Новый” администратор получает уведомления по почте, что позволяет ему мгновенно связываться с покупателем. Для удобства учета новых заказов, они автоматически попадают во вкладку “Новые” на панели управления заказами и отображаются в виде списка с сортировкой по дате добавления.'
+			),
+			'processed'    => array(
+				'name'        => 'Обработан',
+				'description' => 'Заказ принят и может быть оплачен. Статус введен, в основном, для удобства внутреннего ведения заказов, уже не “Новые”, но еще не оплаченные или не отправленные в доставку;',
+			),
+			'pay'          => array(
+				'name'        => 'Оплачивается',
+				'description' => 'Статус может быть назначен администратором, после отправки клиенту счета для оплаты.'
+			),
+			'paid'         => array(
+				'name'        => 'Оплачен',
+				'description' => 'Статус присваивается заказу автоматически, если расчет произведен через платежную систему Деньги Online. В случае, если товар был доставлен курьером и оплачен наличными, статус может использоваться как отчетный;'
+			),
+			'for-delivery' => array(
+				'name'        => 'В доставку',
+				'description' => 'Администратор присваивает заказам этот статус при составлении листа доставки. Лист передается курьеру вместе с товарами.'
+			),
+			'delivered'    => array(
+				'name'        => 'Доставляется',
+				'description' => 'Статус присваивается заказам, переданным курьеру. Заказ может сохранять этот статус достаточно долго, в зависимости от того как далеко находится клиент;'
+			),
+			'ready'        => array(
+				'name'        => 'Готов',
+				'description' => 'Cтатус присваивается заказу, если товар доставлен, оплачен, и его можно отправить в архив. Заказы с этим статусом нужны вам только для внутреннего учета.'
+			),
+			'refused'      => array(
+				'name'        => 'Отказан',
+				'description' => 'Статус присваивается заказам, которые не могут быть удовлетворены (например, товара нет на складе). Позже вы в любой момент можете изменить статус заказа (например, если товар появился на складе);'
+			),
+			'canceled'     => array(
+				'name'        => 'Отменен',
+				'description' => 'Администратор присваивает заказу такой статус, если клиент по каким-то причинам отказался от заказа;'
+			),
+			'return'       => array(
+				'name'        => 'Возврат',
+				'description' => 'Администратор присваивает заказу такой статус, если клиент по каким-то причинам вернул товар.'
+			),
+		);
+
+		return apply_filters( 'fs_order_statuses', $order_statuses );
 	}
 
 
