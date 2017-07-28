@@ -480,7 +480,6 @@ jQuery(document).ready(function ($) {
 jQuery(document).ready(function ($) {
     $('[data-fs-type="delete-cart"]').on('click', function (event) {
         event.preventDefault();
-        console.log('click');
         if (confirm(fs_message.delete_all_text)) {
             document.location.href = $(this).data('url');
         }
