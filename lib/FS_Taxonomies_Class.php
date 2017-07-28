@@ -57,7 +57,8 @@ class FS_Taxonomies_Class {
 				"publicly_queryable" => false,
 
 				'metabox'           => false,
-				'show_admin_column' => false
+				'show_admin_column' => false,
+
 			),
 			'fs-delivery-methods'                   => array(
 				'label'              => __( 'Delivery methods', 'fast-shop' ),
@@ -70,9 +71,9 @@ class FS_Taxonomies_Class {
 				"public"             => false,
 				"show_ui"            => true,
 				"publicly_queryable" => false,
-
 				'metabox'           => false,
-				'show_admin_column' => false
+				'show_admin_column' => false,
+				'show_in_quick_edit'    => false
 			),
 			'product-attributes'                    => array(
 				'label'              => __( 'Product attributes', 'fast-shop' ),
@@ -87,8 +88,9 @@ class FS_Taxonomies_Class {
 				"publicly_queryable" => true,
 
 				'metabox'           => null,
-				'show_admin_column' => true,
-				'hierarchical'      => true
+				'show_admin_column' => false,
+				'hierarchical'      => true,
+				'show_in_quick_edit'    => false
 			)
 		);
 

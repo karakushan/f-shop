@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-23 11:41+0000\n"
-"PO-Revision-Date: 2017-07-23 11:42+0000\n"
+"POT-Creation-Date: 2017-07-28 07:06+0000\n"
+"PO-Revision-Date: 2017-07-28 07:06+0000\n"
 "Last-Translator: sharf-admin <karakushan@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
@@ -25,22 +25,13 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Loco-Target-Locale: ru_RU"
 
-#: lib/FS_Post_Type.php:92
-msgid "Add Order"
-msgstr "Добавить заказ"
+#: functions/filters.php:19
+msgid "ID"
+msgstr ""
 
-#: lib/FS_Post_Type.php:94
-msgid "Edit order"
-msgstr "Изменить заказ"
-
-#: lib/FS_Taxonomies_Class.php:100 lib/FS_Taxonomies_Class.php:102
-#: lib/FS_Taxonomies_Class.php:103
-msgid "Order statuses"
-msgstr "Статусы заказов"
-
-#: lib/FS_Taxonomies_Class.php:104
-msgid "Add status"
-msgstr "Добавить статус"
+#: functions/filters.php:86
+msgid "units"
+msgstr "единиц"
 
 #: templates/back-end/metabox/tab-3.php:10
 msgid "Запас товара на складе"
@@ -59,51 +50,59 @@ msgstr ""
 msgid "Choose a shipping method"
 msgstr "Выберите способ доставки"
 
-#: functions/actions.php:99
+#: functions/actions.php:107
 msgid "Views"
 msgstr "Просмотров"
 
-#: functions/actions.php:106
+#: functions/actions.php:114
 msgid "It looks like your site has not been visited yet."
 msgstr "Похоже что кроме вас ваш сайт ещё никто не посещал."
 
-#: functions/actions.php:114
+#: functions/actions.php:122
 msgid "Popular items"
 msgstr "Популярные товары"
 
-#: functions/attributes.php:169
+#: functions/attributes.php:181 functions/filters.php:50
 msgid "in stock"
 msgstr "в наличии"
 
-#: functions/attributes.php:170
+#: functions/attributes.php:182 functions/filters.php:52
 msgid "not available"
 msgstr "нет  в наличии"
 
-#: functions/filters.php:17
+#: functions/filters.php:20 functions/filters.php:78
 msgid "Price"
 msgstr "Цена"
 
-#: functions/filters.php:18
+#: functions/filters.php:21 functions/filters.php:82
+msgid "Vendor code"
+msgstr "Артикул"
+
+#: functions/filters.php:22 functions/filters.php:86
+msgid "Stock in stock"
+msgstr "Наличие на складе"
+
+#: functions/filters.php:23
 msgid "Photo"
 msgstr "Фото"
 
-#: functions/filters.php:37
+#: functions/filters.php:61
 msgid "no photo"
 msgstr "нет фото"
 
-#: functions/functions.php:383
+#: functions/functions.php:348
 msgid "Remove items"
 msgstr "Удалить позицию"
 
-#: functions/functions.php:477
+#: functions/functions.php:446
 msgid "Add to cart"
 msgstr "В корзину"
 
-#: functions/functions.php:791
+#: functions/functions.php:777
 msgid "add to wish list"
 msgstr "добавить в список желаний"
 
-#: functions/functions.php:1257 templates/front-end/auth/profile.php:9
+#: functions/functions.php:1247 templates/front-end/auth/profile.php:9
 #: templates/front-end/auth/profile.php:13
 #: templates/front-end/auth/register.php:10
 #: templates/front-end/auth/register.php:15
@@ -145,19 +144,6 @@ msgstr "Акционая цена"
 msgid "This type of price interrupts the base price"
 msgstr "Этот тип цены перебивает базовую цену"
 
-#: lib/FS_Config.php:133
-msgid "The displayed price"
-msgstr "Отображаемая цена"
-
-#: lib/FS_Config.php:136
-#, php-format
-msgid ""
-"example: \"from %d %c for a couple\" (%d - replaced with the price of %s on "
-"currency)"
-msgstr ""
-"пример:  \"от %d %c за штуку\" (%d - будет заменено на цену, а %s на символ "
-"валюты)"
-
 #: lib/FS_Export_Class.php:163
 msgid "Update/create database was successful!"
 msgstr "Обновление создание базы закончилось успехом!"
@@ -170,7 +156,7 @@ msgstr "Произошла непредвиденная ошибка в проц
 msgid "Product category"
 msgstr "Категории товаров"
 
-#: lib/FS_Init.php:155
+#: lib/FS_Init.php:157
 msgid "Client"
 msgstr "Клиент"
 
@@ -200,6 +186,14 @@ msgstr "Заказы"
 msgid "Order"
 msgstr "Заказ"
 
+#: lib/FS_Post_Type.php:92
+msgid "Add Order"
+msgstr "Добавить заказ"
+
+#: lib/FS_Post_Type.php:94
+msgid "Edit order"
+msgstr "Изменить заказ"
+
 #: lib/FS_Post_Type.php:184
 msgid "Product settings"
 msgstr "Настройки товара"
@@ -225,39 +219,48 @@ msgstr "Редактирование категории"
 msgid "Add category"
 msgstr "Добавить категорию "
 
-#: lib/FS_Taxonomies_Class.php:44 lib/FS_Taxonomies_Class.php:46
+#: lib/FS_Taxonomies_Class.php:48 lib/FS_Taxonomies_Class.php:50
 msgid "Payment methods"
 msgstr "Способы оплаты"
 
-#: lib/FS_Taxonomies_Class.php:47 templates/front-end/auth/profile.php:53
+#: lib/FS_Taxonomies_Class.php:51 templates/front-end/auth/profile.php:53
 #: templates/front-end/auth/register.php:61
 msgid "Payment method"
 msgstr "Способ оплаты"
 
-#: lib/FS_Taxonomies_Class.php:48
+#: lib/FS_Taxonomies_Class.php:52
 msgid "Add a payment method"
 msgstr "Добавление способа оплаты"
 
-#: lib/FS_Taxonomies_Class.php:59 lib/FS_Taxonomies_Class.php:61
+#: lib/FS_Taxonomies_Class.php:64 lib/FS_Taxonomies_Class.php:66
 msgid "Delivery methods"
 msgstr "Способы доставки"
 
-#: lib/FS_Taxonomies_Class.php:62
+#: lib/FS_Taxonomies_Class.php:67
 msgid "Delivery method"
 msgstr "Способ доставки"
 
-#: lib/FS_Taxonomies_Class.php:63
+#: lib/FS_Taxonomies_Class.php:68
 msgid "Add a delivery method"
 msgstr "Добавление способа доставки"
 
-#: lib/FS_Taxonomies_Class.php:74 lib/FS_Taxonomies_Class.php:76
-#: lib/FS_Taxonomies_Class.php:77
+#: lib/FS_Taxonomies_Class.php:79 lib/FS_Taxonomies_Class.php:81
+#: lib/FS_Taxonomies_Class.php:82
 msgid "Product attributes"
 msgstr "Свойства товаров"
 
-#: lib/FS_Taxonomies_Class.php:78
+#: lib/FS_Taxonomies_Class.php:83
 msgid "Add property / group of properties"
 msgstr "Добавление свойства/группы свойств"
+
+#: lib/FS_Taxonomies_Class.php:106 lib/FS_Taxonomies_Class.php:108
+#: lib/FS_Taxonomies_Class.php:109
+msgid "Order statuses"
+msgstr "Статусы заказов"
+
+#: lib/FS_Taxonomies_Class.php:110
+msgid "Add status"
+msgstr "Добавить статус"
 
 #: templates/back-end/orders.php:36
 #: templates/front-end/mail/themes/oxygen.php:457
@@ -308,6 +311,10 @@ msgstr "Экспорт"
 #: templates/back-end/settings.php:260
 msgid "Settings export and import of goods"
 msgstr "Настройки экспорта и импорта товаров"
+
+#: templates/back-end/metabox/tab-2.php:20
+msgid "Remove from gallery"
+msgstr "Удалить из галереи"
 
 #: templates/back-end/metabox/tab-3.php:6
 msgid "Article"

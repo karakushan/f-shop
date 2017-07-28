@@ -9,34 +9,115 @@ function fs_price_format( $price, $delimiter = '' ) {
 	return $price;
 }
 
+
 // создаем новую колонку
 add_filter( 'manage_edit-product_columns', 'add_views_column', 4 );
 function add_views_column( $columns ) {
 	$num         = 2; // после какой по счету колонки вставлять новые
 	$new_columns = array(
-		'fs_price' => __( 'Price', 'fast-shop' ),
-		'fs_photo' => __( 'Photo', 'fast-shop' ),
+		'fs_id'          => __( 'ID', 'fast-shop' ),
+		'fs_price'       => __( 'Price', 'fast-shop' ),
+		'fs_vendor_code' => __( 'Vendor code', 'fast-shop' ),
+		'fs_stock'       => __( 'Stock in stock', 'fast-shop' ),
+		'fs_photo'       => __( 'Photo', 'fast-shop' )
+
 	);
 
 	return array_slice( $columns, 0, $num ) + $new_columns + array_slice( $columns, $num );
 }
 
+
+
 // заполняем колонку данными
 add_filter( 'manage_product_posts_custom_column', 'fill_views_column', 5, 2 ); // wp-admin/includes/class-wp-posts-list-table.php
 function fill_views_column( $colname, $post_id ) {
-	if ( $colname === 'fs_price' ) {
+	$config = new \FS\FS_Config();
+	switch ( $colname ) {
+		case "fs_id":
+			echo $post_id;
+			break;
+		case "fs_price":
+			$price = apply_filters( 'fs_price_format', (float) get_post_meta( $post_id, $config->meta['price'], 1 ) );
+			echo '<span class="fs-price-blank">' . $price . '</span> ' . fs_currency();
+
+			break;
+		case "fs_vendor_code":
+			echo get_post_meta( $post_id, $config->meta['product_article'], 1 );
+			break;
+		case "fs_stock":
+			$stock      = get_post_meta( $post_id, $config->meta['remaining_amount'], 1 );
+			$stock_real = get_post_meta( $post_id, $config->meta['remaining_amount'], 1 );
+			if ( $stock == '' || $stock > 0 ) {
+				$stock = __( 'in stock', 'fast-shop' );
+			} else {
+				$stock = __( 'not available', 'fast-shop' );
+			}
+			echo $stock . '<span class="fs_stock_real" style="display:none">' . $stock_real . '</span>';
+			break;
+		case "fs_photo":
+			$sizes = fs_get_image_sizes();
+			if ( has_post_thumbnail() ) {
+				the_post_thumbnail( 'thumbnail' );
+			} else {
+				echo '<div class="fs_admin_col_photo " style="width:' . $sizes['thumbnail']['width'] . 'px;height:' . $sizes['thumbnail']['height'] . 'px;">' . __( 'no photo', 'fast-shop' ) . '</div>';
+			}
+			break;
+	}
+}
+
+// Выводим поле в быстром редактировании записи
+add_action( 'quick_edit_custom_box', 'shiba_add_quick_edit', 10, 2 );
+function shiba_add_quick_edit( $column_name, $post_type ) {
+	if ( $column_name == 'fs_price' && $post_type == 'product' ) {
 		$config = new \FS\FS_Config();
-		$price  = apply_filters( 'fs_price_format', (float) get_post_meta( $post_id, $config->meta['price'], 1 ) );
-		echo $price . ' ' . fs_currency();
+		?>
+
+    <fieldset class="inline-edit-col-left inline-edit-fast-shop">
+      <legend class="inline-edit-legend">Настройки товара</legend>
+      <div class="inline-edit-col">
+        <label>
+          <span class="title"><?php _e( 'Price', 'fast-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
+          <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['price'] ?>" class="fs_price"
+                                               value="" required></span>
+        </label>
+        <label>
+          <span class="title"><?php _e( 'Vendor code', 'fast-shop' ) ?></span>
+          <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['product_article'] ?>"
+                                               class="fs_vendor_code" value=""></span>
+        </label>
+        <label>
+          <span class="title"><?php _e( 'Stock in stock', 'fast-shop' ) ?> (<?php _e( 'units', 'fast-shop' ) ?>)</span>
+          <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['remaining_amount'] ?>"
+                                               class="fs_stock" value=""></span>
+        </label>
+      </div>
+    </fieldset>
+		<?php
 	}
-	if ( $colname === 'fs_photo' ) {
-		$sizes = fs_get_image_sizes();
-		if ( has_post_thumbnail() ) {
-			the_post_thumbnail( 'thumbnail' );
-		} else {
-			echo '<div class="fs_admin_col_photo " style="width:' . $sizes['thumbnail']['width'] . 'px;height:' . $sizes['thumbnail']['height'] . 'px;">' . __( 'no photo', 'fast-shop' ) . '</div>';
-		}
+}
+
+/* Хук осуществляет поиск по метаполям */
+add_filter('posts_join', 'segnalazioni_search_join' );
+function segnalazioni_search_join ($join){
+	if (!isset($_GET['s']))  return $join;
+	global $pagenow, $wpdb;
+	// I want the filter only when performing a search on edit page of Custom Post Type named "segnalazioni"
+	if ( is_admin() && $pagenow=='edit.php' && $_GET['post_type']=='product' && $_GET['s'] != '') {
+		$join .='LEFT JOIN '.$wpdb->postmeta. ' ON '. $wpdb->posts . '.ID = ' . $wpdb->postmeta . '.post_id ';
 	}
+	return $join;
+}
+add_filter( 'posts_where', 'segnalazioni_search_where' );
+function segnalazioni_search_where( $where ){
+  if (!isset($_GET['s']))  return $where;
+	global $pagenow, $wpdb;
+	// I want the filter only when performing a search on edit page of Custom Post Type named "segnalazioni"
+	if ( is_admin() && $pagenow=='edit.php' && $_GET['post_type']=='product' && $_GET['s'] != '') {
+		$where = preg_replace(
+			"/\(\s*".$wpdb->posts.".post_title\s+LIKE\s*(\'[^\']+\')\s*\)/",
+			"(".$wpdb->posts.".post_title LIKE $1) OR (".$wpdb->postmeta.".meta_value LIKE $1)", $where );
+	}
+	return $where;
 }
 
 // изменяем запрос при сортировке колонки
@@ -54,7 +135,7 @@ function fs_sort_admin_by( $object ) {
 		$object->set( 'order', (string) $_GET['order'] );
 
 	} //	сортируем по дате
-	elseif (! empty( $_GET['orderby'] ) && $_GET['orderby'] == 'date' ) {
+  elseif ( ! empty( $_GET['orderby'] ) && $_GET['orderby'] == 'date' ) {
 		$object->set( 'orderby', 'date' );
 		$object->set( 'order', (string) $_GET['order'] );
 	}//	сортируем по умолчанию по  дате
