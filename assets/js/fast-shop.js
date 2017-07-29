@@ -231,13 +231,19 @@ jQuery(function ($) {
                     if (response) {
                         try {
                             var jsonData = JSON.parse(response);
-                            // создаём событие
-                            var send_order = new CustomEvent("fs_send_order", {
-                                detail: {order_id: jsonData.order_id}
-                            });
-                            document.dispatchEvent(send_order);
-                            if (jsonData.redirect != false) document.location.href = jsonData.redirect;
-                            $('[data-fs-action="order-send"]').html('Отправлено');
+                            /* если статус заказ успешный */
+                            if (jsonData.success) {
+                                // создаём событие
+                                var send_order = new CustomEvent("fs_send_order", {
+                                    detail: {order_id: jsonData.order_id}
+                                });
+                                document.dispatchEvent(send_order);
+                                console.log(jsonData.text);
+                                $('[data-fs-action="order-send"]').html('Отправлено');
+                                if (jsonData.redirect != false) document.location.href = jsonData.redirect;
+                            } else {
+                                console.log(jsonData.text);
+                            }
                         } catch (e) {
                             console.log(response);
                         }

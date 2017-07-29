@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-28 07:06+0000\n"
+"POT-Creation-Date: 2017-07-29 22:12+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -47,23 +47,23 @@ msgstr ""
 msgid "not available"
 msgstr ""
 
-#: functions/filters.php:19
+#: functions/filters.php:18
 msgid "ID"
 msgstr ""
 
-#: functions/filters.php:20 functions/filters.php:78
+#: functions/filters.php:19 functions/filters.php:121
 msgid "Price"
 msgstr ""
 
-#: functions/filters.php:21 functions/filters.php:82
+#: functions/filters.php:20 functions/filters.php:126
 msgid "Vendor code"
 msgstr ""
 
-#: functions/filters.php:22 functions/filters.php:86
+#: functions/filters.php:21 functions/filters.php:131
 msgid "Stock in stock"
 msgstr ""
 
-#: functions/filters.php:23
+#: functions/filters.php:22
 msgid "Photo"
 msgstr ""
 
@@ -71,7 +71,27 @@ msgstr ""
 msgid "no photo"
 msgstr ""
 
-#: functions/filters.php:86
+#: functions/filters.php:73
+msgid "Total cost"
+msgstr ""
+
+#: functions/filters.php:74
+msgid "Customer"
+msgstr ""
+
+#: functions/filters.php:99
+msgid "phone"
+msgstr ""
+
+#: functions/filters.php:100
+msgid "email"
+msgstr ""
+
+#: functions/filters.php:101
+msgid "city"
+msgstr ""
+
+#: functions/filters.php:131
 msgid "units"
 msgstr ""
 
@@ -83,11 +103,11 @@ msgstr ""
 msgid "Add to cart"
 msgstr ""
 
-#: functions/functions.php:777
+#: functions/functions.php:807
 msgid "add to wish list"
 msgstr ""
 
-#: functions/functions.php:1247 templates/front-end/auth/profile.php:9
+#: functions/functions.php:1277 templates/front-end/auth/profile.php:9
 #: templates/front-end/auth/profile.php:13
 #: templates/front-end/auth/register.php:10
 #: templates/front-end/auth/register.php:15
@@ -141,7 +161,7 @@ msgstr ""
 msgid "Product category"
 msgstr ""
 
-#: lib/FS_Init.php:157
+#: lib/FS_Init.php:112
 msgid "Client"
 msgstr ""
 
@@ -162,7 +182,6 @@ msgid "Edit product"
 msgstr ""
 
 #: lib/FS_Post_Type.php:90 lib/FS_Post_Type.php:101
-#: lib/FS_Settings_Class.php:57 lib/FS_Settings_Class.php:58
 #: templates/back-end/orders.php:2
 msgid "Orders"
 msgstr ""
@@ -179,11 +198,23 @@ msgstr ""
 msgid "Edit order"
 msgstr ""
 
-#: lib/FS_Post_Type.php:184
+#: lib/FS_Post_Type.php:188
 msgid "Product settings"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:67 lib/FS_Settings_Class.php:68
+#: lib/FS_Post_Type.php:198
+msgid "List of products"
+msgstr ""
+
+#: lib/FS_Post_Type.php:208
+msgid "Customer data"
+msgstr ""
+
+#: lib/FS_Post_Type.php:218
+msgid "Order status"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:55 lib/FS_Settings_Class.php:56
 #: templates/back-end/settings.php:2
 msgid "Store settings"
 msgstr ""

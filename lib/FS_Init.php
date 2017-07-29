@@ -12,8 +12,6 @@ class FS_Init {
 
 		add_action( 'wp_enqueue_scripts', array( &$this, 'fast_shop_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'fast_shop_admin_scripts' ) );
-		add_action( 'template_redirect', array( $this, 'redirect_users' ) );
-
 		// Инициализация классов Fast Shop
 		$GLOBALS['fs_option'] = get_option( 'fs_option' );
 		new FS_Settings_Class;

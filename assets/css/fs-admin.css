@@ -431,4 +431,10 @@ td.fs_photo.column-fs_photo {
 .fsdw_popular {
   width: 100%; }
 
+.order-list thead th {
+  background-color: #f5f5f5; }
+
+.order-user {
+  max-width: 480px; }
+
 /*# sourceMappingURL=fs-admin.css.map */

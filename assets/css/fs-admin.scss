@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,400i,700,700i&subset=cyrillic');
-
 @import "mixins";
 
 .fs-add-attr {
@@ -564,9 +563,11 @@ td.fs_price.column-fs_price span span {
 #fs-order-info table {
     width: auto;
 }
+
 td.fs_photo.column-fs_photo {
     vertical-align: middle;
 }
+
 .fs_admin_col_photo {
     height: 150px;
     width: 150px;
@@ -580,8 +581,20 @@ td.fs_photo.column-fs_photo {
     font-size: 1.5em;
     background-color: #f7f7f7;
 }
+
 .fsdw_popular {
     width: 100%;
+}
+
+.order-list {
+    thead {
+        th {
+            background-color: #f5f5f5;
+        }
+    }
+}
+.order-user{
+    max-width: 480px;
 }
 
 

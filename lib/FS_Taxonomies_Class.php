@@ -102,7 +102,7 @@ class FS_Taxonomies_Class {
 		}
 
 		/* регистрируем таксономию статусов заказа 'order-statuses' для посто типа заказ 'order' */
-		register_taxonomy( 'order-statuses', 'order', array(
+		register_taxonomy( 'order-statuses', 'orders', array(
 			'label'              => __( 'Order statuses', 'fast-shop' ),
 			'labels'             => array(
 				'name'          => __( 'Order statuses', 'fast-shop' ),
@@ -113,9 +113,9 @@ class FS_Taxonomies_Class {
 			"public"             => true,
 			"show_ui"            => true,
 			"publicly_queryable" => false,
-			'metabox'            => null,
-			'show_admin_column'  => false,
-			'hierarchical'       => false
+			'metabox'            => false,
+			'show_admin_column'  => true,
+			'hierarchical'       => true
 		) );
 
 		add_action( "product-attributes_edit_form_fields", array( $this, 'edit_product_attr_fields' ) );

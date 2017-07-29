@@ -84,7 +84,7 @@ class FS_Post_Type {
 		);
 
 		/* Регистрируем тип постов - заказы */
-		register_post_type( 'order',
+		register_post_type( 'orders',
 			array(
 				'labels'             => array(
 					'name'               => __( 'Orders', 'fast-shop' ),
@@ -115,8 +115,7 @@ class FS_Post_Type {
 				'query_var'          => true,
 				'taxonomies'         => array( 'order-statuses' ),
 				'description'        => __( "Здесь размещены заказы с вашего сайта." ),
-
-				'supports' => array(
+				'supports'           => array(
 					'title',
 					'comments'
 				)
@@ -136,7 +135,7 @@ class FS_Post_Type {
 
 		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] == self::POST_TYPE && current_user_can( 'edit_post', $post_id ) ) {
 			foreach ( @$this->config->meta as $field_name ) {
-				if (!isset($_POST[ $field_name ])) {
+				if ( ! isset( $_POST[ $field_name ] ) ) {
 					delete_post_meta( $post_id, $field_name );
 					continue;
 				}
@@ -182,6 +181,7 @@ class FS_Post_Type {
 	 * hook into WP's add_meta_boxes action hook
 	 */
 	public function add_meta_boxes() {
+		remove_meta_box( 'order-statusesdiv', 'orders', 'side' );
 		// Add this metabox to every selected post
 		add_meta_box(
 			sprintf( 'fast_shop_%s_metabox', self::POST_TYPE ),
@@ -190,6 +190,36 @@ class FS_Post_Type {
 			self::POST_TYPE,
 			'normal',
 			'high'
+		);
+
+		// добавляем метабокс списка товаров в заказе
+		add_meta_box(
+			sprintf( 'fast_shop_%s_metabox', 'orders' ),
+			__( 'List of products', 'fast-shop' ),
+			array( &$this, 'add_order_products_meta_boxes' ),
+			'orders',
+			'normal',
+			'high'
+		);
+
+		// добавляем метабокс списка товаров в заказе
+		add_meta_box(
+			sprintf( 'fast_shop_%s_user_metabox', 'orders' ),
+			__( 'Customer data', 'fast-shop' ),
+			array( &$this, 'add_order_user_meta_boxes' ),
+			'orders',
+			'normal',
+			'default'
+		);
+
+		// добавляем метабокс изменения статуса  заказа
+		add_meta_box(
+			sprintf( 'fast_shop_%s_status_metabox', 'orders' ),
+			__( 'Order status', 'fast-shop' ),
+			array( &$this, 'add_order_status_meta_boxes' ),
+			'orders',
+			'side',
+			'default'
 		);
 
 		// Add this metabox to every selected post
@@ -266,6 +296,58 @@ class FS_Post_Type {
 
 		}
 		echo '</div>';
+	}
+
+	/* метабокс списка товаров в редактировании заказа */
+	public function add_order_products_meta_boxes( $post ) {
+		$products = get_post_meta( $post->ID, '_products', 0 );
+		$products = $products[0];
+		$amount   = get_post_meta( $post->ID, '_amount', 1 );
+		$amount   = apply_filters( 'fs_price_format', $amount );
+		$amount   = $amount . ' ' . fs_currency();
+		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-0.php';
+	}
+
+	/* метабокс данных пользователя в редактировании заказа */
+	public function add_order_user_meta_boxes( $post ) {
+		$user     = get_post_meta( $post->ID, '_user', 0 );
+		$user     = $user[0];
+		$payment  = get_post_meta( $post->ID, '_payment', 1 );
+		$delivery = get_post_meta( $post->ID, '_delivery', 0 );
+		$delivery = $delivery[0];
+
+		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-1.php';
+	}
+
+	/* метабокс отображает select для изменения статуса заказаы */
+	public function add_order_status_meta_boxes( $post ) {
+		$term    = get_the_terms( $post, 'order-statuses' );
+		$term_id = intval( $term[0]->term_id );
+		$args    = array(
+			'show_option_all'  => '',
+			'show_option_none' => '',
+			'orderby'          => 'ID',
+			'order'            => 'ASC',
+			'show_last_update' => 0,
+			'show_count'       => 0,
+			'hide_empty'       => 0,
+			'child_of'         => 0,
+			'exclude'          => '',
+			'echo'             => 1,
+			'selected'         => $term_id,
+			'hierarchical'     => 0,
+			'name'             => 'tax_input[order-statuses][]',
+			'id'               => 'order-statuses',
+			'class'            => 'order-statuses',
+			'depth'            => 0,
+			'tab_index'        => 0,
+			'taxonomy'         => 'order-statuses',
+			'hide_if_empty'    => false,
+			'value_field'      => 'term_id', // значение value e option
+			'required'         => false,
+		);
+
+		wp_dropdown_categories( $args );
 	}
 
 

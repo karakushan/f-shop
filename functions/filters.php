@@ -27,9 +27,8 @@ function add_views_column( $columns ) {
 }
 
 
-
 // заполняем колонку данными
-add_filter( 'manage_product_posts_custom_column', 'fill_views_column', 5, 2 ); // wp-admin/includes/class-wp-posts-list-table.php
+add_filter( 'manage_product_posts_custom_column', 'fill_views_column', 5, 2 );
 function fill_views_column( $colname, $post_id ) {
 	$config = new \FS\FS_Config();
 	switch ( $colname ) {
@@ -63,6 +62,49 @@ function fill_views_column( $colname, $post_id ) {
 			}
 			break;
 	}
+}
+
+// создаем новую колонку
+add_filter( 'manage_edit-orders_columns', 'fs_edit_orders_columns', 4 );
+function fs_edit_orders_columns( $columns ) {
+	$num         = 2; // после какой по счету колонки вставлять новые
+	$new_columns = array(
+//		'fs_order_id'     => __( 'ID', 'fast-shop' ),
+		'fs_order_amount' => __( 'Total cost', 'fast-shop' ),
+		'fs_user'         => __( 'Customer', 'fast-shop' )
+
+	);
+
+	return array_slice( $columns, 0, $num ) + $new_columns + array_slice( $columns, $num );
+}
+
+add_filter( 'manage_orders_posts_custom_column', 'fs_orders_posts_custom_column', 5, 2 );
+function fs_orders_posts_custom_column( $colname, $post_id ) {
+	switch ( $colname ) {
+		/*	case 'fs_order_id':
+				echo $post_id;
+				break;*/
+		case 'fs_order_amount':
+			$amount = get_post_meta( $post_id, '_amount', 1 );
+			$amount = apply_filters( 'fs_price_format', $amount );
+			echo $amount . ' ' . fs_currency();
+			break;
+		case 'fs_user':
+			$user = get_post_meta( $post_id, '_user', 0 );
+			$user = $user[0];
+			echo '<ul>';
+			echo '<li><b>';
+			echo $user['first_name'] . ' ' . $user['last_name'];
+			echo '</b></li>';
+			printf( '<li><span>%s:</span> %s</li>', __( 'phone', 'fast-shop' ), $user['phone'] );
+			printf( '<li><span>%s:</span> %s</li>', __( 'email', 'fast-shop' ), $user['email'] );
+			printf( '<li><span>%s:</span> %s</li>', __( 'city', 'fast-shop' ), $user['city'] );
+			echo '</ul>';
+
+
+			break;
+	}
+
 }
 
 // Выводим поле в быстром редактировании записи

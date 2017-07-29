@@ -39,7 +39,6 @@ class FS_Ajax_Class {
 			die ( 'не пройдена верификация формы nonce' );
 		}
 		$fs_products = $_SESSION['cart'];
-		$fs_config   = new FS_Config();
 		global $wpdb;
 		$wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
@@ -57,8 +56,6 @@ class FS_Ajax_Class {
 						$sanitize_field[ $field_name ] = sanitize_text_field( $_POST[ $field_name ] );
 					}
 				}
-
-
 			}
 		}
 
@@ -73,37 +70,46 @@ class FS_Ajax_Class {
 			$user_id = $user->ID;
 		}
 
-		//Добавляем  данные заказа в базу
-		$wpdb->insert(
-			$fs_config->data['table_orders'],
-			array(
-				'user_id'         => $user_id,
-				'status'          => 0,
-				'comments'        => $sanitize_field['fs_comment'],
-				'delivery'        => $sanitize_field['fs_delivery_methods'],
-				'address'         => $sanitize_field['fs_adress'],
-				'payment'         => $sanitize_field['fs_payment_methods'],
-				'products'        => serialize( $fs_products ),
-				'summa'           => fs_total_amount( $fs_products, false ),
-				'formdata'        => serialize( $_POST ),
-				'email'           => $sanitize_field['fs_email'],
-				'city'            => $sanitize_field['fs_city'],
-				'phone'           => $sanitize_field['fs_phone'],
-				'first_name'      => $sanitize_field['fs_first_name'],
-				'last_name'       => $sanitize_field['fs_last_name'],
-				'delivery_number' => $sanitize_field['fs_delivery_number'],
-			)
+		// Вставляем заказ в базу данных
+		$defaults                              = array(
+			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
+			'post_content' => '',
+			'post_status'  => 'publish',
+			'post_type'    => 'orders',
+			'post_author'  => 1,
+			'ping_status'  => get_option( 'default_ping_status' ),
+			'post_parent'  => 0,
+			'menu_order'   => 0,
+			'import_id'    => 0,
+			'tax_input'    => array( 'order-statuses' => array( 'new' ) ),
+			'meta_input'   => array(
+				'_user'     => array(
+					'id'         => $user_id,
+					'first_name' => $sanitize_field['fs_first_name'],
+					'last_name'  => $sanitize_field['fs_last_name'],
+					'email'      => $sanitize_field['fs_email'],
+					'phone'      => $sanitize_field['fs_phone'],
+					'city'       => $sanitize_field['fs_city']
+				),
+				'_products' => $fs_products,
+				'_delivery' => array(
+					'method' => $sanitize_field['fs_delivery_methods'],
+
+					'adress' => $sanitize_field['fs_adress']
+				),
+				'_payment'  => $sanitize_field['fs_payment_methods'],
+				'_amount'   => fs_total_amount( $fs_products, false ),
+				'_comment'  => $sanitize_field['fs_comment']
+			),
 		);
-		$order_id                              = $wpdb->insert_id;
+		$order_id                              = wp_insert_post( $defaults );
 		$sanitize_field['order_id']            = $order_id;
 		$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
 		$sanitize_field['fs_payment_methods']  = fs_get_payment( $sanitize_field['fs_payment_methods'] );
 		$sanitize_field['fs_admin_message']    = fs_option( '' );
-
-		$_SESSION['last_order_id'] = $order_id;
-
-		$search  = fs_mail_keys( $sanitize_field );
-		$replace = array_values( $sanitize_field );
+		$_SESSION['last_order_id']             = $order_id;
+		$search                                = fs_mail_keys( $sanitize_field );
+		$replace                               = array_values( $sanitize_field );
 
 		// текст письма заказчику
 		$user_message = apply_filters( 'fs_order_user_message' );
@@ -122,24 +128,28 @@ class FS_Ajax_Class {
 		$admin_mail_header = fs_option( 'admin_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
 		wp_mail( $admin_email, $admin_mail_header, $admin_message, $headers );
 
-
-		if ( ! empty( $wpdb->last_error ) ) {
-			echo $wpdb->last_error;
-		} else {
+		/* Если есть ошибки выводим их*/
+		if ( is_wp_error( $order_id ) ) {
 
 			$result = array(
+				'success' => false,
+				'text'    => $order_id->get_error_messages()
+			);
+		} else {
+			wp_update_post( array( 'ID' => $order_id, 'post_title' => 'Order №' . $order_id ) );
+			$result = array(
 				'success'  => true,
+				'text'     => 'Заказ №' . $order_id . ' успешно добавлен',
 				'products' => $fs_products,
 				'order_id' => $order_id,
-				'redirect' => get_permalink( fs_option( 'page_success' ) )
+				'redirect' => 0,
+//				'redirect' => get_permalink( fs_option( 'page_success' ) )
 			);
-			$json   = json_encode( $result );
-			echo $json;
-
+			// unset( $_SESSION['cart'] );
 		}
-		unset( $_SESSION['cart'] );
-		exit();
 
+		echo json_encode( $result );
+		exit();
 	}
 
 	public function fs_addto_wishlist() {
