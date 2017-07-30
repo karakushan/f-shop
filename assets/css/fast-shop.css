@@ -394,7 +394,14 @@ li.fs-attr {
 .fs-form-info {
   color: #fff;
   background-color: #337ab7;
-  padding: 10px; }
+  padding: 10px;
+  line-height: 1;
+  text-align: center; }
+  .fs-form-info a {
+    color: #ffffff;
+    text-decoration: underline; }
+  .fs-form-info.bg-danger {
+    background-color: #ff6767; }
 
 .fs-profile-edit {
   max-width: 480px; }

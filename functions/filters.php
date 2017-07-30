@@ -172,17 +172,19 @@ function add_views_sortable_column( $sortable_columns ) {
 }
 
 /**
- * Фильтр возвращает тег формы и скрытые поля необходимые для безопасности
+ *  возвращает тег формы и скрытые поля необходимые для безопасности
  *
  * @param array $attr массив атрибутов тега form
  *
+ * @param $ajax_action
+ *
  * @return mixed|string|void
  */
-add_filter( 'fs_form_header', 'fs_form_header', 10, 2 );
+
 function fs_form_header( $attr, $ajax_action ) {
 	$attr        = fs_parse_attr( $attr );
 	$form_header = '<form ' . $attr . '>';
-	$form_header .= wp_nonce_field( 'fast-shop', '_wpnonce', true, false );
+	$form_header .= \FS\FS_Config::nonce_field();
 	$form_header .= '<input type="hidden" name="action" value="' . $ajax_action . '">';
 	$form_header .= '<p class="fs-form-info"></p>';
 

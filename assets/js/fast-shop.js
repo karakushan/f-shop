@@ -363,18 +363,17 @@ jQuery(function ($) {
                 .done(function (result) {
                     var data = JSON.parse(result);
                     console.log(data);
-
                     loginForm.find('.fs-preloader').fadeOut();
-
                     if (data.status == 0) {
-                        loginForm.find('.form-info').addClass('bg-danger').fadeIn().html(data.error);
+                        loginForm.find('.fs-form-info').addClass('bg-danger').fadeIn().html(data.error);
                     } else {
-                        location.reload();
+                        if (data.redirect == false) {
+                            location.reload();
+                        } else {
+                            location.href = data.redirect;
+                        }
                     }
-
                 });
-
-
         }
     });
 });

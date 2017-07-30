@@ -1188,6 +1188,7 @@ function fs_parse_attr( $attr = array(), $default = array() ) {
 	return $atributes;
 }
 
+
 /**
  * возвращает список желаний
  * @return array список желаний

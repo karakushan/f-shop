@@ -20,6 +20,9 @@ class FS_Config {
 	public static $user_meta = array();
 	public static $prices;
 	public static $form_fields;
+	protected static $nonce = 'fast-shop';
+
+	protected static $nonce_field = 'fs-secret';
 
 	/**
 	 * FS_Config constructor.
@@ -212,5 +215,44 @@ class FS_Config {
 		return apply_filters( 'fs_order_statuses', $order_statuses );
 	}
 
+	/**
+	 * Возвращает проверочный код nonce
+	 */
+	public static function get_nonce() {
+		$nonce = wp_create_nonce( self::$nonce );
 
+		return $nonce;
+	}
+
+	/**
+	 * Выводит скрытое поле с проверочным кодом nonce
+	 */
+	public static function nonce_field() {
+		$field = '<input type="hidden" name="' . self::$nonce_field . '" value="' . self::get_nonce() . '">';
+
+		return $field;
+	}
+
+	/**
+	 * Проверяет код nonce
+	 *
+	 * @param string $method
+	 *
+	 * @return false|int
+	 */
+	public static function verify_nonce( $method = 'post' ) {
+		switch ( $method ) {
+			case 'post':
+				return wp_verify_nonce( $_POST[ self::$nonce_field ], self::$nonce );
+				break;
+			case 'get':
+				return wp_verify_nonce( $_GET[ self::$nonce_field ], self::$nonce );
+				break;
+			default:
+				return wp_verify_nonce( $_POST[ self::$nonce_field ], self::$nonce );
+				break;
+		}
+
+
+	}
 }

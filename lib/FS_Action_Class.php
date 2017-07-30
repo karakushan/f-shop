@@ -9,6 +9,7 @@ class FS_Action_Class {
 	function __construct() {
 		add_action( 'init', array( &$this, 'fs_catch_action' ), 2 );
 		$this->register_plugin_action();
+		$this->register_plugin_filters();
 	}
 
 	public function fs_catch_action() {
@@ -65,5 +66,15 @@ class FS_Action_Class {
 		add_action( 'fs_delete_cart', 'fs_delete_cart', 10, 2 );
 		/* Выводит общую сумму всех товаров в корзине */
 		add_action( 'fs_total_amount', 'fs_total_amount', 10, 3 );
+		/* Возвращает html код формы входа в личный кабинет */
+		add_action( 'fs_login_form', array( 'FS\FS_Users_Class', 'login_form' ), 10, 1 );
+	}
+
+	/**
+	 *Функция регистрирует хуки-фильтры плагина
+	 */
+	function register_plugin_filters() {
+		/* Фильтр возвращает начальный тег формы и скрытые поля необходимые для безопасности */
+		add_filter( 'fs_form_header', 'fs_form_header', 10, 2 );
 	}
 }
