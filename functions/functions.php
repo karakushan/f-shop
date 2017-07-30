@@ -616,7 +616,7 @@ function fs_cart_quantity( $product_id, $value, $args = array() ) {
 		$minus,
 		$input
 	), $args['position'] );
-	$quantity = '<div class="' . $args['wrapper_class']. '">' . $quantity . '</div>';
+	$quantity = '<div class="' . $args['wrapper_class'] . '">' . $quantity . '</div>';
 	echo $quantity;
 }
 
@@ -1323,6 +1323,31 @@ function fs_mail_keys( $keys = array() ) {
 	}
 
 	return $email_variable;
+}
+
+function fs_attr_list( $attr_group = 0 ) {
+	$terms = get_terms( array(
+		'taxonomy'   => 'product-attributes',
+		'hide_empty' => false,
+		'parent'     => $attr_group,
+	) );
+	$atts  = array();
+	foreach ( $terms as $term ) {
+		switch ( get_term_meta( $term->term_id, 'fs_att_type', 1 ) ) {
+			case 'color':
+				$atts[] = get_term_meta( $term->term_id, 'fs_att_color_value', 1 );
+				break;
+			case 'image':
+				$atts[] = get_term_meta( $term->term_id, 'fs_att_image_value', 1 );
+				break;
+			case 'text':
+				$atts[] = $term->name;
+				break;
+		}
+
+	}
+
+	return $atts;
 }
 
 /**
