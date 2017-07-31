@@ -1,32 +1,36 @@
-<div class="width text-center">
-    <img src="/wp-content/themes/clothes/images/img-thanks.png" alt=""/>
-    <ul>
-        <li>
-            <b>Заказ оформлен на следующие контактные данные:</b>
-        </li>
-        <li>
-            Ваше имя 
-            <span><?php echo $order_info->user_name; ?></span>
-        </li>
-        <li>
-            Электронная почта 
-            <span><?php echo $order_info->email; ?></span>
-        </li>
-        <li>
-            Номер телефона  
-            <span><?php echo $order_info->telephone; ?></span>
-        </li>
-        <li>
-            Город 
-            <span><?php echo $order_info->city; ?></span>
-        </li>
-        <li>
-            Тип доставки 
-            <span><?php echo $order_info->delivery_name; ?></span>
-        </li>
-        <li>
-            Тип оплаты 
-            <span><?php echo $order_info->payment_name; ?></span>
-        </li>                    
-    </ul>
-</div>
+<?php
+$user     = get_post_meta( $order->ID, '_user', 0 );
+$user     = $user[0];
+$delivery = get_post_meta( $order->ID, '_delivery', 0 );
+$delivery = $delivery[0];
+$payment  = get_post_meta( $order->ID, '_payment', 1 );
+?>
+<ul class="<?php echo $class ?>">
+  <li>
+    <b>Заказ оформлен на следующие контактные данные:</b>
+  </li>
+  <li>
+    <span>Ваше имя: </span>
+		<?php echo $user['first_name']; ?><?php echo $user['last_name']; ?>
+  </li>
+  <li>
+    <span>Электронная почта: </span>
+		<?php echo $user['email']; ?>
+  </li>
+  <li>
+    <span> Номер телефона: </span>
+		<?php echo $user['phone']; ?>
+  </li>
+  <li>
+    <span> Город: </span>
+		<?php echo $user['city']; ?>
+  </li>
+  <li>
+    <span> Тип доставки: </span>
+		<?php echo get_term_field( 'name', $delivery['method'], 'fs-delivery-methods' ) ?>
+  </li>
+  <li>
+    <span>Тип оплаты: </span>
+		<?php echo get_term_field( 'name', $payment, 'fs-payment-methods' ) ?>
+  </li>
+</ul>

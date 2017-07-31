@@ -8,8 +8,8 @@ class FS_Action_Class {
 
 	function __construct() {
 		add_action( 'init', array( &$this, 'fs_catch_action' ), 2 );
-		$this->register_plugin_action();
-		$this->register_plugin_filters();
+		add_action( 'init', array( &$this, 'register_plugin_action' ), 10 );
+		add_action( 'init', array( &$this, 'register_plugin_filters' ), 10 );
 	}
 
 	public function fs_catch_action() {
@@ -67,7 +67,11 @@ class FS_Action_Class {
 		/* Выводит общую сумму всех товаров в корзине */
 		add_action( 'fs_total_amount', 'fs_total_amount', 10, 3 );
 		/* Возвращает html код формы входа в личный кабинет */
-		add_action( 'fs_login_form', array( 'FS\FS_Users_Class', 'login_form' ), 10, 1 );
+		add_action( 'fs_login_form', array( 'FS\FS_Users_Class', 'login_form_show' ), 10, 1 );
+		/* Выводит всю информацию о текущем пользователе в виде списка */
+		add_action( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info_show' ), 10 );
+		/* Выводит форму редактирования профиля */
+		add_action( 'fs_profile_edit', array( 'FS\FS_Users_Class', 'profile_edit' ), 10, 1 );
 	}
 
 	/**

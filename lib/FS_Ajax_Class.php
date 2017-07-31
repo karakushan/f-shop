@@ -81,8 +81,8 @@ class FS_Ajax_Class {
 			'post_parent'  => 0,
 			'menu_order'   => 0,
 			'import_id'    => 0,
-			'tax_input'    => array( 'order-statuses' => array( 'new' ) ),
 			'meta_input'   => array(
+				'_user_id'  => $user_id,
 				'_user'     => array(
 					'id'         => $user_id,
 					'first_name' => $sanitize_field['fs_first_name'],
@@ -136,16 +136,17 @@ class FS_Ajax_Class {
 				'text'    => $order_id->get_error_messages()
 			);
 		} else {
-			wp_update_post( array( 'ID' => $order_id, 'post_title' => 'Order №' . $order_id ) );
+			wp_update_post( array( 'ID' => $order_id, 'post_title' => __( 'Order', 'fast-shop' ) . ' №' . $order_id ) );
+			wp_set_post_terms( $order_id, array( 'new' ), 'order-statuses', false );
+
 			$result = array(
 				'success'  => true,
 				'text'     => 'Заказ №' . $order_id . ' успешно добавлен',
 				'products' => $fs_products,
 				'order_id' => $order_id,
-				'redirect' => 0,
-//				'redirect' => get_permalink( fs_option( 'page_success' ) )
+				'redirect' => get_permalink( fs_option( 'page_success' ) )
 			);
-			// unset( $_SESSION['cart'] );
+			unset( $_SESSION['cart'] );
 		}
 
 		echo json_encode( $result );

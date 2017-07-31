@@ -280,11 +280,11 @@ jQuery(function ($) {
                 data: userInfoEdit.serialize(),
                 beforeSend: function () {
                     userInfoEdit.find('.fs-form-info').fadeOut().removeClass('fs-error fs-success').html();
-                    userInfoEdit.find('.fs-submit').html('<img src="/wp-content/plugins/fast-shop/assets/img/ajax-loader.gif">');
+                    userInfoEdit.find('[data-fs-element="submit"]').html('<img src="/wp-content/plugins/fast-shop/assets/img/ajax-loader.gif">');
                 }
             })
                 .done(function (result) {
-                    userInfoEdit.find('.fs-submit').html('Сохранить');
+                    userInfoEdit.find('[data-fs-element="submit"]').html('Сохранить');
                     var data = JSON.parse(result);
                     if (data.status == 0) {
                         userInfoEdit.find('.fs-form-info').addClass('fs-error').fadeIn().html(data.message);

@@ -392,11 +392,12 @@ li.fs-attr {
   margin: 9px 0 2px 0; }
 
 .fs-form-info {
-  color: #fff;
-  background-color: #337ab7;
+  color: #333;
+  background-color: #b9dfff;
   padding: 10px;
   line-height: 1;
-  text-align: center; }
+  text-align: center;
+  border: 1px solid #a5d2f8; }
   .fs-form-info a {
     color: #ffffff;
     text-decoration: underline; }
@@ -409,7 +410,8 @@ li.fs-attr {
     margin-bottom: 10px; }
   .fs-profile-edit input[type=text],
   .fs-profile-edit input[type=email],
-  .fs-profile-edit input[type=date] {
+  .fs-profile-edit input[type=date],
+  .fs-profile-edit input[type=tel] {
     float: left;
     height: 30px;
     width: 100%;
@@ -421,18 +423,6 @@ li.fs-attr {
     font-weight: 400; }
     .fs-profile-edit label span {
       color: #EA2B2B; }
-  .fs-profile-edit button[type=submit] {
-    width: 185px;
-    border: none;
-    height: 38px;
-    line-height: 38px;
-    text-align: center;
-    color: #fff;
-    float: left;
-    font-size: 13px;
-    font-weight: 300;
-    text-transform: uppercase;
-    background-color: #00507b; }
 
 [class^="fs-col-"] {
   float: left;

@@ -470,12 +470,13 @@ li.fs-attr {
 }
 
 .fs-form-info {
-    color: #fff;
-    background-color: #337ab7;
+    color: #333;
+    background-color: #b9dfff;
     padding: 10px;
     line-height: 1;
     text-align: center;
-    a{
+    border: 1px solid #a5d2f8;
+    a {
         color: #ffffff;
         text-decoration: underline;
     }
@@ -492,7 +493,8 @@ li.fs-attr {
     }
     input[type=text],
     input[type=email],
-    input[type=date] {
+    input[type=date],
+    input[type=tel] {
         float: left;
         height: 30px;
         width: 100%;
@@ -505,21 +507,6 @@ li.fs-attr {
         font-weight: 400;
         span {
             color: #EA2B2B;
-        }
-    }
-    button {
-        &[type=submit] {
-            width: 185px;
-            border: none;
-            height: 38px;
-            line-height: 38px;
-            text-align: center;
-            color: #fff;
-            float: left;
-            font-size: 13px;
-            font-weight: 300;
-            text-transform: uppercase;
-            background-color: #00507b;
         }
     }
 }

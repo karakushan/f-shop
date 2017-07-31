@@ -20,8 +20,21 @@ class FS_Users_Class {
 		//  редактирование профиля пользователя
 		add_action( 'wp_ajax_fs_profile_edit', array( &$this, 'fs_profile_edit' ) );
 		add_action( 'wp_ajax_nopriv_fs_profile_edit', array( &$this, 'fs_profile_edit' ) );
+
+		/* Защита личного кабинета от неавторизованных пользователей */
+		add_action( 'template_redirect', array( &$this, 'cabinet_protect' ) );
 	}
 
+	/**
+	 * Защита личного кабинета от неавторизованных пользователей
+	 */
+	function cabinet_protect() {
+		$redirect_page = fs_option( 'page_cabinet' );
+		if ( is_page( $redirect_page ) && ! is_user_logged_in() ) {
+			wp_redirect( home_url( '/' ) );
+			exit();
+		}
+	}
 
 	/**
 	 *Функция авторизует пользователя по полученным данным
@@ -29,9 +42,11 @@ class FS_Users_Class {
 	 * поле password - пароль
 	 */
 	function login_user() {
-		$username = sanitize_text_field( $_POST['username'] );
-		$password = sanitize_text_field( $_POST['password'] );
-		$referer  = esc_url( $_POST['_wp_http_referer'] );
+		$username      = sanitize_text_field( $_POST['username'] );
+		$password      = sanitize_text_field( $_POST['password'] );
+		$referer       = esc_url( $_POST['_wp_http_referer'] );
+		$redirect_page = fs_option( 'page_cabinet' );
+		$redirect      = ! empty( $redirect_page ) ? get_permalink( $redirect_page ) : false;
 
 		if ( ! FS_Config::verify_nonce() ) {
 			echo json_encode( array(
@@ -47,7 +62,7 @@ class FS_Users_Class {
 			echo json_encode( array(
 				'status'   => 0,
 				'redirect' => false,
-				'error'    => 'Вы уже авторизованны на сайте. <a href="' . wp_logout_url( $referer ) . '">Выход</a>'
+				'error'    => 'Вы уже авторизованны на сайте. <a href="' . wp_logout_url( $_SERVER['REQUEST_URI'] ) . '">Выход</a>. <a href="' . $redirect . '">В кабинет</a>'
 			) );
 			exit;
 		}
@@ -76,8 +91,7 @@ class FS_Users_Class {
 				nocache_headers();
 				wp_clear_auth_cookie();
 				wp_set_auth_cookie( $auth->ID );
-				$redirect_page = fs_option( 'page_cabinet' );
-				$redirect      = ! empty( $redirect_page ) ? get_permalink( $redirect_page ) : false;
+
 				echo json_encode( array( 'status' => 1, 'redirect' => $redirect ) );
 				exit;
 			}
@@ -155,9 +169,13 @@ class FS_Users_Class {
 
 // редактирование профиля пользователя
 	public function fs_profile_edit() {
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'fast-shop' ) || empty( $_POST['fs'] ) || ! is_user_logged_in()
+		if ( ! FS_Config::verify_nonce() || empty( $_POST['fs'] ) || ! is_user_logged_in()
 		) {
-			exit( 'форма не прошла проверку безопасности в ' . __FUNCTION__ );
+			echo json_encode( array(
+				'status'  => 0,
+				'message' => 'Форма не прошла проверку безопасности!'
+			) );
+			exit;
 		}
 
 		$user = wp_get_current_user();
@@ -167,7 +185,7 @@ class FS_Users_Class {
 			$value = sanitize_text_field( $_POST['fs'][ $name ] );
 
 			if ( empty( $value ) ) {
-				delete_user_meta( $user->ID, '$meta_key' );
+				delete_user_meta( $user->ID, $meta_key );
 				continue;
 			}
 
@@ -187,18 +205,32 @@ class FS_Users_Class {
 					}
 					break;
 				case 'user_email':
-					$update_user = wp_update_user( array(
-						'ID'         => $user->ID,
-						'user_email' => sanitize_email( $_POST['fs'][ $name ] )
-					) );
-					if ( is_wp_error( $update_user ) ) {
-						$errors = $update_user->get_error_message();
+					$email = sanitize_email( $_POST['fs'][ $name ] );
+					if ( ! is_email( $email ) ) {
 						echo json_encode( array(
 							'status'  => 0,
-							'message' => $errors
+							'message' => 'E-mail не соответствует формату!'
 						) );
 						exit;
+					} else {
+						$update_user = wp_update_user( array(
+							'ID'         => $user->ID,
+							'user_email' => $email
+						) );
+						if ( is_wp_error( $update_user ) ) {
+							$errors = $update_user->get_error_message();
+							echo json_encode( array(
+								'status'  => 0,
+								'message' => $errors
+							) );
+							exit;
+						}
 					}
+
+
+					break;
+				case 'birth_day' :
+					update_user_meta( $user->ID, $meta_key, strtotime( $value ) );
 					break;
 				default:
 					update_user_meta( $user->ID, $meta_key, $value );
@@ -234,5 +266,63 @@ class FS_Users_Class {
 
 		return $template;
 	}
+
+	/**
+	 * Выводит html код формы входа в личный кабинет
+	 *
+	 * @param array $attr
+	 *
+	 * @return mixed|string|void
+	 */
+	public static function login_form_show( $args = array() ) {
+		$args     = wp_parse_args( $args, array(
+			'class'  => 'fs-login-form',
+			'name'   => 'fs-login',
+			'method' => 'posts'
+		) );
+		$template = apply_filters( 'fs_form_header', $args, 'fs_login' );
+		$template .= fs_frontend_template( 'auth/login', array( 'field' => array() ) );
+		$template .= apply_filters( 'fs_form_bottom', '' );
+
+		echo $template;
+	}
+
+	public static function user_info() {
+		global $wpdb;
+		$user     = fs_get_current_user();
+		$template = fs_frontend_template( 'cabinet/personal-info', array( 'user' => $user ), true );
+
+		return $template;
+	}
+
+	/**
+	 * Выводит информацию о текущем пользователе в виде списка
+	 */
+	public static function user_info_show() {
+		echo self::user_info();
+	}
+
+	function profile_edit( $args = array() ) {
+		$user           = fs_get_current_user();
+		$default        = array(
+			'class' => 'fs-profile-edit',
+			'echo'  => false
+		);
+		$args           = wp_parse_args( $args, $default );
+		$args['name']   = 'fs-profile-edit';
+		$args['method'] = 'post';
+		$template       = apply_filters( 'fs_form_header', $args, 'fs_profile_edit' );
+		$template       .= fs_frontend_template( 'cabinet/profile-edit', array(
+			'user'  => $user,
+			'field' => FS_Config::$user_meta
+		) );
+		$template       .= apply_filters( 'fs_form_bottom', '' );
+		if ( ! $args['echo'] ) {
+			return $template;
+		} else {
+			echo $template;
+		}
+	}
+
 
 }

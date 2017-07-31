@@ -670,9 +670,12 @@ function fs_user_viewed() {
  * Получаем симовол валюты
  * @return string
  */
-function fs_currency() {
+function fs_currency( $wrap = false ) {
 	$config   = new \FS\FS_Config();
 	$currency = ! empty( $config->options['currency_symbol'] ) ? $config->options['currency_symbol'] : '$';
+	if ( $wrap ) {
+		return sprintf( '<span>%s</span>', $currency );
+	}
 
 	return $currency;
 }
