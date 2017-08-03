@@ -1268,10 +1268,10 @@ function fs_get_payment( $payment_id ) {
 /**
  * Функция выводе одно поле формы заказа
  *
- * @param $field название поля, атрибут name
+ * @param $field_name название поля, атрибут name
  * @param array $args массив аргументов типа класс, тип, обязательность заполнения, title
  */
-function fs_form_field( $field, $args = array() ) {
+function fs_form_field( $field_name, $args = array() ) {
 	$default     = array(
 		'type'        => 'text',
 		'class'       => '',
@@ -1293,22 +1293,22 @@ function fs_form_field( $field, $args = array() ) {
 	$required    = ! empty( $args['required'] ) ? 'required' : '';
 	switch ( $args['type'] ) {
 		case 'text':
-			echo ' <input type="text" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+			$field = ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 			break;
 		case 'email':
-			echo ' <input type="email" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+			$field = ' <input type="email" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 			break;
 		case 'tel':
-			echo ' <input type="tel" name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+			$field = ' <input type="tel" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 			break;
 		case 'radio':
-			echo ' <input type="radio" name="' . $field . '"  ' . $checked . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+			$field = ' <input type="radio" name="' . $field_name . '"  ' . $checked . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 			break;
 		case 'textarea':
-			echo '<textarea name="' . $field . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
+			$field = '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
 			break;
 	}
-
+	echo apply_filters( 'fs_form_field', $field, $field_name, $args );
 }
 
 /**

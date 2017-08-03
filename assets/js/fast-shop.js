@@ -612,7 +612,9 @@ var addUrlParam = function (search, key, val) {
         event.preventDefault();
     }, false);
 
+
 })(jQuery);
+
 
 // проверяет является ли переменная числом
 function isNumeric(n) {
