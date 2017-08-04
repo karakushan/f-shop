@@ -136,8 +136,12 @@ class FS_Ajax_Class {
 				'text'    => $order_id->get_error_messages()
 			);
 		} else {
+			/* обновляем название заказа для админки */
 			wp_update_post( array( 'ID' => $order_id, 'post_title' => __( 'Order', 'fast-shop' ) . ' №' . $order_id ) );
-			wp_set_post_terms( $order_id, array( 'new' ), 'order-statuses', false );
+			/* обновляем статус поста на новый */
+			if ( $term = term_exists( 'new', 'order-statuses' ) ) {
+				wp_set_post_terms( $order_id, array( $term ['term_id'] ), 'order-statuses', false );
+			}
 
 			$result = array(
 				'success'  => true,

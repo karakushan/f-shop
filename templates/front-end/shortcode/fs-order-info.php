@@ -11,7 +11,7 @@ $payment  = get_post_meta( $order->ID, '_payment', 1 );
   </li>
   <li>
     <span>Ваше имя: </span>
-		<?php echo $user['first_name']; ?><?php echo $user['last_name']; ?>
+		<?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?>
   </li>
   <li>
     <span>Электронная почта: </span>
