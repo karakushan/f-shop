@@ -149,7 +149,7 @@ jQuery(document).ready(function($) {
         event.preventDefault();
         var thisButton=$(this);
         var buttonContent=$(this).text();
-        var buttonPreloader='<img src="/wp-content/plugins/fast-shop/assets/img/preloader-1.svg">';
+        var buttonPreloader='<img src="/wp-content/plugins/f-shop/assets/img/preloader-1.svg">';
 
         if ($(this).data('fs-confirm').length>0) {
             if (confirm($(this).data('fs-confirm'))) {

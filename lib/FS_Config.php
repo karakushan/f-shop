@@ -36,7 +36,7 @@ class FS_Config {
 			'plugin_path'          => FS_PLUGIN_PATH,
 			'plugin_url'           => FS_PLUGIN_URL,
 			'plugin_ver'           => '1.0',
-			'plugin_name'          => 'fast-shop',
+			'plugin_name'          => 'f-shop',
 			'plugin_user_template' => get_template_directory() . '/fast-shop/',
 			'plugin_template'      => FS_PLUGIN_PATH . 'templates/front-end/',
 			'plugin_settings'      => 'fast-shop-settings',

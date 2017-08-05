@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Fast Shop
+Plugin Name: F-Shop
 Plugin URI: https://f-shop.top/
-Description:  The plugin will help in the creation of any online store without changing your template.
+Description:  Плагин интернет магазина для Wordpress.
 Version: 1.1
 Author: Vitaliy Karakushan
 Author URI: https://f-shop.top/
@@ -35,6 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 /* Основные константы для упрощения режим разработки, сокращения написания путей и пр. */
+define( 'FS_PLUGIN_VER', '1.1' ); // версия плагина
 define( 'FS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) ); // абсолютный системный путь
 define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // абсолютный путь относительно сайта
 define( 'FS_BASENAME', plugin_basename( __FILE__ ) ); // относительный путь типа my-plugin/my-plugin.php
