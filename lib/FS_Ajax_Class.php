@@ -93,9 +93,9 @@ class FS_Ajax_Class {
 				),
 				'_products' => $fs_products,
 				'_delivery' => array(
-					'method' => $sanitize_field['fs_delivery_methods'],
-
-					'adress' => $sanitize_field['fs_adress']
+					'method'    => $sanitize_field['fs_delivery_methods'],
+					'secession' => $sanitize_field['fs_delivery_number'],
+					'adress'    => $sanitize_field['fs_adress']
 				),
 				'_payment'  => $sanitize_field['fs_payment_methods'],
 				'_amount'   => fs_total_amount( $fs_products, false ),

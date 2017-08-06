@@ -25,16 +25,24 @@
     <td><?php echo $user['city'] ?></td>
   </tr>
   <tr>
-    <th>Способ доставки</th><td><?php echo  get_term_field( 'name',$delivery['method'], 'fs-delivery-methods' ) ?></td>
+    <th>Способ доставки</th>
+    <td><?php echo get_term_field( 'name', $delivery['method'], 'fs-delivery-methods' ) ?></td>
   </tr>
   <tr>
-    <th>Адрес доставки</th><td><?php echo  $delivery['adress'] ?></td>
+    <th>Отделение службы доставки:</th>
+    <td><?php echo $delivery['secession'] ?></td>
   </tr>
   <tr>
-    <th>Способ оплаты</th><td><?php echo  get_term_field( 'name', $payment, 'fs-payment-methods' ) ?></td>
+    <th>Адрес доставки</th>
+    <td><?php echo $delivery['adress'] ?></td>
   </tr>
   <tr>
-    <th>Комментарий к заказу</th><td><?php echo get_post_meta($post->ID,'_comment',1) ?></td>
+    <th>Способ оплаты</th>
+    <td><?php echo get_term_field( 'name', $payment, 'fs-payment-methods' ) ?></td>
+  </tr>
+  <tr>
+    <th>Комментарий к заказу</th>
+    <td><?php echo get_post_meta( $post->ID, '_comment', 1 ) ?></td>
   </tr>
 
   </tbody>
