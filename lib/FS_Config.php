@@ -30,12 +30,11 @@ class FS_Config {
 	function __construct() {
 		global $wpdb;
 
-
 		//Массив общих настроек плагина. При изменении настройки все настройки меняются глобально.
 		$data       = array(
 			'plugin_path'          => FS_PLUGIN_PATH,
 			'plugin_url'           => FS_PLUGIN_URL,
-			'plugin_ver'           => '1.0',
+			'plugin_ver'           => '1.1',
 			'plugin_name'          => 'f-shop',
 			'plugin_user_template' => get_template_directory() . '/fast-shop/',
 			'plugin_template'      => FS_PLUGIN_PATH . 'templates/front-end/',
@@ -86,34 +85,20 @@ class FS_Config {
 
 		//Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
 		$meta = array(
-			'price'            => 'fs_price',
 			//базовая цена
-			'action_price'     => 'fs_action_price',
+			'price'            => 'fs_price',
 			//акционная цена, перебивает цену
-			//'wholesale_price'        => 'fs_wholesale_price',
-			//цена для оптовиков
-			//'wholesale_price_action' => 'fs_wholesale_price_act',
-			//цена для оптовиков акционная
-			//'discount'               => 'fs_discount',
-			//размер скидки
-			'product_article'  => 'fs_articul',
+			'action_price'     => 'fs_action_price',
+			// валюта товара
+			'currency'         => 'fs_currency',
 			//артикул
-			//'availability'           => 'fs_availability',
-			//наличие на складе
-			'remaining_amount' => 'fs_remaining_amount',
+			'product_article'  => 'fs_articul',
 			//запас товаров на складе
-			//'action'                 => 'fs_actions',
-			//включить  или выключить акцию
-			//'action_page'            => 'fs_page_action',
-			//ссылка на страницу описывающую акцию на товарпоставленнуюю полем 'discount'
-			//'displayed_price'        => 'fs_displayed_price',
-			//тображаемая цена
-			//'attributes'             => 'fs_attributes_post',
-			//атрибуты товара
+			'remaining_amount' => 'fs_remaining_amount',
+			//галерея
 			'gallery'          => 'fs_galery',
-			//галерея
+			// похожие товары выбранные вручную
 			'related_products' => 'fs_related_products',
-			//галерея
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );
@@ -131,13 +116,7 @@ class FS_Config {
 				'meta_key'    => $this->meta['action_price'],
 				'on'          => true,
 				'description' => __( 'This type of price interrupts the base price', 'fast-shop' )
-			),
-			/*'displayed_price' => array(
-				'name'        => __( 'The displayed price', 'fast-shop' ),
-				'meta_key'    => $this->meta['displayed_price'],
-				'on'          => false,
-				'description' => __( 'example: "from %d %c for a couple" (%d - replaced with the price of %s on currency)', 'fast-shop' )
-			)*/
+			)
 		);
 
 		self::$user_meta = array(
@@ -166,6 +145,7 @@ class FS_Config {
 			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'required' => true ),
 			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
 		);
+
 	}
 
 	public static function default_order_statuses() {
@@ -252,7 +232,5 @@ class FS_Config {
 				return wp_verify_nonce( $_POST[ self::$nonce_field ], self::$nonce );
 				break;
 		}
-
-
 	}
 }
