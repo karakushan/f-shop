@@ -88,7 +88,7 @@ class FS_Taxonomies_Class {
 				"publicly_queryable" => true,
 
 				'metabox'           => null,
-				'show_admin_column' => false,
+				'show_admin_column' => true,
 				'hierarchical'      => true,
 				'show_in_quick_edit'    => false
 			)
