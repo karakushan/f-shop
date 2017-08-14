@@ -1393,5 +1393,25 @@ function fs_get_image_sizes( $unset_disabled = true ) {
 	return $sizes;
 }
 
+/**
+ * Возвращает массив состоящий id прикреплённых к посту вложений
+ *
+ * @param int $post_id - ID поста
+ *
+ * @return array
+ */
+function fs_gallery_images_ids( $post_id = 0 ) {
+	global $post;
+	$post_id = ! empty( $post_id ) ? $post_id : $post->ID;
+	$media   = get_attached_media( 'image', $post_id );
+	$gallery = array_keys( $media );
+	if ( empty( $gallery ) ) {
+		$fs_gallery = get_post_meta( $post->ID, $this->config->meta['gallery'], false );
+		$gallery    = ! empty( $fs_gallery ) ? $fs_gallery['0'] : array();
+	}
+
+	return $gallery;
+}
+
 
 
