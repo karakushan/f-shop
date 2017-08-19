@@ -11,47 +11,69 @@ namespace FS;
 
 use ES_LIB\ES_config;
 
-class FS_Form_Class
-{
+class FS_Form_Class {
 
-    /**
-     * @param string $field_name  ключ поля в FS_Config::$form_fields
-     * @param array $attr атрибуты input (class,id,value,checked)
-     * @return string html код поля
-     */
-    function form_field($field_name = '', $attr = array())
-    {
-        $fields = FS_Config::$form_fields;
-        $default = array(
-            'class' => '',
-            'id' => $field_name,
-            'value' => '',
-            'checked' => ''
-        );
-        $attr = wp_parse_args($attr, $default);
-        $class = !empty($attr['class']) ? 'class="' . esc_attr($attr['class']) . '"' : '';
-        $field = $fields[$field_name];
-        $required = $field['required'] === true ? 'required' : '';
-        $placeholder = $field['placeholder'] === true ? $field['label'] : '';
-        $id = esc_attr($attr['id']);
+	/**
+	 * @param string $field_name ключ поля в FS_Config::$form_fields
+	 * @param array $args атрибуты input (class,id,value,checked)
+	 *
+	 * @return string html код поля
+	 */
+	function fs_form_field( $field_name, $args = array() ) {
+		$default     = array(
+			'type'        => 'text',
+			'class'       => '',
+			'id'          => str_replace( array(
+				'[',
+				']'
+			), array( '_' ), $field_name ),
+			'required'    => false,
+			'title'       => '',
+			'placeholder' => '',
+			'value'       => '',
+			'editor_args' => array( 'textarea_rows' => 8, 'textarea_name' => $field_name )
 
-        switch ($field['type']) {
-            case 'text':
-                $html = '<input type="text" name="' . $field_name . '" ' . $class . ' value="' . $attr['value'] . '" id="' . $id . '" ' . $placeholder . ' title="обязательное поле" ' . $required . '>';
-                break;
-            case 'email':
-                $html = '<input type="email" name="' . $field_name . '" ' . $class . ' value="' . $attr['value'] . '" id="' . $id . '" ' . $placeholder . ' title="обязательное поле" ' . $required . '>';
-                break;
-            case 'tel':
-                $html = '<input type="tel" name="' . $field_name . '" ' . $class . ' value="' . $attr['value'] . '" id="' . $id . '" ' . $placeholder . ' title="обязательное поле" ' . $required . '>';
-                break;
-            case 'radio':
-                $html = '<input type="radio" name="' . $field_name . '" ' . $class . ' value="' . $attr['value'] . '" id="' . $id . '" ' . $placeholder . ' ' . $attr['checked'] . ' title="обязательное поле" ' . $required . '>';
-                break;
-            default:
-                $html = '<input type="text" name="' . $field_name . '" ' . $class . ' value="' . $attr['value'] . '" id="' . $id . '" ' . $placeholder . ' title="обязательное поле" ' . $required . '>';
+		);
+		$args        = wp_parse_args( $args, $default );
+		$class       = ! empty( $args['class'] ) ? 'class="' . sanitize_html_class( $args['class'] ) . '"' : '';
+		$id          = ! empty( $args['id'] ) ? 'id="' . sanitize_html_class( $args['id'] ) . '"' : 'id=""';
+		$title       = ! empty( $args['title'] ) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
+		$placeholder = ! empty( $args['placeholder'] ) ? 'placeholder="' . esc_html( $args['placeholder'] ) . '"' : '';
+		$value       = ! empty( $args['value'] ) ? 'value="' . esc_html( $args['value'] ) . '"' : '';
 
-        }
-        return $html;
-    }
+		$required = ! empty( $args['required'] ) ? 'required' : '';
+		$field    = '';
+		switch ( $args['type'] ) {
+			case 'text':
+				$field = ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+				break;
+			case 'email':
+				$field = ' <input type="email" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+				break;
+			case 'tel':
+				$field = ' <input type="tel" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+				break;
+			case 'radio':
+				$field = ' <input type="radio" name="' . $field_name . '"  ' . checked( 'on', $value, false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+				break;
+			case 'checkbox':
+				$field = ' <input type="checkbox" name="' . $field_name . '"  ' . checked( '1', $args['value'], false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '  value="1"  ' . $id . '> ';
+				break;
+			case 'textarea':
+				$field = '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
+				break;
+			case 'pages':
+				$field = wp_dropdown_pages( array( 'name'     => $field_name,
+				                                   'echo'     => 0,
+				                                   'id'       => $args['id'],
+				                                   'selected' => $args['value']
+				) );
+				break;
+			case 'editor':
+				wp_editor( esc_html( $args['value'] ), $args['id'], $args['editor_args'] );
+				$field = ob_get_clean();
+				break;
+		}
+		echo apply_filters( 'fs_form_field', $field, $field_name, $args );
+	}
 }

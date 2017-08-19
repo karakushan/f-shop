@@ -1272,43 +1272,8 @@ function fs_get_payment( $payment_id ) {
  * @param array $args массив аргументов типа класс, тип, обязательность заполнения, title
  */
 function fs_form_field( $field_name, $args = array() ) {
-	$default     = array(
-		'type'        => 'text',
-		'class'       => '',
-		'checked'     => '',
-		'id'          => '',
-		'required'    => true,
-		'title'       => __( 'required field', 'fast-shop' ),
-		'placeholder' => '',
-		'value'       => '',
-
-	);
-	$args        = wp_parse_args( $args, $default );
-	$class       = ! empty( $args['class'] ) ? 'class="' . sanitize_html_class( $args['class'] ) . '"' : '';
-	$id          = ! empty( $args['id'] ) ? 'id="' . sanitize_html_class( $args['id'] ) . '"' : '';
-	$title       = ! empty( $args['title'] ) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
-	$placeholder = ! empty( $args['placeholder'] ) ? 'placeholder="' . esc_html( $args['placeholder'] ) . '"' : '';
-	$value       = ! empty( $args['value'] ) ? 'value="' . esc_html( $args['value'] ) . '"' : '';
-	$checked     = ! empty( $args['checked'] ) ? 'checked="' . esc_html( $args['checked'] ) . '"' : '';
-	$required    = ! empty( $args['required'] ) ? 'required' : '';
-	switch ( $args['type'] ) {
-		case 'text':
-			$field = ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
-			break;
-		case 'email':
-			$field = ' <input type="email" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
-			break;
-		case 'tel':
-			$field = ' <input type="tel" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
-			break;
-		case 'radio':
-			$field = ' <input type="radio" name="' . $field_name . '"  ' . $checked . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
-			break;
-		case 'textarea':
-			$field = '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
-			break;
-	}
-	echo apply_filters( 'fs_form_field', $field, $field_name, $args );
+	$form_class = new \FS\FS_Form_Class();
+	$form_class->fs_form_field( $field_name, $args );
 }
 
 /**

@@ -22,7 +22,10 @@ class FS_Api_Class {
 	 * fs-api=drop_orders_table - удаляет таблицу с заказами
 	 */
 	function plugin_api_actions() {
-		if ( ! is_admin() && ! isset( $_GET['fs-api'] ) && ! current_user_can( 'manage_options' ) ) {
+		if ( empty( $_GET['fs-api'] ) ) {
+			return;
+		}
+		if ( ! is_admin() && ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 		$api_command = $_GET['fs-api'];
