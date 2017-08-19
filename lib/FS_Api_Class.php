@@ -37,6 +37,13 @@ class FS_Api_Class {
 		} elseif ( $api_command == 'drop_products' ) {
 			$product_class = new FS_Product_Class();
 			$product_class->delete_products();
+			// удаляет категории товаров
+		} elseif ( $api_command == 'drop_cat' ) {
+			$tax_class = new FS_Taxonomies_Class();
+			$tax_class->delete_product_categories();
+		} elseif ( $api_command == 'drop_att' ) {
+			$tax_class = new FS_Taxonomies_Class();
+			$tax_class->delete_product_attributes();
 		}
 	}
 

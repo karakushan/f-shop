@@ -41,7 +41,8 @@ class FS_Config {
 			'plugin_settings'      => 'fast-shop-settings',
 			'post_type'            => 'product',
 			'post_type_orders'     => 'orders',
-			'product_taxonomy'     => 'catalog'
+			'product_taxonomy'     => 'catalog',
+			'product_att_taxonomy' => 'product-attributes'
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
