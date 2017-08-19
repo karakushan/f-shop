@@ -26,15 +26,19 @@ class FS_Api_Class {
 			return;
 		}
 		global $wpdb;
-		$config = new FS_Config();
+		$config      = new FS_Config();
+		$api_command = $_REQUEST['fs-api'];
 //		импортирует свойства товаров из опций
-		if (isset( $_REQUEST['fs-api'] ) && $_REQUEST['fs-api'] == 'migrate' ) {
+		if ( $api_command == 'migrate' ) {
 			FS_Migrate_Class::import_option_attr();
 //			удаляет таблицу заказов
-		} elseif (isset( $_REQUEST['fs-api'] ) && $_REQUEST['fs-api'] == 'drop_orders_table' ) {
-			$orders_table=$config->data['table_orders'];
-			$wpdb->query( "DROP TABLE IF EXISTS $orders_table") ;
+		} elseif ( $api_command == 'drop_orders_table' ) {
+			$orders_table = $config->data['table_orders'];
+			$wpdb->query( "DROP TABLE IF EXISTS $orders_table" );
 
+		} elseif ( $api_command == 'drop_products' ) {
+			$product_class = new FS_Product_Class();
+			$product_class->delete_products();
 		}
 	}
 

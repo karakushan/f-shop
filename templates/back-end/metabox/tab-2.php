@@ -6,7 +6,8 @@
   <button type="button" class="fs-button" id="fs-add-gallery">Добавить изображения</button>
 </div>
 <?php
-$gallery = fs_gallery_images_ids( $post_id = 0 )
+$gallery = fs_gallery_images_ids( $post_id = 0 );
+//print_r($gallery)
 ?>
 <div class="fs-field-row fs-gallery clearfix">
   <div class="fs-grid fs-sortable-items" id="fs-gallery-wrapper">
