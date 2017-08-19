@@ -142,4 +142,19 @@ class FS_Orders_Class {
 		return $items_sum;
 	}
 
+	public function delete_orders() {
+		global $fs_config;
+		$posts = new \WP_Query( array(
+			'post_type'      => array( $fs_config->data['post_type_orders'] ),
+			'posts_per_page' => - 1
+		) );
+		if ( $posts->have_posts() ) {
+			while ( $posts->have_posts() ) {
+				$posts->the_post();
+				global $post;
+				wp_delete_post( $post->ID, true );
+			}
+		}
+	}
+
 }

@@ -22,20 +22,18 @@ class FS_Api_Class {
 	 * fs-api=drop_orders_table - удаляет таблицу с заказами
 	 */
 	function plugin_api_actions() {
-		if ( ! is_admin() && ! isset( $_REQUEST['fs-api'] ) ) {
+		if ( ! is_admin() && ! isset( $_GET['fs-api'] ) ) {
 			return;
 		}
-		global $wpdb;
-		$config      = new FS_Config();
-		$api_command = $_REQUEST['fs-api'];
-//		импортирует свойства товаров из опций
+		$api_command = $_GET['fs-api'];
+		// импортирует свойства товаров из опций
 		if ( $api_command == 'migrate' ) {
 			FS_Migrate_Class::import_option_attr();
-//			удаляет таблицу заказов
-		} elseif ( $api_command == 'drop_orders_table' ) {
-			$orders_table = $config->data['table_orders'];
-			$wpdb->query( "DROP TABLE IF EXISTS $orders_table" );
-
+			// удаляет все заказы
+		} elseif ( $api_command == 'drop_orders' ) {
+			$orders_class = new FS_Orders_Class();
+			$orders_class->delete_orders();
+			// удаляет все товары
 		} elseif ( $api_command == 'drop_products' ) {
 			$product_class = new FS_Product_Class();
 			$product_class->delete_products();

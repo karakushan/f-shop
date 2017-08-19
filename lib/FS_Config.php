@@ -39,15 +39,9 @@ class FS_Config {
 			'plugin_user_template' => get_template_directory() . '/fast-shop/',
 			'plugin_template'      => FS_PLUGIN_PATH . 'templates/front-end/',
 			'plugin_settings'      => 'fast-shop-settings',
-			'table_orders'         => $wpdb->prefix . "fs_orders",
 			'post_type'            => 'product',
-			'product_taxonomy'     => 'catalog',
-			'order_statuses'       => array(
-				'0' => 'ожидает подтверждения',
-				'1' => 'в ожидании оплаты',
-				'2' => 'оплачен',
-				'3' => 'отменён'
-			)
+			'post_type_orders'     => 'orders',
+			'product_taxonomy'     => 'catalog'
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
