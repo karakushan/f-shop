@@ -260,7 +260,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 				'attributes' => $attributes
 			), $_SERVER['REQUEST_URI'] );
 
-			unset( $attributes[$term->slug] );
+			unset( $attributes[ $term->slug ] );
 			$remove_attr = add_query_arg( array(
 				'fs_filter'  => wp_create_nonce( 'fast-shop' ),
 				'attributes' => $attributes
@@ -320,5 +320,38 @@ function fs_attr_change( $required_atts = array() ) {
 
 	echo '<div class="fs-group-info"></div>';
 	echo '</div>';
+
+}
+
+function fs_list_post_atts( $post_id = 0 ) {
+	global $fs_config, $post;
+	$post_id             = ! empty( $post_id ) ? $post_id : $post->ID;
+	$characteristics     = get_the_terms( $post_id, $fs_config->data['product_att_taxonomy'] );
+	$characteristic_sort = array();
+	if ( ! empty( $characteristics ) ) {
+		foreach ( $characteristics as $characteristic ) {
+			$characteristic_sort[ $characteristic->parent ][ $characteristic->term_id ] = $characteristic;
+
+		}
+	}
+	if ( ! empty( $characteristic_sort ) ) {
+		foreach ( $characteristic_sort as $key => $parent ) {
+			$group = get_term_field( 'name', $key, $fs_config->data['product_att_taxonomy'] );
+			echo '<ul class="fs-attr-groups-list">';
+			echo '<div class="fs-attr-group-name">' . $group . '</div>';
+			foreach ( $parent as $child ) {
+				$attr_type = get_term_meta( $child->term_id, 'fs_att_type', 1 );
+				if ( $attr_type == 'image' ) {
+					$image_id = get_term_meta( $child->term_id, 'fs_att_image_value', 1 );
+					$img_url  = wp_get_attachment_thumb_url( $image_id );
+					echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$child->slug\" value=\"$child->term_id\" data-fs-element=\"attr\" data-product-id=\"$post_id\"></label></li>";
+				} else {
+					echo "<li><label>" . $child->name . "</label><input type=\"radio\" name=\"$group\" value=\"$child->term_id\"></li>";
+				}
+			}
+			echo '</ul>';
+
+		}
+	}
 
 }

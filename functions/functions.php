@@ -1181,14 +1181,18 @@ function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
  * @return [type]          строка атрибутов
  */
 function fs_parse_attr( $attr = array(), $default = array() ) {
-	$attr = array_merge( $attr, $default );
-	$attr = array_map( 'esc_attr', $attr );
+	$attr      = array_merge( $attr, $default );
+	$attr      = array_map( 'esc_attr', $attr );
+	$atributes = array();
+	$att       = '';
 	foreach ( $attr as $key => $att ) {
 		$atributes[] = $key . '="' . $att . '"';
 	}
-	$atributes = implode( ' ', $atributes );
+	if ( ! empty( $atributes ) ) {
+		$att = implode( ' ', $atributes );
+	}
 
-	return $atributes;
+	return $att;
 }
 
 
