@@ -58,6 +58,9 @@ class FS_Api_Class {
 
 			$tax_class = new FS_Taxonomies_Class();
 			$tax_class->delete_product_attributes();
+
+			$orders_class = new FS_Orders_Class();
+			$orders_class->delete_orders();
 		}
 
 	}
