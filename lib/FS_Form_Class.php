@@ -32,7 +32,7 @@ class FS_Form_Class {
 			'title'       => '',
 			'placeholder' => '',
 			'value'       => '',
-			'editor_args' => array( 'textarea_rows' => 8, 'textarea_name' => $field_name )
+			'editor_args' => array( 'textarea_rows' => 8, 'textarea_name' => $field_name,'tinymce'=>false ,'media_buttons'=>false)
 
 		);
 		$args        = wp_parse_args( $args, $default );

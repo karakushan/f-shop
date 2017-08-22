@@ -114,7 +114,7 @@ class FS_Settings_Class {
 					1 => array(
 						'type'  => 'text',
 						'name'  => 'site_logo',
-						'label' => 'Ссылка на логотип сайта в письме',
+						'label' => 'Ссылка на изображение логотипа',
 						'value' => fs_option( 'site_logo' )
 					),
 					2 => array(
