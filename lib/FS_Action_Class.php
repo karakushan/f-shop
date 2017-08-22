@@ -62,6 +62,8 @@ class FS_Action_Class {
 		add_action( 'fs_cart_widget', 'fs_cart_widget', 10, 1 );
 		/* Выводит поле для изменения к-ва товаров в корзине */
 		add_action( 'fs_cart_quantity', 'fs_cart_quantity', 10, 3 );
+		/* Выводит поле для изменения к-ва товаров добавляемых в корзину */
+		add_action( 'fs_quantity_product', 'fs_quantity_product', 10, 3 );
 		/* Выводит кнопку для удаления всех товаров в корзине */
 		add_action( 'fs_delete_cart', 'fs_delete_cart', 10, 2 );
 		/* Выводит общую сумму всех товаров в корзине */
@@ -72,6 +74,8 @@ class FS_Action_Class {
 		add_action( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info_show' ), 10 );
 		/* Выводит форму редактирования профиля */
 		add_action( 'fs_profile_edit', array( 'FS\FS_Users_Class', 'profile_edit' ), 10, 1 );
+		/* Выводит форму заполнения личных данных при отправке заказа */
+		add_action( 'fs_order_form', 'fs_order_send_form', 10, 1 );
 	}
 
 	/**

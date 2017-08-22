@@ -298,7 +298,7 @@ function fs_get_cart() {
 	}
 
 	$products = array();
-	if ( count( $_SESSION['cart'] ) ) {
+	if ( !empty( $_SESSION['cart'] ) ) {
 		foreach ( $_SESSION['cart'] as $key => $count ) {
 			if ( $key == 0 ) {
 				continue;
@@ -311,11 +311,13 @@ function fs_get_cart() {
 			$attr       = array();
 			if ( ! empty( $count['attr'] ) ) {
 				foreach ( $count['attr'] as $term ) {
-					$t             = get_term_by( 'term_taxonomy_id', $term );
-					$attr[ $term ] = array(
-						'name'       => $t->name,
-						'group_name' => get_term_field( 'name', $t->parent )
-					);
+					$t = get_term_by( 'term_taxonomy_id', $term );
+					if ( $t ) {
+						$attr[ $term ] = array(
+							'name'       => $t->name,
+							'group_name' => get_term_field( 'name', $t->parent )
+						);
+					}
 				}
 			}
 			$products[ $key ] = array(
@@ -569,24 +571,48 @@ function fs_aviable_product( $post_id = 0 ) {
 	return $aviable;
 }
 
+
 /**
- * Отоюражает поле для ввода количества добавляемых продуктов в корзину
+ * Отображает или возвращает поле для изменения количества добавляемых товаров в корзину
  *
- * @param  int $product_id - id продукта
+ * @param int $product_id - ID товара
+ * @param array $args - массив аргументов
  *
+ * @return mixed
  */
-function fs_quantity_product( $product_id = 0, $echo = true ) {
+function fs_quantity_product( $product_id = 0, $args = array() ) {
 	global $post;
-	$product_id  = ! empty( $product_id ) ? $product_id : $post->ID;
-	$quantity_el = '<div class="fs-quantity-product">
-    <button type="button" class="plus" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '">+</button> 
-    <input type="text" name="" value="1" data-fs-action="change_count" id="product-quantify-' . $product_id . '" data-fs-product-id="' . $product_id . '"> 
-    <button type="button" class="minus" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '">-</button> </div>';
-	$quantity_el = apply_filters( 'fs_quantity_product', $quantity_el );
-	if ( $echo ) {
-		echo $quantity_el;
+	$product_id = ! empty( $product_id ) ? $product_id : $post->ID;
+	$args       = wp_parse_args( $args, array(
+		'position'      => '%pluss% %input% %minus%',
+		'wrapper'       => 'div',
+		'wrapper_class' => 'fs-qty-wrap',
+		'pluss_class'   => 'fs-pluss',
+		'pluss_content' => '+',
+		'minus_class'   => 'fs-minus',
+		'minus_content' => '-',
+		'input_class'   => 'fs-quantity',
+		'echo'          => true
+	) );
+	$pluss      = sprintf( '<button type="button" class="%s" data-fs-count="pluss" data-target="#product-quantify-%s">%s</button> ', $args['pluss_class'], $product_id, $args['pluss_content'] );
+	$minus      = sprintf( '<button type="button" class="%s" data-fs-count="minus" data-target="#product-quantify-%s">%s</button>', $args['minus_class'], $product_id, $args['minus_content'] );
+	$input      = sprintf( '<input type="text" class="%s" name="count" value="1" data-fs-action="change_count" id="product-quantify-%s" data-fs-product-id="%s">', $args['input_class'], $product_id, $product_id );
+	$quantity   = str_replace(
+		array(
+			'%pluss%',
+			'%input%',
+			'%minus%'
+		),
+		array(
+			$pluss,
+			$input,
+			$minus
+		), $args['position'] );
+	$quantity   = sprintf( '<%s class="%s"> %s </%s>', $args['wrapper'], $args['wrapper_class'], $quantity, $args['wrapper'] );
+	if ( $args['echo'] ) {
+		echo $quantity;
 	} else {
-		return $quantity_el;
+		return $quantity;
 	}
 }
 
@@ -1381,6 +1407,3 @@ function fs_gallery_images_ids( $post_id = 0 ) {
 
 	return $gallery;
 }
-
-
-

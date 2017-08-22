@@ -336,17 +336,20 @@ function fs_list_post_atts( $post_id = 0 ) {
 	}
 	if ( ! empty( $characteristic_sort ) ) {
 		foreach ( $characteristic_sort as $key => $parent ) {
+
 			$group = get_term_field( 'name', $key, $fs_config->data['product_att_taxonomy'] );
-			echo '<ul class="fs-attr-groups-list">';
+			$group_slug = get_term_field( 'slug', $key, $fs_config->data['product_att_taxonomy'] );
+
 			echo '<div class="fs-attr-group-name">' . $group . '</div>';
+			echo '<ul class="fs-attr-groups-list">';
 			foreach ( $parent as $child ) {
 				$attr_type = get_term_meta( $child->term_id, 'fs_att_type', 1 );
 				if ( $attr_type == 'image' ) {
 					$image_id = get_term_meta( $child->term_id, 'fs_att_image_value', 1 );
 					$img_url  = wp_get_attachment_thumb_url( $image_id );
-					echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$child->slug\" value=\"$child->term_id\" data-fs-element=\"attr\" data-product-id=\"$post_id\"></label></li>";
+					echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group_slug\" value=\"$child->term_id\" data-fs-element=\"attr\" data-product-id=\"$post_id\"></label></li>";
 				} else {
-					echo "<li><label>" . $child->name . "</label><input type=\"radio\" name=\"$group\" value=\"$child->term_id\"></li>";
+					echo "<li><label>" . $child->name . "</label><input type=\"radio\" name=\"$group_slug\" value=\"$child->term_id\"></li>";
 				}
 			}
 			echo '</ul>';

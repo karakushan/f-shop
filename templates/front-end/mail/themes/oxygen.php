@@ -475,7 +475,7 @@
                                                         <td class="product">
                                                             <span style="color: #4d4d4d; font-weight:bold;"><?php echo $p['name'] ?></span>
                                                             <br/>
-															<?php if ( $p['attr'] ): ?>
+															<?php if ( !empty($p['attr']) ): ?>
 																<?php foreach ( $p['attr'] as $att ): ?>
 																	<?php echo $att['group_name'] ?>:<?php echo $att['name'] ?>
                                                                     <br>

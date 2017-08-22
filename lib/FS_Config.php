@@ -28,8 +28,6 @@ class FS_Config {
 	 * FS_Config constructor.
 	 */
 	function __construct() {
-		global $wpdb;
-
 		//Массив общих настроек плагина. При изменении настройки все настройки меняются глобально.
 		$data       = array(
 			'plugin_path'          => FS_PLUGIN_PATH,
@@ -42,7 +40,9 @@ class FS_Config {
 			'post_type'            => 'product',
 			'post_type_orders'     => 'orders',
 			'product_taxonomy'     => 'catalog',
-			'product_att_taxonomy' => 'product-attributes'
+			'product_att_taxonomy' => 'product-attributes',
+			'product_pay_taxonomy' => 'fs-payment-methods',
+			'product_del_taxonomy' => 'fs-delivery-methods'
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
@@ -137,7 +137,7 @@ class FS_Config {
 			'fs_adress'           => array( 'type' => 'text', 'label' => 'Адрес доставки', 'required' => false ),
 			'fs_delivery_number'  => array( 'type' => 'text', 'label' => 'Номер отделения', 'required' => false ),
 			'fs_delivery_methods' => array( 'type' => 'radio', 'label' => 'Способ доставки', 'required' => true ),
-			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'required' => true ),
+			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты'),
 			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
 		);
 

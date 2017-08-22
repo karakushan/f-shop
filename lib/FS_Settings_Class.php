@@ -125,7 +125,7 @@ class FS_Settings_Class {
 					),
 					3 => array(
 						'type'  => 'text',
-						'name'  => 'email_sender',
+						'name'  => 'name_sender',
 						'label' => 'Название отправителя писем',
 						'value' => fs_option( 'name_sender', get_bloginfo( 'name' ) )
 					),

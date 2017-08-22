@@ -112,11 +112,11 @@ class FS_Ajax_Class {
 		$replace                               = array_values( $sanitize_field );
 
 		// текст письма заказчику
-		$user_message = apply_filters( 'fs_order_user_message' );
+		$user_message = apply_filters( 'fs_order_user_message', '' );
 		$user_message = str_replace( $search, $replace, $user_message );
 
 		// текст письма админу
-		$admin_message = apply_filters( 'fs_order_admin_message' );
+		$admin_message = apply_filters( 'fs_order_admin_message', '' );
 		$admin_message = str_replace( $search, $replace, $admin_message );
 
 		//Отсылаем письмо с данными заказа заказчику

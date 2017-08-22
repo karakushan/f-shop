@@ -20,6 +20,7 @@ class FS_Form_Class {
 	 * @return string html код поля
 	 */
 	function fs_form_field( $field_name, $args = array() ) {
+		global $fs_config;
 		$default     = array(
 			'type'        => 'text',
 			'class'       => '',
@@ -63,10 +64,31 @@ class FS_Form_Class {
 				$field = '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
 				break;
 			case 'pages':
-				$field = wp_dropdown_pages( array( 'name'     => $field_name,
-				                                   'echo'     => 0,
-				                                   'id'       => $args['id'],
-				                                   'selected' => $args['value']
+				$field = wp_dropdown_pages( array(
+					'name'     => $field_name,
+					'echo'     => 0,
+					'id'       => $args['id'],
+					'selected' => $args['value']
+				) );
+				break;
+			case 'pay_methods':
+				$field = wp_dropdown_categories( array(
+					'show_option_all' => 'Способ оплаты',
+					'hide_empty'      => 0,
+					'name'            => $field_name,
+					'class'           => $args['class'],
+					'echo'            => 0,
+					'taxonomy'        => $fs_config->data['product_pay_taxonomy']
+				) );
+				break;
+				case 'del_methods':
+				$field = wp_dropdown_categories( array(
+					'show_option_all' => 'Способ доставки',
+					'hide_empty'      => 0,
+					'name'            => $field_name,
+					'class'           => $args['class'],
+					'echo'            => 0,
+					'taxonomy'        => $fs_config->data['product_del_taxonomy']
 				) );
 				break;
 			case 'editor':
