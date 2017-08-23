@@ -298,7 +298,7 @@ function fs_get_cart() {
 	}
 
 	$products = array();
-	if ( !empty( $_SESSION['cart'] ) ) {
+	if ( ! empty( $_SESSION['cart'] ) ) {
 		foreach ( $_SESSION['cart'] as $key => $count ) {
 			if ( $key == 0 ) {
 				continue;
@@ -1207,6 +1207,9 @@ function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
  * @return [type]          строка атрибутов
  */
 function fs_parse_attr( $attr = array(), $default = array() ) {
+	if ( empty( $attr ) ) {
+		return;
+	}
 	$attr      = array_merge( $attr, $default );
 	$attr      = array_map( 'esc_attr', $attr );
 	$atributes = array();

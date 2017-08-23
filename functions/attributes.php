@@ -126,7 +126,7 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
  *
  * @return [type]               выводит html элемент типа select
  */
-function fs_types_sort_filter( $attr ) {
+function fs_types_sort_filter( $attr=array() ) {
 	$filter      = '';
 	$order_types = array(
 		'date_desc'  => array(
