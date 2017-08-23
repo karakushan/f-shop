@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-23 07:57+0000\n"
+"POT-Creation-Date: 2017-08-23 08:54+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -108,7 +108,7 @@ msgstr ""
 msgid "add to wish list"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:140 lib/FS_Post_Type.php:91
+#: lib/FS_Ajax_Class.php:141 lib/FS_Post_Type.php:91
 #: templates/front-end/mail/themes/oxygen.php:426
 msgid "Order"
 msgstr ""
@@ -157,7 +157,11 @@ msgstr ""
 msgid "Product category"
 msgstr ""
 
-#: lib/FS_Init.php:113
+#: lib/FS_Form_Class.php:28
+msgid "this field is required"
+msgstr ""
+
+#: lib/FS_Init.php:112
 msgid "Client"
 msgstr ""
 

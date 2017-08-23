@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-29 22:12+0000\n"
-"PO-Revision-Date: 2017-07-29 22:12+0000\n"
-"Last-Translator: sharf-admin <karakushan@gmail.com>\n"
+"POT-Creation-Date: 2017-08-23 07:57+0000\n"
+"PO-Revision-Date: 2017-08-23 07:57+0000\n"
+"Last-Translator: cube44-admin <karakushan@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -29,36 +29,20 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: functions/filters.php:73
-msgid "Total cost"
-msgstr "Общая стоимость"
-
-#: functions/filters.php:74
-msgid "Customer"
-msgstr "Заказчик"
-
-#: functions/filters.php:99
-msgid "phone"
-msgstr "телефон"
-
 #: functions/filters.php:100
 msgid "email"
 msgstr ""
-
-#: functions/filters.php:101
-msgid "city"
-msgstr "город"
-
-#: lib/FS_Post_Type.php:218
-msgid "Order status"
-msgstr "Статус заказа"
 
 #: templates/back-end/metabox/tab-3.php:10
 msgid "Запас товара на складе"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
-msgid "Fast Shop"
+#. Name of the plugin
+msgid "F-Shop"
+msgstr ""
+
+#. Description of the plugin
+msgid "Плагин интернет магазина для Wordpress."
 msgstr ""
 
 #. URI of the plugin
@@ -91,6 +75,7 @@ msgid "not available"
 msgstr "нет  в наличии"
 
 #: functions/filters.php:19 functions/filters.php:121
+#: templates/front-end/mail/themes/oxygen.php:462
 msgid "Price"
 msgstr "Цена"
 
@@ -110,61 +95,72 @@ msgstr "Фото"
 msgid "no photo"
 msgstr "нет фото"
 
+#: functions/filters.php:73
+msgid "Total cost"
+msgstr "Общая стоимость"
+
+#: functions/filters.php:74
+msgid "Customer"
+msgstr "Заказчик"
+
+#: functions/filters.php:99
+msgid "phone"
+msgstr "телефон"
+
+#: functions/filters.php:101
+msgid "city"
+msgstr "город"
+
 #: functions/filters.php:131
 msgid "units"
 msgstr "единиц"
 
-#: functions/functions.php:348
+#: functions/functions.php:350
 msgid "Remove items"
 msgstr "Удалить позицию"
 
-#: functions/functions.php:446
+#: functions/functions.php:448
 msgid "Add to cart"
 msgstr "В корзину"
 
-#: functions/functions.php:807
+#: functions/functions.php:836
 msgid "add to wish list"
 msgstr "добавить в список желаний"
 
-#: functions/functions.php:1277 templates/front-end/auth/profile.php:9
-#: templates/front-end/auth/profile.php:13
-#: templates/front-end/auth/register.php:10
-#: templates/front-end/auth/register.php:15
-#: templates/front-end/auth/register.php:26
-#: templates/front-end/auth/register.php:31
-#: templates/front-end/cabinet/profile-edit.php:19
-msgid "required field"
-msgstr "обязательное поле"
+#: lib/FS_Ajax_Class.php:140 lib/FS_Post_Type.php:91
+#: templates/front-end/mail/themes/oxygen.php:426
+msgid "Order"
+msgstr "Заказ"
 
-#: lib/FS_Config.php:55
+#: lib/FS_Config.php:52
 msgid "Prices"
 msgstr "Цены"
 
-#: lib/FS_Config.php:61
+#: lib/FS_Config.php:58
 msgid "Gallery"
 msgstr "Галерея"
 
-#: lib/FS_Config.php:67
+#: lib/FS_Config.php:64
 msgid "Other"
 msgstr "Другое"
 
-#: lib/FS_Config.php:73
+#: lib/FS_Config.php:70
 msgid "Associated"
 msgstr "Связанное"
 
-#: lib/FS_Config.php:121
+#: lib/FS_Config.php:104
 msgid "The base price"
 msgstr "Базовая цена"
 
-#: lib/FS_Config.php:124
+#: lib/FS_Config.php:107
 msgid "This is the main type prices"
 msgstr "Это главный тип цены"
 
-#: lib/FS_Config.php:127
+#: lib/FS_Config.php:110
 msgid "Promotional price"
 msgstr "Акционая цена"
 
-#: lib/FS_Config.php:130
+#: lib/FS_Config.php:113
 msgid "This type of price interrupts the base price"
 msgstr "Этот тип цены перебивает базовую цену"
 
@@ -176,11 +172,11 @@ msgstr "Обновление создание базы закончилось у
 msgid "An error occurred during the process of database updates!"
 msgstr "Произошла непредвиденная ошибка в процессе обновления/создания базы!"
 
-#: lib/FS_Filters.php:45 lib/FS_Taxonomies_Class.php:28
+#: lib/FS_Filters.php:45 lib/FS_Taxonomies_Class.php:29
 msgid "Product category"
 msgstr "Категории товаров"
 
-#: lib/FS_Init.php:112
+#: lib/FS_Init.php:113
 msgid "Client"
 msgstr "Клиент"
 
@@ -205,10 +201,6 @@ msgstr "Изменить товар"
 msgid "Orders"
 msgstr "Заказы"
 
-#: lib/FS_Post_Type.php:91 templates/front-end/mail/themes/oxygen.php:422
-msgid "Order"
-msgstr "Заказ"
-
 #: lib/FS_Post_Type.php:92
 msgid "Add Order"
 msgstr "Добавить заказ"
@@ -229,73 +221,93 @@ msgstr "Список товаров"
 msgid "Customer data"
 msgstr "Данные заказчика"
 
-#: lib/FS_Settings_Class.php:55 lib/FS_Settings_Class.php:56
+#: lib/FS_Post_Type.php:218
+msgid "Order status"
+msgstr "Статус заказа"
+
+#: lib/FS_Settings_Class.php:57 lib/FS_Settings_Class.php:58
 #: templates/back-end/settings.php:2
 msgid "Store settings"
 msgstr "Настройки магазина"
 
-#: lib/FS_Taxonomies_Class.php:25 lib/FS_Taxonomies_Class.php:27
-#: lib/FS_Taxonomies_Class.php:29 lib/FS_Taxonomies_Class.php:30
-#: lib/FS_Taxonomies_Class.php:31 lib/FS_Taxonomies_Class.php:32
-#: lib/FS_Taxonomies_Class.php:34 lib/FS_Taxonomies_Class.php:36
-#: lib/FS_Taxonomies_Class.php:37
+#: lib/FS_Settings_Class.php:81
+msgid "General"
+msgstr "Главные"
+
+#: lib/FS_Settings_Class.php:106
+msgid "Letters"
+msgstr "Письма"
+
+#: lib/FS_Settings_Class.php:155
+msgid "Page"
+msgstr "Страницы"
+
+#: lib/FS_Settings_Class.php:198
+msgid "Users"
+msgstr "Пользователи"
+
+#: lib/FS_Taxonomies_Class.php:26 lib/FS_Taxonomies_Class.php:28
+#: lib/FS_Taxonomies_Class.php:30 lib/FS_Taxonomies_Class.php:31
+#: lib/FS_Taxonomies_Class.php:32 lib/FS_Taxonomies_Class.php:33
+#: lib/FS_Taxonomies_Class.php:35 lib/FS_Taxonomies_Class.php:37
+#: lib/FS_Taxonomies_Class.php:38
 msgid "Product categories"
 msgstr "Категории товара"
 
-#: lib/FS_Taxonomies_Class.php:33
+#: lib/FS_Taxonomies_Class.php:34
 msgid "Category editing"
 msgstr "Редактирование категории"
 
-#: lib/FS_Taxonomies_Class.php:35
+#: lib/FS_Taxonomies_Class.php:36
 msgid "Add category"
 msgstr "Добавить категорию "
 
-#: lib/FS_Taxonomies_Class.php:48 lib/FS_Taxonomies_Class.php:50
+#: lib/FS_Taxonomies_Class.php:49 lib/FS_Taxonomies_Class.php:51
 msgid "Payment methods"
 msgstr "Способы оплаты"
 
-#: lib/FS_Taxonomies_Class.php:51 templates/front-end/auth/profile.php:53
+#: lib/FS_Taxonomies_Class.php:52 templates/front-end/auth/profile.php:53
 #: templates/front-end/auth/register.php:61
 msgid "Payment method"
 msgstr "Способ оплаты"
 
-#: lib/FS_Taxonomies_Class.php:52
+#: lib/FS_Taxonomies_Class.php:53
 msgid "Add a payment method"
 msgstr "Добавление способа оплаты"
 
-#: lib/FS_Taxonomies_Class.php:64 lib/FS_Taxonomies_Class.php:66
+#: lib/FS_Taxonomies_Class.php:65 lib/FS_Taxonomies_Class.php:67
 msgid "Delivery methods"
 msgstr "Способы доставки"
 
-#: lib/FS_Taxonomies_Class.php:67
+#: lib/FS_Taxonomies_Class.php:68
 msgid "Delivery method"
 msgstr "Способ доставки"
 
-#: lib/FS_Taxonomies_Class.php:68
+#: lib/FS_Taxonomies_Class.php:69
 msgid "Add a delivery method"
 msgstr "Добавление способа доставки"
 
-#: lib/FS_Taxonomies_Class.php:79 lib/FS_Taxonomies_Class.php:81
-#: lib/FS_Taxonomies_Class.php:82
+#: lib/FS_Taxonomies_Class.php:80 lib/FS_Taxonomies_Class.php:82
+#: lib/FS_Taxonomies_Class.php:83
 msgid "Product attributes"
 msgstr "Свойства товаров"
 
-#: lib/FS_Taxonomies_Class.php:83
+#: lib/FS_Taxonomies_Class.php:84
 msgid "Add property / group of properties"
 msgstr "Добавление свойства/группы свойств"
 
-#: lib/FS_Taxonomies_Class.php:106 lib/FS_Taxonomies_Class.php:108
-#: lib/FS_Taxonomies_Class.php:109
+#: lib/FS_Taxonomies_Class.php:107 lib/FS_Taxonomies_Class.php:109
+#: lib/FS_Taxonomies_Class.php:110
 msgid "Order statuses"
 msgstr "Статусы заказов"
 
-#: lib/FS_Taxonomies_Class.php:110
+#: lib/FS_Taxonomies_Class.php:111
 msgid "Add status"
 msgstr "Добавить статус"
 
 #: templates/back-end/orders.php:36
-#: templates/front-end/mail/themes/oxygen.php:457
-#: templates/front-end/mail/themes/oxygen.php:511
+#: templates/front-end/mail/themes/oxygen.php:465
+#: templates/front-end/mail/themes/oxygen.php:518
 msgid "Total"
 msgstr "Всего"
 
@@ -311,39 +323,7 @@ msgstr[2] "%s заказов"
 msgid "At the current time you have no order."
 msgstr "В текущее время у вас нет ни одного заказа."
 
-#: templates/back-end/settings.php:7
-msgid "General"
-msgstr "Главные"
-
-#: templates/back-end/settings.php:8
-msgid "Letters"
-msgstr "Письма"
-
-#: templates/back-end/settings.php:9
-msgid "Stock"
-msgstr "Акции"
-
-#: templates/back-end/settings.php:10
-msgid "Page"
-msgstr "Страницы"
-
-#: templates/back-end/settings.php:11
-msgid "Users"
-msgstr "Пользователи"
-
-#: templates/back-end/settings.php:12
-msgid "Messages"
-msgstr "Сообщения"
-
-#: templates/back-end/settings.php:14
-msgid "Export"
-msgstr "Экспорт"
-
-#: templates/back-end/settings.php:260
-msgid "Settings export and import of goods"
-msgstr "Настройки экспорта и импорта товаров"
-
-#: templates/back-end/metabox/tab-2.php:20
+#: templates/back-end/metabox/tab-2.php:19
 msgid "Remove from gallery"
 msgstr "Удалить из галереи"
 
@@ -359,24 +339,24 @@ msgstr "Связанные товары"
 msgid "Select a category"
 msgstr "Выберите категорию"
 
-#: templates/front-end/auth/login.php:6 templates/front-end/auth/login.php:7
+#: templates/front-end/auth/login.php:6 templates/front-end/auth/login.php:8
 msgid "Email or login"
 msgstr "Email или логин"
 
-#: templates/front-end/auth/login.php:7 templates/front-end/auth/login.php:11
+#: templates/front-end/auth/login.php:9 templates/front-end/auth/login.php:14
 msgid "required"
 msgstr "обязательно"
 
-#: templates/front-end/auth/login.php:10 templates/front-end/auth/login.php:11
+#: templates/front-end/auth/login.php:12 templates/front-end/auth/login.php:14
 #: templates/front-end/auth/register.php:30
 msgid "Password"
 msgstr "Пароль"
 
-#: templates/front-end/auth/login.php:16
+#: templates/front-end/auth/login.php:18
 msgid "Remember me"
 msgstr "Запомнить меня"
 
-#: templates/front-end/auth/login.php:22
+#: templates/front-end/auth/login.php:23
 msgid "Log"
 msgstr "Вход"
 
@@ -384,6 +364,16 @@ msgstr "Вход"
 #: templates/front-end/auth/register.php:9
 msgid "Full Name"
 msgstr "Фамилия Имя Отчество"
+
+#: templates/front-end/auth/profile.php:9
+#: templates/front-end/auth/profile.php:13
+#: templates/front-end/auth/register.php:10
+#: templates/front-end/auth/register.php:15
+#: templates/front-end/auth/register.php:26
+#: templates/front-end/auth/register.php:31
+#: templates/front-end/cabinet/profile-edit.php:18
+msgid "required field"
+msgstr "обязательное поле"
 
 #: templates/front-end/auth/profile.php:12
 #: templates/front-end/auth/register.php:14
@@ -445,49 +435,29 @@ msgstr "Отправить"
 msgid "Order on the site"
 msgstr "Заказ на сайте"
 
-#: templates/front-end/mail/themes/oxygen.php:359
+#: templates/front-end/mail/themes/oxygen.php:362
 msgid "Thank you for your order!"
 msgstr "Благодарим за заказ!"
 
-#: templates/front-end/mail/themes/oxygen.php:376
+#: templates/front-end/mail/themes/oxygen.php:380
 msgid "My Account"
 msgstr "Личный кабинет"
 
-#: templates/front-end/mail/themes/oxygen.php:397
+#: templates/front-end/mail/themes/oxygen.php:401
 msgid "Shipping and payment"
 msgstr "Доставка и оплата"
 
-#: templates/front-end/mail/themes/oxygen.php:419
+#: templates/front-end/mail/themes/oxygen.php:423
 msgid "Date Ordered"
 msgstr "Дата заказа"
 
-#: templates/front-end/mail/themes/oxygen.php:450
+#: templates/front-end/mail/themes/oxygen.php:454
 msgid "Item"
 msgstr "Товар"
 
-#: templates/front-end/mail/themes/oxygen.php:453
+#: templates/front-end/mail/themes/oxygen.php:458
 msgid "Qty"
 msgstr "К-во"
-
-#: templates/front-end/mail/themes/oxygen.php:507
-msgid "Subtotal"
-msgstr "Начальная цена"
-
-#: templates/front-end/mail/themes/oxygen.php:508
-msgid "Tax"
-msgstr "Налог"
-
-#: templates/front-end/mail/themes/oxygen.php:509
-msgid "Shipping"
-msgstr "Доставка"
-
-#. Description of the plugin/theme
-msgid ""
-"The plugin will help in the creation of any online store without changing "
-"your template."
-msgstr ""
-"Это плагин позволяет в короткое время создать полноценный магазин на любом "
-"шаблоне Wordpress."
 
 #. Author of the plugin/theme
 msgid "Vitaliy Karakushan"

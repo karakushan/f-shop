@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-23 07:57+0000\n"
-"PO-Revision-Date: 2017-08-23 07:57+0000\n"
+"POT-Creation-Date: 2017-08-23 08:54+0000\n"
+"PO-Revision-Date: 2017-08-23 08:55+0000\n"
 "Last-Translator: cube44-admin <karakushan@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
@@ -32,6 +32,10 @@ msgstr ""
 #: functions/filters.php:100
 msgid "email"
 msgstr ""
+
+#: lib/FS_Form_Class.php:28
+msgid "this field is required"
+msgstr "это поле обязательное"
 
 #: templates/back-end/metabox/tab-3.php:10
 msgid "Запас товара на складе"
@@ -127,7 +131,7 @@ msgstr "В корзину"
 msgid "add to wish list"
 msgstr "добавить в список желаний"
 
-#: lib/FS_Ajax_Class.php:140 lib/FS_Post_Type.php:91
+#: lib/FS_Ajax_Class.php:141 lib/FS_Post_Type.php:91
 #: templates/front-end/mail/themes/oxygen.php:426
 msgid "Order"
 msgstr "Заказ"
@@ -176,7 +180,7 @@ msgstr "Произошла непредвиденная ошибка в проц
 msgid "Product category"
 msgstr "Категории товаров"
 
-#: lib/FS_Init.php:113
+#: lib/FS_Init.php:112
 msgid "Client"
 msgstr "Клиент"
 

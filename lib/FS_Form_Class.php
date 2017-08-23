@@ -25,7 +25,7 @@ class FS_Form_Class {
 				']'
 			), array( '_' ), $field_name ),
 			'required'    => false,
-			'title'       => '',
+			'title'       => __('this field is required','fast-shop'),
 			'placeholder' => '',
 			'value'       => '',
 			'editor_args' => array(
