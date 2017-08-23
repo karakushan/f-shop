@@ -446,9 +446,6 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	 */
 	if ( empty( $label ) ) {
 		$label = __( 'Add to cart', 'fast-shop' );
-	} else {
-		$my_theme = wp_get_theme();
-		$label    = __( $label, $my_theme->get( 'TextDomain' ) );
 	}
 
 	//Добавляем к json свои значения
@@ -1207,10 +1204,7 @@ function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
  * @return [type]          строка атрибутов
  */
 function fs_parse_attr( $attr = array(), $default = array() ) {
-	if ( empty( $attr ) ) {
-		return;
-	}
-	$attr      = array_merge( $attr, $default );
+	$attr      = wp_parse_args( $attr, $default );
 	$attr      = array_map( 'esc_attr', $attr );
 	$atributes = array();
 	$att       = '';
