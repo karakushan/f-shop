@@ -35,7 +35,8 @@ class FS_Ajax_Class {
 	 *Отправка заказа в базу, на почту админа и заказчика
 	 */
 	function order_send_ajax() {
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'fast-shop' ) ) {
+		global $fs_config;
+		if ( ! $fs_config::verify_nonce() ) {
 			die ( 'не пройдена верификация формы nonce' );
 		}
 		$fs_products = $_SESSION['cart'];

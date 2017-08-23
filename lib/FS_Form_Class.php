@@ -7,10 +7,6 @@
  */
 
 namespace FS;
-
-
-use ES_LIB\ES_config;
-
 class FS_Form_Class {
 
 	/**
@@ -32,7 +28,12 @@ class FS_Form_Class {
 			'title'       => '',
 			'placeholder' => '',
 			'value'       => '',
-			'editor_args' => array( 'textarea_rows' => 8, 'textarea_name' => $field_name,'tinymce'=>false ,'media_buttons'=>false)
+			'editor_args' => array(
+				'textarea_rows' => 8,
+				'textarea_name' => $field_name,
+				'tinymce'       => false,
+				'media_buttons' => false
+			)
 
 		);
 		$args        = wp_parse_args( $args, $default );
@@ -81,7 +82,7 @@ class FS_Form_Class {
 					'taxonomy'        => $fs_config->data['product_pay_taxonomy']
 				) );
 				break;
-				case 'del_methods':
+			case 'del_methods':
 				$field = wp_dropdown_categories( array(
 					'show_option_all' => 'Способ доставки',
 					'hide_empty'      => 0,
