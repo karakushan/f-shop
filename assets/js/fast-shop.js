@@ -176,6 +176,19 @@ jQuery(function ($) {
         var product_id = curent.data('product-id');
         var product_name = curent.data('product-name');
         var attr = curent.data('attr');
+        // объект передаваемый в события
+        var detail = {
+            button: curent,
+            id: product_id,
+            name: product_name,
+            attr: attr,
+            success: true,
+            text: {
+                success: curent.data('success'),
+                error: curent.data('error')
+            }
+        }
+
 
         var productObject = {
             "action": 'add_to_cart',
@@ -188,26 +201,18 @@ jQuery(function ($) {
             beforeSend: function () {
                 // создаём событие
                 var before_add_product = new CustomEvent("fs_before_add_product", {
-                    detail: {id: product_id, name: product_name, attr: attr, success: true, button: curent}
+                    detail: detail
                 });
                 document.dispatchEvent(before_add_product);
-                curent.find('.fs-preloader ').fadeIn('slow');
                 return before_add_product.success;
             }
         })
             .done(function (result) {
-
                 // создаём событие
                 var add_to_cart = new CustomEvent("fs_add_to_cart", {
-                    detail: {id: product_id, name: product_name, attr: attr, button: curent}
+                    detail: detail
                 });
                 document.dispatchEvent(add_to_cart);
-
-                $('#fs_cart_widget,.fs_cart_widget,[data-fs-element="cart-widget"]').replaceWith(result);
-                curent.find('.fs-preloader ').fadeOut('fast', function () {
-
-                });
-
             });
 
     });
@@ -601,14 +606,18 @@ var addUrlParam = function (search, key, val) {
     document.addEventListener("fs_before_add_product", function (event) {
         // действие которое инициирует событие, здесь может быть любой ваш код
         var button = event.detail.button;
-        button.html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
+        button.find('.fs-atc-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
         event.preventDefault();
     }, false);
     // Событие срабатывает когда товар добавлен в корзину
     document.addEventListener("fs_add_to_cart", function (event) {
-        // действие которое инициирует событие, здесь может быть любой ваш код
+        // действие которое инициирует событие
         var button = event.detail.button;
-        button.html('<span class="fs-atc-success">товар в корзине <i class="fa fa-check" aria-hidden="true"></i></span>');
+        button.find('.fs-atc-preloader').fadeOut();
+        button.find('.fs-atc-info').fadeIn().html(event.detail.text.success);
+        setTimeout(function () {
+            button.find('.fs-atc-info').fadeOut();
+        }, 4000)
         event.preventDefault();
     }, false);
 

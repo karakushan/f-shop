@@ -436,7 +436,9 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
 			'preloader' => '',
 			'class'     => '',
-			'type'      => 'button'
+			'type'      => 'button',
+			'success'   => sprintf( __( 'Item «%s» added to cart', 'fast-shop' ), get_the_title( $post_id ) ),
+			'error'     => __( 'Error adding product to cart', 'fast-shop' )
 		)
 	);
 
@@ -457,17 +459,20 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		'data-product-id'   => $post_id,
 		'data-product-name' => get_the_title( $post_id ),
 		'id'                => 'fs-atc-' . $post_id,
-		'data-attr'         => $attr_json
+		'data-attr'         => $attr_json,
+		'data-success'      => $attr['success'],
+		'data-error'        => $attr['error']
 	);
 	$attributes = fs_parse_attr( array(), $attr_set );
+
 
 	/* позволяем устанавливать разные html элементы в качестве кнопки */
 	switch ( $attr['type'] ) {
 		case 'link':
-			$button = '<a href="#" ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '</a>';
+			$button = '<a href="#" ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '<span class="fs-atc-info" style="display:none"></span></a>';
 			break;
 		default:
-			$button = '<button ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '</button>';
+			$button = '<button ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '<span class="fs-atc-info" style="display:none"></span><span class="fs-atc-preloader" style="display:none"></span></button>';
 			break;
 	}
 

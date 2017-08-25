@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-23 08:54+0000\n"
+"POT-Creation-Date: 2017-08-25 13:58+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -100,11 +100,20 @@ msgstr ""
 msgid "Remove items"
 msgstr ""
 
-#: functions/functions.php:448
+#: functions/functions.php:440
+#, php-format
+msgid "Item «%s» added to cart"
+msgstr ""
+
+#: functions/functions.php:441
+msgid "Error adding product to cart"
+msgstr ""
+
+#: functions/functions.php:450
 msgid "Add to cart"
 msgstr ""
 
-#: functions/functions.php:836
+#: functions/functions.php:838
 msgid "add to wish list"
 msgstr ""
 

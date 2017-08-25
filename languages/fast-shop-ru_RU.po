@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-23 08:54+0000\n"
-"PO-Revision-Date: 2017-08-23 08:55+0000\n"
-"Last-Translator: cube44-admin <karakushan@gmail.com>\n"
+"POT-Creation-Date: 2017-08-25 13:58+0000\n"
+"PO-Revision-Date: 2017-08-25 13:59+0000\n"
+"Last-Translator: kratus-admin <karakushan@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -33,9 +33,14 @@ msgstr ""
 msgid "email"
 msgstr ""
 
-#: lib/FS_Form_Class.php:28
-msgid "this field is required"
-msgstr "это поле обязательное"
+#: functions/functions.php:440
+#, php-format
+msgid "Item «%s» added to cart"
+msgstr "Товар «%s» добавлен в корзину"
+
+#: functions/functions.php:441
+msgid "Error adding product to cart"
+msgstr "Ошибка добавления товара в корзину"
 
 #: templates/back-end/metabox/tab-3.php:10
 msgid "Запас товара на складе"
@@ -123,11 +128,11 @@ msgstr "единиц"
 msgid "Remove items"
 msgstr "Удалить позицию"
 
-#: functions/functions.php:448
+#: functions/functions.php:450
 msgid "Add to cart"
 msgstr "В корзину"
 
-#: functions/functions.php:836
+#: functions/functions.php:838
 msgid "add to wish list"
 msgstr "добавить в список желаний"
 
@@ -179,6 +184,10 @@ msgstr "Произошла непредвиденная ошибка в проц
 #: lib/FS_Filters.php:45 lib/FS_Taxonomies_Class.php:29
 msgid "Product category"
 msgstr "Категории товаров"
+
+#: lib/FS_Form_Class.php:28
+msgid "this field is required"
+msgstr "это поле обязательное"
 
 #: lib/FS_Init.php:112
 msgid "Client"

@@ -466,4 +466,21 @@ li.fs-attr {
 .fs-col-12 {
   width: 100%; }
 
+.fs-atc-info {
+  position: absolute;
+  background: rgba(8, 182, 127, 0.82);
+  font-weight: normal;
+  font-size: 12px;
+  width: 249px;
+  line-height: 1;
+  padding: 10px;
+  bottom: calc(100% + 10px);
+  left: 0;
+  text-transform: none; }
+
+.fs-atc-preloader {
+  position: absolute;
+  left: 26px;
+  top: 0; }
+
 /*# sourceMappingURL=fast-shop.css.map */
