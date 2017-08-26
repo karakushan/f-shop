@@ -337,28 +337,46 @@ function fs_get_cart() {
 }
 
 /**
- * Отображает ссылку для удаления товара
+ * выводит кнопку удаления товара из корзины
  *
- * @param  [type] $product_id id удаляемого товара
- * @param string $text
- * @param string $type
- * @param string $attr
+ * @param $product_id - ID удаляемого товара
+ * @param $args - массив аргументов для кнопки или ссылки
+ *        'text'  - содержимое кнопки, по умолчанию '&#10005;',
+ *        'type'  - тип тега ссылка 'link' или 'button',
+ *        'class' - класс для кнопки, ссылки (по умолчанию класс 'fs-delete-position')
+ *
+ * @return bool
  */
-function fs_delete_position( $product_id, $text = '&#10005;', $type = 'link', $class = '' ) {
-	$title = 'title="' . __( 'Remove items', 'fast-shop' ) . ' ' . get_the_title( $product_id ) . '"';
-	$class = "class=\"$class\"";
-	switch ( $type ) {
+function fs_delete_position( $product_id, $args ) {
+	$args      = wp_parse_args( $args, array(
+		'text'  => '&#10005;',
+		'type'  => 'link',
+		'class' => 'fs-delete-position'
+	) );
+	$html_atts = fs_parse_attr( array(), array(
+		'class'        => $args['class'],
+		'title'        => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) ),
+		'data-fs-type' => 'product-delete',
+		'data-fs-id'   => $product_id,
+		'data-fs-name' => get_the_title( $product_id )
+
+	) );
+
+	$text = sanitize_text_field( $args['text'] );
+
+	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#" ' . $class . ' ' . $title . '  data-fs-type="product-delete" data-fs-id="' . $product_id . '" data-fs-name="' . get_the_title( $product_id ) . '">' . $text . '</a>';
+			echo '<a href="#" ' . $html_atts . '>' . $text . '</a>';
 			break;
 		case 'button':
-			echo '<button type="button" ' . $class . ' ' . $title . '  data-fs-type="product-delete" data-fs-id="' . $product_id . '" data-fs-name="' . get_the_title( $product_id ) . '">' . $text . '</button>';
+			echo '<button type="button" ' . $html_atts . '>' . $text . '</button>';
 			break;
 		default:
-			echo '<a href="#" ' . $class . ' ' . $title . '  data-fs-type="product-delete" data-fs-id="' . $product_id . '" data-fs-name="' . get_the_title( $product_id ) . '">' . $text . '</a>';
-
+			echo '<a href="#" ' . $html_atts . '>' . $text . '</a>';
 			break;
 	}
+
+	return true;
 }
 
 
