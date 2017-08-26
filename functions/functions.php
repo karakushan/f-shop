@@ -503,9 +503,20 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	echo apply_filters( 'fs_add_to_cart_filter', $button );
 }
 
-//Отображает кнопку сабмита формы заказа
-function fs_order_send( $label = 'Отправить заказ', $attr = '', $preloader = '<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>' ) {
-	echo "<button type=\"submit\" $attr data-fs-action=\"order-send\">$label <span class=\"fs-preloader\">$preloader</span></button>";
+
+/**
+ * Отображает кнопку сабмита формы заказа
+ *
+ * @param string $label - надпись на кнопке
+ * @param array $attr - html атрибуты элемента button
+ * @param string $preloader - код прелоадера, который будет показан перед отправкой
+ */
+function fs_order_send( $label = 'Отправить заказ', $attr = array(), $preloader = '<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>' ) {
+	$attr = fs_parse_attr( $attr, array(
+		'data-fs-action' => "order-send",
+		'class'          => 'fs-order-send'
+	) );
+	echo "<button type=\"submit\" $attr >$label <span class=\"fs-preloader\">$preloader</span></button>";
 }
 
 function fs_order_send_form() {
@@ -1250,7 +1261,7 @@ function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
  * @return [type]          строка атрибутов
  */
 function fs_parse_attr( $attr = array(), $default = array() ) {
-	$attr = wp_parse_args( $attr, $default );
+	$attr      = wp_parse_args( $attr, $default );
 	$attr      = array_map( 'esc_attr', $attr );
 	$atributes = array();
 	$att       = '';
