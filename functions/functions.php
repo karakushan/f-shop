@@ -292,13 +292,15 @@ function fs_total_count( $echo = true ) {
  *         'price' - цена за единицу,
  *         'all_price' - общая цена
  */
-function fs_get_cart() {
+function fs_get_cart( $args = array() ) {
 	if ( ! isset( $_SESSION['cart'] ) ) {
 		return false;
 	}
-
+	$args     = wp_parse_args( $args, array(
+		'price_format' => '%s <span>%s</span>'
+	) );
 	$products = array();
-	if ( count( $_SESSION['cart'] ) ) {
+	if ( ! empty( $_SESSION['cart'] ) ) {
 		foreach ( $_SESSION['cart'] as $key => $count ) {
 			if ( $key == 0 ) {
 				continue;
@@ -311,24 +313,27 @@ function fs_get_cart() {
 			$attr       = array();
 			if ( ! empty( $count['attr'] ) ) {
 				foreach ( $count['attr'] as $term ) {
-					$t             = get_term_by( 'term_taxonomy_id', $term );
-					$attr[ $term ] = array(
-						'name'       => $t->name,
-						'group_name' => get_term_field( 'name', $t->parent )
-					);
+					$t = get_term_by( 'term_taxonomy_id', $term );
+					if ( $t ) {
+						$attr[ $term ] = array(
+							'name'       => $t->name,
+							'group_name' => get_term_field( 'name', $t->parent )
+						);
+					}
 				}
 			}
 			$products[ $key ] = array(
-				'id'        => $key,
-				'name'      => get_the_title( $key ),
-				'count'     => $c,
-				'thumb'     => get_the_post_thumbnail_url( $key, 'full' ),
-				'attr'      => $attr,
-				'link'      => get_permalink( $key ),
-				'price'     => $price_show,
-				'all_price' => $all_price,
-				'code'      => fs_product_code( $key ),
-				'currency'  => fs_currency()
+				'id'         => $key,
+				'name'       => get_the_title( $key ),
+				'count'      => $c,
+				'thumb'      => get_the_post_thumbnail_url( $key, 'full' ),
+				'attr'       => $attr,
+				'link'       => get_permalink( $key ),
+				'price'      => sprintf( $args['price_format'], $price_show, fs_currency() ),
+				'base_price' => sprintf( $args['price_format'], fs_base_price( $key, false ), fs_currency() ),
+				'all_price'  => sprintf( $args['price_format'], $all_price, fs_currency() ),
+				'code'       => fs_product_code( $key ),
+				'currency'   => fs_currency()
 			);
 		}
 	}
