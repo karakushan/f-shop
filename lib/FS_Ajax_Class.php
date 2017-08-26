@@ -28,6 +28,8 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 
+
+
 	}
 
 

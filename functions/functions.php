@@ -40,7 +40,7 @@ function fs_lightslider( $post_id = 0, $args = array() ) {
 }
 
 /**
- * Возвращает массив изображений галереи товара
+ * Возвращает массив ID изображений галереи товара
  *
  * @param int $post_id - id поста
  * @param bool $thumbnail - включать ли миниатюру поста в список
@@ -185,17 +185,19 @@ function fs_get_wholesale_price( $post_id = 0 ) {
 /**
  * Получает общую сумму всех продуктов в корзине
  *
+ * @param string $wrap - формат отображения цены с валютой
  * @param  boolean $show показывать (по умолчанию) или возвращать
- * @param  string $cur_before html перед символом валюты
- * @param  string $cur_after html после символа валюты
  *
  * @return возвращает или показывает общую сумму с валютой
+ * @internal param string $cur_before html перед символом валюты
+ * @internal param string $cur_after html после символа валюты
+ *
  */
-function fs_total_amount( $products = array(), $show = true, $wrap = '%s <span>%s</span>' ) {
+function fs_total_amount( $wrap = '%s <span>%s</span>', $show = true ) {
 
 	$all_price = array();
 	$price     = '';
-	$products  = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : $products;
+	$products  = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : array();
 	foreach ( $products as $key => $count ) {
 		$all_price[ $key ] = $count['count'] * fs_get_price( $key );
 	}
@@ -292,11 +294,13 @@ function fs_total_count( $echo = true ) {
  *         'price' - цена за единицу,
  *         'all_price' - общая цена
  */
-function fs_get_cart() {
+function fs_get_cart( $args = array() ) {
 	if ( ! isset( $_SESSION['cart'] ) ) {
 		return false;
 	}
-
+	$args     = wp_parse_args( $args, array(
+		'price_format' => '%s <span>%s</span>'
+	) );
 	$products = array();
 	if ( ! empty( $_SESSION['cart'] ) ) {
 		foreach ( $_SESSION['cart'] as $key => $count ) {
@@ -321,16 +325,17 @@ function fs_get_cart() {
 				}
 			}
 			$products[ $key ] = array(
-				'id'        => $key,
-				'name'      => get_the_title( $key ),
-				'count'     => $c,
-				'thumb'     => get_the_post_thumbnail_url( $key, 'full' ),
-				'attr'      => $attr,
-				'link'      => get_permalink( $key ),
-				'price'     => $price_show,
-				'all_price' => $all_price,
-				'code'      => fs_product_code( $key ),
-				'currency'  => fs_currency()
+				'id'         => $key,
+				'name'       => get_the_title( $key ),
+				'count'      => $c,
+				'thumb'      => get_the_post_thumbnail_url( $key, 'full' ),
+				'attr'       => $attr,
+				'link'       => get_permalink( $key ),
+				'price'      => sprintf( $args['price_format'], $price_show, fs_currency() ),
+				'base_price' => sprintf( $args['price_format'], fs_base_price( $key, false ), fs_currency() ),
+				'all_price'  => sprintf( $args['price_format'], $all_price, fs_currency() ),
+				'code'       => fs_product_code( $key ),
+				'currency'   => fs_currency()
 			);
 		}
 	}
@@ -338,29 +343,48 @@ function fs_get_cart() {
 	return $products;
 }
 
+
 /**
- * Отображает ссылку для удаления товара
+ * выводит кнопку удаления товара из корзины
  *
- * @param  [type] $product_id id удаляемого товара
- * @param string $text
- * @param string $type
- * @param string $attr
+ * @param $product_id - ID удаляемого товара
+ * @param $args - массив аргументов для кнопки или ссылки
+ *        'text'  - содержимое кнопки, по умолчанию '&#10005;',
+ *        'type'  - тип тега ссылка 'link' или 'button',
+ *        'class' - класс для кнопки, ссылки (по умолчанию класс 'fs-delete-position')
+ *
+ * @return bool
  */
-function fs_delete_position( $product_id, $text = '&#10005;', $type = 'link', $class = '' ) {
-	$title = 'title="' . __( 'Remove items', 'fast-shop' ) . ' ' . get_the_title( $product_id ) . '"';
-	$class = "class=\"$class\"";
-	switch ( $type ) {
+function fs_delete_position( $product_id, $args ) {
+	$args      = wp_parse_args( $args, array(
+		'text'  => '&#10005;',
+		'type'  => 'link',
+		'class' => 'fs-delete-position'
+	) );
+	$html_atts = fs_parse_attr( array(), array(
+		'class'        => $args['class'],
+		'title'        => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) ),
+		'data-fs-type' => 'product-delete',
+		'data-fs-id'   => $product_id,
+		'data-fs-name' => get_the_title( $product_id )
+
+	) );
+
+	$text = sanitize_text_field( $args['text'] );
+
+	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#" ' . $class . ' ' . $title . '  data-fs-type="product-delete" data-fs-id="' . $product_id . '" data-fs-name="' . get_the_title( $product_id ) . '">' . $text . '</a>';
+			echo '<a href="#" ' . $html_atts . '>' . $text . '</a>';
 			break;
 		case 'button':
-			echo '<button type="button" ' . $class . ' ' . $title . '  data-fs-type="product-delete" data-fs-id="' . $product_id . '" data-fs-name="' . get_the_title( $product_id ) . '">' . $text . '</button>';
+			echo '<button type="button" ' . $html_atts . '>' . $text . '</button>';
 			break;
 		default:
-			echo '<a href="#" ' . $class . ' ' . $title . '  data-fs-type="product-delete" data-fs-id="' . $product_id . '" data-fs-name="' . get_the_title( $product_id ) . '">' . $text . '</a>';
-
+			echo '<a href="#" ' . $html_atts . '>' . $text . '</a>';
 			break;
 	}
+
+	return true;
 }
 
 
@@ -505,22 +529,20 @@ function fs_post_views( $post_id = '' ) {
 
 /**
  * показывает вижет корзины в шаблоне
+ *
+ * @param array $attr - массив атрибутов html элемента обёртки
+ *
  * @return показывает виджет корзины
  */
 function fs_cart_widget( $attr = array() ) {
 
-	$template_theme = TEMPLATEPATH . '/fast-shop/cart-widget/widget.php';
-	$template       = plugin_dir_path( __FILE__ ) . 'templates/front-end/cart-widget/widget.php';
-
-	if ( file_exists( $template_theme ) ) {
-		$template = $template_theme;
-	}
+	$template = fs_frontend_template( 'cart-widget/widget' );
 	$attr_set = array(
 		'data-fs-element' => 'cart-widget'
 	);
 	$attr     = fs_parse_attr( $attr, $attr_set );
 	echo "<div  $attr>";
-	require $template;
+	echo $template;
 	echo "</div>";
 }
 
@@ -1399,13 +1421,9 @@ function fs_get_image_sizes( $unset_disabled = true ) {
  */
 function fs_gallery_images_ids( $post_id = 0 ) {
 	global $post, $fs_config;
-	$post_id = ! empty( $post_id ) ? $post_id : $post->ID;
-	$media   = get_attached_media( 'image', $post_id );
-	$gallery = array_keys( $media );
-	if ( empty( $gallery ) ) {
-		$fs_gallery = get_post_meta( $post->ID, $fs_config->meta['gallery'], false );
-		$gallery    = ! empty( $fs_gallery ) ? $fs_gallery['0'] : array();
-	}
+	$post_id    = ! empty( $post_id ) ? $post_id : $post->ID;
+	$fs_gallery = get_post_meta( $post_id, $fs_config->meta['gallery'], false );
+	$gallery    = ! empty( $fs_gallery ) ? $fs_gallery['0'] : array();
 
 	return $gallery;
 }

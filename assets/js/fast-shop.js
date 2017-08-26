@@ -612,17 +612,40 @@ var addUrlParam = function (search, key, val) {
     // Событие срабатывает когда товар добавлен в корзину
     document.addEventListener("fs_add_to_cart", function (event) {
         // действие которое инициирует событие
+        fs_get_cart('cart-widget/widget','[data-fs-element="cart-widget"]')
         var button = event.detail.button;
         button.find('.fs-atc-preloader').fadeOut();
         button.find('.fs-atc-info').fadeIn().html(event.detail.text.success);
         setTimeout(function () {
             button.find('.fs-atc-info').fadeOut();
         }, 4000)
+
         event.preventDefault();
     }, false);
 
 
 })(jQuery);
+
+// получает корзину через шаблон "cartTemplate"  и выводит её внутри "cartWrap"
+function fs_get_cart(cartTemplate, cartWrap) {
+    var parameters = {
+        action: 'fs_get_cart',
+        template: cartTemplate
+    }
+    jQuery.ajax({
+        type: 'POST',
+        url: FastShopData.ajaxurl,
+        data: parameters,
+        dataType: 'html',
+        success: function (data) {
+            if(data) jQuery(cartWrap).html(data);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log('error...', xhr);
+            //error logging
+        }
+    });
+}
 
 
 // проверяет является ли переменная числом

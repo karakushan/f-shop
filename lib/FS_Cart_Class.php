@@ -23,6 +23,11 @@ class FS_Cart_Class {
 		//Удаление товара из корзины ajax
 		add_action( 'wp_ajax_delete_product', array( &$this, 'delete_product_ajax' ) );
 		add_action( 'wp_ajax_nopriv_delete_product', array( &$this, 'delete_product_ajax' ) );
+
+// получаем содержимое корзины
+		add_action( 'wp_ajax_fs_get_cart', array( &$this, 'fs_get_cart_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_get_cart', array( &$this, 'fs_get_cart_callback' ) );
+
 	}
 
 
@@ -30,6 +35,19 @@ class FS_Cart_Class {
 	function fast_shop_init_session() {
 		@session_start();
 
+	}
+
+
+	/**
+	 * Получает шаблон корзины методом ajax
+	 * позволяет использовать пользователям отображение корзины в нескольких местах одновременно
+	 */
+	function fs_get_cart_callback() {
+		$template = ! empty( $_POST['template'] ) ? $_POST['template'] : 'cart-widget/widget';
+		if ( ! empty( $template ) ) {
+			echo fs_frontend_template( $template );
+		}
+		exit();
 	}
 
 	// ajax обработка добавления в корзину
