@@ -1204,6 +1204,7 @@ function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
  * @return [type]          строка атрибутов
  */
 function fs_parse_attr( $attr = array(), $default = array() ) {
+	$attr = wp_parse_args( $attr, $default );
 	$attr = array_merge( $attr, $default );
 	$attr = array_map( 'esc_attr', $attr );
 	foreach ( $attr as $key => $att ) {
