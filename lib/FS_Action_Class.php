@@ -65,7 +65,7 @@ class FS_Action_Class {
 		/* Выводит поле для изменения к-ва товаров добавляемых в корзину */
 		add_action( 'fs_quantity_product', 'fs_quantity_product', 10, 3 );
 		/* Выводит кнопку для удаления всех товаров в корзине */
-		add_action( 'fs_delete_cart', 'fs_delete_cart', 10, 2 );
+		add_action( 'fs_delete_cart', 'fs_delete_cart', 10, 1 );
 		/* Выводит общую сумму всех товаров в корзине */
 		add_action( 'fs_total_amount', 'fs_total_amount', 10, 3 );
 		/* Возвращает html код формы входа в личный кабинет */
