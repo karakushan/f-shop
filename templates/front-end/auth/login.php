@@ -21,7 +21,7 @@
 </div>
 <div class="form-group">
   <button type="submit" class="button-t1"><?php _e( 'Log', 'fast-shop' ) ?> <img
-      src="/wp-content/plugins/fast-shop/assets/img/heart.svg" alt="preloader" class="fs-preloader"></button>
+      src="/wp-content/plugins/f-shop/assets/img/heart.svg" alt="preloader" class="fs-preloader"></button>
 </div>
 <div class="clearfix"></div>
 

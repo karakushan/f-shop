@@ -322,7 +322,7 @@ class FS_Post_Type {
 	/* метабокс отображает select для изменения статуса заказаы */
 	public function add_order_status_meta_boxes( $post ) {
 		$term    = get_the_terms( $post, 'order-statuses' );
-		$term_id = intval( $term[0]->term_id );
+		$term_id = ! empty( $term ) ? $term[0]->term_id : 0;
 		$args    = array(
 			'show_option_all'  => '',
 			'show_option_none' => '',

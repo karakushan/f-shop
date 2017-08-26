@@ -28,6 +28,8 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 
+
+
 	}
 
 
@@ -35,7 +37,8 @@ class FS_Ajax_Class {
 	 *Отправка заказа в базу, на почту админа и заказчика
 	 */
 	function order_send_ajax() {
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'fast-shop' ) ) {
+		global $fs_config;
+		if ( ! $fs_config::verify_nonce() ) {
 			die ( 'не пройдена верификация формы nonce' );
 		}
 		$fs_products = $_SESSION['cart'];
@@ -93,9 +96,9 @@ class FS_Ajax_Class {
 				),
 				'_products' => $fs_products,
 				'_delivery' => array(
-					'method' => $sanitize_field['fs_delivery_methods'],
-
-					'adress' => $sanitize_field['fs_adress']
+					'method'    => $sanitize_field['fs_delivery_methods'],
+					'secession' => $sanitize_field['fs_delivery_number'],
+					'adress'    => $sanitize_field['fs_adress']
 				),
 				'_payment'  => $sanitize_field['fs_payment_methods'],
 				'_amount'   => fs_total_amount( $fs_products, false ),
@@ -112,11 +115,11 @@ class FS_Ajax_Class {
 		$replace                               = array_values( $sanitize_field );
 
 		// текст письма заказчику
-		$user_message = apply_filters( 'fs_order_user_message' );
+		$user_message = apply_filters( 'fs_order_user_message', '' );
 		$user_message = str_replace( $search, $replace, $user_message );
 
 		// текст письма админу
-		$admin_message = apply_filters( 'fs_order_admin_message' );
+		$admin_message = apply_filters( 'fs_order_admin_message', '' );
 		$admin_message = str_replace( $search, $replace, $admin_message );
 
 		//Отсылаем письмо с данными заказа заказчику

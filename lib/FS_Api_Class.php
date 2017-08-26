@@ -22,20 +22,47 @@ class FS_Api_Class {
 	 * fs-api=drop_orders_table - удаляет таблицу с заказами
 	 */
 	function plugin_api_actions() {
-		if ( ! is_admin() && ! isset( $_REQUEST['fs-api'] ) ) {
+		if ( empty( $_GET['fs-api'] ) ) {
 			return;
 		}
-		global $wpdb;
-		$config = new FS_Config();
-//		импортирует свойства товаров из опций
-		if (isset( $_REQUEST['fs-api'] ) && $_REQUEST['fs-api'] == 'migrate' ) {
-			FS_Migrate_Class::import_option_attr();
-//			удаляет таблицу заказов
-		} elseif (isset( $_REQUEST['fs-api'] ) && $_REQUEST['fs-api'] == 'drop_orders_table' ) {
-			$orders_table=$config->data['table_orders'];
-			$wpdb->query( "DROP TABLE IF EXISTS $orders_table") ;
-
+		if ( ! is_admin() && ! current_user_can( 'manage_options' ) ) {
+			return;
 		}
+		$api_command = $_GET['fs-api'];
+		// импортирует свойства товаров из опций
+		if ( $api_command == 'migrate' ) {
+			FS_Migrate_Class::import_option_attr();
+			// удаляет все заказы
+		} elseif ( $api_command == 'drop_orders' ) {
+			$orders_class = new FS_Orders_Class();
+			$orders_class->delete_orders();
+			// удаляет все товары
+		} elseif ( $api_command == 'drop_products' ) {
+			$product_class = new FS_Product_Class();
+			$product_class->delete_products();
+			// удаляет категории товаров
+		} elseif ( $api_command == 'drop_cat' ) {
+			$tax_class = new FS_Taxonomies_Class();
+			$tax_class->delete_product_categories();
+			// удаляет свойства товаров
+		} elseif ( $api_command == 'drop_att' ) {
+			$tax_class = new FS_Taxonomies_Class();
+			$tax_class->delete_product_attributes();
+			// удаляет все товары а вместе с ними категории и свойства
+		} elseif ( $api_command == 'drop_all' ) {
+			$product_class = new FS_Product_Class();
+			$product_class->delete_products();
+
+			$tax_class = new FS_Taxonomies_Class();
+			$tax_class->delete_product_categories();
+
+			$tax_class = new FS_Taxonomies_Class();
+			$tax_class->delete_product_attributes();
+
+			$orders_class = new FS_Orders_Class();
+			$orders_class->delete_orders();
+		}
+
 	}
 
 }

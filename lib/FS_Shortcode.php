@@ -167,34 +167,12 @@ class FS_Shortcode {
 	 * @return string
 	 */
 	public function order_send( $atts = array() ) {
-		$prefix = 'order/order-form.php';
-		extract( shortcode_atts( array(
-			'order_type' => 'normal',
-			'class'      => 'order-send'
-		), $atts ) );
-		$template = '
-        <form action="#" name="fs-order-send" class="' . $class . '" method="POST">
-            <div class="products_wrapper"></div>
-            <input type="hidden" id="_wpnonce" name="_wpnonce" value="' . wp_create_nonce( 'fast-shop' ) . '">
-            <input type="hidden" name="action" value="order_send">
-            <input type="hidden" name="order_type" value="' . $order_type . '">
-
-            ';
-		if ( file_exists( $this->config->data['plugin_user_template'] . $prefix ) ) {
-
-			ob_start();
-			include( $this->config->data['plugin_user_template'] . $prefix );
-			$template .= ob_get_contents();
-			ob_end_clean();
-
-
-		} else {
-			ob_start();
-			include( $this->config->data['plugin_template'] . $prefix );
-			$template .= ob_get_contents();
-			ob_end_clean();
-		}
-		$template .= '</form>';
+		$atts     = shortcode_atts( array(
+			'class' => 'order-send'
+		), $atts );
+		$template = fs_form_header( array( 'name' => 'fs-order-send', 'class' => $atts['class'] ), 'order_send' );
+		$template .= fs_frontend_template( 'order/order-form' );
+		$template .= fs_form_bottom( '' );
 
 		return $template;
 	}
@@ -237,8 +215,6 @@ class FS_Shortcode {
 
 		return $template;
 	}
-
-
 
 
 }

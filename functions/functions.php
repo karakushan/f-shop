@@ -185,17 +185,19 @@ function fs_get_wholesale_price( $post_id = 0 ) {
 /**
  * Получает общую сумму всех продуктов в корзине
  *
+ * @param string $wrap - формат отображения цены с валютой
  * @param  boolean $show показывать (по умолчанию) или возвращать
- * @param  string $cur_before html перед символом валюты
- * @param  string $cur_after html после символа валюты
  *
  * @return возвращает или показывает общую сумму с валютой
+ * @internal param string $cur_before html перед символом валюты
+ * @internal param string $cur_after html после символа валюты
+ *
  */
-function fs_total_amount( $products = array(), $show = true, $wrap = '%s <span>%s</span>' ) {
+function fs_total_amount( $wrap = '%s <span>%s</span>', $show = true ) {
 
 	$all_price = array();
 	$price     = '';
-	$products  = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : $products;
+	$products  = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : array();
 	foreach ( $products as $key => $count ) {
 		$all_price[ $key ] = $count['count'] * fs_get_price( $key );
 	}
@@ -341,6 +343,7 @@ function fs_get_cart( $args = array() ) {
 	return $products;
 }
 
+
 /**
  * выводит кнопку удаления товара из корзины
  *
@@ -457,7 +460,9 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
 			'preloader' => '',
 			'class'     => '',
-			'type'      => 'button'
+			'type'      => 'button',
+			'success'   => sprintf( __( 'Item «%s» added to cart', 'fast-shop' ), get_the_title( $post_id ) ),
+			'error'     => __( 'Error adding product to cart', 'fast-shop' )
 		)
 	);
 
@@ -467,9 +472,6 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	 */
 	if ( empty( $label ) ) {
 		$label = __( 'Add to cart', 'fast-shop' );
-	} else {
-		$my_theme = wp_get_theme();
-		$label    = __( $label, $my_theme->get( 'TextDomain' ) );
 	}
 
 	//Добавляем к json свои значения
@@ -481,17 +483,20 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		'data-product-id'   => $post_id,
 		'data-product-name' => get_the_title( $post_id ),
 		'id'                => 'fs-atc-' . $post_id,
-		'data-attr'         => $attr_json
+		'data-attr'         => $attr_json,
+		'data-success'      => $attr['success'],
+		'data-error'        => $attr['error']
 	);
 	$attributes = fs_parse_attr( array(), $attr_set );
+
 
 	/* позволяем устанавливать разные html элементы в качестве кнопки */
 	switch ( $attr['type'] ) {
 		case 'link':
-			$button = '<a href="#" ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '</a>';
+			$button = '<a href="#" ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '<span class="fs-atc-info" style="display:none"></span></a>';
 			break;
 		default:
-			$button = '<button ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '</button>';
+			$button = '<button ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '<span class="fs-atc-info" style="display:none"></span><span class="fs-atc-preloader" style="display:none"></span></button>';
 			break;
 	}
 
@@ -524,22 +529,20 @@ function fs_post_views( $post_id = '' ) {
 
 /**
  * показывает вижет корзины в шаблоне
+ *
+ * @param array $attr - массив атрибутов html элемента обёртки
+ *
  * @return показывает виджет корзины
  */
 function fs_cart_widget( $attr = array() ) {
 
-	$template_theme = TEMPLATEPATH . '/fast-shop/cart-widget/widget.php';
-	$template       = plugin_dir_path( __FILE__ ) . 'templates/front-end/cart-widget/widget.php';
-
-	if ( file_exists( $template_theme ) ) {
-		$template = $template_theme;
-	}
+	$template = fs_frontend_template( 'cart-widget/widget' );
 	$attr_set = array(
 		'data-fs-element' => 'cart-widget'
 	);
 	$attr     = fs_parse_attr( $attr, $attr_set );
 	echo "<div  $attr>";
-	require $template;
+	echo $template;
 	echo "</div>";
 }
 
@@ -592,24 +595,48 @@ function fs_aviable_product( $post_id = 0 ) {
 	return $aviable;
 }
 
+
 /**
- * Отоюражает поле для ввода количества добавляемых продуктов в корзину
+ * Отображает или возвращает поле для изменения количества добавляемых товаров в корзину
  *
- * @param  int $product_id - id продукта
+ * @param int $product_id - ID товара
+ * @param array $args - массив аргументов
  *
+ * @return mixed
  */
-function fs_quantity_product( $product_id = 0, $echo = true ) {
+function fs_quantity_product( $product_id = 0, $args = array() ) {
 	global $post;
-	$product_id  = ! empty( $product_id ) ? $product_id : $post->ID;
-	$quantity_el = '<div class="fs-quantity-product">
-    <button type="button" class="plus" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '">+</button> 
-    <input type="text" name="" value="1" data-fs-action="change_count" id="product-quantify-' . $product_id . '" data-fs-product-id="' . $product_id . '"> 
-    <button type="button" class="minus" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '">-</button> </div>';
-	$quantity_el = apply_filters( 'fs_quantity_product', $quantity_el );
-	if ( $echo ) {
-		echo $quantity_el;
+	$product_id = ! empty( $product_id ) ? $product_id : $post->ID;
+	$args       = wp_parse_args( $args, array(
+		'position'      => '%pluss% %input% %minus%',
+		'wrapper'       => 'div',
+		'wrapper_class' => 'fs-qty-wrap',
+		'pluss_class'   => 'fs-pluss',
+		'pluss_content' => '+',
+		'minus_class'   => 'fs-minus',
+		'minus_content' => '-',
+		'input_class'   => 'fs-quantity',
+		'echo'          => true
+	) );
+	$pluss      = sprintf( '<button type="button" class="%s" data-fs-count="pluss" data-target="#product-quantify-%s">%s</button> ', $args['pluss_class'], $product_id, $args['pluss_content'] );
+	$minus      = sprintf( '<button type="button" class="%s" data-fs-count="minus" data-target="#product-quantify-%s">%s</button>', $args['minus_class'], $product_id, $args['minus_content'] );
+	$input      = sprintf( '<input type="text" class="%s" name="count" value="1" data-fs-action="change_count" id="product-quantify-%s" data-fs-product-id="%s">', $args['input_class'], $product_id, $product_id );
+	$quantity   = str_replace(
+		array(
+			'%pluss%',
+			'%input%',
+			'%minus%'
+		),
+		array(
+			$pluss,
+			$input,
+			$minus
+		), $args['position'] );
+	$quantity   = sprintf( '<%s class="%s"> %s </%s>', $args['wrapper'], $args['wrapper_class'], $quantity, $args['wrapper'] );
+	if ( $args['echo'] ) {
+		echo $quantity;
 	} else {
-		return $quantity_el;
+		return $quantity;
 	}
 }
 
@@ -735,11 +762,30 @@ function fs_products_loop() {
 /**
  * Эта функция выводит кнопку удаления всех товаров в корзине
  *
- * @param string $text - надпись на кнопке (мультиязык)
- * @param string $class - класс присваемый кнопке
+ * @param array $args
  */
-function fs_delete_cart( $text = 'Remove all items', $class = '' ) {
-	echo '<button class="' . sanitize_html_class( $class, '' ) . '" data-fs-type="delete-cart" data-url="' . wp_nonce_url( add_query_arg( array( "fs_action" => "delete-cart" ) ), "fs_action" ) . '">' . __( $text, 'fast-shop' ) . '</button> ';
+function fs_delete_cart( $args = array() ) {
+	$args     = wp_parse_args( $args, array(
+		'text'  => __( 'Remove all items', 'fast-shop' ),
+		'class' => 'fs-delete-cart',
+		'type'  => 'button'
+	) );
+	$html_att = fs_parse_attr( array(), array(
+		'class'        => $args['class'],
+		'data-fs-type' => "delete-cart",
+		'data-url'     => wp_nonce_url( add_query_arg( array( "fs_action" => "delete-cart" ) ), "fs_action" )
+
+	) );
+	switch ( $args['type'] ) {
+		case 'button':
+			echo '<button ' . $html_att . '>' . $args['text'] . '</button> ';
+			break;
+		case 'link':
+			echo '<a href="#" ' . $html_att . '>' . $args['text'] . '</a> ';
+			break;
+	}
+
+
 }
 
 /**
@@ -1205,14 +1251,17 @@ function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
  */
 function fs_parse_attr( $attr = array(), $default = array() ) {
 	$attr = wp_parse_args( $attr, $default );
-	$attr = array_merge( $attr, $default );
-	$attr = array_map( 'esc_attr', $attr );
+	$attr      = array_map( 'esc_attr', $attr );
+	$atributes = array();
+	$att       = '';
 	foreach ( $attr as $key => $att ) {
 		$atributes[] = $key . '="' . $att . '"';
 	}
-	$atributes = implode( ' ', $atributes );
+	if ( ! empty( $atributes ) ) {
+		$att = implode( ' ', $atributes );
+	}
 
-	return $atributes;
+	return $att;
 }
 
 
@@ -1296,43 +1345,8 @@ function fs_get_payment( $payment_id ) {
  * @param array $args массив аргументов типа класс, тип, обязательность заполнения, title
  */
 function fs_form_field( $field_name, $args = array() ) {
-	$default     = array(
-		'type'        => 'text',
-		'class'       => '',
-		'checked'     => '',
-		'id'          => '',
-		'required'    => true,
-		'title'       => __( 'required field', 'fast-shop' ),
-		'placeholder' => '',
-		'value'       => '',
-
-	);
-	$args        = wp_parse_args( $args, $default );
-	$class       = ! empty( $args['class'] ) ? 'class="' . sanitize_html_class( $args['class'] ) . '"' : '';
-	$id          = ! empty( $args['id'] ) ? 'id="' . sanitize_html_class( $args['id'] ) . '"' : '';
-	$title       = ! empty( $args['title'] ) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
-	$placeholder = ! empty( $args['placeholder'] ) ? 'placeholder="' . esc_html( $args['placeholder'] ) . '"' : '';
-	$value       = ! empty( $args['value'] ) ? 'value="' . esc_html( $args['value'] ) . '"' : '';
-	$checked     = ! empty( $args['checked'] ) ? 'checked="' . esc_html( $args['checked'] ) . '"' : '';
-	$required    = ! empty( $args['required'] ) ? 'required' : '';
-	switch ( $args['type'] ) {
-		case 'text':
-			$field = ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
-			break;
-		case 'email':
-			$field = ' <input type="email" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
-			break;
-		case 'tel':
-			$field = ' <input type="tel" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
-			break;
-		case 'radio':
-			$field = ' <input type="radio" name="' . $field_name . '"  ' . $checked . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
-			break;
-		case 'textarea':
-			$field = '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
-			break;
-	}
-	echo apply_filters( 'fs_form_field', $field, $field_name, $args );
+	$form_class = new \FS\FS_Form_Class();
+	$form_class->fs_form_field( $field_name, $args );
 }
 
 /**
@@ -1417,5 +1431,18 @@ function fs_get_image_sizes( $unset_disabled = true ) {
 	return $sizes;
 }
 
+/**
+ * Возвращает массив состоящий id прикреплённых к посту вложений
+ *
+ * @param int $post_id - ID поста
+ *
+ * @return array
+ */
+function fs_gallery_images_ids( $post_id = 0 ) {
+	global $post, $fs_config;
+	$post_id    = ! empty( $post_id ) ? $post_id : $post->ID;
+	$fs_gallery = get_post_meta( $post_id, $fs_config->meta['gallery'], false );
+	$gallery    = ! empty( $fs_gallery ) ? $fs_gallery['0'] : array();
 
-
+	return $gallery;
+}

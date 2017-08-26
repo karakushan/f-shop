@@ -60,5 +60,5 @@
             <?php endif ?>
         </select>
     </div>
-    <button type="submit" class="button-t1"><?php _e('Save','fast-shop') ?> <img src="/wp-content/plugins/fast-shop/assets/img/heart.svg" alt="preloader" class="fs-preloader"></button>
+    <button type="submit" class="button-t1"><?php _e('Save','fast-shop') ?> <img src="/wp-content/plugins/f-shop/assets/img/heart.svg" alt="preloader" class="fs-preloader"></button>
 </form>

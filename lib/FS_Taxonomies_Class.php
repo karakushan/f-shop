@@ -1,4 +1,5 @@
 <?php
+
 namespace FS;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,8 +23,8 @@ class FS_Taxonomies_Class {
 		$this->config = new FS_Config();
 		$taxonomies   = array(
 			$this->config->data['product_taxonomy'] => array(
-				'label'        => __( 'Product categories', 'fast-shop' ),
-				'labels'       => array(
+				'label'              => __( 'Product categories', 'fast-shop' ),
+				'labels'             => array(
 					'name'              => __( 'Product categories', 'fast-shop' ),
 					'singular_name'     => __( 'Product category', 'fast-shop' ),
 					'search_items'      => __( 'Product categories', 'fast-shop' ),
@@ -36,12 +37,12 @@ class FS_Taxonomies_Class {
 					'new_item_name'     => __( 'Product categories', 'fast-shop' ),
 					'menu_name'         => __( 'Product categories', 'fast-shop' ),
 				),
-				'metabox'      => true,
-				'hierarchical' => true,
+				'metabox'            => true,
+				'hierarchical'       => true,
 				"public"             => true,
 				"show_ui"            => true,
 				"publicly_queryable" => true,
-				'show_admin_column' => true,
+				'show_admin_column'  => true,
 			)
 		,
 			'fs-payment-methods'                    => array(
@@ -71,9 +72,9 @@ class FS_Taxonomies_Class {
 				"public"             => false,
 				"show_ui"            => true,
 				"publicly_queryable" => false,
-				'metabox'           => false,
-				'show_admin_column' => false,
-				'show_in_quick_edit'    => false
+				'metabox'            => false,
+				'show_admin_column'  => false,
+				'show_in_quick_edit' => false
 			),
 			'product-attributes'                    => array(
 				'label'              => __( 'Product attributes', 'fast-shop' ),
@@ -87,10 +88,10 @@ class FS_Taxonomies_Class {
 				"show_ui"            => true,
 				"publicly_queryable" => true,
 
-				'metabox'           => null,
-				'show_admin_column' => false,
-				'hierarchical'      => true,
-				'show_in_quick_edit'    => false
+				'metabox'            => null,
+				'show_admin_column'  => true,
+				'hierarchical'       => true,
+				'show_in_quick_edit' => false
 			)
 		);
 
@@ -260,6 +261,42 @@ class FS_Taxonomies_Class {
 			}
 			echo "</ul>";
 
+		}
+
+	}
+
+	/**
+	 * удаляет все категории товаров
+	 */
+	public function delete_product_categories() {
+		global $fs_config;
+		$terms = get_terms( array(
+				'taxonomy'   => $fs_config->data['product_taxonomy'],
+				'hide_empty' => false
+			)
+		);
+		if ( $terms ) {
+			foreach ( $terms as $term ) {
+				wp_delete_term( $term->term_id, $fs_config->data['product_taxonomy'] );
+			}
+		}
+
+	}
+
+	/**
+	 * удаляет все свойства товаров
+	 */
+	public function delete_product_attributes() {
+		global $fs_config;
+		$terms = get_terms( array(
+				'taxonomy'   => $fs_config->data['product_att_taxonomy'],
+				'hide_empty' => false
+			)
+		);
+		if ( $terms ) {
+			foreach ( $terms as $term ) {
+				wp_delete_term( $term->term_id, $fs_config->data['product_att_taxonomy'] );
+			}
 		}
 
 	}
