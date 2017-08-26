@@ -762,11 +762,30 @@ function fs_products_loop() {
 /**
  * Эта функция выводит кнопку удаления всех товаров в корзине
  *
- * @param string $text - надпись на кнопке (мультиязык)
- * @param string $class - класс присваемый кнопке
+ * @param array $args
  */
-function fs_delete_cart( $text = 'Remove all items', $class = '' ) {
-	echo '<button class="' . sanitize_html_class( $class, '' ) . '" data-fs-type="delete-cart" data-url="' . wp_nonce_url( add_query_arg( array( "fs_action" => "delete-cart" ) ), "fs_action" ) . '">' . __( $text, 'fast-shop' ) . '</button> ';
+function fs_delete_cart( $args = array() ) {
+	$args     = wp_parse_args( $args, array(
+		'text'  => __( 'Remove all items', 'fast-shop' ),
+		'class' => 'fs-delete-cart',
+		'type'  => 'button'
+	) );
+	$html_att = fs_parse_attr( array(), array(
+		'class'        => $args['class'],
+		'data-fs-type' => "delete-cart",
+		'data-url'     => wp_nonce_url( add_query_arg( array( "fs_action" => "delete-cart" ) ), "fs_action" )
+
+	) );
+	switch ( $args['type'] ) {
+		case 'button':
+			echo '<button ' . $html_att . '>' . $args['text'] . '</button> ';
+			break;
+		case 'link':
+			echo '<a href="#" ' . $html_att . '>' . $args['text'] . '</a> ';
+			break;
+	}
+
+
 }
 
 /**
