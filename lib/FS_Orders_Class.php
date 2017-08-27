@@ -102,15 +102,15 @@ class FS_Orders_Class {
 	 */
 	public function get_order( $order_id = 0 ) {
 		global $fs_config;
-		$order    = new \stdClass();
-		$user     = get_post_meta( $order_id, '_user', 0 );
-		$items    = get_post_meta( $order_id, '_products', 0 );
-		$delivery = get_post_meta( $order_id, '_delivery', 0 );
-		$pay_id   = get_post_meta( $order_id, '_payment', 1 );
+		$order         = new \stdClass();
+		$user          = get_post_meta( $order_id, '_user', 0 );
+		$items         = get_post_meta( $order_id, '_products', 0 );
+		$delivery      = get_post_meta( $order_id, '_delivery', 0 );
+		$pay_id = get_post_meta( $order_id, '_payment', 1 );
 		if ( ! empty( $pay_id ) && is_numeric( $pay_id ) ) {
 			$order->payment = get_term_field( 'name', $order->pay_id, $fs_config->data['product_pay_taxonomy'] );
-		} else {
-			$order->payment = $pay_id;
+		}else{
+			$order->payment=$pay_id;
 		}
 		$order->comment  = get_post_meta( $order_id, '_comment', 1 );
 		$order->user     = ! empty( $user[0] ) ? $user[0] : array();
@@ -120,9 +120,8 @@ class FS_Orders_Class {
 			$order->delivery['method'] = get_term_field( 'name', $delivery['method'], $fs_config->data['product_del_taxonomy'] );
 		}
 		$order->sum       = fs_get_total_amount( $order->items );
-		$order->status    = $this->get_order_status( $order_id );
+		$order->status    = self::get_order_status( $order_id );
 		$order->user_name = get_user_meta( $order->user['id'], 'nickname', true );
-
 		return $order;
 	}
 

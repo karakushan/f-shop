@@ -1,36 +1,33 @@
-<?php
-$user     = get_post_meta( $order->ID, '_user', 0 );
-$user     = $user[0];
-$delivery = get_post_meta( $order->ID, '_delivery', 0 );
-$delivery = $delivery[0];
-$payment  = get_post_meta( $order->ID, '_payment', 1 );
-?>
 <ul class="<?php echo $class ?>">
   <li>
     <b>Заказ оформлен на следующие контактные данные:</b>
   </li>
   <li>
-    <span>Ваше имя: </span>
-		<?php echo $user['first_name']; ?> <?php echo $user['last_name']; ?>
+    <span>Имя: </span>
+	  <?php echo $order->user['first_name']; ?>
+  </li>
+  <li>
+    <span>Фамилия: </span>
+	  <?php echo $order->user['last_name']; ?>
   </li>
   <li>
     <span>Электронная почта: </span>
-		<?php echo $user['email']; ?>
+	  <?php echo $order->user['email']; ?>
   </li>
   <li>
     <span> Номер телефона: </span>
-		<?php echo $user['phone']; ?>
+	  <?php echo $order->user['phone']; ?>
   </li>
   <li>
     <span> Город: </span>
-		<?php echo $user['city']; ?>
+	  <?php echo $order->user['city']; ?>
   </li>
   <li>
     <span> Тип доставки: </span>
-		<?php echo get_term_field( 'name', $delivery['method'], 'fs-delivery-methods' ) ?>
+	  <?php echo $order->delivery['method'] ?>
   </li>
   <li>
     <span>Тип оплаты: </span>
-		<?php echo get_term_field( 'name', $payment, 'fs-payment-methods' ) ?>
+	  <?php echo $order->payment ?>
   </li>
 </ul>

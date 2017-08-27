@@ -116,7 +116,7 @@ class FS_Shortcode {
 		), $atts );
 
 		$order_id      = (int) $_SESSION['last_order_id'];
-		$atts['order'] = get_post( $order_id );
+		$atts['order'] = FS_Orders_Class::get_order( $order_id );
 
 
 		$template = fs_frontend_template( 'shortcode/fs-order-info', $atts );

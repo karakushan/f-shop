@@ -29,7 +29,6 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 
 
-
 	}
 
 
@@ -101,7 +100,7 @@ class FS_Ajax_Class {
 					'adress'    => $sanitize_field['fs_adress']
 				),
 				'_payment'  => $sanitize_field['fs_payment_methods'],
-				'_amount'   => fs_total_amount( $fs_products, false ),
+				'_amount'   => fs_get_total_amount( $fs_products ),
 				'_comment'  => $sanitize_field['fs_comment']
 			),
 		);
