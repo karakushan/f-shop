@@ -250,7 +250,7 @@ class FS_Users_Class {
 	/**
 	 * Возвращает html код формы входа в личный кабинет
 	 *
-	 * @param array $attr
+	 * @param array $args
 	 *
 	 * @return mixed|string|void
 	 */
@@ -258,7 +258,7 @@ class FS_Users_Class {
 		$args     = wp_parse_args( $args, array(
 			'class'  => 'fs-login-form',
 			'name'   => 'fs-login',
-			'method' => 'posts'
+			'method' => 'post'
 		) );
 		$template = apply_filters( 'fs_form_header', $args, 'fs_login' );
 		$template .= fs_frontend_template( 'auth/login', array( 'field' => array() ) );
@@ -288,7 +288,6 @@ class FS_Users_Class {
 	}
 
 	public static function user_info() {
-		global $wpdb;
 		$user     = fs_get_current_user();
 		$template = fs_frontend_template( 'cabinet/personal-info', array( 'user' => $user ), true );
 

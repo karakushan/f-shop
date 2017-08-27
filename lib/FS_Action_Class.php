@@ -39,25 +39,36 @@ class FS_Action_Class {
 
 
 	/**
-	 *Функция регистрирует хуки-события плагина
+	 * метод регистрирует хуки-события плагина
 	 */
 	function register_plugin_action() {
-		/* отображение кнопки добавления в корзину */
-		add_action( 'fs_add_to_cart', 'fs_add_to_cart', 10, 3 );
-		/* отображение фактической цены */
-		add_action( 'fs_the_price', 'fs_the_price', 10, 2 );
-		/* отображение артикула товара */
-		add_action( 'fs_product_code', 'fs_product_code', 10, 3 );
-		/* отображение базовой цены без учёта скидки */
-		add_action( 'fs_base_price', 'fs_base_price', 10, 3 );
+		//===== PRODUCT =====
 		/* отображение скидки в процентах */
 		add_action( 'fs_discount_percent', 'fs_discount_percent', 10, 2 );
+		/* отображение артикула товара */
+		add_action( 'fs_product_code', 'fs_product_code', 10, 3 );
+		/* отображение кнопки добавления в корзину */
+		add_action( 'fs_add_to_cart', 'fs_add_to_cart', 10, 3 );
+
+		//===== FILTERS =====
 		/* выводит select для сортировки по параметрам (обычно применяется в каталоге или на страницах категорий) */
 		add_action( 'fs_types_sort_filter', 'fs_types_sort_filter', 10, 1 );
 		/* выводит select для указания к-ва выводимых постов на странице (обычно применяется в каталоге или на страницах категорий) */
 		add_action( 'fs_per_page_filter', 'fs_per_page_filter', 10, 2 );
+
+		//===== ATTRIBUTES =====
 		/* выводит фильтр для сортировки по атрибутам */
 		add_action( 'fs_attr_filter', 'fs_attr_filter', 10, 2 );
+
+		//===== PRICE =====
+		/* отображение фактической цены */
+		add_action( 'fs_the_price', 'fs_the_price', 10, 2 );
+		/* Выводит общую сумму всех товаров в корзине */
+		add_action( 'fs_total_amount', 'fs_total_amount', 10, 3 );
+		/* отображение базовой цены без учёта скидки */
+		add_action( 'fs_base_price', 'fs_base_price', 10, 3 );
+
+		//===== CART =====
 		/* выводит корзину в определёном месте */
 		add_action( 'fs_cart_widget', 'fs_cart_widget', 10, 1 );
 		/* Выводит поле для изменения к-ва товаров в корзине */
@@ -66,16 +77,19 @@ class FS_Action_Class {
 		add_action( 'fs_quantity_product', 'fs_quantity_product', 10, 3 );
 		/* Выводит кнопку для удаления всех товаров в корзине */
 		add_action( 'fs_delete_cart', 'fs_delete_cart', 10, 1 );
-		/* Выводит общую сумму всех товаров в корзине */
-		add_action( 'fs_total_amount', 'fs_total_amount', 10, 3 );
-		/* Возвращает html код формы входа в личный кабинет */
-		add_action( 'fs_login_form', array( 'FS\FS_Users_Class', 'login_form_show' ), 10, 1 );
+
+		//===== ORDER =====
+		/* Выводит форму заполнения личных данных при отправке заказа */
+		add_action( 'fs_order_form', 'fs_order_send_form', 10, 1 );
+
+		//===== USERS =====
+		/* Выводит форму авторизации на сайте */
+		add_action( 'fs_login_form', 'fs_login_form', 10 );
 		/* Выводит всю информацию о текущем пользователе в виде списка */
 		add_action( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info_show' ), 10 );
 		/* Выводит форму редактирования профиля */
 		add_action( 'fs_profile_edit', array( 'FS\FS_Users_Class', 'profile_edit' ), 10, 1 );
-		/* Выводит форму заполнения личных данных при отправке заказа */
-		add_action( 'fs_order_form', 'fs_order_send_form', 10, 1 );
+
 	}
 
 	/**

@@ -1001,16 +1001,21 @@ function fs_get_current_user() {
 
 /**
  * Получает шаблон формы входа
+ *
+ * @param bool $echo - выводить(по умолчанию) или возвращать
+ *
  * @return mixed|void
  */
-function fs_login_form() {
-	if ( ! is_user_logged_in() ) {
-		$template = fs_frontend_template( 'auth/login' );
+function fs_login_form( $echo = true ) {
+	$template = fs_form_header( array(), 'fs_login' );
+	$template .= fs_frontend_template( 'auth/login' );
+	$template .= fs_form_bottom();
+	if ( $echo ) {
+		echo $template;
 	} else {
-		$template = fs_frontend_template( 'auth/user-authorized' );
+		return $template;
 	}
 
-	return apply_filters( 'fs_login_form', $template );
 }
 
 /**
@@ -1258,7 +1263,7 @@ function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
  * @param  array $attr атрибуты переданные в функцию
  * @param  array $default атрибуты функции по умолчанию
  *
- * @return [type]          строка атрибутов
+ * @return string $att          строка атрибутов
  */
 function fs_parse_attr( $attr = array(), $default = array() ) {
 	$attr      = wp_parse_args( $attr, $default );

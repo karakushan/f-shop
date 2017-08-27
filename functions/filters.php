@@ -114,26 +114,28 @@ function shiba_add_quick_edit( $column_name, $post_type ) {
 		$config = new \FS\FS_Config();
 		?>
 
-    <fieldset class="inline-edit-col-left inline-edit-fast-shop">
-      <legend class="inline-edit-legend">Настройки товара</legend>
-      <div class="inline-edit-col">
-        <label>
-          <span class="title"><?php _e( 'Price', 'fast-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
-          <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['price'] ?>" class="fs_price"
-                                               value="" required></span>
-        </label>
-        <label>
-          <span class="title"><?php _e( 'Vendor code', 'fast-shop' ) ?></span>
-          <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['product_article'] ?>"
-                                               class="fs_vendor_code" value=""></span>
-        </label>
-        <label>
-          <span class="title"><?php _e( 'Stock in stock', 'fast-shop' ) ?> (<?php _e( 'units', 'fast-shop' ) ?>)</span>
-          <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['remaining_amount'] ?>"
-                                               class="fs_stock" value=""></span>
-        </label>
-      </div>
-    </fieldset>
+      <fieldset class="inline-edit-col-left inline-edit-fast-shop">
+        <legend class="inline-edit-legend">Настройки товара</legend>
+        <div class="inline-edit-col">
+          <label>
+            <span class="title"><?php _e( 'Price', 'fast-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
+            <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['price'] ?>"
+                                                 class="fs_price"
+                                                 value="" required></span>
+          </label>
+          <label>
+            <span class="title"><?php _e( 'Vendor code', 'fast-shop' ) ?></span>
+            <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['product_article'] ?>"
+                                                 class="fs_vendor_code" value=""></span>
+          </label>
+          <label>
+            <span class="title"><?php _e( 'Stock in stock', 'fast-shop' ) ?> (<?php _e( 'units', 'fast-shop' ) ?>
+              )</span>
+            <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['remaining_amount'] ?>"
+                                                 class="fs_stock" value=""></span>
+          </label>
+        </div>
+      </fieldset>
 		<?php
 	}
 }
@@ -153,7 +155,7 @@ function fs_sort_admin_by( $object ) {
 		$object->set( 'order', (string) $_GET['order'] );
 
 	} //	сортируем по дате
-  elseif ( ! empty( $_GET['orderby'] ) && $_GET['orderby'] == 'date' ) {
+    elseif ( ! empty( $_GET['orderby'] ) && $_GET['orderby'] == 'date' ) {
 		$object->set( 'orderby', 'date' );
 		$object->set( 'order', (string) $_GET['order'] );
 	}//	сортируем по умолчанию по  дате
@@ -181,8 +183,11 @@ function add_views_sortable_column( $sortable_columns ) {
  * @return mixed|string|void
  */
 
-function fs_form_header( $attr=array(), $ajax_action ) {
-	$attr        = fs_parse_attr( $attr );
+function fs_form_header( $attr = array(), $ajax_action ) {
+	$attr        = fs_parse_attr( $attr, array(
+		'method'       => 'POST',
+		'autocomplete' => 'off'
+	) );
 	$form_header = '<form ' . $attr . '>';
 	$form_header .= \FS\FS_Config::nonce_field();
 	$form_header .= '<input type="hidden" name="action" value="' . $ajax_action . '">';
@@ -196,7 +201,7 @@ function fs_form_header( $attr=array(), $ajax_action ) {
  * @return string
  */
 add_filter( 'fs_form_bottom', 'fs_form_bottom', 10, 1 );
-function fs_form_bottom( $form_bottom ) {
+function fs_form_bottom( $form_bottom = '' ) {
 	$form_bottom = $form_bottom . '</form>';
 
 	return $form_bottom;
