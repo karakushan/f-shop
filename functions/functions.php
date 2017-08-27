@@ -993,7 +993,7 @@ function fs_get_current_user() {
 		$user->adress    = get_user_meta( $user->ID, 'adress', 1 );
 		$user->birth_day = get_user_meta( $user->ID, 'birth_day', 1 );
 		if ( ! empty( $user->birth_day ) ) {
-			$user->birth_day = date( 'd.m.Y', strtotime( $user->birth_day ) );
+			$user->birth_day = $user->birth_day;
 		}
 		$user->profile_update = $profile_update;
 		$user->gender         = get_user_meta( $user->ID, 'gender', 1 );

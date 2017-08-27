@@ -40,8 +40,8 @@
   </div>
   <div class="fs-col-6">
     <select class="selectStyle" name="fs[<?php echo $field['gender']['name'] ?>]">
-      <option <?php selected( $user->gender, 'm' ); ?> value="m">М</option>
-      <option <?php selected( $user->gender, 'w' ); ?> value="w">Ж</option>
+      <option <?php selected( $user->gender, 'male' ); ?> value="male"><?php _e( 'male', 'fast-shop' ) ?></option>
+      <option <?php selected( $user->gender, 'female' ); ?> value="female"><?php _e( 'female', 'fast-shop' ) ?></option>
     </select>
   </div>
 </div>
@@ -75,5 +75,5 @@
   </div>
 </div>
 <div class="fs-row">
-  <button type="submit" class="greenBtn" data-fs-element="submit">Сохранить</button>
+  <button type="submit" class="big-green-btn" data-fs-element="submit">Сохранить</button>
 </div>

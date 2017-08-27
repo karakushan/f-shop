@@ -270,9 +270,7 @@ class FS_Users_Class {
 	/**
 	 * Выводит html код формы входа в личный кабинет
 	 *
-	 * @param array $attr
-	 *
-	 * @return mixed|string|void
+	 * @param array $args
 	 */
 	public static function login_form_show( $args = array() ) {
 		$args     = wp_parse_args( $args, array(
@@ -301,7 +299,7 @@ class FS_Users_Class {
 		echo self::user_info();
 	}
 
-	function profile_edit( $args = array() ) {
+	public static function profile_edit( $args = array() ) {
 		$user           = fs_get_current_user();
 		$default        = array(
 			'class' => 'fs-profile-edit',
