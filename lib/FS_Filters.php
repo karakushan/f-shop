@@ -12,6 +12,7 @@ class FS_Filters {
 		'price_end',
 		'sort_custom'
 	);
+
 	function __construct() {
 
 
@@ -33,30 +34,30 @@ class FS_Filters {
 		}
 	}
 
-// фильтр по категориям товаров в админке
+
+	/**
+	 * фильтр по категориям товаров в админке
+	 */
 	function category_filter_admin() {
 		global $typenow;
-		global $wp_query;
 		$get_parr = isset( $_GET['catalog'] ) ? $_GET['catalog'] : '';
 		if ( $typenow != 'product' ) {
 			return;
 		}
-		$terms       = get_terms( 'catalog', array( 'hide_empty' => false ) );
-		$select_name = __( 'Product category', 'fast-shop' );
-		if ( $terms ) {
-			echo "<select name=\"catalog\" id=\"fs-category-filter\">";
-			echo "<option value=\"\">$select_name</option>";
-			foreach ( $terms as $key => $term ) {
-				echo "<option value=\"$term->slug\" " . selected( $term->slug, $get_parr, 0 ) . ">$term->name</option>";
-			}
-			echo "</select>";
-		}
 
+		wp_dropdown_categories( array(
+			'show_option_all' => __( 'Product category', 'fast-shop' ),
+			'taxonomy'        => 'catalog',
+			'id'              => 'fs-category-filter',
+			'hide_empty'      => false,
+			'value_field'     => 'slug',
+			'hierarchical'    => true,
+			'selected'        => $get_parr,
+			'name'            => 'catalog'
+		) );
 	}
 
-	/**
-	 * @param $query
-	 */
+
 	public function filter_curr_product( $query ) {
 		if ( is_admin() ) {
 			return;
@@ -72,7 +73,7 @@ class FS_Filters {
 			exit( 'ошибка безопасности' );
 		}
 
-		$config = new FS_Config;
+		$config     = new FS_Config;
 		$meta_query = array();
 		$orderby    = array();
 		$order      = '';
