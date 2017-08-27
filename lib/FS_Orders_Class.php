@@ -101,19 +101,24 @@ class FS_Orders_Class {
 	 * @return \stdClass
 	 */
 	public function get_order( $order_id = 0 ) {
-		$order            = new \stdClass();
-		$user             = get_post_meta( $order_id, '_user', 0 );
-		$items            = get_post_meta( $order_id, '_products', 0 );
-		$delivery         = get_post_meta( $order_id, '_delivery', 0 );
-		$order->pay_id    = get_post_meta( $order_id, '_payment', 1 );
-		$order->payment   = get_term_field( 'name', $order->pay_id, 'fs-payment-methods' );
-		$order->comment   = get_post_meta( $order_id, '_comment', 1 );
-		$order->user      = ! empty( $user[0] ) ? $user[0] : array();
-		$order->items     = ! empty( $items[0] ) ? $items[0] : array();
-		$order->delivery  = ! empty( $delivery[0] ) ? $delivery[0] : array();
+		global $fs_config;
+		$order           = new \stdClass();
+		$user            = get_post_meta( $order_id, '_user', 0 );
+		$items           = get_post_meta( $order_id, '_products', 0 );
+		$delivery        = get_post_meta( $order_id, '_delivery', 0 );
+		$order->pay_id   = get_post_meta( $order_id, '_payment', 1 );
+		$order->payment  = get_term_field( 'name', $order->pay_id, $fs_config->data['product_pay_taxonomy'] );
+		$order->comment  = get_post_meta( $order_id, '_comment', 1 );
+		$order->user     = ! empty( $user[0] ) ? $user[0] : array();
+		$order->items    = ! empty( $items[0] ) ? $items[0] : array();
+		$order->delivery = ! empty( $delivery[0] ) ? $delivery[0] : array();
+		if ( ! empty( $delivery['method'] ) && is_numeric( $delivery['method'] ) ) {
+			$order->delivery['method'] = get_term_field( 'name', $delivery['method'], $fs_config->data['product_del_taxonomy'] );
+		}
 		$order->sum       = fs_get_total_amount( $order->items );
 		$order->status    = $this->get_order_status( $order_id );
 		$order->user_name = get_user_meta( $order->user['id'], 'nickname', true );
+
 		return $order;
 	}
 
