@@ -29,8 +29,8 @@
 
                         </thead>
                         <tbody>
-                        <?php if ($order->products): ?>
-                            <?php foreach ($order->products as $id => $product) : ?>
+                        <?php if ($order->items): ?>
+                            <?php foreach ($order->items as $id => $product) : ?>
                                 <tr>
                                     <td>
                                         <?php echo get_the_post_thumbnail($id); ?>

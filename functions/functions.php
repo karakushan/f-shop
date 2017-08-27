@@ -183,34 +183,42 @@ function fs_get_wholesale_price( $post_id = 0 ) {
 }
 
 /**
- * Получает общую сумму всех продуктов в корзине
+ * Выводит общую сумму всех продуктов в корзине
  *
  * @param string $wrap - формат отображения цены с валютой
- * @param  boolean $show показывать (по умолчанию) или возвращать
  *
  * @return возвращает или показывает общую сумму с валютой
- * @internal param string $cur_before html перед символом валюты
- * @internal param string $cur_after html после символа валюты
  *
  */
-function fs_total_amount( $wrap = '%s <span>%s</span>', $show = true ) {
+function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
+	if ( empty( $_SESSION['cart'] ) ) {
+		return 0;
+	}
+	$products = $_SESSION['cart'];
+	$total    = fs_get_total_amount( $products );
+	$total    = apply_filters( 'fs_price_format', $total );
+	$total    = sprintf( $wrap, $total, fs_currency() );
+	echo $total;
+}
 
+/**
+ * возвращает общую сумму всех продуктов в корзине
+ *
+ * @param array $products - список товаров в массиве
+ *
+ * @return float|int
+ */
+function fs_get_total_amount( $products = array() ) {
+	if ( empty( $products ) ) {
+		return 0;
+	}
 	$all_price = array();
-	$price     = '';
-	$products  = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : array();
 	foreach ( $products as $key => $count ) {
 		$all_price[ $key ] = $count['count'] * fs_get_price( $key );
 	}
 	$price = array_sum( $all_price );
 
-	if ( $show == false ) {
-		return $price;
-	} else {
-		$price = apply_filters( 'fs_price_format', $price );
-		$price = sprintf( $wrap, $price, fs_currency() );
-		echo $price;
-	}
-
+	return $price;
 }
 
 /**

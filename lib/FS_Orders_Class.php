@@ -111,10 +111,9 @@ class FS_Orders_Class {
 		$order->user      = ! empty( $user[0] ) ? $user[0] : array();
 		$order->items     = ! empty( $items[0] ) ? $items[0] : array();
 		$order->delivery  = ! empty( $delivery[0] ) ? $delivery[0] : array();
-		$order->sum       = fs_total_amount( $order->items, false );
+		$order->sum       = fs_get_total_amount( $order->items );
 		$order->status    = $this->get_order_status( $order_id );
 		$order->user_name = get_user_meta( $order->user['id'], 'nickname', true );
-
 		return $order;
 	}
 
