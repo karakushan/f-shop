@@ -102,12 +102,16 @@ class FS_Orders_Class {
 	 */
 	public function get_order( $order_id = 0 ) {
 		global $fs_config;
-		$order           = new \stdClass();
-		$user            = get_post_meta( $order_id, '_user', 0 );
-		$items           = get_post_meta( $order_id, '_products', 0 );
-		$delivery        = get_post_meta( $order_id, '_delivery', 0 );
-		$order->pay_id   = get_post_meta( $order_id, '_payment', 1 );
-		$order->payment  = get_term_field( 'name', $order->pay_id, $fs_config->data['product_pay_taxonomy'] );
+		$order    = new \stdClass();
+		$user     = get_post_meta( $order_id, '_user', 0 );
+		$items    = get_post_meta( $order_id, '_products', 0 );
+		$delivery = get_post_meta( $order_id, '_delivery', 0 );
+		$pay_id   = get_post_meta( $order_id, '_payment', 1 );
+		if ( ! empty( $pay_id ) && is_numeric( $pay_id ) ) {
+			$order->payment = get_term_field( 'name', $order->pay_id, $fs_config->data['product_pay_taxonomy'] );
+		} else {
+			$order->payment = $pay_id;
+		}
 		$order->comment  = get_post_meta( $order_id, '_comment', 1 );
 		$order->user     = ! empty( $user[0] ) ? $user[0] : array();
 		$order->items    = ! empty( $items[0] ) ? $items[0] : array();
