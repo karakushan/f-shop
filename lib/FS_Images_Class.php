@@ -54,12 +54,6 @@ class FS_Images_Class {
 		$galerys           = $this->fs_galery_images( $post_id );
 		$images_n          = '';
 		$alt               = get_the_title( $post_id );
-		// получаем первое изображение галереи из установленной миниатюры поста
-		if ( has_post_thumbnail( $post_id ) ) {
-
-			$image    = get_the_post_thumbnail_url( $post_id, 'full' );
-			$images_n .= "<li data-thumb=\"$image\" style=\"background - image:url( $image )\" data-src=\"$image\" style=\"text-align:center\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\"></a></li>";
-		}
 		if ( $galerys ) {
 			foreach ( $galerys as $atach_id ) {
 				$image = wp_get_attachment_image_src( $atach_id, 'full' );
