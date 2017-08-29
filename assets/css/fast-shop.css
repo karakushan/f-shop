@@ -314,8 +314,22 @@ li.fs-attr {
 .lSSlideOuter .lSPager.lSGallery img {
   margin: 0 auto; }
 
-[data-action="add-to-cart"] {
+[data-action="add-to-cart"],
+[data-fs-action="wishlist"] {
   position: relative; }
+
+[data-fs-action="wishlist"] .fs-wh-message {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: 226px;
+  background: rgba(28, 153, 90, 0.85);
+  font-size: 12px;
+  font-weight: 300;
+  padding: 10px;
+  color: #ffffff;
+  text-transform: none;
+  line-height: 1; }
 
 .fs-form-info {
   display: none; }

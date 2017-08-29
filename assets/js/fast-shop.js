@@ -118,13 +118,17 @@ jQuery(function ($) {
             url: FastShopData.ajaxurl,
             data: {action: 'fs_addto_wishlist', product_id: product_id},
             beforeSend: function () {
-                curentBlock.find('.icon').addClass('wheel');
+                // генерируем событие добавления в список желаний
+                var before_to_wishlist = new CustomEvent("fs_before_to_wishlist", {
+                    detail: {id: product_id, name: product_name, button: curentBlock}
+                });
+                document.dispatchEvent(before_to_wishlist);
             }
         })
             .done(function (success) {
                 // генерируем событие добавления в список желаний
                 var add_to_wishlist = new CustomEvent("fs_add_to_wishlist", {
-                    detail: {id: product_id, name: product_name}
+                    detail: {id: product_id, name: product_name, button: curentBlock}
                 });
                 document.dispatchEvent(add_to_wishlist);
 
@@ -612,7 +616,7 @@ var addUrlParam = function (search, key, val) {
     // Событие срабатывает когда товар добавлен в корзину
     document.addEventListener("fs_add_to_cart", function (event) {
         // действие которое инициирует событие
-        fs_get_cart('cart-widget/widget','[data-fs-element="cart-widget"]')
+        fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]')
         var button = event.detail.button;
         button.find('.fs-atc-preloader').fadeOut();
         button.find('.fs-atc-info').fadeIn().html(event.detail.text.success);
@@ -621,6 +625,15 @@ var addUrlParam = function (search, key, val) {
         }, 4000)
 
         event.preventDefault();
+    }, false);
+
+    // событие срабатывает после добавления товара в список желаений
+    document.addEventListener("fs_add_to_wishlist", function (event) {
+        event.preventDefault();
+        event.detail.button.find('.fs-wh-message').fadeIn();
+        setTimeout(function () {
+            event.detail.button.find('.fs-wh-message').fadeOut();
+        }, 4000)
     }, false);
 
 
@@ -638,7 +651,7 @@ function fs_get_cart(cartTemplate, cartWrap) {
         data: parameters,
         dataType: 'html',
         success: function (data) {
-            if(data) jQuery(cartWrap).html(data);
+            if (data) jQuery(cartWrap).html(data);
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.log('error...', xhr);

@@ -210,7 +210,7 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
  */
 function fs_get_total_amount( $products = array() ) {
 	if ( empty( $products ) ) {
-		return 0;
+		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : 0;
 	}
 	$all_price = array();
 	foreach ( $products as $key => $count ) {
@@ -887,25 +887,39 @@ function fs_price_max( $filter = true ) {
  * @param  integer $post_id - id записи
  * @param  array $args - дополнительные аргументы массивом
  *
- * @return [type]           [description]
  */
-function fs_wishlist_button( $post_id = 0, $args = '' ) {
+function fs_wishlist_button( $post_id = 0, $args = array() ) {
 	global $post;
 	$post_id = empty( $post_id ) ? $post->ID : $post_id;
 	// определим параметры по умолчанию
-	$defaults = array(
-		'attr'    => '',
-		'content' => __( 'add to wish list', 'fast-shop' ),
-		'type'    => 'button'
+	$defaults  = array(
+		'attr'      => '',
+		'success'   => __( 'Item added to wishlist', 'fast-shop' ),
+		'type'      => 'button',
+		'preloader' => '',
+		'class'     => 'fs-whishlist-btn',
+		'id'        => 'fs-whishlist-btn-' . $post_id,
+		'content'   => ''
 	);
-	$args     = wp_parse_args( $args, $defaults );
+	$args      = wp_parse_args( $args, $defaults );
+	$html_atts = fs_parse_attr( array(), array(
+		'data-fs-action'  => "wishlist",
+		'class'           => $args['class'],
+		'id'              => $args['id'],
+		'data-name'       => get_the_title( $post_id ),
+		'data-product-id' => $post_id,
+
+	) );
+	$content   = '<span class="fs-wh-message" style="display:none">' . $args['success'] . '</span>';
+	$content   .= '<span class="fs-wh-preloader" style="display:none"></span>';
+	$content   .= $args['content'];
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a  data-fs-action="wishlist" ' . $args['attr'] . ' data-name="' . get_the_title( $post_id ) . '"  data-product-id="' . $post_id . '"><span class="whishlist-message"></span>' . $args['content'] . '</a>';
+			echo '<a   ' . $html_atts . '>' . $content . '</a>';
 			break;
 
-		default:
-			echo '<button data-fs-action="wishlist" ' . $args['attr'] . '  data-product-id="' . $post_id . '" data-name="' . get_the_title( $post_id ) . '"><span class="whishlist-message"></span>' . $args['content'] . '</button>';
+		case 'button':
+			echo '<button ' . $html_atts . '>' . $content . '</button>';
 			break;
 	}
 
