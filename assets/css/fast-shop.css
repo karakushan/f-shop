@@ -318,6 +318,9 @@ li.fs-attr {
 [data-fs-action="wishlist"] {
   position: relative; }
 
+[data-fs-element="whishlist-widget"] {
+  display: inline-block; }
+
 [data-fs-action="wishlist"] .fs-wh-message {
   position: absolute;
   right: 0;

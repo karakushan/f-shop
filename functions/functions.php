@@ -1304,48 +1304,51 @@ function fs_parse_attr( $attr = array(), $default = array() ) {
 
 /**
  * возвращает список желаний
+ *
+ * @param array $args массив аргументов, идентичные WP_Query
+ *
  * @return array список желаний
  */
-function fs_get_wishlist() {
-	$wishlist       = ! empty( $_SESSION['fs_wishlist'] ) ? $_SESSION['fs_wishlist'] : array();
-	$wishlist_count = count( $wishlist );
-	$wishlist       = array(
-		'count'    => $wishlist_count,
-		'page'     => get_permalink( fs_option( 'page_whishlist' ) ),
-		'products' => $wishlist
-	);
+function fs_get_wishlist( $args = array() ) {
+	if ( empty( $_SESSION['fs_wishlist'] ) ) {
+		return false;
+	}
+	$wishlist = $_SESSION['fs_wishlist'];
+	$args     = wp_parse_args( $args, array(
+		'post_type' => 'product',
+		'post__in'  => array_unique( $wishlist )
 
-	return $wishlist;
+	) );
+	$wh_posts = new \WP_Query( $args );
+
+	return $wh_posts;
+}
+
+/**
+ * Выводит количество товаров в списке желаний
+ */
+function fs_wishlist_count() {
+	$wl = fs_get_wishlist();
+	if ( $wl ) {
+		echo $wl->found_posts;
+	} else {
+		echo 0;
+	}
 }
 
 /**
  * отображает список желаний
  *
  * @param  array $html_attr массив html атрибутов для дива обёртки
- * @param  dool $wrap выводить ли стандартную обёртку для элеменнтов
- *
- * @return [type]       [description]
  */
-function fs_wishlist_widget( $html_attr, $wrap = true ) {
-	$template_theme = TEMPLATEPATH . '/fast-shop/wishlist/wishlist.php';
-	$template       = plugin_dir_path( __FILE__ ) . 'templates/front-end/wishlist/wishlist.php';
+function fs_wishlist_widget( $html_attr = array() ) {
+	$template = fs_frontend_template( 'wishlist/wishlist' );
 
-	if ( file_exists( $template_theme ) ) {
-		$template = $template_theme;
-	}
-	$attr_set = array(
+	$attr_set  = array(
 		'data-fs-element' => 'whishlist-widget'
 	);
-
 	$html_attr = fs_parse_attr( $html_attr, $attr_set );
-
-	if ( $wrap ) {
-		echo "<div  $html_attr>";
-	}
-	require $template;
-	if ( $wrap ) {
-		echo "</div>";
-	}
+	printf( '<div %s>%s</div>', $html_attr, $template );
 }
 
 /**
