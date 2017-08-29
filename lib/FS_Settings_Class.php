@@ -158,37 +158,37 @@ class FS_Settings_Class {
 						'type'  => 'pages',
 						'name'  => 'page_cart',
 						'label' => 'Страница корзины',
-						'value' => fs_option( 'page_cart' )
+						'value' => fs_option( 'page_cart', 0 )
 					),
 					1 => array(
 						'type'  => 'pages',
 						'name'  => 'page_payment',
 						'label' => 'Страница оплаты',
-						'value' => fs_option( 'page_payment' )
+						'value' => fs_option( 'page_payment', 0 )
 					),
 					2 => array(
 						'type'  => 'pages',
 						'name'  => 'page_success',
 						'label' => 'Страница успешной отправки заказа',
-						'value' => fs_option( 'page_success' )
+						'value' => fs_option( 'page_success', 0 )
 					),
 					3 => array(
 						'type'  => 'pages',
 						'name'  => 'page_whishlist',
 						'label' => 'Страница списка желаний',
-						'value' => fs_option( 'page_whishlist' )
+						'value' => fs_option( 'page_whishlist', 0 )
 					),
 					4 => array(
 						'type'  => 'pages',
 						'name'  => 'page_cabinet',
 						'label' => 'Страница личного кабинета',
-						'value' => fs_option( 'page_cabinet' )
+						'value' => fs_option( 'page_cabinet', 0 )
 					),
 					5 => array(
 						'type'  => 'pages',
 						'name'  => 'page_auth',
 						'label' => 'Страница авторизации',
-						'value' => fs_option( 'page_auth' )
+						'value' => fs_option( 'page_auth', 0 )
 					),
 				)
 

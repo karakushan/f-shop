@@ -25,7 +25,7 @@ class FS_Form_Class {
 				']'
 			), array( '_' ), $field_name ),
 			'required'    => false,
-			'title'       => __('this field is required','fast-shop'),
+			'title'       => __( 'this field is required', 'fast-shop' ),
 			'placeholder' => '',
 			'value'       => '',
 			'editor_args' => array(
@@ -66,10 +66,12 @@ class FS_Form_Class {
 				break;
 			case 'pages':
 				$field = wp_dropdown_pages( array(
-					'name'     => $field_name,
-					'echo'     => 0,
-					'id'       => $args['id'],
-					'selected' => $args['value']
+					'show_option_none'  => __( 'Select page', 'fast-shop' ),
+					'option_none_value' => 0,
+					'name'              => $field_name,
+					'echo'              => 0,
+					'id'                => $args['id'],
+					'selected'          => $args['value']
 				) );
 				break;
 			case 'pay_methods':

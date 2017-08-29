@@ -30,8 +30,15 @@ class FS_Users_Class {
 	 */
 	function cabinet_protect() {
 		$redirect_page = fs_option( 'page_cabinet' );
-		if ( is_page( $redirect_page ) && ! is_user_logged_in() ) {
-			wp_redirect( home_url( '/' ) );
+		$login_page    = fs_option( 'page_auth' );
+		if ( empty( $redirect_page ) ) {
+			return;
+		} elseif ( is_page( $redirect_page ) && ! is_user_logged_in() ) {
+			if ( empty( $login_page ) ) {
+				wp_redirect( home_url( '/' ) );
+			} else {
+				wp_redirect( get_permalink( (int) $login_page ) );
+			}
 			exit();
 		}
 	}
