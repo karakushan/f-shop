@@ -125,15 +125,14 @@ jQuery(function ($) {
                 document.dispatchEvent(before_to_wishlist);
             }
         })
-            .done(function (success) {
+            .done(function (result) {
+                var ajax_data = jQuery.parseJSON(result);
                 // генерируем событие добавления в список желаний
                 var add_to_wishlist = new CustomEvent("fs_add_to_wishlist", {
-                    detail: {id: product_id, name: product_name, button: curentBlock}
+                    detail: {id: product_id, name: product_name, button: curentBlock, ajax_data: ajax_data}
                 });
                 document.dispatchEvent(add_to_wishlist);
 
-                var data = jQuery.parseJSON(success);
-                $('[data-fs-element="whishlist-widget"]').html(data.body);
             });
     });
 
@@ -606,6 +605,26 @@ var addUrlParam = function (search, key, val) {
         $('#product_slider').lightSlider(fs_lightslider_options);
     }
 
+    // Событие срабатывает перед добавлением товара в список желаний
+    document.addEventListener("fs_before_to_wishlist", function (event) {
+        // действие которое инициирует событие, здесь может быть любой ваш код
+        var button = event.detail.button;
+        button.find('.fs-wh-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
+        event.preventDefault();
+    }, false);
+
+    // Событие срабатывает после добавления товара в список желаний
+    document.addEventListener("fs_add_to_wishlist", function (event) {
+        // действие которое инициирует событие, здесь может быть любой ваш код
+        var button = event.detail.button;
+        button.find('.fs-wh-preloader').fadeOut();
+        button.find('.fs-wh-message').fadeIn();
+        setTimeout(function () {
+            button.find('.fs-wh-message').fadeOut();
+        }, 4000);
+        event.preventDefault();
+    }, false);
+
     // Событие срабатывает перед добавлением твоара в корзину
     document.addEventListener("fs_before_add_product", function (event) {
         // действие которое инициирует событие, здесь может быть любой ваш код
@@ -625,15 +644,6 @@ var addUrlParam = function (search, key, val) {
         }, 4000)
 
         event.preventDefault();
-    }, false);
-
-    // событие срабатывает после добавления товара в список желаений
-    document.addEventListener("fs_add_to_wishlist", function (event) {
-        event.preventDefault();
-        event.detail.button.find('.fs-wh-message').fadeIn();
-        setTimeout(function () {
-            event.detail.button.find('.fs-wh-message').fadeOut();
-        }, 4000)
     }, false);
 
 

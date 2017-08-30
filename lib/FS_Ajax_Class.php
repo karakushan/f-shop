@@ -159,18 +159,16 @@ class FS_Ajax_Class {
 		exit();
 	}
 
+	/**
+	 * Метод ajax добавления товара в список желаний
+	 */
 	public function fs_addto_wishlist() {
 		$product_id                             = (int) $_REQUEST['product_id'];
 		$_SESSION['fs_wishlist'][ $product_id ] = $product_id;
-		ob_start();
-		fs_wishlist_widget( array(), false );
-		$widget = ob_get_clean();
-		echo json_encode( array(
-			'body' => $widget,
-			'type' => 'success'
+		$json                                   = json_encode( array(
+			'status' => true
 		) );
-
-		exit;
+		exit( $json );
 	}
 
 	public function fs_del_wishlist_pos() {

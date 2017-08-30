@@ -68,6 +68,12 @@ class FS_Action_Class {
 		/* отображение базовой цены без учёта скидки */
 		add_action( 'fs_base_price', 'fs_base_price', 10, 3 );
 
+		//===== WISHLIST =====
+		/* отображает кнопку добавления в список желаний */
+		add_action( 'fs_wishlist_button', 'fs_wishlist_button', 10, 2 );
+		/* отображает виджет (блок) со списком желаний */
+		add_action( 'fs_wishlist_widget', 'fs_wishlist_widget', 10, 1 );
+
 		//===== CART =====
 		/* выводит корзину в определёном месте */
 		add_action( 'fs_cart_widget', 'fs_cart_widget', 10, 1 );
@@ -84,7 +90,7 @@ class FS_Action_Class {
 
 		//===== USERS =====
 		/* Выводит форму авторизации на сайте */
-		add_action( 'fs_login_form', 'fs_login_form', 10 ,1);
+		add_action( 'fs_login_form', 'fs_login_form', 10, 1 );
 		/* Выводит всю информацию о текущем пользователе в виде списка */
 		add_action( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info_show' ), 10 );
 		/* Выводит форму редактирования профиля */

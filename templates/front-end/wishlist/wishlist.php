@@ -1,12 +1,4 @@
-<?php $wishlist=fs_get_wishlist(); ?>
-<a href="<?php echo $wishlist['page'] ?>">
-	<span><?php echo $wishlist['count'] ?></span>
+<a href="<?php the_permalink(203) ?>" class="fav">
+  <span class="icon"><span class="count"><?php fs_wishlist_count() ?></span></span>
+  <span class="text">Желания</span>
 </a>
-<span class="name">
-	Избранное
-</span>
-<?php if ($wishlist['count']>0): ?>
-	<span><?php echo $wishlist['count'] ?> товаров</span>
-<?php else: ?>
-	<span>нет товаров</span>
-<?php endif ?>

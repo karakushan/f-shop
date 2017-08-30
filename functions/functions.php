@@ -915,7 +915,7 @@ function fs_wishlist_button( $post_id = 0, $args = array() ) {
 	$content   .= $args['content'];
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a   ' . $html_atts . '>' . $content . '</a>';
+			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . '>' . $content . '</a>';
 			break;
 
 		case 'button':
@@ -1311,15 +1311,16 @@ function fs_parse_attr( $attr = array(), $default = array() ) {
  */
 function fs_get_wishlist( $args = array() ) {
 	if ( empty( $_SESSION['fs_wishlist'] ) ) {
-		return false;
+		$wishlist[0] = 0;
+	} else {
+		$wishlist = $_SESSION['fs_wishlist'];
 	}
-	$wishlist = $_SESSION['fs_wishlist'];
 	$args     = wp_parse_args( $args, array(
 		'post_type' => 'product',
 		'post__in'  => array_unique( $wishlist )
 
 	) );
-	$wh_posts = new \WP_Query( $args );
+	$wh_posts = new WP_Query( $args );
 
 	return $wh_posts;
 }
