@@ -135,9 +135,11 @@ class FS_Config {
 			'fs_phone'            => array( 'type' => 'tel', 'label' => 'Телефон', 'required' => true ),
 			'fs_city'             => array( 'type' => 'text', 'label' => 'Город', 'required' => true ),
 			'fs_adress'           => array( 'type' => 'text', 'label' => 'Адрес доставки', 'required' => false ),
+			'fs_home_num'         => array( 'type' => 'text', 'label' => 'Номер дома', 'required' => false ),
+			'fs_apartment_num'    => array( 'type' => 'text', 'label' => 'Номер квартиры', 'required' => false ),
 			'fs_delivery_number'  => array( 'type' => 'text', 'label' => 'Номер отделения', 'required' => false ),
 			'fs_delivery_methods' => array( 'type' => 'radio', 'label' => 'Способ доставки', 'required' => true ),
-			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты'),
+			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты' ),
 			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
 		);
 

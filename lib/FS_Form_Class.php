@@ -20,6 +20,7 @@ class FS_Form_Class {
 		$default     = array(
 			'type'        => 'text',
 			'class'       => '',
+			'label_class' => 'fs-form-label',
 			'id'          => str_replace( array(
 				'[',
 				']'
@@ -28,6 +29,8 @@ class FS_Form_Class {
 			'title'       => __( 'this field is required', 'fast-shop' ),
 			'placeholder' => '',
 			'value'       => '',
+			'format'      => '%input% %label%',
+			'el'          => 'select',
 			'editor_args' => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $field_name,
@@ -39,7 +42,7 @@ class FS_Form_Class {
 		$args        = wp_parse_args( $args, $default );
 		$class       = ! empty( $args['class'] ) ? 'class="' . sanitize_html_class( $args['class'] ) . '"' : '';
 		$id          = ! empty( $args['id'] ) ? 'id="' . sanitize_html_class( $args['id'] ) . '"' : 'id=""';
-		$title       = ! empty( $args['title'] ) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
+		$title       = (! empty( $args['title'] ) && $args['required']) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
 		$placeholder = ! empty( $args['placeholder'] ) ? 'placeholder="' . esc_html( $args['placeholder'] ) . '"' : '';
 		$value       = ! empty( $args['value'] ) ? 'value="' . esc_html( $args['value'] ) . '"' : '';
 
@@ -75,25 +78,58 @@ class FS_Form_Class {
 				) );
 				break;
 			case 'pay_methods':
-				$field = wp_dropdown_categories( array(
-					'show_option_all' => 'Способ оплаты',
-					'hide_empty'      => 0,
-					'name'            => $field_name,
-					'class'           => $args['class'],
-					'echo'            => 0,
-					'taxonomy'        => $fs_config->data['product_pay_taxonomy']
-				) );
+				if ( $args['el'] == 'select' ) {
+					$field = wp_dropdown_categories( array(
+						'show_option_all' => 'Способ оплаты',
+						'hide_empty'      => 0,
+						'name'            => $field_name,
+						'class'           => $args['class'],
+						'echo'            => 0,
+						'taxonomy'        => $fs_config->data['product_pay_taxonomy']
+					) );
+				} elseif ( $args['el'] == 'radio' ) {
+					$pay_methods = get_terms( array(
+						'hide_empty' => false,
+						'taxonomy'   => $fs_config->data['product_pay_taxonomy']
+					) );
+					if ( $pay_methods ) {
+						foreach ( $pay_methods as $pay_method ) {
+							$field .= str_replace( array( '%input%', '%label%' ), array(
+								'<input type="radio" name="' . $field_name . '" class="' . $args['class'] . '" id="fs-del-' . $pay_method->term_id . '">',
+								'<label for="fs-del-' . $pay_method->term_id . '" class="' . $args['label_class'] . '">' . $pay_method->name . '</label>'
+							), $args['format'] );
+						}
+					}
+
+				}
 				break;
 			case 'del_methods':
-				$field = wp_dropdown_categories( array(
-					'show_option_all' => 'Способ доставки',
-					'hide_empty'      => 0,
-					'name'            => $field_name,
-					'class'           => $args['class'],
-					'echo'            => 0,
-					'taxonomy'        => $fs_config->data['product_del_taxonomy']
-				) );
+				if ( $args['el'] == 'select' ) {
+					$field = wp_dropdown_categories( array(
+						'show_option_all' => 'Способ доставки',
+						'hide_empty'      => 0,
+						'name'            => $field_name,
+						'class'           => $args['class'],
+						'echo'            => 0,
+						'taxonomy'        => $fs_config->data['product_del_taxonomy']
+					) );
+				} elseif ( $args['el'] == 'radio' ) {
+					$del_methods = get_terms( array(
+						'hide_empty' => false,
+						'taxonomy'   => $fs_config->data['product_del_taxonomy']
+					) );
+					if ( $del_methods ) {
+						foreach ( $del_methods as $del_method ) {
+							$field .= str_replace( array( '%input%', '%label%' ), array(
+								'<input type="radio" name="' . $field_name . '" class="' . $args['class'] . '" id="fs-del-' . $del_method->term_id . '">',
+								'<label for="fs-del-' . $del_method->term_id . '" class="' . $args['label_class'] . '">' . $del_method->name . '</label>'
+							), $args['format'] );
+						}
+					}
+
+				}
 				break;
+
 			case 'editor':
 				wp_editor( esc_html( $args['value'] ), $args['id'], $args['editor_args'] );
 				$field = ob_get_clean();
