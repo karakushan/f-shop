@@ -44,7 +44,7 @@ class FS_Post_Type {
 			array(
 				'labels'             => array(
 					'name'               => __( 'Products', 'fast-shop' ),
-					'singular_name'      => __( 'product', 'fast-shop' ),
+					'singular_name'      => __( 'Product', 'fast-shop' ),
 					'add_new'            => __( 'Add product', 'fast-shop' ),
 					'add_new_item'       => '',
 					'edit_item'          => __( 'Edit product', 'fast-shop' ),
