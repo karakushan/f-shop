@@ -42,7 +42,7 @@ class FS_Form_Class {
 		$args        = wp_parse_args( $args, $default );
 		$class       = ! empty( $args['class'] ) ? 'class="' . sanitize_html_class( $args['class'] ) . '"' : '';
 		$id          = ! empty( $args['id'] ) ? 'id="' . sanitize_html_class( $args['id'] ) . '"' : 'id=""';
-		$title       = (! empty( $args['title'] ) && $args['required']) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
+		$title       = ( ! empty( $args['title'] ) && $args['required'] ) ? 'title="' . esc_html( $args['title'] ) . '"' : '';
 		$placeholder = ! empty( $args['placeholder'] ) ? 'placeholder="' . esc_html( $args['placeholder'] ) . '"' : '';
 		$value       = ! empty( $args['value'] ) ? 'value="' . esc_html( $args['value'] ) . '"' : '';
 
@@ -95,7 +95,7 @@ class FS_Form_Class {
 					if ( $pay_methods ) {
 						foreach ( $pay_methods as $pay_method ) {
 							$field .= str_replace( array( '%input%', '%label%' ), array(
-								'<input type="radio" name="' . $field_name . '" class="' . $args['class'] . '" id="fs-del-' . $pay_method->term_id . '">',
+								'<input type="radio" name="' . $field_name . '" value="' . $pay_method->term_id . '" class="' . $args['class'] . '" id="fs-del-' . $pay_method->term_id . '">',
 								'<label for="fs-del-' . $pay_method->term_id . '" class="' . $args['label_class'] . '">' . $pay_method->name . '</label>'
 							), $args['format'] );
 						}
@@ -121,7 +121,7 @@ class FS_Form_Class {
 					if ( $del_methods ) {
 						foreach ( $del_methods as $del_method ) {
 							$field .= str_replace( array( '%input%', '%label%' ), array(
-								'<input type="radio" name="' . $field_name . '" class="' . $args['class'] . '" id="fs-del-' . $del_method->term_id . '">',
+								'<input type="radio" name="' . $field_name . '" value="' . $del_method->term_id . '" class="' . $args['class'] . '" id="fs-del-' . $del_method->term_id . '">',
 								'<label for="fs-del-' . $del_method->term_id . '" class="' . $args['label_class'] . '">' . $del_method->name . '</label>'
 							), $args['format'] );
 						}
