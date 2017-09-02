@@ -83,6 +83,8 @@ class FS_Action_Class {
 		add_action( 'fs_quantity_product', 'fs_quantity_product', 10, 3 );
 		/* Выводит кнопку для удаления всех товаров в корзине */
 		add_action( 'fs_delete_cart', 'fs_delete_cart', 10, 1 );
+		/* Выводит кнопку для удаления определёного товара из корзины */
+		add_action( 'fs_delete_position', 'fs_delete_position', 10, 2 );
 
 		//===== ORDER =====
 		/* Выводит форму заполнения личных данных при отправке заказа */
