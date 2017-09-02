@@ -1,1 +1,2 @@
-<a href="<?php fs_cart_url() ?>" title="Смотреть добавленные товары"><span><?php fs_product_count(true) ?></span></a>
+<a href="<?php fs_cart_url() ?>" title="Смотреть добавленные товары"
+   class="cart"><span><?php fs_product_count() ?></span></a>

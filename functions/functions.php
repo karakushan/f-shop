@@ -403,7 +403,6 @@ function fs_delete_position( $product_id, $args ) {
  * @param  array $products список товаров, по умолчанию $_SESSION['cart']
  * @param  boolean $echo выводить результат или возвращать, по умолчанию выводить
  *
- * @return [type]        [description]
  */
 function fs_product_count( $products = array(), $echo = true ) {
 	$all_count = array();
@@ -467,46 +466,43 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	$attr = wp_parse_args( $attr,
 		array(
 			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
-			'preloader' => '',
-			'class'     => '',
+			'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
+			'class'     => 'fs-add-to-cart',
 			'type'      => 'button',
 			'success'   => sprintf( __( 'Item «%s» added to cart', 'fast-shop' ), get_the_title( $post_id ) ),
 			'error'     => __( 'Error adding product to cart', 'fast-shop' )
 		)
 	);
 
-	/* Отключаем надпись на кнопке добавления в корзину */
-	if ( empty( $label ) ) {
-		$label = '';
-	}
-
-	//Добавляем к json свои значения
-	$attr_json = json_encode( $attr['json'] );
-
-	$attr_set   = array(
-		'type'              => 'button',
+	// устанавливаем html атрибуты кнопки
+	$attr_set  = array(
 		'data-action'       => 'add-to-cart',
 		'data-product-id'   => $post_id,
 		'data-product-name' => get_the_title( $post_id ),
 		'id'                => 'fs-atc-' . $post_id,
-		'data-attr'         => $attr_json,
+		'data-attr'         => json_encode( $attr['json'] ),
 		'data-success'      => $attr['success'],
-		'data-error'        => $attr['error']
+		'data-error'        => $attr['error'],
+		'class'             => $attr['class']
 	);
-	$attributes = fs_parse_attr( array(), $attr_set );
+	$html_atts = fs_parse_attr( array(), $attr_set );
+	$href      = '#';
+	// дополнительные скрытые инфо-блоки внутри кнопки (прелоадер, сообщение успешного добавления в корзину)
+	$atc_after = '<span class="fs-atc-info" style="display:none"></span>';
+	$atc_after .= '<span class="fs-atc-preloader" style="display:none"></span>';
 
 
 	/* позволяем устанавливать разные html элементы в качестве кнопки */
 	switch ( $attr['type'] ) {
 		case 'link':
-			$button = '<a href="#" ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '<span class="fs-atc-info" style="display:none"></span></a>';
+			$atc_button = sprintf( '<a href="%s" %s>%s %s</a>', $href, $html_atts, $label, $atc_after );
 			break;
 		default:
-			$button = '<button ' . $attributes . ' class="' . $attr['class'] . '">' . $label . '<span class="fs-atc-info" style="display:none"></span><span class="fs-atc-preloader" style="display:none"></span></button>';
+			$atc_button = sprintf( '<button type="button" %s>%s %s</button>', $html_atts, $label, $atc_after );
 			break;
 	}
 
-	echo apply_filters( 'fs_add_to_cart_filter', $button );
+	echo apply_filters( 'fs_add_to_cart_filter', $atc_button );
 }
 
 
