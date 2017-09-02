@@ -222,7 +222,12 @@ jQuery(function ($) {
 
 
 // валидация и отправка формы заказа
-    var validator = $('form[name="fs-order-send"]');
+    var validator = $('[name="fs-order-send"]');
+    $('[data-fs-action="order-send"]').click(function (e) {
+            e.preventDefault();
+            validator.submit();
+        }
+    )
     validator.validate({
         ignore: [],
         submitHandler: function (form) {
@@ -261,6 +266,7 @@ jQuery(function ($) {
 
         }
     });
+
 
 // валидация формы редактирования личных данных
     var userInfoEdit = $('form[name="fs-profile-edit"]');
