@@ -366,9 +366,9 @@ function fs_get_cart( $args = array() ) {
  */
 function fs_delete_position( $product_id, $args ) {
 	$args      = wp_parse_args( $args, array(
-		'text'  => '&#10005;',
-		'type'  => 'link',
-		'class' => 'fs-delete-position'
+		'content' => '',
+		'type'    => 'link',
+		'class'   => 'fs-delete-position'
 	) );
 	$html_atts = fs_parse_attr( array(), array(
 		'class'        => $args['class'],
@@ -379,17 +379,17 @@ function fs_delete_position( $product_id, $args ) {
 
 	) );
 
-	$text = sanitize_text_field( $args['text'] );
+	$content = sanitize_text_field( $args['content'] );
 
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#" ' . $html_atts . '>' . $text . '</a>';
+			echo '<a href="#" ' . $html_atts . '>' . $content . '</a>';
 			break;
 		case 'button':
-			echo '<button type="button" ' . $html_atts . '>' . $text . '</button>';
+			echo '<button type="button" ' . $html_atts . '>' . $content . '</button>';
 			break;
 		default:
-			echo '<a href="#" ' . $html_atts . '>' . $text . '</a>';
+			echo '<a href="#" ' . $html_atts . '>' . $content . '</a>';
 			break;
 	}
 
