@@ -222,6 +222,26 @@ function fs_get_total_amount( $products = array() ) {
 }
 
 /**
+ * Выводит количество товаров в корзине
+ *
+ * @param array $products
+ *
+ * @return array|float|int
+ */
+function fs_total_count( $products = array() ) {
+	if ( empty( $products ) ) {
+		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : 0;
+	}
+	$all_count = array();
+	foreach ( $products as $key => $count ) {
+		$all_count[ $key ] = $count['count'];
+	}
+	$all_count = array_sum( $all_count );
+
+	return $all_count;
+}
+
+/**
  * Получает общую сумму всех продуктов в корзине
  *
  * @param  boolean $show показывать (по умолчанию) или возвращать
@@ -271,25 +291,6 @@ function fs_total_wholesale_amount( $products = array(), $echo = true, $wrap = '
 		echo $amount;
 	} else {
 		return $amount;
-	}
-}
-
-/**
- * возвращает к-во всех товаров в корзине
- * @return [type] [description]
- */
-function fs_total_count( $echo = true ) {
-	$count = array();
-	if ( isset( $_SESSION['cart'] ) ) {
-		foreach ( $_SESSION['cart'] as $key => $product ) {
-			$count[] = $product['count'];
-		}
-	}
-	$all_count = array_sum( $count );
-	if ( $echo ) {
-		echo $all_count;
-	} else {
-		return $all_count;
 	}
 }
 
@@ -476,7 +477,7 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 
 	/* Отключаем надпись на кнопке добавления в корзину */
 	if ( empty( $label ) ) {
-		$label ='';
+		$label = '';
 	}
 
 	//Добавляем к json свои значения
@@ -667,23 +668,28 @@ function fs_cart_quantity( $product_id, $value, $args = array() ) {
 	$value      = intval( $value );
 	$product_id = intval( $product_id );
 	$args       = wp_parse_args( $args, array(
-		'wrapper_class' => 'fs-qty-wrapper',
+		'wrapper'       => 'div',
+		'wrapper_class' => sanitize_html_class( 'fs-qty-wrapper' ),
 		'position'      => '%pluss% %input% %minus%',
-		'pluss'         => array( 'class' => 'fs-pluss', 'content' => '+' ),
-		'minus'         => array( 'class' => 'fs-minus', 'content' => '-' ),
+		'pluss'         => array( 'class' => sanitize_html_class( 'fs-pluss' ), 'content' => '+' ),
+		'minus'         => array( 'class' => sanitize_html_class( 'fs-minus' ), 'content' => '-' ),
 		'input'         => array( 'class' => 'fs-cart-quantity' )
 	) );
 
 	$pluss    = '<button type="button" class="' . $args['pluss']['class'] . '" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '">' . $args['pluss']['content'] . '</button> ';
-	$minus    = '<button type="button" class="' . $args['minus']['class'] . '" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '">' . $args['minus']['content'] . '</button> </div>';
+	$minus    = '<button type="button" class="' . $args['minus']['class'] . '" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '">' . $args['minus']['content'] . '</button>';
 	$input    = '<input type="text" name="" value="' . $value . '" class="' . $args['input']['class'] . '" data-fs-type="cart-quantity" id="product-quantify-' . $product_id . '" data-product-id="' . $product_id . '">';
 	$quantity = str_replace( array( '%pluss%', '%minus%', '%input%' ), array(
 		$pluss,
 		$minus,
 		$input
 	), $args['position'] );
-	$quantity = '<div class="' . $args['wrapper_class'] . '">' . $quantity . '</div>';
-	echo $quantity;
+	printf( '<%s class="%s">%s</%s>',
+		$args['wrapper'],
+		$args['wrapper_class'],
+		$quantity,
+		$args['wrapper']
+	);
 }
 
 /**
