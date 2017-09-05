@@ -427,12 +427,11 @@ function fs_product_count( $products = array(), $echo = true ) {
 //Выводит текущую цену с символом валюты без учёта скидки
 /**
  * @param int $post_id - id товара
- * @param bool $echo - вывести или возвратить (по умолчанию вывести)
  * @param string $wrap - html обёртка для цены
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price( $post_id = 0, $echo = true, $wrap = '%s <span>%s</span>' ) {
+function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>' ) {
 	global $post;
 	$config  = new \FS\FS_Config();
 	$post_id = empty( $post_id ) ? $post->ID : $post_id;
@@ -444,11 +443,7 @@ function fs_base_price( $post_id = 0, $echo = true, $wrap = '%s <span>%s</span>'
 	$price_float = $price;
 	$price       = apply_filters( 'fs_price_format', $price );
 	$cur_symb    = fs_currency();
-	if ( $echo ) {
-		printf( $wrap, $price, $cur_symb );
-	} else {
-		return $price_float;
-	}
+	printf( $wrap, $price, $cur_symb );
 }
 
 
@@ -1430,6 +1425,63 @@ function fs_attr_list( $attr_group = 0 ) {
 	}
 
 	return $atts;
+}
+
+
+/**
+ * Выводит список всех атрибутов товара в виде:
+ *   Название группы свойств : свойство (свойства)
+ *
+ * @param int $post_id - ID товара
+ * @param array $args - дополнительные аргументы вывода
+ */
+function fs_the_atts_list( $post_id = 0, $args = array() ) {
+	global $post, $fs_config;
+	$post_id = ! empty( $post_id ) ? $post_id : $post->ID;
+	$args    = wp_parse_args( $args, array(
+		'wrapper'       => 'ul',
+		'group_wrapper' => 'span',
+		'wrapper_class' => 'fs-atts-list',
+		'hierarchy'     => true
+	) );
+	$atts    = get_the_terms( $post_id, $fs_config->data['product_att_taxonomy'] );
+	if ( empty( $atts ) || is_wp_error( $atts ) ) {
+		return;
+	}
+
+	$atts_new = array();
+	// сортируем атрибуты по родителю
+	if ( $args['hierarchy'] ) {
+		foreach ( $atts as $k => $att ) {
+			$atts_new[ $att->parent ][] = $att;
+		}
+	}
+	$list = '';
+
+	foreach ( $atts_new as $k => $att ) {
+		$list_ch = '';
+		if ( $att ) {
+			if ( count( $att ) > 1 ) {
+				$list_ch .= '<ul>';
+				foreach ( $att as $at ) {
+					$list_ch .= '<li>' . $at->name . '</li>';
+				}
+				$list_ch .= '</ul>';
+			} else {
+				foreach ( $att as $at ) {
+					$list_ch .= $at->name;
+				}
+			}
+		}
+		$parent_name = get_term_field( 'name', $k, $fs_config->data['product_att_taxonomy'] );
+		$list        .= sprintf( '<li><%s>%s:</%s> %s</li>', $args['group_wrapper'], $parent_name, $args['group_wrapper'], $list_ch );
+
+	}
+	$html_atts = fs_parse_attr( array(), array(
+		'class' => $args['wrapper_class']
+	) );
+	printf( '<%s %s>%s</%s>', $args['wrapper'], $html_atts, $list, $args['wrapper'] );
+
 }
 
 /**
