@@ -562,6 +562,8 @@ var addUrlParam = function (search, key, val) {
     var p_start = u.query.price_start == undefined ? 0 : u.query.price_start;
     var p_end = u.query.price_end == undefined ? FastShopData.fs_slider_max : u.query.price_end;
 
+
+
     $('[data-fs-element="range-slider"]').slider({
         range: true,
         min: 0,
@@ -572,6 +574,8 @@ var addUrlParam = function (search, key, val) {
             $('[data-fs-element="range-start"] ').html(ui.values[0] + ' ' + FastShopData.fs_currency);
             $("#slider-range > .ui-slider-handle:nth-child(2)").html('<span><span class="val">' + ui.values[0] + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
             $("#slider-range > .ui-slider-handle:nth-child(3)").html('<span><span class="val">' + ui.values[1] + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
+            $('[data-fs-element="range-start-input"]').val(ui.values[0]);
+            $('[data-fs-element="range-end-input"]').val(ui.values[1]);
         },
         change: function (event, ui) {
 
@@ -586,6 +590,9 @@ var addUrlParam = function (search, key, val) {
     });
     $('[data-fs-element="range-end"] ').html(p_end + ' ' + FastShopData.fs_currency);
     $('[data-fs-element="range-start"] ').html(p_start + ' ' + FastShopData.fs_currency);
+
+    $('[data-fs-element="range-start-input"]').val(p_start);
+    $('[data-fs-element="range-end-input"]').val(p_end);
 
     $("#slider-range > .ui-slider-handle:nth-child(2)").html('<span><span class="val">' + p_start + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
     $("#slider-range > .ui-slider-handle:nth-child(3)").html('<span><span class="val">' + p_end + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');

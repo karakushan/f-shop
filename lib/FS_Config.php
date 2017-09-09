@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class FS_Config {
 	public $data;
 	public $meta;
+	public $term_meta;
 	public $options;
 	public $tabs;
 	public $taxonomies;
@@ -97,6 +98,15 @@ class FS_Config {
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );
+
+		$this->term_meta = array(
+			'att_type'      => 'fs_att_type',
+			'att_value'     => 'fs_att_value',
+			'att_unit'      => 'fs_att_unit',
+			'att_unit_type' => 'fs_att_unit_type',
+			'att_start'     => 'fs_att_start',
+			'att_end'       => 'fs_att_end',
+		);
 
 		//  устанавливаем основные типы цен
 		self::$prices = array(

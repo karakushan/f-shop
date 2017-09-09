@@ -136,16 +136,25 @@ function fs_row_wholesale_price( $post_id, $count, $curency = true, $wrap = '%s 
 /**
  * Выводит текущую цену с учётом скидки
  *
- * @param string $post_id - id товара
+ * @param int|string $post_id - id товара
  * @param string $wrap - html обёртка для цены
+ * @param array $args - дополнительные аргументы
  */
-function fs_the_price( $post_id = 0, $wrap = "%s <span>%s</span>" ) {
+function fs_the_price( $post_id = 0, $wrap = "%s <span>%s</span>", $args = array() ) {
 	global $post;
+	$args     = wp_parse_args( $args, array(
+		'echo' => true
+	) );
 	$cur_symb = fs_currency();
 	$post_id  = empty( $post_id ) ? $post->ID : $post_id;
 	$price    = fs_get_price( $post_id );
 	$price    = apply_filters( 'fs_price_format', $price );
-	printf( $wrap, $price, $cur_symb );
+	if ( $args['echo'] ) {
+		printf( $wrap, $price, $cur_symb );
+	} else {
+		return sprintf( $wrap, $price, $cur_symb );
+	}
+
 }
 
 /**
@@ -423,29 +432,36 @@ function fs_product_count( $products = array(), $echo = true ) {
 	}
 }
 
-
-//Выводит текущую цену с символом валюты без учёта скидки
 /**
+ * Выводит текущую цену с символом валюты без учёта скидки
+ *
  * @param int $post_id - id товара
  * @param string $wrap - html обёртка для цены
+ * @param array $args - дополнительные аргументы
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>' ) {
+function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = array() ) {
 	global $post;
+	$args    = wp_parse_args( $args, array(
+		'echo' => true
+	) );
 	$config  = new \FS\FS_Config();
 	$post_id = empty( $post_id ) ? $post->ID : $post_id;
 	$price   = get_post_meta( $post_id, $config->meta['price'], 1 );
 	if ( $price == fs_get_price( $post_id ) ) {
 		return;
 	}
-	$price       = empty( $price ) ? 0 : (float) $price;
-	$price_float = $price;
-	$price       = apply_filters( 'fs_price_format', $price );
-	$cur_symb    = fs_currency();
-	printf( $wrap, $price, $cur_symb );
-}
+	$price    = empty( $price ) ? 0 : (float) $price;
+	$price    = apply_filters( 'fs_price_format', $price );
+	$cur_symb = fs_currency();
+	if ( $args['echo'] ) {
+		printf( $wrap, $price, $cur_symb );
+	} else {
+		return sprintf( $wrap, $price, $cur_symb );
+	}
 
+}
 
 /**
  * [Отображает кнопку "в корзину" со всеми необходимыми атрибутамии]
@@ -465,7 +481,8 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 			'class'     => 'fs-add-to-cart',
 			'type'      => 'button',
 			'success'   => sprintf( __( 'Item «%s» added to cart', 'fast-shop' ), get_the_title( $post_id ) ),
-			'error'     => __( 'Error adding product to cart', 'fast-shop' )
+			'error'     => __( 'Error adding product to cart', 'fast-shop' ),
+			'echo'      => true
 		)
 	);
 
@@ -496,8 +513,11 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 			$atc_button = sprintf( '<button type="button" %s>%s %s</button>', $html_atts, $label, $atc_after );
 			break;
 	}
-
-	echo apply_filters( 'fs_add_to_cart_filter', $atc_button );
+	if ( $attr['echo'] ) {
+		echo apply_filters( 'fs_add_to_cart_filter', $atc_button );
+	} else {
+		return apply_filters( 'fs_add_to_cart_filter', $atc_button );
+	}
 }
 
 
@@ -1462,11 +1482,11 @@ function fs_the_atts_list( $post_id = 0, $args = array() ) {
 		$list_ch = '';
 		if ( $att ) {
 			if ( count( $att ) > 1 ) {
-				$list_ch .= '<ul>';
+				$list_ch_arr = array();
 				foreach ( $att as $at ) {
-					$list_ch .= '<li>' . $at->name . '</li>';
+					$list_ch_arr[] = $at->name;
 				}
-				$list_ch .= '</ul>';
+				$list_ch = implode( ', ', $list_ch_arr );
 			} else {
 				foreach ( $att as $at ) {
 					$list_ch .= $at->name;
