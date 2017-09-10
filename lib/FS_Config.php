@@ -18,10 +18,14 @@ class FS_Config {
 	public $options;
 	public $tabs;
 	public $taxonomies;
+	public static $currencies = array();
+	public static $default_currency = 'USD';
 	public static $user_meta = array();
 	public static $prices;
 	public static $form_fields;
 	protected static $nonce = 'fast-shop';
+	protected static $text_domain = 'fast-shop';
+
 
 	protected static $nonce_field = 'fs-secret';
 
@@ -46,6 +50,7 @@ class FS_Config {
 			'product_del_taxonomy' => 'fs-delivery-methods'
 		);
 		$this->data = apply_filters( 'fs_data', $data );
+
 
 		//Табы отображаемые в метабоксе в редактировании товара
 		$this->tabs = array(
@@ -111,12 +116,14 @@ class FS_Config {
 		//  устанавливаем основные типы цен
 		self::$prices = array(
 			'price'        => array(
+				'id'          => 'base-price',
 				'name'        => __( 'The base price', 'fast-shop' ),
 				'meta_key'    => $this->meta['price'],
 				'on'          => true,
 				'description' => __( 'This is the main type prices', 'fast-shop' )
 			),
 			'action_price' => array(
+				'id'          => 'action-price',
 				'name'        => __( 'Promotional price', 'fast-shop' ),
 				'meta_key'    => $this->meta['action_price'],
 				'on'          => true,
@@ -151,6 +158,12 @@ class FS_Config {
 			'fs_delivery_methods' => array( 'type' => 'radio', 'label' => 'Способ доставки', 'required' => true ),
 			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты' ),
 			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
+		);
+
+		self::$currencies = array(
+			'USD' => __( 'US dollar', 'fast-shop' ),
+			'UAH' => __( 'Ukrainian hryvnia', 'fast-shop' ),
+			'RUB' => __( 'Russian ruble', 'fast-shop' ),
 		);
 
 	}
@@ -240,4 +253,31 @@ class FS_Config {
 				break;
 		}
 	}
+
+	/**
+	 * Возвращает список основных валют
+	 * @return array
+	 */
+	public static function getCurrencies(): array {
+		return apply_filters( 'fs_currencies_filter', self::$currencies );
+	}
+
+	/**
+	 * Получем валюту по умолчанию
+	 * @return string
+	 */
+	public static function getDefaultCurrency(): string {
+		return self::$default_currency;
+	}
+
+	/**
+	 * устанавливаем валюту по умолчанию
+	 *
+	 * @param string $default_currency
+	 */
+	public static function setDefaultCurrency( string $default_currency ) {
+		self::$default_currency = $default_currency;
+	}
+
+
 }

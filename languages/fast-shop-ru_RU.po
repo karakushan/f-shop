@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-02 10:40+0000\n"
-"PO-Revision-Date: 2017-09-02 10:40+0000\n"
-"Last-Translator: beton-admin <karakushan@gmail.com>\n"
+"POT-Creation-Date: 2017-09-10 10:03+0000\n"
+"PO-Revision-Date: 2017-09-10 10:03+0000\n"
+"Last-Translator: fs_name <clothes@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -33,9 +33,17 @@ msgstr ""
 msgid "email"
 msgstr ""
 
-#: lib/FS_Post_Type.php:47
-msgid "Product"
-msgstr "Товар"
+#: lib/FS_Config.php:164
+msgid "US dollar"
+msgstr "Доллар США"
+
+#: lib/FS_Config.php:165
+msgid "Ukrainian hryvnia"
+msgstr "Украинская гривна"
+
+#: lib/FS_Config.php:166
+msgid "Russian ruble"
+msgstr "Русский рубль"
 
 #: templates/back-end/metabox/tab-3.php:10
 msgid "Запас товара на складе"
@@ -119,29 +127,25 @@ msgstr "город"
 msgid "units"
 msgstr "единиц"
 
-#: functions/functions.php:374
+#: functions/functions.php:384
 #, php-format
 msgid "Remove items %s"
 msgstr "Удалить товар  %s"
 
-#: functions/functions.php:472
+#: functions/functions.php:483
 #, php-format
 msgid "Item «%s» added to cart"
 msgstr "Товар «%s» добавлен в корзину"
 
-#: functions/functions.php:473
+#: functions/functions.php:484
 msgid "Error adding product to cart"
 msgstr "Ошибка добавления товара в корзину"
 
-#: functions/functions.php:482
-msgid "Add to cart"
-msgstr "В корзину"
-
-#: functions/functions.php:788
+#: functions/functions.php:802
 msgid "Remove all items"
 msgstr "Удалить все товары"
 
-#: functions/functions.php:897
+#: functions/functions.php:911
 msgid "Item added to wishlist"
 msgstr "Товар добавлен в список желаний"
 
@@ -150,35 +154,35 @@ msgstr "Товар добавлен в список желаний"
 msgid "Order"
 msgstr "Заказ"
 
-#: lib/FS_Config.php:52
+#: lib/FS_Config.php:58
 msgid "Prices"
 msgstr "Цены"
 
-#: lib/FS_Config.php:58
+#: lib/FS_Config.php:64
 msgid "Gallery"
 msgstr "Галерея"
 
-#: lib/FS_Config.php:64
+#: lib/FS_Config.php:70
 msgid "Other"
 msgstr "Другое"
 
-#: lib/FS_Config.php:70
+#: lib/FS_Config.php:76
 msgid "Associated"
 msgstr "Связанное"
 
-#: lib/FS_Config.php:104
+#: lib/FS_Config.php:120
 msgid "The base price"
 msgstr "Базовая цена"
 
-#: lib/FS_Config.php:107
+#: lib/FS_Config.php:123
 msgid "This is the main type prices"
 msgstr "Это главный тип цены"
 
-#: lib/FS_Config.php:110
+#: lib/FS_Config.php:127
 msgid "Promotional price"
 msgstr "Акционая цена"
 
-#: lib/FS_Config.php:113
+#: lib/FS_Config.php:130
 msgid "This type of price interrupts the base price"
 msgstr "Этот тип цены перебивает базовую цену"
 
@@ -194,11 +198,11 @@ msgstr "Произошла непредвиденная ошибка в проц
 msgid "Product category"
 msgstr "Категории товаров"
 
-#: lib/FS_Form_Class.php:28
+#: lib/FS_Form_Class.php:29
 msgid "this field is required"
 msgstr "это поле обязательное"
 
-#: lib/FS_Form_Class.php:69
+#: lib/FS_Form_Class.php:72
 msgid "Select page"
 msgstr "Выберите страницу"
 
@@ -209,6 +213,10 @@ msgstr "Клиент"
 #: lib/FS_Post_Type.php:46 lib/FS_Post_Type.php:57
 msgid "Products"
 msgstr "Товары"
+
+#: lib/FS_Post_Type.php:47
+msgid "Product"
+msgstr "Товар"
 
 #: lib/FS_Post_Type.php:48
 msgid "Add product"
