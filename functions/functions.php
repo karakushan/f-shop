@@ -248,8 +248,10 @@ function fs_total_count( $products = array() ) {
 		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : 0;
 	}
 	$all_count = array();
-	foreach ( $products as $key => $count ) {
-		$all_count[ $key ] = $count['count'];
+	if ( $products ) {
+		foreach ( $products as $key => $count ) {
+			$all_count[ $key ] = $count['count'];
+		}
 	}
 	$all_count = array_sum( $all_count );
 
