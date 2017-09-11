@@ -92,28 +92,31 @@ class FS_Orders_Class {
 		return $item;
 	}
 
-//Получаем объект одного заказа
-	public function get_order( $id = 0 ) {
-		global $wpdb;
-		$table_name = $this->config->data['table_orders'];
-		$order      = $wpdb->get_row( "SELECT * FROM $table_name WHERE id ='$id'" );
-		if ( ! is_null( $order ) ) {
-			$user                 = get_user_by( 'id', $order->user_id );
-			$order->user          = $user;
-			$order->delivery_name = 'не определено';
-			$order->payment_name  = 'не определено';
-			$order->products      = unserialize( $order->products );
-			$order->status        = $this->order_status( $order->status );
-			if ( ! is_wp_error( get_term_field( 'name', $order->delivery ) ) ) {
-				$order->delivery_name = get_term_field( 'name', $order->delivery );
-			}
-			if ( ! is_wp_error( get_term_field( 'name', $order->payment ) ) ) {
-				$order->payment_name = get_term_field( 'name', $order->payment );
-			}
-		}
+
+	/**
+	 * возвращает один заказ
+	 *
+	 * @param int $order_id - ID заказа
+	 *
+	 * @return \stdClass
+	 */
+	public function get_order( $order_id = 0 ) {
+		$order           = new \stdClass();
+		$user            = get_post_meta( $order_id, '_user', 0 );
+		$items           = get_post_meta( $order_id, '_products', 0 );
+		$delivery        = get_post_meta( $order_id, '_delivery', 0 );
+		$order->pay_id   = get_post_meta( $order_id, '_payment', 1 );
+		$order->payment  = get_term_field( 'name', $order->pay_id, 'fs-payment-methods' );
+		$order->comment  = get_post_meta( $order_id, '_comment', 1 );
+		$order->user     = ! empty( $user[0] ) ? $user[0] : array();
+		$order->items    = ! empty( $items[0] ) ? $items[0] : array();
+		$order->delivery = ! empty( $delivery[0] ) ? $delivery[0] : array();
+		$order->sum      = fs_total_amount( $order->items, false );
+		$order->status   = $this->get_order_status( $order_id );
 
 		return $order;
 	}
+
 
 	/**
 	 * подсчитывает общую сумму товаров в одном заказе
