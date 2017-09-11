@@ -383,9 +383,10 @@ li.fs-attr {
     position: relative;
 }
 
-[data-fs-element="whishlist-widget"]{
+[data-fs-element="whishlist-widget"] {
     display: inline-block;
 }
+
 [data-fs-action  = "wishlist"] {
     .fs-wh-message {
         position: absolute;
@@ -607,8 +608,14 @@ li.fs-attr {
 
 .fs-atc-preloader {
     position: absolute;
-    left: 26px;
+    left: 0;
     top: 0;
+    background: rgba(0, 0, 0, 0.49);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
 }
 
 

@@ -66,11 +66,34 @@ class FS_Ajax_Class {
 		$headers[] = 'From: ' . fs_option( 'name_sender', get_bloginfo( 'name' ) ) . ' <' . fs_option( 'email_sender', get_bloginfo( 'admin_email' ) ) . '>';
 
 		// проверяем существование пользователя
-		$user_id = 0;
 		if ( is_user_logged_in() ) {
 			$user    = wp_get_current_user();
 			$user_id = $user->ID;
+		} else {
+			// Если пользователь не залогинен пробуем его зарегистрировать
+			$new_user = register_new_user( $sanitize_field['fs_email'], $sanitize_field['fs_email'] );
+			if ( ! is_wp_error( $new_user ) ) {
+				$user_id = $new_user;
+				wp_update_user( array(
+					'ID'         => $user_id,
+					'first_name' => $sanitize_field['fs_first_name'],
+					'last_name'  => $sanitize_field['fs_last_name'],
+					'role'       => FS_Config::getUsers( 'new_user_role' )
+				) );
+				foreach ( FS_Config::getFormFields() as $key => $user_meta ) {
+					if ( ! empty( $sanitize_field[ $key ] ) ) {
+						update_user_meta( $new_user, $key, $sanitize_field[ $key ] );
+					}
+				}
+			} else {
+				echo json_encode( array(
+					'success' => false,
+					'text'    => $new_user->get_error_message(),
+				) );
+				exit();
+			}
 		}
+
 
 		// Вставляем заказ в базу данных
 		$defaults                              = array(
@@ -112,6 +135,7 @@ class FS_Ajax_Class {
 		$_SESSION['last_order_id']             = $order_id;
 		$search                                = fs_mail_keys( $sanitize_field );
 		$replace                               = array_values( $sanitize_field );
+
 
 		// текст письма заказчику
 		$user_message = apply_filters( 'fs_order_user_message', '' );

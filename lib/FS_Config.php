@@ -17,8 +17,10 @@ class FS_Config {
 	public $term_meta;
 	public $options;
 	public $tabs;
+
 	public $taxonomies;
 	public static $currencies = array();
+	protected static $users = array();
 	public static $default_currency = 'USD';
 	public static $user_meta = array();
 	public static $prices;
@@ -166,6 +168,11 @@ class FS_Config {
 			'RUB' => __( 'Russian ruble', 'fast-shop' ),
 		);
 
+		self::$users = array(
+			'new_user_role' => 'client',
+			'new_user_name' => __( 'Client', 'fast-shop' )
+		);
+
 	}
 
 	public static function default_order_statuses() {
@@ -258,7 +265,7 @@ class FS_Config {
 	 * Возвращает список основных валют
 	 * @return array
 	 */
-	public static function getCurrencies(){
+	public static function getCurrencies() {
 		return apply_filters( 'fs_currencies_filter', self::$currencies );
 	}
 
@@ -266,7 +273,7 @@ class FS_Config {
 	 * Получем валюту по умолчанию
 	 * @return string
 	 */
-	public static function getDefaultCurrency(){
+	public static function getDefaultCurrency() {
 		return self::$default_currency;
 	}
 
@@ -277,6 +284,50 @@ class FS_Config {
 	 */
 	public static function setDefaultCurrency( string $default_currency ) {
 		self::$default_currency = $default_currency;
+	}
+
+	/**
+	 * @param string $user
+	 *
+	 * @return array
+	 */
+	public static function getUsers( $user = '' ) {
+		return self::$users[ $user ];
+	}
+
+	/**
+	 * @param array $users
+	 */
+	public static function setUsers( $users = array() ) {
+		self::$users = $users;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getUserMeta() {
+		return self::$user_meta;
+	}
+
+	/**
+	 * @param array $user_meta
+	 */
+	public static function setUserMeta( $user_meta = array() ) {
+		self::$user_meta = $user_meta;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getFormFields() {
+		return self::$form_fields;
+	}
+
+	/**
+	 * @param array $form_fields
+	 */
+	public static function setFormFields( $form_fields = array() ) {
+		self::$form_fields = $form_fields;
 	}
 
 

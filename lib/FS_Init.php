@@ -109,7 +109,13 @@ class FS_Init {
 	 *Функция срабатывает один раз при активации плагина
 	 */
 	function fs_activate() {
-		add_role( 'client', __( 'Client', 'fast-shop' ), array( 'read' => true, 'level_0' => true ) );
+		add_role(
+			FS_Config::getUsers( 'new_user_role' ),
+			FS_Config::getUsers( 'new_user_name' ),
+			array(
+				'read'    => true,
+				'level_0' => true
+			) );
 		/* регистрируем статусы заказа по умолчанию */
 		$taxonomies = new FS_Taxonomies_Class;
 		$taxonomies->create_taxonomy();
