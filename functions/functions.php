@@ -1567,3 +1567,36 @@ function fs_gallery_images_ids( $post_id = 0 ) {
 
 	return $gallery;
 }
+
+/**
+ * Выводит миниатюру товара, если миниатюра не установлена - заглушку
+ *
+ * @param int $product_id ID товара (поста)
+ * @param string $size размер миниатюры
+ * @param bool $echo выводить (по умолчанию) или возвращать
+ * @param array $args html атрибуты, типа класс, id
+ *
+ * @return false|string
+ */
+function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = true, $args = array() ) {
+	global $post;
+	$product_id = empty( $product_id ) ? $post->ID : $product_id;
+	if ( has_post_thumbnail( $product_id ) ) {
+		$image = get_the_post_thumbnail_url( $product_id, $size );
+	} else {
+		$image = FS_PLUGIN_URL . 'assets/img/no-image.png';
+	}
+	$atts  = fs_parse_attr( $args, array(
+		'src'   => $image,
+		'class' => 'fs-product-thumbnail',
+		'id'    => 'fs-product-thumbnail-' . $product_id,
+		'alt'   => get_the_title( $product_id ),
+	) );
+	$image = '<img ' . $atts . '>';
+	if ( $echo ) {
+		echo $image;
+	} else {
+		return $image;
+	}
+
+}

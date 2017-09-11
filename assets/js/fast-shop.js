@@ -47,7 +47,6 @@ jQuery(function ($) {
         event.preventDefault();
         var pName = $(this).data('product-name');
         var pId = $(this).data('product-id');
-        console.log();
         $('[name="fs_cart[product_name]"]').val(pName);
         $('[name="fs_cart[product_id]"]').val(pId);
     });
