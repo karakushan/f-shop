@@ -196,10 +196,12 @@ function fs_get_wholesale_price( $post_id = 0 ) {
  *
  * @param string $wrap - формат отображения цены с валютой
  *
+ * @param bool $echo выводить (по умолчанию) или возвращать
+ *
  * @return возвращает или показывает общую сумму с валютой
  *
  */
-function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
+function fs_total_amount( $wrap = '%s <span>%s</span>', $echo = true ) {
 	if ( empty( $_SESSION['cart'] ) ) {
 		return 0;
 	}
@@ -207,7 +209,11 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
 	$total    = fs_get_total_amount( $products );
 	$total    = apply_filters( 'fs_price_format', $total );
 	$total    = sprintf( $wrap, $total, fs_currency() );
-	echo $total;
+	if ( $echo ) {
+		echo $total;
+	} else {
+		return $total;
+	}
 }
 
 /**
@@ -317,7 +323,8 @@ function fs_get_cart( $args = array() ) {
 		return false;
 	}
 	$args     = wp_parse_args( $args, array(
-		'price_format' => '%s <span>%s</span>'
+		'price_format'   => '%s <span>%s</span>',
+		'thumbnail_size' => 'thumbnail'
 	) );
 	$products = array();
 	if ( ! empty( $_SESSION['cart'] ) ) {
@@ -346,7 +353,7 @@ function fs_get_cart( $args = array() ) {
 				'id'         => $key,
 				'name'       => get_the_title( $key ),
 				'count'      => $c,
-				'thumb'      => get_the_post_thumbnail_url( $key, 'full' ),
+				'thumb'      => get_the_post_thumbnail_url( $key, $args['thumbnail_size'] ),
 				'attr'       => $attr,
 				'link'       => get_permalink( $key ),
 				'price'      => sprintf( $args['price_format'], $price_show, fs_currency() ),

@@ -258,7 +258,7 @@ class FS_Config {
 	 * Возвращает список основных валют
 	 * @return array
 	 */
-	public static function getCurrencies(): array {
+	public static function getCurrencies(){
 		return apply_filters( 'fs_currencies_filter', self::$currencies );
 	}
 
@@ -266,7 +266,7 @@ class FS_Config {
 	 * Получем валюту по умолчанию
 	 * @return string
 	 */
-	public static function getDefaultCurrency(): string {
+	public static function getDefaultCurrency(){
 		return self::$default_currency;
 	}
 
