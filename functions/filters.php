@@ -181,7 +181,7 @@ function add_views_sortable_column( $sortable_columns ) {
  * @return mixed|string|void
  */
 
-function fs_form_header( $attr, $ajax_action ) {
+function fs_form_header( $attr=array(), $ajax_action ) {
 	$attr        = fs_parse_attr( $attr );
 	$form_header = '<form ' . $attr . '>';
 	$form_header .= \FS\FS_Config::nonce_field();
