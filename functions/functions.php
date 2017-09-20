@@ -3,6 +3,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
+/**
+ * Recursively get taxonomy and its children
+ *
+ * @param string $taxonomy
+ * @param int $parent - parent term id
+ *
+ * @return array
+ */
+function fs_get_taxonomy_hierarchy( $taxonomy, $parent = 0 ) {
+	// only 1 taxonomy
+	$taxonomy = is_array( $taxonomy ) ? array_shift( $taxonomy ) : $taxonomy;
+	// get all direct decendants of the $parent
+	$terms = get_terms( $taxonomy, array( 'parent' => $parent ) );
+	// prepare a new array.  these are the children of $parent
+	// we'll ultimately copy all the $terms into this new array, but only after they
+	// find their own children
+	$children = array();
+	// go through all the direct decendants of $parent, and gather their children
+	foreach ( $terms as $term ) {
+		// recurse to get the direct decendants of "this" term
+		$term->children = fs_get_taxonomy_hierarchy( $taxonomy, $term->term_id );
+		// add the term to our new array
+		$children[ $term->term_id ] = $term;
+	}
+
+	// send the results back to the caller
+	return $children;
+}
 
 function fs_dropdown_attr_group( $group_id = 0, $post_id = 0, $args = array() ) {
 
@@ -1466,46 +1494,39 @@ function fs_attr_list( $attr_group = 0 ) {
  */
 function fs_the_atts_list( $post_id = 0, $args = array() ) {
 	global $post, $fs_config;
-	$post_id = ! empty( $post_id ) ? $post_id : $post->ID;
-	$args    = wp_parse_args( $args, array(
+	$list           = '';
+	$post_id        = ! empty( $post_id ) ? $post_id : $post->ID;
+	$args           = wp_parse_args( $args, array(
 		'wrapper'       => 'ul',
 		'group_wrapper' => 'span',
 		'wrapper_class' => 'fs-atts-list',
-		'hierarchy'     => true
+		'parent'        => 0,
+		'exclude'       => array()
 	) );
-	$atts    = get_the_terms( $post_id, $fs_config->data['product_att_taxonomy'] );
-	if ( empty( $atts ) || is_wp_error( $atts ) ) {
-		return;
-	}
-
-	$atts_new = array();
-	// сортируем атрибуты по родителю
-	if ( $args['hierarchy'] ) {
-		foreach ( $atts as $k => $att ) {
-			$atts_new[ $att->parent ][] = $att;
+	$post_terms     = wp_get_object_terms( $post_id, $fs_config->data['product_att_taxonomy'] );
+	$all_post_terms = array();
+	if ( $post_terms ) {
+		foreach ( $post_terms as $post_term ) {
+			$all_post_terms[ $post_term->term_id ] = $post_term->term_id;
+			$all_post_terms[ $post_term->parent ]  = $post_term->parent;
 		}
 	}
-	$list = '';
-
-	foreach ( $atts_new as $k => $att ) {
-		$list_ch = '';
-		if ( $att ) {
-			if ( count( $att ) > 1 ) {
-				$list_ch_arr = array();
-				foreach ( $att as $at ) {
-					$list_ch_arr[] = $at->name;
-				}
-				$list_ch = implode( ', ', $list_ch_arr );
-			} else {
-				foreach ( $att as $at ) {
-					$list_ch .= $at->name;
+	$terms = fs_get_taxonomy_hierarchy( $fs_config->data['product_att_taxonomy'], $args['parent'] );
+	if ( $terms ) {
+		foreach ( $terms as $term ) {
+			if ( in_array( $term->term_id, $args['exclude'] ) || ! in_array( $term->term_id, $all_post_terms ) ) {
+				continue;
+			}
+			$list_ch = [];
+			if ( $term->children ) {
+				foreach ( $term->children as $child ) {
+					$list_ch[] = $child->name;
 				}
 			}
+			$list .= sprintf( '<li><%s>%s:</%s> %s</li>', $args['group_wrapper'], $term->name, $args['group_wrapper'], implode( ', ', $list_ch ) );
 		}
-		$parent_name = get_term_field( 'name', $k, $fs_config->data['product_att_taxonomy'] );
-		$list        .= sprintf( '<li><%s>%s:</%s> %s</li>', $args['group_wrapper'], $parent_name, $args['group_wrapper'], $list_ch );
-
 	}
+
 	$html_atts = fs_parse_attr( array(), array(
 		'class' => $args['wrapper_class']
 	) );
@@ -1600,3 +1621,4 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
 	}
 
 }
+
