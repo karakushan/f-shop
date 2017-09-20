@@ -759,16 +759,19 @@ function fs_parse_url( $url = '' ) {
  *
  * @return bool|mixed
  */
-function fs_action( $post_id = 0 ) {
-	global $post;
-	$post_id = empty( $post_id ) ? $post->ID : (int) $post_id;
-	if ( fs_base_price( $post_id, false ) > fs_get_price( $post_id ) ) {
-		$action = true;
-	} else {
-		$action = false;
+function fs_is_action( $post_id = 0 ) {
+	global $post, $fs_config;
+	$post_id      = empty( $post_id ) ? $post->ID : (int) $post_id;
+	$base_price   = get_post_meta( $post_id, $fs_config->meta['price'], 1 );
+	$action_price = get_post_meta( $post_id, $fs_config->meta['action_price'], 1 );
+	if ( empty( $action_price ) ) {
+		return false;
 	}
-
-	return $action;
+	if ( (float) $action_price > 0 && (float) $action_price < (float) $base_price ) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 
@@ -1249,34 +1252,35 @@ function fs_gallery_images_url( $product_id = 0 ) {
  *
  * @return object                  объект с товарами
  */
-function fs_get_related_products( $product_id = 0, array $args = array() ) {
-	global $post;
+function fs_get_related_products( $product_id = 0, $args = array() ) {
+	global $post, $fs_config;
 	$product_id = empty( $product_id ) ? $post->ID : $product_id;
 	$config     = new \FS\FS_Config;
 	$posts      = new stdClass;
 	$products   = get_post_meta( $product_id, $config->meta['related_products'], false );
+
+	$args = wp_parse_args( $args, array(
+		'limit' => 4
+	) );
+
+	// ищем товары привязанные вручную
 	if ( ! empty( $products[0] ) && is_array( $products[0] ) ) {
 		$products = array_unique( $products[0] );
-		$default  = array(
-			'post_type'    => 'product',
-			'post__in'     => $products,
-			'post__not_in' => array( $product_id )
+		$args     = array(
+			'post_type'      => 'product',
+			'post__in'       => $products,
+			'post__not_in'   => array( $product_id ),
+			'posts_per_page' => $args['limit']
 		);
-		$args     = wp_parse_args( $args, $default );
 		$posts    = new WP_Query( $args );
 	}
 
-	if ( empty( $posts->post_count ) ) {
-		$terms    = get_the_terms( $product_id, 'catalog' );
-		$term_ids = array();
-		if ( $terms ) {
-			foreach ( $terms as $key => $term ) {
-				$term_ids[] = $term->term_id;
-			}
-		}
-		$posts = new WP_Query( array(
+	// если нет товаров привязаных вручную, возвращаем товары их смежных категорий
+	if ( ! $posts->post_count ) {
+		$term_ids = wp_get_post_terms( $product_id, $fs_config->data['product_taxonomy'], array( 'fields' => 'ids' ) );
+		$args     = array(
 			'post_type'      => 'product',
-			'posts_per_page' => 4,
+			'posts_per_page' => $args['limit'],
 			'tax_query'      => array(
 				array(
 					'taxonomy' => 'catalog',
@@ -1284,7 +1288,9 @@ function fs_get_related_products( $product_id = 0, array $args = array() ) {
 					'terms'    => $term_ids
 				)
 			)
-		) );
+		);
+
+		$posts = new WP_Query( $args );
 	}
 
 	return $posts;

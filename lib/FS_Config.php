@@ -330,5 +330,16 @@ class FS_Config {
 		self::$form_fields = $form_fields;
 	}
 
+	/**
+	 * @param $key
+	 *s
+	 * @return mixed|void
+	 */
+	public function getMeta( $key ) {
+		if ( ! empty( $this->meta[ $key ] ) ) {
+			return $this->meta[ $key ];
+		}
+	}
+
 
 }
