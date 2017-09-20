@@ -1281,6 +1281,7 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
 		$args     = array(
 			'post_type'      => 'product',
 			'posts_per_page' => $args['limit'],
+			'post__not_in'   => array( $product_id ),
 			'tax_query'      => array(
 				array(
 					'taxonomy' => 'catalog',
