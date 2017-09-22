@@ -1255,9 +1255,8 @@ function fs_gallery_images_url( $product_id = 0 ) {
 function fs_get_related_products( $product_id = 0, $args = array() ) {
 	global $post, $fs_config;
 	$product_id = empty( $product_id ) ? $post->ID : $product_id;
-	$config     = new \FS\FS_Config;
 	$posts      = new stdClass;
-	$products   = get_post_meta( $product_id, $config->meta['related_products'], false );
+	$products   = get_post_meta( $product_id, $fs_config->meta['related_products'], false );
 
 	$args = wp_parse_args( $args, array(
 		'limit' => 4
@@ -1501,43 +1500,50 @@ function fs_attr_list( $attr_group = 0 ) {
  */
 function fs_the_atts_list( $post_id = 0, $args = array() ) {
 	global $post, $fs_config;
-	$list           = '';
-	$post_id        = ! empty( $post_id ) ? $post_id : $post->ID;
-	$args           = wp_parse_args( $args, array(
+	$list       = '';
+	$post_id    = ! empty( $post_id ) ? $post_id : $post->ID;
+	$args       = wp_parse_args( $args, array(
 		'wrapper'       => 'ul',
 		'group_wrapper' => 'span',
 		'wrapper_class' => 'fs-atts-list',
-		'parent'        => 0,
-		'exclude'       => array()
+		'exclude'       => array(),
+		'parent'        => 0
 	) );
-	$post_terms     = wp_get_object_terms( $post_id, $fs_config->data['product_att_taxonomy'] );
-	$all_post_terms = array();
+	$term_args  = array(
+		'hide_empty'   => false,
+		'exclude_tree' => $args['exclude'],
+	);
+	$post_terms = wp_get_object_terms( $post_id, $fs_config->data['product_att_taxonomy'], $term_args );
+	$parents    = array();
 	if ( $post_terms ) {
 		foreach ( $post_terms as $post_term ) {
-			$all_post_terms[ $post_term->term_id ] = $post_term->term_id;
-			$all_post_terms[ $post_term->parent ]  = $post_term->parent;
-		}
-	}
-	$terms = fs_get_taxonomy_hierarchy( $fs_config->data['product_att_taxonomy'], $args['parent'] );
-	if ( $terms ) {
-		foreach ( $terms as $term ) {
-			if ( in_array( $term->term_id, $args['exclude'] ) || ! in_array( $term->term_id, $all_post_terms ) ) {
+			if ( $post_term->parent == 0 || ( $args['parent'] != 0 && $args['parent'] != $post_term->parent ) ) {
 				continue;
 			}
-			$list_ch = [];
-			if ( $term->children ) {
-				foreach ( $term->children as $child ) {
-					$list_ch[] = $child->name;
-				}
-			}
-			$list .= sprintf( '<li><%s>%s:</%s> %s</li>', $args['group_wrapper'], $term->name, $args['group_wrapper'], implode( ', ', $list_ch ) );
+			$parents[ $post_term->parent ][ $post_term->term_id ] = $post_term->term_id;
+
 		}
 	}
+	if ( $parents ) {
+		foreach ( $parents as $k => $parent ) {
+			$primary_term = get_term( $k, $fs_config->data['product_att_taxonomy'] );
+			$second_term  = [];
+			foreach ( $parent as $p ) {
+				$s             = get_term( $p, $fs_config->data['product_att_taxonomy'] );
+				$second_term[] = $s->name;
+			}
+
+			$list .= '<li>' . $primary_term->name . ': ' . implode( ', ', $second_term ) . ' </li > ';
+
+
+		}
+	}
+
 
 	$html_atts = fs_parse_attr( array(), array(
 		'class' => $args['wrapper_class']
 	) );
-	printf( '<%s %s>%s</%s>', $args['wrapper'], $html_atts, $list, $args['wrapper'] );
+	printf( ' <%s % s >%s </%s > ', $args['wrapper'], $html_atts, $list, $args['wrapper'] );
 
 }
 
@@ -1612,15 +1618,15 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
 	if ( has_post_thumbnail( $product_id ) ) {
 		$image = get_the_post_thumbnail_url( $product_id, $size );
 	} else {
-		$image = FS_PLUGIN_URL . 'assets/img/no-image.png';
+		$image = FS_PLUGIN_URL . 'assets / img / no - image . png';
 	}
 	$atts  = fs_parse_attr( $args, array(
 		'src'   => $image,
-		'class' => 'fs-product-thumbnail',
-		'id'    => 'fs-product-thumbnail-' . $product_id,
+		'class' => 'fs - product - thumbnail',
+		'id'    => 'fs - product - thumbnail - ' . $product_id,
 		'alt'   => get_the_title( $product_id ),
 	) );
-	$image = '<img ' . $atts . '>';
+	$image = ' < img ' . $atts . ' > ';
 	if ( $echo ) {
 		echo $image;
 	} else {
