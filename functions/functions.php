@@ -1170,9 +1170,6 @@ function fs_product_code( $product_id = 0, $wrap = '%s', $echo = false ) {
 	$config     = new \FS\FS_Config();
 	$product_id = $product_id == 0 ? $post->ID : $product_id;
 	$articul    = get_post_meta( $product_id, $config->meta['product_article'], 1 );
-	if ( empty( $articul ) ) {
-		$articul = $product_id;
-	}
 	if ( $wrap ) {
 		$articul = sprintf( $wrap, $articul );
 	}
