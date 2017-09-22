@@ -20,11 +20,16 @@
             <div id="<?php echo $key ?>">
 				<?php if ( ! empty( $setting['fields'] ) ): ?>
 					<?php foreach ( $setting['fields'] as $field ): ?>
-						<?php $label_id = str_replace( array( '[', ']' ), array( '_' ), sprintf( 'fs_option[%s]', $field['name'] )); ?>
+						<?php $label_id = str_replace( array(
+							'[',
+							']'
+						), array( '_' ), sprintf( 'fs_option[%s]', $field['name'] ) ); ?>
                     <p>
-                      <label for="<?php echo $label_id ?>"><?php echo $field['label'] ?></label><br>
+						<?php if ( $field['label'] ): ?>
+                          <label for="<?php echo $label_id ?>"><?php echo $field['label'] ?></label><br>
+						<?php endif; ?>
 						<?php fs_form_field( sprintf( 'fs_option[%s]', $field['name'] ), array(
-							'type'  => $field['type'],
+							'type' => $field['type'],
 							'value' => $field['value']
 						) ) ?>
                     </p>
