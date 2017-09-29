@@ -41,6 +41,7 @@ class FS_Ajax_Class {
 			die ( 'не пройдена верификация формы nonce' );
 		}
 		$fs_products = $_SESSION['cart'];
+		$sum         = fs_get_total_amount( $fs_products );
 		global $wpdb;
 		$wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
@@ -123,7 +124,7 @@ class FS_Ajax_Class {
 					'adress'    => $sanitize_field['fs_adress']
 				),
 				'_payment'  => $sanitize_field['fs_payment_methods'],
-				'_amount'   => fs_get_total_amount( $fs_products ),
+				'_amount'   => $sum,
 				'_comment'  => $sanitize_field['fs_comment']
 			),
 		);
@@ -174,6 +175,7 @@ class FS_Ajax_Class {
 				'text'     => 'Заказ №' . $order_id . ' успешно добавлен',
 				'products' => $fs_products,
 				'order_id' => $order_id,
+				'sum'      => $sum,
 				'redirect' => get_permalink( fs_option( 'page_success' ) )
 			);
 			unset( $_SESSION['cart'] );

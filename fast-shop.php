@@ -39,6 +39,8 @@ define( 'FS_PLUGIN_VER', '1.1' ); // версия плагина
 define( 'FS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) ); // абсолютный системный путь
 define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // абсолютный путь относительно сайта
 define( 'FS_BASENAME', plugin_basename( __FILE__ ) ); // относительный путь типа my-plugin/my-plugin.php
+define( 'FS_LANG_PATH', dirname( plugin_basename( __FILE__ ) ) . '/languages' ); // относительный путь типа my-plugin/my-plugin.php
+
 define( 'FS_DEBUG', false ); // режим разработки, по умолчанию выключен
 
 /* Включаем режим разработки если константа FS_DEBUG === true */

@@ -240,26 +240,26 @@ jQuery(function ($) {
             })
                 .done(function (response) {
                     $('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
-                    if (response) {
-                        try {
-                            var jsonData = JSON.parse(response);
-                            /* если статус заказ успешный */
-                            if (jsonData.success) {
-                                // создаём событие
-                                var send_order = new CustomEvent("fs_send_order", {
-                                    detail: {order_id: jsonData.order_id}
-                                });
-                                document.dispatchEvent(send_order);
-                                console.log(jsonData.text);
-                                $('[data-fs-action="order-send"]').html('Отправлено');
-                                if (jsonData.redirect != false) document.location.href = jsonData.redirect;
-                            } else {
-                                console.log(jsonData.text);
+                    if (!IsJsonString(response)) return false;
+                    var jsonData = JSON.parse(response);
+                    /* если статус заказ успешный */
+                    if (jsonData.success) {
+                        // создаём событие
+                        var send_order = new CustomEvent("fs_send_order", {
+                            detail: {
+                                order_id: jsonData.order_id,
+                                sum: jsonData.sum
                             }
-                        } catch (e) {
-                            console.log(response);
-                        }
+                        });
+                        document.dispatchEvent(send_order);
+
+                        $('[data-fs-action="order-send"]').html('Отправлено');
+                        if (jsonData.redirect != false) document.location.href = jsonData.redirect;   
+                    } else {
+                        $('[name="fs-order-send"] .fs-form-info').addClass('error').html(jsonData.text).fadeIn();
                     }
+
+
                 });
 
 
@@ -562,7 +562,6 @@ var addUrlParam = function (search, key, val) {
     var p_end = u.query.price_end == undefined ? FastShopData.fs_slider_max : u.query.price_end;
 
 
-
     $('[data-fs-element="range-slider"]').slider({
         range: true,
         min: 0,
@@ -686,5 +685,16 @@ function fs_get_cart(cartTemplate, cartWrap) {
 // проверяет является ли переменная числом
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// проверяет является ли строка JSON объектом
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        console.log(str);
+        return false;
+    }
+    return true;
 }
 

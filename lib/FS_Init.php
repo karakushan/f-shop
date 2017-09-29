@@ -38,7 +38,7 @@ class FS_Init {
 	} // END public function __construct
 
 	function true_load_plugin_textdomain() {
-		load_plugin_textdomain( 'fast-shop', false, $this->config->data['plugin_name'] . '/languages/' );
+		load_plugin_textdomain( 'fast-shop', false, FS_LANG_PATH  );
 	}
 
 	// Add the settings link to the plugins page
