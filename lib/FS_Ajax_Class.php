@@ -130,21 +130,17 @@ class FS_Ajax_Class {
 		);
 		$order_id                              = wp_insert_post( $defaults );
 		$sanitize_field['order_id']            = $order_id;
+		$sanitize_field['total_amount']        = $sum . ' ' . fs_currency();
+		$sanitize_field['site_name']           = get_bloginfo( 'name' );
 		$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
 		$sanitize_field['fs_payment_methods']  = fs_get_payment( $sanitize_field['fs_payment_methods'] );
-		$sanitize_field['fs_admin_message']    = fs_option( '' );
 		$_SESSION['last_order_id']             = $order_id;
-		$search                                = fs_mail_keys( $sanitize_field );
-		$replace                               = array_values( $sanitize_field );
-
 
 		// текст письма заказчику
-		$user_message = apply_filters( 'fs_order_user_message', '' );
-		$user_message = str_replace( $search, $replace, $user_message );
+		$user_message                      = apply_filters( 'fs_email_template', $sanitize_field,fs_option( 'customer_mail' ) );
 
 		// текст письма админу
-		$admin_message = apply_filters( 'fs_order_admin_message', '' );
-		$admin_message = str_replace( $search, $replace, $admin_message );
+		$admin_message                    = apply_filters( 'fs_email_template', $sanitize_field ,fs_option( 'admin_mail' ));
 
 		//Отсылаем письмо с данными заказа заказчику
 		$customer_mail_header = fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
