@@ -254,7 +254,7 @@ jQuery(function ($) {
                         document.dispatchEvent(send_order);
 
                         $('[data-fs-action="order-send"]').html('Отправлено');
-                        if (jsonData.redirect != false) document.location.href = jsonData.redirect;   
+                        if (jsonData.redirect != false) document.location.href = jsonData.redirect;
                     } else {
                         $('[name="fs-order-send"] .fs-form-info').addClass('error').html(jsonData.text).fadeIn();
                     }
@@ -467,7 +467,7 @@ jQuery(document).ready(function ($) {
 
 //Удаление продукта из корзины
 jQuery(document).ready(function ($) {
-    $('[data-fs-type="product-delete"]').on('click', function (event) {
+    $(document).on('click', '[data-fs-type="product-delete"]', function (event) {
         event.preventDefault();
         var productId = $(this).data('fs-id');
         var productName = $(this).data('fs-name');
