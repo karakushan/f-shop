@@ -1623,7 +1623,7 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
 		'id'    => 'fs - product - thumbnail - ' . $product_id,
 		'alt'   => get_the_title( $product_id ),
 	) );
-	$image = ' < img ' . $atts . ' > ';
+	$image = ' <img ' . $atts . ' > ';
 	if ( $echo ) {
 		echo $image;
 	} else {
