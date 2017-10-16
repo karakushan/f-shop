@@ -100,7 +100,7 @@ class FS_Orders_Class {
 	 *
 	 * @return \stdClass
 	 */
-	public function get_order( $order_id = 0 ) {
+	public static function get_order( $order_id = 0 ) {
 		global $fs_config;
 		$order    = new \stdClass();
 		$user     = get_post_meta( $order_id, '_user', 0 );

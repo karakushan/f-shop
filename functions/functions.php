@@ -219,7 +219,7 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
  */
 function fs_get_total_amount( $products = array() ) {
 	if ( empty( $products ) ) {
-		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : 0;
+		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : array();
 	}
 	$all_price = array();
 	foreach ( $products as $key => $count ) {
