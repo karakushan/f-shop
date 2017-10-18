@@ -210,29 +210,30 @@ function fs_form_bottom( $form_bottom = '' ) {
 
 /**
  *  фильтр для создания шаблона письма пользователю
+ *
+ * @param $vars переменные письма
+ *
+ * @param $message
+ *
+ * @return mixed|string|void
  */
-add_filter( 'fs_order_user_message', 'fs_order_user_message', 10, 1 );
-function fs_order_user_message( $template = '' ) {
-	$default_template = 'oxygen';
-	if ( empty( $template ) ) {
-		$template = fs_frontend_template( 'mail/themes/' . $default_template );
-	}
+function fs_email_template( $vars, $message ) {
+	$template = 'oxygen';
 
-	return $template;
+	$search  = fs_mail_keys( $vars );
+	$replace = array_values( $vars );
+	$html    = fs_frontend_template( 'mail/themes/' . $template, $args = array(
+		'message' => $message
+	) );
+	$html    = str_replace( $search, $replace, $html );
+
+	return $html;
 }
 
-/**
- *  фильтр для создания шаблона письма администратору
- */
-add_filter( 'fs_order_admin_message', 'fs_order_admin_message', 10, 1 );
-function fs_order_admin_message( $template = '' ) {
-	$default_template = 'oxygen';
-	if ( empty( $template ) ) {
-		$template = fs_frontend_template( 'mail/themes/' . $default_template );
-	}
+add_filter( 'fs_email_template', 'fs_email_template', 10, 2 );
 
-	return $template;
-}
+
+
 
 
 

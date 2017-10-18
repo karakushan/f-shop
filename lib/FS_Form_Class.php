@@ -67,6 +67,9 @@ class FS_Form_Class {
 			case 'textarea':
 				$field = '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
 				break;
+			case 'button':
+				$field ='<button type="button" ' . $class . ' ' . $id . '>'.$args['value'].'</button>';
+				break;
 			case 'pages':
 				$field = wp_dropdown_pages( array(
 					'show_option_none'  => __( 'Select page', 'fast-shop' ),

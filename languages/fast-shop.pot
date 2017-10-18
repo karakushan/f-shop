@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-02 10:40+0000\n"
+"POT-Creation-Date: 2017-09-10 10:02+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -96,29 +96,25 @@ msgstr ""
 msgid "units"
 msgstr ""
 
-#: functions/functions.php:374
+#: functions/functions.php:384
 #, php-format
 msgid "Remove items %s"
 msgstr ""
 
-#: functions/functions.php:472
+#: functions/functions.php:483
 #, php-format
 msgid "Item «%s» added to cart"
 msgstr ""
 
-#: functions/functions.php:473
+#: functions/functions.php:484
 msgid "Error adding product to cart"
 msgstr ""
 
-#: functions/functions.php:482
-msgid "Add to cart"
-msgstr ""
-
-#: functions/functions.php:788
+#: functions/functions.php:802
 msgid "Remove all items"
 msgstr ""
 
-#: functions/functions.php:897
+#: functions/functions.php:911
 msgid "Item added to wishlist"
 msgstr ""
 
@@ -127,36 +123,48 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-#: lib/FS_Config.php:52
+#: lib/FS_Config.php:58
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:58
+#: lib/FS_Config.php:64
 msgid "Gallery"
 msgstr ""
 
-#: lib/FS_Config.php:64
+#: lib/FS_Config.php:70
 msgid "Other"
 msgstr ""
 
-#: lib/FS_Config.php:70
+#: lib/FS_Config.php:76
 msgid "Associated"
 msgstr ""
 
-#: lib/FS_Config.php:104
+#: lib/FS_Config.php:120
 msgid "The base price"
 msgstr ""
 
-#: lib/FS_Config.php:107
+#: lib/FS_Config.php:123
 msgid "This is the main type prices"
 msgstr ""
 
-#: lib/FS_Config.php:110
+#: lib/FS_Config.php:127
 msgid "Promotional price"
 msgstr ""
 
-#: lib/FS_Config.php:113
+#: lib/FS_Config.php:130
 msgid "This type of price interrupts the base price"
+msgstr ""
+
+#: lib/FS_Config.php:164
+msgid "US dollar"
+msgstr ""
+
+#: lib/FS_Config.php:165
+msgid "Ukrainian hryvnia"
+msgstr ""
+
+#: lib/FS_Config.php:166
+msgid "Russian ruble"
 msgstr ""
 
 #: lib/FS_Export_Class.php:163
@@ -171,11 +179,11 @@ msgstr ""
 msgid "Product category"
 msgstr ""
 
-#: lib/FS_Form_Class.php:28
+#: lib/FS_Form_Class.php:29
 msgid "this field is required"
 msgstr ""
 
-#: lib/FS_Form_Class.php:69
+#: lib/FS_Form_Class.php:72
 msgid "Select page"
 msgstr ""
 

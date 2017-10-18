@@ -28,9 +28,33 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 
+		// добавление товара к сравнению
+		add_action( 'wp_ajax_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
+
 
 	}
 
+	/**
+	 * добавление товара к сравнению
+	 */
+	function fs_add_to_comparison_callback() {
+		session_start();
+		unset( $_SESSION['fs_comparison_list'] );
+		if ( ! empty( $_SESSION['fs_comparison_list'] ) && is_array( $_SESSION['fs_comparison_list'] ) && ! in_array( (int) $_POST['product_id'], $_SESSION['fs_comparison_list'] ) ) {
+			$_SESSION['fs_comparison_list'] = array_unshift( $_SESSION['fs_comparison_list'], (int) $_POST['product_id'] );
+		} else {
+			$_SESSION['fs_comparison_list'][] = (int) $_POST['product_id'];
+
+		}
+
+		// Устанавливаем Cookie до конца сессии:
+		setcookie( "fs_comparison_list", serialize( $_SESSION['fs_comparison_list'] ), 30 * DAYS_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN );
+		echo json_encode( array(
+			'status' => true
+		) );
+		exit();
+	}
 
 	/**
 	 *Отправка заказа в базу, на почту админа и заказчика
@@ -41,6 +65,7 @@ class FS_Ajax_Class {
 			die ( 'не пройдена верификация формы nonce' );
 		}
 		$fs_products = $_SESSION['cart'];
+		$sum         = fs_get_total_amount( $fs_products );
 		global $wpdb;
 		$wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
@@ -66,11 +91,34 @@ class FS_Ajax_Class {
 		$headers[] = 'From: ' . fs_option( 'name_sender', get_bloginfo( 'name' ) ) . ' <' . fs_option( 'email_sender', get_bloginfo( 'admin_email' ) ) . '>';
 
 		// проверяем существование пользователя
-		$user_id = 0;
 		if ( is_user_logged_in() ) {
 			$user    = wp_get_current_user();
 			$user_id = $user->ID;
+		} else {
+			// Если пользователь не залогинен пробуем его зарегистрировать
+			$new_user = register_new_user( $sanitize_field['fs_email'], $sanitize_field['fs_email'] );
+			if ( ! is_wp_error( $new_user ) ) {
+				$user_id = $new_user;
+				wp_update_user( array(
+					'ID'         => $user_id,
+					'first_name' => $sanitize_field['fs_first_name'],
+					'last_name'  => $sanitize_field['fs_last_name'],
+					'role'       => FS_Config::getUsers( 'new_user_role' )
+				) );
+				foreach ( FS_Config::getFormFields() as $key => $user_meta ) {
+					if ( ! empty( $sanitize_field[ $key ] ) ) {
+						update_user_meta( $new_user, $key, $sanitize_field[ $key ] );
+					}
+				}
+			} else {
+				echo json_encode( array(
+					'success' => false,
+					'text'    => $new_user->get_error_message(),
+				) );
+				exit();
+			}
 		}
+
 
 		// Вставляем заказ в базу данных
 		$defaults                              = array(
@@ -100,26 +148,23 @@ class FS_Ajax_Class {
 					'adress'    => $sanitize_field['fs_adress']
 				),
 				'_payment'  => $sanitize_field['fs_payment_methods'],
-				'_amount'   => fs_get_total_amount( $fs_products ),
+				'_amount'   => $sum,
 				'_comment'  => $sanitize_field['fs_comment']
 			),
 		);
 		$order_id                              = wp_insert_post( $defaults );
 		$sanitize_field['order_id']            = $order_id;
+		$sanitize_field['total_amount']        = $sum . ' ' . fs_currency();
+		$sanitize_field['site_name']           = get_bloginfo( 'name' );
 		$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
 		$sanitize_field['fs_payment_methods']  = fs_get_payment( $sanitize_field['fs_payment_methods'] );
-		$sanitize_field['fs_admin_message']    = fs_option( '' );
 		$_SESSION['last_order_id']             = $order_id;
-		$search                                = fs_mail_keys( $sanitize_field );
-		$replace                               = array_values( $sanitize_field );
 
 		// текст письма заказчику
-		$user_message = apply_filters( 'fs_order_user_message', '' );
-		$user_message = str_replace( $search, $replace, $user_message );
+		$user_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'customer_mail' ) );
 
 		// текст письма админу
-		$admin_message = apply_filters( 'fs_order_admin_message', '' );
-		$admin_message = str_replace( $search, $replace, $admin_message );
+		$admin_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'admin_mail' ) );
 
 		//Отсылаем письмо с данными заказа заказчику
 		$customer_mail_header = fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
@@ -150,6 +195,7 @@ class FS_Ajax_Class {
 				'text'     => 'Заказ №' . $order_id . ' успешно добавлен',
 				'products' => $fs_products,
 				'order_id' => $order_id,
+				'sum'      => $sum,
 				'redirect' => get_permalink( fs_option( 'page_success' ) )
 			);
 			unset( $_SESSION['cart'] );

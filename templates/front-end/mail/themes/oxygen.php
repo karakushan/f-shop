@@ -358,13 +358,8 @@
       <center>
         <table cellspacing="0" cellpadding="0" width="600" class="w320">
           <tr>
-            <td class="header-lg">
-				<?php _e( 'Thank you for your order!', 'fast-shop' ) ?>
-            </td>
-          </tr>
-          <tr>
             <td class="free-text">
-				<?php echo fs_option( 'customer_mail' ) ?>
+				<?php echo $message ?>
             </td>
           </tr>
           <tr>
@@ -498,10 +493,10 @@
 							<?php echo $p['count'] ?>
                         </td>
                         <td class="item-col">
-							<?php echo $p['price'] ?> <span><?php echo $p['currency'] ?></span>
+							<?php echo $p['price'] ?>
                         </td>
                         <td class="item-col">
-							<?php echo $p['all_price'] ?> <span><?php echo $p['currency'] ?></span>
+							<?php echo $p['all_price'] ?>
                         </td>
                       </tr>
 					  <?php endforeach; ?>

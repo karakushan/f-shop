@@ -26,6 +26,7 @@ function fs_get_attributes_group( $product_id = 0 ) {
 	return $parents;
 }
 
+
 /**
  * получает заданное свойство товара с вложенными свойтвами
  * @return array
@@ -126,7 +127,7 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
  *
  * @return [type]               выводит html элемент типа select
  */
-function fs_types_sort_filter( $attr=array() ) {
+function fs_types_sort_filter( $attr = array() ) {
 	$filter      = '';
 	$order_types = array(
 		'date_desc'  => array(
@@ -323,6 +324,19 @@ function fs_attr_change( $required_atts = array() ) {
 
 }
 
+function fs_list_product_att_group( $product_id, $group_id ) {
+	global $fs_config;
+	$terms = get_the_terms( $product_id, $fs_config->data['product_att_taxonomy'] );
+	if ( $terms ) {
+		foreach ( $terms as $term ) {
+			if ( $term->parent == $group_id ) {
+				echo apply_filters( 'the_title', $term->name );
+			}
+		}
+	}
+
+}
+
 function fs_list_post_atts( $post_id = 0 ) {
 	global $fs_config, $post;
 	$post_id             = ! empty( $post_id ) ? $post_id : $post->ID;
@@ -337,7 +351,7 @@ function fs_list_post_atts( $post_id = 0 ) {
 	if ( ! empty( $characteristic_sort ) ) {
 		foreach ( $characteristic_sort as $key => $parent ) {
 
-			$group = get_term_field( 'name', $key, $fs_config->data['product_att_taxonomy'] );
+			$group      = get_term_field( 'name', $key, $fs_config->data['product_att_taxonomy'] );
 			$group_slug = get_term_field( 'slug', $key, $fs_config->data['product_att_taxonomy'] );
 
 			echo '<div class="fs-attr-group-name">' . $group . '</div>';

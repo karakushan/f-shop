@@ -3,6 +3,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
+/**
+ * Recursively get taxonomy and its children
+ *
+ * @param string $taxonomy
+ * @param int $parent - parent term id
+ *
+ * @return array
+ */
+function fs_get_taxonomy_hierarchy( $taxonomy, $parent = 0 ) {
+	// only 1 taxonomy
+	$taxonomy = is_array( $taxonomy ) ? array_shift( $taxonomy ) : $taxonomy;
+	// get all direct decendants of the $parent
+	$terms = get_terms( $taxonomy, array( 'parent' => $parent ) );
+	// prepare a new array.  these are the children of $parent
+	// we'll ultimately copy all the $terms into this new array, but only after they
+	// find their own children
+	$children = array();
+	// go through all the direct decendants of $parent, and gather their children
+	foreach ( $terms as $term ) {
+		// recurse to get the direct decendants of "this" term
+		$term->children = fs_get_taxonomy_hierarchy( $taxonomy, $term->term_id );
+		// add the term to our new array
+		$children[ $term->term_id ] = $term;
+	}
+
+	// send the results back to the caller
+	return $children;
+}
 
 function fs_dropdown_attr_group( $group_id = 0, $post_id = 0, $args = array() ) {
 
@@ -196,10 +224,12 @@ function fs_get_wholesale_price( $post_id = 0 ) {
  *
  * @param string $wrap - формат отображения цены с валютой
  *
+ * @param bool $echo выводить (по умолчанию) или возвращать
+ *
  * @return возвращает или показывает общую сумму с валютой
  *
  */
-function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
+function fs_total_amount( $wrap = '%s <span>%s</span>', $echo = true ) {
 	if ( empty( $_SESSION['cart'] ) ) {
 		return 0;
 	}
@@ -207,7 +237,11 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
 	$total    = fs_get_total_amount( $products );
 	$total    = apply_filters( 'fs_price_format', $total );
 	$total    = sprintf( $wrap, $total, fs_currency() );
-	echo $total;
+	if ( $echo ) {
+		echo $total;
+	} else {
+		return $total;
+	}
 }
 
 /**
@@ -242,8 +276,10 @@ function fs_total_count( $products = array() ) {
 		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : 0;
 	}
 	$all_count = array();
-	foreach ( $products as $key => $count ) {
-		$all_count[ $key ] = $count['count'];
+	if ( $products ) {
+		foreach ( $products as $key => $count ) {
+			$all_count[ $key ] = $count['count'];
+		}
 	}
 	$all_count = array_sum( $all_count );
 
@@ -317,7 +353,8 @@ function fs_get_cart( $args = array() ) {
 		return false;
 	}
 	$args     = wp_parse_args( $args, array(
-		'price_format' => '%s <span>%s</span>'
+		'price_format'   => '%s <span>%s</span>',
+		'thumbnail_size' => 'thumbnail'
 	) );
 	$products = array();
 	if ( ! empty( $_SESSION['cart'] ) ) {
@@ -346,7 +383,7 @@ function fs_get_cart( $args = array() ) {
 				'id'         => $key,
 				'name'       => get_the_title( $key ),
 				'count'      => $c,
-				'thumb'      => get_the_post_thumbnail_url( $key, 'full' ),
+				'thumb'      => get_the_post_thumbnail_url( $key, $args['thumbnail_size'] ),
 				'attr'       => $attr,
 				'link'       => get_permalink( $key ),
 				'price'      => sprintf( $args['price_format'], $price_show, fs_currency() ),
@@ -518,6 +555,53 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	} else {
 		return apply_filters( 'fs_add_to_cart_filter', $atc_button );
 	}
+}
+
+/**
+ * Выводит кнопку "добавить к сравнению"
+ *
+ * @param int $post_id
+ * @param string $label
+ * @param array $attr
+ */
+function fs_add_to_comparison( $post_id = 0, $label = '', $attr = array() ) {
+	global $post;
+	$post_id = empty( $post_id ) ? $post->ID : $post_id;
+	$attr    = wp_parse_args( $attr,
+		array(
+			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
+			'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
+			'class'     => 'fs-add-to-comparison',
+			'type'      => 'button',
+			'success'   => sprintf( __( 'Item «%s» added to comparison', 'fast-shop' ), get_the_title( $post_id ) ),
+			'error'     => __( 'Error adding product to comparison', 'fast-shop' ),
+		)
+	);
+
+	// устанавливаем html атрибуты кнопки
+	$attr_set  = array(
+		'data-action'       => 'add-to-comparison',
+		'data-product-id'   => $post_id,
+		'data-product-name' => get_the_title( $post_id ),
+		'id'                => 'fs-atc-' . $post_id,
+		'data-success'      => $attr['success'],
+		'data-error'        => $attr['error'],
+		'class'             => $attr['class']
+	);
+	$html_atts = fs_parse_attr( array(), $attr_set );
+// дополнительные скрытые инфо-блоки внутри кнопки (прелоадер, сообщение успешного добавления в корзину)
+	$atc_after = '<span class="fs-atc-info" style="display:none"></span>';
+	$atc_after .= '<span class="fs-atc-preloader" style="display:none">'.$attr['preloader'].'</span>';
+	/* позволяем устанавливать разные html элементы в качестве кнопки */
+	switch ( $attr['type'] ) {
+		case 'link':
+			$atc_button = sprintf( '<a href="#add_to_comparison" %s>%s %s</a>', $html_atts, $label, $atc_after );
+			break;
+		default:
+			$atc_button = sprintf( '<button type="button" %s>%s %s</button>', $html_atts, $label, $atc_after );
+			break;
+	}
+	echo $atc_button;
 }
 
 
@@ -722,16 +806,19 @@ function fs_parse_url( $url = '' ) {
  *
  * @return bool|mixed
  */
-function fs_action( $post_id = 0 ) {
-	global $post;
-	$post_id = empty( $post_id ) ? $post->ID : (int) $post_id;
-	if ( fs_base_price( $post_id, false ) > fs_get_price( $post_id ) ) {
-		$action = true;
-	} else {
-		$action = false;
+function fs_is_action( $post_id = 0 ) {
+	global $post, $fs_config;
+	$post_id      = empty( $post_id ) ? $post->ID : (int) $post_id;
+	$base_price   = get_post_meta( $post_id, $fs_config->meta['price'], 1 );
+	$action_price = get_post_meta( $post_id, $fs_config->meta['action_price'], 1 );
+	if ( empty( $action_price ) ) {
+		return false;
 	}
-
-	return $action;
+	if ( (float) $action_price > 0 && (float) $action_price < (float) $base_price ) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 
@@ -1130,9 +1217,6 @@ function fs_product_code( $product_id = 0, $wrap = '%s', $echo = false ) {
 	$config     = new \FS\FS_Config();
 	$product_id = $product_id == 0 ? $post->ID : $product_id;
 	$articul    = get_post_meta( $product_id, $config->meta['product_article'], 1 );
-	if ( empty( $articul ) ) {
-		$articul = $product_id;
-	}
 	if ( $wrap ) {
 		$articul = sprintf( $wrap, $articul );
 	}
@@ -1212,34 +1296,35 @@ function fs_gallery_images_url( $product_id = 0 ) {
  *
  * @return object                  объект с товарами
  */
-function fs_get_related_products( $product_id = 0, array $args = array() ) {
-	global $post;
+function fs_get_related_products( $product_id = 0, $args = array() ) {
+	global $post, $fs_config;
 	$product_id = empty( $product_id ) ? $post->ID : $product_id;
-	$config     = new \FS\FS_Config;
 	$posts      = new stdClass;
-	$products   = get_post_meta( $product_id, $config->meta['related_products'], false );
+	$products   = get_post_meta( $product_id, $fs_config->meta['related_products'], false );
+
+	$args = wp_parse_args( $args, array(
+		'limit' => 4
+	) );
+
+	// ищем товары привязанные вручную
 	if ( ! empty( $products[0] ) && is_array( $products[0] ) ) {
 		$products = array_unique( $products[0] );
-		$default  = array(
-			'post_type'    => 'product',
-			'post__in'     => $products,
-			'post__not_in' => array( $product_id )
+		$args     = array(
+			'post_type'      => 'product',
+			'post__in'       => $products,
+			'post__not_in'   => array( $product_id ),
+			'posts_per_page' => $args['limit']
 		);
-		$args     = wp_parse_args( $args, $default );
 		$posts    = new WP_Query( $args );
 	}
 
-	if ( empty( $posts->post_count ) ) {
-		$terms    = get_the_terms( $product_id, 'catalog' );
-		$term_ids = array();
-		if ( $terms ) {
-			foreach ( $terms as $key => $term ) {
-				$term_ids[] = $term->term_id;
-			}
-		}
-		$posts = new WP_Query( array(
+	// если нет товаров привязаных вручную, возвращаем товары их смежных категорий
+	if ( ! $posts->post_count ) {
+		$term_ids = wp_get_post_terms( $product_id, $fs_config->data['product_taxonomy'], array( 'fields' => 'ids' ) );
+		$args     = array(
 			'post_type'      => 'product',
-			'posts_per_page' => 4,
+			'posts_per_page' => $args['limit'],
+			'post__not_in'   => array( $product_id ),
 			'tax_query'      => array(
 				array(
 					'taxonomy' => 'catalog',
@@ -1247,7 +1332,9 @@ function fs_get_related_products( $product_id = 0, array $args = array() ) {
 					'terms'    => $term_ids
 				)
 			)
-		) );
+		);
+
+		$posts = new WP_Query( $args );
 	}
 
 	return $posts;
@@ -1457,50 +1544,50 @@ function fs_attr_list( $attr_group = 0 ) {
  */
 function fs_the_atts_list( $post_id = 0, $args = array() ) {
 	global $post, $fs_config;
-	$post_id = ! empty( $post_id ) ? $post_id : $post->ID;
-	$args    = wp_parse_args( $args, array(
+	$list       = '';
+	$post_id    = ! empty( $post_id ) ? $post_id : $post->ID;
+	$args       = wp_parse_args( $args, array(
 		'wrapper'       => 'ul',
 		'group_wrapper' => 'span',
 		'wrapper_class' => 'fs-atts-list',
-		'hierarchy'     => true
+		'exclude'       => array(),
+		'parent'        => 0
 	) );
-	$atts    = get_the_terms( $post_id, $fs_config->data['product_att_taxonomy'] );
-	if ( empty( $atts ) || is_wp_error( $atts ) ) {
-		return;
-	}
-
-	$atts_new = array();
-	// сортируем атрибуты по родителю
-	if ( $args['hierarchy'] ) {
-		foreach ( $atts as $k => $att ) {
-			$atts_new[ $att->parent ][] = $att;
-		}
-	}
-	$list = '';
-
-	foreach ( $atts_new as $k => $att ) {
-		$list_ch = '';
-		if ( $att ) {
-			if ( count( $att ) > 1 ) {
-				$list_ch_arr = array();
-				foreach ( $att as $at ) {
-					$list_ch_arr[] = $at->name;
-				}
-				$list_ch = implode( ', ', $list_ch_arr );
-			} else {
-				foreach ( $att as $at ) {
-					$list_ch .= $at->name;
-				}
+	$term_args  = array(
+		'hide_empty'   => false,
+		'exclude_tree' => $args['exclude'],
+	);
+	$post_terms = wp_get_object_terms( $post_id, $fs_config->data['product_att_taxonomy'], $term_args );
+	$parents    = array();
+	if ( $post_terms ) {
+		foreach ( $post_terms as $post_term ) {
+			if ( $post_term->parent == 0 || ( $args['parent'] != 0 && $args['parent'] != $post_term->parent ) ) {
+				continue;
 			}
-		}
-		$parent_name = get_term_field( 'name', $k, $fs_config->data['product_att_taxonomy'] );
-		$list        .= sprintf( '<li><%s>%s:</%s> %s</li>', $args['group_wrapper'], $parent_name, $args['group_wrapper'], $list_ch );
+			$parents[ $post_term->parent ][ $post_term->term_id ] = $post_term->term_id;
 
+		}
 	}
+	if ( $parents ) {
+		foreach ( $parents as $k => $parent ) {
+			$primary_term = get_term( $k, $fs_config->data['product_att_taxonomy'] );
+			$second_term  = [];
+			foreach ( $parent as $p ) {
+				$s             = get_term( $p, $fs_config->data['product_att_taxonomy'] );
+				$second_term[] = $s->name;
+			}
+
+			$list .= '<li><span class="first">' . $primary_term->name . ': </span><span class="last">' . implode( ', ', $second_term ) . ' </span></li > ';
+
+
+		}
+	}
+
+
 	$html_atts = fs_parse_attr( array(), array(
 		'class' => $args['wrapper_class']
 	) );
-	printf( '<%s %s>%s</%s>', $args['wrapper'], $html_atts, $list, $args['wrapper'] );
+	printf( ' <%s % s >%s </%s > ', $args['wrapper'], $html_atts, $list, $args['wrapper'] );
 
 }
 
@@ -1558,3 +1645,37 @@ function fs_gallery_images_ids( $post_id = 0 ) {
 
 	return $gallery;
 }
+
+/**
+ * Выводит миниатюру товара, если миниатюра не установлена - заглушку
+ *
+ * @param int $product_id ID товара (поста)
+ * @param string $size размер миниатюры
+ * @param bool $echo выводить (по умолчанию) или возвращать
+ * @param array $args html атрибуты, типа класс, id
+ *
+ * @return false|string
+ */
+function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = true, $args = array() ) {
+	global $post;
+	$product_id = empty( $product_id ) ? $post->ID : $product_id;
+	if ( has_post_thumbnail( $product_id ) ) {
+		$image = get_the_post_thumbnail_url( $product_id, $size );
+	} else {
+		$image = FS_PLUGIN_URL . 'assets / img / no - image . png';
+	}
+	$atts  = fs_parse_attr( $args, array(
+		'src'   => $image,
+		'class' => 'fs - product - thumbnail',
+		'id'    => 'fs - product - thumbnail - ' . $product_id,
+		'alt'   => get_the_title( $product_id ),
+	) );
+	$image = ' <img ' . $atts . ' > ';
+	if ( $echo ) {
+		echo $image;
+	} else {
+		return $image;
+	}
+
+}
+

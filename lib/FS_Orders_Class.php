@@ -13,6 +13,7 @@ class FS_Orders_Class {
 	private $config;
 
 	function __construct() {
+		add_filter( 'pre_get_posts', array( $this, 'filter_orders_by_search' ));
 	}
 
 
@@ -165,4 +166,36 @@ class FS_Orders_Class {
 		}
 	}
 
+	/**
+	 * Создаёт возможность поиска по метаполям на странце заказов
+	 */
+	function filter_orders_by_search( $query ) {
+		if ( ! is_admin() || empty( $_GET['s'] ) ) {
+			return;
+		}
+		global $wpdb;
+		$s       = $_GET['s'];
+		$prepare = $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_value LIKE '%%%s%%'", $s );
+		$results = $wpdb->get_results( $prepare );
+		if ( $results ) {
+			$user_ids = [];
+			foreach ( $results as $result ) {
+				$user_ids[] = $result->user_id;
+			}
+			$user_ids = array_unique( $user_ids );
+			$query->set( 's', false );
+			$meta_query [] = array(
+				'key'     => '_user_id',
+				'value'   => $user_ids,
+				'compare' => 'IN',
+				'type'    => 'CHAR'
+			);
+			$query->set( 'meta_query', $meta_query );
+			$query->set( 'post_type', 'orders' );
+
+		}
+
+		return $query;
+
+	}
 }

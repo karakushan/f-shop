@@ -38,7 +38,7 @@ class FS_Init {
 	} // END public function __construct
 
 	function true_load_plugin_textdomain() {
-		load_plugin_textdomain( 'fast-shop', false, $this->config->data['plugin_name'] . '/languages/' );
+		load_plugin_textdomain( 'fast-shop', false, FS_LANG_PATH  );
 	}
 
 	// Add the settings link to the plugins page
@@ -109,7 +109,13 @@ class FS_Init {
 	 *Функция срабатывает один раз при активации плагина
 	 */
 	function fs_activate() {
-		add_role( 'client', __( 'Client', 'fast-shop' ), array( 'read' => true, 'level_0' => true ) );
+		add_role(
+			FS_Config::getUsers( 'new_user_role' ),
+			FS_Config::getUsers( 'new_user_name' ),
+			array(
+				'read'    => true,
+				'level_0' => true
+			) );
 		/* регистрируем статусы заказа по умолчанию */
 		$taxonomies = new FS_Taxonomies_Class;
 		$taxonomies->create_taxonomy();

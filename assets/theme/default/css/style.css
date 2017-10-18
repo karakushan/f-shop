@@ -110,6 +110,12 @@ body {
         font-size: 18px;
         letter-spacing: .025em;
         font-size: 16px; }
+        .fs-metabox .fs-tabs > .fs-tab button.add-att {
+          line-height: 1;
+          float: right;
+          height: 25px;
+          /* font-size: 4px; */
+          padding: 4px; }
         .fs-metabox .fs-tabs > .fs-tab button:hover {
           cursor: pointer;
           background: #7a7a7a; }

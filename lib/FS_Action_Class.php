@@ -10,6 +10,8 @@ class FS_Action_Class {
 		add_action( 'init', array( &$this, 'fs_catch_action' ), 2 );
 		add_action( 'init', array( &$this, 'register_plugin_action' ), 10 );
 		add_action( 'init', array( &$this, 'register_plugin_filters' ), 10 );
+		add_action( 'admin_menu', array( $this, 'remove_admin_submenus' ), 999 );
+
 	}
 
 	public function fs_catch_action() {
@@ -66,7 +68,7 @@ class FS_Action_Class {
 		/* отображение фактической цены */
 		add_action( 'fs_the_price', 'fs_the_price', 10, 2 );
 		/* Выводит общую сумму всех товаров в корзине */
-		add_action( 'fs_total_amount', 'fs_total_amount', 10, 1 );
+		add_action( 'fs_total_amount', 'fs_total_amount', 10, 2 );
 		/* отображение базовой цены без учёта скидки */
 		add_action( 'fs_base_price', 'fs_base_price', 10, 3 );
 
@@ -99,6 +101,8 @@ class FS_Action_Class {
 		add_action( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info_show' ), 10 );
 		/* Выводит форму редактирования профиля */
 		add_action( 'fs_profile_edit', array( 'FS\FS_Users_Class', 'profile_edit' ), 10, 1 );
+		//===== COMPARISON LIST ====
+		add_action( 'fs_add_to_comparison', 'fs_add_to_comparison', 10, 3 );
 
 	}
 
@@ -108,5 +112,13 @@ class FS_Action_Class {
 	function register_plugin_filters() {
 		/* Фильтр возвращает начальный тег формы и скрытые поля необходимые для безопасности */
 		add_filter( 'fs_form_header', 'fs_form_header', 10, 2 );
+	}
+
+	/**
+	 * Удаляет ненужные подпункты навигации в админке
+	 */
+	function remove_admin_submenus() {
+		// удаляем подпункт "добавить заказ"
+		remove_submenu_page( 'edit.php?post_type=orders', 'post-new.php?post_type=orders' );
 	}
 }

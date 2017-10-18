@@ -17,11 +17,17 @@ class FS_Config {
 	public $term_meta;
 	public $options;
 	public $tabs;
+
 	public $taxonomies;
+	public static $currencies = array();
+	protected static $users = array();
+	public static $default_currency = 'USD';
 	public static $user_meta = array();
 	public static $prices;
 	public static $form_fields;
 	protected static $nonce = 'fast-shop';
+	protected static $text_domain = 'fast-shop';
+
 
 	protected static $nonce_field = 'fs-secret';
 
@@ -47,31 +53,38 @@ class FS_Config {
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
+
 		//Табы отображаемые в метабоксе в редактировании товара
 		$this->tabs = array(
 			'0' => array(
 				'title'    => __( 'Prices', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
-				'template' => ''
+				'template' => 'prices'
 			),
 			'2' => array(
 				'title'    => __( 'Gallery', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
-				'template' => ''
+				'template' => 'gallery'
 			),
 			'3' => array(
+				'title'    => __( 'Attributes', 'fast-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'attributes'
+			),
+			'4' => array(
 				'title'    => __( 'Other', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
-				'template' => ''
+				'template' => 'other'
 			),
-			'4' => array(
+			'5' => array(
 				'title'    => __( 'Associated', 'fast-shop' ),
 				'on'       => false,
 				'body'     => '',
-				'template' => ''
+				'template' => 'related'
 			)
 		);
 
@@ -111,12 +124,14 @@ class FS_Config {
 		//  устанавливаем основные типы цен
 		self::$prices = array(
 			'price'        => array(
+				'id'          => 'base-price',
 				'name'        => __( 'The base price', 'fast-shop' ),
 				'meta_key'    => $this->meta['price'],
 				'on'          => true,
 				'description' => __( 'This is the main type prices', 'fast-shop' )
 			),
 			'action_price' => array(
+				'id'          => 'action-price',
 				'name'        => __( 'Promotional price', 'fast-shop' ),
 				'meta_key'    => $this->meta['action_price'],
 				'on'          => true,
@@ -151,6 +166,17 @@ class FS_Config {
 			'fs_delivery_methods' => array( 'type' => 'radio', 'label' => 'Способ доставки', 'required' => true ),
 			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты' ),
 			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
+		);
+
+		self::$currencies = array(
+			'USD' => __( 'US dollar', 'fast-shop' ),
+			'UAH' => __( 'Ukrainian hryvnia', 'fast-shop' ),
+			'RUB' => __( 'Russian ruble', 'fast-shop' ),
+		);
+
+		self::$users = array(
+			'new_user_role' => 'client',
+			'new_user_name' => __( 'Client', 'fast-shop' )
 		);
 
 	}
@@ -240,4 +266,87 @@ class FS_Config {
 				break;
 		}
 	}
+
+	/**
+	 * Возвращает список основных валют
+	 * @return array
+	 */
+	public static function getCurrencies() {
+		return apply_filters( 'fs_currencies_filter', self::$currencies );
+	}
+
+	/**
+	 * Получем валюту по умолчанию
+	 * @return string
+	 */
+	public static function getDefaultCurrency() {
+		return self::$default_currency;
+	}
+
+	/**
+	 * устанавливаем валюту по умолчанию
+	 *
+	 * @param string $default_currency
+	 */
+	public static function setDefaultCurrency( string $default_currency ) {
+		self::$default_currency = $default_currency;
+	}
+
+	/**
+	 * @param string $user
+	 *
+	 * @return array
+	 */
+	public static function getUsers( $user = '' ) {
+		return self::$users[ $user ];
+	}
+
+	/**
+	 * @param array $users
+	 */
+	public static function setUsers( $users = array() ) {
+		self::$users = $users;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getUserMeta() {
+		return self::$user_meta;
+	}
+
+	/**
+	 * @param array $user_meta
+	 */
+	public static function setUserMeta( $user_meta = array() ) {
+		self::$user_meta = $user_meta;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getFormFields() {
+		return self::$form_fields;
+	}
+
+	/**
+	 * @param array $form_fields
+	 */
+	public static function setFormFields( $form_fields = array() ) {
+		self::$form_fields = $form_fields;
+	}
+
+	/**
+	 * @param $key
+	 *s
+	 *
+	 * @return mixed|void
+	 */
+	public function getMeta( $key ) {
+		if ( ! empty( $this->meta[ $key ] ) ) {
+			return $this->meta[ $key ];
+		}
+	}
+
+
 }
