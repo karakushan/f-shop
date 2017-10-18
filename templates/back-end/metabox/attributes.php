@@ -15,8 +15,12 @@ if ( $attributes ) {
 <table class="fs-admin-atts">
   <thead>
   <tr>
-    <th>Группа <button class="add-att button" type="button"><span class="dashicons dashicons-plus"></span></button></th>
-    <th>Свойства <button class="add-att button" type="button"><span class="dashicons dashicons-plus"></span></button></th>
+    <th>Группа
+      <button class="add-att button" type="button"><span class="dashicons dashicons-plus"></span></button>
+    </th>
+    <th>Свойства
+      <button class="add-att button" type="button"><span class="dashicons dashicons-plus"></span></button>
+    </th>
   </tr>
   </thead>
   <tbody>
@@ -29,7 +33,9 @@ if ( $attributes ) {
         <td>
 
           <ul class="fs-childs-list">   <?php foreach ( $att_h as $child ): ?>
-              <li><?php echo apply_filters( 'the_title', $child->name ) ?> <span class="dashicons dashicons-no-alt remove-att" title="do I delete a property?" data-action="remove-att"></span></li>
+              <li><?php echo apply_filters( 'the_title', $child->name ) ?> <span
+                  class="dashicons dashicons-no-alt remove-att" title="do I delete a property?" data-action="remove-att"
+                  data-category-id="<?php echo $child->term_id ?>" data-product-id="<?php echo $post->ID ?>"></span></li>
 			  <?php endforeach; ?>
           </ul>
 

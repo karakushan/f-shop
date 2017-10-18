@@ -32,7 +32,30 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
 
+		// удаляет один термин (свойство) товара
+		add_action( 'wp_ajax_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
 
+
+	}
+
+	/**
+	 * удаляет один термин (свойство) товара
+	 */
+	function fs_remove_product_term_callback() {
+		global $fs_config;
+		$output = array_map( 'sanitize_text_field', $_POST );
+		$remove = wp_remove_object_terms( (int) $output['product_id'], (int) $output['term_id'], $fs_config->data['product_att_taxonomy'] );
+		if ( $remove ) {
+			echo json_encode( array(
+				'status' => true
+			) );
+		} else {
+			echo json_encode( array(
+				'status' => false
+			) );
+		}
+		exit();
 	}
 
 	/**

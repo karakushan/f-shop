@@ -248,12 +248,27 @@ jQuery(document).ready(function ($) {
     // удаление свойства на вкладке "Атрибуты"
     $(document).on('click', '[data-action="remove-att"]', function (event) {
         event.preventDefault();
-        var clickEl = $(this);
+        var el = $(this);
         if (confirm('Confirm?')) {
-
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'fs_remove_product_term',
+                    term_id: el.data('category-id'),
+                    product_id: el.data('product-id')
+                },
+            })
+                .done(function (data) {
+                    if (!IsJsonString(data)) return;
+                    var json = $.parseJSON(data);
+                    if (json.status) {
+                        console.log(json)
+                        el.parents('li').fadeOut().remove();
+                    }
+                });
         }
     });
-
 
 
 });
