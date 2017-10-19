@@ -31,6 +31,7 @@ class FS_Form_Class {
 			'value'       => '',
 			'format'      => '%input% %label%',
 			'el'          => 'select',
+			'first_option'=>__('Select'),
 			'editor_args' => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $field_name,
@@ -83,7 +84,7 @@ class FS_Form_Class {
 			case 'pay_methods':
 				if ( $args['el'] == 'select' ) {
 					$field = wp_dropdown_categories( array(
-						'show_option_all' => 'Способ оплаты',
+						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
 						'class'           => $args['class'],
@@ -109,7 +110,7 @@ class FS_Form_Class {
 			case 'del_methods':
 				if ( $args['el'] == 'select' ) {
 					$field = wp_dropdown_categories( array(
-						'show_option_all' => 'Способ доставки',
+						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
 						'class'           => $args['class'],

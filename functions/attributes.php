@@ -131,25 +131,22 @@ function fs_types_sort_filter( $attr = array() ) {
 	$filter      = '';
 	$order_types = array(
 		'date_desc'  => array(
-			'name' => __( 'First new', 'cube44' )
+			'name' => __( 'First new', 'fast-shop' )
 		),
 		'date_asc'   => array(
-			'name' => __( 'First old ones', 'cube44' )
+			'name' => __( 'First old ones', 'fast-shop' )
 		),
 		'price_asc'  => array(
-			'name' => __( 'Price low to high', 'cube44' )
+			'name' => __( 'Price low to high', 'fast-shop' )
 		),
 		'price_desc' => array(
-			'name' => __( 'Price high to low', 'cube44' )
+			'name' => __( 'Price high to low', 'fast-shop' )
 		),
 		'name_asc'   => array(
-			'name' => __( 'Name A to Z', 'cube44' )
+			'name' => __( 'Name A to Z', 'fast-shop' )
 		),
 		'name_desc'  => array(
-			'name' => __( 'Name Z to A', 'cube44' )
-		),
-		'aviable'    => array(
-			'name' => __( 'By availability', 'cube44' )
+			'name' => __( 'Name Z to A', 'fast-shop' )
 		)
 	);
 
