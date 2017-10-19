@@ -126,29 +126,29 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
  *
  * @return [type]               выводит html элемент типа select
  */
-function fs_types_sort_filter( $attr=array() ) {
+function fs_types_sort_filter( $attr = array() ) {
 	$filter      = '';
 	$order_types = array(
 		'date_desc'  => array(
-			'name' => 'сначала новые'
+			'name' => __( 'First new', 'cube44' )
 		),
 		'date_asc'   => array(
-			'name' => 'сначала старые'
+			'name' => __( 'First old ones', 'cube44' )
 		),
 		'price_asc'  => array(
-			'name' => 'цена по возрастанию'
+			'name' => __( 'Price low to high', 'cube44' )
 		),
 		'price_desc' => array(
-			'name' => 'цена по убыванию'
+			'name' => __( 'Price high to low', 'cube44' )
 		),
 		'name_asc'   => array(
-			'name' => 'по алфавиту'
+			'name' => __( 'Name A to Z', 'cube44' )
 		),
 		'name_desc'  => array(
-			'name' => 'по алфавиту с конца'
+			'name' => __( 'Name Z to A', 'cube44' )
 		),
 		'aviable'    => array(
-			'name' => 'по наличию'
+			'name' => __( 'By availability', 'cube44' )
 		)
 	);
 
@@ -337,7 +337,7 @@ function fs_list_post_atts( $post_id = 0 ) {
 	if ( ! empty( $characteristic_sort ) ) {
 		foreach ( $characteristic_sort as $key => $parent ) {
 
-			$group = get_term_field( 'name', $key, $fs_config->data['product_att_taxonomy'] );
+			$group      = get_term_field( 'name', $key, $fs_config->data['product_att_taxonomy'] );
 			$group_slug = get_term_field( 'slug', $key, $fs_config->data['product_att_taxonomy'] );
 
 			echo '<div class="fs-attr-group-name">' . $group . '</div>';
