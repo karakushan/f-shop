@@ -26,6 +26,7 @@ function fs_get_attributes_group( $product_id = 0 ) {
 	return $parents;
 }
 
+
 /**
  * получает заданное свойство товара с вложенными свойтвами
  * @return array
@@ -320,6 +321,19 @@ function fs_attr_change( $required_atts = array() ) {
 
 	echo '<div class="fs-group-info"></div>';
 	echo '</div>';
+
+}
+
+function fs_list_product_att_group( $product_id, $group_id ) {
+	global $fs_config;
+	$terms = get_the_terms( $product_id, $fs_config->data['product_att_taxonomy'] );
+	if ( $terms ) {
+		foreach ( $terms as $term ) {
+			if ( $term->parent == $group_id ) {
+				echo apply_filters( 'the_title', $term->name );
+			}
+		}
+	}
 
 }
 

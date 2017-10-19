@@ -277,13 +277,14 @@ class FS_Post_Type {
 					}
 				}
 
-				$template_default = FS_PLUGIN_PATH . 'templates/back-end/metabox/tab-' . $key_body . '.php';
-				$template_file    = empty( $tab_body['template'] ) ? $template_default : $tab_body['template'];
 
 				echo '<div class="fs-tab ' . $class_tab . '" id="tab-' . $key_body . '">';
-				if ( empty( $tab_body['body'] ) ) {
+				if ( empty( $tab_body['body'] ) && ! empty( $tab_body['template'] ) ) {
+					$template_file = sprintf( FS_PLUGIN_PATH . 'templates/back-end/metabox/%s.php', $tab_body['template'] );
 					if ( file_exists( $template_file ) ) {
 						include( $template_file );
+					} else {
+						_e( 'Template file not found', 'fast-shop' );
 					}
 				} else {
 					echo $tab_body['body'];

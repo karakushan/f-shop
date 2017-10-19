@@ -60,25 +60,31 @@ class FS_Config {
 				'title'    => __( 'Prices', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
-				'template' => ''
+				'template' => 'prices'
 			),
 			'2' => array(
 				'title'    => __( 'Gallery', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
-				'template' => ''
+				'template' => 'gallery'
 			),
 			'3' => array(
+				'title'    => __( 'Attributes', 'fast-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'attributes'
+			),
+			'4' => array(
 				'title'    => __( 'Other', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
-				'template' => ''
+				'template' => 'other'
 			),
-			'4' => array(
+			'5' => array(
 				'title'    => __( 'Associated', 'fast-shop' ),
 				'on'       => false,
 				'body'     => '',
-				'template' => ''
+				'template' => 'related'
 			)
 		);
 
@@ -333,6 +339,7 @@ class FS_Config {
 	/**
 	 * @param $key
 	 *s
+	 *
 	 * @return mixed|void
 	 */
 	public function getMeta( $key ) {

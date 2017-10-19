@@ -28,9 +28,56 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 
+		// добавление товара к сравнению
+		add_action( 'wp_ajax_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
+
+		// удаляет один термин (свойство) товара
+		add_action( 'wp_ajax_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
+
 
 	}
 
+	/**
+	 * удаляет один термин (свойство) товара
+	 */
+	function fs_remove_product_term_callback() {
+		global $fs_config;
+		$output = array_map( 'sanitize_text_field', $_POST );
+		$remove = wp_remove_object_terms( (int) $output['product_id'], (int) $output['term_id'], $fs_config->data['product_att_taxonomy'] );
+		if ( $remove ) {
+			echo json_encode( array(
+				'status' => true
+			) );
+		} else {
+			echo json_encode( array(
+				'status' => false
+			) );
+		}
+		exit();
+	}
+
+	/**
+	 * добавление товара к сравнению
+	 */
+	function fs_add_to_comparison_callback() {
+		session_start();
+		unset( $_SESSION['fs_comparison_list'] );
+		if ( ! empty( $_SESSION['fs_comparison_list'] ) && is_array( $_SESSION['fs_comparison_list'] ) && ! in_array( (int) $_POST['product_id'], $_SESSION['fs_comparison_list'] ) ) {
+			$_SESSION['fs_comparison_list'] = array_unshift( $_SESSION['fs_comparison_list'], (int) $_POST['product_id'] );
+		} else {
+			$_SESSION['fs_comparison_list'][] = (int) $_POST['product_id'];
+
+		}
+
+		// Устанавливаем Cookie до конца сессии:
+		setcookie( "fs_comparison_list", serialize( $_SESSION['fs_comparison_list'] ), 30 * DAYS_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN );
+		echo json_encode( array(
+			'status' => true
+		) );
+		exit();
+	}
 
 	/**
 	 *Отправка заказа в базу, на почту админа и заказчика
@@ -137,10 +184,10 @@ class FS_Ajax_Class {
 		$_SESSION['last_order_id']             = $order_id;
 
 		// текст письма заказчику
-		$user_message                      = apply_filters( 'fs_email_template', $sanitize_field,fs_option( 'customer_mail' ) );
+		$user_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'customer_mail' ) );
 
 		// текст письма админу
-		$admin_message                    = apply_filters( 'fs_email_template', $sanitize_field ,fs_option( 'admin_mail' ));
+		$admin_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'admin_mail' ) );
 
 		//Отсылаем письмо с данными заказа заказчику
 		$customer_mail_header = fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );

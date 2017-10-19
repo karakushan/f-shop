@@ -10,7 +10,7 @@ class FS_Action_Class {
 		add_action( 'init', array( &$this, 'fs_catch_action' ), 2 );
 		add_action( 'init', array( &$this, 'register_plugin_action' ), 10 );
 		add_action( 'init', array( &$this, 'register_plugin_filters' ), 10 );
-		add_action( 'admin_menu', array($this,'remove_admin_submenus'), 999 );
+		add_action( 'admin_menu', array( $this, 'remove_admin_submenus' ), 999 );
 
 	}
 
@@ -101,6 +101,8 @@ class FS_Action_Class {
 		add_action( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info_show' ), 10 );
 		/* Выводит форму редактирования профиля */
 		add_action( 'fs_profile_edit', array( 'FS\FS_Users_Class', 'profile_edit' ), 10, 1 );
+		//===== COMPARISON LIST ====
+		add_action( 'fs_add_to_comparison', 'fs_add_to_comparison', 10, 3 );
 
 	}
 

@@ -56,7 +56,7 @@ class FS_Taxonomies_Class {
 				"public"             => false,
 				"show_ui"            => true,
 				"publicly_queryable" => false,
-
+				'meta_box_cb'                => false,
 				'metabox'           => false,
 				'show_admin_column' => false,
 
@@ -73,6 +73,7 @@ class FS_Taxonomies_Class {
 				"show_ui"            => true,
 				"publicly_queryable" => false,
 				'metabox'            => false,
+				'meta_box_cb'                => false,
 				'show_admin_column'  => false,
 				'show_in_quick_edit' => false
 			),

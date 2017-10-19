@@ -593,8 +593,64 @@ td.fs_photo.column-fs_photo {
         }
     }
 }
-.order-user{
+
+.order-user {
     max-width: 480px;
+}
+
+.fs-admin-atts {
+    width: 530px;
+    text-align: left;
+    max-width: 100%;
+    .fs-childs-list {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        li {
+            display: block;
+            .remove-att {
+                float: right;
+                color: red;
+                border: 1px solid #ded4d4;
+                padding: 0px;
+                line-height: 18px;
+                font-size: 18px;
+                -webkit-transition: all .4s ease-in-out;
+                -moz-transition: all .4s ease-in-out;
+                -ms-transition: all .4s ease-in-out;
+                -o-transition: all .4s ease-in-out;
+                transition: all .4s ease-in-out;
+                &:hover {
+                    cursor: pointer;
+                    background: red;
+                    color: #fff;
+                    border: 1px solid red;
+
+                }
+            }
+        }
+    }
+    & > thead {
+        & > tr {
+            & > th {
+                border-bottom: 1px solid #838383;
+                background: #ccc;
+                padding: 7px;
+                line-height: 25px;
+            }
+        }
+
+    }
+    & > tbody {
+        & > tr {
+            & > td {
+                border-bottom: 1px solid #838383;
+                width: 50%;
+                padding: 7px;
+            }
+        }
+
+    }
 }
 
 

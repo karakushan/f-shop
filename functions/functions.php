@@ -253,7 +253,7 @@ function fs_total_amount( $wrap = '%s <span>%s</span>', $echo = true ) {
  */
 function fs_get_total_amount( $products = array() ) {
 	if ( empty( $products ) ) {
-		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : 0;
+		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : array();
 	}
 	$all_price = array();
 	foreach ( $products as $key => $count ) {
@@ -555,6 +555,53 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	} else {
 		return apply_filters( 'fs_add_to_cart_filter', $atc_button );
 	}
+}
+
+/**
+ * Выводит кнопку "добавить к сравнению"
+ *
+ * @param int $post_id
+ * @param string $label
+ * @param array $attr
+ */
+function fs_add_to_comparison( $post_id = 0, $label = '', $attr = array() ) {
+	global $post;
+	$post_id = empty( $post_id ) ? $post->ID : $post_id;
+	$attr    = wp_parse_args( $attr,
+		array(
+			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
+			'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
+			'class'     => 'fs-add-to-comparison',
+			'type'      => 'button',
+			'success'   => sprintf( __( 'Item «%s» added to comparison', 'fast-shop' ), get_the_title( $post_id ) ),
+			'error'     => __( 'Error adding product to comparison', 'fast-shop' ),
+		)
+	);
+
+	// устанавливаем html атрибуты кнопки
+	$attr_set  = array(
+		'data-action'       => 'add-to-comparison',
+		'data-product-id'   => $post_id,
+		'data-product-name' => get_the_title( $post_id ),
+		'id'                => 'fs-atc-' . $post_id,
+		'data-success'      => $attr['success'],
+		'data-error'        => $attr['error'],
+		'class'             => $attr['class']
+	);
+	$html_atts = fs_parse_attr( array(), $attr_set );
+// дополнительные скрытые инфо-блоки внутри кнопки (прелоадер, сообщение успешного добавления в корзину)
+	$atc_after = '<span class="fs-atc-info" style="display:none"></span>';
+	$atc_after .= '<span class="fs-atc-preloader" style="display:none">'.$attr['preloader'].'</span>';
+	/* позволяем устанавливать разные html элементы в качестве кнопки */
+	switch ( $attr['type'] ) {
+		case 'link':
+			$atc_button = sprintf( '<a href="#add_to_comparison" %s>%s %s</a>', $html_atts, $label, $atc_after );
+			break;
+		default:
+			$atc_button = sprintf( '<button type="button" %s>%s %s</button>', $html_atts, $label, $atc_after );
+			break;
+	}
+	echo $atc_button;
 }
 
 
@@ -1530,7 +1577,7 @@ function fs_the_atts_list( $post_id = 0, $args = array() ) {
 				$second_term[] = $s->name;
 			}
 
-			$list .= '<li>' . $primary_term->name . ': ' . implode( ', ', $second_term ) . ' </li > ';
+			$list .= '<li><span class="first">' . $primary_term->name . ': </span><span class="last">' . implode( ', ', $second_term ) . ' </span></li > ';
 
 
 		}
@@ -1623,7 +1670,7 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
 		'id'    => 'fs - product - thumbnail - ' . $product_id,
 		'alt'   => get_the_title( $product_id ),
 	) );
-	$image = ' < img ' . $atts . ' > ';
+	$image = ' <img ' . $atts . ' > ';
 	if ( $echo ) {
 		echo $image;
 	} else {
