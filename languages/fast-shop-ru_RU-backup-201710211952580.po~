@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-21 19:50+0000\n"
-"PO-Revision-Date: 2017-10-21 19:52+0000\n"
+"PO-Revision-Date: 2017-10-21 19:51+0000\n"
 "Last-Translator: kratus-admin <karakushan@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
@@ -43,11 +43,11 @@ msgstr "Цена по спаданию"
 
 #: functions/attributes.php:146
 msgid "Name A to Z"
-msgstr "По имени от А до Я"
+msgstr ""
 
 #: functions/attributes.php:149
 msgid "Name Z to A"
-msgstr "По имени от Я до А"
+msgstr ""
 
 #: functions/filters.php:18
 msgid "ID"
@@ -60,19 +60,19 @@ msgstr ""
 #: functions/functions.php:576
 #, php-format
 msgid "Item «%s» added to comparison"
-msgstr "Товар «%s» добавлен к сравнению"
+msgstr ""
 
 #: functions/functions.php:577
 msgid "Error adding product to comparison"
-msgstr "Ошибка добавления товара к сравнению"
+msgstr ""
 
 #: lib/FS_Config.php:72
 msgid "Attributes"
-msgstr "Атрибуты"
+msgstr ""
 
 #: lib/FS_Post_Type.php:287
 msgid "Template file not found"
-msgstr "Файл шаблона не найден"
+msgstr ""
 
 #: templates/back-end/metabox/other.php:10
 msgid "Запас товара на складе"
