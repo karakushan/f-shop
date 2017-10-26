@@ -232,6 +232,22 @@ function fs_email_template( $vars, $message ) {
 
 add_filter( 'fs_email_template', 'fs_email_template', 10, 2 );
 
+add_filter( 'wp_dropdown_cats', 'fs_dropdown_cats_multiple', 10, 2 );
+function fs_dropdown_cats_multiple( $output, $r ) {
+
+	if( isset( $r['multiple'] ) && $r['multiple'] ) {
+
+		$output = preg_replace( '/^<select/i', '<select multiple', $output );
+
+		$output = str_replace( "name='{$r['name']}'", "name='{$r['name']}[]'", $output );
+
+		foreach ( array_map( 'trim', explode( ",", $r['selected'] ) ) as $value )
+			$output = str_replace( "value=\"{$value}\"", "value=\"{$value}\" selected", $output );
+
+	}
+
+	return $output;
+}
 
 
 

@@ -121,6 +121,17 @@ div#fs_select_image {
 
     border: 1px solid #fed6e2;
 }
+.fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-panel {
+    float: left;
+    width: 47em;
+    border-left: 1px solid gray;
+    border-radius: 0;
+    position: relative;
+    left: -1px;
+    .after {
+        margin-left: 12px;
+    }
+}
 
 .fs_form label {
     font-family: "Bebas Neue";
@@ -341,6 +352,7 @@ td.fs_price.column-fs_price span span {
     color: #fff;
     border-bottom: 1px solid #015ebc;
     background-color: #06c;
+
 }
 
 #fs-table table {
