@@ -114,12 +114,13 @@ class FS_Taxonomies_Class {
 					'add_new_item'  => __( 'Add Currency', 'fast-shop' ),
 				),
 				//					исключаем категории из лицевой части
-				"public"             =>false,
+				"public"             => false,
 				"show_ui"            => true,
 				"publicly_queryable" => false,
 				'metabox'            => false,
 				'show_admin_column'  => false,
 				'hierarchical'       => false,
+				'meta_box_cb'        => false,
 				'show_in_quick_edit' => false
 			),
 			'order-statuses'      => array(
@@ -413,7 +414,7 @@ class FS_Taxonomies_Class {
 				//do your stuff here with $term or $term_id
 				$content = get_term_meta( $term_id, 'currency-code', 1 );
 				break;
-				case 'cost-basic':
+			case 'cost-basic':
 				//do your stuff here with $term or $term_id
 				$content = get_term_meta( $term_id, 'cost-basic', 1 );
 				break;
