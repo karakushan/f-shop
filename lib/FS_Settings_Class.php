@@ -77,22 +77,35 @@ class FS_Settings_Class {
 	 */
 	public function register_settings() {
 		$settings = array(
-			'general' => array(
-				'name'   => __( 'General', 'fast-shop' ),
+			'currencies' => array(
+				'name'   => __( 'Currencies', 'fast-shop' ),
 				'fields' => array(
-					0 => array(
+					array(
+						'type'  => 'custom',
+						'name'  => 'default_currency',
+						'label' => 'Валюта по умолчанию',
+						'html'  => wp_dropdown_categories( array(
+							'taxonomy'   => 'fs-currencies',
+							'echo'       => 0,
+							'hide_empty' => 0,
+							'selected'   => fs_option( 'default_currency' ),
+							'name'       => 'fs_option[default_currency]'
+						) ),
+						'value' => fs_option( 'default_currency' )
+					),
+					array(
 						'type'  => 'text',
 						'name'  => 'currency_symbol',
-						'label' => 'Символ валюты <span>(по умолчанию $):</span>',
+						'label' => 'Символ основной валюты <span>(по умолчанию отображается международный код типа USD):</span>',
 						'value' => fs_option( 'currency_symbol' )
 					),
-					1 => array(
+					array(
 						'type'  => 'text',
 						'name'  => 'currency_delimiter',
 						'label' => 'Разделитель цены <span>(по умолчанию .)</span>',
 						'value' => fs_option( 'currency_delimiter', '.' )
 					),
-					2 => array(
+					array(
 						'type'  => 'checkbox',
 						'name'  => 'price_cents',
 						'label' => 'Использовать копейки?',
@@ -102,7 +115,7 @@ class FS_Settings_Class {
 
 
 			),
-			'letters' => array(
+			'letters'    => array(
 				'name'   => __( 'Letters', 'fast-shop' ),
 				'fields' => array(
 					0 => array(
@@ -151,7 +164,7 @@ class FS_Settings_Class {
 
 
 			),
-			'pages'   => array(
+			'pages'      => array(
 				'name'   => __( 'Page', 'fast-shop' ),
 				'fields' => array(
 					0 => array(
@@ -190,19 +203,6 @@ class FS_Settings_Class {
 						'label' => 'Страница авторизации',
 						'value' => fs_option( 'page_auth', 0 )
 					),
-				)
-
-
-			),
-			'users'   => array(
-				'name'   => __( 'Users', 'fast-shop' ),
-				'fields' => array(
-					0 => array(
-						'type'  => 'checkbox',
-						'name'  => 'register_user',
-						'label' => 'Регистрировать пользователя при покупке?',
-						'value' => fs_option( 'register_user' )
-					)
 				)
 
 
