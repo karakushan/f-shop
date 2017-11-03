@@ -237,7 +237,7 @@ function fs_dropdown_cats_multiple( $output, $r ) {
 
 	if( isset( $r['multiple'] ) && $r['multiple'] ) {
 
-		$output = preg_replace( '/^<select/i', '<select multiple', $output );
+		$output = preg_replace( '/^<select/i', '<select multiple size="30"', $output );
 
 		$output = str_replace( "name='{$r['name']}'", "name='{$r['name']}[]'", $output );
 
