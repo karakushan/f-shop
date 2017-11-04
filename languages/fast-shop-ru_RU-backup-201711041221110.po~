@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-03 15:23+0000\n"
-"PO-Revision-Date: 2017-11-03 15:23+0000\n"
+"POT-Creation-Date: 2017-11-03 17:52+0000\n"
+"PO-Revision-Date: 2017-11-03 17:53+0000\n"
 "Last-Translator: kratus-admin <karakushan@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
@@ -33,9 +33,9 @@ msgstr ""
 msgid "email"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:404
-msgid "Cost"
-msgstr "Стоимость"
+#: lib/FS_Settings_Class.php:93
+msgid "no currencies"
+msgstr "не добавлено ни одной валюты"
 
 #: templates/back-end/metabox/other.php:10
 msgid "Запас товара на складе"
@@ -305,21 +305,18 @@ msgstr "Файл шаблона не найден"
 msgid "Store settings"
 msgstr "Настройки магазина"
 
-#: lib/FS_Settings_Class.php:81
-msgid "General"
-msgstr "Главные"
+#: lib/FS_Settings_Class.php:81 lib/FS_Taxonomies_Class.php:110
+#: lib/FS_Taxonomies_Class.php:112
+msgid "Currencies"
+msgstr "Валюты"
 
-#: lib/FS_Settings_Class.php:106
+#: lib/FS_Settings_Class.php:120
 msgid "Letters"
 msgstr "Письма"
 
-#: lib/FS_Settings_Class.php:155
+#: lib/FS_Settings_Class.php:169
 msgid "Page"
 msgstr "Страницы"
-
-#: lib/FS_Settings_Class.php:198
-msgid "Users"
-msgstr "Пользователи"
 
 #: lib/FS_Taxonomies_Class.php:34 lib/FS_Taxonomies_Class.php:36
 #: lib/FS_Taxonomies_Class.php:38 lib/FS_Taxonomies_Class.php:39
@@ -371,10 +368,6 @@ msgstr "Свойства товаров"
 msgid "Add property / group of properties"
 msgstr "Добавление свойства/группы свойств"
 
-#: lib/FS_Taxonomies_Class.php:110 lib/FS_Taxonomies_Class.php:112
-msgid "Currencies"
-msgstr "Валюты"
-
 #: lib/FS_Taxonomies_Class.php:113
 msgid "Currency"
 msgstr "Валюта"
@@ -408,6 +401,10 @@ msgstr "Стоимость в базовой валюте"
 #: lib/FS_Taxonomies_Class.php:274 lib/FS_Taxonomies_Class.php:289
 msgid "Only digits with a dot are allowed"
 msgstr "Можно использовать только цифры и точки в качестве разделителя"
+
+#: lib/FS_Taxonomies_Class.php:404
+msgid "Cost"
+msgstr "Стоимость"
 
 #: templates/back-end/orders.php:36
 #: templates/front-end/mail/themes/oxygen.php:460

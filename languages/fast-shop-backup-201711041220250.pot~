@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-03 15:22+0000\n"
+"POT-Creation-Date: 2017-11-03 17:52+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -282,20 +282,21 @@ msgstr ""
 msgid "Store settings"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:81
-msgid "General"
+#: lib/FS_Settings_Class.php:81 lib/FS_Taxonomies_Class.php:110
+#: lib/FS_Taxonomies_Class.php:112
+msgid "Currencies"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:106
+#: lib/FS_Settings_Class.php:93
+msgid "no currencies"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:120
 msgid "Letters"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:155
+#: lib/FS_Settings_Class.php:169
 msgid "Page"
-msgstr ""
-
-#: lib/FS_Settings_Class.php:198
-msgid "Users"
 msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:34 lib/FS_Taxonomies_Class.php:36
@@ -346,10 +347,6 @@ msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:96
 msgid "Add property / group of properties"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:110 lib/FS_Taxonomies_Class.php:112
-msgid "Currencies"
 msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:113

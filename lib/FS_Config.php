@@ -49,7 +49,8 @@ class FS_Config {
 			'product_taxonomy'     => 'catalog',
 			'product_att_taxonomy' => 'product-attributes',
 			'product_pay_taxonomy' => 'fs-payment-methods',
-			'product_del_taxonomy' => 'fs-delivery-methods'
+			'product_del_taxonomy' => 'fs-delivery-methods',
+			'currency_taxonomy'    => 'fs-currencies'
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
@@ -108,6 +109,8 @@ class FS_Config {
 			'gallery'          => 'fs_galery',
 			// похожие товары выбранные вручную
 			'related_products' => 'fs_related_products',
+			// поле производителя
+			'vendor' => 'fs_vendor',
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );

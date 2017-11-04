@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-03 17:52+0000\n"
+"POT-Creation-Date: 2017-11-04 12:20+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -125,29 +125,29 @@ msgstr ""
 msgid "Remove items %s"
 msgstr ""
 
-#: functions/functions.php:520
+#: functions/functions.php:521
 #, php-format
 msgid "Item «%s» added to cart"
 msgstr ""
 
-#: functions/functions.php:521
+#: functions/functions.php:522
 msgid "Error adding product to cart"
 msgstr ""
 
-#: functions/functions.php:576
+#: functions/functions.php:577
 #, php-format
 msgid "Item «%s» added to comparison"
 msgstr ""
 
-#: functions/functions.php:577
+#: functions/functions.php:578
 msgid "Error adding product to comparison"
 msgstr ""
 
-#: functions/functions.php:889
+#: functions/functions.php:890
 msgid "Remove all items"
 msgstr ""
 
-#: functions/functions.php:998
+#: functions/functions.php:999
 msgid "Item added to wishlist"
 msgstr ""
 
@@ -156,55 +156,55 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-#: lib/FS_Config.php:60
+#: lib/FS_Config.php:61
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:66
+#: lib/FS_Config.php:67
 msgid "Gallery"
 msgstr ""
 
-#: lib/FS_Config.php:72
+#: lib/FS_Config.php:73
 msgid "Attributes"
 msgstr ""
 
-#: lib/FS_Config.php:78
+#: lib/FS_Config.php:79
 msgid "Other"
 msgstr ""
 
-#: lib/FS_Config.php:84
+#: lib/FS_Config.php:85
 msgid "Associated"
 msgstr ""
 
-#: lib/FS_Config.php:128
+#: lib/FS_Config.php:129
 msgid "The base price"
 msgstr ""
 
-#: lib/FS_Config.php:131
+#: lib/FS_Config.php:132
 msgid "This is the main type prices"
 msgstr ""
 
-#: lib/FS_Config.php:135
+#: lib/FS_Config.php:136
 msgid "Promotional price"
 msgstr ""
 
-#: lib/FS_Config.php:138
+#: lib/FS_Config.php:139
 msgid "This type of price interrupts the base price"
 msgstr ""
 
-#: lib/FS_Config.php:172
+#: lib/FS_Config.php:173
 msgid "US dollar"
 msgstr ""
 
-#: lib/FS_Config.php:173
+#: lib/FS_Config.php:174
 msgid "Ukrainian hryvnia"
 msgstr ""
 
-#: lib/FS_Config.php:174
+#: lib/FS_Config.php:175
 msgid "Russian ruble"
 msgstr ""
 
-#: lib/FS_Config.php:179
+#: lib/FS_Config.php:180
 msgid "Client"
 msgstr ""
 
@@ -357,33 +357,45 @@ msgstr ""
 msgid "Add Currency"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:127 lib/FS_Taxonomies_Class.php:129
-#: lib/FS_Taxonomies_Class.php:130
-msgid "Order statuses"
+#: lib/FS_Taxonomies_Class.php:128 lib/FS_Taxonomies_Class.php:130
+msgid "Manufacturers"
 msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:131
+msgid "Manufacturer"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:132
+msgid "Add Manufacturer"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:146 lib/FS_Taxonomies_Class.php:148
+#: lib/FS_Taxonomies_Class.php:149
+msgid "Order statuses"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:150
 msgid "Add status"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:266 lib/FS_Taxonomies_Class.php:280
-#: lib/FS_Taxonomies_Class.php:403
+#: lib/FS_Taxonomies_Class.php:285 lib/FS_Taxonomies_Class.php:299
+#: lib/FS_Taxonomies_Class.php:422
 msgid "Currency code"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:268 lib/FS_Taxonomies_Class.php:282
+#: lib/FS_Taxonomies_Class.php:287 lib/FS_Taxonomies_Class.php:301
 msgid "International Currency Symbol"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:272 lib/FS_Taxonomies_Class.php:287
+#: lib/FS_Taxonomies_Class.php:291 lib/FS_Taxonomies_Class.php:306
 msgid "Cost in basic currency"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:274 lib/FS_Taxonomies_Class.php:289
+#: lib/FS_Taxonomies_Class.php:293 lib/FS_Taxonomies_Class.php:308
 msgid "Only digits with a dot are allowed"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:404
+#: lib/FS_Taxonomies_Class.php:423
 msgid "Cost"
 msgstr ""
 
@@ -414,6 +426,10 @@ msgstr ""
 
 #: templates/back-end/metabox/other.php:10
 msgid "Запас товара на складе"
+msgstr ""
+
+#: templates/back-end/metabox/prices.php:25
+msgid "Select currency"
 msgstr ""
 
 #: templates/back-end/metabox/related.php:2
