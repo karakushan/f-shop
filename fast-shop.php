@@ -3,7 +3,7 @@
 Plugin Name: F-Shop
 Plugin URI: https://f-shop.top/
 Description:  Плагин интернет магазина для Wordpress.
-Version: 1.1
+Version: 1.2
 Author: Vitaliy Karakushan
 Author URI: https://f-shop.top/
 License: GPL2
