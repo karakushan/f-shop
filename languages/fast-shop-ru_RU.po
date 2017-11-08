@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-08 20:30+0000\n"
-"PO-Revision-Date: 2017-11-08 20:37+0000\n"
+"PO-Revision-Date: 2017-11-08 20:49+0000\n"
 "Last-Translator: cube44-admin <karakushan@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
@@ -25,6 +25,31 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Loco-Target-Locale: ru_RU"
 
+#: functions/filters.php:18
+msgid "ID"
+msgstr ""
+
+#: functions/filters.php:100
+msgid "email"
+msgstr ""
+
+#: templates/back-end/metabox/other.php:10
+msgid "Запас товара на складе"
+msgstr ""
+
+#. Name of the plugin
+msgid "F-Shop"
+msgstr ""
+
+#. Description of the plugin
+msgid "Плагин интернет магазина для Wordpress."
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "https://f-shop.top/"
+msgstr ""
+
 #: functions/attributes.php:134
 msgid "First new"
 msgstr "Сначала новые"
@@ -39,7 +64,7 @@ msgstr "По цене от меньшего к большему"
 
 #: functions/attributes.php:143
 msgid "Price high to low"
-msgstr "По цене от меньшего к большему"
+msgstr "По цене от большего к меньшему"
 
 #: functions/attributes.php:146
 msgid "Name A to Z"
@@ -48,14 +73,6 @@ msgstr "По имени от А до Я"
 #: functions/attributes.php:149
 msgid "Name Z to A"
 msgstr "По имени от Я до А"
-
-#: functions/filters.php:18
-msgid "ID"
-msgstr ""
-
-#: functions/filters.php:100
-msgid "email"
-msgstr ""
 
 #: functions/functions.php:421
 #, php-format
@@ -145,10 +162,6 @@ msgstr "Можно использовать только цифры и точк�
 msgid "Cost"
 msgstr "Стоимость"
 
-#: templates/back-end/metabox/other.php:10
-msgid "Запас товара на складе"
-msgstr ""
-
 #: templates/back-end/metabox/prices.php:25
 msgid "Select currency"
 msgstr "Выберите валюту"
@@ -160,19 +173,6 @@ msgstr "мужчина"
 #: templates/front-end/cabinet/profile-edit.php:44
 msgid "female"
 msgstr "женщина"
-
-#. Name of the plugin
-msgid "F-Shop"
-msgstr ""
-
-#. Description of the plugin
-msgid "Плагин интернет магазина для Wordpress."
-msgstr ""
-
-#. URI of the plugin
-#. Author URI of the plugin
-msgid "https://f-shop.top/"
-msgstr ""
 
 #: functions/actions.php:44 functions/actions.php:66
 msgid "Choose a shipping method"

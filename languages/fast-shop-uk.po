@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-08 20:37+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2017-11-08 20:43+0000\n"
+"PO-Revision-Date: 2017-11-08 20:54+0000\n"
 "Last-Translator: cube44-admin <karakushan@gmail.com>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -23,13 +23,30 @@ msgstr ""
 "esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2"
 
+#: functions/filters.php:18
+msgid "ID"
+msgstr ""
+
+#: functions/filters.php:100
+msgid "email"
+msgstr ""
+
+#. Name of the plugin
+msgid "F-Shop"
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "https://f-shop.top/"
+msgstr ""
+
 #: functions/attributes.php:134
 msgid "First new"
-msgstr "Спочатку свіжі"
+msgstr "Спочатку новіші"
 
 #: functions/attributes.php:137
 msgid "First old ones"
-msgstr "Спочатку старі"
+msgstr "Спочатку старіші"
 
 #: functions/attributes.php:140
 msgid "Price low to high"
@@ -46,14 +63,6 @@ msgstr "По імені від А до Я"
 #: functions/attributes.php:149
 msgid "Name Z to A"
 msgstr "По імені від Я до А"
-
-#: functions/filters.php:18
-msgid "ID"
-msgstr ""
-
-#: functions/filters.php:100
-msgid "email"
-msgstr ""
 
 #: functions/functions.php:421
 #, php-format
@@ -154,15 +163,6 @@ msgstr "чоловік"
 #: templates/front-end/cabinet/profile-edit.php:44
 msgid "female"
 msgstr "жінка"
-
-#. Name of the plugin
-msgid "F-Shop"
-msgstr ""
-
-#. URI of the plugin
-#. Author URI of the plugin
-msgid "https://f-shop.top/"
-msgstr ""
 
 #: functions/actions.php:44 functions/actions.php:66
 msgid "Choose a shipping method"
