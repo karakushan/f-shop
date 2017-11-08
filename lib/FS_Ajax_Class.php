@@ -134,9 +134,15 @@ class FS_Ajax_Class {
 					}
 				}
 			} else {
+				if ( $new_user->get_error_code() == 'email_exists' ) {
+					$error_text = 'Пользователь с таким E-mail зарегистрирован на сайте. <a href="#fs-modal-login" data-fs-action="modal">Войти на сайт</a>. <a href="'.wp_lostpassword_url( get_permalink() ).'">Забыли пароль?</a>';
+				} else {
+					$error_text = $new_user->get_error_message();
+				}
 				echo json_encode( array(
-					'success' => false,
-					'text'    => $new_user->get_error_message(),
+					'success'    => false,
+					'text'       => $error_text,
+					'error_code' => $new_user->get_error_code()
 				) );
 				exit();
 			}

@@ -591,7 +591,7 @@ function fs_add_to_comparison( $post_id = 0, $label = '', $attr = array() ) {
 	$html_atts = fs_parse_attr( array(), $attr_set );
 // дополнительные скрытые инфо-блоки внутри кнопки (прелоадер, сообщение успешного добавления в корзину)
 	$atc_after = '<span class="fs-atc-info" style="display:none"></span>';
-	$atc_after .= '<span class="fs-atc-preloader" style="display:none">'.$attr['preloader'].'</span>';
+	$atc_after .= '<span class="fs-atc-preloader" style="display:none">' . $attr['preloader'] . '</span>';
 	/* позволяем устанавливать разные html элементы в качестве кнопки */
 	switch ( $attr['type'] ) {
 		case 'link':
@@ -1130,10 +1130,17 @@ function fs_get_current_user() {
  *
  * @param bool $echo - выводить(по умолчанию) или возвращать
  *
+ * @param array $args
+ *
  * @return mixed|void
  */
-function fs_login_form( $echo = true ) {
-	$template = fs_form_header( array( 'name' => "fs-login" ), 'fs_login' );
+function fs_login_form( $echo = true, $args = array() ) {
+	$args = wp_parse_args( $args, array(
+		'name' => "fs-login",
+		'class' => "fs-login",
+		'id' => "fs-login"
+	) );
+	$template = fs_form_header( $args, 'fs_login' );
 	$template .= fs_frontend_template( 'auth/login' );
 	$template .= fs_form_bottom();
 	if ( $echo ) {

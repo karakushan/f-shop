@@ -257,9 +257,8 @@ jQuery(function (jQuery) {
                         if (jsonData.redirect != false) document.location.href = jsonData.redirect;
                     } else {
                         jQuery('[name="fs-order-send"] .fs-form-info').addClass('error').html(jsonData.text).fadeIn();
+                        jQuery('[data-fs-action="order-send"]').html('Отправить');
                     }
-
-
                 });
 
 
@@ -704,7 +703,7 @@ jQuery(document).on('click', '[data-action="add-to-comparison"]', function (even
             el.find('.fs-atc-info').fadeIn().html(el.data('success'));
             setTimeout(function () {
                 el.find('.fs-atc-info').fadeOut(1000)
-            },3000);
+            }, 3000);
         });
 });
 

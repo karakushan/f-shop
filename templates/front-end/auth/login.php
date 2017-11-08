@@ -13,7 +13,7 @@
   <input type="password" name="password" class="form-control" id="inputPassword3"
          placeholder="<?php _e( 'Password', 'fast-shop' ) ?>" required title="<?php _e( 'required', 'fast-shop' ) ?>">
 </div>
-<div class="form-group">s
+<div class="form-group">
   <label class="checkbox-inline">
     <input type="checkbox"> <?php _e( 'Remember me', 'fast-shop' ) ?>
   </label>

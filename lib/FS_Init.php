@@ -73,6 +73,7 @@ class FS_Init {
 			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : $price_max
 		);
 		wp_localize_script( 'fast-shop', 'FastShopData', $l10n );
+		wp_enqueue_script( 'f-shop', $this->config->data['plugin_url'] . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
 	}
 
 	public function fast_shop_admin_scripts() {

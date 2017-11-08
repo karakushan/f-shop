@@ -1,0 +1,1 @@
+jQuery("[data-fs-action='modal']").on("click",function(t){t.preventDefault();var a=$(this).attr("href");console.log(a)});

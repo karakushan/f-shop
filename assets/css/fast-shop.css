@@ -415,11 +415,14 @@ li.fs-attr {
   line-height: 1;
   text-align: center;
   border: 1px solid #a5d2f8; }
-  .fs-form-info a {
-    color: #ffffff;
+  .fs-form-info a, .fs-form-info a:hover, .fs-form-info a:focus {
+    color: #337ab7;
     text-decoration: underline; }
   .fs-form-info.bg-danger {
     background-color: #ff6767; }
+  .fs-form-info.error {
+    background: #ffbdbb;
+    border: 1px solid #ff9692; }
 
 .fs-profile-edit {
   max-width: 480px; }
@@ -516,5 +519,25 @@ li.fs-attr {
   align-items: center;
   height: 100%;
   justify-content: center; }
+
+.fs-login {
+  position: fixed;
+  top: 20%;
+  width: 300px;
+  left: 50%;
+  margin-left: -150px;
+  background: #fff;
+  z-index: 5;
+  padding: 29px; }
+
+.fs-fade {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 999; }
 
 /*# sourceMappingURL=fast-shop.css.map */
