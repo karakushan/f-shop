@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-08-25 13:58+0000\n"
-"PO-Revision-Date: 2017-08-25 13:58+0000\n"
+"PO-Revision-Date: 2017-08-25 13:59+0000\n"
 "Last-Translator: kratus-admin <karakushan@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru-RU\n"
@@ -40,7 +40,7 @@ msgstr "Товар «%s» добавлен в корзину"
 
 #: functions/functions.php:441
 msgid "Error adding product to cart"
-msgstr ""
+msgstr "Ошибка добавления товара в корзину"
 
 #: templates/back-end/metabox/tab-3.php:10
 msgid "Запас товара на складе"

@@ -2,10 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-23 07:57+0000\n"
+"POT-Creation-Date: 2017-08-25 13:59+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2017-08-23 07:57+0000\n"
-"Last-Translator: cube44-admin <karakushan@gmail.com>\n"
+"PO-Revision-Date: 2017-08-25 14:02+0000\n"
+"Last-Translator: kratus-admin <karakushan@gmail.com>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -29,23 +29,23 @@ msgstr ""
 
 #: functions/filters.php:20 functions/filters.php:126
 msgid "Vendor code"
-msgstr ""
+msgstr "Код виробника (артикул)"
 
 #: functions/filters.php:21 functions/filters.php:131
 msgid "Stock in stock"
-msgstr ""
+msgstr "Є в наявності"
 
 #: functions/filters.php:73
 msgid "Total cost"
-msgstr ""
+msgstr "Загальна сумма"
 
 #: functions/filters.php:74
 msgid "Customer"
-msgstr ""
+msgstr "Замовник"
 
 #: functions/filters.php:99
 msgid "phone"
-msgstr ""
+msgstr "телефон"
 
 #: functions/filters.php:100
 msgid "email"
@@ -53,27 +53,40 @@ msgstr ""
 
 #: functions/filters.php:101
 msgid "city"
-msgstr ""
+msgstr "місто"
 
 #: functions/filters.php:131
 msgid "units"
-msgstr ""
+msgstr "одиниць"
+
+#: functions/functions.php:440
+#, php-format
+msgid "Item «%s» added to cart"
+msgstr "Товар «%s» успішно додано в корзину"
+
+#: functions/functions.php:441
+msgid "Error adding product to cart"
+msgstr "Помилка  додання товара в кошик"
+
+#: lib/FS_Form_Class.php:28
+msgid "this field is required"
+msgstr "це поле є обов'язковим"
 
 #: lib/FS_Post_Type.php:198
 msgid "List of products"
-msgstr ""
+msgstr "Список товарів"
 
 #: lib/FS_Post_Type.php:208
 msgid "Customer data"
-msgstr ""
+msgstr "Дані замовника"
 
 #: lib/FS_Post_Type.php:218
 msgid "Order status"
-msgstr ""
+msgstr "Статус замовлення"
 
 #: templates/back-end/metabox/tab-2.php:19
 msgid "Remove from gallery"
-msgstr ""
+msgstr "Видалити з галереї"
 
 #. Name of the plugin
 msgid "F-Shop"
@@ -81,7 +94,7 @@ msgstr ""
 
 #. Description of the plugin
 msgid "Плагин интернет магазина для Wordpress."
-msgstr ""
+msgstr "Плагін інтренет-магазину для Wordpress"
 
 #. URI of the plugin
 #. Author URI of the plugin
@@ -129,15 +142,15 @@ msgstr "нема фото"
 msgid "Remove items"
 msgstr "Видалити позицію"
 
-#: functions/functions.php:448
+#: functions/functions.php:450
 msgid "Add to cart"
 msgstr "Додати в кошик"
 
-#: functions/functions.php:836
+#: functions/functions.php:838
 msgid "add to wish list"
 msgstr "додати в список бажань"
 
-#: lib/FS_Ajax_Class.php:140 lib/FS_Post_Type.php:91
+#: lib/FS_Ajax_Class.php:141 lib/FS_Post_Type.php:91
 #: templates/front-end/mail/themes/oxygen.php:426
 msgid "Order"
 msgstr "Замовлення"
@@ -188,7 +201,7 @@ msgstr "Під час процесу оновлення бази даних ст
 msgid "Product category"
 msgstr "Категорія товару"
 
-#: lib/FS_Init.php:113
+#: lib/FS_Init.php:112
 msgid "Client"
 msgstr "Клієнт"
 

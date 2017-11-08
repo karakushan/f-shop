@@ -412,7 +412,7 @@ function fs_get_cart( $args = array() ) {
  */
 function fs_delete_position( $product_id, $args ) {
 	$args      = wp_parse_args( $args, array(
-		'content' => '',
+		'content' => '🞫',
 		'type'    => 'link',
 		'class'   => 'fs-delete-position'
 	) );
