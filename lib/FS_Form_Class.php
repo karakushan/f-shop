@@ -61,7 +61,7 @@ class FS_Form_Class {
 			'required'     => false,
 			'title'        => __( 'this field is required', 'fast-shop' ),
 			'placeholder'  => '',
-			'value'        => '',
+			'value'        => $default_value,
 			'html'         => '',
 			'options'      => array(),
 			'format'       => '%input% %label%',
