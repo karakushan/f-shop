@@ -259,7 +259,8 @@ function fs_wp_mail_from_name( $from_name ) {
 //  заменяет почту отправителя писем
 add_filter( 'wp_mail_from', 'fs_wp_mail_from' );
 function fs_wp_mail_from( $from_email ) {
-	$from_email = fs_option( 'manager_email', $from_email );
+	$from_email = fs_option( 'email_sender', $from_email );
+
 	return $from_email;
 }
 

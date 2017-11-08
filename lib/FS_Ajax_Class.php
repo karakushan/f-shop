@@ -128,7 +128,6 @@ class FS_Ajax_Class {
 					'last_name'  => $sanitize_field['fs_last_name'],
 					'role'       => FS_Config::getUsers( 'new_user_role' )
 				) );
-
 			} else {
 				if ( $new_user->get_error_code() == 'email_exists' || $new_user->get_error_code() == 'username_exists' ) {
 					$error_text = 'Пользователь с таким E-mail или Логином зарегистрирован на сайте. <a href="#fs-modal-login" data-fs-action="modal">Войти на сайт</a>. <a href="' . wp_lostpassword_url( get_permalink() ) . '">Забыли пароль?</a>';
@@ -146,6 +145,11 @@ class FS_Ajax_Class {
 
 		// обновляем мета поля пользователя
 		if ( $user_id ) {
+			wp_update_user( array(
+				'ID'         => $user_id,
+				'first_name' => $sanitize_field['fs_first_name'],
+				'last_name'  => $sanitize_field['fs_last_name']
+			) );
 			foreach ( FS_Config::getFormFields() as $key => $user_meta ) {
 				if ( ! empty( $sanitize_field[ $key ] ) && ! empty( $user_meta['save_meta'] ) ) {
 					update_user_meta( $user_id, $key, $sanitize_field[ $key ] );
@@ -198,7 +202,7 @@ class FS_Ajax_Class {
 		$user_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'customer_mail' ) );
 
 		// текст письма админу
-		$admin_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'admin_mail' ) );
+		$admin_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'admin_mail', get_bloginfo( 'admin_email' ) ) );
 
 		//Отсылаем письмо с данными заказа заказчику
 		$customer_mail_header = fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
