@@ -88,11 +88,10 @@ function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
 //Получает текущую цену с учётом скидки
 /**
  * @param int $post_id - id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
- * @param boolean $filter - включить или отключить фильтры типа add_filter дя получения базовой цены (по умолчанию включены)
  *
  * @return float $price - значение цены
  */
-function fs_get_price( $post_id = 0, $filter = true ) {
+function fs_get_price( $post_id = 0 ) {
 	$config = new \FS\FS_Config();//класс основных настроек плагина
 
 	// устанавливаем id поста
@@ -113,7 +112,8 @@ function fs_get_price( $post_id = 0, $filter = true ) {
 		$price = $action_price;
 	}
 
-	return (float) $price;
+	return apply_filters( 'fs_price_filter', $post_id, (float) $price );
+
 }
 
 //Отображает общую сумму продуктов с одним артикулом
@@ -486,7 +486,8 @@ function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = arra
 	$config  = new \FS\FS_Config();
 	$post_id = empty( $post_id ) ? $post->ID : $post_id;
 	$price   = get_post_meta( $post_id, $config->meta['price'], 1 );
-	if ( $price == fs_get_price( $post_id ) ) {
+	$action_price   = get_post_meta( $post_id, $config->meta['action_price'], 1 );
+	if ( $price == fs_get_price( $post_id ) || empty($action_price)) {
 		return;
 	}
 	$price    = empty( $price ) ? 0 : (float) $price;
@@ -1306,10 +1307,8 @@ function fs_gallery_images_url( $product_id = 0 ) {
 function fs_get_related_products( $product_id = 0, $args = array() ) {
 	global $post, $fs_config;
 	$product_id = empty( $product_id ) ? $post->ID : $product_id;
-	$posts      = new stdClass;
 	$products   = get_post_meta( $product_id, $fs_config->meta['related_products'], false );
-
-	$args = wp_parse_args( $args, array(
+	$args       = wp_parse_args( $args, array(
 		'limit' => 4
 	) );
 
@@ -1322,11 +1321,7 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
 			'post__not_in'   => array( $product_id ),
 			'posts_per_page' => $args['limit']
 		);
-		$posts    = new WP_Query( $args );
-	}
-
-	// если нет товаров привязаных вручную, возвращаем товары их смежных категорий
-	if ( ! $posts->post_count ) {
+	} else {
 		$term_ids = wp_get_post_terms( $product_id, $fs_config->data['product_taxonomy'], array( 'fields' => 'ids' ) );
 		$args     = array(
 			'post_type'      => 'product',
@@ -1340,9 +1335,8 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
 				)
 			)
 		);
-
-		$posts = new WP_Query( $args );
 	}
+	$posts = new WP_Query( $args );
 
 	return $posts;
 }

@@ -364,14 +364,6 @@ li.fs-attr {
 .fs-option label span {
   font-weight: normal; }
 
-.fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-panel {
-  float: left;
-  width: 47em;
-  border-left: 1px solid gray;
-  border-radius: 0;
-  position: relative;
-  left: -1px; }
-
 .count-error {
   position: absolute;
   width: 233px;
@@ -626,5 +618,9 @@ li.fs-attr {
   align-items: center;
   height: 100%;
   justify-content: center; }
+
+td.fs_photo.column-fs_photo img {
+  max-width: 100%;
+  height: auto; }
 
 /*# sourceMappingURL=fast-shop.css.map */

@@ -61,11 +61,14 @@ class FS_Form_Class {
 			'required'     => false,
 			'title'        => __( 'this field is required', 'fast-shop' ),
 			'placeholder'  => '',
-			'value'        => $default_value,
-			'selected'     => $selected,
+			'value'        => '',
+			'html'         => '',
+			'options'      => array(),
 			'format'       => '%input% %label%',
 			'el'           => 'select',
 			'first_option' => __( 'Select' ),
+			'before'       => '',
+			'after'        => '',
 			'editor_args'  => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $field_name,
@@ -82,32 +85,44 @@ class FS_Form_Class {
 		$value       = ! empty( $args['value'] ) ? 'value="' . esc_html( $args['value'] ) . '"' : '';
 
 		$required = ! empty( $args['required'] ) ? 'required' : '';
-		$field    = '';
+		$field    = $args['before'];
 
 		switch ( $args['type'] ) {
 			case 'text':
-				$field = ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+				$field .= ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 				break;
 			case 'email':
-				$field = ' <input type="email" name="' . $field_name . '" ' . $value . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '> ';
+				$field .= ' <input type="email" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 				break;
 			case 'tel':
-				$field = ' <input type="tel" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+				$field .= ' <input type="tel" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 				break;
 			case 'radio':
-				$field = ' <input type="radio" name="' . $field_name . '"  ' . checked( 'on', $value, false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+				$field .= ' <input type="radio" name="' . $field_name . '"  ' . checked( 'on', $value, false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 				break;
 			case 'checkbox':
-				$field = ' <input type="checkbox" name="' . $field_name . '"  ' . checked( '1', $args['value'], false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '  value="1"  ' . $id . '> ';
+				$field .= ' <input type="checkbox" name="' . $field_name . '"  ' . checked( '1', $args['value'], false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '  value="1"  ' . $id . '> ';
 				break;
 			case 'textarea':
-				$field = '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
+				$field .= '<textarea name="c"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
+				break;
+			case 'custom':
+				$field .= $args['html'];
 				break;
 			case 'button':
-				$field = '<button type="button" ' . $class . ' ' . $id . '>' . $args['value'] . '</button>';
+				$field .= '<button type="button" ' . $class . ' ' . $id . '>' . $args['value'] . '</button>';
+				break;
+			case 'select':
+				$field .= '<select name="' . $field_name . '">';
+				$field .= '<option value="">' . $args['first_option'] . '</option>';
+				foreach ( $args['options'] as $k => $val ) {
+					$field .= '<option value="' . $k . '"  ' . selected( $args['value'], $k, 0 ) . '>' . $val . '</option>';
+				}
+				$field .= '</select>';
+
 				break;
 			case 'pages':
-				$field = wp_dropdown_pages( array(
+				$field .= wp_dropdown_pages( array(
 					'show_option_none'  => __( 'Select page', 'fast-shop' ),
 					'option_none_value' => 0,
 					'name'              => $field_name,
@@ -118,7 +133,7 @@ class FS_Form_Class {
 				break;
 			case 'pay_methods':
 				if ( $args['el'] == 'select' ) {
-					$field = wp_dropdown_categories( array(
+					$field .= wp_dropdown_categories( array(
 						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
@@ -145,7 +160,7 @@ class FS_Form_Class {
 				break;
 			case 'del_methods':
 				if ( $args['el'] == 'select' ) {
-					$field = wp_dropdown_categories( array(
+					$field .= wp_dropdown_categories( array(
 						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
@@ -176,6 +191,8 @@ class FS_Form_Class {
 				$field = ob_get_clean();
 				break;
 		}
+
+		$field .= $args['after'];
 		echo apply_filters( 'fs_form_field', $field, $field_name, $args );
 	}
 }

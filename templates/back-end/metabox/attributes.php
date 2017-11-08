@@ -6,6 +6,9 @@ $attributes    = get_the_terms( $post->ID, $fs_config->data['product_att_taxonom
 $att_hierarchy = [];
 if ( $attributes ) {
 	foreach ( $attributes as $att ) {
+		if ( ! $att->parent ) {
+			continue;
+		}
 		$att_hierarchy[ $att->parent ][] = $att;
 	}
 
@@ -35,7 +38,8 @@ if ( $attributes ) {
           <ul class="fs-childs-list">   <?php foreach ( $att_h as $child ): ?>
               <li><?php echo apply_filters( 'the_title', $child->name ) ?> <span
                   class="dashicons dashicons-no-alt remove-att" title="do I delete a property?" data-action="remove-att"
-                  data-category-id="<?php echo $child->term_id ?>" data-product-id="<?php echo $post->ID ?>"></span></li>
+                  data-category-id="<?php echo $child->term_id ?>" data-product-id="<?php echo $post->ID ?>"></span>
+              </li>
 			  <?php endforeach; ?>
           </ul>
 

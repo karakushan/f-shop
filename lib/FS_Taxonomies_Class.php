@@ -17,12 +17,20 @@ class FS_Taxonomies_Class {
 
 	function __construct() {
 		add_action( 'init', array( $this, 'create_taxonomy' ) );
+		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
+		// добавляем колонку при просмотре списка терминов таксономии валют
+		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
+		add_filter( 'manage_edit-fs-currencies_columns', array( $this, 'add_fs_currencies_columns' ) );
 	}
 
-	function create_taxonomy() {
-		$this->config = new FS_Config();
-		$taxonomies   = array(
-			$this->config->data['product_taxonomy'] => array(
+	/**
+	 * Регистирует пользовательские таксономии
+	 * @return array|mixed|void
+	 */
+	function shop_taxonomies() {
+		$taxonomies = array(
+			'catalog'             => array(
+				'object_type'        => 'product',
 				'label'              => __( 'Product categories', 'fast-shop' ),
 				'labels'             => array(
 					'name'              => __( 'Product categories', 'fast-shop' ),
@@ -45,7 +53,8 @@ class FS_Taxonomies_Class {
 				'show_admin_column'  => true,
 			)
 		,
-			'fs-payment-methods'                    => array(
+			'fs-payment-methods'  => array(
+				'object_type'        => 'product',
 				'label'              => __( 'Payment methods', 'fast-shop' ),
 				'labels'             => array(
 					'name'          => __( 'Payment methods', 'fast-shop' ),
@@ -56,12 +65,13 @@ class FS_Taxonomies_Class {
 				"public"             => false,
 				"show_ui"            => true,
 				"publicly_queryable" => false,
-				'meta_box_cb'                => false,
-				'metabox'           => false,
-				'show_admin_column' => false,
+				'meta_box_cb'        => false,
+				'metabox'            => false,
+				'show_admin_column'  => false,
 
 			),
-			'fs-delivery-methods'                   => array(
+			'fs-delivery-methods' => array(
+				'object_type'        => 'product',
 				'label'              => __( 'Delivery methods', 'fast-shop' ),
 				'labels'             => array(
 					'name'          => __( 'Delivery methods', 'fast-shop' ),
@@ -73,11 +83,12 @@ class FS_Taxonomies_Class {
 				"show_ui"            => true,
 				"publicly_queryable" => false,
 				'metabox'            => false,
-				'meta_box_cb'                => false,
+				'meta_box_cb'        => false,
 				'show_admin_column'  => false,
 				'show_in_quick_edit' => false
 			),
-			'product-attributes'                    => array(
+			'product-attributes'  => array(
+				'object_type'        => 'product',
 				'label'              => __( 'Product attributes', 'fast-shop' ),
 				'labels'             => array(
 					'name'          => __( 'Product attributes', 'fast-shop' ),
@@ -93,37 +104,81 @@ class FS_Taxonomies_Class {
 				'show_admin_column'  => true,
 				'hierarchical'       => true,
 				'show_in_quick_edit' => false
+			),
+			'fs-currencies'       => array(
+				'object_type'        => 'product',
+				'label'              => __( 'Currencies', 'fast-shop' ),
+				'labels'             => array(
+					'name'          => __( 'Currencies', 'fast-shop' ),
+					'singular_name' => __( 'Currency', 'fast-shop' ),
+					'add_new_item'  => __( 'Add Currency', 'fast-shop' ),
+				),
+				//					исключаем категории из лицевой части
+				"public"             => false,
+				"show_ui"            => true,
+				"publicly_queryable" => false,
+				'metabox'            => false,
+				'show_admin_column'  => false,
+				'hierarchical'       => false,
+				'meta_box_cb'        => false,
+				'show_in_quick_edit' => false
+			),
+			'order-statuses'      => array(
+				'object_type'        => 'orders',
+				'label'              => __( 'Order statuses', 'fast-shop' ),
+				'labels'             => array(
+					'name'          => __( 'Order statuses', 'fast-shop' ),
+					'singular_name' => __( 'Order statuses', 'fast-shop' ),
+					'add_new_item'  => __( 'Add status', 'fast-shop' ),
+				),
+				//					исключаем категории из лицевой части
+				"public"             => false,
+				"show_ui"            => true,
+				"publicly_queryable" => false,
+				'metabox'            => false,
+				'show_admin_column'  => true,
+				'hierarchical'       => true
 			)
 		);
 
 		$taxonomies = apply_filters( 'fs_taxonomies', $taxonomies );
-		if ( $taxonomies ) {
-			foreach ( $taxonomies as $key => $taxonomy ) {
-				register_taxonomy( $key, 'product', $taxonomy );
+
+		return $taxonomies;
+	}
+
+	/**
+	 * Создаёт такономии
+	 * категории товаров
+	 * методы оплаты
+	 * методы доставки
+	 * свойства товаров
+	 * валюты
+	 * статусы заказов
+	 */
+	function create_taxonomy() {
+		// сам процесс регистрации таксономий
+		if ( $this->shop_taxonomies() ) {
+			foreach ( $this->shop_taxonomies() as $key => $taxonomy ) {
+				$object_type = $taxonomy['object_type'];
+				unset( $taxonomy['object_type'] );
+				register_taxonomy( $key, $object_type, $taxonomy );
 			}
 		}
 
-		/* регистрируем таксономию статусов заказа 'order-statuses' для посто типа заказ 'order' */
-		register_taxonomy( 'order-statuses', 'orders', array(
-			'label'              => __( 'Order statuses', 'fast-shop' ),
-			'labels'             => array(
-				'name'          => __( 'Order statuses', 'fast-shop' ),
-				'singular_name' => __( 'Order statuses', 'fast-shop' ),
-				'add_new_item'  => __( 'Add status', 'fast-shop' ),
-			),
-			//					исключаем категории из лицевой части
-			"public"             => true,
-			"show_ui"            => true,
-			"publicly_queryable" => false,
-			'metabox'            => false,
-			'show_admin_column'  => true,
-			'hierarchical'       => true
-		) );
 
+		// дополнительные поля таксономий, поля отображаются при добавлении или редактировании таксономии
+
+		// поля таксономии харакеристик товара
 		add_action( "product-attributes_edit_form_fields", array( $this, 'edit_product_attr_fields' ) );
 		add_action( "product-attributes_add_form_fields", array( $this, 'add_product_attr_fields' ) );
 		add_action( "create_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
 		add_action( "edited_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
+
+		// поля таксономии валют
+		add_action( "fs-currencies_edit_form_fields", array( $this, 'edit_fs_currencies_fields' ) );
+		add_action( "fs-currencies_add_form_fields", array( $this, 'add_fs_currencies_fields' ) );
+		add_action( "create_fs-currencies", array( $this, 'save_custom_taxonomy_meta' ) );
+		add_action( "edited_fs-currencies", array( $this, 'save_custom_taxonomy_meta' ) );
 
 	}
 
@@ -207,6 +262,41 @@ class FS_Taxonomies_Class {
 </div>';
 	}
 
+	function add_fs_currencies_fields() {
+		echo '<tr class="form-field term-currency-code-wrap">
+			<th scope="row"><label for="slug">' . __( 'Currency code', 'fast-shop' ) . '</label></th>
+						<td><input name="fast-shop[currency-code]" id="currency-code" type="text" value="" size="5">
+			<p class="description">' . __( 'International Currency Symbol', 'fast-shop' ) . '</p></td>
+		</tr>';
+
+		echo '<tr class="form-field term-currency-code-wrap">
+			<th scope="row"><label for="slug">' . __( 'Cost in basic currency', 'fast-shop' ) . '</label></th>
+						<td><input name="fast-shop[cost-basic]" id="currency-code" type="text" value="" size="5"> 
+			<p class="description">' . __( 'Only digits with a dot are allowed', 'fast-shop' ) . '</p></td>
+		</tr>';
+	}
+
+	function edit_fs_currencies_fields( $term ) {
+		echo '<tr class="form-field term-currency-code-wrap">
+			<th scope="row"><label for="slug">' . __( 'Currency code', 'fast-shop' ) . '</label></th>
+						<td><input name="fast-shop[currency-code]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'currency-code', 1 ) . '" size="5">
+			<p class="description">' . __( 'International Currency Symbol', 'fast-shop' ) . '</p></td>
+		</tr>';
+
+
+		echo '<tr class="form-field term-currency-code-wrap">
+			<th scope="row"><label for="slug">' . __( 'Cost in basic currency', 'fast-shop' ) . '</label></th>
+						<td><input name="fast-shop[cost-basic]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'cost-basic', 1 ) . '" size="5">
+			<p class="description">' . __( 'Only digits with a dot are allowed', 'fast-shop' ) . '</p></td>
+		</tr>';
+	}
+
+
+	/**
+	 * метод срабатывает в момент сохранения доп. полей таксономии
+	 *
+	 * @param $term_id
+	 */
 	function save_custom_taxonomy_meta( $term_id ) {
 		if ( ! isset( $_POST['fast-shop'] ) ) {
 			return;
@@ -301,4 +391,38 @@ class FS_Taxonomies_Class {
 		}
 
 	}
+
+
+	/**
+	 * Регистриует колонку код валюты в таксономии валют
+	 *
+	 * @param $columns
+	 *
+	 * @return mixed
+	 */
+	function add_fs_currencies_columns( $columns ) {
+		$columns['сurrency-code'] = __( 'Currency code', 'fast-shop' );
+		$columns['cost-basic']    = __( 'Cost', 'fast-shop' );
+		unset( $columns['description'], $columns['posts'] );
+
+		return $columns;
+	}
+
+	function fs_currencies_column_content( $content, $column_name, $term_id ) {
+		switch ( $column_name ) {
+			case 'сurrency-code':
+				//do your stuff here with $term or $term_id
+				$content = get_term_meta( $term_id, 'currency-code', 1 );
+				break;
+			case 'cost-basic':
+				//do your stuff here with $term or $term_id
+				$content = get_term_meta( $term_id, 'cost-basic', 1 );
+				break;
+			default:
+				break;
+		}
+
+		return $content;
+	}
+
 }

@@ -264,6 +264,54 @@ function fs_wp_mail_from( $from_email ) {
 }
 
 
+add_filter( 'wp_dropdown_cats', 'fs_dropdown_cats_multiple', 10, 2 );
+function fs_dropdown_cats_multiple( $output, $r ) {
+
+	if ( isset( $r['multiple'] ) && $r['multiple'] ) {
+
+		$output = preg_replace( '/^<select/i', '<select multiple size="30"', $output );
+
+		$output = str_replace( "name='{$r['name']}'", "name='{$r['name']}[]'", $output );
+
+		foreach ( array_map( 'trim', explode( ",", $r['selected'] ) ) as $value ) {
+			$output = str_replace( "value=\"{$value}\"", "value=\"{$value}\" selected", $output );
+		}
+
+	}
+
+	return $output;
+}
+
+// вносит коррективы в цену с учётом настроек валюты
+add_filter( 'fs_price_filter', 'fs_price_filter_callback', 10, 2 );
+function fs_price_filter_callback( $post_id, $price ) {
+	global $fs_config;
+	$active_currency_id = fs_option( 'default_currency' );
+	$post_currency_id   = get_post_meta( $post_id, $fs_config->meta['currency'], 1 );
+
+	// если валюта не указана, то выходим
+	if ( empty( $post_currency_id ) ) {
+		return (float) $price;
+	}
+
+	// если термин валюты или таксономия не найдены, то выходим
+	$currency_term = get_term( (int) $post_currency_id );
+	if ( is_wp_error( $currency_term ) || ! $currency_term ) {
+		return (float) $price;
+	}
+
+	// это сработает если валюта товара отличается от валюты по умолчанию
+	if ( $post_currency_id != $active_currency_id ) {
+		$active_currency_rate = get_term_meta( $post_currency_id, 'cost-basic', 1 );
+		// проверяем указана ли стоимость валюты товара в базовой валюте, и есть ли вообще такое поле
+		if ( ! empty( $active_currency_rate ) && $active_currency_rate > 0 ) {
+			$price = (float) $price * (float) $active_currency_rate;
+		}
+	}
+
+
+	return (float) $price;
+}
 
 
 

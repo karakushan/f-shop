@@ -92,6 +92,16 @@ div#fs_select_image {
   letter-spacing: .025em;
   border: 1px solid #fed6e2; }
 
+.fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-panel {
+  float: left;
+  width: 47em;
+  border-left: 1px solid gray;
+  border-radius: 0;
+  position: relative;
+  left: -1px; }
+  .fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-panel .after {
+    margin-left: 12px; }
+
 .fs_form label {
   font-family: "Bebas Neue";
   font-size: 14px;

@@ -109,6 +109,8 @@ class FS_Config {
 			'gallery'          => 'fs_galery',
 			// похожие товары выбранные вручную
 			'related_products' => 'fs_related_products',
+			// поле производителя
+			'vendor' => 'fs_vendor',
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );
