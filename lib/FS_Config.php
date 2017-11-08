@@ -49,7 +49,8 @@ class FS_Config {
 			'product_taxonomy'     => 'catalog',
 			'product_att_taxonomy' => 'product-attributes',
 			'product_pay_taxonomy' => 'fs-payment-methods',
-			'product_del_taxonomy' => 'fs-delivery-methods'
+			'product_del_taxonomy' => 'fs-delivery-methods',
+			'preloader'            => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif'
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
@@ -157,14 +158,47 @@ class FS_Config {
 			'fs_email'            => array( 'type' => 'email', 'label' => 'Ваш email', 'required' => true ),
 			'fs_first_name'       => array( 'type' => 'text', 'label' => 'Ваше имя', 'required' => true ),
 			'fs_last_name'        => array( 'type' => 'text', 'label' => 'Ваша фамилия', 'required' => true ),
-			'fs_phone'            => array( 'type' => 'tel', 'label' => 'Телефон', 'required' => true ),
-			'fs_city'             => array( 'type' => 'text', 'label' => 'Город', 'required' => true ),
-			'fs_adress'           => array( 'type' => 'text', 'label' => 'Адрес доставки', 'required' => false ),
-			'fs_home_num'         => array( 'type' => 'text', 'label' => 'Номер дома', 'required' => false ),
-			'fs_apartment_num'    => array( 'type' => 'text', 'label' => 'Номер квартиры', 'required' => false ),
-			'fs_delivery_number'  => array( 'type' => 'text', 'label' => 'Номер отделения', 'required' => false ),
-			'fs_delivery_methods' => array( 'type' => 'radio', 'label' => 'Способ доставки', 'required' => true ),
-			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты' ),
+			'fs_phone'            => array(
+				'type'      => 'tel',
+				'label'     => 'Телефон',
+				'required'  => true,
+				'save_meta' => 1
+			),
+			'fs_city'             => array( 'type'      => 'text',
+			                                'label'     => 'Город',
+			                                'required'  => true,
+			                                'save_meta' => 1
+			),
+			'fs_adress'           => array(
+				'type'      => 'text',
+				'label'     => 'Адрес доставки',
+				'required'  => false,
+				'save_meta' => 1
+			),
+			'fs_home_num'         => array(
+				'type'      => 'text',
+				'label'     => 'Номер дома',
+				'required'  => false,
+				'save_meta' => 1
+			),
+			'fs_apartment_num'    => array(
+				'type'      => 'text',
+				'label'     => 'Номер квартиры',
+				'required'  => false,
+				'save_meta' => 1
+			),
+			'fs_delivery_number'  => array(
+				'type'      => 'text',
+				'label'     => 'Номер отделения',
+				'required'  => false,
+				'save_meta' => 1
+			),
+			'fs_delivery_methods' => array( 'type'      => 'radio',
+			                                'label'     => 'Способ доставки',
+			                                'required'  => true,
+			                                'save_meta' => 1
+			),
+			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'save_meta' => 1 ),
 			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
 		);
 

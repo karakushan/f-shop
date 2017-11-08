@@ -17,22 +17,56 @@ class FS_Form_Class {
 	 */
 	function fs_form_field( $field_name, $args = array() ) {
 		global $fs_config;
+		$curent_user = wp_get_current_user();
+		//подставляем начальное значение в атрибут value интпута формы
+		$default_value = '';
+		$selected      = '';
+		if ( $curent_user->exists() ) {
+			switch ( $field_name ) {
+				case 'fs_email':
+					$default_value = $curent_user->user_email;
+					break;
+				case 'fs_first_name':
+					$default_value = $curent_user->first_name;
+					break;
+				case 'fs_last_name':
+					$default_value = $curent_user->last_name;
+					break;
+				case 'fs_phone':
+					$default_value = get_user_meta( $curent_user->ID, 'fs_phone', 1 );
+					break;
+				case 'fs_city':
+					$default_value = get_user_meta( $curent_user->ID, 'fs_city', 1 );
+					break;
+				case 'fs_adress':
+					$default_value = get_user_meta( $curent_user->ID, 'fs_adress', 1 );
+					break;
+				case 'fs_delivery_methods':
+					$selected = get_user_meta( $curent_user->ID, 'fs_delivery_methods', 1 );
+					break;
+				case 'fs_payment_methods':
+					$selected = get_user_meta( $curent_user->ID, 'fs_payment_methods', 1 );
+					break;
+
+			}
+		}
 		$default     = array(
-			'type'        => 'text',
-			'class'       => '',
-			'label_class' => 'fs-form-label',
-			'id'          => str_replace( array(
+			'type'         => 'text',
+			'class'        => '',
+			'label_class'  => 'fs-form-label',
+			'id'           => str_replace( array(
 				'[',
 				']'
 			), array( '_' ), $field_name ),
-			'required'    => false,
-			'title'       => __( 'this field is required', 'fast-shop' ),
-			'placeholder' => '',
-			'value'       => '',
-			'format'      => '%input% %label%',
-			'el'          => 'select',
-			'first_option'=>__('Select'),
-			'editor_args' => array(
+			'required'     => false,
+			'title'        => __( 'this field is required', 'fast-shop' ),
+			'placeholder'  => '',
+			'value'        => $default_value,
+			'selected'     => $selected,
+			'format'       => '%input% %label%',
+			'el'           => 'select',
+			'first_option' => __( 'Select' ),
+			'editor_args'  => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $field_name,
 				'tinymce'       => false,
@@ -49,12 +83,13 @@ class FS_Form_Class {
 
 		$required = ! empty( $args['required'] ) ? 'required' : '';
 		$field    = '';
+
 		switch ( $args['type'] ) {
 			case 'text':
 				$field = ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 				break;
 			case 'email':
-				$field = ' <input type="email" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
+				$field = ' <input type="email" name="' . $field_name . '" ' . $value . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '> ';
 				break;
 			case 'tel':
 				$field = ' <input type="tel" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
@@ -69,7 +104,7 @@ class FS_Form_Class {
 				$field = '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
 				break;
 			case 'button':
-				$field ='<button type="button" ' . $class . ' ' . $id . '>'.$args['value'].'</button>';
+				$field = '<button type="button" ' . $class . ' ' . $id . '>' . $args['value'] . '</button>';
 				break;
 			case 'pages':
 				$field = wp_dropdown_pages( array(
@@ -87,6 +122,7 @@ class FS_Form_Class {
 						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
+						'selected'        => $selected,
 						'class'           => $args['class'],
 						'echo'            => 0,
 						'taxonomy'        => $fs_config->data['product_pay_taxonomy']
@@ -99,8 +135,8 @@ class FS_Form_Class {
 					if ( $pay_methods ) {
 						foreach ( $pay_methods as $pay_method ) {
 							$field .= str_replace( array( '%input%', '%label%' ), array(
-								'<input type="radio" name="' . $field_name . '" value="' . $pay_method->term_id . '" class="' . $args['class'] . '" id="fs-del-' . $pay_method->term_id . '">',
-								'<label for="fs-del-' . $pay_method->term_id . '" class="' . $args['label_class'] . '">' . $pay_method->name . '</label>'
+								'<input type="radio" name="' . $field_name . '" value="' . $pay_method->term_id . '" class="' . $args['class'] . '" id="fs - del - ' . $pay_method->term_id . '">',
+								'<label for="fs - del - ' . $pay_method->term_id . '" class="' . $args['label_class'] . '">' . $pay_method->name . '</label>'
 							), $args['format'] );
 						}
 					}
@@ -113,6 +149,7 @@ class FS_Form_Class {
 						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
+						'selected'        => $selected,
 						'class'           => $args['class'],
 						'echo'            => 0,
 						'taxonomy'        => $fs_config->data['product_del_taxonomy']
@@ -125,8 +162,8 @@ class FS_Form_Class {
 					if ( $del_methods ) {
 						foreach ( $del_methods as $del_method ) {
 							$field .= str_replace( array( '%input%', '%label%' ), array(
-								'<input type="radio" name="' . $field_name . '" value="' . $del_method->term_id . '" class="' . $args['class'] . '" id="fs-del-' . $del_method->term_id . '">',
-								'<label for="fs-del-' . $del_method->term_id . '" class="' . $args['label_class'] . '">' . $del_method->name . '</label>'
+								'<input type="radio" name="' . $field_name . '" value="' . $del_method->term_id . '" class="' . $args['class'] . '" id="fs - del - ' . $del_method->term_id . '">',
+								'<label for="fs - del - ' . $del_method->term_id . '" class="' . $args['label_class'] . '">' . $del_method->name . '</label>'
 							), $args['format'] );
 						}
 					}

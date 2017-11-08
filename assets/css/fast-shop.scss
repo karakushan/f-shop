@@ -1,4 +1,23 @@
 @charset "UTF-8";
+
+//----- Variables
+// colors
+$c-red:#F8342D;
+$c-orange:#FF803A;
+$c-yellow:#FFF771;
+$c-green:#7EBB41;
+$c-green-light:#B2FF55;
+// error
+$error-bg:#ffdedd;
+$error-color:#333;
+$error-bd-color:#ffc6c4;
+// fonts
+$font-primary:Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+//---- Import
+@import "scss/modal";
+@import "scss/form";
+
 //----- Extends
 %clearfix:after {
     display: block;
@@ -371,7 +390,13 @@ li.fs-attr {
 }
 
 .form-header {
-    margin: 0 0 10px 0;
+    margin: 0 0 20px 0;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 18px;
+    letter-spacing: .025em;
+    color: #333;
 }
 
 .lSSlideOuter .lSPager.lSGallery img {
@@ -497,17 +522,30 @@ li.fs-attr {
     line-height: 1;
     text-align: center;
     border: 1px solid #a5d2f8;
-    a,a:hover,a:focus {
+    a, a:hover, a:focus {
         color: #337ab7;
         text-decoration: underline;
     }
     &.bg-danger {
-        background-color: #ff6767;
+        background-color: $error-bd-color;
+        border: 1px solid $error-bd-color;
+        color: #333333;
+        font-size: 13px;
+        font-family: $font-primary;
     }
     &.error {
         background: #ffbdbb;
         border: 1px solid #ff9692;
     }
+}
+.fs-form-title {
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+    font-family:$font-primary;
 }
 
 // форма редактирования профиля пользователя
@@ -621,7 +659,6 @@ li.fs-attr {
         bottom: -9px;
     }
 }
-
 .fs-atc-preloader {
     position: absolute;
     left: 0;
@@ -634,26 +671,9 @@ li.fs-attr {
     justify-content: center;
 }
 
-.fs-login{
-    position: fixed;
-    top: 20%;
-    width: 300px;
-    left: 50%;
-    margin-left: -150px;
-    background: #fff;
-    z-index: 5;
-    padding: 29px;
-}
-.fs-fade {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.80);
-    z-index: 999;
-}
+
+
+
 
 
 

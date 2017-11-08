@@ -1137,8 +1137,8 @@ function fs_get_current_user() {
 function fs_login_form( $echo = true, $args = array() ) {
 	$args = wp_parse_args( $args, array(
 		'name' => "fs-login",
-		'class' => "fs-login",
-		'id' => "fs-login"
+		'id' => "fs-login",
+		'title'=>__('Login','fast-shop')
 	) );
 	$template = fs_form_header( $args, 'fs_login' );
 	$template .= fs_frontend_template( 'auth/login' );

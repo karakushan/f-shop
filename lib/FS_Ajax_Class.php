@@ -111,12 +111,12 @@ class FS_Ajax_Class {
 
 		// устанавливаем заголовки
 		$headers[] = 'Content-type: text/html; charset=utf-8';
-		$headers[] = 'From: ' . fs_option( 'name_sender', get_bloginfo( 'name' ) ) . ' <' . fs_option( 'email_sender', get_bloginfo( 'admin_email' ) ) . '>';
 
 		// проверяем существование пользователя
 		if ( is_user_logged_in() ) {
 			$user    = wp_get_current_user();
 			$user_id = $user->ID;
+
 		} else {
 			// Если пользователь не залогинен пробуем его зарегистрировать
 			$new_user = register_new_user( $sanitize_field['fs_email'], $sanitize_field['fs_email'] );
@@ -128,14 +128,10 @@ class FS_Ajax_Class {
 					'last_name'  => $sanitize_field['fs_last_name'],
 					'role'       => FS_Config::getUsers( 'new_user_role' )
 				) );
-				foreach ( FS_Config::getFormFields() as $key => $user_meta ) {
-					if ( ! empty( $sanitize_field[ $key ] ) ) {
-						update_user_meta( $new_user, $key, $sanitize_field[ $key ] );
-					}
-				}
+
 			} else {
-				if ( $new_user->get_error_code() == 'email_exists' ) {
-					$error_text = 'Пользователь с таким E-mail зарегистрирован на сайте. <a href="#fs-modal-login" data-fs-action="modal">Войти на сайт</a>. <a href="'.wp_lostpassword_url( get_permalink() ).'">Забыли пароль?</a>';
+				if ( $new_user->get_error_code() == 'email_exists' || $new_user->get_error_code() == 'username_exists' ) {
+					$error_text = 'Пользователь с таким E-mail или Логином зарегистрирован на сайте. <a href="#fs-modal-login" data-fs-action="modal">Войти на сайт</a>. <a href="' . wp_lostpassword_url( get_permalink() ) . '">Забыли пароль?</a>';
 				} else {
 					$error_text = $new_user->get_error_message();
 				}
@@ -145,6 +141,15 @@ class FS_Ajax_Class {
 					'error_code' => $new_user->get_error_code()
 				) );
 				exit();
+			}
+		}
+
+		// обновляем мета поля пользователя
+		if ( $user_id ) {
+			foreach ( FS_Config::getFormFields() as $key => $user_meta ) {
+				if ( ! empty( $sanitize_field[ $key ] ) && ! empty( $user_meta['save_meta'] ) ) {
+					update_user_meta( $user_id, $key, $sanitize_field[ $key ] );
+				}
 			}
 		}
 

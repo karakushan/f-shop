@@ -256,6 +256,9 @@ jQuery(function (jQuery) {
                         jQuery('[data-fs-action="order-send"]').html('Отправлено');
                         if (jsonData.redirect != false) document.location.href = jsonData.redirect;
                     } else {
+                        if (jsonData.error_code != 'undefined') {
+                            console.log(jsonData.error_code);
+                        }
                         jQuery('[name="fs-order-send"] .fs-form-info').addClass('error').html(jsonData.text).fadeIn();
                         jQuery('[data-fs-action="order-send"]').html('Отправить');
                     }

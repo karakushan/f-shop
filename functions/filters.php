@@ -176,21 +176,26 @@ function add_views_sortable_column( $sortable_columns ) {
 /**
  *  возвращает тег формы и скрытые поля необходимые для безопасности
  *
- * @param array $attr массив атрибутов тега form
- *
+ * @param array $args
  * @param $ajax_action
  *
  * @return mixed|string|void
+ * @internal param array $attr массив атрибутов тега form
+ *
  */
 
-function fs_form_header( $attr = array(), $ajax_action ) {
-	$attr        = fs_parse_attr( $attr, array(
+function fs_form_header( $args = array(), $ajax_action ) {
+	$attr        = fs_parse_attr( $args, array(
 		'method'       => 'POST',
-		'autocomplete' => 'off'
+		'autocomplete' => 'off',
+		'class'        => 'fs-form'
 	) );
 	$form_header = '<form ' . $attr . '>';
 	$form_header .= \FS\FS_Config::nonce_field();
 	$form_header .= '<input type="hidden" name="action" value="' . $ajax_action . '">';
+	if ( ! empty( $args['title'] ) ) {
+		$form_header .= '<div class="fs-form-title">' . $args['title'] . '</div>';
+	}
 	$form_header .= '<p class="fs-form-info"></p>';
 
 	return $form_header;
@@ -237,13 +242,26 @@ function fs_footer_html() {
 	// выводим форму входа
 	if ( ! is_user_logged_in() ) {
 		echo '<div class="fs-fade fs-modal" id="fs-modal-login">';
-		fs_login_form( 1, array( 'class' => 'fs-login' ) );
+		fs_login_form( 1, array( 'title' => 'Вход на сайт' ) );
 		echo '</div>';
 	}
 
 }
 
 add_action( 'wp_footer', 'fs_footer_html' );
+
+// заменяет имя отправителя писем
+add_filter( 'wp_mail_from_name', 'fs_wp_mail_from_name' );
+function fs_wp_mail_from_name( $from_name ) {
+	return apply_filters( 'the_title', fs_option( 'name_sender', $from_name ) );
+}
+
+//  заменяет почту отправителя писем
+add_filter( 'wp_mail_from', 'fs_wp_mail_from' );
+function fs_wp_mail_from( $from_email ) {
+	$from_email = fs_option( 'manager_email', $from_email );
+	return $from_email;
+}
 
 
 
