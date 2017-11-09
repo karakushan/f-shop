@@ -26,7 +26,7 @@
   </tr>
   <tr>
     <th>Способ доставки</th>
-    <td><?php echo get_term_field( 'name', $delivery['method'], 'fs-delivery-methods' ) ?></td>
+    <td><?php echo apply_filters( 'the_title', get_term_field( 'name', $delivery['method'], 'fs-delivery-methods' ) ) ?></td>
   </tr>
   <tr>
     <th>Отделение службы доставки:</th>
@@ -38,7 +38,7 @@
   </tr>
   <tr>
     <th>Способ оплаты</th>
-    <td><?php echo get_term_field( 'name', $payment, 'fs-payment-methods' ) ?></td>
+    <td><?php echo apply_filters( 'the_title', get_term_field( 'name', $payment, 'fs-payment-methods' ) ) ?></td>
   </tr>
   <tr>
     <th>Комментарий к заказу</th>
