@@ -533,6 +533,7 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		'data-attr'         => json_encode( $attr['json'] ),
 		'data-success'      => $attr['success'],
 		'data-error'        => $attr['error'],
+		'data-image'        => esc_url(get_the_post_thumbnail_url($post_id)),
 		'class'             => $attr['class']
 	);
 	$html_atts = fs_parse_attr( array(), $attr_set );
@@ -1009,6 +1010,7 @@ function fs_wishlist_button( $post_id = 0, $args = array() ) {
 		'class'           => $args['class'],
 		'id'              => $args['id'],
 		'data-name'       => get_the_title( $post_id ),
+		'data-image'       => get_the_post_thumbnail_url( $post_id ),
 		'data-product-id' => $post_id,
 
 	) );

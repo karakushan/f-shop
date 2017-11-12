@@ -369,3 +369,71 @@ function fs_list_post_atts( $post_id = 0 ) {
 	}
 
 }
+
+/**
+ * возвращает термины поста (товара) отсортированные по родителю
+ *
+ * @param int $post_id
+ * @param $taxonomy
+ *
+ * @return array
+ */
+function fs_get_the_terms_group( $post_id = 0, $taxonomy ) {
+	$terms = get_the_terms( $post_id, $taxonomy );
+	if ( empty( $terms ) ) {
+		return array();
+	}
+	$group = array();
+	foreach ( $terms as $term ) {
+		$group[ $term->parent ][ $term->term_id ] = $term;
+	}
+
+	return $group;
+}
+
+/**
+ * Выводит поля для покупки товара с возможностью выбора атрибутов типа цвет, размер и т.д.
+ *
+ * @param int $product_id
+ * @param int $parent
+ * @param array $args
+ */
+function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) {
+
+	global $post, $fs_config;
+	if ( empty( $product_id ) ) {
+		$product_id = $post->ID;
+	}
+	$args  = wp_parse_args( $args, array(
+		'type'          => 'radio',
+		'wpapper'       => 'ul',
+		'wpapper_class' => 'fs-att-select'
+	) );
+	$terms = fs_get_the_terms_group( $product_id, $fs_config->data['product_att_taxonomy'] );
+
+	if ( empty( $terms[ $parent ] ) ) {
+		return;
+	}
+	printf( '<%s class="%s">', $args['wpapper'], sanitize_html_class( $args['wpapper_class'] ) );
+	switch ( $args['type'] ) {
+		case 'radio':
+			foreach ( $terms[ $parent ] as $term ) {
+				if ( $args['wpapper'] == 'ul' ) {
+					echo ' <li>';
+				} else {
+					echo ' <div>';
+				}
+				echo '<input type="radio" name="fs-group-' . $term->parent . '" data-action="change-attr" data-parent="' . $term->parent . '" data-product-id="' . $product_id . '" value="' . $term->term_id . '" id="fs-att-' . $term->term_id . '">
+                  <label for="fs-att-' . $term->term_id . '">' . $term->name . '</label>';
+				if ( $args['wpapper'] == 'ul' ) {
+					echo ' </li>';
+				} else {
+					echo ' </div>';
+				}
+			}
+
+			break;
+	}
+	printf( '</%s>', $args['wpapper'] );
+
+}

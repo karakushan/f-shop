@@ -107,117 +107,7 @@ jQuery(function (jQuery) {
         }
     });
 
-    //добавление товара в список желаний
-    jQuery('[data-fs-action="wishlist"]').on('click', function (event) {
-        event.preventDefault();
-        var product_id = jQuery(this).data('product-id');
-        var product_name = jQuery(this).data('name');
-        var curentBlock = jQuery(this);
-        jQuery.ajax({
-            url: FastShopData.ajaxurl,
-            data: {action: 'fs_addto_wishlist', product_id: product_id},
-            beforeSend: function () {
-                // генерируем событие добавления в список желаний
-                var before_to_wishlist = new CustomEvent("fs_before_to_wishlist", {
-                    detail: {id: product_id, name: product_name, button: curentBlock}
-                });
-                document.dispatchEvent(before_to_wishlist);
-            }
-        })
-            .done(function (result) {
-                var ajax_data = jQuery.parseJSON(result);
-                // генерируем событие добавления в список желаний
-                var add_to_wishlist = new CustomEvent("fs_add_to_wishlist", {
-                    detail: {id: product_id, name: product_name, button: curentBlock, ajax_data: ajax_data}
-                });
-                document.dispatchEvent(add_to_wishlist);
 
-            });
-    });
-
-    // изменяем атрибуты товара по изменению input radio
-    jQuery('[data-action="change-attr"]').on('change', function () {
-        var target = jQuery(this).data('target');
-        var productId = jQuery(this).data('product-id');
-        var attrObj = jQuery('#fs-atc-' + productId).data('attr');
-        jQuery(target).val(jQuery(this).val());
-        attrObj.terms = [];
-        var checked = true;
-        jQuery('[name="fs-attr"]').each(function (index) {
-            if (jQuery(this).val() != '') {
-                attrObj.terms[index] = jQuery(this).val();
-            } else {
-                checked = false;
-            }
-        });
-        jQuery('#fs-atc-' + productId).attr('data-attr', JSON.stringify(attrObj));
-        if (checked) {
-            jQuery('#fs-attr-change .fs-group-info').fadeIn().html('Теперь можно добавить в корзину!')
-        }
-
-    });
-
-    //добавление товара в корзину (сессию)
-    jQuery('[data-action=add-to-cart]').on('click', function (event) {
-        event.preventDefault();
-
-        // проверяем выбрал ли пользователь обязательные атибуты товара, например размер
-        var fsAttrReq = true;
-        jQuery('[name="fs-attr"]').each(function () {
-            if (jQuery(this).val() == '') {
-                fsAttrReq = false;
-                // создаём событие
-                var no_selected_attr = new CustomEvent("fs_no_selected_attr");
-                document.dispatchEvent(no_selected_attr);
-            }
-        });
-
-        if (!fsAttrReq) return fsAttrReq;
-
-        var curent = jQuery(this);
-        var product_id = curent.data('product-id');
-        var product_name = curent.data('product-name');
-        var attr = curent.data('attr');
-        // объект передаваемый в события
-        var detail = {
-            button: curent,
-            id: product_id,
-            name: product_name,
-            attr: attr,
-            success: true,
-            text: {
-                success: curent.data('success'),
-                error: curent.data('error')
-            }
-        }
-
-
-        var productObject = {
-            "action": 'add_to_cart',
-            "attr": attr,
-            'post_id': product_id
-        };
-        jQuery.ajax({
-            url: FastShopData.ajaxurl,
-            data: productObject,
-            beforeSend: function () {
-                // создаём событие
-                var before_add_product = new CustomEvent("fs_before_add_product", {
-                    detail: detail
-                });
-                document.dispatchEvent(before_add_product);
-                return before_add_product.success;
-            }
-        })
-            .done(function (result) {
-                // создаём событие
-                var add_to_cart = new CustomEvent("fs_add_to_cart", {
-                    detail: detail
-                });
-                document.dispatchEvent(add_to_cart);
-            });
-
-    });
 
 
 // валидация и отправка формы заказа
@@ -631,14 +521,18 @@ var addUrlParam = function (search, key, val) {
         // действие которое инициирует событие, здесь может быть любой ваш код
         var button = event.detail.button;
         button.find('.fs-wh-preloader').fadeOut();
-        button.find('.fs-wh-message').fadeIn();
-        setTimeout(function () {
-            button.find('.fs-wh-message').fadeOut();
-        }, 4000);
+        iziToast.show({
+            image: event.detail.image,
+            theme: 'light',
+            title: 'Успех!',
+            message: 'Товар &laquo;'+event.detail.name+'&raquo; добавлен в список желаний!',
+            position: 'topCenter',
+
+        });
         event.preventDefault();
     }, false);
 
-    // Событие срабатывает перед добавлением твоара в корзину
+    // Событие срабатывает перед добавлением товара в корзину
     document.addEventListener("fs_before_add_product", function (event) {
         // действие которое инициирует событие, здесь может быть любой ваш код
         var button = event.detail.button;
@@ -650,8 +544,16 @@ var addUrlParam = function (search, key, val) {
         // действие которое инициирует событие
         fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]')
         var button = event.detail.button;
+        iziToast.show({
+            image: event.detail.image,
+            theme: 'light',
+            title: 'Успех!',
+            message: 'Товар &laquo;'+event.detail.name+'&raquo; добавлен в корзину!',
+            position: 'topCenter',
+
+        });
         button.find('.fs-atc-preloader').fadeOut();
-        button.find('.fs-atc-info').fadeIn().html(event.detail.text.success);
+        // button.find('.fs-atc-info').fadeIn().html(event.detail.text.success);
         setTimeout(function () {
             button.find('.fs-atc-info').fadeOut();
         }, 4000)

@@ -1,5 +1,5 @@
 /**
- * Created by karak on 08.10.2016.
+ * функция транслитерации
  */
 function fs_transliteration(text){
 // Символ, на который будут заменяться все спецсимволы
@@ -48,3 +48,4 @@ function TrimStr(s) {
     s = s.replace(/^-/, '');
     return s.replace(/-$/, '');
 }
+

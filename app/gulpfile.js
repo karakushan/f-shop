@@ -3,7 +3,13 @@ var gulp = require('gulp'),
     pump = require('pump'),
     concat = require('gulp-concat');
 
-var jsFiles=['./js/modal.js'];
+var jsFiles = [
+    './js/fs-library.js',
+    './js/modal.js',
+    './js/attributes.js',
+    './js/add-to-cart.js',
+    './js/wishlist.js',
+];
 
 // объединение скриптов
 gulp.task('concat', function () {
@@ -30,4 +36,4 @@ gulp.task('watch', function () {
 });
 
 // этот таск запускается автоматом при вводе команды gulp
-gulp.task('default', ['concat','compress', 'watch']);
+gulp.task('default', ['concat', 'compress', 'watch']);
