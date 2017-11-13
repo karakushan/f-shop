@@ -57,6 +57,8 @@ class FS_Action_Class {
 		add_action( 'fs_types_sort_filter', 'fs_types_sort_filter', 10, 1 );
 		/* выводит select для указания к-ва выводимых постов на странице (обычно применяется в каталоге или на страницах категорий) */
 		add_action( 'fs_per_page_filter', 'fs_per_page_filter', 10, 2 );
+		/*выводит список группы свойств и сортирует при выборе свойства*/
+		add_action('fs_attr_filter','fs_attr_filter',10,2);
 
 		//===== ATTRIBUTES =====
 		/* выводит фильтр для сортировки по атрибутам */
@@ -101,6 +103,7 @@ class FS_Action_Class {
 		add_action( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info_show' ), 10 );
 		/* Выводит форму редактирования профиля */
 		add_action( 'fs_profile_edit', array( 'FS\FS_Users_Class', 'profile_edit' ), 10, 1 );
+
 		//===== COMPARISON LIST ====
 		add_action( 'fs_add_to_comparison', 'fs_add_to_comparison', 10, 3 );
 
