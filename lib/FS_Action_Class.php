@@ -59,6 +59,8 @@ class FS_Action_Class {
 		add_action( 'fs_per_page_filter', 'fs_per_page_filter', 10, 2 );
 		/*выводит список группы свойств и сортирует при выборе свойства*/
 		add_action('fs_attr_filter','fs_attr_filter',10,2);
+		/*выводит фильтр для сортировки по диапазону цены (слайдер цены)*/
+		add_action('fs_range_slider','fs_range_slider',10);
 
 		//===== ATTRIBUTES =====
 		/* выводит фильтр для сортировки по атрибутам */

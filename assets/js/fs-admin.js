@@ -1,19 +1,3 @@
-// проверяет является ли переменная числом
-function isNumeric(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
-// проверяет является ли строка JSON объектом
-function IsJsonString(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        console.log(str);
-        return false;
-    }
-    return true;
-}
-
 jQuery(function ($) {
     // тип атрибута в редкатировании атрибутов
     $(".fs-color-select").spectrum({
@@ -67,7 +51,7 @@ jQuery(function ($) {
             $(button).next().val(attachment.id);
             $(button).prev().css({
                 'background-image': 'url(' + attachment.url + ')'
-            });
+            }).removeClass('hidden');
             $(button).text('изменить изображение');
             wp.media.editor.send.attachment = send_attachment_bkp;
             button.parents('.fs-fields-container').find('.delete_file').fadeIn(400);
@@ -80,7 +64,7 @@ jQuery(function ($) {
             $(this).parents('.fs-fields-container').find('input').val('');
             $(this).parents('.fs-fields-container').find('.fs-selected-image').css({
                 'background-image': 'none'
-            });
+            }).addClass('hidden');
             $(this).parents('.fs-fields-container').find('.select_file').text('выбрать изображение');
             $(this).fadeOut(400);
 

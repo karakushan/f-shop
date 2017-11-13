@@ -121,6 +121,7 @@ div#fs_select_image {
 
     border: 1px solid #fed6e2;
 }
+
 .fast-shop-settings .ui-tabs.ui-tabs-vertical .ui-tabs-panel {
     float: left;
     width: 47em;
@@ -241,18 +242,16 @@ td.fs_price.column-fs_price span span {
 
 .fs-selected-image {
     position: relative;
-
     width: 260px;
     max-width: 100%;
     height: 179px;
     margin: 0 0 10px 0;
-
-    border: 1px solid #b4b9be;
     border-radius: 2px;
     background: #fcfcfc;
     background-position: center center;
-    background-size: cover;
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
+    box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.07058823529411765);
 }
 
 .delete-image {
@@ -269,57 +268,41 @@ td.fs_price.column-fs_price span span {
 }
 
 .select_file {
-    font-size: 12px;
-
+    font-size: 14px;
     display: block;
-
     width: 262px;
     max-width: 100%;
     margin: 0 0 8px 0;
     padding: 8px 27px;
-
     letter-spacing: .05em;
     text-transform: uppercase;
-
     color: #fff;
-    border: 1px solid #0097db;
-    /* height: 31px; */
-    border-radius: 2px;
-    background: #03a9f4;
-    box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, .36);
+    background: #0073aa;
+    border: none;
+    outline: none;
+    &:hover {
+        cursor: pointer;
+        background: darken(#0073aa, 8%);
+    }
 }
 
 .delete_file {
-    font-size: 12px;
-
+    outline: none;
+    border: none;
+    font-size: 14px;
     display: block;
-
     min-width: 262px;
     margin: 0 0 15px 0;
     padding: 8px 27px;
-
     letter-spacing: .05em;
     text-transform: uppercase;
-
     color: #fff;
     border: 1px solid #ff4584;
-    border-radius: 2px;
-    background: #ff4c89;
-    box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, .36);
-}
-
-.delete_file:hover {
-    cursor: pointer;
-
-    background: #e91e63;
-    box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, .36);
-}
-
-.select_file:hover {
-    cursor: pointer;
-
-    background: #0085ba;
-    box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, .36);
+    background: #ff5b5b;
+    &:hover {
+        cursor: pointer;
+        background: darken(#ff5b5b, 8%);
+    }
 }
 
 .fs-att-values {

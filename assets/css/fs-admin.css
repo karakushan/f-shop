@@ -186,12 +186,12 @@ td.fs_price.column-fs_price span span {
   max-width: 100%;
   height: 179px;
   margin: 0 0 10px 0;
-  border: 1px solid #b4b9be;
   border-radius: 2px;
   background: #fcfcfc;
   background-position: center center;
-  background-size: cover;
-  background-size: cover; }
+  background-size: contain;
+  background-repeat: no-repeat;
+  box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.0705882353); }
 
 .delete-image {
   line-height: 1;
@@ -203,7 +203,7 @@ td.fs_price.column-fs_price span span {
   background: #fff; }
 
 .select_file {
-  font-size: 12px;
+  font-size: 14px;
   display: block;
   width: 262px;
   max-width: 100%;
@@ -212,14 +212,17 @@ td.fs_price.column-fs_price span span {
   letter-spacing: .05em;
   text-transform: uppercase;
   color: #fff;
-  border: 1px solid #0097db;
-  /* height: 31px; */
-  border-radius: 2px;
-  background: #03a9f4;
-  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.36); }
+  background: #0073aa;
+  border: none;
+  outline: none; }
+  .select_file:hover {
+    cursor: pointer;
+    background: #005781; }
 
 .delete_file {
-  font-size: 12px;
+  outline: none;
+  border: none;
+  font-size: 14px;
   display: block;
   min-width: 262px;
   margin: 0 0 15px 0;
@@ -228,19 +231,10 @@ td.fs_price.column-fs_price span span {
   text-transform: uppercase;
   color: #fff;
   border: 1px solid #ff4584;
-  border-radius: 2px;
-  background: #ff4c89;
-  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.36); }
-
-.delete_file:hover {
-  cursor: pointer;
-  background: #e91e63;
-  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.36); }
-
-.select_file:hover {
-  cursor: pointer;
-  background: #0085ba;
-  box-shadow: 2px 3px 8px 0 rgba(0, 0, 0, 0.36); }
+  background: #ff5b5b; }
+  .delete_file:hover {
+    cursor: pointer;
+    background: #ff3232; }
 
 .fs-att-values {
   display: none; }

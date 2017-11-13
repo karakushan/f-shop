@@ -49,3 +49,19 @@ function TrimStr(s) {
     return s.replace(/-$/, '');
 }
 
+// проверяет является ли переменная числом
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// проверяет является ли строка JSON объектом
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        console.log(str);
+        return false;
+    }
+    return true;
+}
+

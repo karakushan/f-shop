@@ -79,6 +79,10 @@ class FS_Init {
 	}
 
 	public function fast_shop_admin_scripts() {
+		//!!! не удалять, необходимо для работы загрузчика изображений
+		if ( ! did_action( 'wp_enqueue_media' ) ) {
+			wp_enqueue_media();
+		}
 		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'font-bebas', $this->config->data['plugin_url'] . 'assets/fonts/BebasNeueBold/styles.css' );
 		wp_enqueue_style( 'spectrum', $this->config->data['plugin_url'] . 'assets/css/spectrum.css' );
@@ -95,10 +99,11 @@ class FS_Init {
 			wp_enqueue_script( 'fs-quick-edit', $this->config->data['plugin_url'] . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
 		}
 
+
 		wp_enqueue_script( 'fs-admin', $this->config->data['plugin_url'] . 'assets/js/fs-admin.js', array(
 			'jquery',
-			'fs-library',
-			'js-cookie'
+			'js-cookie',
+			'f-shop'
 		), null, true );
 
 		// подключаем стили и скрипты текущей темы админки
