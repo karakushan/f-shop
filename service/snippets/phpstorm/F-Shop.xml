@@ -1,0 +1,17 @@
+<templateSet group="F-Shop">
+  <template name="fs_product_quantity" value="&lt;?php do_action( 'fs_quantity_product', 0, array(&#10;&#9;&#9;&#9;&#9;  'position'      =&gt; '%pluss% %input% %minus%', // позиция элементов&#10;&#9;&#9;&#9;&#9;  'wrapper'       =&gt; 'div',// html элемент обёртки&#10;&#9;&#9;&#9;&#9;  'wrapper_class' =&gt; 'fs-qty-wrap', // html class элемента обёртки&#10;&#9;&#9;&#9;&#9;  'pluss_class'   =&gt; 'fs-pluss', // html class кнопки увеличения к-ва&#10;&#9;&#9;&#9;&#9;  'pluss_content' =&gt; '+', // внутреннее содержимое кнопки увеличения к-ва&#10;&#9;&#9;&#9;&#9;  'minus_class'   =&gt; 'fs-minus',// html class кнопки уменьшения к-ва&#10;&#9;&#9;&#9;&#9;  'minus_content' =&gt; '-',// внутреннее содержимое кнопки уменьшения к-ва&#10;&#9;&#9;&#9;&#9;  'input_class'   =&gt; 'fs-quantity',// html class поля типа input&#10;&#9;&#9;&#9;&#9;  'echo'          =&gt; true // выводить или возвращать (актуально если использоввать не хук do_action() а функцию fs_quantity_product()&#10;&#9;&#9;&#9;&#9;  ) &#10;&#9;&#9;&#9;&#9;); ?&gt;" description="" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="HTML" value="true" />
+    </context>
+  </template>
+  <template name="fs_cart_quantity" value="&lt;?php do_action( 'fs_cart_quantity', 0, $c['count'], array(&#10;&#9;                    'wrapper_class' =&gt; 'fs-qty-wrapper',&#10;&#9;                    'position'      =&gt; '%pluss% %input% %minus%',&#10;&#9;                    'pluss'         =&gt; array( 'class' =&gt; 'fs-pluss', 'content' =&gt; '+' ),&#10;&#9;                    'minus'         =&gt; array( 'class' =&gt; 'fs-minus', 'content' =&gt; '-' ),&#10;&#9;                    'input'         =&gt; array( 'class' =&gt; 'fs-cart-quantity' )&#10;                    ) ) ?&gt;" description="" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="HTML" value="true" />
+    </context>
+  </template>
+  <template name="fs_cart_clean" value="&lt;?php do_action( 'fs_delete_cart', array(&#10;&#9;&#9;              'text'  =&gt; __( 'Remove all items', 'fast-shop' ), // текст внутри HTML элемента&#10;&#9;&#9;              'class' =&gt; 'fs-delete-cart', // класс HTML элемента&#10;&#9;&#9;              'type'  =&gt; 'button'// тип HTML элемента&#10;&#9;              ) ) ?&gt;" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="HTML" value="true" />
+    </context>
+  </template>
+</templateSet>

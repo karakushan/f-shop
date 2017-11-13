@@ -407,9 +407,18 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 	$args  = wp_parse_args( $args, array(
 		'type'          => 'radio',
 		'wpapper'       => 'ul',
-		'wpapper_class' => 'fs-att-select'
+		'wpapper_class' => 'fs-att-select-w',
+		'class'         => 'fs-att-select'
 	) );
 	$terms = fs_get_the_terms_group( $product_id, $fs_config->data['product_att_taxonomy'] );
+
+	$tag_att = fs_parse_attr( array(
+		'class'           => $args['class'],
+		'name'            => 'fs-group-' . $parent,
+		'data-action'     => 'change-attr',
+		'data-parent'     => $parent,
+		'data-product-id' => $product_id
+	) );
 
 	if ( empty( $terms[ $parent ] ) ) {
 		return;
@@ -420,18 +429,25 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 			foreach ( $terms[ $parent ] as $term ) {
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' <li>';
-				} else {
+				} elseif ( 'div' ) {
 					echo ' <div>';
 				}
 				echo '<input type="radio" name="fs-group-' . $term->parent . '" data-action="change-attr" data-parent="' . $term->parent . '" data-product-id="' . $product_id . '" value="' . $term->term_id . '" id="fs-att-' . $term->term_id . '">
                   <label for="fs-att-' . $term->term_id . '">' . $term->name . '</label>';
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' </li>';
-				} else {
+				} elseif ( 'div' ) {
 					echo ' </div>';
 				}
 			}
 
+			break;
+		case'select':
+			echo '<select ' . $tag_att . '>';
+			foreach ( $terms[ $parent ] as $term ) {
+				echo '<option value="' . $term->term_id . '">' . $term->name . '</option>';
+			}
+			echo '</select>';
 			break;
 	}
 	printf( '</%s>', $args['wpapper'] );
