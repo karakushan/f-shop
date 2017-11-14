@@ -150,10 +150,15 @@ function fs_types_sort_filter( $attr = array() ) {
 		)
 	);
 
-	$attr = fs_parse_attr( $attr );
+	$attr = fs_parse_attr( $attr, array(
+		'class'          => 'fs-types-sort-filter',
+		'id'             => 'fs-types-sort-filter',
+		'name'           => 'order_type',
+		'data-fs-action' => 'filter'
+	) );
 
 	if ( $order_types ) {
-		$filter .= '<select name="order_type" data-fs-action="filter" ' . $attr . '>';
+		$filter .= '<select  ' . $attr.'>';
 
 		foreach ( $order_types as $key => $order_type ) {
 			if ( isset( $_GET['order_type'] ) ) {
