@@ -20,26 +20,10 @@ class FS_Images_Class {
 
 	function __construct() {
 		$this->config = new FS_Config();
-		// хук для регистрации размеров изображений для галереи
-		add_action( 'init', array( $this, 'register_product_g_thumbnail' ) );
-		//  получаем зарегистрированные размеры изобраений
-		$this->image_big_width    = fs_option( 'gallery_big_width', $this->image_big_width );
-		$this->image_big_height   = fs_option( 'gallery_big_height', $this->image_big_height );
-		$this->image_small_width  = fs_option( 'gallery_small_width', $this->image_small_width );
-		$this->image_small_height = fs_option( 'gallery_small_height', $this->image_small_height );
-	}
-
-	public function register_product_g_thumbnail() {
-		if ( function_exists( 'add_image_size' ) ) {
-			//  регистрируем два типа изображений: большое - и маленькое слайдера
-			add_image_size( $this->image_big_name, $this->image_big_width, $this->image_big_height, $this->image_crop );
-			add_image_size( $this->image_small_name, $this->image_small_width, $this->image_small_height, $this->image_crop );
-		}
 	}
 
 	/**
 	 * @param int $post_id
-	 * @param array $size
 	 *
 	 * @return bool|string
 	 */
