@@ -158,7 +158,7 @@ function fs_types_sort_filter( $attr = array() ) {
 	) );
 
 	if ( $order_types ) {
-		$filter .= '<select  ' . $attr.'>';
+		$filter .= '<select  ' . $attr . '>';
 
 		foreach ( $order_types as $key => $order_type ) {
 			if ( isset( $_GET['order_type'] ) ) {
@@ -437,20 +437,84 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 				} elseif ( 'div' ) {
 					echo ' <div>';
 				}
-				echo '<input type="radio" name="fs-group-' . $term->parent . '" data-action="change-attr" data-parent="' . $term->parent . '" data-product-id="' . $product_id . '" value="' . $term->term_id . '" id="fs-att-' . $term->term_id . '">
-                  <label for="fs-att-' . $term->term_id . '">' . $term->name . '</label>';
+				echo '<input type="radio" ' . $tag_att . '    value="' . esc_attr( $term->term_id ) . '" id="fs-att-' . esc_attr( $term->term_id ) . '">
+                  <label for="fs-att-' . esc_attr( $term->term_id ) . '">' . esc_html( $term->name ) . '</label>';
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' </li>';
 				} elseif ( 'div' ) {
 					echo ' </div>';
 				}
 			}
-
 			break;
 		case'select':
 			echo '<select ' . $tag_att . '>';
 			foreach ( $terms[ $parent ] as $term ) {
 				echo '<option value="' . $term->term_id . '">' . $term->name . '</option>';
+			}
+			echo '</select>';
+			break;
+	}
+	printf( '</%s>', $args['wpapper'] );
+
+}
+
+/**
+ * Выводит поля для покупки товара с возможностью выбора атрибутов типа цвет, размер и т.д.
+ * по предназначению похожа на функцию fs_product_att_select, с отличием того что
+ * можно задавать только собственные атрибуты, не из таксономии свойств товара
+ *
+ * @param int $product_id
+ * @param array $custom_attributes собственные атрибуты
+ * @param array $args
+ *
+ * @internal param int $parent
+ */
+function fs_custom_att_select( $product_id = 0, $custom_attributes = array(), $args = array() ) {
+
+	global $post, $fs_config;
+	if ( empty( $product_id ) ) {
+		$product_id = $post->ID;
+	}
+	$args  = wp_parse_args( $args, array(
+		'type'          => 'radio',
+		'wpapper'       => 'ul',
+		'wpapper_class' => 'fs-att-select-w',
+		'class'         => 'fs-att-select'
+	) );
+	$terms = fs_get_the_terms_group( $product_id, $fs_config->data['product_att_taxonomy'] );
+
+	$tag_att = fs_parse_attr( array(
+		'class'           => $args['class'],
+		'name'            => 'fs-group',
+		'data-action'     => 'change-attr',
+		'data-product-id' => $product_id
+	) );
+
+	if ( empty( $custom_attributes ) ) {
+		return;
+	}
+	printf( '<%s class="%s">', $args['wpapper'], sanitize_html_class( $args['wpapper_class'] ) );
+	switch ( $args['type'] ) {
+		case 'radio':
+			foreach ( $custom_attributes as $key=>$term ) {
+				if ( $args['wpapper'] == 'ul' ) {
+					echo ' <li>';
+				} elseif ( 'div' ) {
+					echo ' <div>';
+				}
+				echo '<input type="radio" ' . $tag_att . '    value="' . esc_attr( $term ) . '" id="fs-att-' . esc_attr($key) . '">
+                  <label for="fs-att-' . esc_attr( $key ) . '">' . esc_html( $term) . '</label>';
+				if ( $args['wpapper'] == 'ul' ) {
+					echo ' </li>';
+				} elseif ( 'div' ) {
+					echo ' </div>';
+				}
+			}
+			break;
+		case'select':
+			echo '<select ' . $tag_att . '>';
+			foreach ( $custom_attributes as $key=>$term ) {
+				echo '<option value="' . $term . '">' . $term . '</option>';
 			}
 			echo '</select>';
 			break;

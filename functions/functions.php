@@ -1441,6 +1441,14 @@ function fs_wishlist_count() {
 	}
 }
 
+
+/**
+ * выводит ссылку на список желаний
+ */
+function fs_wishlist_link(){
+	the_permalink(fs_option('page_whishlist'));
+}
+
 /**
  * отображает список желаний
  *
