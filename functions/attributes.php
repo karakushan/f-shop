@@ -1,6 +1,9 @@
 <?php
 /**
  * Возвращает массив атрибутов конкретного товара
+ *
+ * @param int $product_id
+ *
  * @return array массив атрибутов
  */
 function fs_get_attributes_group( $product_id = 0 ) {
@@ -29,6 +32,11 @@ function fs_get_attributes_group( $product_id = 0 ) {
 
 /**
  * получает заданное свойство товара с вложенными свойтвами
+ *
+ * @param $attr_id
+ * @param int $product_id
+ * @param array $args
+ *
  * @return array
  */
 function fs_get_attribute( $attr_id, $product_id = 0, $args = array() ) {
@@ -65,7 +73,7 @@ function fs_get_attribute( $attr_id, $product_id = 0, $args = array() ) {
  *
  * @param $parent_term_id
  *
- * @return массив объектов поста
+ * @return array массив объектов поста
  */
 function fs_current_screen_attributes( $parent_term_id ) {
 	global $wp_query;
@@ -123,9 +131,9 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
 /**
  * выводит фильтр сортировки по разным параметрам
  *
- * @param  [type] $attr          дополниетльные атрибуты html тега
+ * @param array $attr          дополниетльные атрибуты html тега
  *
- * @return [type]               выводит html элемент типа select
+ * @return string              выводит html элемент типа select
  */
 function fs_types_sort_filter( $attr = array() ) {
 	$filter      = '';
@@ -175,6 +183,7 @@ function fs_types_sort_filter( $attr = array() ) {
 	}
 
 	echo $filter;
+	return;
 }
 
 // селект фильтр для фильтрования товаров по наличию
@@ -207,7 +216,9 @@ function fs_aviable_select_filter( $first_option = 'сделайте выбор'
 /**
  * @param array $interval массив содержащий  интервалы выводимых товаров на странице
  *
- * @return  выводит переключатель к-ва товаров
+ * @param array $attr
+ *
+ * @return string выводит переключатель к-ва товаров
  */
 function fs_per_page_filter( $interval = array(), $attr = array() ) {
 	$filters = new FS\FS_Filters;
@@ -216,6 +227,7 @@ function fs_per_page_filter( $interval = array(), $attr = array() ) {
 	}
 	$page_filter = $filters->posts_per_page_filter( $interval, $attr );
 	echo $page_filter;
+	return;
 }
 
 /**
@@ -471,18 +483,16 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
  */
 function fs_custom_att_select( $product_id = 0, $custom_attributes = array(), $args = array() ) {
 
-	global $post, $fs_config;
+	global $post;
 	if ( empty( $product_id ) ) {
 		$product_id = $post->ID;
 	}
-	$args  = wp_parse_args( $args, array(
+	$args    = wp_parse_args( $args, array(
 		'type'          => 'radio',
 		'wpapper'       => 'ul',
 		'wpapper_class' => 'fs-att-select-w',
 		'class'         => 'fs-att-select'
 	) );
-	$terms = fs_get_the_terms_group( $product_id, $fs_config->data['product_att_taxonomy'] );
-
 	$tag_att = fs_parse_attr( array(
 		'class'           => $args['class'],
 		'name'            => 'fs-group',
@@ -496,14 +506,14 @@ function fs_custom_att_select( $product_id = 0, $custom_attributes = array(), $a
 	printf( '<%s class="%s">', $args['wpapper'], sanitize_html_class( $args['wpapper_class'] ) );
 	switch ( $args['type'] ) {
 		case 'radio':
-			foreach ( $custom_attributes as $key=>$term ) {
+			foreach ( $custom_attributes as $key => $term ) {
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' <li>';
 				} elseif ( 'div' ) {
 					echo ' <div>';
 				}
-				echo '<input type="radio" ' . $tag_att . '    value="' . esc_attr( $term ) . '" id="fs-att-' . esc_attr($key) . '">
-                  <label for="fs-att-' . esc_attr( $key ) . '">' . esc_html( $term) . '</label>';
+				echo '<input type="radio" ' . $tag_att . '    value="' . esc_attr( $term ) . '" id="fs-att-' . esc_attr( $key ) . '">
+                  <label for="fs-att-' . esc_attr( $key ) . '">' . esc_html( $term ) . '</label>';
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' </li>';
 				} elseif ( 'div' ) {
@@ -513,12 +523,13 @@ function fs_custom_att_select( $product_id = 0, $custom_attributes = array(), $a
 			break;
 		case'select':
 			echo '<select ' . $tag_att . '>';
-			foreach ( $custom_attributes as $key=>$term ) {
-				echo '<option value="' . $term . '">' . $term . '</option>';
+			foreach ( $custom_attributes as $key => $term ) {
+				echo '<option value="' . esc_html( $term ) . '">' . esc_html( $term ) . '</option>';
 			}
 			echo '</select>';
 			break;
 	}
 	printf( '</%s>', $args['wpapper'] );
 
+	return;
 }
