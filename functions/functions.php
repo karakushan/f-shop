@@ -480,14 +480,14 @@ function fs_product_count( $products = array(), $echo = true ) {
  */
 function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = array() ) {
 	global $post;
-	$args    = wp_parse_args( $args, array(
+	$args         = wp_parse_args( $args, array(
 		'echo' => true
 	) );
-	$config  = new \FS\FS_Config();
-	$post_id = empty( $post_id ) ? $post->ID : $post_id;
-	$price   = get_post_meta( $post_id, $config->meta['price'], 1 );
-	$action_price   = get_post_meta( $post_id, $config->meta['action_price'], 1 );
-	if ( $price == fs_get_price( $post_id ) || empty($action_price)) {
+	$config       = new \FS\FS_Config();
+	$post_id      = empty( $post_id ) ? $post->ID : $post_id;
+	$price        = get_post_meta( $post_id, $config->meta['price'], 1 );
+	$action_price = get_post_meta( $post_id, $config->meta['action_price'], 1 );
+	if ( $price == fs_get_price( $post_id ) || empty( $action_price ) ) {
 		return;
 	}
 	$price    = empty( $price ) ? 0 : (float) $price;
@@ -533,7 +533,7 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		'data-attr'         => json_encode( $attr['json'] ),
 		'data-success'      => $attr['success'],
 		'data-error'        => $attr['error'],
-		'data-image'        => esc_url(get_the_post_thumbnail_url($post_id)),
+		'data-image'        => esc_url( get_the_post_thumbnail_url( $post_id ) ),
 		'class'             => $attr['class']
 	);
 	$html_atts = fs_parse_attr( array(), $attr_set );
@@ -1010,7 +1010,7 @@ function fs_wishlist_button( $post_id = 0, $args = array() ) {
 		'class'           => $args['class'],
 		'id'              => $args['id'],
 		'data-name'       => get_the_title( $post_id ),
-		'data-image'       => get_the_post_thumbnail_url( $post_id ),
+		'data-image'      => get_the_post_thumbnail_url( $post_id ),
 		'data-product-id' => $post_id,
 
 	) );
@@ -1138,10 +1138,10 @@ function fs_get_current_user() {
  * @return mixed|void
  */
 function fs_login_form( $echo = true, $args = array() ) {
-	$args = wp_parse_args( $args, array(
-		'name' => "fs-login",
-		'id' => "fs-login",
-		'title'=>__('Login','fast-shop')
+	$args     = wp_parse_args( $args, array(
+		'name'  => "fs-login",
+		'id'    => "fs-login",
+		'title' => __( 'Login', 'fast-shop' )
 	) );
 	$template = fs_form_header( $args, 'fs_login' );
 	$template .= fs_frontend_template( 'auth/login' );
@@ -1445,8 +1445,8 @@ function fs_wishlist_count() {
 /**
  * выводит ссылку на список желаний
  */
-function fs_wishlist_link(){
-	the_permalink(fs_option('page_whishlist'));
+function fs_wishlist_link() {
+	the_permalink( fs_option( 'page_whishlist' ) );
 }
 
 /**
@@ -1688,5 +1688,23 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
 		return $image;
 	}
 
+}
+
+/**
+ * Создаёт ссылку для отфильтровки товаров по параметрам в каталоге
+ *
+ * @param null $filter
+ * @param string $order
+ * @param string $catalog_link
+ */
+function fs_filter_link( $filter = null, $order = 'date_desc', $catalog_link = '/product/' ) {
+	$query['fs_filter'] = wp_create_nonce( 'fast-shop' );
+	if ( ! empty( $order ) ) {
+		$query['order_type'] = $order;
+	}
+	if ( ! empty( $filter ) ) {
+		$query['order_type'] = $filter;
+	}
+	echo esc_url( add_query_arg( $query, $catalog_link ) );
 }
 

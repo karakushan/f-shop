@@ -146,13 +146,6 @@ class FS_Filters {
 					$orderby[] = 'date';
 					$order     = 'ASC';
 					break;
-				case 'field_action': //сортируем по наличию акции
-					$meta_query['action_price'] = array(
-						'key'     => $config->meta['action_price'],
-						'compare' => '!=',
-						'value'   => ''
-					);
-					break;
 
 
 			}
@@ -187,6 +180,13 @@ class FS_Filters {
 
 					);
 					break;
+				/*case 'field_action': //сортируем по наличию акции
+					$meta_query['action_price'] = array(
+						'key'     => $config->meta['action_price'],
+						'compare' => '!=',
+						'value'   => ''
+					);
+					break;*/
 			}
 		}
 
