@@ -22,10 +22,8 @@ body {
 
 @import url(../fonts/caviardreams/stylesheet.css);
 .fs-metabox {
-    width: 1400px;
+    width: 100%;
     margin: 0 auto;
-    font-family: 'Caviar Dreams';
-    font-size: 18px;
     color: #444;
     font-weight: 400;
     letter-spacing: .025em;
@@ -35,11 +33,10 @@ body {
         max-width: 100%;
     }
     ul {
-        width: 25%;
+        width: 20%;
         float: left;
         padding: 0;
         margin: 0;
-        max-width: 300px;
         @media screen and (max-width: 768px) {
             width: 100%;
             max-width: 100%;
@@ -51,9 +48,8 @@ body {
             &.fs-link-active {
 
                 a {
-                    background-color: #666666;
+                    background-color: #23282d;
                     color: #fff;
-                    font-weight: bold;
                     padding-left: 25px;
                 }
                 &:before {
@@ -61,7 +57,7 @@ body {
                     position: absolute;
                     width: 4px;
                     height: 100%;
-                    background-color: #fe0000;
+                    background-color: #389eff;
                 }
 
             }
@@ -70,15 +66,19 @@ body {
                 background-color: #cccccc;
                 display: block;
                 text-decoration: none;
-                font-size: 18px;
+                font-size: 1.2em;
                 letter-spacing: .025em;
                 color: #444;
-                transition: padding .2s;
+                -webkit-transition: all .4s;
+                -moz-transition: all .4s;
+                -ms-transition: all .4s;
+                -o-transition: all .4s;
+                transition: all .4s;
             }
         }
     }
     .fs-tabs {
-        width: 75%;
+        width: 80%;
         float: left;
         @media screen and (max-width: 768px) {
             width: 100%;
@@ -88,29 +88,21 @@ body {
             display: none;
             min-height: 178px;
             margin-left: 2px;
-            padding: 18px;
-            background-color: #fff;
+            padding: 29px 41px;
+            background-color: #f6f6f6;
             width: 100%;
-            border: 1px solid #ccc;
+            border: 1px solid #eaeaea;
             @media screen and (max-width: 768px) {
                 margin: 0;
             }
 
             h3 {
                 margin: 0 0 10px 0;
-                font-weight: bold;
-                font-size: 23px;
-                color: #444;
             }
             h4 {
                 margin: 0 0 2px 0;
             }
-            p {
-                font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-                font-style: italic;
-                color: #666;
-                font-size: 14px;
-            }
+
             .fs-help {
                 font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
                 font-style: normal;
@@ -138,15 +130,23 @@ body {
                 }
             }
             button {
-                height: 34px;
-                padding: 0 15px;
-                background: #666;
+                height: 2.35em;
+                padding: 0 22px;
+                background: #389eff;
                 color: #fff;
                 border: none;
-                font-family: 'Caviar Dreams';
-                font-size: 18px;
                 letter-spacing: .025em;
-                font-size: 16px;
+                font-size: 14px;
+                box-shadow: inset 0px -3px 0px #00000029;
+                border-radius: 4px;
+                text-transform: uppercase;
+                line-height: 2.35em;
+                &.button-small {
+                    height: 2.5em;
+                    line-height: 2.5em;
+                    font-size: 12px;
+                    letter-spacing: .05em;
+                }
                 &.add-att {
                     line-height: 1;
                     float: right;
@@ -156,7 +156,12 @@ body {
                 }
                 &:hover {
                     cursor: pointer;
-                    background: lighten(#666, 8%);
+                    -webkit-transition: all .4s;
+                    -moz-transition: all .4s;
+                    -ms-transition: all .4s;
+                    -o-transition: all .4s;
+                    transition: all .4s;
+                    background: darken(#389eff, 8%);
                 }
                 &:focus {
                     outline: none;
@@ -180,13 +185,8 @@ body {
             }
             input {
                 &[type=text] {
-                    height: 34px;
-                    padding: 0 15px;
-                    border: 1px solid #ccc;
-                    font-family: 'Caviar Dreams';
-                    font-size: 18px;
-                    color: #444;
-                    line-height: 1;
+                    height: 2.35em;
+                    padding: 0px 15px;
 
                     &:focus {
                         border: 1px solid #5b9dd9;
@@ -199,12 +199,8 @@ body {
                 }
             }
             select {
-                height: 34px;
-                padding: 0 15px;
-                font-family: 'Caviar Dreams';
-                font-size: 18px;
-                color: #444;
-                line-height: 1;
+                height: 2.35em;
+                padding: 0px 10px;
                 &[multiple="multiple"] {
                     height: 90px;
                 }

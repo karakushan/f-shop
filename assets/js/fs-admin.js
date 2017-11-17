@@ -254,6 +254,43 @@ jQuery(document).ready(function ($) {
         }
     });
 
+    $(document).on('click', '[data-fs-element="clone-att"]', function (event) {
+        event.preventDefault();
+        var node = $(this).prev().clone();
+        var index = $(this).parents('.fs-rule').data('index');
+        node.attr('name', 'fs_variant[' + index + '][]')
+        $(this).before(node);
+    });
+    $(document).on('click', '#fs-add-variant', function (event) {
+        var count = $(".fs-rule").length;
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {
+                action: "fs_add_variant",
+                index: count
+            },
+            success: function (data) {
+                if (!count){
+                    $("#fs-variants-wrapper").html(data);
+                }else{
+                    $("#fs-variants-wrapper .fs-rule").last().after(data);
+                }
+
+                //console.log(data);
+                // do something with ajax data
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            },
+            complete: function () {
+                //afer ajax call is completed
+            }
+        });
+
+    });
 
 });
 

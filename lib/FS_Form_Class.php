@@ -51,25 +51,27 @@ class FS_Form_Class {
 			}
 		}
 		$default     = array(
-			'type'         => 'text',
-			'class'        => '',
-			'label_class'  => 'fs-form-label',
-			'id'           => str_replace( array(
+			'type'          => FS_Config::$form_fields[ $field_name ]['type'],
+			'class'         => '',
+			'wrapper'       => true,
+			'wrapper_class' => 'fs-field-wrapper',
+			'label_class'   => 'fs-form-label',
+			'id'            => str_replace( array(
 				'[',
 				']'
 			), array( '_' ), $field_name ),
-			'required'     => false,
-			'title'        => __( 'this field is required', 'fast-shop' ),
-			'placeholder'  => FS_Config::$form_fields[$field_name]['label'],
-			'value'        => $default_value,
-			'html'         => '',
-			'options'      => array(),
-			'format'       => '%input% %label%',
-			'el'           => 'select',
-			'first_option' => __( 'Select' ),
-			'before'       => '',
-			'after'        => '',
-			'editor_args'  => array(
+			'required'      => FS_Config::$form_fields[ $field_name ]['required'],
+			'title'         => __( 'this field is required', 'fast-shop' ),
+			'placeholder'   => FS_Config::$form_fields[ $field_name ]['label'],
+			'value'         => $default_value,
+			'html'          => '',
+			'options'       => array(),
+			'format'        => '%input% %label%',
+			'el'            => 'select',
+			'first_option'  => __( 'Select' ),
+			'before'        => '',
+			'after'         => '',
+			'editor_args'   => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $field_name,
 				'tinymce'       => false,
@@ -86,7 +88,9 @@ class FS_Form_Class {
 
 		$required = ! empty( $args['required'] ) ? 'required' : '';
 		$field    = $args['before'];
-
+		if ( $args['wrapper'] ) {
+			$field .= '<div class="' . esc_attr( $args['wrapper_class'] ) . '">';
+		}
 		switch ( $args['type'] ) {
 			case 'text':
 				$field .= ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
@@ -191,7 +195,9 @@ class FS_Form_Class {
 				$field = ob_get_clean();
 				break;
 		}
-
+		if ( $args['wrapper'] ) {
+			$field .= '</div>';
+		}
 		$field .= $args['after'];
 		echo apply_filters( 'fs_form_field', $field, $field_name, $args );
 	}

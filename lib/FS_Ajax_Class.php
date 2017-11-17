@@ -11,32 +11,80 @@ if ( ! defined( 'ABSPATH' ) ) {
 class FS_Ajax_Class {
 
 	function __construct() {
-		//  обработка формы заказа
+//  обработка формы заказа
 		add_action( 'wp_ajax_order_send', array( &$this, 'order_send_ajax' ) );
 		add_action( 'wp_ajax_nopriv_order_send', array( &$this, 'order_send_ajax' ) );
-		//  добавление в список желаний
+//  добавление в список желаний
 		add_action( 'wp_ajax_fs_addto_wishlist', array( &$this, 'fs_addto_wishlist' ) );
 		add_action( 'wp_ajax_nopriv_fs_addto_wishlist', array( &$this, 'fs_addto_wishlist' ) );
-		// удаление из списка желаний
+// удаление из списка желаний
 		add_action( 'wp_ajax_fs_del_wishlist_pos', array( &$this, 'fs_del_wishlist_pos' ) );
 		add_action( 'wp_ajax_nopriv_fs_del_wishlist_pos', array( &$this, 'fs_del_wishlist_pos' ) );
-		//   живой поиск по сайту
+//   живой поиск по сайту
 		add_action( 'wp_ajax_fs_livesearch', array( &$this, 'fs_livesearch' ) );
 		add_action( 'wp_ajax_nopriv_fs_livesearch', array( &$this, 'fs_livesearch' ) );
 
-		//  получение связанных постов категории
+//  получение связанных постов категории
 		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
 
-		// добавление товара к сравнению
+// добавление товара к сравнению
 		add_action( 'wp_ajax_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
 
-		// удаляет один термин (свойство) товара
+// удаляет один термин (свойство) товара
 		add_action( 'wp_ajax_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
+// добавляет вариант покупки товара
+		add_action( 'wp_ajax_fs_add_variant', array( $this, 'fs_add_variant_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_add_variant', array( $this, 'fs_add_variant_callback' ) );
 
 
+	}
+
+	function fs_add_variant_callback() {
+	  $index=(int)$_POST['index'];
+		?>
+      <div class="fs-rule" data-index="<?php echo $index ?>">
+        <p>
+          <label for="">Вариант №<?php echo $index+1 ?></label>
+
+			<?php
+
+			global $fs_config;
+			$args = array(
+				'show_option_all'  => 'Свойство товара',
+				'show_option_none' => '',
+				'orderby'          => 'ID',
+				'order'            => 'ASC',
+				'show_last_update' => 0,
+				'show_count'       => 0,
+				'hide_empty'       => 0,
+				'child_of'         => 0,
+				'exclude'          => '',
+				'echo'             => 1,
+				'selected'         => 0,
+				'hierarchical'     => 1,
+				'name'             => 'fs_variant['.$index.'][]',
+				'id'               => '',
+				'class'            => 'fs_select_variant',
+				'depth'            => 0,
+				'tab_index'        => 0,
+				'taxonomy'         => $fs_config->data['product_att_taxonomy'],
+				'hide_if_empty'    => false,
+
+			);
+
+			wp_dropdown_categories( $args ); ?>
+          <button type="button" class="button-small" data-fs-element="clone-att">ещё свойство</button>
+        </p>
+        <p>
+          <label for="">Цена</label>
+          <input type="text" name="fs_variant_price[<?php echo $index ?>]" class="fs_variant_price">
+        </p>
+      </div>
+		<?php
+		exit();
 	}
 
 	/**
@@ -71,7 +119,7 @@ class FS_Ajax_Class {
 
 		}
 
-		// Устанавливаем Cookie до конца сессии:
+// Устанавливаем Cookie до конца сессии:
 		setcookie( "fs_comparison_list", serialize( $_SESSION['fs_comparison_list'] ), 30 * DAYS_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN );
 		echo json_encode( array(
 			'status' => true
@@ -92,7 +140,7 @@ class FS_Ajax_Class {
 		global $wpdb;
 		$wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
-		//Производим очистку полученных данных с формы заказа
+//Производим очистку полученных данных с формы заказа
 		$form_fields    = FS_Config::$form_fields;
 		$sanitize_field = array();
 		if ( $form_fields ) {
@@ -109,16 +157,16 @@ class FS_Ajax_Class {
 			}
 		}
 
-		// устанавливаем заголовки
+// устанавливаем заголовки
 		$headers[] = 'Content-type: text/html; charset=utf-8';
 
-		// проверяем существование пользователя
+// проверяем существование пользователя
 		if ( is_user_logged_in() ) {
 			$user    = wp_get_current_user();
 			$user_id = $user->ID;
 
 		} else {
-			// Если пользователь не залогинен пробуем его зарегистрировать
+// Если пользователь не залогинен пробуем его зарегистрировать
 			$new_user = register_new_user( $sanitize_field['fs_email'], $sanitize_field['fs_email'] );
 			if ( ! is_wp_error( $new_user ) ) {
 				$user_id = $new_user;
@@ -130,7 +178,9 @@ class FS_Ajax_Class {
 				) );
 			} else {
 				if ( $new_user->get_error_code() == 'email_exists' || $new_user->get_error_code() == 'username_exists' ) {
-					$error_text = 'Пользователь с таким E-mail или Логином зарегистрирован на сайте. <a href="#fs-modal-login" data-fs-action="modal">Войти на сайт</a>. <a href="' . wp_lostpassword_url( get_permalink() ) . '">Забыли пароль?</a>';
+					$error_text = 'Пользователь с таким E-mail или Логином зарегистрирован на сайте. <a href="#fs-modal-login"
+                                                                                    data-fs-action="modal">Войти на
+  сайт</a>. <a href="' . wp_lostpassword_url( get_permalink() ) . '">Забыли пароль?</a>';
 				} else {
 					$error_text = $new_user->get_error_message();
 				}
@@ -143,7 +193,7 @@ class FS_Ajax_Class {
 			}
 		}
 
-		// обновляем мета поля пользователя
+// обновляем мета поля пользователя
 		if ( $user_id ) {
 			wp_update_user( array(
 				'ID'         => $user_id,
@@ -158,7 +208,7 @@ class FS_Ajax_Class {
 		}
 
 
-		// Вставляем заказ в базу данных
+// Вставляем заказ в базу данных
 		$defaults                              = array(
 			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
 			'post_content' => '',
@@ -198,17 +248,17 @@ class FS_Ajax_Class {
 		$sanitize_field['fs_payment_methods']  = fs_get_payment( $sanitize_field['fs_payment_methods'] );
 		$_SESSION['last_order_id']             = $order_id;
 
-		// текст письма заказчику
+// текст письма заказчику
 		$user_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'customer_mail' ) );
 
-		// текст письма админу
+// текст письма админу
 		$admin_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'admin_mail', get_bloginfo( 'admin_email' ) ) );
 
-		//Отсылаем письмо с данными заказа заказчику
+//Отсылаем письмо с данными заказа заказчику
 		$customer_mail_header = fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
 		wp_mail( $sanitize_field['fs_email'], $customer_mail_header, $user_message, $headers );
 
-		//Отсылаем письмо с данными заказа админу
+//Отсылаем письмо с данными заказа админу
 		$admin_email       = fs_option( 'manager_email', get_option( 'admin_email' ) );
 		$admin_mail_header = fs_option( 'admin_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
 		wp_mail( $admin_email, $admin_mail_header, $admin_message, $headers );
@@ -262,12 +312,20 @@ class FS_Ajax_Class {
 		$wishlist = ! empty( $_SESSION['fs_user_settings']['fs_wishlist'] ) ? $_SESSION['fs_user_settings']['fs_wishlist'] : array();
 		$count    = count( $wishlist );
 		$class    = $count == 0 ? '' : 'wishlist-show';
-		$res      .= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>' . $count . '</span></a><ul class="fs-wishlist-listing ' . $class . '">
-        <li class="wishlist-header">' . __( 'Wishlist', 'cube44' ) . ': <i class="fa fa-times-circle" aria-hidden="true"></i></li>';
+		$res      .= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>' . $count . '</span></a>
+<ul class="fs-wishlist-listing ' . $class . '">
+  <li class="wishlist-header">' . __( 'Wishlist', 'cube44' ) . ': <i class="fa fa-times-circle" aria-hidden="true"></i>
+  </li>
+  ';
 		foreach ( $_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value ) {
-			$res .= "<li><i class=\"fa fa-trash\" aria-hidden=\"true\" data-fs-action=\"wishlist-delete-position\" data-product-id=\"$key\" data-product-name=\"" . get_the_title( $key ) . "\" ></i> <a href=\"" . get_permalink( $key ) . "\">" . get_the_title( $key ) . "</a></li>";
+			$res .= "
+  <li><i class=\"fa fa-trash\" aria-hidden=\"true\" data-fs-action=\"wishlist-delete-position\" data-product-id=\"$key\"
+    data-product-name=\"" . get_the_title( $key ) . "\" ></i> <a href=\"" . get_permalink( $key ) . "\">" .
+			        get_the_title( $key ) . "</a></li>
+  ";
 		}
-		$res .= '</ul>';
+		$res .= '
+</ul>';
 
 		if ( ! empty( $res ) ) {
 			echo json_encode( array(
@@ -331,10 +389,14 @@ class FS_Ajax_Class {
 		) );
 
 		$body .= '<select data-fs-action="select_related">';
-		$body .= '<option value="">Выберите товар</option>';
+		$body .= '
+  <option value="">Выберите товар</option>
+  ';
 		if ( $posts ) {
 			foreach ( $posts as $key => $post ) {
-				$body .= '<option value="' . $post->ID . '">' . $post->post_title . '</option>';
+				$body .= '
+  <option value="' . $post->ID . '">' . $post->post_title . '</option>
+  ';
 			}
 		}
 		$body .= '</select>';

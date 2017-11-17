@@ -152,6 +152,13 @@ class FS_Post_Type {
 							update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
 						}
 						break;
+					case 'fs_variant':
+						if ( empty( $_POST[ $field_name ] ) ) {
+							delete_post_meta( $post_id, $field_name );
+						} else {
+							update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
+						}
+						break;
 					default:
 						if ( is_array( $_POST[ $field_name ] ) ) {
 

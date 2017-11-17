@@ -680,6 +680,26 @@ td.fs_photo.column-fs_photo img {
     align-items: center;
     background-color: rgba(0, 0, 0, 0.49);
 }
+.fs-field-wrapper{
+    position: relative;
+    .error{
+        font-weight: 400;
+        color: red;
+        font-size: 12px;
+        font-family: sans-serif;
+        font-style: normal;
+        text-transform: none;
+    }
+}
+.fs-rule {
+    border: 1px dashed #88c6ff;
+    margin: 15px 0;
+    padding: 10px 17px;
+    background-color: #d1e8fe;
+    p{
+        margin: 0 0 12px 0
+    }
+}
 
 
 

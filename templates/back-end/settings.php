@@ -31,8 +31,9 @@
 						<?php fs_form_field( sprintf( 'fs_option[%s]', $field['name'] ), array(
 							'type'    => $field['type'],
 							'value'   => $field['value'],
+							'wrapper' => false,
 							'options' => $field['type'] == 'select' ? $field['options'] : [],
-							'name'   => ! empty( $field['name'] ) ? $field['name'] : '',
+							'name'    => ! empty( $field['name'] ) ? $field['name'] : '',
 							'value'   => ! empty( $field['value'] ) ? $field['value'] : '',
 							'label'   => ! empty( $field['label'] ) ? $field['label'] : '',
 							'class'   => ! empty( $field['class'] ) ? $field['class'] : '',
