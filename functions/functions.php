@@ -491,7 +491,9 @@ function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = arra
 		return;
 	}
 	$price    = empty( $price ) ? 0 : (float) $price;
+	$price    = apply_filters( 'fs_price_filter',$post_id, $price );
 	$price    = apply_filters( 'fs_price_format', $price );
+
 	$cur_symb = fs_currency();
 	if ( $args['echo'] ) {
 		printf( $wrap, $price, $cur_symb );
