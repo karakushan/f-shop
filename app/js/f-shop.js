@@ -86,7 +86,7 @@ jQuery('[data-action="change-attr"]').on('change', function () {
     var attrObj = jQuery('#fs-atc-' + productId).data('attr');
     var name = jQuery(this).attr('name');
     jQuery(target).val(jQuery(this).val());
-    attrObj.terms = [];
+    attrObj.attr = [];
     jQuery('[name="' + name + '"]').each(function (index) {
         jQuery(this).prop('checked', false);
     });
@@ -94,7 +94,7 @@ jQuery('[data-action="change-attr"]').on('change', function () {
 
     jQuery('[data-action="change-attr"]').each(function (index) {
         if (jQuery(this).prop('checked') && jQuery(this).val()) {
-            attrObj.terms[index] = jQuery(this).val();
+            attrObj.attr[index] = jQuery(this).val();
         }
     });
     Array.prototype.clean = function(deleteValue) {
@@ -106,7 +106,7 @@ jQuery('[data-action="change-attr"]').on('change', function () {
         }
         return this;
     };
-    attrObj.terms.clean(undefined);
+    attrObj.attr.clean(undefined);
     jQuery('#fs-atc-' + productId).attr('data-attr', JSON.stringify(attrObj));
 });
 //добавление товара в корзину (сессию)
