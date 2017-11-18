@@ -92,18 +92,17 @@ function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
  * @return float $price - значение цены
  */
 function fs_get_price( $post_id = 0 ) {
-	$config = new \FS\FS_Config();//класс основных настроек плагина
-
+	global $fs_config;
 	// устанавливаем id поста
 	global $post;
 	$post_id = empty( $post_id ) && isset( $post ) ? $post->ID : (int) $post_id;
 
 	//узнаём какой тип скидки активирован в настройках (% или фикс)
-	$action_type = isset( $config->options['action_count'] ) && $config->options['action_count'] == 1 ? 1 : 0;
+	$action_type = isset( $fs_config->options['action_count'] ) && $fs_config->options['action_count'] == 1 ? 1 : 0;
 
 	// получаем возможные типы цен
-	$base_price   = get_post_meta( $post_id, $config->meta['price'], true );//базовая и главная цена
-	$action_price = get_post_meta( $post_id, $config->meta['action_price'], true );//акионная цена
+	$base_price   = get_post_meta( $post_id, $fs_config->meta['price'], true );//базовая и главная цена
+	$action_price = get_post_meta( $post_id, $fs_config->meta['action_price'], true );//акионная цена
 	$price        = empty( $base_price ) ? 0 : (float) $base_price;
 	$action_price = empty( $action_price ) ? 0 : (float) $action_price;
 
@@ -231,19 +230,15 @@ function fs_get_wholesale_price( $post_id = 0 ) {
  * @return возвращает или показывает общую сумму с валютой
  *
  */
-function fs_total_amount( $wrap = '%s <span>%s</span>', $echo = true ) {
+function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
 	if ( empty( $_SESSION['cart'] ) ) {
-		return 0;
-	}
-	$products = $_SESSION['cart'];
-	$total    = fs_get_total_amount( $products );
-	$total    = apply_filters( 'fs_price_format', $total );
-	$total    = sprintf( $wrap, $total, fs_currency() );
-	if ( $echo ) {
-		echo $total;
+		$total = 0;
 	} else {
-		return $total;
+		$total = fs_get_total_amount( $_SESSION['cart'] );
 	}
+	$total = apply_filters( 'fs_price_format', $total );
+	$total = sprintf( $wrap, $total, fs_currency() );
+	echo $total;
 }
 
 /**
@@ -259,7 +254,12 @@ function fs_get_total_amount( $products = array() ) {
 	}
 	$all_price = array();
 	foreach ( $products as $key => $count ) {
-		$all_price[ $key ] = $count['count'] * fs_get_price( $key );
+		if ( fs_is_variated( $key ) ) {
+			$all_price[ $key ] = $count['count'] * fs_get_variated_price( $key, $count['attr'] );
+		} else {
+			$all_price[ $key ] = $count['count'] * fs_get_price( $key );
+		}
+
 	}
 	$price = array_sum( $all_price );
 
@@ -364,7 +364,11 @@ function fs_get_cart( $args = array() ) {
 			if ( $key == 0 ) {
 				continue;
 			}
-			$price      = fs_get_price( $key );
+
+			$price = fs_get_price( $key );
+			if ( fs_is_variated( $key ) ) {
+				$price = fs_get_variated_price( $key, $count['attr'] );
+			}
 			$price_show = apply_filters( 'fs_price_format', $price );
 			$c          = (int) $count['count'];
 			$all_price  = $price * $c;
@@ -1726,5 +1730,51 @@ function fs_filter_link( $filter = null, $order = 'date_desc', $catalog_link = '
  */
 function fs_in_array_multi( $needles, $haystack ) {
 	return ! array_diff( $needles, $haystack );
+}
+
+/**
+ * Проверяет является ли товар вариативным
+ *
+ * @param int $post_id
+ *
+ * @return int
+ */
+function fs_is_variated( $post_id = 0 ) {
+	global $fs_config;
+
+	return intval( get_post_meta( $post_id, $fs_config->meta['variated_on'], 1 ) );
+}
+
+/**
+ * Получает вариативную цену
+ *
+ * @param int $post_id
+ * @param array $atts
+ *
+ * @return float
+ */
+function fs_get_variated_price( $post_id = 0, $atts = array() ) {
+
+	$atts           = array_map( 'intval', $atts );
+	$variants       = get_post_meta( $post_id, 'fs_variant', 0 );
+	$variants_price = get_post_meta( $post_id, 'fs_variant_price', 0 );
+	$variated_price = fs_get_price( $post_id );
+	// если не включен чекбок "вариативный товар" , то возвращаем цену
+	if ( ! fs_is_variated( $post_id ) ) {
+		return $variated_price;
+	}
+
+	if ( ! empty( $variants[0] ) ) {
+		foreach ( $variants[0] as $k => $variant ) {
+			// ищем совпадения варианов в присланными значениями
+			if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
+				$variated_price = apply_filters( 'fs_price_filter', $post_id, (float) $variants_price[0][ $k ] );
+
+			}
+		}
+
+	}
+
+	return (float) $variated_price;
 }
 

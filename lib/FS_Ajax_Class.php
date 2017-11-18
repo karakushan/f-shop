@@ -336,7 +336,9 @@ class FS_Ajax_Class {
 	public function fs_addto_wishlist() {
 		$product_id                             = (int) $_REQUEST['product_id'];
 		$_SESSION['fs_wishlist'][ $product_id ] = $product_id;
+
 		$json                                   = json_encode( array(
+		  'body'=>fs_frontend_template('wishlist/wishlist'),
 			'status' => true
 		) );
 		exit( $json );

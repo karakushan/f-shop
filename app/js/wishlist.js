@@ -12,7 +12,7 @@ jQuery('[data-fs-action="wishlist"]').on('click', function (event) {
             var before_to_wishlist = new CustomEvent("fs_before_to_wishlist", {
                 detail: {
                     id: product_id,
-                    image:curentBlock.data('image'),
+                    image: curentBlock.data('image'),
                     name: product_name,
                     button: curentBlock
                 }
@@ -22,9 +22,16 @@ jQuery('[data-fs-action="wishlist"]').on('click', function (event) {
     })
         .done(function (result) {
             var ajax_data = jQuery.parseJSON(result);
+            jQuery('[data-fs-element="whishlist-widget"]').html(ajax_data.body);
             // генерируем событие добавления в список желаний
             var add_to_wishlist = new CustomEvent("fs_add_to_wishlist", {
-                detail: {id: product_id, name: product_name, button: curentBlock, image:curentBlock.data('image'), ajax_data: ajax_data}
+                detail: {
+                    id: product_id,
+                    name: product_name,
+                    button: curentBlock,
+                    image: curentBlock.data('image'),
+                    ajax_data: ajax_data
+                }
             });
             document.dispatchEvent(add_to_wishlist);
 

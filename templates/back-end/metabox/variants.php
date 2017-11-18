@@ -2,25 +2,26 @@
 <p>Вы можете настроить условия при которых цена будет изменятся.</p>
 <?php
 global $fs_config;
-$variated_on = get_post_meta( $post->ID, 'fs_variated_on', 1 );
+$variated_on = fs_is_variated( $post->ID );
 ?>
 <p><input type="checkbox" name="fs_variated_on" value="1" id="fs_variated" <?php checked( $variated_on, 1 ) ?>> <label
     for="fs_variated" style="display: inline-block;">Сделать товар вариативным</label></p>
 <?php if ( $variated_on ): ?>
-<?php
-    $variants = get_post_meta( $post->ID, 'fs_variant', 0 );
-    $variants_price = get_post_meta( $post->ID, 'fs_variant_price', 0 );
-    if (!empty($variants_price[0])){
-	    $variants_price=$variants_price[0];
-    }else{
-	    $variants_price='';
-    }
-?>
-  <button type="button" class="button" id="fs-add-variant">добавить вариант <img src="<?php echo FS_PLUGIN_URL.'assets/img/ajax-loader.gif' ?>" alt="preloader" class="fs-preloader"></button>
+	<?php
+	$variants       = get_post_meta( $post->ID, 'fs_variant', 0 );
+	$variants_price = get_post_meta( $post->ID, 'fs_variant_price', 0 );
+	if ( ! empty( $variants_price[0] ) ) {
+		$variants_price = $variants_price[0];
+	} else {
+		$variants_price = '';
+	}
+	?>
+  <button type="button" class="button" id="fs-add-variant">добавить вариант <img
+      src="<?php echo FS_PLUGIN_URL . 'assets/img/ajax-loader.gif' ?>" alt="preloader" class="fs-preloader"></button>
   <div id="fs-variants-wrapper">
 	  <?php if ( ! empty( $variants[0] ) ): ?>
 		  <?php foreach ( $variants[0] as $key => $variant ): ?>
-          <div class="fs-rule fs-field-row" data-index="<?php echo $key  ?>">
+          <div class="fs-rule fs-field-row" data-index="<?php echo $key ?>">
             <a href="#" class="fs-remove-variant">удалить вариант</a>
             <p>
               <label for="">Вариант <span class="index"><?php echo $key + 1 ?></span></label>
@@ -59,7 +60,8 @@ $variated_on = get_post_meta( $post->ID, 'fs_variated_on', 1 );
             </p>
             <p>
               <label for="">Цена</label>
-              <input type="text" name="fs_variant_price[<?php echo $key ?>]" value="<?php echo $variants_price[$key] ?>" class="fs_variant_price">
+              <input type="text" name="fs_variant_price[<?php echo $key ?>]"
+                     value="<?php echo $variants_price[ $key ] ?>" class="fs_variant_price">
             </p>
           </div>
 		  <?php endforeach; ?>
