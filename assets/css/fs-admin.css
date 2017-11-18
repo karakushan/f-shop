@@ -1,8 +1,244 @@
-@import url("https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,400i,700,700i&subset=cyrillic");
-.clearfix:after {
+.clearfix:after, .fs-metabox .fs-grid:after {
   display: block;
   clear: both;
   content: ''; }
+
+.fs-preloader {
+  display: none; }
+
+.fs-metabox {
+  width: 100%;
+  margin: 0 auto;
+  color: #444;
+  font-weight: 400;
+  letter-spacing: .025em;
+  max-width: 100%; }
+  .fs-metabox * {
+    box-sizing: border-box;
+    max-width: 100%; }
+  .fs-metabox ul {
+    width: 20%;
+    float: left;
+    padding: 0;
+    margin: 0; }
+    @media screen and (max-width: 768px) {
+      .fs-metabox ul {
+        width: 100%;
+        max-width: 100%; } }
+    .fs-metabox ul li {
+      display: block;
+      margin-bottom: 4px;
+      position: relative; }
+      .fs-metabox ul li.fs-link-active a {
+        background-color: #23282d;
+        color: #fff;
+        padding-left: 25px;
+        outline: none;
+        box-shadow: none; }
+      .fs-metabox ul li.fs-link-active:before {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 100%;
+        background-color: #389eff; }
+      .fs-metabox ul li a {
+        padding: 10px 16px;
+        background-color: #cccccc;
+        display: block;
+        text-decoration: none;
+        font-size: 1.2em;
+        letter-spacing: .025em;
+        color: #444;
+        -webkit-transition: all .4s;
+        -moz-transition: all .4s;
+        -ms-transition: all .4s;
+        -o-transition: all .4s;
+        transition: all .4s; }
+  .fs-metabox .fs-tabs {
+    width: 80%;
+    float: left; }
+    @media screen and (max-width: 768px) {
+      .fs-metabox .fs-tabs {
+        width: 100%; } }
+    .fs-metabox .fs-tabs > .fs-tab {
+      float: left;
+      display: none;
+      min-height: 178px;
+      margin-left: 2px;
+      padding: 29px 41px;
+      background-color: #f8f8f8;
+      width: 100%;
+      border: 1px solid #eaeaea; }
+      @media screen and (max-width: 768px) {
+        .fs-metabox .fs-tabs > .fs-tab {
+          margin: 0; } }
+      .fs-metabox .fs-tabs > .fs-tab h3 {
+        margin: 0 0 10px 0; }
+      .fs-metabox .fs-tabs > .fs-tab h4 {
+        margin: 0 0 2px 0; }
+      .fs-metabox .fs-tabs > .fs-tab .fs-help {
+        display: inline-block;
+        font-size: 12px; }
+      .fs-metabox .fs-tabs > .fs-tab .fs-hidden {
+        display: none; }
+      .fs-metabox .fs-tabs > .fs-tab label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: bold; }
+        .fs-metabox .fs-tabs > .fs-tab label span {
+          font-weight: 400;
+          font-size: .8em;
+          padding: 0px 8px;
+          color: #00a0d2;
+          border-radius: 3px;
+          border: 1px solid #00a0d2;
+          background: #f6f6f6;
+          display: inline-block;
+          margin-left: 7px;
+          text-transform: uppercase;
+          letter-spacing: .05em; }
+      .fs-metabox .fs-tabs > .fs-tab button {
+        height: 2.35em;
+        padding: 0 22px;
+        background: #389eff;
+        color: #fff;
+        border: none;
+        letter-spacing: .025em;
+        font-size: 14px;
+        box-shadow: inset 0px -3px 0px #00000029;
+        border-radius: 4px;
+        text-transform: uppercase;
+        line-height: 2.35em; }
+        .fs-metabox .fs-tabs > .fs-tab button.button-small {
+          height: 2.5em;
+          line-height: 2.5em;
+          font-size: 12px;
+          letter-spacing: .05em; }
+        .fs-metabox .fs-tabs > .fs-tab button.add-att {
+          line-height: 1;
+          float: right;
+          height: 25px;
+          /* font-size: 4px; */
+          padding: 4px; }
+        .fs-metabox .fs-tabs > .fs-tab button:hover {
+          cursor: pointer;
+          -webkit-transition: all .4s;
+          -moz-transition: all .4s;
+          -ms-transition: all .4s;
+          -o-transition: all .4s;
+          transition: all .4s;
+          background: #0f8aff; }
+        .fs-metabox .fs-tabs > .fs-tab button:focus {
+          outline: none; }
+      .fs-metabox .fs-tabs > .fs-tab .fs-attr-list ul {
+        padding-left: 10px; }
+        .fs-metabox .fs-tabs > .fs-tab .fs-attr-list ul li span {
+          font-size: 13px;
+          color: #fe0000; }
+          .fs-metabox .fs-tabs > .fs-tab .fs-attr-list ul li span:hover {
+            cursor: pointer; }
+      .fs-metabox .fs-tabs > .fs-tab input[type=text] {
+        height: 2.35em;
+        padding: 0px 15px; }
+        .fs-metabox .fs-tabs > .fs-tab input[type=text]:focus {
+          border: 1px solid #5b9dd9;
+          outline: none; }
+        .fs-metabox .fs-tabs > .fs-tab input[type=text].placeholder {
+          color: #969696; }
+        .fs-metabox .fs-tabs > .fs-tab input[type=text]:-moz-placeholder {
+          color: #969696; }
+        .fs-metabox .fs-tabs > .fs-tab input[type=text]::-moz-placeholder {
+          color: #969696; }
+        .fs-metabox .fs-tabs > .fs-tab input[type=text]:-ms-input-placeholder {
+          color: #969696; }
+        .fs-metabox .fs-tabs > .fs-tab input[type=text]::-webkit-input-placeholder {
+          color: #969696; }
+      .fs-metabox .fs-tabs > .fs-tab select {
+        height: 2.35em;
+        padding: 0px 10px; }
+        .fs-metabox .fs-tabs > .fs-tab select[multiple="multiple"] {
+          height: 90px; }
+        .fs-metabox .fs-tabs > .fs-tab select:focus {
+          border: 1px solid #5b9dd9;
+          outline: none; }
+      .fs-metabox .fs-tabs > .fs-tab #fs-variants-wrapper {
+        margin-top: 15px;
+        max-height: 542px;
+        overflow: auto; }
+      .fs-metabox .fs-tabs > .fs-tab .fs-field-row {
+        margin-bottom: 15px;
+        border-bottom: 1px dotted #cdcdcd;
+        padding-bottom: 15px;
+        position: relative; }
+        .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule {
+          background: #e7f1ff;
+          padding: 5px 20px; }
+          .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule .fs-remove-variant {
+            position: absolute;
+            right: 20px;
+            color: red; }
+            .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule .fs-remove-variant:hover {
+              text-decoration: none; }
+      .fs-metabox .fs-tabs > .fs-tab.fs-tab-active {
+        display: block; }
+  .fs-metabox [draggable] {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    /* Required to make elements draggable in old WebKit */
+    -khtml-user-drag: element;
+    -webkit-user-drag: element; }
+  .fs-metabox [draggable="true"] {
+    cursor: move;
+    cursor: -webkit-grab; }
+  .fs-metabox .fs-grid {
+    margin: 0 -10px; }
+  .fs-metabox .fs-col-4 {
+    width: calc(25% - 20px);
+    float: left;
+    position: relative;
+    height: 201px;
+    margin: 10px;
+    background-size: cover;
+    background-repeat: no-repeat; }
+    .fs-metabox .fs-col-4 img {
+      width: 100%;
+      height: auto;
+      padding: 0;
+      margin: 0; }
+    .fs-metabox .fs-col-4 .fs-remove-img {
+      position: absolute;
+      height: 25px;
+      width: 25px;
+      background: url(../img/rounded-remove-button.svg);
+      z-index: 1;
+      top: 12px;
+      left: 10px;
+      background-size: 25px;
+      opacity: 1;
+      transition: all .2s; }
+      .fs-metabox .fs-col-4 .fs-remove-img:hover {
+        opacity: .7;
+        cursor: pointer; }
+
+.clearfix:after, .fs-metabox .fs-grid:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0; }
+
+.clearfix, .fs-metabox .fs-grid {
+  display: inline-block; }
+
+/* start commented backslash hack \*/
+* html .clearfix, * html .fs-metabox .fs-grid, .fs-metabox * html .fs-grid {
+  height: 1%; }
+
+.clearfix, .fs-metabox .fs-grid {
+  display: block; }
 
 .fs-add-attr {
   margin: 20px 0 0 0;
@@ -75,7 +311,6 @@ div#fs_select_image {
   background-color: #ededed; }
 
 .fs-settings {
-  font-family: "Bebas Neue";
   font-size: 16px;
   font-weight: bold;
   letter-spacing: .075em;
@@ -83,7 +318,6 @@ div#fs_select_image {
 
 .fs_form input,
 .fs_form select {
-  font-family: "Roboto", sans-serif;
   font-size: 14px;
   font-weight: 500;
   height: 44px;
@@ -103,7 +337,6 @@ div#fs_select_image {
     margin-left: 12px; }
 
 .fs_form label {
-  font-family: "Bebas Neue";
   font-size: 14px;
   font-weight: bold;
   letter-spacing: .075em;
@@ -121,7 +354,6 @@ div#fs_select_image {
   background: #fed6e2; }
 
 .fs-group-list a {
-  font-family: "Roboto", sans-serif;
   font-size: 13px;
   font-weight: 300;
   letter-spacing: normal; }
@@ -140,13 +372,11 @@ ul.fs-group-list ul {
   padding: 9px 0 0 30px; }
 
 ul.fs-group-list ul li {
-  font-family: "Roboto";
   font-size: 14px;
   font-weight: 500;
   letter-spacing: normal; }
 
 ul.fs-group-list > li > span {
-  font-family: Roboto;
   font-size: 14px;
   font-weight: 300;
   letter-spacing: normal; }
@@ -243,7 +473,6 @@ td.fs_price.column-fs_price span span {
   margin: 10px 0; }
 
 #fs-table {
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: #036; }
 
 #fs-table caption {

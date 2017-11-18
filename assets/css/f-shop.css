@@ -168,6 +168,9 @@ button.remove-tr {
   -webkit-animation: cssload-spin 575ms infinite linear;
   -moz-animation: cssload-spin 575ms infinite linear; }
 
+.fs-preloader {
+  display: none; }
+
 @keyframes cssload-spin {
   100% {
     transform: rotate(360deg); } }
@@ -650,8 +653,15 @@ td.fs_photo.column-fs_photo img {
   border: 1px dashed #88c6ff;
   margin: 15px 0;
   padding: 10px 17px;
-  background-color: #d1e8fe; }
+  background-color: #d1e8fe;
+  position: relative; }
   .fs-rule p {
     margin: 0 0 12px 0; }
+  .fs-rule .fs-remove-variant {
+    position: absolute;
+    right: 20px;
+    color: red; }
+    .fs-rule .fs-remove-variant:hover {
+      text-decoration: none; }
 
-/*# sourceMappingURL=fast-shop.css.map */
+/*# sourceMappingURL=f-shop.css.map */

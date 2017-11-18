@@ -696,8 +696,17 @@ td.fs_photo.column-fs_photo img {
     margin: 15px 0;
     padding: 10px 17px;
     background-color: #d1e8fe;
+    position: relative;
     p{
         margin: 0 0 12px 0
+    }
+    .fs-remove-variant {
+        position: absolute;
+        right: 20px;
+        color: red;
+        &:hover{
+            text-decoration: none;
+        }
     }
 }
 

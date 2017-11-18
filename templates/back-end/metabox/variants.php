@@ -16,14 +16,14 @@ $variated_on = get_post_meta( $post->ID, 'fs_variated_on', 1 );
 	    $variants_price='';
     }
 ?>
-  <button type="button" class="button" id="fs-add-variant">добавить вариант</button>
+  <button type="button" class="button" id="fs-add-variant">добавить вариант <img src="<?php echo FS_PLUGIN_URL.'assets/img/ajax-loader.gif' ?>" alt="preloader" class="fs-preloader"></button>
   <div id="fs-variants-wrapper">
 	  <?php if ( ! empty( $variants[0] ) ): ?>
 		  <?php foreach ( $variants[0] as $key => $variant ): ?>
-          <div class="fs-rule" data-index="<?php echo $key  ?>">
+          <div class="fs-rule fs-field-row" data-index="<?php echo $key  ?>">
             <a href="#" class="fs-remove-variant">удалить вариант</a>
             <p>
-              <label for="">Вариант №<?php echo $key + 1 ?></label>
+              <label for="">Вариант <span class="index"><?php echo $key + 1 ?></span></label>
 				<?php if ( is_array( $variant ) ): ?>
 					<?php foreach ( $variant as $k => $v ): ?>
 						<?php

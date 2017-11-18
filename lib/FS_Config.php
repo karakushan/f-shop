@@ -140,17 +140,17 @@ class FS_Config {
 		self::$prices = array(
 			'price'        => array(
 				'id'          => 'base-price',
-				'name'        => __( 'The base price', 'fast-shop' ),
+				'name'        => __( 'Базовая цена', 'fast-shop' ),
 				'meta_key'    => $this->meta['price'],
 				'on'          => true,
-				'description' => __( 'This is the main type prices', 'fast-shop' )
+				'description' => __( 'Основной тип цены', 'fast-shop' )
 			),
 			'action_price' => array(
 				'id'          => 'action-price',
-				'name'        => __( 'Promotional price', 'fast-shop' ),
+				'name'        => __( 'Акционная цена', 'fast-shop' ),
 				'meta_key'    => $this->meta['action_price'],
 				'on'          => true,
-				'description' => __( 'This type of price interrupts the base price', 'fast-shop' )
+				'description' => __( 'Этот тип изменяет базовую цену отображаемую по умолчанию', 'fast-shop' )
 			)
 		);
 

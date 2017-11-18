@@ -45,10 +45,10 @@ class FS_Ajax_Class {
 	function fs_add_variant_callback() {
 	  $index=(int)$_POST['index'];
 		?>
-      <div class="fs-rule" data-index="<?php echo $index ?>">
+      <div class="fs-rule fs-field-row" data-index="<?php echo $index ?>">
+        <a href="#" class="fs-remove-variant">удалить вариант</a>
         <p>
-          <label for="">Вариант №<?php echo $index+1 ?></label>
-
+          <label for="">Вариант <span class="index"><?php echo $index + 1 ?></span></label>
 			<?php
 
 			global $fs_config;

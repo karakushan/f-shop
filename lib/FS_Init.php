@@ -38,7 +38,7 @@ class FS_Init {
 	} // END public function __construct
 
 	function true_load_plugin_textdomain() {
-		load_plugin_textdomain( 'fast-shop', false, FS_LANG_PATH  );
+		load_plugin_textdomain( 'fast-shop', false, FS_LANG_PATH );
 	}
 
 	// Add the settings link to the plugins page
@@ -50,12 +50,12 @@ class FS_Init {
 	}
 
 	function fast_shop_scripts() {
-		wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'] . 'assets/css/fast-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'lightslider', $this->config->data['plugin_url'] . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/css/lightbox.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'font-awesome', $this->config->data['plugin_url'] . 'assets/fontawesome/css/font-awesome.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'izi-toast', $this->config->data['plugin_url'] . 'assets/css/iziToast.min.css', array(), $this->config->data['plugin_ver'], 'all' );
+		wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'] . 'assets/css/f-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
 
 		wp_enqueue_script( "jquery-ui-core", array( 'jquery' ) );
 		wp_enqueue_script( "jquery-ui-slider", array( 'jquery' ) );
@@ -84,16 +84,12 @@ class FS_Init {
 			wp_enqueue_media();
 		}
 		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'font-bebas', $this->config->data['plugin_url'] . 'assets/fonts/BebasNeueBold/styles.css' );
 		wp_enqueue_style( 'spectrum', $this->config->data['plugin_url'] . 'assets/css/spectrum.css' );
-		wp_enqueue_style( 'font-roboto', 'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&subset=cyrillic' );
-		wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'] . 'assets/css/fast-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'fs-admin', $this->config->data['plugin_url'] . 'assets/css/fs-admin.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_script( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.js', array( 'jquery' ), null, true );
 
 		wp_enqueue_script( 'spectrum', $this->config->data['plugin_url'] . 'assets/js/spectrum.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'js-cookie', $this->config->data['plugin_url'] . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
-//		wp_enqueue_script( 'f-shop', $this->config->data['plugin_url'] . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
 		$screen = get_current_screen();
 		if ( $screen->id == 'edit-product' ) {
 			wp_enqueue_script( 'fs-quick-edit', $this->config->data['plugin_url'] . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
@@ -104,11 +100,6 @@ class FS_Init {
 			'jquery',
 			'js-cookie'
 		), null, true );
-
-		// подключаем стили и скрипты текущей темы админки
-		$fs_theme = fs_option( 'fs-theme', 'default' );
-		wp_enqueue_style( 'fs-theme-' . $fs_theme, $this->config->data['plugin_url'] . 'assets/theme/' . $fs_theme . '/css/style.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_script( 'fs-theme-' . $fs_theme, $this->config->data['plugin_url'] . 'assets/theme/' . $fs_theme . '/js/theme.js', array( 'jquery' ), null, true );
 	}
 
 	/**
