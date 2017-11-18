@@ -39,11 +39,48 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_add_variant', array( $this, 'fs_add_variant_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_add_variant', array( $this, 'fs_add_variant_callback' ) );
 
+		// получение вариантов цены товара
+		add_action( 'wp_ajax_fs_get_variated', array( $this, 'fs_get_variated_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_get_variated', array( $this, 'fs_get_variated_callback' ) );
+
 
 	}
 
+	function fs_get_variated_callback() {
+
+		$post_id        = sanitize_text_field( $_POST['product_id'] );
+		$atts           = array_map( 'intval', $_POST['atts'] );
+		$variants       = get_post_meta( $post_id, 'fs_variant', 0 );
+		$variants_price = get_post_meta( $post_id, 'fs_variant_price', 0 );
+		if ( ! empty( $variants[0] ) ) {
+			foreach ( $variants[0] as $k => $variant ) {
+				// ищем совпадения варианов в присланными значениями
+				if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
+					// если вариант найден то выходим возвращая цену
+					$base_price = apply_filters( 'fs_price_filter', $post_id, (float) $variants_price[0][ $k ] );
+					echo json_encode( array(
+						'result'     => 1,
+						'base_price' => apply_filters( 'fs_price_format', $base_price )
+					) );
+					exit();
+				}
+			}
+
+		}
+		echo json_encode( array(
+			'result'     => 0,
+			'base_price' => apply_filters( 'fs_price_format', fs_get_price( $post_id ) ),
+			'old_price' => apply_filters( 'fs_price_format', fs_get_base_price( $post_id ) )
+		) );
+		exit();
+	}
+
+
+	/**
+	 * Добавление варианта цены. колбек функция
+	 */
 	function fs_add_variant_callback() {
-	  $index=(int)$_POST['index'];
+		$index = (int) $_POST['index'];
 		?>
       <div class="fs-rule fs-field-row" data-index="<?php echo $index ?>">
         <a href="#" class="fs-remove-variant">удалить вариант</a>
@@ -65,7 +102,7 @@ class FS_Ajax_Class {
 				'echo'             => 1,
 				'selected'         => 0,
 				'hierarchical'     => 1,
-				'name'             => 'fs_variant['.$index.'][]',
+				'name'             => 'fs_variant[' . $index . '][]',
 				'id'               => '',
 				'class'            => 'fs_select_variant',
 				'depth'            => 0,

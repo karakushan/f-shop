@@ -65,6 +65,17 @@ function IsJsonString(str) {
     return true;
 }
 
+// очищает от пустых элементов массива
+Array.prototype.clean = function(deleteValue) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] == deleteValue) {
+            this.splice(i, 1);
+            i--;
+        }
+    }
+    return this;
+};
+
 
 // открытие модального окна
 jQuery(document).on('click', "[data-fs-action='modal']", function (e) {
@@ -80,33 +91,64 @@ jQuery(document).on('click', "[data-fs-action='modal-close']", function (e) {
 })
 // изменяем атрибуты товара по изменению input radio
 jQuery('[data-action="change-attr"]').on('change', function () {
-    var curent = jQuery(this);
-    var target = jQuery(this).data('target');
-    var productId = jQuery(this).data('product-id');
-    var attrObj = jQuery('#fs-atc-' + productId).data('attr');
-    var name = jQuery(this).attr('name');
-    jQuery(target).val(jQuery(this).val());
+
+    var curent = jQuery(this);// получаем элемент который был изменён
+    var productId = curent.data('product-id');// получаем ID товара из атрибутов
+    var atcButton = jQuery('#fs-atc-' + productId); // получаем кнопку добавить в корзину
+    var attrObj = atcButton.data('attr');// получаем  атрибуты кнопки "добавить в корзину" в виде объекта
+    var variated = atcButton.data('variated');// узнаём вариативный товар или нет
+
+    // выключаем чекбоксы всей группе атрибутов
     attrObj.attr = [];
-    jQuery('[name="' + name + '"]').each(function (index) {
+    jQuery('[name="' + curent.attr('name') + '"]').each(function (index) {
         jQuery(this).prop('checked', false);
     });
-    jQuery(this).prop('checked', true);
+    // делаем активным чекбокс на который нажали
+    curent.prop('checked', true);
 
     jQuery('[data-action="change-attr"]').each(function (index) {
         if (jQuery(this).prop('checked') && jQuery(this).val()) {
             attrObj.attr[index] = jQuery(this).val();
         }
     });
-    Array.prototype.clean = function(deleteValue) {
-        for (var i = 0; i < this.length; i++) {
-            if (this[i] == deleteValue) {
-                this.splice(i, 1);
-                i--;
-            }
-        }
-        return this;
-    };
+
+    // производим очистку массыва атрибутов от пустых значений
     attrObj.attr.clean(undefined);
+
+    // делаем аякс запрос для получения вариативной цены и подмены на сайте
+    if (variated) {
+        jQuery.ajax({
+            type: 'POST',
+            url: FastShopData.ajaxurl,
+            data: {action: "fs_get_variated", product_id: productId, atts: attrObj.attr},
+            success: function (data) {
+                if (IsJsonString(data)) {
+                    var json = jQuery.parseJSON(data);
+                    if (json.result) {
+                        jQuery("[data-fs-element=\"base_price\"]").text(json.base_price);
+                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility','hidden');
+                        jQuery("[data-fs-element=\"discount\"]").parent().css('visibility','hidden');
+                    }else{
+                        jQuery("[data-fs-element=\"base_price\"]").text(json.base_price);
+                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility','visible');
+                        jQuery("[data-fs-element=\"discount\"]").parent().css('visibility','visible');
+                    }
+                } else {
+                    console.log(data);
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            },
+            complete: function () {
+                //afer ajax call is completed
+            }
+        });
+
+    }
+
     jQuery('#fs-atc-' + productId).attr('data-attr', JSON.stringify(attrObj));
 });
 //добавление товара в корзину (сессию)
@@ -249,10 +291,4 @@ validator.validate({
 
 
     }
-});
-$(document).on('click','[data-fs-element="clone-att"]',function (event) {
-    event.preventDefault();
-    console.log(event);
-var node=$(this).prev().clone();
-$(this).before(node);
 });

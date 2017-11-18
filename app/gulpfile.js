@@ -9,8 +9,7 @@ var jsFiles = [
     './js/attributes.js',
     './js/add-to-cart.js',
     './js/wishlist.js',
-    './js/validate.js',
-    './js/variants.js'
+    './js/validate.js'
 ];
 
 // объединение скриптов
