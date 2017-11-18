@@ -130,6 +130,24 @@ class FS_Filters {
 					$orderby[]           = 'price';
 					$order               = 'DESC';
 					break;
+				case 'views_desc': //сортируем по просмотрам в спадающем порядке
+					$meta_query['views'] = array(
+						'key'     => 'views',
+						'compare' => 'EXISTS',
+						'type'    => 'NUMERIC',
+					);
+					$orderby[]           = 'views';
+					$order               = 'DESC';
+					break;
+				case 'views_asc': //сортируем по просмотрам в спадающем порядке
+					$meta_query['views'] = array(
+						'key'     => 'views',
+						'compare' => 'EXISTS',
+						'type'    => 'NUMERIC',
+					);
+					$orderby[]           = 'views';
+					$order               = 'ASC';
+					break;
 				case 'name_asc': //сортируем по названию по алфавиту
 					$orderby[] = 'title';
 					$order     = 'ASC';
@@ -145,6 +163,13 @@ class FS_Filters {
 				case 'date_asc':
 					$orderby[] = 'date';
 					$order     = 'ASC';
+					break;
+				case 'field_action' :
+					$meta_query['action_price'] = array(
+						'key'     => $config->meta['action_price'],
+						'compare' => 'EXISTS'
+
+					);
 					break;
 
 
@@ -170,26 +195,6 @@ class FS_Filters {
 			}
 
 		}
-
-		if ( ! empty( $_REQUEST['filter_by'] ) ) {
-			switch ( $_REQUEST['filter_by'] ) {
-				case 'field_action' :
-					$meta_query['action_price'] = array(
-						'key'     => $config->meta['action_price'],
-						'compare' => 'EXISTS'
-
-					);
-					break;
-				/*case 'field_action': //сортируем по наличию акции
-					$meta_query['action_price'] = array(
-						'key'     => $config->meta['action_price'],
-						'compare' => '!=',
-						'value'   => ''
-					);
-					break;*/
-			}
-		}
-
 
 		//Фильтруем по свойствам (атрибутам)
 		if ( ! empty( $_REQUEST['attributes'] ) ) {

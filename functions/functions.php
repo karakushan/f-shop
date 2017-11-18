@@ -507,7 +507,10 @@ function fs_get_base_price( $post_id = 0 ) {
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
 function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>' ) {
-	$price    = fs_get_base_price( $post_id );
+	$price = fs_get_base_price( $post_id );
+	if ( ! $price ) {
+		return;
+	}
 	$price    = apply_filters( 'fs_price_format', $price );
 	$cur_symb = fs_currency();
 	$price    = sprintf( '<span data-fs-element="old_price">%s</span>', $price );
