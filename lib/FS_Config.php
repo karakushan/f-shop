@@ -121,6 +121,8 @@ class FS_Config {
 			'variants'=>'fs_variant',
 			// цены вариации товара
 			'variants_price'=>'fs_variant_price',
+			// начальное количество
+			'variant_count'=>'fs_variant_count',
 			// включает вариативность товара
 			'variated_on'=>'fs_variated_on'
 		);

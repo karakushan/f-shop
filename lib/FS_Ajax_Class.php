@@ -52,15 +52,21 @@ class FS_Ajax_Class {
 		$atts           = array_map( 'intval', $_POST['atts'] );
 		$variants       = get_post_meta( $post_id, 'fs_variant', 0 );
 		$variants_price = get_post_meta( $post_id, 'fs_variant_price', 0 );
+		$variants_count = get_post_meta( $post_id, 'fs_variant_count', 0 );
 		if ( ! empty( $variants[0] ) ) {
 			foreach ( $variants[0] as $k => $variant ) {
 				// ищем совпадения варианов в присланными значениями
 				if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
+					$price = (float) $variants_price[0][$k];
+					$count = max( $variants_count[0][ $k ], 1 );
+
+					$total_price = $price * $count;
 					// если вариант найден то выходим возвращая цену
-					$base_price = apply_filters( 'fs_price_filter', $post_id, (float) $variants_price[0][ $k ] );
+					$base_price = apply_filters( 'fs_price_filter', $post_id, (float) $total_price );
 					echo json_encode( array(
 						'result'     => 1,
-						'base_price' => apply_filters( 'fs_price_format', $base_price )
+						'base_price' => apply_filters( 'fs_price_format', $base_price ),
+						'count'      => max( $variants_count[0][ $k ], 1 )
 					) );
 					exit();
 				}
@@ -70,7 +76,7 @@ class FS_Ajax_Class {
 		echo json_encode( array(
 			'result'     => 0,
 			'base_price' => apply_filters( 'fs_price_format', fs_get_price( $post_id ) ),
-			'old_price' => apply_filters( 'fs_price_format', fs_get_base_price( $post_id ) )
+			'old_price'  => apply_filters( 'fs_price_format', fs_get_base_price( $post_id ) )
 		) );
 		exit();
 	}
@@ -337,8 +343,8 @@ class FS_Ajax_Class {
 		$product_id                             = (int) $_REQUEST['product_id'];
 		$_SESSION['fs_wishlist'][ $product_id ] = $product_id;
 
-		$json                                   = json_encode( array(
-		  'body'=>fs_frontend_template('wishlist/wishlist'),
+		$json = json_encode( array(
+			'body'   => fs_frontend_template( 'wishlist/wishlist' ),
 			'status' => true
 		) );
 		exit( $json );

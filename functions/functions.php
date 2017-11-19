@@ -1667,7 +1667,16 @@ function fs_gallery_images_ids( $post_id = 0 ) {
 	global $post, $fs_config;
 	$post_id    = ! empty( $post_id ) ? $post_id : $post->ID;
 	$fs_gallery = get_post_meta( $post_id, $fs_config->meta['gallery'], false );
-	$gallery    = ! empty( $fs_gallery ) ? $fs_gallery['0'] : array();
+	$gallery    = array();
+	if ( $post_thumbnail_id = get_post_thumbnail_id( $post_id ) ) {
+		$gallery       [] = $post_thumbnail_id;
+	}
+
+	if ( ! empty( $fs_gallery['0'] ) ) {
+		foreach ( $fs_gallery['0'] as $item ) {
+			$gallery       [] = $item;
+		}
+	}
 
 	return $gallery;
 }

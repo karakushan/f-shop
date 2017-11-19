@@ -87,7 +87,7 @@
         font-weight: bold; }
         .fs-metabox .fs-tabs > .fs-tab label span {
           font-weight: 400;
-          font-size: .8em;
+          font-size: .9em;
           padding: 0px 8px;
           color: #00a0d2;
           border-radius: 3px;
@@ -173,6 +173,10 @@
         .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule {
           background: #e7f1ff;
           padding: 5px 20px; }
+          .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule .col {
+            /* float: left; */
+            display: inline-block;
+            margin-right: 12px; }
           .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule .fs-remove-variant {
             position: absolute;
             right: 20px;

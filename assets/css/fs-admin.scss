@@ -101,7 +101,7 @@
                 font-weight: bold;
                 span {
                     font-weight: 400;
-                    font-size: .8em;
+                    font-size: .9em;
                     padding: 0px 8px;
                     color: #00a0d2;
                     border-radius: 3px;
@@ -197,6 +197,7 @@
                 margin-top: 15px;
                 max-height: 542px;
                 overflow: auto;
+
             }
             .fs-field-row {
                 margin-bottom: 15px;
@@ -206,6 +207,11 @@
                 &.fs-rule {
                     background: #e7f1ff;
                     padding: 5px 20px;
+                    .col {
+                        /* float: left; */
+                        display: inline-block;
+                        margin-right: 12px;
+                    }
                     .fs-remove-variant {
                         position: absolute;
                         right: 20px;

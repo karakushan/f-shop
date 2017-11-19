@@ -35,12 +35,13 @@ jQuery('[data-action="change-attr"]').on('change', function () {
                     var json = jQuery.parseJSON(data);
                     if (json.result) {
                         jQuery("[data-fs-element=\"base_price\"]").text(json.base_price);
-                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility','hidden');
-                        jQuery("[data-fs-element=\"discount\"]").parent().css('visibility','hidden');
-                    }else{
+                        attrObj.count = json.count;
+                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility', 'hidden');
+                        jQuery("[data-fs-element=\"discount\"]").parent().css('visibility', 'hidden');
+                    } else {
                         jQuery("[data-fs-element=\"base_price\"]").text(json.base_price);
-                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility','visible');
-                        jQuery("[data-fs-element=\"discount\"]").parent().css('visibility','visible');
+                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility', 'visible');
+                        jQuery("[data-fs-element=\"discount\"]").parent().css('visibility', 'visible');
                     }
                 } else {
                     console.log(data);

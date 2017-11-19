@@ -163,7 +163,6 @@ class FS_Post_Type {
 						if ( is_array( $_POST[ $field_name ] ) ) {
 
 							$field_sanitize = array_map( 'sanitize_text_field', $_POST[ $field_name ] );
-							$field_sanitize = array_unique( $field_sanitize );
 							update_post_meta( $post_id, $field_name, $field_sanitize );
 						} else {
 							update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
