@@ -1763,14 +1763,17 @@ function fs_is_variated( $post_id = 0 ) {
  * @param int $post_id
  * @param array $atts
  *
+ * @param bool $count
+ *
  * @return float
  */
-function fs_get_variated_price( $post_id = 0, $atts = array() ) {
+function fs_get_variated_price( $post_id = 0, $atts = array(), $count = true ) {
 
 	$atts           = array_map( 'intval', $atts );
 	$variants       = get_post_meta( $post_id, 'fs_variant', 0 );
 	$variants_price = get_post_meta( $post_id, 'fs_variant_price', 0 );
 	$variated_price = fs_get_price( $post_id );
+	$variants_count = get_post_meta( $post_id, 'fs_variant_count', 0 );
 	// если не включен чекбок "вариативный товар" , то возвращаем цену
 	if ( ! fs_is_variated( $post_id ) ) {
 		return $variated_price;
@@ -1780,7 +1783,14 @@ function fs_get_variated_price( $post_id = 0, $atts = array() ) {
 		foreach ( $variants[0] as $k => $variant ) {
 			// ищем совпадения варианов в присланными значениями
 			if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
-				$variated_price = apply_filters( 'fs_price_filter', $post_id, (float) $variants_price[0][ $k ] );
+				if ( $count ) {
+					$price       = (float) $variants_price[0][ $k ];
+					$count       = max( $variants_count[0][ $k ], 1 );
+					$total_price = $price * $count;
+				} else {
+					$total_price = (float) $variants_price[0][ $k ];
+				}
+				$variated_price = apply_filters( 'fs_price_filter', $post_id, (float) $total_price );
 
 			}
 		}
@@ -1788,5 +1798,22 @@ function fs_get_variated_price( $post_id = 0, $atts = array() ) {
 	}
 
 	return (float) $variated_price;
+}
+
+/**
+ * Выводит вариативную цену
+ *
+ * @param int $post_id
+ * @param array $atts
+ *
+ * @param bool $count
+ *
+ * @return float
+ */
+function fs_variated_price( $post_id = 0, $atts = array(), $count = true ) {
+	$price = fs_get_variated_price( $post_id, $atts, $count );
+	echo apply_filters( 'fs_price_format', $price );
+
+	return true;
 }
 
