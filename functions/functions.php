@@ -387,7 +387,7 @@ function fs_get_cart( $args = array() ) {
 							if ( $at_term_parent->parent == $product_term->parent ) {
 								// удаляем термин с которым куплен товар из сессии корзины
 								unset( $count['attr'][ $k ] );
-								$count['attr'][]                  = $product_term->term_id;
+								$count['attr'][] = $product_term->term_id;
 								// добавляем в сессию термин который подошел в сравнении
 								$_SESSION['cart'][ $key ]['attr'] = $count['attr'];
 							}
@@ -1271,14 +1271,17 @@ function fs_product_code( $product_id = 0, $wrap = '%s', $echo = false ) {
 	$config     = new \FS\FS_Config();
 	$product_id = $product_id == 0 ? $post->ID : $product_id;
 	$articul    = get_post_meta( $product_id, $config->meta['product_article'], 1 );
-	if ( $wrap ) {
-		$articul = sprintf( $wrap, $articul );
+	if ( empty( $articul ) ) {
+		return false;
 	}
-	if ( $echo ) {
-		echo $articul;
-	} else {
-		return $articul;
+	if ( $wrap && $articul ) {
+		if ( $echo ) {
+			echo esc_html(sprintf( $wrap, $articul ));
+		} else {
+			return $articul;
+		}
 	}
+
 }
 
 /**
