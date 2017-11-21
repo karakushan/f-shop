@@ -167,7 +167,8 @@ class FS_Filters {
 				case 'field_action' :
 					$meta_query['action_price'] = array(
 						'key'     => $config->meta['action_price'],
-						'compare' => 'EXISTS'
+						'compare' => '>',
+						'value'   => 0
 
 					);
 					break;
