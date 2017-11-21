@@ -48,6 +48,6 @@
 			<?php endforeach; ?>
 		<?php endif; ?>
     </div>
-    <input type="submit" name="fs_save_options" value="Сохранить">
+    <input type="submit" name="fs_save_options" class="fs-primary-button" value="Сохранить">
   </form>
 </div>

@@ -14,7 +14,7 @@ var jsFiles = [
 
 // объединение скриптов
 gulp.task('concat', function () {
-    return gulp.src(jsFiles)
+    return gulp.src(['./js/*.js', '!./js/f-shop.js'])
         .pipe(concat('f-shop.js'))
         .pipe(gulp.dest('./js'));
 });

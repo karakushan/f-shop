@@ -60,3 +60,32 @@ jQuery('[data-action=add-to-cart]').on('click', function (event) {
         });
 
 });
+
+// Событие срабатывает перед добавлением товара в корзину
+document.addEventListener("fs_before_add_product", function (event) {
+    // действие которое инициирует событие, здесь может быть любой ваш код
+    var button = event.detail.button;
+    button.find('.fs-atc-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
+    event.preventDefault();
+}, false);
+
+// Событие срабатывает когда товар добавлен в корзину
+document.addEventListener("fs_add_to_cart", function (event) {
+    // действие которое инициирует событие
+    fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]')
+    var button = event.detail.button;
+    iziToast.show({
+        image: event.detail.image,
+        theme: 'light',
+        title: 'Успех!',
+        message: 'Товар &laquo;'+event.detail.name+'&raquo; добавлен в корзину!',
+        position: 'topCenter',
+
+    });
+    button.find('.fs-atc-preloader').fadeOut();
+    setTimeout(function () {
+        button.find('.fs-atc-info').fadeOut();
+    }, 4000)
+
+    event.preventDefault();
+}, false);

@@ -1,0 +1,10 @@
+.blink {
+    -webkit-animation: blink2 2s linear infinite;
+    animation: blink2 2s linear infinite;
+}
+@-webkit-keyframes blink2 {
+    100% { color: rgba(34, 34, 34, 0); }
+}
+@keyframes blink2 {
+    100% { color: rgba(34, 34, 34, 0); }
+}

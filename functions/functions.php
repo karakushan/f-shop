@@ -351,9 +351,11 @@ function fs_total_wholesale_amount( $products = array(), $echo = true, $wrap = '
  *         'all_price' - общая цена
  */
 function fs_get_cart( $args = array() ) {
+
 	if ( ! isset( $_SESSION['cart'] ) ) {
 		return false;
 	}
+	global $fs_config;
 	$args     = wp_parse_args( $args, array(
 		'price_format'   => '%s <span>%s</span>',
 		'thumbnail_size' => 'thumbnail'
@@ -367,11 +369,39 @@ function fs_get_cart( $args = array() ) {
 
 			$price = fs_get_price( $key );
 			if ( fs_is_variated( $key ) ) {
-				$price = fs_get_variated_price( $key, $count['attr'] );
+				$product_terms = get_the_terms( $key, $fs_config->data['product_att_taxonomy'] );
+				$price         = fs_get_variated_price( $key, $count['attr'] );
+				foreach ( $product_terms as $product_term ) {
+					$range_start = get_term_meta( $product_term->term_id, 'fs_att_range_start_value', 1 );
+					$range_end   = get_term_meta( $product_term->term_id, 'fs_att_range_end_value', 1 );
+					if ( ! empty( $range_start ) && empty( $range_end ) ) {
+						$range_end = INF;
+					}
+					// ищем наиболее подходящий вариант если в настройках термина (атрибута) указана данная опция
+					if ( get_term_meta( $product_term->term_id, 'fs_att_compare', 1 ) && ( $range_start <= $count['count'] && $range_end >= $count['count'] ) ) {
+						// сначала перебыраем атрибуты с которыми пользователь добавил товар в корзину
+						foreach ( $count['attr'] as $k => $at ) {
+							// получаем всю информацию о термине, но нам понадобится только id родителя
+							$at_term_parent = get_term( $at, $fs_config->data['product_att_taxonomy'] );
+							// если id родителя термина с которым куплен товар совпадает с id родителя который мы вычислили методом сравнения то
+							if ( $at_term_parent->parent == $product_term->parent ) {
+								// удаляем термин с которым куплен товар из сессии корзины
+								unset( $count['attr'][ $k ] );
+								$count['attr'][]                  = $product_term->term_id;
+								// добавляем в сессию термин который подошел в сравнении
+								$_SESSION['cart'][ $key ]['attr'] = $count['attr'];
+							}
+						}
+						// возвращаем уже новую цену с учётом нового набора атрибутов
+						$price = fs_get_variated_price( $key, $count['attr'] );
+					}
+
+				}
+
 			}
-			$price_show = apply_filters( 'fs_price_format', $price );
 			$c          = (int) $count['count'];
 			$all_price  = $price * $c;
+			$price_show = apply_filters( 'fs_price_format', $price );
 			$all_price  = apply_filters( 'fs_price_format', $all_price );
 			$attr       = array();
 			if ( ! empty( $count['attr'] ) ) {
@@ -1661,14 +1691,18 @@ function fs_get_image_sizes( $unset_disabled = true ) {
  *
  * @param int $post_id - ID поста
  *
+ * @param bool $thumbnail - включать ли миниатюру в галерею,
+ * если да, то миниатюра будет выведена первым изображением
+ *
  * @return array
  */
-function fs_gallery_images_ids( $post_id = 0 ) {
+function fs_gallery_images_ids( $post_id = 0, $thumbnail = true ) {
 	global $post, $fs_config;
-	$post_id    = ! empty( $post_id ) ? $post_id : $post->ID;
-	$fs_gallery = get_post_meta( $post_id, $fs_config->meta['gallery'], false );
-	$gallery    = array();
-	if ( $post_thumbnail_id = get_post_thumbnail_id( $post_id ) ) {
+	$post_id           = ! empty( $post_id ) ? $post_id : $post->ID;
+	$fs_gallery        = get_post_meta( $post_id, $fs_config->meta['gallery'], false );
+	$gallery           = array();
+	$post_thumbnail_id = get_post_thumbnail_id( $post_id );
+	if ( $post_thumbnail_id && $thumbnail ) {
 		$gallery       [] = $post_thumbnail_id;
 	}
 
@@ -1763,17 +1797,15 @@ function fs_is_variated( $post_id = 0 ) {
  * @param int $post_id
  * @param array $atts
  *
- * @param bool $count
- *
  * @return float
  */
-function fs_get_variated_price( $post_id = 0, $atts = array(), $count = true ) {
-
+function fs_get_variated_price( $post_id = 0, $atts = array() ) {
+	$post_id        = fs_get_product_id( $post_id );
 	$atts           = array_map( 'intval', $atts );
 	$variants       = get_post_meta( $post_id, 'fs_variant', 0 );
 	$variants_price = get_post_meta( $post_id, 'fs_variant_price', 0 );
 	$variated_price = fs_get_price( $post_id );
-	$variants_count = get_post_meta( $post_id, 'fs_variant_count', 0 );
+
 	// если не включен чекбок "вариативный товар" , то возвращаем цену
 	if ( ! fs_is_variated( $post_id ) ) {
 		return $variated_price;
@@ -1783,15 +1815,7 @@ function fs_get_variated_price( $post_id = 0, $atts = array(), $count = true ) {
 		foreach ( $variants[0] as $k => $variant ) {
 			// ищем совпадения варианов в присланными значениями
 			if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
-				if ( $count ) {
-					$price       = (float) $variants_price[0][ $k ];
-					$count       = max( $variants_count[0][ $k ], 1 );
-					$total_price = $price * $count;
-				} else {
-					$total_price = (float) $variants_price[0][ $k ];
-				}
-				$variated_price = apply_filters( 'fs_price_filter', $post_id, (float) $total_price );
-
+				$variated_price = apply_filters( 'fs_price_filter', $post_id, (float) $variants_price[0][ $k ] );
 			}
 		}
 
@@ -1806,14 +1830,73 @@ function fs_get_variated_price( $post_id = 0, $atts = array(), $count = true ) {
  * @param int $post_id
  * @param array $atts
  *
+ * @param array $args
+ *
+ * @return float
+ */
+function fs_variated_price( $post_id = 0, $atts = array(), $args = array() ) {
+	$post_id = fs_get_product_id( $post_id );
+	$args    = wp_parse_args( $args, array(
+		'count'  => true,
+		'format' => '%s <span>%s</span>',
+		'echo'   => true
+	) );
+	$price   = fs_get_variated_price( $post_id, $atts );
+	$price   = apply_filters( 'fs_price_format', $price );
+	printf( $args['format'], $price, fs_currency() );
+
+	return true;
+}
+
+/**
+ * Получает минимальное количество вариативных покупаемых товаров
+ *
+ * @param int $post_id
+ * @param array $atts
+ *
  * @param bool $count
  *
  * @return float
  */
-function fs_variated_price( $post_id = 0, $atts = array(), $count = true ) {
-	$price = fs_get_variated_price( $post_id, $atts, $count );
-	echo apply_filters( 'fs_price_format', $price );
+function fs_get_variated_count( $post_id = 0, $atts = array() ) {
+	$post_id        = fs_get_product_id( $post_id );
+	$atts           = array_map( 'intval', $atts );
+	$variants       = get_post_meta( $post_id, 'fs_variant', 0 );
+	$variants_count = get_post_meta( $post_id, 'fs_variant_count', 0 );
+	$variant_count  = 1;
+	// если не включен чекбок "вариативный товар" , то возвращаем 1
+	if ( ! fs_is_variated( $post_id ) ) {
+		return $variant_count;
+	}
 
-	return true;
+	if ( ! empty( $variants[0] ) ) {
+		foreach ( $variants[0] as $k => $variant ) {
+			// ищем совпадения варианов в присланными значениями
+			if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
+				$variant_count = max( $variants_count[0][ $k ], 1 );
+			}
+		}
+
+	}
+
+	return intval( $variant_count );
+}
+
+/**
+ * Возвращает ID товара
+ *
+ * @param mixed $product ID поста
+ *
+ * @return int
+ */
+function fs_get_product_id( $product = null ) {
+	if ( empty( $product ) ) {
+		global $post;
+		$product = $post->ID;
+	} elseif ( is_object( $product ) ) {
+		$product = $product->ID;
+	}
+
+	return intval( $product );
 }
 

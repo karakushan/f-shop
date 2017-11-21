@@ -57,16 +57,21 @@ class FS_Ajax_Class {
 			foreach ( $variants[0] as $k => $variant ) {
 				// ищем совпадения варианов в присланными значениями
 				if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
-					$price = (float) $variants_price[0][$k];
-					$count = max( $variants_count[0][ $k ], 1 );
+					$price     = (float) $variants_price[0][ $k ];
+					$min_count = 1;
+					foreach ( $atts as $att ) {
+						if ( get_term_meta( $att, 'fs_att_type', 1 ) == 'range' ) {
+							$min_count =intval(get_term_meta( $att, 'fs_att_range_start_value', 1 )) ;
 
-					$total_price = $price * $count;
+						}
+					}
+
 					// если вариант найден то выходим возвращая цену
-					$base_price = apply_filters( 'fs_price_filter', $post_id, (float) $total_price );
+					$base_price = apply_filters( 'fs_price_filter', $post_id, (float) $price );
 					echo json_encode( array(
 						'result'     => 1,
 						'base_price' => apply_filters( 'fs_price_format', $base_price ),
-						'count'      => max( $variants_count[0][ $k ], 1 )
+						'count'      => max( $min_count, 1 )
 					) );
 					exit();
 				}

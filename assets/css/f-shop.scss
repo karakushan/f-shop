@@ -17,6 +17,7 @@ $font-primary:Arial, "Helvetica Neue", Helvetica, sans-serif;
 //---- Import
 @import "scss/modal";
 @import "scss/form";
+@import "scss/animation";
 
 //----- Extends
 %clearfix:after {
@@ -708,6 +709,44 @@ td.fs_photo.column-fs_photo img {
             text-decoration: none;
         }
     }
+}
+.fs-qty-wrap {
+    position: relative;
+    display: inline-block;
+    input{
+        height: 44px;
+        position: relative;
+        padding: 0 31px 0 10px;
+        width: 74px;
+        border: 1px solid #e0e0e0;
+
+
+    }
+    .fs-button-style{
+        position: absolute;
+        right: 2px;
+        height: calc(50% - 3px);
+        border: none;
+        background: #6acccb;
+        width: 24px;
+        z-index: 2;
+        line-height: 1;
+        font-size: 1em;
+        &:hover{
+            background:lighten(#6acccb,8%) ;
+        }
+    }
+    .fs-pluss{
+        @extend .fs-button-style;
+        top: 2px;
+
+    }
+    .fs-minus{
+        @extend .fs-button-style;
+        bottom: 2.5px;
+
+    }
+
 }
 
 

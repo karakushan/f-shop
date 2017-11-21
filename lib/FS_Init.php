@@ -64,7 +64,7 @@ class FS_Init {
 		wp_enqueue_script( 'izi-toast', $this->config->data['plugin_url'] . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'lightslider', $this->config->data['plugin_url'] . 'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'fast-shop', $this->config->data['plugin_url'] . 'assets/js/fast-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
+		wp_enqueue_script( 'f-shop', $this->config->data['plugin_url'] . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
 		$price_max = (int) fs_price_max( false );
 		$l10n      = array(
 			'ajaxurl'           => admin_url( "admin-ajax.php" ),
@@ -74,8 +74,7 @@ class FS_Init {
 			'fs_slider_val_min' => ! empty( $_REQUEST['price_start'] ) ? (int) $_REQUEST['price_start'] : 0,
 			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : $price_max
 		);
-		wp_localize_script( 'fast-shop', 'FastShopData', $l10n );
-		wp_enqueue_script( 'f-shop', $this->config->data['plugin_url'] . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
+		wp_localize_script( 'f-shop', 'FastShopData', $l10n );
 	}
 
 	public function fast_shop_admin_scripts() {

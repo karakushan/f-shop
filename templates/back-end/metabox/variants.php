@@ -8,20 +8,10 @@ $variated_on = fs_is_variated( $post->ID );
     for="fs_variated" style="display: inline-block;">Сделать товар вариативным</label></p>
 <?php if ( $variated_on ): ?>
 	<?php
-	$variants       = get_post_meta( $post->ID, 'fs_variant', 0 );
-	$variants_price = get_post_meta( $post->ID, 'fs_variant_price', 0 );
-	$variants_count = get_post_meta( $post->ID, 'fs_variant_count', 0 );
-	if ( ! empty( $variants_price[0] ) ) {
-		$variants_price = $variants_price[0];
-	} else {
-		$variants_price = '';
-	}
-	if ( ! empty( $variants_count ) ) {
-		$variants_count = $variants_count[0];
-	} else {
-		$variants_count = array();
-	}
-
+	$variants             = get_post_meta( $post->ID, 'fs_variant', 0 );
+	$variants_price       = get_post_meta( $post->ID, 'fs_variant_price', 0 );
+	$variants_count       = get_post_meta( $post->ID, 'fs_variant_count', 0 );
+	$fs_variant_count_max = get_post_meta( $post->ID, 'fs_variant_count_max', 0 );
 	?>
   <button type="button" class="button" id="fs-add-variant">добавить вариант <img
       src="<?php echo FS_PLUGIN_URL . 'assets/img/ajax-loader.gif' ?>" alt="preloader" class="fs-preloader"></button>
@@ -68,18 +58,11 @@ $variated_on = fs_is_variated( $post->ID );
             <p>
            <span class="col">
              <label>Цена <span>формат: 0,01</span></label>
-                         <input type="number" step="0.01" min="0" name="fs_variant_price[<?php echo $key ?>]"
-                                value="<?php echo $variants_price[ $key ] ?>" class="fs_variant_price">
+                         <input type="number" step="0.01" min="0" size="5" name="fs_variant_price[<?php echo $key ?>]"
+                                value="<?php if ( ! empty( $variants_price[0][ $key ] ) ) {
+	                                echo $variants_price[0][ $key ];
+                                } else echo 0 ?>" class="fs_variant_price fs-input-small">
            </span>
-              <span class="col">
-                <label for="">Начальное количество <span>единиц</span></label>
-              <input type="number" min="1" step="1" name="fs_variant_count[<?php echo $key ?>]"
-                     value="<?php if ( ! empty( $variants_count[ $key ] ) ) {
-	                     echo $variants_count[ $key ];
-                     } else {
-	                     echo 1;
-                     } ?>" class="fs_variant_count">
-              </span>
             </p>
           </div>
 		  <?php endforeach; ?>

@@ -30,12 +30,16 @@ jQuery('[data-action="change-attr"]').on('change', function () {
             type: 'POST',
             url: FastShopData.ajaxurl,
             data: {action: "fs_get_variated", product_id: productId, atts: attrObj.attr},
+            beforeSend: function () {
+                jQuery("[data-fs-element=\"base_price\"]").addClass('blink');
+            },
             success: function (data) {
                 if (IsJsonString(data)) {
                     var json = jQuery.parseJSON(data);
                     if (json.result) {
-                        jQuery("[data-fs-element=\"base_price\"]").text(json.base_price);
+                        jQuery("[data-fs-element=\"base_price\"]").removeClass('blink').text(json.base_price);
                         attrObj.count = json.count;
+                        jQuery('[data-fs-action="change_count"]').val(json.count);
                         jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility', 'hidden');
                         jQuery("[data-fs-element=\"discount\"]").parent().css('visibility', 'hidden');
                     } else {
@@ -60,4 +64,29 @@ jQuery('[data-action="change-attr"]').on('change', function () {
     }
 
     jQuery('#fs-atc-' + productId).attr('data-attr', JSON.stringify(attrObj));
+});
+
+//Образует js объект с данными о продукте и помещает в кнопку добавления в корзину в атрибут 'data-json'
+jQuery('[data-fs-element="attr"]').on('change input', function (event) {
+    event.preventDefault();
+    var productId = jQuery(this).data('product-id');
+    var cartbutton = jQuery('#fs-atc-' + productId);
+    var productObject = cartbutton.data('attr');
+    var attrName = jQuery(this).attr('name');
+    var attrVal = jQuery(this).val();
+    //если покупатель вбил неправильное к-во товаров
+    if (jQuery(this).attr('name') == 'count') {
+        if (!isNumeric(attrVal) || attrVal <= 0) {
+            jQuery(this).val(1);
+            attrVal = 1;
+            jQuery(this).parent().css({'position': 'relative'});
+            jQuery(this).prev('.count-error').text(fs_message.count_error).fadeIn(400);
+        } else {
+            jQuery(this).prev('.count-error').text('').fadeOut(800);
+        }
+        productObject.count = attrVal;
+    }
+    productObject.attr[attrName] = attrVal;
+    var jsontostr = JSON.stringify(productObject);
+    cartbutton.attr('data-attr', jsontostr);
 });

@@ -32,16 +32,9 @@ jQuery(function ($) {
     $('#fs_att_type').on('change', function (event) {
         event.preventDefault();
         $('.fs-att-values').css({'display': 'none'});
-        switch ($(this).val()) {
-            case "color":
-                $('#fs-att-color').css({'display': 'table-row'});
-                break;
-            case "image":
-                $('#fs-att-image').css({'display': 'table-row'});
-                break;
-        }
-
+        $(".fs-att-" + $(this).val()).fadeIn();
     });
+
     //вызываем стандартный загрузчик изображений
     $('.select_file').on('click', function () {
         var send_attachment_bkp = wp.media.editor.send.attachment;

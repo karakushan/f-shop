@@ -28,7 +28,7 @@ class FS_Taxonomies_Class {
 	 * @return array|mixed|void
 	 */
 	function shop_taxonomies() {
-		$taxonomies=array(
+		$taxonomies = array(
 			'catalog'             => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Product categories', 'fast-shop' ),
@@ -141,7 +141,7 @@ class FS_Taxonomies_Class {
 			)
 		);
 
-		$taxonomies=apply_filters( 'fs_taxonomies', $taxonomies );
+		$taxonomies = apply_filters( 'fs_taxonomies', $taxonomies );
 
 		return $taxonomies;
 	}
@@ -159,7 +159,7 @@ class FS_Taxonomies_Class {
 		// сам процесс регистрации таксономий
 		if ( $this->shop_taxonomies() ) {
 			foreach ( $this->shop_taxonomies() as $key => $taxonomy ) {
-				$object_type=$taxonomy['object_type'];
+				$object_type = $taxonomy['object_type'];
 				unset( $taxonomy['object_type'] );
 				register_taxonomy( $key, $object_type, $taxonomy );
 			}
@@ -183,37 +183,62 @@ class FS_Taxonomies_Class {
 	}
 
 	function edit_product_attr_fields( $term ) {
-		$att_type     =get_term_meta( $term->term_id, 'fs_att_type', 1 );
-		$display_color=$att_type == 'color' ? 'style="display:table-row"' : '';
-		$display_image=$att_type == 'image' ? 'style="display:table-row"' : '';
+
+		$att_type   = get_term_meta( $term->term_id, 'fs_att_type', 1 );
+		$attr_types = array(
+			'text'  => array( 'name' => 'текст' ),
+			'color' => array( 'name' => 'цвет' ),
+			'image' => array( 'name' => 'изображение' ),
+			'range' => array( 'name' => 'диапазон' )
+		);
 		echo '<tr class="form-field term-parent-wrap">
         <th scope="row"><label for="fs_att_type">Тип атрибута</label></th>
         <td>
-            <select name="fast-shop[fs_att_type]" id="fs_att_type" class="postform">
-                <option value="text" ' . selected( 'text', $att_type, 0 ) . '>текст</option>
-                <option value="color" ' . selected( 'color', $att_type, 0 ) . '>цвет</option>
-                <option value="image" ' . selected( 'image', $att_type, 0 ) . '>изображение</option>
-            </select>
+            <select name="fast-shop[fs_att_type]" id="fs_att_type" class="postform">';
+		if ( ! empty( $attr_types ) ) {
+			foreach ( $attr_types as $att_key => $attr_type ) {
+				echo '<option value = "' . $att_key . '" ' . selected( $att_key, $att_type, 0 ) . ' > ' . $attr_type['name'] . '</option >';
+			}
+		}
+		echo '</select>
             <p class="description">Товары могут иметь разные свойства. Здесь вы можете выбрать какой тип свойства нужен.</p>
         </td>
     </tr>';
-		echo '<tr class="form-field term-parent-wrap fs-att-values" ' . $display_color . ' id="fs-att-color">
-    <th scope="row"><label>Значение цвета</label></th>
-    <td>
+		echo '<tr class="form-field term-parent-wrap  fs-att-values fs-att-color" style="' . ( $att_type == 'color' ? "display:table-row" : "display:none" ) . '" class="fs-att-color">
+                <th scope="row"><label>Значение цвета</label></th>
+               <td>
+               <input type="text"  name="fast-shop[fs_att_color_value]" value="' . get_term_meta( $term->term_id, 'fs_att_color_value', 1 ) . '" class="fs-color-select">
+                </td>
+			 </tr>';
 
-       <input type="text"  name="fast-shop[fs_att_color_value]" value="' . get_term_meta( $term->term_id, 'fs_att_color_value', 1 ) . '" class="fs-color-select">
+		echo '<tr class="form-field term-parent-wrap fs-att-values fs-att-range" style="' . ( $att_type == 'range' ? "display:table-row" : "display:none" ) . '">
+    <th scope="row"><label>Начало диапазона</label></th>
+    <td>
+       <input type="number" step="0.01"  name="fast-shop[fs_att_range_start_value]" placeholder="0" value="' . get_term_meta( $term->term_id, 'fs_att_range_start_value', 1 ) . '">
+   </td>
+</tr>
+<tr class="form-field term-parent-wrap fs-att-values fs-att-range" style="' . ( $att_type == 'range' ? "display:table-row" : "display:none" ) . '">
+    <th scope="row"><label>Конец диапазона</label></th>
+    <td>
+       <input type="number" step="0.01"  name="fast-shop[fs_att_range_end_value]" placeholder="∞" value="' . get_term_meta( $term->term_id, 'fs_att_range_end_value', 1 ) . '">
+   </td>
+</tr>
+<tr class="form-field term-parent-wrap fs-att-values fs-att-range" style="' . ( $att_type == 'range' ? "display:table-row" : "display:none" ) . '">
+    <th scope="row"><label>Использовать к-во покупаемого товара для сравнения с этим атрибутом</label></th>
+    <td>
+       <input type="checkbox"  name="fast-shop[fs_att_compare]" ' . checked( 1, get_term_meta( $term->term_id, 'fs_att_compare', 1 ), 0 ) . ' value="1">
    </td>
 </tr>';
-		$atach_image_id=get_term_meta( $term->term_id, 'fs_att_image_value', 1 );
-		$att_image     =$atach_image_id ? wp_get_attachment_url( $atach_image_id, 'medium' ) : '';
-		$display_button=! empty( $att_image ) ? 'block' : 'none';
-		$display_text  =! empty( $att_image ) ? 'изменить изображение' : 'выбрать изображение';
+		$atach_image_id = get_term_meta( $term->term_id, 'fs_att_image_value', 1 );
+		$att_image      = $atach_image_id ? wp_get_attachment_url( $atach_image_id, 'medium' ) : '';
+		$display_button = ! empty( $att_image ) ? 'block' : 'none';
+		$display_text   = ! empty( $att_image ) ? 'изменить изображение' : 'выбрать изображение';
 		if ( ! empty( $att_image ) ) {
-			$class="show";
+			$class = "show";
 		} else {
-			$class="hidden";
+			$class = "hidden";
 		}
-		echo '<tr class="form-field term-parent-wrap fs-att-values" ' . $display_image . ' id="fs-att-image">
+		echo '<tr class="form-field term-parent-wrap fs-att-values fs-att-image" style="' . ( $att_type == 'image' ? "display:table-row" : "display:none" ) . '" id="fs-att-image">
 			  <th scope="row"><label>Изображение</label></th><td><div class="fs-fields-container">';
 		echo '<div class="fs-selected-image ' . $class . '" style=" background-image: url(' . $att_image . ');"></div>';
 		echo '<button type="button" class="select_file">' . $display_text . '</button>
@@ -224,11 +249,10 @@ class FS_Taxonomies_Class {
 
 	function add_product_attr_fields( $term ) {
 
-		$display_color='style="display:none"';
-		$display_image='style="display:none"';
+		$display_color = 'style="display:none"';
+		$display_image = 'style="display:none"';
 		echo '<div class="form-field term-parent-wrap">
     <label for="fs_att_type"> Тип атрибута </label>
-
     <select name="fast-shop[fs_att_type]" id="fs_att_type" class="postform">
         <option value="text"> текст</option>
         <option value="color"> цвет</option>
@@ -245,8 +269,8 @@ class FS_Taxonomies_Class {
 
 </div> ';
 
-		$display_button="'block':'none'";
-		$display_text  ='выбрать изображение';
+		$display_button = "'block':'none'";
+		$display_text   = 'выбрать изображение';
 		echo '<div class="form-field term-parent-wrap  fs-att-values" ' . $display_image . ' id="fs-att-image">
 <label> Изображение</label>
 <div class="fs-fields-container">
@@ -300,9 +324,12 @@ class FS_Taxonomies_Class {
 		if ( ! isset( $_POST['fast-shop'] ) ) {
 			return;
 		}
-		$extra=array_map( 'trim', $_POST['fast-shop'] );
+		if ( ! isset( $_POST['fast-shop']['fs_att_compare'] ) ) {
+			$_POST['fast-shop']['fs_att_compare'] = "-";
+		}
+		$extra = array_map( 'trim', $_POST['fast-shop'] );
 		foreach ( $extra as $key => $value ) {
-			if ( empty( $value ) ) {
+			if ( empty( $value ) || $value == "-" ) {
 				delete_term_meta( $term_id, $key ); // удаляем поле если значение пустое
 				continue;
 			}
@@ -313,8 +340,8 @@ class FS_Taxonomies_Class {
 	}
 
 //Получаем списком все категории продуктов
-	public function get_product_terms( $terms='catalog' ) {
-		$args   =array(
+	public function get_product_terms( $terms = 'catalog' ) {
+		$args    = array(
 			'orderby'                => 'id',
 			'order'                  => 'ASC',
 			'hide_empty'             => false,
@@ -338,14 +365,14 @@ class FS_Taxonomies_Class {
 			'update_term_meta_cache' => true,
 			'meta_query'             => '',
 		);
-		$myterms=get_terms( array( $terms ), $args );
+		$myterms = get_terms( array( $terms ), $args );
 		if ( $myterms ) {
 			echo "<ul>";
 			foreach ( $myterms as $term ) {
-				$link =get_term_link( $term->term_id );
-				$class="";
+				$link  = get_term_link( $term->term_id );
+				$class = "";
 				if ( strripos( $link, $_SERVER['REQUEST_URI'] ) ) {
-					$class='class="active"';
+					$class = 'class="active"';
 				}
 				echo "<li $class><a href=\"$link\">$term->name</a></li>";
 			}
@@ -360,7 +387,7 @@ class FS_Taxonomies_Class {
 	 */
 	public function delete_product_categories() {
 		global $fs_config;
-		$terms=get_terms( array(
+		$terms = get_terms( array(
 				'taxonomy'   => $fs_config->data['product_taxonomy'],
 				'hide_empty' => false
 			)
@@ -378,7 +405,7 @@ class FS_Taxonomies_Class {
 	 */
 	public function delete_product_attributes() {
 		global $fs_config;
-		$terms=get_terms( array(
+		$terms = get_terms( array(
 				'taxonomy'   => $fs_config->data['product_att_taxonomy'],
 				'hide_empty' => false
 			)
@@ -400,8 +427,8 @@ class FS_Taxonomies_Class {
 	 * @return mixed
 	 */
 	function add_fs_currencies_columns( $columns ) {
-		$columns['сurrency-code']=__( 'Currency code', 'fast-shop' );
-		$columns['cost-basic']   =__( 'Cost', 'fast-shop' );
+		$columns['сurrency-code'] = __( 'Currency code', 'fast-shop' );
+		$columns['cost-basic']    = __( 'Cost', 'fast-shop' );
 		unset( $columns['description'], $columns['posts'] );
 
 		return $columns;
@@ -411,11 +438,11 @@ class FS_Taxonomies_Class {
 		switch ( $column_name ) {
 			case 'сurrency-code':
 				//do your stuff here with $term or $term_id
-				$content=get_term_meta( $term_id, 'currency-code', 1 );
+				$content = get_term_meta( $term_id, 'currency-code', 1 );
 				break;
 			case 'cost-basic':
 				//do your stuff here with $term or $term_id
-				$content=get_term_meta( $term_id, 'cost-basic', 1 );
+				$content = get_term_meta( $term_id, 'cost-basic', 1 );
 				break;
 			default:
 				break;
