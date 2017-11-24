@@ -3,15 +3,6 @@ var gulp = require('gulp'),
     pump = require('pump'),
     concat = require('gulp-concat');
 
-var jsFiles = [
-    './js/fs-library.js',
-    './js/modal.js',
-    './js/attributes.js',
-    './js/add-to-cart.js',
-    './js/wishlist.js',
-    './js/validate.js'
-];
-
 // объединение скриптов
 gulp.task('concat', function () {
     return gulp.src(['./js/*.js', '!./js/f-shop.js'])

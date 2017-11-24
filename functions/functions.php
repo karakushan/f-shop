@@ -415,6 +415,7 @@ function fs_get_cart( $args = array() ) {
 					}
 				}
 			}
+			$base_price       = fs_get_base_price( $key ) ? sprintf( $args['price_format'], fs_get_base_price( $key ), fs_currency() ) : '';
 			$products[ $key ] = array(
 				'id'         => $key,
 				'name'       => get_the_title( $key ),
@@ -423,7 +424,7 @@ function fs_get_cart( $args = array() ) {
 				'attr'       => $attr,
 				'link'       => get_permalink( $key ),
 				'price'      => sprintf( $args['price_format'], $price_show, fs_currency() ),
-				'base_price' => sprintf( $args['price_format'], fs_base_price( $key, false ), fs_currency() ),
+				'base_price' => $base_price,
 				'all_price'  => sprintf( $args['price_format'], $all_price, fs_currency() ),
 				'code'       => fs_product_code( $key ),
 				'currency'   => fs_currency()
@@ -1276,7 +1277,7 @@ function fs_product_code( $product_id = 0, $wrap = '%s', $echo = false ) {
 	}
 	if ( $wrap && $articul ) {
 		if ( $echo ) {
-			echo esc_html(sprintf( $wrap, $articul ));
+			echo esc_html( sprintf( $wrap, $articul ) );
 		} else {
 			return $articul;
 		}
@@ -1901,5 +1902,36 @@ function fs_get_product_id( $product = null ) {
 	}
 
 	return intval( $product );
+}
+
+/**
+ * Выводит метку об акции, популярном товаре, или недавно добавленом
+ *
+ * @param int $product_id - уникальный ID товара (записи ВП)
+ * @param array $labels HTML код метки
+ *              могут быть метки типа: 'action','popular','new'
+ */
+function fs_product_label( $product_id = 0, $labels = array() ) {
+	$product_id = fs_get_product_id( $product_id );
+	$args       = wp_parse_args( $labels, array(
+		'action'  => '',
+		'popular' => '',
+		'new'     => ''
+	) );
+	if ( ! empty( $_GET['order_type'] ) ) {
+		if ( $_GET['order_type'] == 'field_action' ) {
+			echo $args['action'] ;
+		} elseif ( $_GET['order_type'] == 'views_desc' ) {
+			echo  $args['popular'] ;
+		} elseif ( $_GET['order_type'] == 'date_desc' ) {
+			echo  $args['new'];
+		}
+	} else {
+		if ( fs_is_action( $product_id ) ) {
+			echo  $args['action'];
+		}
+	}
+
+
 }
 

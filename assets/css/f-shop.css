@@ -697,4 +697,14 @@ td.fs_photo.column-fs_photo img {
   .fs-qty-wrap .fs-minus {
     bottom: 2.5px; }
 
+[data-fs-element="range-start"] {
+  float: left;
+  margin: 20px 0;
+  font-weight: bold; }
+
+[data-fs-element="range-end"] {
+  float: right;
+  margin: 20px 0;
+  font-weight: bold; }
+
 /*# sourceMappingURL=f-shop.css.map */

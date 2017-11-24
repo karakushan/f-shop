@@ -131,7 +131,7 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
 /**
  * выводит фильтр сортировки по разным параметрам
  *
- * @param array $attr          дополниетльные атрибуты html тега
+ * @param array $attr дополниетльные атрибуты html тега
  *
  * @return string              выводит html элемент типа select
  */
@@ -183,6 +183,7 @@ function fs_types_sort_filter( $attr = array() ) {
 	}
 
 	echo $filter;
+
 	return;
 }
 
@@ -227,6 +228,7 @@ function fs_per_page_filter( $interval = array(), $attr = array() ) {
 	}
 	$page_filter = $filters->posts_per_page_filter( $interval, $attr );
 	echo $page_filter;
+
 	return;
 }
 
@@ -238,12 +240,13 @@ function fs_per_page_filter( $interval = array(), $attr = array() ) {
  */
 function fs_attr_filter( $group_id, $args = array() ) {
 	$default = array(
-		'redirect'        => true,
-		'container'       => 'ul',
-		'container_class' => 'listCheck',
-		'container_id'    => 'listCheck-' . $group_id,
-		'input_class'     => 'checkStyle',
-		'label_class'     => 'checkLabel'
+		'redirect'            => true,
+		'container'           => 'ul',
+		'container_class'     => 'listCheck',
+		'container_id'        => 'listCheck-' . $group_id,
+		'input_wrapper_class' => 'fs-checkbox-wrapper',
+		'input_class'         => 'checkStyle',
+		'label_class'         => 'checkLabel'
 	);
 	$args    = wp_parse_args( $args, $default );
 	$terms   = get_terms( array(
@@ -255,13 +258,15 @@ function fs_attr_filter( $group_id, $args = array() ) {
 	parse_str( $arr_url, $url );
 
 	if ( $terms ) {
-		echo '<' . $args['container'] . ' class="' . sanitize_html_class( $args['container_class'] ) . '"  id="' . sanitize_html_class( $args['container_id'] ) . '">';
+		if ( ! empty( $args['container'] ) ) {
+			echo '<' . $args['container'] . ' class="' . sanitize_html_class( $args['container_class'] ) . '"  id="' . sanitize_html_class( $args['container_id'] ) . '">';
+		}
 		foreach ( $terms as $key => $term ) {
 			$product_attributes = isset( $_GET['attributes'][ $term->slug ] ) ? $_GET['attributes'][ $term->slug ] : '';
 			if ( $args['container'] == 'ul' ) {
-				echo '<li>';
+				echo '<li class="' . esc_attr( $args['input_wrapper_class'] ) . '">';
 			} else {
-				echo '<div>';
+				echo '<div class="' . esc_attr( $args['input_wrapper_class'] ) . '">';
 			}
 
 			if ( ! empty( $url['attributes'] ) ) {
@@ -294,7 +299,9 @@ function fs_attr_filter( $group_id, $args = array() ) {
 				echo '</div>';
 			}
 		}
-		echo '</' . $args['container'] . '>';
+		if ( ! empty( $args['container'] ) ) {
+			echo '</' . $args['container'] . '>';
+		}
 	}
 }
 
