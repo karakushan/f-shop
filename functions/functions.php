@@ -178,7 +178,6 @@ function fs_the_price( $post_id = 0, $wrap = "%s <span>%s</span>", $args = array
 	$price    = apply_filters( 'fs_price_format', $price );
 
 	if ( $args['echo'] ) {
-		$price = sprintf( '<span data-fs-element="base_price">%s</span>', $price );
 		printf( $wrap, $price, $cur_symb );
 	} else {
 		return sprintf( $wrap, $price, $cur_symb );
@@ -533,20 +532,23 @@ function fs_get_base_price( $post_id = 0 ) {
  *
  * @param int $post_id - id товара
  * @param string $wrap - html обёртка для цены
- * @param array $args - дополнительные аргументы
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>' ) {
+function fs_base_price( $post_id = 0, $wrap = '<span {data}>%s <span class="fs-currency">%s</span></span>' ) {
 	$price = fs_get_base_price( $post_id );
+
 	if ( ! $price ) {
 		return;
 	}
+	$atts     = fs_parse_attr( array(), array(
+		'data-fs-element' => 'old_price',
+		'data-fs-value'   => $price
+	) );
 	$price    = apply_filters( 'fs_price_format', $price );
 	$cur_symb = fs_currency();
-	$price    = sprintf( '<span data-fs-element="old_price">%s</span>', $price );
+	$wrap     = str_replace( '{data}', $atts, $wrap );
 	printf( $wrap, $price, $cur_symb );
-
 }
 
 /**
@@ -1920,15 +1922,15 @@ function fs_product_label( $product_id = 0, $labels = array() ) {
 	) );
 	if ( ! empty( $_GET['order_type'] ) ) {
 		if ( $_GET['order_type'] == 'field_action' ) {
-			echo $args['action'] ;
+			echo $args['action'];
 		} elseif ( $_GET['order_type'] == 'views_desc' ) {
-			echo  $args['popular'] ;
+			echo $args['popular'];
 		} elseif ( $_GET['order_type'] == 'date_desc' ) {
-			echo  $args['new'];
+			echo $args['new'];
 		}
 	} else {
 		if ( fs_is_action( $product_id ) ) {
-			echo  $args['action'];
+			echo $args['action'];
 		}
 	}
 
