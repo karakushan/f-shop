@@ -57,7 +57,7 @@ class FS_Config {
 
 		//Табы отображаемые в метабоксе в редактировании товара
 		$this->tabs = array(
-			 array(
+			array(
 				'title'    => __( 'Prices', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
@@ -102,31 +102,31 @@ class FS_Config {
 		//Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
 		$meta = array(
 			//базовая цена
-			'price'            => 'fs_price',
+			'price'             => 'fs_price',
 			//акционная цена, перебивает цену
-			'action_price'     => 'fs_action_price',
+			'action_price'      => 'fs_action_price',
 			// валюта товара
-			'currency'         => 'fs_currency',
+			'currency'          => 'fs_currency',
 			//артикул
-			'product_article'  => 'fs_articul',
+			'product_article'   => 'fs_articul',
 			//запас товаров на складе
-			'remaining_amount' => 'fs_remaining_amount',
+			'remaining_amount'  => 'fs_remaining_amount',
 			//галерея
-			'gallery'          => 'fs_galery',
+			'gallery'           => 'fs_galery',
 			// похожие товары выбранные вручную
-			'related_products' => 'fs_related_products',
+			'related_products'  => 'fs_related_products',
 			// поле производителя
-			'vendor' => 'fs_vendor',
+			'vendor'            => 'fs_vendor',
 			// вариации товара
-			'variants'=>'fs_variant',
+			'variants'          => 'fs_variant',
 			// цены вариации товара
-			'variants_price'=>'fs_variant_price',
+			'variants_price'    => 'fs_variant_price',
 			// начальное количество
-			'variant_count'=>'fs_variant_count',
+			'variant_count'     => 'fs_variant_count',
 			// максимальное количество
-			'variant_count_max'=>'fs_variant_count_max',
+			'variant_count_max' => 'fs_variant_count_max',
 			// включает вариативность товара
-			'variated_on'=>'fs_variated_on'
+			'variated_on'       => 'fs_variated_on'
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );
@@ -173,51 +173,59 @@ class FS_Config {
 		);
 
 		self::$form_fields = array(
-			'fs_email'            => array( 'type' => 'email', 'label' => 'Ваш email', 'required' => true ),
-			'fs_first_name'       => array( 'type' => 'text', 'label' => 'Ваше имя', 'required' => true ),
-			'fs_last_name'        => array( 'type' => 'text', 'label' => 'Ваша фамилия', 'required' => true ),
-			'fs_phone'            => array(
+			'fs_email'             => array( 'type' => 'email', 'label' => 'Ваш email', 'required' => true ),
+			'fs_first_name'        => array( 'type' => 'text', 'label' => 'Ваше имя', 'required' => true ),
+			'fs_last_name'         => array( 'type' => 'text', 'label' => 'Ваша фамилия', 'required' => true ),
+			'fs_phone'             => array(
 				'type'      => 'tel',
 				'label'     => 'Телефон',
 				'required'  => true,
 				'save_meta' => 1
 			),
-			'fs_city'             => array( 'type'      => 'text',
-			                                'label'     => 'Город',
-			                                'required'  => true,
-			                                'save_meta' => 1
+			'fs_city'              => array(
+				'type'      => 'text',
+				'label'     => 'Город',
+				'required'  => true,
+				'save_meta' => 1
 			),
-			'fs_adress'           => array(
+			'fs_adress'            => array(
 				'type'      => 'text',
 				'label'     => 'Адрес доставки',
 				'required'  => false,
 				'save_meta' => 1
 			),
-			'fs_home_num'         => array(
+			'fs_home_num'          => array(
 				'type'      => 'text',
 				'label'     => 'Номер дома',
 				'required'  => false,
 				'save_meta' => 1
 			),
-			'fs_apartment_num'    => array(
+			'fs_apartment_num'     => array(
 				'type'      => 'text',
 				'label'     => 'Номер квартиры',
 				'required'  => false,
 				'save_meta' => 1
 			),
-			'fs_delivery_number'  => array(
+			'fs_delivery_number'   => array(
 				'type'      => 'text',
 				'label'     => 'Номер отделения',
 				'required'  => false,
 				'save_meta' => 1
 			),
-			'fs_delivery_methods' => array( 'type'      => 'radio',
-			                                'label'     => 'Способ доставки',
-			                                'required'  => true,
-			                                'save_meta' => 1
+			'fs_delivery_methods'  => array(
+				'type'      => 'radio',
+				'label'     => 'Способ доставки',
+				'required'  => true,
+				'save_meta' => 1
 			),
-			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'save_meta' => 1 ),
-			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
+			'fs_payment_methods'   => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'save_meta' => 1 ),
+			'fs_comment'           => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
+			'fs_customer_register' => array(
+				'type'     => 'checkbox',
+				'label'    => __( 'Register on the site', 'fast-shop' ),
+				'value'    => 1,
+				'required' => false
+			),
 		);
 
 		self::$currencies = array(

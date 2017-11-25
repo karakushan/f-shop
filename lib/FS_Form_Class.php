@@ -47,6 +47,9 @@ class FS_Form_Class {
 				case 'fs_payment_methods':
 					$selected = get_user_meta( $curent_user->ID, 'fs_payment_methods', 1 );
 					break;
+				case 'fs_customer_register':
+					return;
+					break;
 
 			}
 		}
@@ -62,7 +65,8 @@ class FS_Form_Class {
 			), array( '_' ), $field_name ),
 			'required'      => FS_Config::$form_fields[ $field_name ]['required'],
 			'title'         => __( 'this field is required', 'fast-shop' ),
-			'placeholder'   => FS_Config::$form_fields[ $field_name ]['label'],
+			'placeholder'   => FS_Config::$form_fields[ $field_name ]['placeholder'],
+			'label'         => FS_Config::$form_fields[ $field_name ]['label'],
 			'value'         => $default_value,
 			'html'          => '',
 			'options'       => array(),
@@ -106,9 +110,10 @@ class FS_Form_Class {
 				break;
 			case 'checkbox':
 				$field .= ' <input type="checkbox" name="' . $field_name . '"  ' . checked( '1', $args['value'], false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '  value="1"  ' . $id . '> ';
+				$field .= '<label for="' . esc_attr( $args['id'] ) . '">' . $args['label'] . '</label>';
 				break;
 			case 'textarea':
-				$field .= '<textarea name="c"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
+				$field .= '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
 				break;
 			case 'custom':
 				$field .= $args['html'];

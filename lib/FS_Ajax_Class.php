@@ -61,7 +61,7 @@ class FS_Ajax_Class {
 					$min_count = 1;
 					foreach ( $atts as $att ) {
 						if ( get_term_meta( $att, 'fs_att_type', 1 ) == 'range' ) {
-							$min_count =intval(get_term_meta( $att, 'fs_att_range_start_value', 1 )) ;
+							$min_count = intval( get_term_meta( $att, 'fs_att_range_start_value', 1 ) );
 
 						}
 					}
@@ -184,6 +184,7 @@ class FS_Ajax_Class {
 			die ( 'не пройдена верификация формы nonce' );
 		}
 		$fs_products = $_SESSION['cart'];
+		$user_id     = 0;
 		$sum         = fs_get_total_amount( $fs_products );
 		global $wpdb;
 		$wpdb->show_errors(); // включаем показывать ошибки при работе с базой
@@ -214,31 +215,34 @@ class FS_Ajax_Class {
 			$user_id = $user->ID;
 
 		} else {
-// Если пользователь не залогинен пробуем его зарегистрировать
-			$new_user = register_new_user( $sanitize_field['fs_email'], $sanitize_field['fs_email'] );
-			if ( ! is_wp_error( $new_user ) ) {
-				$user_id = $new_user;
-				wp_update_user( array(
-					'ID'         => $user_id,
-					'first_name' => $sanitize_field['fs_first_name'],
-					'last_name'  => $sanitize_field['fs_last_name'],
-					'role'       => FS_Config::getUsers( 'new_user_role' )
-				) );
-			} else {
-				if ( $new_user->get_error_code() == 'email_exists' || $new_user->get_error_code() == 'username_exists' ) {
-					$error_text = 'Пользователь с таким E-mail или Логином зарегистрирован на сайте. <a href="#fs-modal-login"
+			if ( ! empty( $sanitize_field['fs_customer_register'] ) &&  $sanitize_field['fs_customer_register']==1) {
+				// Если пользователь не залогинен пробуем его зарегистрировать
+				$new_user = register_new_user( $sanitize_field['fs_email'], $sanitize_field['fs_email'] );
+				if ( ! is_wp_error( $new_user ) ) {
+					$user_id = $new_user;
+					wp_update_user( array(
+						'ID'         => $user_id,
+						'first_name' => $sanitize_field['fs_first_name'],
+						'last_name'  => $sanitize_field['fs_last_name'],
+						'role'       => FS_Config::getUsers( 'new_user_role' )
+					) );
+				} else {
+					if ( $new_user->get_error_code() == 'email_exists' || $new_user->get_error_code() == 'username_exists' ) {
+						$error_text = 'Пользователь с таким E-mail или Логином зарегистрирован на сайте. <a href="#fs-modal-login"
                                                                                     data-fs-action="modal">Войти на
   сайт</a>. <a href="' . wp_lostpassword_url( get_permalink() ) . '">Забыли пароль?</a>';
-				} else {
-					$error_text = $new_user->get_error_message();
+					} else {
+						$error_text = $new_user->get_error_message();
+					}
+					echo json_encode( array(
+						'success'    => false,
+						'text'       => $error_text,
+						'error_code' => $new_user->get_error_code()
+					) );
+					exit();
 				}
-				echo json_encode( array(
-					'success'    => false,
-					'text'       => $error_text,
-					'error_code' => $new_user->get_error_code()
-				) );
-				exit();
 			}
+
 		}
 
 // обновляем мета поля пользователя
