@@ -41,7 +41,7 @@ class FS_Payment_Class {
 			$order_id = intval( $_GET['order_id'] );
 		}
 		$order = FS_Orders_Class::get_order( $order_id );
-		switch ( (string) $_GET['fs_action'] ) {
+		switch ( (string) $_GET['fs-action'] ) {
 			case 'order_status':
 				$order_status = FS_Orders_Class::get_order_status( $order_id );
 				$html         .= '<div class="fs-order-status">Статус заказа №' . $order_id . ': <b>' . $order_status . '</b></div>';
@@ -77,7 +77,7 @@ class FS_Payment_Class {
 		if ( $this->payment_methods( $order_id ) ) {
 			foreach ( $this->payment_methods( $order_id ) as $k => $payment_method ) {
 				printf( '<a href="%s">%s</a>', esc_url( add_query_arg( array(
-					'action'         => 'payment_method',
+					'fs-action'         => 'payment_method',
 					'order_id'       => $order_id,
 					'payment_method' => $k
 				), get_permalink( fs_option( 'page_payment' ) ) ) ), $payment_method['name'] );
