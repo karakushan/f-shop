@@ -16,15 +16,17 @@ class FS_Post_Type {
 	 * The Constructor
 	 */
 	public function __construct() {
-
 		// register actions
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'init' ),12 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'save_post', array( $this, 'save_fs_fields' ) );
 		$this->product_id = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
 
 		$this->config = new FS_Config();
 	} // END public function __construct()
+
+
+
 
 	/**
 	 * hook into WP's init action hook
@@ -33,7 +35,9 @@ class FS_Post_Type {
 		// Initialize Post Type
 		$this->create_post_type();
 
+
 	} // END public function init()
+
 
 	/**
 	 * Create the post type

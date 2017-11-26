@@ -707,4 +707,34 @@ td.fs_photo.column-fs_photo img {
   margin: 20px 0;
   font-weight: bold; }
 
+.fs-pay-wrapper {
+  width: 360px;
+  margin: 30px auto;
+  border: 1px solid #f1f1f1;
+  padding: 20px;
+  box-shadow: -4px 5px 4px rgba(0, 0, 0, 0.0705882353);
+  max-width: 100%; }
+  .fs-pay-wrapper .amount {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
+    color: #f74848;
+    letter-spacing: .05em;
+    margin-bottom: 20px; }
+  .fs-pay-wrapper img {
+    height: auto;
+    max-width: 100%;
+    margin-bottom: 20px;
+    display: inline-block; }
+
+.fs-order-status {
+  width: 360px;
+  margin: 0 auto 30px;
+  display: block;
+  float: none;
+  padding: 15px 30px;
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e6e6e6;
+  font-size: 16px; }
+
 /*# sourceMappingURL=f-shop.css.map */

@@ -119,22 +119,17 @@ function fs_get_price( $post_id = 0 ) {
 /**
  * @param $post_id - id
  * @param $count - к-во товаров
- * @param bool $curency
- * @param string $wpap формат отображения цены вместе с валютой
+ * @param string $wrap формат отображения цены вместе с валютой
  *
  * @return int|mixed|string
  */
-function fs_row_price( $post_id = 0, $count = 0, $curency = true, $wrap = '%s <span>%s</span>' ) {
+function fs_row_price( $post_id = 0, $count = 0, $wrap = '%s <span>%s</span>' ) {
 	global $post;
 	$post_id = empty( $post_id ) ? $post->ID : (int) $post_id;
 	$price   = fs_get_price( $post_id );
 	$price   = $price * $count;
-	if ( $curency ) {
-		$price = apply_filters( 'fs_price_format', $price );
-		$price = sprintf( $wrap, $price, fs_currency() );
-	}
-
-	return $price;
+	$price   = apply_filters( 'fs_price_format', $price );
+	printf( $wrap, $price, fs_currency() );
 }
 
 /**

@@ -28,6 +28,7 @@ class FS_Init {
 		new FS_Action_Class;
 		new FS_Users_Class;
 		new FS_Api_Class();
+		new FS_Payment_Class();
 
 		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );

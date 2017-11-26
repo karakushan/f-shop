@@ -85,12 +85,12 @@ class FS_Settings_Class {
 						'name'  => 'default_currency',
 						'label' => 'Валюта по умолчанию',
 						'html'  => wp_dropdown_categories( array(
-							'taxonomy'   => 'fs-currencies',
-							'echo'       => 0,
-							'hide_empty' => 0,
-							'selected'   => fs_option( 'default_currency' ),
-							'name'       => 'fs_option[default_currency]',
-							'show_option_none'   =>__('no currencies','fast-shop'),
+							'taxonomy'         => 'fs-currencies',
+							'echo'             => 0,
+							'hide_empty'       => 0,
+							'selected'         => fs_option( 'default_currency' ),
+							'name'             => 'fs_option[default_currency]',
+							'show_option_none' => __( 'no currencies', 'fast-shop' ),
 						) ),
 						'value' => fs_option( 'default_currency' )
 					),
@@ -210,7 +210,8 @@ class FS_Settings_Class {
 			)
 		);
 
-		$settings = apply_filters( 'fs_plugin_settings', $settings );
+		$settings           = apply_filters( 'fs_plugin_settings', $settings );
+
 
 		return $settings;
 	}

@@ -16,7 +16,7 @@ class FS_Taxonomies_Class {
 	public $product_taxonomy;
 
 	function __construct() {
-		add_action( 'init', array( $this, 'create_taxonomy' ) );
+		add_action( 'init', array( $this, 'create_taxonomy' ), 12 );
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
 		// добавляем колонку при просмотре списка терминов таксономии валют
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );

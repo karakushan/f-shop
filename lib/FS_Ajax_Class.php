@@ -264,7 +264,7 @@ class FS_Ajax_Class {
 		$defaults                              = array(
 			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
 			'post_content' => '',
-			'post_status'  => 'publish',
+			'post_status'  => 'pending',
 			'post_type'    => 'orders',
 			'post_author'  => 1,
 			'ping_status'  => get_option( 'default_ping_status' ),

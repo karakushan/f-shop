@@ -25,7 +25,7 @@
 							']'
 						), array( '_' ), sprintf( 'fs_option[%s]', $field['name'] ) ); ?>
                     <p>
-						<?php if ( $field['label'] ): ?>
+						<?php if ( ! empty( $field['label'] ) && $field['type'] != 'checkbox' ): ?>
                           <label for="<?php echo $label_id ?>"><?php echo $field['label'] ?></label><br>
 						<?php endif; ?>
 						<?php fs_form_field( sprintf( 'fs_option[%s]', $field['name'] ), array(
