@@ -17,6 +17,7 @@ class FS_Config {
 	public $term_meta;
 	public $options;
 	public $tabs;
+	public $texts;
 
 	public $taxonomies;
 	public static $currencies = array();
@@ -54,6 +55,8 @@ class FS_Config {
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
+		// Получает массив служебных текстов
+		$this->texts = self::get_texts();
 
 		//Табы отображаемые в метабоксе в редактировании товара
 		$this->tabs = array(
@@ -286,6 +289,23 @@ class FS_Config {
 		);
 
 		return apply_filters( 'fs_order_statuses', $order_statuses );
+	}
+
+	/**
+	 * Тексты копирайтов в письмах
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public static function get_texts( $key = '' ) {
+		$texts = array(
+			'mail_copywrite' => '<p>Этот интернет-магазин работает благодаря плагину <a href="https://f-shop.top/">F-Shop</a>.  <a href="https://f-shop.top/dokumentacija/">Документация</a>. <a href="https://f-shop.top/novosti/">Новости</a>.</p>'
+		);
+
+		$texts = apply_filters( 'fs_service_text', $texts );
+
+		return ! empty( $texts[ $key ] ) ? $texts[ $key ] : $texts;
 	}
 
 	/**

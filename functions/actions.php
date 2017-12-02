@@ -137,7 +137,7 @@ function fs_orders_bubble() {
 
 		foreach ( $menu as $key => $value ) {
 
-			if ( $menu[ $key ][2] == 'edit.php?post_type='.$fs_config->data['post_type_orders'] ) {
+			if ( $menu[ $key ][2] == 'edit.php?post_type=' . $fs_config->data['post_type_orders'] ) {
 
 				$menu[ $key ][0] .= ' <span class="update-plugins count-' . $custom_post_pending_count . '"><span class="plugin-count" aria-hidden="true"> ' . $custom_post_pending_count . '</span><span class="screen-reader-text"> ' . $custom_post_pending_count . '</span></span>';
 
@@ -150,7 +150,7 @@ function fs_orders_bubble() {
 	}
 }
 
-function create_new_archive_post_status(){
+function create_new_archive_post_status() {
 	register_post_status( 'archive', array(
 		'label'                     => _x( 'Archive', 'post' ),
 		'public'                    => true,
@@ -160,8 +160,32 @@ function create_new_archive_post_status(){
 		'label_count'               => _n_noop( 'Archive <span class="count">(%s)</span>', 'Archive <span class="count">(%s)</span>' ),
 	) );
 }
-add_action( 'init', 'create_new_archive_post_status',999 );
 
+add_action( 'init', 'create_new_archive_post_status', 999 );
+
+
+// Добавляем кнопки в текстовый html-редактор
+add_action( 'admin_print_footer_scripts', 'fs_add_sheensay_quicktags' );
+function fs_add_sheensay_quicktags() {
+	if ( empty( $_GET['page'] ) && $_GET['page'] != 'fast-shop-settings' || ! wp_script_is( 'quicktags' ) ) {
+		return;
+	} ?>
+  <script type="text/javascript">
+      if (QTags) {
+          // QTags.addButton( id, display, arg1, arg2, access_key, title, priority, instance );
+          QTags.addButton('fs_b_fname', '<?php _e( 'First name', 'fast-shop' ) ?>', '%fs_first_name%', '', '', '<?php _e( 'First name', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_lname', '<?php _e( 'Last name', 'fast-shop' ) ?>', '%fs_last_name%', '', '', '<?php _e( 'Last name', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_email', '<?php _e( 'Email', 'fast-shop' ) ?>', '%fs_email%', '', '', '<?php _e( 'E-mail', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_order_id', '<?php _e( 'Order id', 'fast-shop' ) ?>', '%order_id%', '', '', '<?php _e( 'Order id', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_total_amount', '<?php _e( 'Amount', 'fast-shop' ) ?>', '%total_amount%', '', '', '<?php _e( 'Amount', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_phone', '<?php _e( 'Phone', 'fast-shop' ) ?>', '%fs_phone%', '', '', '<?php _e( 'Phone', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fs_city', '<?php _e( 'City', 'fast-shop' ) ?>', '%fs_city%', '', '', '<?php _e( 'City', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fs_adress', '<?php _e( 'Delivery address', 'fast-shop' ) ?>', '%fs_adress%', '', '', '<?php _e( 'Delivery address', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_site_name', '<?php _e( 'Site name', 'fast-shop' ) ?>', '%site_name%', '', '', '<?php _e( 'Site name', 'fast-shop' ) ?>', 1);
+      }
+  </script>
+	<?php
+}
 
 
 
