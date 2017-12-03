@@ -69,6 +69,7 @@ class FS_Form_Class {
 			'label'         => FS_Config::$form_fields[ $field_name ]['label'],
 			'value'         => $default_value,
 			'html'          => '',
+			'selected'      => $selected,
 			'options'       => array(),
 			'format'        => '%input% %label%',
 			'el'            => 'select',
@@ -146,7 +147,7 @@ class FS_Form_Class {
 						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
-						'selected'        => $selected,
+						'selected'        => $args['selected'],
 						'class'           => $args['class'],
 						'echo'            => 0,
 						'taxonomy'        => $fs_config->data['product_pay_taxonomy']
@@ -173,7 +174,7 @@ class FS_Form_Class {
 						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
-						'selected'        => $selected,
+						'selected'        => $args['selected'],
 						'class'           => $args['class'],
 						'echo'            => 0,
 						'taxonomy'        => $fs_config->data['product_del_taxonomy']

@@ -35,6 +35,7 @@
 							'options' => $field['type'] == 'select' ? $field['options'] : [],
 							'name'    => ! empty( $field['name'] ) ? $field['name'] : '',
 							'value'   => ! empty( $field['value'] ) ? $field['value'] : '',
+							'selected'=>! empty( $field['selected'] ) ? $field['selected'] : '',
 							'label'   => ! empty( $field['label'] ) ? $field['label'] : '',
 							'class'   => ! empty( $field['class'] ) ? $field['class'] : '',
 							'after'   => ! empty( $field['after'] ) ? $field['after'] : '',

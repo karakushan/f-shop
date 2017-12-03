@@ -1008,6 +1008,14 @@ td.fs_photo.column-fs_photo {
 .fs-option{
     label{
         font-weight: bold;
+        >span {
+            padding: 4px 8px;
+            background: #eee;
+            font-weight: normal;
+            margin-left: 8px;
+            position: relative;
+            top: -6px;
+        }
     }
     select,
     input[type=text],

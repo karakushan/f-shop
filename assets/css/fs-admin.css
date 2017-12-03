@@ -760,6 +760,13 @@ td.fs_photo.column-fs_photo {
 
 .fs-option label {
   font-weight: bold; }
+  .fs-option label > span {
+    padding: 4px 8px;
+    background: #eee;
+    font-weight: normal;
+    margin-left: 8px;
+    position: relative;
+    top: -6px; }
 .fs-option select,
 .fs-option input[type=text],
 .fs-option input[type=number],
