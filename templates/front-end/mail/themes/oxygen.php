@@ -393,15 +393,16 @@
                                  style="border-collapse:separate !important;">
                             <tr>
                               <td class="mini-block">
-                                <span class="header-sm"><?php _e( 'Shipping and payment', 'fast-shop' ) ?></span><br/>
-                                %fs_first_name% %fs_last_name%<br/>
-                                %fs_phone%<br/>
-                                %fs_city% <br/>
-                                %fs_adress% <br/>
-                                %fs_delivery_methods% %fs_delivery_number%<br/>
-                                %fs_payment_methods%
+                                <span class="header-sm">Информация о заказе</span><br/>
+                                <b>Номер заказа:</b>%order_id%
+                                <b>Имя:</b> %fs_first_name% %fs_last_name%<br/>
+                                <b>Телефон:</b> %fs_phone%<br/>
+                                <b>Город:</b> %fs_city% <br/>
+                                <b>Адрес:</b> %fs_adress% <br/>
+                                <b>Способ доставки:</b> %fs_delivery_methods% %fs_delivery_number%<br/>
                               </td>
                             </tr>
+
                           </table>
                         </td>
                       </tr>
@@ -415,12 +416,10 @@
                                  style="border-collapse:separate !important;">
                             <tr>
                               <td class="mini-block">
-                                <span class="header-sm"><?php _e( 'Date Ordered', 'fast-shop' ) ?></span><br/>
-								  <?php echo date( 'd.m.Y H:i' ) ?> <br/>
-                                <br/>
-                                <span class="header-sm"><?php _e( 'Order', 'fast-shop' ) ?></span>
-                                <br/>
-                                #%order_id%
+                                <span class="header-sm">Оплата</span><br/>
+                                <b>Способ оплаты:</b> %fs_payment_methods%<br>
+                                Оплата станет доступной после подтверждения заказа менеджером. <br>
+                                Если заказ будет подтверждён - информация об оплате придёт в следующем письме.
                               </td>
                             </tr>
                           </table>

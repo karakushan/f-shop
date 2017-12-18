@@ -122,22 +122,6 @@ class FS_Taxonomies_Class {
 				'hierarchical'       => false,
 				'meta_box_cb'        => false,
 				'show_in_quick_edit' => false
-			),
-			'order-statuses'      => array(
-				'object_type'        => 'orders',
-				'label'              => __( 'Order statuses', 'fast-shop' ),
-				'labels'             => array(
-					'name'          => __( 'Order statuses', 'fast-shop' ),
-					'singular_name' => __( 'Order statuses', 'fast-shop' ),
-					'add_new_item'  => __( 'Add status', 'fast-shop' ),
-				),
-				//					исключаем категории из лицевой части
-				"public"             => false,
-				"show_ui"            => true,
-				"publicly_queryable" => false,
-				'metabox'            => false,
-				'show_admin_column'  => true,
-				'hierarchical'       => true
 			)
 		);
 
@@ -179,6 +163,12 @@ class FS_Taxonomies_Class {
 		add_action( "fs-currencies_add_form_fields", array( $this, 'add_fs_currencies_fields' ) );
 		add_action( "create_fs-currencies", array( $this, 'save_custom_taxonomy_meta' ) );
 		add_action( "edited_fs-currencies", array( $this, 'save_custom_taxonomy_meta' ) );
+
+		// поля таксономии способов оплаты
+		add_action( "fs-payment-methods_edit_form_fields", array( $this, 'edit_fs_payment_methods_fields' ) );
+		add_action( "fs-payment-methods_add_form_fields", array( $this, 'add_fs_payment_methods_fields' ) );
+		add_action( "create_fs-payment-methods", array( $this, 'save_custom_taxonomy_meta' ) );
+		add_action( "edited_fs-payment-methods", array( $this, 'save_custom_taxonomy_meta' ) );
 
 	}
 
@@ -312,6 +302,32 @@ class FS_Taxonomies_Class {
 						<td><input name="fast-shop[cost-basic]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'cost-basic', 1 ) . '" size="5">
 			<p class="description"> ' . __( 'Only digits with a dot are allowed', 'fast-shop' ) . ' </p></td>
 		</tr> ';
+	}
+
+	/**
+	 * Создаёт поле "Сообщение покупателю  для оплаты" при редактировании способа оплаты
+	 *
+	 * @param $term объект термина который редактируется
+	 */
+	function edit_fs_payment_methods_fields( $term ) {
+		echo '<tr class="form-field term-currency-code-wrap">
+			<th scope="row"><label for="slug"> ' . __( 'Сообщение покупателю  для оплаты', 'fast-shop' ) . ' </label></th>
+						<td><textarea name="fast-shop[pay-message]" id="pay-message">' . esc_html( get_term_meta( $term->term_id, 'pay-message', 1 ) ) . '</textarea>
+			<p class="description">%pay_url% будет заменено на ссылку для оплаты, %pay_name% на название способа оплаты </p></td>
+		</tr> ';
+
+	}
+
+	/**
+	 * Создаёт поле "Сообщение покупателю  для оплаты" при добававлении способа оплаты
+	 */
+	function add_fs_payment_methods_fields() {
+		echo '<div class="form-field pay-message-code-wrap">
+			<label for="pay-message"> ' . __( 'Сообщение покупателю  для оплаты', 'fast-shop' ) . ' </label>
+						<textarea name="fast-shop[pay-message]" id="pay-message" cols="40" rows="5"></textarea>
+			<p class="description">%pay_url% будет заменено на ссылку для оплаты, %pay_name% на название способа оплаты </p>
+		</div> ';
+
 	}
 
 

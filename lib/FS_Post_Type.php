@@ -17,15 +17,13 @@ class FS_Post_Type {
 	 */
 	public function __construct() {
 		// register actions
-		add_action( 'init', array( $this, 'init' ),12 );
+		add_action( 'init', array( $this, 'init' ), 12 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'save_post', array( $this, 'save_fs_fields' ) );
 		$this->product_id = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
 
 		$this->config = new FS_Config();
 	} // END public function __construct()
-
-
 
 
 	/**
@@ -222,17 +220,6 @@ class FS_Post_Type {
 			'normal',
 			'default'
 		);
-
-		// добавляем метабокс изменения статуса  заказа
-		add_meta_box(
-			sprintf( 'fast_shop_%s_status_metabox', 'orders' ),
-			__( 'Order status', 'fast-shop' ),
-			array( &$this, 'add_order_status_meta_boxes' ),
-			'orders',
-			'side',
-			'default'
-		);
-
 		// Add this metabox to every selected post
 
 	} // END public function add_meta_boxes()
@@ -330,37 +317,4 @@ class FS_Post_Type {
 
 		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-1.php';
 	}
-
-	/* метабокс отображает select для изменения статуса заказаы */
-	public function add_order_status_meta_boxes( $post ) {
-		$term    = get_the_terms( $post, 'order-statuses' );
-		$term_id = ! empty( $term ) ? $term[0]->term_id : 0;
-		$args    = array(
-			'show_option_all'  => '',
-			'show_option_none' => '',
-			'orderby'          => 'ID',
-			'order'            => 'ASC',
-			'show_last_update' => 0,
-			'show_count'       => 0,
-			'hide_empty'       => 0,
-			'child_of'         => 0,
-			'exclude'          => '',
-			'echo'             => 1,
-			'selected'         => $term_id,
-			'hierarchical'     => 0,
-			'name'             => 'tax_input[order-statuses][]',
-			'id'               => 'order-statuses',
-			'class'            => 'order-statuses',
-			'depth'            => 0,
-			'tab_index'        => 0,
-			'taxonomy'         => 'order-statuses',
-			'hide_if_empty'    => false,
-			'value_field'      => 'term_id', // значение value e option
-			'required'         => false,
-		);
-
-		wp_dropdown_categories( $args );
-	}
-
-
 } // END class Post_Type_Template

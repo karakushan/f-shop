@@ -215,7 +215,7 @@ class FS_Ajax_Class {
 			$user_id = $user->ID;
 
 		} else {
-			if ( ! empty( $sanitize_field['fs_customer_register'] ) &&  $sanitize_field['fs_customer_register']==1) {
+			if ( ! empty( $sanitize_field['fs_customer_register'] ) && $sanitize_field['fs_customer_register'] == 1 ) {
 				// Если пользователь не залогинен пробуем его зарегистрировать
 				$new_user = register_new_user( $sanitize_field['fs_email'], $sanitize_field['fs_email'] );
 				if ( ! is_wp_error( $new_user ) ) {

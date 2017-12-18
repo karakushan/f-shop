@@ -767,6 +767,7 @@ td.fs_photo.column-fs_photo {
     margin-left: 8px;
     position: relative;
     top: -6px; }
+.fs-option textarea,
 .fs-option select,
 .fs-option input[type=text],
 .fs-option input[type=number],

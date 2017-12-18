@@ -1932,3 +1932,20 @@ function fs_product_label( $product_id = 0, $labels = array() ) {
 
 }
 
+/**
+ * Функция создаёт возможность изменения сообщения пользователю,
+ * которое отсылается или показывается после осуществления покупкиэ
+ * сообщение может содержать две переменные:
+ *
+ *
+ * @param $pay_method_id - ID выбраного метода оплаты
+ *
+ * @return mixed|void
+ */
+function fs_pay_user_message( $pay_method_id ) {
+	$message = get_term_meta( intval( $pay_method_id ), 'pay-message', 1 );
+
+	return apply_filters( 'fs_pay_user_message', $message, $pay_method_id );
+}
+
+
