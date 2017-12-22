@@ -172,12 +172,16 @@ function fs_the_price( $post_id = 0, $wrap = "%s <span>%s</span>", $args = array
 	$price    = fs_get_price( $post_id );
 	$price    = apply_filters( 'fs_price_format', $price );
 
+	$wrap = '<span %s>' . $wrap . '</span>';
+	$atts = fs_parse_attr( array(), array(
+		'data-fs-element' => 'price',
+		'data-fs-value'   => $price
+	) );
 	if ( $args['echo'] ) {
-		printf( $wrap, $price, $cur_symb );
+		printf( $wrap, $atts, $price, $cur_symb );
 	} else {
 		return sprintf( $wrap, $price, $cur_symb );
 	}
-
 }
 
 /**
@@ -530,20 +534,21 @@ function fs_get_base_price( $post_id = 0 ) {
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price( $post_id = 0, $wrap = '<span {data}>%s <span class="fs-currency">%s</span></span>' ) {
+function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>' ) {
 	$price = fs_get_base_price( $post_id );
 
 	if ( ! $price ) {
 		return;
 	}
+	$wrap     = '<span %s>' . $wrap . '</span>';
 	$atts     = fs_parse_attr( array(), array(
-		'data-fs-element' => 'old_price',
+		'data-fs-element' => 'base-price',
 		'data-fs-value'   => $price
 	) );
 	$price    = apply_filters( 'fs_price_format', $price );
 	$cur_symb = fs_currency();
-	$wrap     = str_replace( '{data}', $atts, $wrap );
-	printf( $wrap, $price, $cur_symb );
+
+	printf( $wrap, $atts, $price, $cur_symb );
 }
 
 /**

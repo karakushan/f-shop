@@ -52,9 +52,7 @@ class FS_Init {
 
 	function fast_shop_scripts() {
 		wp_enqueue_style( 'lightslider', $this->config->data['plugin_url'] . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/css/lightbox.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'font-awesome', $this->config->data['plugin_url'] . 'assets/fontawesome/css/font-awesome.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'izi-toast', $this->config->data['plugin_url'] . 'assets/css/iziToast.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'] . 'assets/css/f-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
 
@@ -63,7 +61,6 @@ class FS_Init {
 		wp_enqueue_script( 'jquery-validate', $this->config->data['plugin_url'] . 'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'domurl', $this->config->data['plugin_url'] . 'assets/js/url.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'izi-toast', $this->config->data['plugin_url'] . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'lightslider', $this->config->data['plugin_url'] . 'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'f-shop', $this->config->data['plugin_url'] . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
 		$price_max = (int) fs_price_max( false );
@@ -79,14 +76,14 @@ class FS_Init {
 	}
 
 	public function fast_shop_admin_scripts() {
-		//!!! не удалять, необходимо для работы загрузчика изображений
+		// необходимо для работы загрузчика изображений
 		if ( ! did_action( 'wp_enqueue_media' ) ) {
 			wp_enqueue_media();
 		}
-		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
+		wp_enqueue_script( "jquery-ui-core", array( 'jquery' ) );
+		wp_enqueue_script( "jquery-ui-tabs", array( 'jquery' ) );
 		wp_enqueue_style( 'spectrum', $this->config->data['plugin_url'] . 'assets/css/spectrum.css' );
 		wp_enqueue_style( 'fs-admin', $this->config->data['plugin_url'] . 'assets/css/fs-admin.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_script( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.js', array( 'jquery' ), null, true );
 
 		wp_enqueue_script( 'spectrum', $this->config->data['plugin_url'] . 'assets/js/spectrum.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'js-cookie', $this->config->data['plugin_url'] . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
@@ -94,8 +91,6 @@ class FS_Init {
 		if ( $screen->id == 'edit-product' ) {
 			wp_enqueue_script( 'fs-quick-edit', $this->config->data['plugin_url'] . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
 		}
-
-
 		wp_enqueue_script( 'fs-admin', $this->config->data['plugin_url'] . 'assets/js/fs-admin.js', array(
 			'jquery',
 			'js-cookie'

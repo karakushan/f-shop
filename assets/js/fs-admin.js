@@ -134,7 +134,7 @@ jQuery(document).ready(function ($) {
         }
     }).addClass("ui-tabs-vertical ui-helper-clearfix");
     $("#fs-options-tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
-    $(".fs-metabox input[type='radio']").checkboxradio();
+
 
     //действия в админке
     $('[data-fs-action*=admin_]').on('click', function (event) {
@@ -359,6 +359,15 @@ jQuery(document).ready(function ($) {
         event.preventDefault();
         $(this).parent('div').remove();
     });
+});
+
+jQuery(document).on('change', '.fs_select_variant', function (event) {
+    event.preventDefault();
+    if (jQuery(this).val() == '-1') {
+        if (confirm('подтверждаете?')) {
+            jQuery(this).fadeOut().remove();
+        }
+    }
 });
 
 

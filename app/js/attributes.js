@@ -31,20 +31,21 @@ jQuery('[data-action="change-attr"]').on('change', function () {
             url: FastShopData.ajaxurl,
             data: {action: "fs_get_variated", product_id: productId, atts: attrObj.attr},
             beforeSend: function () {
-                jQuery("[data-fs-element=\"base_price\"]").addClass('blink');
+                jQuery("[data-fs-element=\"price\"]").addClass('blink');
             },
             success: function (data) {
                 if (IsJsonString(data)) {
                     var json = jQuery.parseJSON(data);
+                    var priceFull=json.base_price + ' <span>' +json.currency+ '</span>';
                     if (json.result) {
-                        jQuery("[data-fs-element=\"base_price\"]").removeClass('blink').text(json.base_price);
+                        jQuery("[data-fs-element=\"price\"]").removeClass('blink').html(priceFull);
                         attrObj.count = json.count;
                         jQuery('[data-fs-action="change_count"]').val(json.count);
-                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility', 'hidden');
+                        jQuery("[data-fs-element=\"base-price\"]").parent().css('visibility', 'hidden');
                         jQuery("[data-fs-element=\"discount\"]").parent().css('visibility', 'hidden');
                     } else {
-                        jQuery("[data-fs-element=\"base_price\"]").text(json.base_price);
-                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility', 'visible');
+                        jQuery("[data-fs-element=\"price\"]").html(priceFull);
+                        jQuery("[data-fs-element=\"base-price\"]").parent().css('visibility', 'visible');
                         jQuery("[data-fs-element=\"discount\"]").parent().css('visibility', 'visible');
                     }
                 } else {

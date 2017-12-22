@@ -62,7 +62,6 @@ class FS_Ajax_Class {
 					foreach ( $atts as $att ) {
 						if ( get_term_meta( $att, 'fs_att_type', 1 ) == 'range' ) {
 							$min_count = intval( get_term_meta( $att, 'fs_att_range_start_value', 1 ) );
-
 						}
 					}
 
@@ -71,6 +70,7 @@ class FS_Ajax_Class {
 					echo json_encode( array(
 						'result'     => 1,
 						'base_price' => apply_filters( 'fs_price_format', $base_price ),
+						'currency'   => fs_currency(),
 						'count'      => max( $min_count, 1 )
 					) );
 					exit();

@@ -450,25 +450,30 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 	printf( '<%s class="%s">', $args['wpapper'], sanitize_html_class( $args['wpapper_class'] ) );
 	switch ( $args['type'] ) {
 		case 'radio':
+			$i = 0;
 			foreach ( $terms[ $parent ] as $term ) {
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' <li>';
 				} elseif ( 'div' ) {
 					echo ' <div>';
 				}
-				echo '<input type="radio" ' . $tag_att . '    value="' . esc_attr( $term->term_id ) . '" id="fs-att-' . esc_attr( $term->term_id ) . '">
+				echo '<input type="radio" ' . $tag_att . ' ' . checked( 0, $i, 0 ) . '    value="' . esc_attr( $term->term_id ) . '" id="fs-att-' . esc_attr( $term->term_id ) . '">
                   <label for="fs-att-' . esc_attr( $term->term_id ) . '">' . esc_html( $term->name ) . '</label>';
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' </li>';
 				} elseif ( 'div' ) {
 					echo ' </div>';
 				}
+				$i ++;
 			}
+
 			break;
 		case'select':
 			echo '<select ' . $tag_att . '>';
-			foreach ( $terms[ $parent ] as $term ) {
-				echo '<option value="' . $term->term_id . '">' . $term->name . '</option>';
+			$i = 0;
+			foreach ( $terms[ $parent ] as $k => $term ) {
+				echo '<option value="' . $term->term_id . '"  ' . selected( 0, $i, 0 ) . ' >' . $term->name . '</option>';
+				$i ++;
 			}
 			echo '</select>';
 			break;
