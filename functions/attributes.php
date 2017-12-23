@@ -319,14 +319,14 @@ function fs_attr_change( $required_atts = array() ) {
 				switch ( $att['type'] ) {
 					case "color":
 						echo '<span class="fs-attr-group-color">';
-						echo '<input type="radio"  name="group-' . $required_att . '" data-product-id="' . $product_id . '" data-target="#group-' . $required_att . '" data-action="change-attr" id="attr-' . $id . '" value="' . $id . '">';
-						echo '<label for="attr-' . $id . '" style="background-color:' . $att['value'] . '"><span class="checkbox"></span></label>';
+						echo '<input type="radio"  name="group-' . esc_attr( $required_att ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-target="#group-' . esc_attr( $required_att ) . '" data-action="change-attr" id="attr-' . esc_attr( $id ) . '" value="' . esc_attr( $id ) . '">';
+						echo '<label for="attr-' . esc_attr( $id ) . '" style="background-color:' . esc_attr( $att['value'] ) . '"><span class="checkbox"></span></label>';
 						echo '</span>';
 						break;
 					default:
 						echo '<div class="fs-attr-group-text">';
-						echo '<input type="radio"  name="group-' . $required_att . '" data-product-id="' . $product_id . '"  data-target="#group-' . $required_att . '" id="attr-' . $id . '" data-action="change-attr" value="' . $id . '">';
-						echo '<label for="attr-' . $id . '"><span class="checkbox"></span>' . $att['value'] . '</label>';
+						echo '<input type="radio"  name="group-' . $required_att . '" data-product-id="' . esc_attr( $product_id ) . '"  data-target="#group-' . esc_attr( $required_att ) . '" id="attr-' . esc_attr( $id ) . '" data-action="change-attr" value="' . esc_attr( $id ) . '">';
+						echo '<label for="attr-' . esc_attr( $id ) . '"><span class="checkbox"></span>' . esc_html( $att['value'] ) . '</label>';
 						echo '</div> ';
 						break;
 				}
@@ -375,7 +375,7 @@ function fs_list_post_atts( $post_id = 0 ) {
 			$group      = get_term_field( 'name', $key, $fs_config->data['product_att_taxonomy'] );
 			$group_slug = get_term_field( 'slug', $key, $fs_config->data['product_att_taxonomy'] );
 
-			echo '<div class="fs-attr-group-name">' . $group . '</div>';
+			echo '<div class="fs-attr-group-name">' . esc_html( $group ) . '</div>';
 			echo '<ul class="fs-attr-groups-list">';
 			foreach ( $parent as $child ) {
 				$attr_type = get_term_meta( $child->term_id, 'fs_att_type', 1 );

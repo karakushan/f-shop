@@ -264,7 +264,7 @@ class FS_Filters {
 					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
-				echo '<option  value="' . $redirect_url . '" ' . selected( $url['attributes'][ $att->slug ], $att->term_id, 0 ) . '>' . $att->name . '</option>';
+				echo '<option  value="' . esc_url( $redirect_url ) . '" ' . selected( $url['attributes'][ $att->slug ], $att->term_id, 0 ) . '>' . $att->name . '</option>';
 			}
 			echo '</select>';
 		}
@@ -276,7 +276,7 @@ class FS_Filters {
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
 
-				echo '<li><a href="' . $redirect_url . '" data-fs-action="filter" >' . $att->name . '</a></li>';
+				echo '<li><a href="' . esc_url( $redirect_url ) . '" data-fs-action="filter" >' . $att->name . '</a></li>';
 			}
 			echo '</ul>';
 		}
