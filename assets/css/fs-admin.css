@@ -168,8 +168,6 @@
         overflow: auto; }
       .fs-metabox .fs-tabs > .fs-tab .fs-field-row {
         margin-bottom: 15px;
-        border-bottom: 1px dotted #cdcdcd;
-        padding-bottom: 15px;
         position: relative; }
         .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule {
           background: #e7f1ff;
@@ -774,5 +772,56 @@ td.fs_photo.column-fs_photo {
 .fs-option input[type=email] {
   width: 274px;
   max-width: 100%; }
+
+#holder {
+  border: 2px dashed #acf;
+  width: 100%;
+  min-height: 191px;
+  margin: 8px auto 0;
+  background-image: url(/wp-content/plugins/f-shop/assets/img/upload.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 66px; }
+  #holder.hover {
+    -webkit-transition: all .4s;
+    -moz-transition: all .4s;
+    -ms-transition: all .4s;
+    -o-transition: all .4s;
+    transition: all .4s;
+    background-color: #acf; }
+  #holder img {
+    display: block;
+    margin: 10px auto; }
+  #holder p {
+    margin: 10px;
+    font-size: 14px; }
+
+progress {
+  width: 100%;
+  position: relative; }
+  progress:before {
+    content: '0%';
+    position: absolute;
+    left: 0;
+    top: 100%;
+    color: #02c913; }
+  progress:after {
+    content: '100%';
+    position: absolute;
+    right: 0;
+    top: 100%;
+    color: #02c913; }
+
+.fail {
+  background: #c00;
+  padding: 2px;
+  color: white; }
+
+.hidden {
+  display: none !important; }
+
+.fs-upload-desc {
+  font-weight: bold;
+  font-size: 14px; }
 
 /*# sourceMappingURL=fs-admin.css.map */

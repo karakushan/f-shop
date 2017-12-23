@@ -1714,7 +1714,9 @@ function fs_gallery_images_ids( $post_id = 0, $thumbnail = true ) {
 
 	if ( ! empty( $fs_gallery['0'] ) ) {
 		foreach ( $fs_gallery['0'] as $item ) {
-			$gallery       [] = $item;
+			if (wp_get_attachment_image($item)){
+				$gallery       [] = $item;
+			}
 		}
 	}
 
@@ -1951,6 +1953,34 @@ function fs_pay_user_message( $pay_method_id ) {
 	$message = get_term_meta( intval( $pay_method_id ), 'pay-message', 1 );
 
 	return apply_filters( 'fs_pay_user_message', $message, $pay_method_id );
+}
+
+/**
+ * Возвращает массив разрешённых типов изображений для загрузки
+ *
+ * @param string $return
+ *
+ * @return array|string
+ */
+function fs_allowed_images_type( $return = 'array' ) {
+	$mime_types = get_allowed_mime_types();
+	$mime       = [];
+	if ( $mime_types ) {
+		foreach ( $mime_types as $mime_type ) {
+			if ( strpos( $mime_type, 'image' ) === 0 ) {
+				if ( $return == 'json' ) {
+					$mime[$mime_type] = true;
+				} else {
+					$mime[] = $mime_type;
+				}
+			}
+		}
+	}
+	if ( $return == 'json' ) {
+		return json_encode($mime);
+	} else {
+		return $mime;
+	}
 }
 
 

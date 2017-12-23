@@ -3,6 +3,7 @@
 .fs-preloader {
     display: none;
 }
+
 .fs-primary-button {
     height: 2.35em;
     padding: 0 22px;
@@ -42,6 +43,7 @@
     }
 
 }
+
 .fs-metabox {
     width: 100%;
     margin: 0 auto;
@@ -154,7 +156,7 @@
                 }
             }
             button {
-             @extend .fs-primary-button;
+                @extend .fs-primary-button;
 
             }
             .fs-attr-list {
@@ -206,8 +208,6 @@
             }
             .fs-field-row {
                 margin-bottom: 15px;
-                border-bottom: 1px dotted #cdcdcd;
-                padding-bottom: 15px;
                 position: relative;
                 &.fs-rule {
                     background: #e7f1ff;
@@ -783,10 +783,12 @@ td.fs_price.column-fs_price span span {
     max-width: 100%;
     margin-bottom: 14px;
 }
+
 .ui-tabs .ui-tabs-nav li.ui-tabs-active {
     margin-bottom: 3px;
     padding-bottom: 1px;
 }
+
 .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
     float: none;
     padding: .5em 1em;
@@ -794,6 +796,7 @@ td.fs_price.column-fs_price span span {
     outline: none;
     box-shadow: none;
 }
+
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
     border: none;
     background: #389eff;
@@ -801,6 +804,7 @@ td.fs_price.column-fs_price span span {
     color: #fff;
     border-radius: 0;
 }
+
 .fs-btn {
     display: inline-block;
 
@@ -1005,10 +1009,10 @@ td.fs_photo.column-fs_photo {
     width: 40em;
 }
 
-.fs-option{
-    label{
+.fs-option {
+    label {
         font-weight: bold;
-        >span {
+        > span {
             padding: 4px 8px;
             background: #eee;
             font-weight: normal;
@@ -1021,12 +1025,74 @@ td.fs_photo.column-fs_photo {
     select,
     input[type=text],
     input[type=number],
-    input[type=email]
-    {
+    input[type=email] {
         width: 274px;
         max-width: 100%;
     }
 
+}
+
+// загрузчик файлов
+#holder {
+    border: 2px dashed #acf;
+    width: 100%;
+    min-height: 191px;
+    margin: 8px auto 0;
+    background-image: url(/wp-content/plugins/f-shop/assets/img/upload.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 66px;
+
+    &.hover {
+        -webkit-transition: all .4s;
+        -moz-transition: all .4s;
+        -ms-transition: all .4s;
+        -o-transition: all .4s;
+        transition: all .4s;
+        background-color: #acf;
+    }
+    img {
+        display: block;
+        margin: 10px auto;
+    }
+    p {
+        margin: 10px;
+        font-size: 14px;
+    }
+}
+
+progress {
+    width: 100%;
+    position: relative;
+    &:before {
+        content: '0%';
+        position: absolute;
+        left: 0;
+        top: 100%;
+        color: #02c913;
+    }
+    &:after {
+        content: '100%';
+        position: absolute;
+        right: 0;
+        top: 100%;
+        color: #02c913;
+    }
+}
+
+.fail {
+    background: #c00;
+    padding: 2px;
+    color: white;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.fs-upload-desc {
+    font-weight: bold;
+    font-size: 14px;
 }
 
 

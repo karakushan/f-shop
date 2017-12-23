@@ -95,6 +95,12 @@ class FS_Init {
 			'jquery',
 			'js-cookie'
 		), null, true );
+		$l10n = array(
+			'allowedImagesType' => fs_allowed_images_type( 'json' ),
+			'mediaNonce'        => wp_create_nonce( 'media-form' )
+
+		);
+		wp_localize_script( 'fs-admin', 'fShop', $l10n );
 	}
 
 	/**
