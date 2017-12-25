@@ -461,7 +461,7 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 		case'select':
 			echo '<select ' . $tag_att . '>';
 			foreach ( $terms[ $parent ] as $term ) {
-				echo '<option value="' . $term->term_id . '">' . $term->name . '</option>';
+				echo '<option value="' .esc_html($term->term_id)  . '">' . $term->name . '</option>';
 			}
 			echo '</select>';
 			break;
