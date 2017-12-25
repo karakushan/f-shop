@@ -92,18 +92,17 @@ function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
  * @return float $price - значение цены
  */
 function fs_get_price( $post_id = 0 ) {
-	$config = new \FS\FS_Config();//класс основных настроек плагина
-
+	global $fs_config;
 	// устанавливаем id поста
 	global $post;
 	$post_id = empty( $post_id ) && isset( $post ) ? $post->ID : (int) $post_id;
 
 	//узнаём какой тип скидки активирован в настройках (% или фикс)
-	$action_type = isset( $config->options['action_count'] ) && $config->options['action_count'] == 1 ? 1 : 0;
+	$action_type = isset( $fs_config->options['action_count'] ) && $fs_config->options['action_count'] == 1 ? 1 : 0;
 
 	// получаем возможные типы цен
-	$base_price   = get_post_meta( $post_id, $config->meta['price'], true );//базовая и главная цена
-	$action_price = get_post_meta( $post_id, $config->meta['action_price'], true );//акионная цена
+	$base_price   = get_post_meta( $post_id, $fs_config->meta['price'], true );//базовая и главная цена
+	$action_price = get_post_meta( $post_id, $fs_config->meta['action_price'], true );//акионная цена
 	$price        = empty( $base_price ) ? 0 : (float) $base_price;
 	$action_price = empty( $action_price ) ? 0 : (float) $action_price;
 
@@ -120,22 +119,17 @@ function fs_get_price( $post_id = 0 ) {
 /**
  * @param $post_id - id
  * @param $count - к-во товаров
- * @param bool $curency
- * @param string $wpap формат отображения цены вместе с валютой
+ * @param string $wrap формат отображения цены вместе с валютой
  *
  * @return int|mixed|string
  */
-function fs_row_price( $post_id = 0, $count = 0, $curency = true, $wrap = '%s <span>%s</span>' ) {
+function fs_row_price( $post_id = 0, $count = 0, $wrap = '%s <span>%s</span>' ) {
 	global $post;
 	$post_id = empty( $post_id ) ? $post->ID : (int) $post_id;
 	$price   = fs_get_price( $post_id );
 	$price   = $price * $count;
-	if ( $curency ) {
-		$price = apply_filters( 'fs_price_format', $price );
-		$price = sprintf( $wrap, $price, fs_currency() );
-	}
-
-	return $price;
+	$price   = apply_filters( 'fs_price_format', $price );
+	printf( $wrap, $price, fs_currency() );
 }
 
 /**
@@ -177,12 +171,17 @@ function fs_the_price( $post_id = 0, $wrap = "%s <span>%s</span>", $args = array
 	$post_id  = empty( $post_id ) ? $post->ID : $post_id;
 	$price    = fs_get_price( $post_id );
 	$price    = apply_filters( 'fs_price_format', $price );
+
+	$wrap = '<span %s>' . $wrap . '</span>';
+	$atts = fs_parse_attr( array(), array(
+		'data-fs-element' => 'price',
+		'data-fs-value'   => $price
+	) );
 	if ( $args['echo'] ) {
-		printf( $wrap, $price, $cur_symb );
+		printf( $wrap, $atts, $price, $cur_symb );
 	} else {
 		return sprintf( $wrap, $price, $cur_symb );
 	}
-
 }
 
 /**
@@ -229,19 +228,15 @@ function fs_get_wholesale_price( $post_id = 0 ) {
  * @return возвращает или показывает общую сумму с валютой
  *
  */
-function fs_total_amount( $wrap = '%s <span>%s</span>', $echo = true ) {
+function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
 	if ( empty( $_SESSION['cart'] ) ) {
-		return 0;
-	}
-	$products = $_SESSION['cart'];
-	$total    = fs_get_total_amount( $products );
-	$total    = apply_filters( 'fs_price_format', $total );
-	$total    = sprintf( $wrap, $total, fs_currency() );
-	if ( $echo ) {
-		echo $total;
+		$total = 0;
 	} else {
-		return $total;
+		$total = fs_get_total_amount( $_SESSION['cart'] );
 	}
+	$total = apply_filters( 'fs_price_format', $total );
+	$total = sprintf( $wrap, $total, fs_currency() );
+	echo $total;
 }
 
 /**
@@ -257,7 +252,12 @@ function fs_get_total_amount( $products = array() ) {
 	}
 	$all_price = array();
 	foreach ( $products as $key => $count ) {
-		$all_price[ $key ] = $count['count'] * fs_get_price( $key );
+		if ( fs_is_variated( $key ) ) {
+			$all_price[ $key ] = $count['count'] * fs_get_variated_price( $key, $count['attr'] );
+		} else {
+			$all_price[ $key ] = $count['count'] * fs_get_price( $key );
+		}
+
 	}
 	$price = array_sum( $all_price );
 
@@ -349,9 +349,11 @@ function fs_total_wholesale_amount( $products = array(), $echo = true, $wrap = '
  *         'all_price' - общая цена
  */
 function fs_get_cart( $args = array() ) {
+
 	if ( ! isset( $_SESSION['cart'] ) ) {
 		return false;
 	}
+	global $fs_config;
 	$args     = wp_parse_args( $args, array(
 		'price_format'   => '%s <span>%s</span>',
 		'thumbnail_size' => 'thumbnail'
@@ -362,10 +364,42 @@ function fs_get_cart( $args = array() ) {
 			if ( $key == 0 ) {
 				continue;
 			}
-			$price      = fs_get_price( $key );
-			$price_show = apply_filters( 'fs_price_format', $price );
+
+			$price = fs_get_price( $key );
+			if ( fs_is_variated( $key ) ) {
+				$product_terms = get_the_terms( $key, $fs_config->data['product_att_taxonomy'] );
+				$price         = fs_get_variated_price( $key, $count['attr'] );
+				foreach ( $product_terms as $product_term ) {
+					$range_start = get_term_meta( $product_term->term_id, 'fs_att_range_start_value', 1 );
+					$range_end   = get_term_meta( $product_term->term_id, 'fs_att_range_end_value', 1 );
+					if ( ! empty( $range_start ) && empty( $range_end ) ) {
+						$range_end = INF;
+					}
+					// ищем наиболее подходящий вариант если в настройках термина (атрибута) указана данная опция
+					if ( get_term_meta( $product_term->term_id, 'fs_att_compare', 1 ) && ( $range_start <= $count['count'] && $range_end >= $count['count'] ) ) {
+						// сначала перебыраем атрибуты с которыми пользователь добавил товар в корзину
+						foreach ( $count['attr'] as $k => $at ) {
+							// получаем всю информацию о термине, но нам понадобится только id родителя
+							$at_term_parent = get_term( $at, $fs_config->data['product_att_taxonomy'] );
+							// если id родителя термина с которым куплен товар совпадает с id родителя который мы вычислили методом сравнения то
+							if ( $at_term_parent->parent == $product_term->parent ) {
+								// удаляем термин с которым куплен товар из сессии корзины
+								unset( $count['attr'][ $k ] );
+								$count['attr'][] = $product_term->term_id;
+								// добавляем в сессию термин который подошел в сравнении
+								$_SESSION['cart'][ $key ]['attr'] = $count['attr'];
+							}
+						}
+						// возвращаем уже новую цену с учётом нового набора атрибутов
+						$price = fs_get_variated_price( $key, $count['attr'] );
+					}
+
+				}
+
+			}
 			$c          = (int) $count['count'];
 			$all_price  = $price * $c;
+			$price_show = apply_filters( 'fs_price_format', $price );
 			$all_price  = apply_filters( 'fs_price_format', $all_price );
 			$attr       = array();
 			if ( ! empty( $count['attr'] ) ) {
@@ -379,6 +413,7 @@ function fs_get_cart( $args = array() ) {
 					}
 				}
 			}
+			$base_price       = fs_get_base_price( $key ) ? sprintf( $args['price_format'], fs_get_base_price( $key ), fs_currency() ) : '';
 			$products[ $key ] = array(
 				'id'         => $key,
 				'name'       => get_the_title( $key ),
@@ -387,7 +422,7 @@ function fs_get_cart( $args = array() ) {
 				'attr'       => $attr,
 				'link'       => get_permalink( $key ),
 				'price'      => sprintf( $args['price_format'], $price_show, fs_currency() ),
-				'base_price' => sprintf( $args['price_format'], fs_base_price( $key, false ), fs_currency() ),
+				'base_price' => $base_price,
 				'all_price'  => sprintf( $args['price_format'], $all_price, fs_currency() ),
 				'code'       => fs_product_code( $key ),
 				'currency'   => fs_currency()
@@ -470,35 +505,50 @@ function fs_product_count( $products = array(), $echo = true ) {
 }
 
 /**
+ * получает базовую цену (перечёркнутую) без учёта скидки
+ *
+ * @param int $post_id - id товара
+ *
+ * @return float $price
+ */
+function fs_get_base_price( $post_id = 0 ) {
+	global $post;
+	$config       = new \FS\FS_Config();
+	$post_id      = empty( $post_id ) ? $post->ID : $post_id;
+	$price        = get_post_meta( $post_id, $config->meta['price'], 1 );
+	$action_price = get_post_meta( $post_id, $config->meta['action_price'], 1 );
+	if ( $price == fs_get_price( $post_id ) || empty( $action_price ) ) {
+		return;
+	}
+	$price = empty( $price ) ? 0 : (float) $price;
+	$price = apply_filters( 'fs_price_filter', $post_id, $price );
+
+	return $price;
+}
+
+/**
  * Выводит текущую цену с символом валюты без учёта скидки
  *
  * @param int $post_id - id товара
  * @param string $wrap - html обёртка для цены
- * @param array $args - дополнительные аргументы
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = array() ) {
-	global $post;
-	$args    = wp_parse_args( $args, array(
-		'echo' => true
-	) );
-	$config  = new \FS\FS_Config();
-	$post_id = empty( $post_id ) ? $post->ID : $post_id;
-	$price   = get_post_meta( $post_id, $config->meta['price'], 1 );
-	$action_price   = get_post_meta( $post_id, $config->meta['action_price'], 1 );
-	if ( $price == fs_get_price( $post_id ) || empty($action_price)) {
+function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>' ) {
+	$price = fs_get_base_price( $post_id );
+
+	if ( ! $price ) {
 		return;
 	}
-	$price    = empty( $price ) ? 0 : (float) $price;
+	$wrap     = '<span %s>' . $wrap . '</span>';
+	$atts     = fs_parse_attr( array(), array(
+		'data-fs-element' => 'base-price',
+		'data-fs-value'   => $price
+	) );
 	$price    = apply_filters( 'fs_price_format', $price );
 	$cur_symb = fs_currency();
-	if ( $args['echo'] ) {
-		printf( $wrap, $price, $cur_symb );
-	} else {
-		return sprintf( $wrap, $price, $cur_symb );
-	}
 
+	printf( $wrap, $atts, $price, $cur_symb );
 }
 
 /**
@@ -509,7 +559,7 @@ function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = arra
  * @param  array $attr дополнительные атрибуты
  */
 function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
-	global $post;
+	global $post, $fs_config;
 	$post_id = empty( $post_id ) ? $post->ID : $post_id;
 
 	$attr = wp_parse_args( $attr,
@@ -518,8 +568,6 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 			'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
 			'class'     => 'fs-add-to-cart',
 			'type'      => 'button',
-			'success'   => sprintf( __( 'Item «%s» added to cart', 'fast-shop' ), get_the_title( $post_id ) ),
-			'error'     => __( 'Error adding product to cart', 'fast-shop' ),
 			'echo'      => true
 		)
 	);
@@ -531,10 +579,9 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		'data-product-name' => get_the_title( $post_id ),
 		'id'                => 'fs-atc-' . $post_id,
 		'data-attr'         => json_encode( $attr['json'] ),
-		'data-success'      => $attr['success'],
-		'data-error'        => $attr['error'],
-		'data-image'        => esc_url(get_the_post_thumbnail_url($post_id)),
-		'class'             => $attr['class']
+		'data-image'        => esc_url( get_the_post_thumbnail_url( $post_id ) ),
+		'class'             => $attr['class'],
+		'data-variated'     => intval( get_post_meta( $post_id, $fs_config->meta['variated_on'], 1 ) )
 	);
 	$html_atts = fs_parse_attr( array(), $attr_set );
 	$href      = '#';
@@ -1010,7 +1057,7 @@ function fs_wishlist_button( $post_id = 0, $args = array() ) {
 		'class'           => $args['class'],
 		'id'              => $args['id'],
 		'data-name'       => get_the_title( $post_id ),
-		'data-image'       => get_the_post_thumbnail_url( $post_id ),
+		'data-image'      => get_the_post_thumbnail_url( $post_id ),
 		'data-product-id' => $post_id,
 
 	) );
@@ -1138,10 +1185,10 @@ function fs_get_current_user() {
  * @return mixed|void
  */
 function fs_login_form( $echo = true, $args = array() ) {
-	$args = wp_parse_args( $args, array(
-		'name' => "fs-login",
-		'id' => "fs-login",
-		'title'=>__('Login','fast-shop')
+	$args     = wp_parse_args( $args, array(
+		'name'  => "fs-login",
+		'id'    => "fs-login",
+		'title' => __( 'Login', 'fast-shop' )
 	) );
 	$template = fs_form_header( $args, 'fs_login' );
 	$template .= fs_frontend_template( 'auth/login' );
@@ -1227,14 +1274,17 @@ function fs_product_code( $product_id = 0, $wrap = '%s', $echo = false ) {
 	$config     = new \FS\FS_Config();
 	$product_id = $product_id == 0 ? $post->ID : $product_id;
 	$articul    = get_post_meta( $product_id, $config->meta['product_article'], 1 );
-	if ( $wrap ) {
-		$articul = sprintf( $wrap, $articul );
+	if ( empty( $articul ) ) {
+		return false;
 	}
-	if ( $echo ) {
-		echo $articul;
-	} else {
-		return $articul;
+	if ( $wrap && $articul ) {
+		if ( $echo ) {
+			echo esc_html( sprintf( $wrap, $articul ) );
+		} else {
+			return $articul;
+		}
 	}
+
 }
 
 /**
@@ -1376,6 +1426,7 @@ function fs_change_price_percent( $product_id = 0 ) {
 function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
 	$discount = fs_change_price_percent( $product_id );
 	if ( $discount > 0 ) {
+		$discount = sprintf( '<span data-fs-element="discount">%s</span>', $discount );
 		printf( $wrap, $discount, '%' );
 	}
 
@@ -1445,8 +1496,8 @@ function fs_wishlist_count() {
 /**
  * выводит ссылку на список желаний
  */
-function fs_wishlist_link(){
-	the_permalink(fs_option('page_whishlist'));
+function fs_wishlist_link() {
+	the_permalink( fs_option( 'page_whishlist' ) );
 }
 
 /**
@@ -1646,13 +1697,28 @@ function fs_get_image_sizes( $unset_disabled = true ) {
  *
  * @param int $post_id - ID поста
  *
+ * @param bool $thumbnail - включать ли миниатюру в галерею,
+ * если да, то миниатюра будет выведена первым изображением
+ *
  * @return array
  */
-function fs_gallery_images_ids( $post_id = 0 ) {
+function fs_gallery_images_ids( $post_id = 0, $thumbnail = true ) {
 	global $post, $fs_config;
-	$post_id    = ! empty( $post_id ) ? $post_id : $post->ID;
-	$fs_gallery = get_post_meta( $post_id, $fs_config->meta['gallery'], false );
-	$gallery    = ! empty( $fs_gallery ) ? $fs_gallery['0'] : array();
+	$post_id           = ! empty( $post_id ) ? $post_id : $post->ID;
+	$fs_gallery        = get_post_meta( $post_id, $fs_config->meta['gallery'], false );
+	$gallery           = array();
+	$post_thumbnail_id = get_post_thumbnail_id( $post_id );
+	if ( $post_thumbnail_id && $thumbnail ) {
+		$gallery       [] = $post_thumbnail_id;
+	}
+
+	if ( ! empty( $fs_gallery['0'] ) ) {
+		foreach ( $fs_gallery['0'] as $item ) {
+			if (wp_get_attachment_image($item)){
+				$gallery       [] = $item;
+			}
+		}
+	}
 
 	return $gallery;
 }
@@ -1689,4 +1755,232 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
 	}
 
 }
+
+/**
+ * Создаёт ссылку для отфильтровки товаров по параметрам в каталоге
+ *
+ * @param null $filter
+ * @param string $order
+ * @param string $catalog_link
+ */
+function fs_filter_link( $filter = null, $order = 'date_desc', $catalog_link = '/product/' ) {
+	$query['fs_filter'] = wp_create_nonce( 'fast-shop' );
+	if ( ! empty( $order ) ) {
+		$query['order_type'] = $order;
+	}
+	if ( ! empty( $filter ) ) {
+		$query['order_type'] = $filter;
+	}
+	echo esc_url( add_query_arg( $query, $catalog_link ) );
+}
+
+/**
+ * Ищет в массиве $haystack значения массива $needles
+ *
+ * @param $needles
+ * @param $haystack
+ *
+ * @return bool если найдены все совпадения будет возвращено true иначе false
+ */
+function fs_in_array_multi( $needles, $haystack ) {
+	return ! array_diff( $needles, $haystack );
+}
+
+/**
+ * Проверяет является ли товар вариативным
+ *
+ * @param int $post_id
+ *
+ * @return int
+ */
+function fs_is_variated( $post_id = 0 ) {
+	global $fs_config;
+
+	return intval( get_post_meta( $post_id, $fs_config->meta['variated_on'], 1 ) );
+}
+
+/**
+ * Получает вариативную цену
+ *
+ * @param int $post_id
+ * @param array $atts
+ *
+ * @return float
+ */
+function fs_get_variated_price( $post_id = 0, $atts = array() ) {
+	$post_id        = fs_get_product_id( $post_id );
+	$atts           = array_map( 'intval', $atts );
+	$variants       = get_post_meta( $post_id, 'fs_variant', 0 );
+	$variants_price = get_post_meta( $post_id, 'fs_variant_price', 0 );
+	$variated_price = fs_get_price( $post_id );
+
+	// если не включен чекбок "вариативный товар" , то возвращаем цену
+	if ( ! fs_is_variated( $post_id ) ) {
+		return $variated_price;
+	}
+
+	if ( ! empty( $variants[0] ) ) {
+		foreach ( $variants[0] as $k => $variant ) {
+			// ищем совпадения варианов в присланными значениями
+			if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
+				$variated_price = apply_filters( 'fs_price_filter', $post_id, (float) $variants_price[0][ $k ] );
+			}
+		}
+
+	}
+
+	return (float) $variated_price;
+}
+
+/**
+ * Выводит вариативную цену
+ *
+ * @param int $post_id
+ * @param array $atts
+ *
+ * @param array $args
+ *
+ * @return float
+ */
+function fs_variated_price( $post_id = 0, $atts = array(), $args = array() ) {
+	$post_id = fs_get_product_id( $post_id );
+	$args    = wp_parse_args( $args, array(
+		'count'  => true,
+		'format' => '%s <span>%s</span>',
+		'echo'   => true
+	) );
+	$price   = fs_get_variated_price( $post_id, $atts );
+	$price   = apply_filters( 'fs_price_format', $price );
+	printf( $args['format'], $price, fs_currency() );
+
+	return true;
+}
+
+/**
+ * Получает минимальное количество вариативных покупаемых товаров
+ *
+ * @param int $post_id
+ * @param array $atts
+ *
+ * @param bool $count
+ *
+ * @return float
+ */
+function fs_get_variated_count( $post_id = 0, $atts = array() ) {
+	$post_id        = fs_get_product_id( $post_id );
+	$atts           = array_map( 'intval', $atts );
+	$variants       = get_post_meta( $post_id, 'fs_variant', 0 );
+	$variants_count = get_post_meta( $post_id, 'fs_variant_count', 0 );
+	$variant_count  = 1;
+	// если не включен чекбок "вариативный товар" , то возвращаем 1
+	if ( ! fs_is_variated( $post_id ) ) {
+		return $variant_count;
+	}
+
+	if ( ! empty( $variants[0] ) ) {
+		foreach ( $variants[0] as $k => $variant ) {
+			// ищем совпадения варианов в присланными значениями
+			if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
+				$variant_count = max( $variants_count[0][ $k ], 1 );
+			}
+		}
+
+	}
+
+	return intval( $variant_count );
+}
+
+/**
+ * Возвращает ID товара
+ *
+ * @param mixed $product ID поста
+ *
+ * @return int
+ */
+function fs_get_product_id( $product = null ) {
+	if ( empty( $product ) ) {
+		global $post;
+		$product = $post->ID;
+	} elseif ( is_object( $product ) ) {
+		$product = $product->ID;
+	}
+
+	return intval( $product );
+}
+
+/**
+ * Выводит метку об акции, популярном товаре, или недавно добавленом
+ *
+ * @param int $product_id - уникальный ID товара (записи ВП)
+ * @param array $labels HTML код метки
+ *              могут быть метки типа: 'action','popular','new'
+ */
+function fs_product_label( $product_id = 0, $labels = array() ) {
+	$product_id = fs_get_product_id( $product_id );
+	$args       = wp_parse_args( $labels, array(
+		'action'  => '',
+		'popular' => '',
+		'new'     => ''
+	) );
+	if ( ! empty( $_GET['order_type'] ) ) {
+		if ( $_GET['order_type'] == 'field_action' ) {
+			echo $args['action'];
+		} elseif ( $_GET['order_type'] == 'views_desc' ) {
+			echo $args['popular'];
+		} elseif ( $_GET['order_type'] == 'date_desc' ) {
+			echo $args['new'];
+		}
+	} else {
+		if ( fs_is_action( $product_id ) ) {
+			echo $args['action'];
+		}
+	}
+
+
+}
+
+/**
+ * Функция создаёт возможность изменения сообщения пользователю,
+ * которое отсылается или показывается после осуществления покупкиэ
+ * сообщение может содержать две переменные:
+ *
+ *
+ * @param $pay_method_id - ID выбраного метода оплаты
+ *
+ * @return mixed|void
+ */
+function fs_pay_user_message( $pay_method_id ) {
+	$message = get_term_meta( intval( $pay_method_id ), 'pay-message', 1 );
+
+	return apply_filters( 'fs_pay_user_message', $message, $pay_method_id );
+}
+
+/**
+ * Возвращает массив разрешённых типов изображений для загрузки
+ *
+ * @param string $return
+ *
+ * @return array|string
+ */
+function fs_allowed_images_type( $return = 'array' ) {
+	$mime_types = get_allowed_mime_types();
+	$mime       = [];
+	if ( $mime_types ) {
+		foreach ( $mime_types as $mime_type ) {
+			if ( strpos( $mime_type, 'image' ) === 0 ) {
+				if ( $return == 'json' ) {
+					$mime[$mime_type] = true;
+				} else {
+					$mime[] = $mime_type;
+				}
+			}
+		}
+	}
+	if ( $return == 'json' ) {
+		return json_encode($mime);
+	} else {
+		return $mime;
+	}
+}
+
 

@@ -121,7 +121,7 @@ class FS_Orders_Class {
 			$order->delivery['method'] = get_term_field( 'name', $order->delivery['method'], $fs_config->data['product_del_taxonomy'] );
 		}
 		$order->sum       = fs_get_total_amount( $order->items );
-		$order->status    = self::get_order_status( $order_id );
+		$order->status    = get_post_status( $order_id );
 		$order->user_name = get_user_meta( $order->user['id'], 'nickname', true );
 
 		return $order;

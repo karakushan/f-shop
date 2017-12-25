@@ -28,6 +28,7 @@ class FS_Init {
 		new FS_Action_Class;
 		new FS_Users_Class;
 		new FS_Api_Class();
+		new FS_Payment_Class();
 
 		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
@@ -38,7 +39,7 @@ class FS_Init {
 	} // END public function __construct
 
 	function true_load_plugin_textdomain() {
-		load_plugin_textdomain( 'fast-shop', false, FS_LANG_PATH  );
+		load_plugin_textdomain( 'fast-shop', false, FS_LANG_PATH );
 	}
 
 	// Add the settings link to the plugins page
@@ -50,21 +51,18 @@ class FS_Init {
 	}
 
 	function fast_shop_scripts() {
-		wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'] . 'assets/css/fast-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'lightslider', $this->config->data['plugin_url'] . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/css/lightbox.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'font-awesome', $this->config->data['plugin_url'] . 'assets/fontawesome/css/font-awesome.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'izi-toast', $this->config->data['plugin_url'] . 'assets/plugins/iziToast/dist/css/iziToast.min.css', array(), $this->config->data['plugin_ver'], 'all' );
+		wp_enqueue_style( 'izi-toast', $this->config->data['plugin_url'] . 'assets/css/iziToast.min.css', array(), $this->config->data['plugin_ver'], 'all' );
+		wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'] . 'assets/css/f-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
 
 		wp_enqueue_script( "jquery-ui-core", array( 'jquery' ) );
 		wp_enqueue_script( "jquery-ui-slider", array( 'jquery' ) );
 		wp_enqueue_script( 'jquery-validate', $this->config->data['plugin_url'] . 'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'domurl', $this->config->data['plugin_url'] . 'assets/js/url.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'izi-toast', $this->config->data['plugin_url'] . 'assets/plugins/iziToast/dist/js/iziToast.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( 'izi-toast', $this->config->data['plugin_url'] . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'lightslider', $this->config->data['plugin_url'] . 'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'fast-shop', $this->config->data['plugin_url'] . 'assets/js/fast-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
+		wp_enqueue_script( 'f-shop', $this->config->data['plugin_url'] . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
 		$price_max = (int) fs_price_max( false );
 		$l10n      = array(
 			'ajaxurl'           => admin_url( "admin-ajax.php" ),
@@ -74,42 +72,38 @@ class FS_Init {
 			'fs_slider_val_min' => ! empty( $_REQUEST['price_start'] ) ? (int) $_REQUEST['price_start'] : 0,
 			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : $price_max
 		);
-		wp_localize_script( 'fast-shop', 'FastShopData', $l10n );
-		wp_enqueue_script( 'f-shop', $this->config->data['plugin_url'] . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
+		wp_localize_script( 'f-shop', 'FastShopData', $l10n );
 	}
 
 	public function fast_shop_admin_scripts() {
-		//!!! не удалять, необходимо для работы загрузчика изображений
+		// необходимо для работы загрузчика изображений
 		if ( ! did_action( 'wp_enqueue_media' ) ) {
 			wp_enqueue_media();
 		}
-		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'font-bebas', $this->config->data['plugin_url'] . 'assets/fonts/BebasNeueBold/styles.css' );
+		wp_enqueue_script( "jquery-ui-core", array( 'jquery' ) );
+		wp_enqueue_script( "jquery-ui-tabs", array( 'jquery' ) );
 		wp_enqueue_style( 'spectrum', $this->config->data['plugin_url'] . 'assets/css/spectrum.css' );
-		wp_enqueue_style( 'font-roboto', 'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&subset=cyrillic' );
-		wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'] . 'assets/css/fast-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'fs-admin', $this->config->data['plugin_url'] . 'assets/css/fs-admin.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_script( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.js', array( 'jquery' ), null, true );
 
 		wp_enqueue_script( 'spectrum', $this->config->data['plugin_url'] . 'assets/js/spectrum.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'js-cookie', $this->config->data['plugin_url'] . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'f-shop', $this->config->data['plugin_url'] . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
 		$screen = get_current_screen();
 		if ( $screen->id == 'edit-product' ) {
 			wp_enqueue_script( 'fs-quick-edit', $this->config->data['plugin_url'] . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
 		}
 
-
+		wp_enqueue_script( 'fs-library', $this->config->data['plugin_url'] . 'assets/js/fs-library.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'fs-admin', $this->config->data['plugin_url'] . 'assets/js/fs-admin.js', array(
 			'jquery',
 			'js-cookie',
-			'f-shop'
+			'fs-library'
 		), null, true );
+		$l10n = array(
+			'allowedImagesType' => fs_allowed_images_type( 'json' ),
+			'mediaNonce'        => wp_create_nonce( 'media-form' )
 
-		// подключаем стили и скрипты текущей темы админки
-		$fs_theme = fs_option( 'fs-theme', 'default' );
-		wp_enqueue_style( 'fs-theme-' . $fs_theme, $this->config->data['plugin_url'] . 'assets/theme/' . $fs_theme . '/css/style.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_script( 'fs-theme-' . $fs_theme, $this->config->data['plugin_url'] . 'assets/theme/' . $fs_theme . '/js/theme.js', array( 'jquery' ), null, true );
+		);
+		wp_localize_script( 'fs-admin', 'fShop', $l10n );
 	}
 
 	/**

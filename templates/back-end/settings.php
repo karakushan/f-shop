@@ -25,15 +25,17 @@
 							']'
 						), array( '_' ), sprintf( 'fs_option[%s]', $field['name'] ) ); ?>
                     <p>
-						<?php if ( $field['label'] ): ?>
+						<?php if ( ! empty( $field['label'] ) && $field['type'] != 'checkbox' ): ?>
                           <label for="<?php echo $label_id ?>"><?php echo $field['label'] ?></label><br>
 						<?php endif; ?>
 						<?php fs_form_field( sprintf( 'fs_option[%s]', $field['name'] ), array(
 							'type'    => $field['type'],
 							'value'   => $field['value'],
+							'wrapper' => false,
 							'options' => $field['type'] == 'select' ? $field['options'] : [],
-							'name'   => ! empty( $field['name'] ) ? $field['name'] : '',
+							'name'    => ! empty( $field['name'] ) ? $field['name'] : '',
 							'value'   => ! empty( $field['value'] ) ? $field['value'] : '',
+							'selected'=>! empty( $field['selected'] ) ? $field['selected'] : '',
 							'label'   => ! empty( $field['label'] ) ? $field['label'] : '',
 							'class'   => ! empty( $field['class'] ) ? $field['class'] : '',
 							'after'   => ! empty( $field['after'] ) ? $field['after'] : '',
@@ -47,6 +49,6 @@
 			<?php endforeach; ?>
 		<?php endif; ?>
     </div>
-    <input type="submit" name="fs_save_options" value="Сохранить">
+    <input type="submit" name="fs_save_options" class="fs-primary-button" value="Сохранить">
   </form>
 </div>

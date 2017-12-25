@@ -131,7 +131,7 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
 /**
  * выводит фильтр сортировки по разным параметрам
  *
- * @param array $attr          дополниетльные атрибуты html тега
+ * @param array $attr дополниетльные атрибуты html тега
  *
  * @return string              выводит html элемент типа select
  */
@@ -183,6 +183,7 @@ function fs_types_sort_filter( $attr = array() ) {
 	}
 
 	echo $filter;
+
 	return;
 }
 
@@ -227,6 +228,7 @@ function fs_per_page_filter( $interval = array(), $attr = array() ) {
 	}
 	$page_filter = $filters->posts_per_page_filter( $interval, $attr );
 	echo $page_filter;
+
 	return;
 }
 
@@ -238,12 +240,13 @@ function fs_per_page_filter( $interval = array(), $attr = array() ) {
  */
 function fs_attr_filter( $group_id, $args = array() ) {
 	$default = array(
-		'redirect'        => true,
-		'container'       => 'ul',
-		'container_class' => 'listCheck',
-		'container_id'    => 'listCheck-' . $group_id,
-		'input_class'     => 'checkStyle',
-		'label_class'     => 'checkLabel'
+		'redirect'            => true,
+		'container'           => 'ul',
+		'container_class'     => 'listCheck',
+		'container_id'        => 'listCheck-' . $group_id,
+		'input_wrapper_class' => 'fs-checkbox-wrapper',
+		'input_class'         => 'checkStyle',
+		'label_class'         => 'checkLabel'
 	);
 	$args    = wp_parse_args( $args, $default );
 	$terms   = get_terms( array(
@@ -255,13 +258,15 @@ function fs_attr_filter( $group_id, $args = array() ) {
 	parse_str( $arr_url, $url );
 
 	if ( $terms ) {
-		echo '<' . $args['container'] . ' class="' . sanitize_html_class( $args['container_class'] ) . '"  id="' . sanitize_html_class( $args['container_id'] ) . '">';
+		if ( ! empty( $args['container'] ) ) {
+			echo '<' . $args['container'] . ' class="' . sanitize_html_class( $args['container_class'] ) . '"  id="' . sanitize_html_class( $args['container_id'] ) . '">';
+		}
 		foreach ( $terms as $key => $term ) {
 			$product_attributes = isset( $_GET['attributes'][ $term->slug ] ) ? $_GET['attributes'][ $term->slug ] : '';
 			if ( $args['container'] == 'ul' ) {
-				echo '<li>';
+				echo '<li class="' . esc_attr( $args['input_wrapper_class'] ) . '">';
 			} else {
-				echo '<div>';
+				echo '<div class="' . esc_attr( $args['input_wrapper_class'] ) . '">';
 			}
 
 			if ( ! empty( $url['attributes'] ) ) {
@@ -294,7 +299,9 @@ function fs_attr_filter( $group_id, $args = array() ) {
 				echo '</div>';
 			}
 		}
-		echo '</' . $args['container'] . '>';
+		if ( ! empty( $args['container'] ) ) {
+			echo '</' . $args['container'] . '>';
+		}
 	}
 }
 
@@ -312,14 +319,14 @@ function fs_attr_change( $required_atts = array() ) {
 				switch ( $att['type'] ) {
 					case "color":
 						echo '<span class="fs-attr-group-color">';
-						echo '<input type="radio"  name="group-' . $required_att . '" data-product-id="' . $product_id . '" data-target="#group-' . $required_att . '" data-action="change-attr" id="attr-' . $id . '" value="' . $id . '">';
-						echo '<label for="attr-' . $id . '" style="background-color:' . $att['value'] . '"><span class="checkbox"></span></label>';
+						echo '<input type="radio"  name="group-' . esc_attr( $required_att ) . '" data-product-id="' . esc_attr( $product_id ) . '" data-target="#group-' . esc_attr( $required_att ) . '" data-action="change-attr" id="attr-' . esc_attr( $id ) . '" value="' . esc_attr( $id ) . '">';
+						echo '<label for="attr-' . esc_attr( $id ) . '" style="background-color:' . esc_attr( $att['value'] ) . '"><span class="checkbox"></span></label>';
 						echo '</span>';
 						break;
 					default:
 						echo '<div class="fs-attr-group-text">';
-						echo '<input type="radio"  name="group-' . $required_att . '" data-product-id="' . $product_id . '"  data-target="#group-' . $required_att . '" id="attr-' . $id . '" data-action="change-attr" value="' . $id . '">';
-						echo '<label for="attr-' . $id . '"><span class="checkbox"></span>' . $att['value'] . '</label>';
+						echo '<input type="radio"  name="group-' . $required_att . '" data-product-id="' . esc_attr( $product_id ) . '"  data-target="#group-' . esc_attr( $required_att ) . '" id="attr-' . esc_attr( $id ) . '" data-action="change-attr" value="' . esc_attr( $id ) . '">';
+						echo '<label for="attr-' . esc_attr( $id ) . '"><span class="checkbox"></span>' . esc_html( $att['value'] ) . '</label>';
 						echo '</div> ';
 						break;
 				}
@@ -368,7 +375,7 @@ function fs_list_post_atts( $post_id = 0 ) {
 			$group      = get_term_field( 'name', $key, $fs_config->data['product_att_taxonomy'] );
 			$group_slug = get_term_field( 'slug', $key, $fs_config->data['product_att_taxonomy'] );
 
-			echo '<div class="fs-attr-group-name">' . $group . '</div>';
+			echo '<div class="fs-attr-group-name">' . esc_html( $group ) . '</div>';
 			echo '<ul class="fs-attr-groups-list">';
 			foreach ( $parent as $child ) {
 				$attr_type = get_term_meta( $child->term_id, 'fs_att_type', 1 );
@@ -443,25 +450,30 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 	printf( '<%s class="%s">', $args['wpapper'], sanitize_html_class( $args['wpapper_class'] ) );
 	switch ( $args['type'] ) {
 		case 'radio':
+			$i = 0;
 			foreach ( $terms[ $parent ] as $term ) {
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' <li>';
 				} elseif ( 'div' ) {
 					echo ' <div>';
 				}
-				echo '<input type="radio" ' . $tag_att . '    value="' . esc_attr( $term->term_id ) . '" id="fs-att-' . esc_attr( $term->term_id ) . '">
+				echo '<input type="radio" ' . $tag_att . ' ' . checked( 0, $i, 0 ) . '    value="' . esc_attr( $term->term_id ) . '" id="fs-att-' . esc_attr( $term->term_id ) . '">
                   <label for="fs-att-' . esc_attr( $term->term_id ) . '">' . esc_html( $term->name ) . '</label>';
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' </li>';
 				} elseif ( 'div' ) {
 					echo ' </div>';
 				}
+				$i ++;
 			}
+
 			break;
 		case'select':
 			echo '<select ' . $tag_att . '>';
-			foreach ( $terms[ $parent ] as $term ) {
-				echo '<option value="' .esc_html($term->term_id)  . '">' . $term->name . '</option>';
+			$i = 0;
+			foreach ( $terms[ $parent ] as $k => $term ) {
+				echo '<option value="' . $term->term_id . '"  ' . selected( 0, $i, 0 ) . ' >' . $term->name . '</option>';
+				$i ++;
 			}
 			echo '</select>';
 			break;

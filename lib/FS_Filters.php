@@ -130,6 +130,24 @@ class FS_Filters {
 					$orderby[]           = 'price';
 					$order               = 'DESC';
 					break;
+				case 'views_desc': //сортируем по просмотрам в спадающем порядке
+					$meta_query['views'] = array(
+						'key'     => 'views',
+						'compare' => 'EXISTS',
+						'type'    => 'NUMERIC',
+					);
+					$orderby[]           = 'views';
+					$order               = 'DESC';
+					break;
+				case 'views_asc': //сортируем по просмотрам в спадающем порядке
+					$meta_query['views'] = array(
+						'key'     => 'views',
+						'compare' => 'EXISTS',
+						'type'    => 'NUMERIC',
+					);
+					$orderby[]           = 'views';
+					$order               = 'ASC';
+					break;
 				case 'name_asc': //сортируем по названию по алфавиту
 					$orderby[] = 'title';
 					$order     = 'ASC';
@@ -146,11 +164,12 @@ class FS_Filters {
 					$orderby[] = 'date';
 					$order     = 'ASC';
 					break;
-				case 'field_action': //сортируем по наличию акции
+				case 'field_action' :
 					$meta_query['action_price'] = array(
 						'key'     => $config->meta['action_price'],
-						'compare' => '!=',
-						'value'   => ''
+						'compare' => '>',
+						'value'   => 0
+
 					);
 					break;
 
@@ -177,19 +196,6 @@ class FS_Filters {
 			}
 
 		}
-
-		if ( ! empty( $_REQUEST['filter_by'] ) ) {
-			switch ( $_REQUEST['filter_by'] ) {
-				case 'field_action' :
-					$meta_query['action_price'] = array(
-						'key'     => $config->meta['action_price'],
-						'compare' => 'EXISTS'
-
-					);
-					break;
-			}
-		}
-
 
 		//Фильтруем по свойствам (атрибутам)
 		if ( ! empty( $_REQUEST['attributes'] ) ) {
@@ -258,7 +264,7 @@ class FS_Filters {
 					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
-				echo '<option  value="' . $redirect_url . '" ' . selected( $url['attributes'][ $att->slug ], $att->term_id, 0 ) . '>' . $att->name . '</option>';
+				echo '<option  value="' . esc_url( $redirect_url ) . '" ' . selected( $url['attributes'][ $att->slug ], $att->term_id, 0 ) . '>' . $att->name . '</option>';
 			}
 			echo '</select>';
 		}
@@ -270,7 +276,7 @@ class FS_Filters {
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
 
-				echo '<li><a href="' . $redirect_url . '" data-fs-action="filter" >' . $att->name . '</a></li>';
+				echo '<li><a href="' . esc_url( $redirect_url ) . '" data-fs-action="filter" >' . $att->name . '</a></li>';
 			}
 			echo '</ul>';
 		}

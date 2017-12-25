@@ -314,6 +314,27 @@ function fs_price_filter_callback( $post_id, $price ) {
 	return (float) $price;
 }
 
+/*
+ *  Это событие отправляет покупателю сведения об оплате выбранным способом
+ *  срабатывает в момент публикации (подтверждения заказа)
+ */
+add_action( 'pending_to_publish', 'fs_publish_order_callback' );
+function fs_publish_order_callback( $post ) {
+	global $fs_config;
+	if ( get_post_type( $post ) == $fs_config->data['post_type_orders'] ) {
+		$pay_method_id     = get_post_meta( $post->ID, '_payment', 1 );
+		$message_no_filter = get_term_meta( $pay_method_id, 'pay-message', 1 );
+		$message           = apply_filters( 'fs_pay_user_message', $message_no_filter, $pay_method_id, $post->ID );
+		$message_decode    = wp_specialchars_decode( $message, ENT_QUOTES );
+		$user_data         = get_post_meta( $post->ID, '_user', 1 );
+		$headers           = array(
+			'content-type: text/html'
+		);
+		if ( is_email( $user_data['email'] ) ) {
+			wp_mail( $user_data['email'], 'Сведения об оплате', $message_decode, $headers );
+		}
+	}
+}
 
 
 

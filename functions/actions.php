@@ -80,15 +80,15 @@ function fs_popular_db_widget() {
 	$popular = new WP_Query( array(
 		'post_type'      => 'product',
 		'posts_per_page' => 5,
-		'meta_query'=>array(
-			'views'=>array(
-				'key'       => 'views',
-				'type'=>'NUMERIC'
+		'meta_query'     => array(
+			'views' => array(
+				'key'  => 'views',
+				'type' => 'NUMERIC'
 			)
 
 		),
 		'orderby'        => 'views',
-		'order'=>'DESC'
+		'order'          => 'DESC'
 
 	) );
 	if ( $popular->have_posts() ) {
@@ -104,7 +104,7 @@ function fs_popular_db_widget() {
 			echo '<tr>';
 			echo '<td>' . $thumbmail . '</td>';
 			echo '<td><a href="' . $link . '" target="_blank">' . $title . '</a></br>
-			<span><i>'.__('Views','fast-shop').': </i>' . $views . '</span></td>';
+			<span><i>' . __( 'Views', 'fast-shop' ) . ': </i>' . $views . '</span></td>';
 			echo '<td>';
 			fs_the_price( $post->ID );
 			echo '</td>';
@@ -119,9 +119,73 @@ function fs_popular_db_widget() {
 
 // Используется в хуке
 function fs_dashboard_widgets() {
-	wp_add_dashboard_widget( 'dashboard_widget', __('Popular items','fast-shop'), 'fs_popular_db_widget' );
+	wp_add_dashboard_widget( 'dashboard_widget', __( 'Popular items', 'fast-shop' ), 'fs_popular_db_widget' );
 }
 
+//  отображает к-во непросмотренных заказов рядом с пунктом меню "Заказы"
+add_action( 'admin_menu', 'fs_orders_bubble' );
+
+function fs_orders_bubble() {
+	global $menu, $fs_config;
+
+
+	$custom_post_count = wp_count_posts( $fs_config->data['post_type_orders'] );
+
+	$custom_post_pending_count = $custom_post_count->pending;
+
+	if ( $custom_post_pending_count ) {
+
+		foreach ( $menu as $key => $value ) {
+
+			if ( $menu[ $key ][2] == 'edit.php?post_type=' . $fs_config->data['post_type_orders'] ) {
+
+				$menu[ $key ][0] .= ' <span class="update-plugins count-' . $custom_post_pending_count . '"><span class="plugin-count" aria-hidden="true"> ' . $custom_post_pending_count . '</span><span class="screen-reader-text"> ' . $custom_post_pending_count . '</span></span>';
+
+				return;
+
+			}
+
+		}
+
+	}
+}
+
+function create_new_archive_post_status() {
+	register_post_status( 'archive', array(
+		'label'                     => _x( 'Archive', 'post' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Archive <span class="count">(%s)</span>', 'Archive <span class="count">(%s)</span>' ),
+	) );
+}
+
+add_action( 'init', 'create_new_archive_post_status', 999 );
+
+
+// Добавляем кнопки в текстовый html-редактор
+add_action( 'admin_print_footer_scripts', 'fs_add_sheensay_quicktags' );
+function fs_add_sheensay_quicktags() {
+	if ( empty( $_GET['page'] ) && $_GET['page'] != 'fast-shop-settings' || ! wp_script_is( 'quicktags' ) ) {
+		return;
+	} ?>
+  <script type="text/javascript">
+      if (QTags) {
+          // QTags.addButton( id, display, arg1, arg2, access_key, title, priority, instance );
+          QTags.addButton('fs_b_fname', '<?php esc_attr_e( 'First name', 'fast-shop' ) ?>', '%fs_first_name%', '', '', '<?php esc_attr_e( 'First name', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_lname', '<?php esc_attr_e( 'Last name', 'fast-shop' ) ?>', '%fs_last_name%', '', '', '<?php esc_attr_e( 'Last name', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_besc_attr_email', '<?php esc_attr_e( 'Email', 'fast-shop' ) ?>', '%fsesc_attr_email%', '', '', '<?php esc_attr_e( 'E-mail', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_order_id', '<?php esc_attr_e( 'Order id', 'fast-shop' ) ?>', '%order_id%', '', '', '<?php esc_attr_e( 'Order id', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_total_amount', '<?php esc_attr_e( 'Amount', 'fast-shop' ) ?>', '%total_amount%', '', '', '<?php esc_attr_e( 'Amount', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_phone', '<?php esc_attr_e( 'Phone', 'fast-shop' ) ?>', '%fs_phone%', '', '', '<?php esc_attr_e( 'Phone', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fs_city', '<?php esc_attr_e( 'City', 'fast-shop' ) ?>', '%fs_city%', '', '', '<?php esc_attr_e( 'City', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fs_adress', '<?php esc_attr_e( 'Delivery address', 'fast-shop' ) ?>', '%fs_adress%', '', '', '<?php esc_attr_e( 'Delivery address', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_site_name', '<?php esc_attr_e( 'Site name', 'fast-shop' ) ?>', '%site_name%', '', '', '<?php esc_attr_e( 'Site name', 'fast-shop' ) ?>', 1);
+      }
+  </script>
+	<?php
+}
 
 
 

@@ -17,6 +17,7 @@ class FS_Config {
 	public $term_meta;
 	public $options;
 	public $tabs;
+	public $texts;
 
 	public $taxonomies;
 	public static $currencies = array();
@@ -54,39 +55,47 @@ class FS_Config {
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
+		// Получает массив служебных текстов
+		$this->texts = self::get_texts();
 
 		//Табы отображаемые в метабоксе в редактировании товара
 		$this->tabs = array(
-			'0' => array(
+			array(
 				'title'    => __( 'Prices', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'prices'
 			),
-			'2' => array(
+			array(
 				'title'    => __( 'Gallery', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'gallery'
 			),
-			'3' => array(
+			array(
 				'title'    => __( 'Attributes', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'attributes'
 			),
-			'4' => array(
+			array(
 				'title'    => __( 'Other', 'fast-shop' ),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'other'
 			),
-			'5' => array(
+			array(
 				'title'    => __( 'Associated', 'fast-shop' ),
 				'on'       => false,
 				'body'     => '',
 				'template' => 'related'
-			)
+			),
+			array(
+				'title'    => __( 'Варианты', 'fast-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'variants'
+			),
 		);
 
 		//Массив настроек сайта
@@ -96,21 +105,31 @@ class FS_Config {
 		//Массив настроек мета полей продукта (записи). При изменении настройки все настройки меняются глобально.
 		$meta = array(
 			//базовая цена
-			'price'            => 'fs_price',
+			'price'             => 'fs_price',
 			//акционная цена, перебивает цену
-			'action_price'     => 'fs_action_price',
+			'action_price'      => 'fs_action_price',
 			// валюта товара
-			'currency'         => 'fs_currency',
+			'currency'          => 'fs_currency',
 			//артикул
-			'product_article'  => 'fs_articul',
+			'product_article'   => 'fs_articul',
 			//запас товаров на складе
-			'remaining_amount' => 'fs_remaining_amount',
+			'remaining_amount'  => 'fs_remaining_amount',
 			//галерея
-			'gallery'          => 'fs_galery',
+			'gallery'           => 'fs_galery',
 			// похожие товары выбранные вручную
-			'related_products' => 'fs_related_products',
+			'related_products'  => 'fs_related_products',
 			// поле производителя
-			'vendor' => 'fs_vendor',
+			'vendor'            => 'fs_vendor',
+			// вариации товара
+			'variants'          => 'fs_variant',
+			// цены вариации товара
+			'variants_price'    => 'fs_variant_price',
+			// начальное количество
+			'variant_count'     => 'fs_variant_count',
+			// максимальное количество
+			'variant_count_max' => 'fs_variant_count_max',
+			// включает вариативность товара
+			'variated_on'       => 'fs_variated_on'
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );
@@ -128,17 +147,17 @@ class FS_Config {
 		self::$prices = array(
 			'price'        => array(
 				'id'          => 'base-price',
-				'name'        => __( 'The base price', 'fast-shop' ),
+				'name'        => __( 'Базовая цена', 'fast-shop' ),
 				'meta_key'    => $this->meta['price'],
 				'on'          => true,
-				'description' => __( 'This is the main type prices', 'fast-shop' )
+				'description' => __( 'Основной тип цены', 'fast-shop' )
 			),
 			'action_price' => array(
 				'id'          => 'action-price',
-				'name'        => __( 'Promotional price', 'fast-shop' ),
+				'name'        => __( 'Акционная цена', 'fast-shop' ),
 				'meta_key'    => $this->meta['action_price'],
 				'on'          => true,
-				'description' => __( 'This type of price interrupts the base price', 'fast-shop' )
+				'description' => __( 'Этот тип изменяет базовую цену отображаемую по умолчанию', 'fast-shop' )
 			)
 		);
 
@@ -157,51 +176,59 @@ class FS_Config {
 		);
 
 		self::$form_fields = array(
-			'fs_email'            => array( 'type' => 'email', 'label' => 'Ваш email', 'required' => true ),
-			'fs_first_name'       => array( 'type' => 'text', 'label' => 'Ваше имя', 'required' => true ),
-			'fs_last_name'        => array( 'type' => 'text', 'label' => 'Ваша фамилия', 'required' => true ),
-			'fs_phone'            => array(
+			'fs_email'             => array( 'type' => 'email', 'label' => 'Ваш email', 'required' => true ),
+			'fs_first_name'        => array( 'type' => 'text', 'label' => 'Ваше имя', 'required' => true ),
+			'fs_last_name'         => array( 'type' => 'text', 'label' => 'Ваша фамилия', 'required' => true ),
+			'fs_phone'             => array(
 				'type'      => 'tel',
 				'label'     => 'Телефон',
 				'required'  => true,
 				'save_meta' => 1
 			),
-			'fs_city'             => array( 'type'      => 'text',
-			                                'label'     => 'Город',
-			                                'required'  => true,
-			                                'save_meta' => 1
+			'fs_city'              => array(
+				'type'      => 'text',
+				'label'     => 'Город',
+				'required'  => true,
+				'save_meta' => 1
 			),
-			'fs_adress'           => array(
+			'fs_adress'            => array(
 				'type'      => 'text',
 				'label'     => 'Адрес доставки',
 				'required'  => false,
 				'save_meta' => 1
 			),
-			'fs_home_num'         => array(
+			'fs_home_num'          => array(
 				'type'      => 'text',
 				'label'     => 'Номер дома',
 				'required'  => false,
 				'save_meta' => 1
 			),
-			'fs_apartment_num'    => array(
+			'fs_apartment_num'     => array(
 				'type'      => 'text',
 				'label'     => 'Номер квартиры',
 				'required'  => false,
 				'save_meta' => 1
 			),
-			'fs_delivery_number'  => array(
+			'fs_delivery_number'   => array(
 				'type'      => 'text',
 				'label'     => 'Номер отделения',
 				'required'  => false,
 				'save_meta' => 1
 			),
-			'fs_delivery_methods' => array( 'type'      => 'radio',
-			                                'label'     => 'Способ доставки',
-			                                'required'  => true,
-			                                'save_meta' => 1
+			'fs_delivery_methods'  => array(
+				'type'      => 'radio',
+				'label'     => 'Способ доставки',
+				'required'  => true,
+				'save_meta' => 1
 			),
-			'fs_payment_methods'  => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'save_meta' => 1 ),
-			'fs_comment'          => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
+			'fs_payment_methods'   => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'save_meta' => 1 ),
+			'fs_comment'           => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
+			'fs_customer_register' => array(
+				'type'     => 'checkbox',
+				'label'    => __( 'Register on the site', 'fast-shop' ),
+				'value'    => 1,
+				'required' => false
+			),
 		);
 
 		self::$currencies = array(
@@ -262,6 +289,23 @@ class FS_Config {
 		);
 
 		return apply_filters( 'fs_order_statuses', $order_statuses );
+	}
+
+	/**
+	 * Тексты копирайтов в письмах
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public static function get_texts( $key = '' ) {
+		$texts = array(
+			'mail_copywrite' => '<p>Этот интернет-магазин работает благодаря плагину <a href="https://f-shop.top/">F-Shop</a>.  <a href="https://f-shop.top/dokumentacija/">Документация</a>. <a href="https://f-shop.top/novosti/">Новости</a>.</p>'
+		);
+
+		$texts = apply_filters( 'fs_service_text', $texts );
+
+		return ! empty( $texts[ $key ] ) ? $texts[ $key ] : $texts;
 	}
 
 	/**

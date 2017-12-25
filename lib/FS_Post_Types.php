@@ -19,15 +19,13 @@ class FS_Post_Types
 	
 	function __construct()
 	{
-		add_action('init', array(&$this, 'init'));
-		
-	}
 
+		add_action('init', array(&$this, 'init'));
+	}
 	public function init()
 	{
 		$this->create_types();
 	}
-
 
 	public function create_types()
 	{

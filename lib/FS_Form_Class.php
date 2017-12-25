@@ -47,29 +47,36 @@ class FS_Form_Class {
 				case 'fs_payment_methods':
 					$selected = get_user_meta( $curent_user->ID, 'fs_payment_methods', 1 );
 					break;
+				case 'fs_customer_register':
+					return;
+					break;
 
 			}
 		}
 		$default     = array(
-			'type'         => 'text',
-			'class'        => '',
-			'label_class'  => 'fs-form-label',
-			'id'           => str_replace( array(
+			'type'          => FS_Config::$form_fields[ $field_name ]['type'],
+			'class'         => '',
+			'wrapper'       => true,
+			'wrapper_class' => 'fs-field-wrapper',
+			'label_class'   => 'fs-form-label',
+			'id'            => str_replace( array(
 				'[',
 				']'
 			), array( '_' ), $field_name ),
-			'required'     => false,
-			'title'        => __( 'this field is required', 'fast-shop' ),
-			'placeholder'  => '',
-			'value'        => $default_value,
-			'html'         => '',
-			'options'      => array(),
-			'format'       => '%input% %label%',
-			'el'           => 'select',
-			'first_option' => __( 'Select' ),
-			'before'       => '',
-			'after'        => '',
-			'editor_args'  => array(
+			'required'      => FS_Config::$form_fields[ $field_name ]['required'],
+			'title'         => __( 'this field is required', 'fast-shop' ),
+			'placeholder'   => FS_Config::$form_fields[ $field_name ]['placeholder'],
+			'label'         => FS_Config::$form_fields[ $field_name ]['label'],
+			'value'         => $default_value,
+			'html'          => '',
+			'selected'      => $selected,
+			'options'       => array(),
+			'format'        => '%input% %label%',
+			'el'            => 'select',
+			'first_option'  => __( 'Select' ),
+			'before'        => '',
+			'after'         => '',
+			'editor_args'   => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $field_name,
 				'tinymce'       => false,
@@ -86,7 +93,9 @@ class FS_Form_Class {
 
 		$required = ! empty( $args['required'] ) ? 'required' : '';
 		$field    = $args['before'];
-
+		if ( $args['wrapper'] ) {
+			$field .= '<div class="' . esc_attr( $args['wrapper_class'] ) . '">';
+		}
 		switch ( $args['type'] ) {
 			case 'text':
 				$field .= ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
@@ -102,9 +111,10 @@ class FS_Form_Class {
 				break;
 			case 'checkbox':
 				$field .= ' <input type="checkbox" name="' . $field_name . '"  ' . checked( '1', $args['value'], false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '  value="1"  ' . $id . '> ';
+				$field .= '<label for="' . esc_attr( $args['id'] ) . '">' . $args['label'] . '</label>';
 				break;
 			case 'textarea':
-				$field .= '<textarea name="c"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
+				$field .= '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
 				break;
 			case 'custom':
 				$field .= $args['html'];
@@ -137,7 +147,7 @@ class FS_Form_Class {
 						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
-						'selected'        => $selected,
+						'selected'        => $args['selected'],
 						'class'           => $args['class'],
 						'echo'            => 0,
 						'taxonomy'        => $fs_config->data['product_pay_taxonomy']
@@ -164,7 +174,7 @@ class FS_Form_Class {
 						'show_option_all' => $args['first_option'],
 						'hide_empty'      => 0,
 						'name'            => $field_name,
-						'selected'        => $selected,
+						'selected'        => $args['selected'],
 						'class'           => $args['class'],
 						'echo'            => 0,
 						'taxonomy'        => $fs_config->data['product_del_taxonomy']
@@ -191,7 +201,9 @@ class FS_Form_Class {
 				$field = ob_get_clean();
 				break;
 		}
-
+		if ( $args['wrapper'] ) {
+			$field .= '</div>';
+		}
 		$field .= $args['after'];
 		echo apply_filters( 'fs_form_field', $field, $field_name, $args );
 	}
