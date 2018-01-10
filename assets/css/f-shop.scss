@@ -2,17 +2,17 @@
 
 //----- Variables
 // colors
-$c-red:#F8342D;
-$c-orange:#FF803A;
-$c-yellow:#FFF771;
-$c-green:#7EBB41;
-$c-green-light:#B2FF55;
+$c-red: #F8342D;
+$c-orange: #FF803A;
+$c-yellow: #FFF771;
+$c-green: #7EBB41;
+$c-green-light: #B2FF55;
 // error
-$error-bg:#ffdedd;
-$error-color:#333;
-$error-bd-color:#ffc6c4;
+$error-bg: #ffdedd;
+$error-color: #333;
+$error-bd-color: #ffc6c4;
 // fonts
-$font-primary:Arial, "Helvetica Neue", Helvetica, sans-serif;
+$font-primary: Arial, "Helvetica Neue", Helvetica, sans-serif;
 
 //---- Import
 @import "scss/modal";
@@ -354,8 +354,6 @@ li.fs-attr {
     font-weight: normal;
 }
 
-
-
 .count-error {
     position: absolute;
     width: 233px;
@@ -532,6 +530,7 @@ li.fs-attr {
         border: 1px solid #ff9692;
     }
 }
+
 .fs-form-title {
     font-weight: bold;
     text-align: center;
@@ -539,7 +538,7 @@ li.fs-attr {
     margin-bottom: 10px;
     font-size: 18px;
     color: #333;
-    font-family:$font-primary;
+    font-family: $font-primary;
 }
 
 // форма редактирования профиля пользователя
@@ -653,6 +652,7 @@ li.fs-attr {
         bottom: -9px;
     }
 }
+
 .fs-atc-preloader {
     position: absolute;
     left: 0;
@@ -664,10 +664,12 @@ li.fs-attr {
     height: 100%;
     justify-content: center;
 }
+
 td.fs_photo.column-fs_photo img {
     max-width: 100%;
     height: auto;
 }
+
 .fs-wh-preloader {
     position: absolute;
     top: 0;
@@ -681,9 +683,10 @@ td.fs_photo.column-fs_photo img {
     align-items: center;
     background-color: rgba(0, 0, 0, 0.49);
 }
-.fs-field-wrapper{
+
+.fs-field-wrapper {
     position: relative;
-    .error{
+    .error {
         font-weight: 400;
         color: red;
         font-size: 12px;
@@ -692,37 +695,38 @@ td.fs_photo.column-fs_photo img {
         text-transform: none;
     }
 }
+
 .fs-rule {
     border: 1px dashed #88c6ff;
     margin: 15px 0;
     padding: 10px 17px;
     background-color: #d1e8fe;
     position: relative;
-    p{
+    p {
         margin: 0 0 12px 0
     }
     .fs-remove-variant {
         position: absolute;
         right: 20px;
         color: red;
-        &:hover{
+        &:hover {
             text-decoration: none;
         }
     }
 }
+
 .fs-qty-wrap {
     position: relative;
     display: inline-block;
-    input{
+    input {
         height: 44px;
         position: relative;
         padding: 0 31px 0 10px;
         width: 74px;
         border: 1px solid #e0e0e0;
 
-
     }
-    .fs-button-style{
+    .fs-button-style {
         position: absolute;
         right: 2px;
         height: calc(50% - 3px);
@@ -732,32 +736,35 @@ td.fs_photo.column-fs_photo img {
         z-index: 2;
         line-height: 1;
         font-size: 1em;
-        &:hover{
-            background:lighten(#6acccb,8%) ;
+        &:hover {
+            background: lighten(#6acccb, 8%);
         }
     }
-    .fs-pluss{
+    .fs-pluss {
         @extend .fs-button-style;
         top: 2px;
 
     }
-    .fs-minus{
+    .fs-minus {
         @extend .fs-button-style;
         bottom: 2.5px;
 
     }
 
 }
+
 [data-fs-element="range-start"] {
     float: left;
     margin: 20px 0;
     font-weight: bold;
 }
+
 [data-fs-element="range-end"] {
     float: right;
     margin: 20px 0;
     font-weight: bold;
 }
+
 .fs-pay-wrapper {
     width: 360px;
     margin: 30px auto;
@@ -773,13 +780,14 @@ td.fs_photo.column-fs_photo img {
         letter-spacing: .05em;
         margin-bottom: 20px;
     }
-    img{
+    img {
         height: auto;
         max-width: 100%;
         margin-bottom: 20px;
         display: inline-block;
     }
 }
+
 .fs-order-status {
     width: 360px;
     margin: 0 auto 30px;
@@ -790,6 +798,72 @@ td.fs_photo.column-fs_photo img {
     border: 1px solid #e6e6e6;
     font-size: 16px;
 
+}
+
+.fs-ls-preloader {
+    position: absolute;
+    left: -43px;
+    height: 49px;
+    top: -8px;
+}
+
+.livesearch-wrapper {
+    .fs-ls-close {
+        cursor: pointer;
+        position: sticky;
+        top: 0;
+        background: #d7d7d7;
+        display: block;
+        padding: 2px;
+        line-height: 1;
+        float: left;
+        font-size: 12px;
+        border: 1px solid #a4a4a4;
+    }
+
+    position: absolute;
+    top: 42px;
+    background: #fff;
+    z-index: 9;
+    padding: 12px;
+    box-shadow: 0 8px 12px #0000001c;
+    max-height: 363px;
+    overflow: auto;
+    width: 100%;
+    border-top: 2px solid #cfa468;
+    p {
+        margin: 0;
+    }
+    .livesearch-item {
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 6px;
+        margin-bottom: 6px;
+        line-height: normal;
+        width: 100%;
+        float: left;
+        img {
+            width: 60px;
+            float: left;
+            margin-right: 12px;
+            overflow: hidden;
+            height: auto;
+        }
+        .title {
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1;
+        }
+        .price {
+            color: #c38d41;
+            line-height: 25px;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin: 2px 0 0 0;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+    }
 }
 
 

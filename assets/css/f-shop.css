@@ -737,4 +737,61 @@ td.fs_photo.column-fs_photo img {
   border: 1px solid #e6e6e6;
   font-size: 16px; }
 
+.fs-ls-preloader {
+  position: absolute;
+  left: -43px;
+  height: 49px;
+  top: -8px; }
+
+.livesearch-wrapper {
+  position: absolute;
+  top: 42px;
+  background: #fff;
+  z-index: 9;
+  padding: 12px;
+  box-shadow: 0 8px 12px #0000001c;
+  max-height: 363px;
+  overflow: auto;
+  width: 100%;
+  border-top: 2px solid #cfa468; }
+  .livesearch-wrapper .fs-ls-close {
+    cursor: pointer;
+    position: sticky;
+    top: 0;
+    background: #d7d7d7;
+    display: block;
+    padding: 2px;
+    line-height: 1;
+    float: left;
+    font-size: 12px;
+    border: 1px solid #a4a4a4; }
+  .livesearch-wrapper p {
+    margin: 0; }
+  .livesearch-wrapper .livesearch-item {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+    line-height: normal;
+    width: 100%;
+    float: left; }
+    .livesearch-wrapper .livesearch-item img {
+      width: 60px;
+      float: left;
+      margin-right: 12px;
+      overflow: hidden;
+      height: auto; }
+    .livesearch-wrapper .livesearch-item .title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1; }
+    .livesearch-wrapper .livesearch-item .price {
+      color: #c38d41;
+      line-height: 25px;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin: 2px 0 0 0;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: Helvetica, Arial, sans-serif; }
+
 /*# sourceMappingURL=f-shop.css.map */
