@@ -393,14 +393,29 @@ class FS_Ajax_Class {
 // живой поиск по сайту
 	public function fs_livesearch() {
 
-		$search = sanitize_text_field( $_POST['s'] );
-		$args   = array(
+	  $search=esc_sql( $_POST['s'] );
+		$args  = array(
 			's'              => $search,
 			'post_type'      => 'product',
-			'posts_per_page' => 40
+			'posts_per_page' => 100
 		);
-		$query  = new \WP_Query( $args );
-		$html   = '<span class="fs-ls-close">✖</span>';
+		$query = new \WP_Query( $args );
+		if (!$query->have_posts()){
+		$args2  = array(
+			'post_type'      => 'product',
+			'posts_per_page' => 100,
+			'meta_query'     => array(
+				'relation' => 'AND',
+				array(
+					'key'          => 'fs_articul',
+					'meta_compare' => 'LIKE',
+					'value'        => $search
+				)
+			)
+		);
+		$query = new \WP_Query( $args2 );
+    }
+		$html  = '<span class="fs-ls-close">✖</span>';
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
 				$query->the_post();
