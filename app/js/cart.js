@@ -3,7 +3,7 @@ function fs_get_cart(cartTemplate, cartWrap) {
     var parameters = {
         action: 'fs_get_cart',
         template: cartTemplate
-    }
+    };
     jQuery.ajax({
         type: 'POST',
         url: FastShopData.ajaxurl,

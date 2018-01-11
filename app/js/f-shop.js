@@ -213,7 +213,7 @@ jQuery('[data-action=add-to-cart]').on('click', function (event) {
             success: curent.data('success'),
             error: curent.data('error')
         }
-    }
+    };
 
 
     var productObject = {
@@ -254,7 +254,7 @@ document.addEventListener("fs_before_add_product", function (event) {
 // Событие срабатывает когда товар добавлен в корзину
 document.addEventListener("fs_add_to_cart", function (event) {
     // действие которое инициирует событие
-    fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]')
+    fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]');
     var button = event.detail.button;
     iziToast.show({
         image: event.detail.image,
@@ -267,7 +267,7 @@ document.addEventListener("fs_add_to_cart", function (event) {
     button.find('.fs-atc-preloader').fadeOut();
     setTimeout(function () {
         button.find('.fs-atc-info').fadeOut();
-    }, 4000)
+    }, 4000);
 
     event.preventDefault();
 }, false);
@@ -370,7 +370,7 @@ function fs_get_cart(cartTemplate, cartWrap) {
     var parameters = {
         action: 'fs_get_cart',
         template: cartTemplate
-    }
+    };
     jQuery.ajax({
         type: 'POST',
         url: FastShopData.ajaxurl,
@@ -527,13 +527,13 @@ jQuery(document).on('click', "[data-fs-action='modal']", function (e) {
     e.preventDefault();
     var modalId = jQuery(this).attr('href');
     jQuery(modalId).fadeIn();
-})
+});
 // закрытие модального окна
 jQuery(document).on('click', "[data-fs-action='modal-close']", function (e) {
     e.preventDefault();
     var modalParentlId = jQuery(this).parents('.fs-modal');
     jQuery(modalParentlId).fadeOut();
-})
+});
 // слайдер товара
 if (typeof fs_lightslider_options != "undefined") {
     jQuery('#product_slider').lightSlider(fs_lightslider_options);
@@ -783,7 +783,7 @@ jQuery('[data-fs-action="order-send"]').click(function (e) {
         e.preventDefault();
         validator.submit();
     }
-)
+);
 validator.validate({
     ignore: [],
     submitHandler: function (form) {

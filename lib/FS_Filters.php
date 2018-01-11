@@ -17,6 +17,7 @@ class FS_Filters {
 
 
 		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ) );
+		add_action( 'pre_get_posts', array( $this, 'search_query' ) );
 
 		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
 
@@ -25,6 +26,45 @@ class FS_Filters {
 
 		add_action( 'template_redirect', array( $this, 'redirect_per_page' ) );
 
+	}
+
+	/**
+	 * Добавляет возможность поиска по дополнительным полям
+	 * отфильтровывает не товары
+	 *
+	 * @param $query
+	 */
+	function search_query( $query ) {
+
+		if ( ! is_admin() &&  $query->is_search ) {
+			global $fs_config;
+			$search_term = filter_input( INPUT_GET, 's', FILTER_SANITIZE_NUMBER_INT ) ?: 0;
+
+			$query->set( 'post_type', 'product' );
+			// включаем поиск по артикулу
+			$query->set( 'meta_query', [
+				[
+					'key'     => $fs_config->meta['product_article'],
+					'value'   => trim($search_term),
+					'compare' => 'LIKE'
+				]
+			] );
+            // включаем возможность искать по нескольким параметрам
+			add_filter( 'get_meta_sql', function ( $sql ) {
+				global $wpdb;
+
+				static $nr = 0;
+				if ( 0 != $nr ++ ) {
+					return $sql;
+				}
+
+				$sql['where'] = mb_eregi_replace( '^ AND', ' OR', $sql['where'] );
+				return $sql;
+
+			} );
+		}
+
+		return $query;
 	}
 
 	public function redirect_per_page() {
@@ -62,9 +102,7 @@ class FS_Filters {
 		if ( is_admin() ) {
 			return;
 		}
-		if ( $query->is_search ) {
-			$query->set( 'post_type', 'product' );
-		}
+
 		if ( ! isset( $_REQUEST['fs_filter'] ) || ! $query->is_main_query() ) {
 			return $query;
 		}

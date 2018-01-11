@@ -31,7 +31,7 @@ jQuery('[data-action=add-to-cart]').on('click', function (event) {
             success: curent.data('success'),
             error: curent.data('error')
         }
-    }
+    };
 
 
     var productObject = {
@@ -72,7 +72,7 @@ document.addEventListener("fs_before_add_product", function (event) {
 // Событие срабатывает когда товар добавлен в корзину
 document.addEventListener("fs_add_to_cart", function (event) {
     // действие которое инициирует событие
-    fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]')
+    fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]');
     var button = event.detail.button;
     iziToast.show({
         image: event.detail.image,
@@ -85,7 +85,7 @@ document.addEventListener("fs_add_to_cart", function (event) {
     button.find('.fs-atc-preloader').fadeOut();
     setTimeout(function () {
         button.find('.fs-atc-info').fadeOut();
-    }, 4000)
+    }, 4000);
 
     event.preventDefault();
 }, false);

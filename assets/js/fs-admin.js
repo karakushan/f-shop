@@ -250,7 +250,7 @@ jQuery(document).ready(function ($) {
         event.preventDefault();
         var node = $(this).prev().clone();
         var index = $(this).parents('.fs-rule').data('index');
-        node.attr('name', 'fs_variant[' + index + '][]')
+        node.attr('name', 'fs_variant[' + index + '][]');
         $(this).before(node);
     });
     $(document).on('click', '#fs-add-variant', function (event) {

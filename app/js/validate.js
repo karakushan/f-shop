@@ -4,7 +4,7 @@ jQuery('[data-fs-action="order-send"]').click(function (e) {
         e.preventDefault();
         validator.submit();
     }
-)
+);
 validator.validate({
     ignore: [],
     submitHandler: function (form) {

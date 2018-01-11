@@ -747,7 +747,7 @@ td.fs_photo.column-fs_photo img {
   position: absolute;
   top: 42px;
   background: #fff;
-  z-index: 9;
+  z-index: 999999;
   padding: 12px;
   box-shadow: 0 8px 12px #0000001c;
   max-height: 363px;
