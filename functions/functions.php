@@ -918,10 +918,7 @@ function fs_currency( $wrap = false ) {
  * @return string
  */
 function fs_option( $option_name, $default = '' ) {
-	$config  = new \FS\FS_Config();
-	$options = $config->options;
-	$option  = ! empty( $options[ $option_name ] ) ? $options[ $option_name ] : $default;
-	$option  = wp_unslash( $option );
+	$option = get_option( $option_name, $default );
 
 	return $option;
 }

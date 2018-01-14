@@ -9,73 +9,65 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Класс выводит страницу настроек в админке
  */
 class FS_Settings_Class {
-	protected $config;
+
+	private $settings_page = 'fast-shop-settings';
 
 	public function __construct() {
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_menu', array( &$this, 'add_menu' ) );
-		$this->config = new FS_Config();
+		add_action( 'admin_init', array( &$this, 'init_settings' ) );
 	}
 
-	public function admin_init() {
-		if ( isset( $_POST['fs_save_options'] ) ) {
-			if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'fs_nonce' ) ) {
-				return;
-			}
-			$options = $_POST['fs_option'];
-			if ( $options ) {
-				$upd = update_option( 'fs_option', $options );
-				if ( $upd ) {
-					add_action( 'admin_notices', function () {
-						echo '<div class="updated is-dismissible"><p>Настройки обновлены</p></div>';
-					} );
-				} else {
-					add_action( 'admin_notices', function () {
-						echo '<div class="notice notice-warning is-dismissible"><p>Страница перезагружена, но настройки не обновлялись.</p></div>';
-					} );
-				}
 
-			}
-
-		}
-
-
-	}
-
-	public function settings_section_wp_plugin_template() {
+	public function settings_section_description() {
 		echo 'Определите настройки вашего магазина.';
 	}
-
 	/**
 	 * add a menu
 	 */
 	public function add_menu() {
 
-		// Add a page to manage this plugin's settings
+		// Регистрация страницы настроек
 		add_submenu_page(
 			'edit.php?post_type=product',
 			__( 'Store settings', 'fast-shop' ),
 			__( 'Store settings', 'fast-shop' ),
 			'manage_options',
-			'fast-shop-settings',
+			$this->settings_page,
 			array( &$this, 'settings_page' )
 		);
 	} // END public function add_menu()
 
 	/**
-	 * подключение шаблона настроек плагина
+	 * Выводит поля, табы настройки плагина в подменю товары
 	 */
 	public function settings_page() {
+		?>
+      <div class="wrap fast-shop-settings">
+      <h2><?php _e( 'Store settings', 'fast-shop' ) ?></h2>
+		<?php settings_errors();
+		$tab = 'currencies';
+		if ( ! empty( $_GET['tab'] ) ) {
+			$tab = esc_attr( $_GET['tab'] );
+		}
+		echo '<form method="post" action="' . add_query_arg( array( 'tab' => $tab ), 'options.php' ) . '">';
+		echo ' <h2 class="nav-tab-wrapper">';
 
-		$plugin_settings = $this->register_settings();
-		include( FS_PLUGIN_PATH . '/templates/back-end/settings.php' );
+		foreach ( $this->register_settings() as $key => $setting ) {
+			$class = $tab == $key ? 'nav-tab-active' : '';
+			echo '<a href="' . esc_url( add_query_arg( array( "tab" => $key ) ) ) . '" class="nav-tab ' . esc_attr( $class ) . '">' . $setting['name'] . '</a>';
+		}
+		echo "</h2>";
+		settings_fields( "fs_{$tab}_section" );
+		do_settings_sections( $this->settings_page );
+		submit_button( null, 'button button-primary button-large' );
+		echo '  </form></div>';
 	}
 
 	/**
 	 * метод содержит массив базовых настроек плагина
 	 * @return array|mixed|void
 	 */
-	public function register_settings() {
+	function register_settings() {
 		$settings = array(
 			'currencies' => array(
 				'name'   => __( 'Currencies', 'fast-shop' ),
@@ -90,7 +82,7 @@ class FS_Settings_Class {
 							'hide_empty'       => 0,
 							'selected'         => fs_option( 'default_currency' ),
 							'name'             => 'fs_option[default_currency]',
-							'show_option_none' => __( 'no currencies', 'fast-shop' ),
+							'show_option_none' => __( 'Select currency', 'fast-shop' ),
 						) ),
 						'value' => fs_option( 'default_currency' )
 					),
@@ -120,7 +112,7 @@ class FS_Settings_Class {
 				'name'   => __( 'Letters', 'fast-shop' ),
 				'fields' => array(
 					0 => array(
-						'type'  => 'text',
+						'type'  => 'email',
 						'name'  => 'manager_email',
 						'label' => 'Куда отправлять письма',
 						'value' => fs_option( 'manager_email', get_option( 'admin_email' ) )
@@ -132,7 +124,7 @@ class FS_Settings_Class {
 						'value' => fs_option( 'site_logo' )
 					),
 					2 => array(
-						'type'  => 'text',
+						'type'  => 'email',
 						'name'  => 'email_sender',
 						'label' => 'Email отправителя писем',
 						'value' => fs_option( 'email_sender' )
@@ -210,9 +202,50 @@ class FS_Settings_Class {
 			)
 		);
 
-		$settings           = apply_filters( 'fs_plugin_settings', $settings );
-
+		$settings = apply_filters( 'fs_plugin_settings', $settings );
 
 		return $settings;
+	}
+
+	/**
+	 * Инициализирует настройки плагина определенные в методе  register_settings()
+	 */
+	function init_settings() {
+		$settings = $this->register_settings();
+		// Регистрируем секции и опции в движке
+		$setting_key = ! empty( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'currencies';
+		$setting     = $settings[ $setting_key ];
+		$section     = "fs_{$setting_key}_section";
+		add_settings_section( $section, $setting['name'], array(
+			$this,
+			'settings_section_description'
+		), $this->settings_page );
+		if ( ! empty( $setting['fields'] ) ) {
+			foreach ( $setting['fields'] as $field ) {
+				$settings_id = $field['name'];
+				add_settings_field(
+					$settings_id,
+					$field['label'],
+					array( $this, 'setting_field_callback' ),
+					$this->settings_page,
+					$section,
+					array( $settings_id, $field )
+				);
+				register_setting( $section, $settings_id, null );
+			}
+		}
+
+	}
+
+	/**
+   * Колбек функция отображающая поля настроек из класса  FS_Form_Class
+	 * @param $args
+	 */
+	function setting_field_callback( $args ) {
+		$form_class = new FS_Form_Class();
+		if ( $args[1]['type'] == 'text' ) {
+			$args[1]['class'] = 'regular-text';
+		}
+		$form_class->fs_form_field( $args[0], $args[1] );
 	}
 }
