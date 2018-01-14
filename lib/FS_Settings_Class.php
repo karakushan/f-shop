@@ -21,6 +21,7 @@ class FS_Settings_Class {
 	public function settings_section_description() {
 		echo 'Определите настройки вашего магазина.';
 	}
+
 	/**
 	 * add a menu
 	 */
@@ -41,20 +42,19 @@ class FS_Settings_Class {
 	 * Выводит поля, табы настройки плагина в подменю товары
 	 */
 	public function settings_page() {
-		?>
-      <div class="wrap fast-shop-settings">
-      <h2><?php _e( 'Store settings', 'fast-shop' ) ?></h2>
-		<?php settings_errors();
+		echo '<div class="wrap fast-shop-settings">';
+		echo ' <h2>' . esc_html__( 'Store settings', 'fast-shop' ) . '</h2>';
+		settings_errors();
 		$tab = 'currencies';
 		if ( ! empty( $_GET['tab'] ) ) {
 			$tab = esc_attr( $_GET['tab'] );
 		}
-		echo '<form method="post" action="' . add_query_arg( array( 'tab' => $tab ), 'options.php' ) . '">';
+		echo '<form method="post" action="' . esc_url( add_query_arg( array( 'tab' => $tab ), 'options.php' ) ) . '">';
 		echo ' <h2 class="nav-tab-wrapper">';
 
 		foreach ( $this->register_settings() as $key => $setting ) {
 			$class = $tab == $key ? 'nav-tab-active' : '';
-			echo '<a href="' . esc_url( add_query_arg( array( "tab" => $key ) ) ) . '" class="nav-tab ' . esc_attr( $class ) . '">' . $setting['name'] . '</a>';
+			echo '<a href="' . esc_url( add_query_arg( array( "tab" => $key ) ) ) . '" class="nav-tab ' . esc_attr( $class ) . '">' . esc_html( $setting['name'] ) . '</a>';
 		}
 		echo "</h2>";
 		settings_fields( "fs_{$tab}_section" );
@@ -208,12 +208,23 @@ class FS_Settings_Class {
 	}
 
 	/**
+	 * Получает активнй таб настроек
+	 *
+	 * @param $key
+	 *
+	 * @return string
+	 */
+	function get_tab( $key ) {
+		return ( isset( $_GET[ $key ] ) ? $_GET[ $key ] : 'currencies' );
+	}
+
+	/**
 	 * Инициализирует настройки плагина определенные в методе  register_settings()
 	 */
 	function init_settings() {
 		$settings = $this->register_settings();
 		// Регистрируем секции и опции в движке
-		$setting_key = ! empty( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'currencies';
+		$setting_key = $this->get_tab( 'tab' );
 		$setting     = $settings[ $setting_key ];
 		$section     = "fs_{$setting_key}_section";
 		add_settings_section( $section, $setting['name'], array(
@@ -238,7 +249,8 @@ class FS_Settings_Class {
 	}
 
 	/**
-   * Колбек функция отображающая поля настроек из класса  FS_Form_Class
+	 * Колбек функция отображающая поля настроек из класса  FS_Form_Class
+	 *
 	 * @param $args
 	 */
 	function setting_field_callback( $args ) {
