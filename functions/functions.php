@@ -572,17 +572,27 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		)
 	);
 
+
 	// устанавливаем html атрибуты кнопки
-	$attr_set  = array(
+	$attr_set = array(
 		'data-action'       => 'add-to-cart',
 		'data-product-id'   => $post_id,
 		'data-product-name' => get_the_title( $post_id ),
+		'data-price'        => fs_get_price( $post_id ),
+		'data-currency'     => fs_currency(),
+		'data-sku'          => fs_product_code( $post_id ),
 		'id'                => 'fs-atc-' . $post_id,
 		'data-attr'         => json_encode( $attr['json'] ),
 		'data-image'        => esc_url( get_the_post_thumbnail_url( $post_id ) ),
 		'class'             => $attr['class'],
 		'data-variated'     => intval( get_post_meta( $post_id, $fs_config->meta['variated_on'], 1 ) )
 	);
+	// помещаем название категории в дата атрибут category
+	$category = get_the_terms( $post_id, $fs_config->data['product_taxonomy'] );
+	if ( ! empty( $category ) ) {
+		$attr_set['data-category'] = array_pop( $category )->name;
+	}
+
 	$html_atts = fs_parse_attr( array(), $attr_set );
 	$href      = '#';
 	// дополнительные скрытые инфо-блоки внутри кнопки (прелоадер, сообщение успешного добавления в корзину)
@@ -1447,7 +1457,7 @@ function fs_parse_attr( $attr = array(), $default = array() ) {
 	$atributes = array();
 	$att       = '';
 	foreach ( $attr as $key => $att ) {
-		$atributes[] = $key . '="' . $att . '"';
+		$atributes[] = $key . '="' . esc_attr( $att ) . '"';
 	}
 	if ( ! empty( $atributes ) ) {
 		$att = implode( ' ', $atributes );
@@ -1714,7 +1724,7 @@ function fs_gallery_images_ids( $post_id = 0, $thumbnail = true ) {
 
 	if ( ! empty( $fs_gallery['0'] ) ) {
 		foreach ( $fs_gallery['0'] as $item ) {
-			if (wp_get_attachment_image($item)){
+			if ( wp_get_attachment_image( $item ) ) {
 				$gallery       [] = $item;
 			}
 		}
@@ -1969,7 +1979,7 @@ function fs_allowed_images_type( $return = 'array' ) {
 		foreach ( $mime_types as $mime_type ) {
 			if ( strpos( $mime_type, 'image' ) === 0 ) {
 				if ( $return == 'json' ) {
-					$mime[$mime_type] = true;
+					$mime[ $mime_type ] = true;
 				} else {
 					$mime[] = $mime_type;
 				}
@@ -1977,7 +1987,7 @@ function fs_allowed_images_type( $return = 'array' ) {
 		}
 	}
 	if ( $return == 'json' ) {
-		return json_encode($mime);
+		return json_encode( $mime );
 	} else {
 		return $mime;
 	}

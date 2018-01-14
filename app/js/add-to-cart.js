@@ -24,8 +24,12 @@ jQuery('[data-action=add-to-cart]').on('click', function (event) {
         button: curent,
         id: product_id,
         name: curent.data('product-name'),
+        price: curent.data('price'),
+        currency: curent.data('currency'),
+        sku: curent.data('sku'),
+        category: curent.data('category'),
         attr: attr,
-        image:curent.data('image'),
+        image: curent.data('image'),
         success: true,
         text: {
             success: curent.data('success'),
@@ -78,7 +82,7 @@ document.addEventListener("fs_add_to_cart", function (event) {
         image: event.detail.image,
         theme: 'light',
         title: 'Успех!',
-        message: 'Товар &laquo;'+event.detail.name+'&raquo; добавлен в корзину!',
+        message: 'Товар &laquo;' + event.detail.name + '&raquo; добавлен в корзину!',
         position: 'topCenter',
 
     });
