@@ -817,7 +817,7 @@ progress {
   padding: 2px;
   color: white; }
 
-.hidden {
+.fs-hidden {
   display: none !important; }
 
 .fs-upload-desc {

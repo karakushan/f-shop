@@ -113,36 +113,12 @@ function btn_view(e) {
 }
 
 jQuery(document).ready(function ($) {
-    // вкладки на странице настроек товара
-    $("#fs-tabs").tabs({
-        active: $.cookie('postactivetab'),
-        activate: function (event, ui) {
-            $.cookie('postactivetab', ui.newTab.index(), {
-                expires: 10
-            });
-        }
-    }).addClass("ui-tabs-vertical ui-helper-clearfix");
-
-    $("#fs-tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
-    // вкладки на странице настроек магазина
-    $("#fs-options-tabs").tabs({
-        active: $.cookie('activetab'),
-        activate: function (event, ui) {
-            $.cookie('activetab', ui.newTab.index(), {
-                expires: 10
-            });
-        }
-    }).addClass("ui-tabs-vertical ui-helper-clearfix");
-    $("#fs-options-tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
-
-
     //действия в админке
     $('[data-fs-action*=admin_]').on('click', function (event) {
         event.preventDefault();
         var thisButton = $(this);
         var buttonContent = $(this).text();
         var buttonPreloader = '<img src="/wp-content/plugins/f-shop/assets/img/preloader-1.svg">';
-
         if ($(this).data('fs-confirm').length > 0) {
             if (confirm($(this).data('fs-confirm'))) {
                 $.ajax({
@@ -274,10 +250,6 @@ jQuery(document).ready(function ($) {
                 } else {
                     $("#fs-variants-wrapper .fs-rule").last().after(data);
                 }
-
-                //console.log(data);
-                // do something with ajax data
-
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log('error...', xhr);
