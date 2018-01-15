@@ -165,7 +165,7 @@ add_action( 'init', 'create_new_archive_post_status', 999 );
 
 
 // Добавляем кнопки в текстовый html-редактор
-// add_action( 'admin_print_footer_scripts', 'fs_add_sheensay_quicktags' );
+add_action( 'admin_print_footer_scripts', 'fs_add_sheensay_quicktags' );
 function fs_add_sheensay_quicktags() {
 
 	if ( empty( $_GET['page'] ) && $_GET['page'] != 'fast-shop-settings' || ! wp_script_is( 'quicktags' ) ) {

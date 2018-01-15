@@ -918,10 +918,7 @@ function fs_currency( $wrap = false ) {
  * @return string
  */
 function fs_option( $option_name, $default = '' ) {
-	$config  = new \FS\FS_Config();
-	$options = $config->options;
-	$option  = ! empty( $options[ $option_name ] ) ? $options[ $option_name ] : $default;
-	$option  = wp_unslash( $option );
+	$option = get_option( $option_name, $default );
 
 	return $option;
 }
@@ -1285,14 +1282,12 @@ function fs_product_code( $product_id = 0, $wrap = '%s', $echo = false ) {
 	$product_id = $product_id == 0 ? $post->ID : $product_id;
 	$articul    = get_post_meta( $product_id, $config->meta['product_article'], 1 );
 	if ( empty( $articul ) ) {
-		return false;
+		$articul = $product_id;
 	}
-	if ( $wrap && $articul ) {
-		if ( $echo ) {
-			echo esc_html( sprintf( $wrap, $articul ) );
-		} else {
-			return $articul;
-		}
+	if ( $echo ) {
+		echo sprintf( $wrap, $articul );
+	} else {
+		return $articul;
 	}
 
 }
@@ -1446,7 +1441,7 @@ function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
  * производит очистку и форматирование атрибутов в строку
  * $default заменяет атрибуты $attr
  *
- * @param  array $attr атрибуты переданные в функцию
+ * @param  array $attr атрибуты которые доступны для изменения динамически
  * @param  array $default атрибуты функции по умолчанию
  *
  * @return string $att          строка атрибутов
@@ -1457,7 +1452,9 @@ function fs_parse_attr( $attr = array(), $default = array() ) {
 	$atributes = array();
 	$att       = '';
 	foreach ( $attr as $key => $att ) {
-		$atributes[] = $key . '="' . esc_attr( $att ) . '"';
+		if ( ! empty( $att ) ) {
+			$atributes[] = $key . '="' . esc_attr( $att ) . '"';
+		}
 	}
 	if ( ! empty( $atributes ) ) {
 		$att = implode( ' ', $atributes );
