@@ -12,7 +12,8 @@ namespace FS;
 class FS_Api_Class {
 
 	function __construct() {
-		add_action( 'init', array( $this, 'plugin_api_actions' ) );
+		add_action( 'init', array( $this, 'plugin_admin_api_actions' ) );
+		add_action( 'template_redirect', array( $this, 'plugin_user_api_actions' ) );
 	}
 
 	/**
@@ -21,7 +22,7 @@ class FS_Api_Class {
 	 * fs-api=migrate - запрос для получения свойст товара из метаполей, которые работали в первых версиях плагина
 	 * fs-api=drop_orders_table - удаляет таблицу с заказами
 	 */
-	function plugin_api_actions() {
+	function plugin_admin_api_actions() {
 		if ( empty( $_GET['fs-api'] ) ) {
 			return;
 		}
@@ -61,6 +62,27 @@ class FS_Api_Class {
 
 			$orders_class = new FS_Orders_Class();
 			$orders_class->delete_orders();
+		}
+
+	}
+
+	/**
+	 * Исполняет API запросы по http, работает со всеми типами пользователей
+	 *
+	 */
+	function plugin_user_api_actions() {
+		if ( empty( $_REQUEST['fs-user-api'] ) ) {
+			return;
+		}
+		$session     = $_SESSION;
+		$api_command = $_REQUEST['fs-user-api'];
+		// импортирует свойства товаров из опций
+		if ( $api_command == 'delete_wishlist_position' ) {
+			if ( ! empty( $session['fs_wishlist'] ) && ! empty( $_REQUEST['product_id'] ) ) {
+				$product_id = intval( $_REQUEST['product_id'] );
+				unset( $_SESSION['fs_wishlist'][ $product_id ] );
+				wp_redirect( remove_query_arg( array( 'fs-user-api', 'product_id' ) ) );
+			}
 		}
 
 	}

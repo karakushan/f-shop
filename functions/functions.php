@@ -477,6 +477,41 @@ function fs_delete_position( $product_id, $args ) {
 	return true;
 }
 
+function fs_delete_wishlist_position( $product_id = 0, $args = array() ) {
+	$product_id = fs_get_product_id( $product_id );
+	$args       = wp_parse_args( $args, array(
+		'content' => '🞫',
+		'type'    => 'link',
+		'class'   => 'fs-delete-wishlist-position'
+	) );
+	$html_atts  = fs_parse_attr( array(), array(
+		'class'          => $args['class'],
+		'title'          => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) ),
+		'data-fs-action' => 'delete_wishlist_position',
+		'data-fs-id'     => $product_id
+	) );
+
+	$content = sanitize_text_field( $args['content'] );
+	switch ( $args['type'] ) {
+		case 'link':
+			echo '<a  href="' . esc_attr( add_query_arg( array(
+					'fs-user-api' => 'delete_wishlist_position',
+					'product_id'  => $product_id
+				) ) ) . '" ' . $html_atts . '>' . $content . '</a>';
+			break;
+		case 'button':
+			echo '<button type="button" ' . $html_atts . '>' . $content . '</button>';
+			break;
+		default:
+			echo '<a href="' . esc_attr( add_query_arg( array(
+					'fs-user-api' => 'delete_wishlist_position',
+					'product_id'  => $product_id
+				) ) ) . '" ' . $html_atts . '>' . $content . '</a>';
+			break;
+	}
+
+}
+
 
 /**
  * Выводит к-во всех товаров в корзине
