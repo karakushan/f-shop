@@ -52,7 +52,6 @@ class FS_Init {
 
 	function fast_shop_scripts() {
 		wp_enqueue_style( 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'font-awesome', FS_PLUGIN_URL . 'assets/fontawesome/css/font-awesome.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'fs-style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'es-lightgallery', FS_PLUGIN_URL. 'assets/plugins/lightGallery/dist/css/lightgallery.min.css' );

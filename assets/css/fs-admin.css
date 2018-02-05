@@ -50,11 +50,37 @@
   .fs-metabox * {
     box-sizing: border-box;
     max-width: 100%; }
+  .fs-metabox .fs-atts-list-table table > thead > tr th:first-child {
+    width: 150px; }
   .fs-metabox ul {
     width: 20%;
     float: left;
     padding: 0;
     margin: 0; }
+    .fs-metabox ul.fs-childs-list {
+      width: 100%; }
+      .fs-metabox ul.fs-childs-list li {
+        margin-bottom: 10px;
+        border: 1px solid #dbdbdb;
+        padding: 5px 10px;
+        background: #ffffff;
+        display: block;
+        float: left;
+        margin-right: 6px; }
+      .fs-metabox ul.fs-childs-list .remove-att {
+        border: 1px solid #c90808;
+        padding: 2px 7px;
+        text-transform: uppercase;
+        font-size: 10px;
+        background: #ff5b5b;
+        color: #fff;
+        margin-left: 10px;
+        border-radius: 31px;
+        letter-spacing: .05em;
+        display: inline-block;
+        cursor: pointer;
+        line-height: 1.2em;
+        text-align: center; }
     @media screen and (max-width: 768px) {
       .fs-metabox ul {
         width: 100%;
@@ -131,6 +157,12 @@
           margin-left: 7px;
           text-transform: uppercase;
           letter-spacing: .05em; }
+      .fs-metabox .fs-tabs > .fs-tab button.button-sm {
+        padding: 5px 10px;
+        line-height: normal;
+        height: auto;
+        font-family: arial;
+        font-size: 12px; }
       .fs-metabox .fs-tabs > .fs-tab .fs-attr-list ul {
         padding-left: 10px; }
         .fs-metabox .fs-tabs > .fs-tab .fs-attr-list ul li span {
@@ -157,6 +189,9 @@
       .fs-metabox .fs-tabs > .fs-tab select {
         height: 2.35em;
         padding: 0px 10px; }
+        .fs-metabox .fs-tabs > .fs-tab select.fs-select-att {
+          height: auto;
+          padding: 1px 7px; }
         .fs-metabox .fs-tabs > .fs-tab select[multiple="multiple"] {
           height: 90px; }
         .fs-metabox .fs-tabs > .fs-tab select:focus {

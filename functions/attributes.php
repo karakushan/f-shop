@@ -155,8 +155,12 @@ function fs_types_sort_filter( $attr = array() ) {
 		),
 		'name_desc'  => array(
 			'name' => __( 'Name Z to A', 'fast-shop' )
+		),
+		'action_price'  => array(
+			'name' => __( 'First promotion', 'fast-shop' )
 		)
 	);
+	$order_types = apply_filters( 'fs_types_sort_name', $order_types );
 
 	$attr = fs_parse_attr( $attr, array(
 		'class'          => 'fs-types-sort-filter',

@@ -109,7 +109,11 @@ class FS_Action_Class {
 		//===== COMPARISON LIST ====
 		add_action( 'fs_add_to_comparison', 'fs_add_to_comparison', 10, 3 );
 
+
+
 	}
+
+
 
 	/**
 	 *Функция регистрирует хуки-фильтры плагина

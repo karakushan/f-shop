@@ -9,11 +9,113 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Класс заказов
  */
 class FS_Orders_Class {
-	public $order_status;
-	private $config;
+	public $post_type = 'orders';
 
 	function __construct() {
-		add_filter( 'pre_get_posts', array( $this, 'filter_orders_by_search' ));
+		add_filter( 'pre_get_posts', array( $this, 'filter_orders_by_search' ) );
+		//===== ORDER STATUSES ====
+		add_action( 'init', array( $this, 'order_status_custom' ), 15 );
+		add_action( 'admin_footer-post-new.php', array(
+			$this,
+			'true_append_post_status_list'
+		) ); // страница создания нового поста
+		add_action( 'admin_footer-post.php', array( $this, 'true_append_post_status_list' ) );
+		add_filter( 'display_post_states', array( $this, 'true_status_display' ) );
+
+		add_action( 'transition_post_status', array( $this, 'fs_publish_order_callback' ) );
+	}
+
+	/*
+   *  Это событие отправляет покупателю сведения об оплате выбранным способом
+   *  срабатывает в момент создания заказа
+   */
+	function fs_publish_order_callback( $new_status ) {
+		global $post;
+
+		if ( $post && $post->post_type == $this->post_type && $new_status == 'fs_pending' ) {
+			$pay_method_id     = get_post_meta( $post->ID, '_payment', 1 );
+			$message_no_filter = get_term_meta( $pay_method_id, 'pay-message', 1 );
+			$message           = apply_filters( 'fs_pay_user_message', $message_no_filter, $pay_method_id, $post->ID );
+			$message_decode    = wp_specialchars_decode( $message, ENT_QUOTES );
+			$user_data         = get_post_meta( $post->ID, '_user', 1 );
+			$headers           = array(
+				'content-type: text/html'
+			);
+			if ( is_email( $user_data['email'] ) && ! empty( $message ) ) {
+				wp_mail( $user_data['email'], 'Сведения об оплате', $message_decode, $headers );
+			}
+		}
+	}
+
+	function true_status_display( $statuses ) {
+		global $post;
+		$all_statuses = $this->get_order_statuses();
+		if ( is_array( $all_statuses ) && ! empty( $all_statuses ) ) {
+			foreach ( $all_statuses as $key => $status ) {
+				if ( get_query_var( 'post_status' ) != $key ) {
+					if ( $post->post_status == $key ) {
+						$statuses[] = $status;
+					}
+				}
+			}
+		}
+
+		return $statuses;
+	}
+
+	/**
+	 * метод регистрирует статусы заказов в системе
+	 */
+	function order_status_custom() {
+		$all_statuses = $this->get_order_statuses();
+		if ( is_array( $all_statuses ) && ! empty( $all_statuses ) ) {
+			foreach ( $all_statuses as $key => $status ) {
+				register_post_status( $key, array(
+					'label'                     => $status,
+					'label_count'               => _n_noop( $status . ' <span class="count">(%s)</span>', $status . ' <span class="count">(%s)</span>' ),
+					'public'                    => true,
+					'show_in_admin_status_list' => true
+				) );
+			}
+		}
+
+	}
+
+	/**
+	 * Добавляет зарегистрированные статусы постов  в выпадающий список
+	 * на странице редактирования заказа
+	 */
+	function true_append_post_status_list() {
+		global $post;
+		if ( $post->post_type == $this->post_type ) {
+			$all_statuses = $this->get_order_statuses();
+			if ( is_array( $all_statuses ) && ! empty( $all_statuses ) ) : ?>
+              <script> jQuery(function ($) {
+					  <?php foreach ( $all_statuses as $key => $status ): ?>
+                      $('select#post_status').append("<option value=\"<?php echo esc_attr( $key )?>\" <?php selected( $post->post_status, $key ) ?>><?php echo esc_attr( $status )?></option>");
+					  <?php if ( $post->post_status == $key ): ?>
+                      $('#post-status-display').text('<?php echo esc_attr( $status )?>');
+					  <?php endif; endforeach;  ?>
+                  });</script>";
+				<?php
+			endif;
+		}
+	}
+
+	/**
+	 * Возвращает зарегистрированные на сайте статусы заказов
+	 *
+	 * через фильтр "fs_order_statuses" можно добавлять свой
+	 * @return mixed|void
+	 */
+	public function get_order_statuses() {
+		$order_statuses = array(
+			'fs_pending'   => __( 'Pending', 'fast-shop' ),
+			'fs_completed' => __( 'Completed', 'fast-shop' ),
+			'fs_cancelled' => __( 'Cancelled', 'fast-shop' ),
+		);
+
+		return apply_filters( 'fs_order_statuses', $order_statuses );
 	}
 
 
@@ -58,14 +160,15 @@ class FS_Orders_Class {
 	 * @return string
 	 */
 	public static function get_order_status( $order_id ) {
-		$statuses = get_the_terms( $order_id, 'order-statuses' );
-		if ( $statuses ) {
-			$order_status = $statuses[0]->name;
+		$post_status_id = get_post_status( $order_id );
+		if ( $post_status_id ) {
+			$all_post_statuses = self::get_order_statuses();
+			$status            = $all_post_statuses[ $post_status_id ];
 		} else {
-			$order_status = 'статус не задан';
+			$status = __( 'The order status is not defined', 'fast-shop' );
 		}
 
-		return $order_status;
+		return $status;
 	}
 
 	public static function get_order_items( $order_id ) {
@@ -126,7 +229,6 @@ class FS_Orders_Class {
 
 		return $order;
 	}
-
 
 
 	/**

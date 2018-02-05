@@ -19,6 +19,7 @@ class FS_Config {
 	public $tabs;
 	public $texts;
 
+
 	public $taxonomies;
 	public static $currencies = array();
 	protected static $users = array();
