@@ -196,6 +196,12 @@ class FS_Settings_Class {
 						'label' => 'Страница авторизации',
 						'value' => fs_option( 'page_auth', 0 )
 					),
+					6 => array(
+						'type'  => 'pages',
+						'name'  => 'page_order_detail',
+						'label' => 'Страница информации о заказе',
+						'value' => fs_option( 'page_order_detail', 0 )
+					),
 				)
 
 

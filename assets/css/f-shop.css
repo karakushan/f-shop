@@ -794,4 +794,26 @@ td.fs_photo.column-fs_photo img {
       font-weight: 500;
       font-family: Helvetica, Arial, sans-serif; }
 
+.fs-order-detail {
+  margin: 21px 0;
+  border: 1px solid #dddddd;
+  padding: 10px; }
+  .fs-order-detail tfoot {
+    font-weight: bold; }
+  .fs-order-detail .thumb img {
+    height: auto;
+    width: 80px; }
+  .fs-order-detail .table {
+    background: #fff;
+    font-size: 14px; }
+    .fs-order-detail .table thead td {
+      background: #fff; }
+      .fs-order-detail .table thead td:nth-child(3) {
+        width: 116px; }
+
+.order-detail-title {
+  margin: 3px 0 14px 0;
+  font-weight: bold;
+  text-transform: uppercase; }
+
 /*# sourceMappingURL=f-shop.css.map */
