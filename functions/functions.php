@@ -563,7 +563,8 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 			'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
 			'class'     => 'fs-add-to-cart',
 			'type'      => 'button',
-			'echo'      => true
+			'echo'      => true,
+			'atts'=>''// возможность добавлять пользовательские атрибуты и код к кнопке
 		)
 	);
 
@@ -588,10 +589,10 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	/* позволяем устанавливать разные html элементы в качестве кнопки */
 	switch ( $attr['type'] ) {
 		case 'link':
-			$atc_button = sprintf( '<a href="%s" %s>%s %s</a>', $href, $html_atts, $label, $atc_after );
+			$atc_button = sprintf( '<a href="%s" %s  %s>%s %s</a>', $href, $html_atts,$attr['atts'], $label, $atc_after );
 			break;
 		default:
-			$atc_button = sprintf( '<button type="button" %s>%s %s</button>', $html_atts, $label, $atc_after );
+			$atc_button = sprintf( '<button type="button" %s %s>%s %s</button>', $html_atts,$attr['atts'], $label, $atc_after );
 			break;
 	}
 	if ( $attr['echo'] ) {
@@ -1044,7 +1045,8 @@ function fs_wishlist_button( $post_id = 0, $args = array() ) {
 		'preloader' => '',
 		'class'     => 'fs-whishlist-btn',
 		'id'        => 'fs-whishlist-btn-' . $post_id,
-		'content'   => ''
+		'content'   => '',
+		'atts'      => ''
 	);
 	$args      = wp_parse_args( $args, $defaults );
 	$html_atts = fs_parse_attr( array(), array(
@@ -1054,18 +1056,17 @@ function fs_wishlist_button( $post_id = 0, $args = array() ) {
 		'data-name'       => get_the_title( $post_id ),
 		'data-image'      => get_the_post_thumbnail_url( $post_id ),
 		'data-product-id' => $post_id,
-
 	) );
 	$content   = '<span class="fs-wh-message" style="display:none">' . $args['success'] . '</span>';
 	$content   .= '<span class="fs-wh-preloader" style="display:none"></span>';
 	$content   .= $args['content'];
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . '>' . $content . '</a>';
+			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' '.$args["atts"].'>' . $content . '</a>';
 			break;
 
 		case 'button':
-			echo '<button ' . $html_atts . '>' . $content . '</button>';
+			echo '<button ' . $html_atts . ' '.$args["atts"].'>' . $content . '</button>';
 			break;
 	}
 
