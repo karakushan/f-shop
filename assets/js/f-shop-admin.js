@@ -1,4 +1,40 @@
 jQuery(function ($) {
+
+    // === АТРИБУТЫ НА ВКЛАДКЕ РЕДАКТИРВОАНИЯ ТОВАРА ===
+    $(document).on('click', '[data-fs-action="add-atts-from"]', function (event) {
+        event.preventDefault();
+        var el = $(this);
+        // c.parents('.fs-childs-list').find('li').last().after('<li>test</li>');
+        var data = {
+            action: 'fs_add_att',
+            term: el.prev().val(),
+            post: el.data('post')
+        }
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            //data: JSON.stringify(parameters),
+            data: data,
+            cache: false,
+            success: function (result) {
+                console.log(result);
+                // do something with ajax data
+                var json = JSON.parse(result);
+                if (json.status) {
+                    el.parents('td').find('.fs-childs-list').append('<li>'+json.term_name+' <a class="remove-att" title="do I delete a property?" data-action="remove-att" data-category-id="'+data.term+'" data-product-id="'+data.term+'">удалить</a></li>')
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            },
+            complete: function () {
+                //afer ajax call is completed
+            }
+        });
+    });
+
     // тип атрибута в редкатировании атрибутов
     $(".fs-color-select").spectrum({
         color: $(this).val(),
@@ -28,7 +64,7 @@ jQuery(function ($) {
         ]
     });
 
-    //показываем скррываем кнопку загрузки изображения в зависимости от типа добавляемого атрибута
+    //показываем скрываем кнопку загрузки изображения в зависимости от типа добавляемого атрибута
     $('#fs_att_type').on('change', function (event) {
         event.preventDefault();
         $('.fs-att-values').css({'display': 'none'});
@@ -113,36 +149,12 @@ function btn_view(e) {
 }
 
 jQuery(document).ready(function ($) {
-    // вкладки на странице настроек товара
-    $("#fs-tabs").tabs({
-        active: $.cookie('postactivetab'),
-        activate: function (event, ui) {
-            $.cookie('postactivetab', ui.newTab.index(), {
-                expires: 10
-            });
-        }
-    }).addClass("ui-tabs-vertical ui-helper-clearfix");
-
-    $("#fs-tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
-    // вкладки на странице настроек магазина
-    $("#fs-options-tabs").tabs({
-        active: $.cookie('activetab'),
-        activate: function (event, ui) {
-            $.cookie('activetab', ui.newTab.index(), {
-                expires: 10
-            });
-        }
-    }).addClass("ui-tabs-vertical ui-helper-clearfix");
-    $("#fs-options-tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
-
-
     //действия в админке
     $('[data-fs-action*=admin_]').on('click', function (event) {
         event.preventDefault();
         var thisButton = $(this);
         var buttonContent = $(this).text();
         var buttonPreloader = '<img src="/wp-content/plugins/f-shop/assets/img/preloader-1.svg">';
-
         if ($(this).data('fs-confirm').length > 0) {
             if (confirm($(this).data('fs-confirm'))) {
                 $.ajax({
@@ -240,7 +252,7 @@ jQuery(document).ready(function ($) {
                     if (!IsJsonString(data)) return;
                     var json = $.parseJSON(data);
                     if (json.status) {
-                        el.parents('li').fadeOut().remove();
+                        el.parent().remove();
                     }
                 });
         }
@@ -274,10 +286,6 @@ jQuery(document).ready(function ($) {
                 } else {
                     $("#fs-variants-wrapper .fs-rule").last().after(data);
                 }
-
-                //console.log(data);
-                // do something with ajax data
-
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log('error...', xhr);
@@ -305,7 +313,7 @@ jQuery(document).ready(function ($) {
 
 jQuery(document).ready(function ($) {
     // табы
-    $('#fs-metabox ul a').on('click', function (event) {
+    $('#fs-metabox .tab-header a').on('click', function (event) {
         event.preventDefault();
         var target = $(this).attr('href');
         $.cookie('fs_active_tab', $(this).data('tab'), {
@@ -371,20 +379,20 @@ jQuery(document).on('change', '.fs_select_variant', function (event) {
 // ==== drag and drop загрузчик файлов ====
 var holder = document.getElementById('holder');
 if (holder) {
-   var tests = {
-        filereader: typeof FileReader != 'undefined',
-        dnd: 'draggable' in document.createElement('span'),
-        formdata: !!window.FormData,
-        progress: "upload" in new XMLHttpRequest
-    },
-    support = {
-        filereader: document.getElementById('filereader'),
-        formdata: document.getElementById('formdata'),
-        progress: document.getElementById('progress')
-    },
-    acceptedTypes = fShop.allowedImagesType,
-    progress = document.getElementById('uploadprogress'),
-    fileupload = document.getElementById('upload');
+    var tests = {
+            filereader: typeof FileReader != 'undefined',
+            dnd: 'draggable' in document.createElement('span'),
+            formdata: !!window.FormData,
+            progress: "upload" in new XMLHttpRequest
+        },
+        support = {
+            filereader: document.getElementById('filereader'),
+            formdata: document.getElementById('formdata'),
+            progress: document.getElementById('progress')
+        },
+        acceptedTypes = fShop.allowedImagesType,
+        progress = document.getElementById('uploadprogress'),
+        fileupload = document.getElementById('upload');
 
 
     "filereader formdata progress".split(' ').forEach(function (api) {

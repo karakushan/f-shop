@@ -235,7 +235,7 @@ class FS_Post_Type {
 		echo '<div class="fs-metabox" id="fs-metabox">';
 
 		if ( ! empty( $this->config->tabs ) && is_array( $this->config->tabs ) ) {
-			echo '<ul>';
+			echo '<ul class="tab-header">';
 			foreach ( $this->config->tabs as $key => $tab ) {
 				if ( ! $tab['on'] ) {
 					continue;

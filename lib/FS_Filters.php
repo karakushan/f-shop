@@ -162,65 +162,36 @@ class FS_Filters {
 
 			switch ( $url['order_type'] ) {
 				case 'price_asc': //сортируем по цене в возрастающем порядке
-
-					$meta_query['price'] = array(
-						'key'     => $config->meta['price'],
-						'compare' => 'EXISTS',
-						'type'    => 'NUMERIC',
-					);
-					$orderby[]           = 'price';
-					$order               = 'ASC';
+					$meta_query['price'] = array( 'key' => $config->meta['price'] );
+					$orderby['price']    = 'ASC';
 					break;
 				case 'price_desc': //сортируем по цене в спадающем порядке
-					$meta_query['price'] = array(
-						'key'     => $config->meta['price'],
-						'compare' => 'EXISTS',
-						'type'    => 'NUMERIC',
-					);
-					$orderby[]           = 'price';
-					$order               = 'DESC';
+					$meta_query['price'] = array( 'key' => $config->meta['price'] );
+					$orderby['price']    = 'DESC';
 					break;
 				case 'views_desc': //сортируем по просмотрам в спадающем порядке
-					$meta_query['views'] = array(
-						'key'     => 'views',
-						'compare' => 'EXISTS',
-						'type'    => 'NUMERIC',
-					);
-					$orderby[]           = 'views';
-					$order               = 'DESC';
+					$meta_query['views'] = array( 'key' => 'views' );
+					$orderby['views']    = 'DESC';
 					break;
 				case 'views_asc': //сортируем по просмотрам в спадающем порядке
-					$meta_query['views'] = array(
-						'key'     => 'views',
-						'compare' => 'EXISTS',
-						'type'    => 'NUMERIC',
-					);
-					$orderby[]           = 'views';
-					$order               = 'ASC';
+					$meta_query['views'] = array( 'key' => 'views' );
+					$orderby['views']    = 'ASC';
 					break;
 				case 'name_asc': //сортируем по названию по алфавиту
-					$orderby[] = 'title';
-					$order     = 'ASC';
+					$orderby['title'] = 'ASC';
 					break;
 				case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
-					$orderby[] = 'title';
-					$order     = 'DESC';
+					$orderby['title'] = 'DESC';
 					break;
 				case 'date_desc':
-					$orderby[] = 'date';
-					$order     = 'DESC';
+					$orderby['date'] = 'DESC';
 					break;
 				case 'date_asc':
-					$orderby[] = 'date';
-					$order     = 'ASC';
+					$orderby['date'] = 'ASC';
 					break;
-				case 'field_action' :
-					$meta_query['action_price'] = array(
-						'key'     => $config->meta['action_price'],
-						'compare' => '>',
-						'value'   => 0
-
-					);
+				case 'action_price' :
+					$meta_query['action_price'] = array( 'key' => $config->meta['action_price'] );
+					$orderby['action_price']    = 'DESC';
 					break;
 
 
@@ -282,8 +253,12 @@ class FS_Filters {
 			$tax_query = array_merge( $query->tax_query->queries, $tax_query );
 			$query->set( 'tax_query', $tax_query );
 		}
-		$query->set( 'orderby', implode( ' ', $orderby ) );
-		$query->set( 'order', $order );
+		if ( ! empty( $orderby ) ) {
+			$query->set( 'orderby', $orderby );
+		}
+		if ( ! empty( $order ) ) {
+			$query->set( 'order', $order );
+		}
 
 		return $query;
 	}//end filter_curr_product()

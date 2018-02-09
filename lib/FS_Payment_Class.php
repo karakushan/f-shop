@@ -43,7 +43,7 @@ class FS_Payment_Class {
 		$order = FS_Orders_Class::get_order( $order_id );
 		switch ( (string) $_GET['fs-action'] ) {
 			case 'order_status':
-				$order_status =get_post_status($order_id);
+				$order_status =FS_Orders_Class::get_order_status($order_id);
 				$html         .= '<div class="fs-order-status">Статус заказа №' . $order_id . ': <b>' . $order_status . '</b></div>';
 				break;
 			case 'payment_method':

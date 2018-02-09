@@ -866,6 +866,36 @@ td.fs_photo.column-fs_photo img {
     }
 }
 
+.fs-order-detail{
+    margin: 21px 0;
+    border: 1px solid #dddddd;
+    padding: 10px;
+    tfoot {
+        font-weight: bold;
+    }
+    .thumb {
+        img {
+            height: auto;
+            width: 80px;
+        }
+    }
+    .table {
+        background: #fff;
+        font-size: 14px;
+        thead td {
+            background: #fff;
+            &:nth-child(3) {
+                width: 116px;
+            }
+        }
+    }
+}
+
+.order-detail-title {
+    margin: 3px 0 14px 0;
+    font-weight: bold;
+    text-transform: uppercase;
+}
 
 
 

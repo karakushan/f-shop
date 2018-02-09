@@ -196,6 +196,12 @@ class FS_Settings_Class {
 						'label' => 'Страница авторизации',
 						'value' => fs_option( 'page_auth', 0 )
 					),
+					6 => array(
+						'type'  => 'pages',
+						'name'  => 'page_order_detail',
+						'label' => 'Страница информации о заказе',
+						'value' => fs_option( 'page_order_detail', 0 )
+					),
 				)
 
 
@@ -255,7 +261,7 @@ class FS_Settings_Class {
 	 */
 	function setting_field_callback( $args ) {
 		$form_class = new FS_Form_Class();
-		if ( $args[1]['type'] == 'text' ) {
+		if ( in_array($args[1]['type'],array('text','email','number')) ) {
 			$args[1]['class'] = 'regular-text';
 		}
 		$form_class->fs_form_field( $args[0], $args[1] );

@@ -43,7 +43,36 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_get_variated', array( $this, 'fs_get_variated_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_variated', array( $this, 'fs_get_variated_callback' ) );
 
+		// привязка атрибута к товару
+		add_action( 'wp_ajax_fs_add_att', array( $this, 'fs_add_att_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_add_att', array( $this, 'fs_add_att_callback' ) );
 
+
+	}
+  // привязка атрибута к товару
+	function fs_add_att_callback() {
+		global $fs_config;
+		$post = array_map( 'sanitize_text_field', $_POST );
+
+		$post_terms = wp_set_post_terms( intval( $post['post'] ), intval( $post['term'] ), $fs_config->data['product_att_taxonomy'], true );
+		if ( is_wp_error( $post_terms ) ) {
+			echo json_encode( array(
+				'status'  => 0,
+				'message' => $post_terms->get_error_message()
+			) );
+		} elseif ( $post_terms === false ) {
+			echo json_encode( array(
+				'status'  => 0,
+				'message' => __( 'Возникла непредвиденная ошибка при прикреплении атрибута к товару' )
+			) );
+		} else {
+			echo json_encode( array(
+				'status'  => 1,
+				'term_name'=>get_term_field('name',intval( $post['term'] ),$fs_config->data['product_att_taxonomy']),
+				'message' => __( 'Атрибут успешно прикреплен к товару' )
+			) );
+		}
+		wp_die();
 	}
 
 	function fs_get_variated_callback() {
@@ -393,29 +422,29 @@ class FS_Ajax_Class {
 // живой поиск по сайту
 	public function fs_livesearch() {
 
-	  $search=esc_sql( $_POST['s'] );
-		$args  = array(
+		$search = esc_sql( $_POST['s'] );
+		$args   = array(
 			's'              => $search,
 			'post_type'      => 'product',
 			'posts_per_page' => 100
 		);
-		$query = new \WP_Query( $args );
-		if (!$query->have_posts()){
-		$args2  = array(
-			'post_type'      => 'product',
-			'posts_per_page' => 100,
-			'meta_query'     => array(
-				'relation' => 'AND',
-				array(
-					'key'          => 'fs_articul',
-					'meta_compare' => 'LIKE',
-					'value'        => $search
+		$query  = new \WP_Query( $args );
+		if ( ! $query->have_posts() ) {
+			$args2 = array(
+				'post_type'      => 'product',
+				'posts_per_page' => 100,
+				'meta_query'     => array(
+					'relation' => 'AND',
+					array(
+						'key'          => 'fs_articul',
+						'meta_compare' => 'LIKE',
+						'value'        => $search
+					)
 				)
-			)
-		);
-		$query = new \WP_Query( $args2 );
-    }
-		$html  = '<span class="fs-ls-close">✖</span>';
+			);
+			$query = new \WP_Query( $args2 );
+		}
+		$html = '<span class="fs-ls-close">✖</span>';
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
 				$query->the_post();

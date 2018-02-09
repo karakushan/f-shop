@@ -150,23 +150,10 @@ function fs_orders_bubble() {
 	}
 }
 
-function create_new_archive_post_status() {
-	register_post_status( 'archive', array(
-		'label'                     => _x( 'Archive', 'post' ),
-		'public'                    => true,
-		'exclude_from_search'       => false,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		'label_count'               => _n_noop( 'Archive <span class="count">(%s)</span>', 'Archive <span class="count">(%s)</span>' ),
-	) );
-}
-
-add_action( 'init', 'create_new_archive_post_status', 999 );
-
-
 // Добавляем кнопки в текстовый html-редактор
 add_action( 'admin_print_footer_scripts', 'fs_add_sheensay_quicktags' );
 function fs_add_sheensay_quicktags() {
+
 	if ( empty( $_GET['page'] ) && $_GET['page'] != 'fast-shop-settings' || ! wp_script_is( 'quicktags' ) ) {
 		return;
 	} ?>

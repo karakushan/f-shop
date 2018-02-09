@@ -538,6 +538,7 @@ jQuery(document).on('click', "[data-fs-action='modal-close']", function (e) {
     var modalParentlId = jQuery(this).parents('.fs-modal');
     jQuery(modalParentlId).fadeOut();
 });
+jQuery("#product_slider").lightGallery();
 // слайдер товара
 if (typeof fs_lightslider_options != "undefined") {
     jQuery('#product_slider').lightSlider(fs_lightslider_options);
