@@ -1,0 +1,490 @@
+jQuery(function ($) {
+
+    // === АТРИБУТЫ НА ВКЛАДКЕ РЕДАКТИРВОАНИЯ ТОВАРА ===
+    $(document).on('click', '[data-fs-action="add-atts-from"]', function (event) {
+        event.preventDefault();
+        var el = $(this);
+        // c.parents('.fs-childs-list').find('li').last().after('<li>test</li>');
+        var data = {
+            action: 'fs_add_att',
+            term: el.prev().val(),
+            post: el.data('post')
+        }
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            //data: JSON.stringify(parameters),
+            data: data,
+            cache: false,
+            success: function (result) {
+                console.log(result);
+                // do something with ajax data
+                var json = JSON.parse(result);
+                if (json.status) {
+                    el.parents('td').find('.fs-childs-list').append('<li>'+json.term_name+' <a class="remove-att" title="do I delete a property?" data-action="remove-att" data-category-id="'+data.term+'" data-product-id="'+data.term+'">удалить</a></li>')
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            },
+            complete: function () {
+                //afer ajax call is completed
+            }
+        });
+    });
+
+    // тип атрибута в редкатировании атрибутов
+    $(".fs-color-select").spectrum({
+        color: $(this).val(),
+        showInput: true,
+        className: "full-spectrum",
+        showInitial: true,
+        showPalette: true,
+        showSelectionPalette: true,
+        maxSelectionSize: 10,
+        preferredFormat: "hex",
+        localStorageKey: "spectrum.demo",
+        palette: [
+            ["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)",
+                "rgb(204, 204, 204)", "rgb(217, 217, 217)", "rgb(255, 255, 255)"],
+            ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 255, 0)",
+                "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"],
+            ["rgb(230, 184, 175)", "rgb(244, 204, 204)", "rgb(252, 229, 205)", "rgb(255, 242, 204)", "rgb(217, 234, 211)",
+                "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)",
+                "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)",
+                "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)",
+                "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)",
+                "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)",
+                "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)",
+                "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)",
+                "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)",
+                "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
+        ]
+    });
+
+    //показываем скрываем кнопку загрузки изображения в зависимости от типа добавляемого атрибута
+    $('#fs_att_type').on('change', function (event) {
+        event.preventDefault();
+        $('.fs-att-values').css({'display': 'none'});
+        $(".fs-att-" + $(this).val()).fadeIn();
+    });
+
+    //вызываем стандартный загрузчик изображений
+    $('.select_file').on('click', function () {
+        var send_attachment_bkp = wp.media.editor.send.attachment;
+        var button = $(this);
+        wp.media.editor.open(button);
+        wp.media.editor.send.attachment = function (props, attachment) {
+            $(button).next().val(attachment.id);
+            $(button).prev().css({
+                'background-image': 'url(' + attachment.url + ')'
+            }).removeClass('hidden');
+            $(button).text('изменить изображение');
+            wp.media.editor.send.attachment = send_attachment_bkp;
+            button.parents('.fs-fields-container').find('.delete_file').fadeIn(400);
+        };
+
+        return false;
+    });
+    $('.delete_file').on('click', function () {
+        if (confirm('Вы точно хотите удалить изображение?')) {
+            $(this).parents('.fs-fields-container').find('input').val('');
+            $(this).parents('.fs-fields-container').find('.fs-selected-image').css({
+                'background-image': 'none'
+            }).addClass('hidden');
+            $(this).parents('.fs-fields-container').find('.select_file').text('выбрать изображение');
+            $(this).fadeOut(400);
+
+        }
+
+    });
+
+
+    /*
+     * действие при нажатии на кнопку загрузки изображения
+     * вы также можете привязать это действие к клику по самому изображению
+     */
+    $('.upload-mft').live('click', function () {
+        var send_attachment_bkp = wp.media.editor.send.attachment;
+        var button = $(this);
+        wp.media.editor.send.attachment = function (props, attachment) {
+            $(button).parents('.mmf-image').find('.img-url').val(attachment.id);
+            $(button).parents('.mmf-image').find('.image-preview').attr('src', attachment.url);
+
+            $(button).prev().val(attachment.id);
+            wp.media.editor.send.attachment = send_attachment_bkp;
+        };
+        wp.media.editor.open(button);
+        return false;
+    });
+    /*
+     * удаляем значение произвольного поля
+     * если быть точным, то мы просто удаляем value у input type="hidden"
+     */
+    $('.remove_image_button').click(function () {
+        var r = confirm("Уверены?");
+        if (r == true) {
+            var src = $(this).parent().prev().attr('data-src');
+            $(this).parent().prev().attr('src', src);
+            $(this).prev().prev().val('');
+        }
+        return false;
+    });
+
+    var nImg = '<div class="mmf-image"><img src="" alt="" width="164" height="133" class="image-preview"><input type="hidden" name="fs_galery[]" value="" class="img-url"><button type="button" class="upload-mft">Загрузить</button><button type="button" class="remove-tr" onclick="btn_view(this)">удалить</button></div>';
+    jQuery('#new_image').click(function (event) {
+        event.preventDefault();
+        if (jQuery('#mmf-1 .mmf-image').length > 0) {
+            jQuery('#mmf-1 .mmf-image:last').after(nImg);
+        } else {
+            jQuery('#mmf-1').html(nImg);
+        }
+    });
+});
+
+function btn_view(e) {
+    jQuery(e).parents('.mmf-image').remove();
+}
+
+jQuery(document).ready(function ($) {
+    //действия в админке
+    $('[data-fs-action*=admin_]').on('click', function (event) {
+        event.preventDefault();
+        var thisButton = $(this);
+        var buttonContent = $(this).text();
+        var buttonPreloader = '<img src="/wp-content/plugins/f-shop/assets/img/preloader-1.svg">';
+        if ($(this).data('fs-confirm').length > 0) {
+            if (confirm($(this).data('fs-confirm'))) {
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    beforeSend: function () {
+                        thisButton.find('div').remove();
+                        thisButton.html(buttonPreloader + buttonContent);
+                    },
+                    data: {action: $(this).data('fs-action')},
+                })
+                    .done(function (result) {
+                        result = jQuery.parseJSON(result);
+                        thisButton.find('img').fadeOut(600).remove();
+                        if (result.status == true) {
+                            thisButton.html('<div class="success">' + result.message + '</div>' + buttonContent);
+                            if (result.action == 'refresh') {
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            }
+                        } else {
+                            thisButton.html('<div class="error">' + result.message + '</div>' + buttonContent);
+                        }
+                    })
+                    .fail(function () {
+                        console.log("error");
+                    })
+                    .always(function () {
+                        console.log("complete");
+                    });
+
+            }
+        }
+
+    });
+    $('[data-fs-action="enabled-select"]').on('click', function (event) {
+        event.preventDefault();
+        $(this).next().fadeIn();
+    });
+    $('#tab-4').on('change', '[data-fs-action="select_related"]', function (event) {
+        event.preventDefault();
+        var thisVal = $(this).val();
+        var text;
+        $(this).find('option').each(function (index, el) {
+            if (thisVal == $(this).attr('value')) {
+                text = $(this).text();
+            }
+
+
+        });
+        $('#tab-4 .related-wrap').append('<li class="single-rel"><span>' + text + '</span> <button type="button" data-fs-action="delete_parents" class="related-delete" data-target=".single-rel">удалить</button><input type="hidden" name="fs_related_products[]" value="' + thisVal + '"></li>');
+        $(this).fadeOut().remove();
+
+    });
+    $('body').on('click', '[data-fs-action="delete_parents"]', function (event) {
+        $(this).parents($(this).data('target')).remove();
+    });
+    // получаем посты термина во вкладке связанные в редактировании товара
+    $('#tab-4').on('change', '[data-fs-action="get_taxonomy_posts"]', function (event) {
+        var term = $(this).val();
+        var thisSel = $(this);
+        var postExclude = $(this).data('post');
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {action: 'fs_get_taxonomy_posts', 'term_id': term, 'post': postExclude},
+        })
+            .done(function (data) {
+                var json = $.parseJSON(data);
+                thisSel.prop('selectedIndex', 0);
+                thisSel.hide();
+                thisSel.parent().append(json.body);
+            });
+
+    });
+
+    $(".fs-sortable-items").sortable();
+
+    // удаление свойства на вкладке "Атрибуты"
+    $(document).on('click', '[data-action="remove-att"]', function (event) {
+        event.preventDefault();
+        var el = $(this);
+        if (confirm('Confirm?')) {
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'fs_remove_product_term',
+                    term_id: el.data('category-id'),
+                    product_id: el.data('product-id')
+                },
+            })
+                .done(function (data) {
+                    if (!IsJsonString(data)) return;
+                    var json = $.parseJSON(data);
+                    if (json.status) {
+                        el.parent().remove();
+                    }
+                });
+        }
+    });
+
+    $(document).on('click', '[data-fs-element="clone-att"]', function (event) {
+        event.preventDefault();
+        var node = $(this).prev().clone();
+        var index = $(this).parents('.fs-rule').data('index');
+        node.attr('name', 'fs_variant[' + index + '][]');
+        $(this).before(node);
+    });
+    $(document).on('click', '#fs-add-variant', function (event) {
+        var count = $(".fs-rule").length;
+        var preloader = $(this).find('.fs-preloader');
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            beforeSend: function () {
+                preloader.fadeIn();
+            },
+            data: {
+                action: "fs_add_variant",
+                index: count
+            },
+
+            success: function (data) {
+                preloader.fadeOut();
+                if (!count) {
+                    $("#fs-variants-wrapper").html(data);
+                } else {
+                    $("#fs-variants-wrapper .fs-rule").last().after(data);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            },
+            complete: function () {
+                //afer ajax call is completed
+            }
+        });
+
+    });
+    $(document).on('click', '#fs-variants-wrapper .fs-remove-variant', function (event) {
+        event.preventDefault();
+        $(this).parents('.fs-rule').remove();
+        $(".fs-rule").each(function (index, value) {
+            $(this).attr('data-index', index);
+            $(this).find('select').attr('name', 'fs_variant[' + index + '][]');
+            $(this).find('input').attr('name', 'fs_variant_price[' + index + ']');
+            $(this).find('.index').text(index + 1);
+        });
+
+    });
+
+});
+
+jQuery(document).ready(function ($) {
+    // табы
+    $('#fs-metabox .tab-header a').on('click', function (event) {
+        event.preventDefault();
+        var target = $(this).attr('href');
+        $.cookie('fs_active_tab', $(this).data('tab'), {
+            expires: 10
+        });
+        $('.fs-tabs .fs-tab').each(function (index, el) {
+            $(this).removeClass('fs-tab-active');
+        });
+        $(target).addClass('fs-tab-active');
+        $('#fs-metabox>ul>li').each(function (index, el) {
+            $(this).removeClass('fs-link-active');
+        });
+        $(this).parent('li').addClass('fs-link-active');
+    });
+// добавление атрибута
+    $('#fs-add-attr').on('click', function (event) {
+        event.preventDefault();
+        $('#fs-attr-select').fadeIn(600);
+    });
+// добавление галереи изображений
+    $('#fs-add-gallery').click(open_media_window);
+
+    function open_media_window() {
+        if (this.window === undefined) {
+            this.window = wp.media({
+                title: 'Добавление изображений в галерею',
+                library: {type: 'image'},
+                multiple: true,
+                button: {text: 'добавить в галерею'}
+            });
+
+            var self = this; // Needed to retrieve our variable in the anonymous function below
+            this.window.on('select', function () {
+                var images = self.window.state().get('selection').toJSON();
+                for (var key in images) {
+                    if (images[key].type != 'image') continue;
+                    var image = '<div class="fs-col-4"> <div class="fs-remove-img"></div> <input type="hidden" name="fs_galery[]" value="' + images[key].id + '"> <img src="' + images[key].url + '" alt="fs gallery image #' + images[key].id + '"> </div>';
+                    $('#fs-gallery-wrapper').append(image);
+                }
+            });
+        }
+
+        this.window.open();
+        return false;
+    }
+
+// удалем одно изображение из галереи
+    $(document).on('click', '#fs-gallery-wrapper .fs-remove-img', function (event) {
+        event.preventDefault();
+        $(this).parent('div').remove();
+    });
+});
+
+jQuery(document).on('change', '.fs_select_variant', function (event) {
+    event.preventDefault();
+    if (jQuery(this).val() == '-1') {
+        if (confirm('подтверждаете?')) {
+            jQuery(this).fadeOut().remove();
+        }
+    }
+});
+
+// ==== drag and drop загрузчик файлов ====
+var holder = document.getElementById('holder');
+if (holder) {
+    var tests = {
+            filereader: typeof FileReader != 'undefined',
+            dnd: 'draggable' in document.createElement('span'),
+            formdata: !!window.FormData,
+            progress: "upload" in new XMLHttpRequest
+        },
+        support = {
+            filereader: document.getElementById('filereader'),
+            formdata: document.getElementById('formdata'),
+            progress: document.getElementById('progress')
+        },
+        acceptedTypes = fShop.allowedImagesType,
+        progress = document.getElementById('uploadprogress'),
+        fileupload = document.getElementById('upload');
+
+
+    "filereader formdata progress".split(' ').forEach(function (api) {
+        if (tests[api] === false) {
+            support[api].className = 'fail';
+        } else {
+            // FFS. I could have done el.hidden = true, but IE doesn't support
+            // hidden, so I tried to create a polyfill that would extend the
+            // Element.prototype, but then IE10 doesn't even give me access
+            // to the Element object. Brilliant.
+            support[api].className = 'hidden';
+        }
+    });
+
+    function previewfile(file) {
+        if (tests.filereader === true && acceptedTypes[file.type] === true) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var image = new Image();
+                image.src = event.target.result;
+                image.width = 250; // a fake resize
+                holder.appendChild(image);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function filesUpload(formData, file) {
+        // document.getElementById('uploadprogress-name').innerText=file.name;
+        progress.value = 0;
+        var xhr = new XMLHttpRequest();
+
+        xhr.onload = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var json = JSON.parse(xhr.responseText);
+                var image = '<div class="fs-col-4"> <div class="fs-remove-img"></div> <input type="hidden" name="fs_galery[]" value="' + json.data.id + '"> <img src="' + json.data.url + '" alt="fs gallery image #' + json.data.id + '"> </div>';
+                jQuery('#fs-gallery-wrapper').append(image);
+                progress.value = 0;
+
+            }
+            progress.value = progress.innerHTML = 100;
+        };
+
+
+        if (tests.progress) {
+            xhr.upload.onprogress = function (event) {
+                if (event.lengthComputable) {
+                    var complete = (event.loaded / event.total * 100 | 0);
+                    progress.value = progress.innerHTML = complete;
+                }
+            }
+        }
+        xhr.open("POST", "/wp-admin/async-upload.php", true);
+        xhr.send(formData);
+    }
+
+    function readfiles(files) {
+        var formData = tests.formdata ? new FormData() : null;
+        formData.append("action", "upload-attachment");
+        formData.append("_wpnonce", fShop.mediaNonce);
+        for (var i = 0; i < files.length; i++) {
+            if (tests.formdata) formData.append('async-upload', files[i]);
+            previewfile(files[i]);
+            filesUpload(formData, files[i]);
+        }
+    }
+
+    if (tests.dnd) {
+        holder.ondragover = function () {
+            this.className = 'hover';
+            return false;
+        };
+        holder.ondragend = function () {
+            this.className = '';
+            return false;
+        };
+        holder.ondrop = function (e) {
+            this.className = '';
+            e.preventDefault();
+            readfiles(e.dataTransfer.files);
+        }
+    } else {
+        fileupload.className = 'hidden';
+        fileupload.querySelector('input').onchange = function () {
+            readfiles(this.files);
+        };
+    }
+}
+
+
+
+
+
+

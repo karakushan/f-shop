@@ -150,38 +150,25 @@ function fs_orders_bubble() {
 	}
 }
 
-function create_new_archive_post_status() {
-	register_post_status( 'archive', array(
-		'label'                     => _x( 'Archive', 'post' ),
-		'public'                    => true,
-		'exclude_from_search'       => false,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		'label_count'               => _n_noop( 'Archive <span class="count">(%s)</span>', 'Archive <span class="count">(%s)</span>' ),
-	) );
-}
-
-add_action( 'init', 'create_new_archive_post_status', 999 );
-
-
 // Добавляем кнопки в текстовый html-редактор
 add_action( 'admin_print_footer_scripts', 'fs_add_sheensay_quicktags' );
 function fs_add_sheensay_quicktags() {
+
 	if ( empty( $_GET['page'] ) && $_GET['page'] != 'fast-shop-settings' || ! wp_script_is( 'quicktags' ) ) {
 		return;
 	} ?>
   <script type="text/javascript">
       if (QTags) {
           // QTags.addButton( id, display, arg1, arg2, access_key, title, priority, instance );
-          QTags.addButton('fs_b_fname', '<?php _e( 'First name', 'fast-shop' ) ?>', '%fs_first_name%', '', '', '<?php _e( 'First name', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_lname', '<?php _e( 'Last name', 'fast-shop' ) ?>', '%fs_last_name%', '', '', '<?php _e( 'Last name', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_email', '<?php _e( 'Email', 'fast-shop' ) ?>', '%fs_email%', '', '', '<?php _e( 'E-mail', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_order_id', '<?php _e( 'Order id', 'fast-shop' ) ?>', '%order_id%', '', '', '<?php _e( 'Order id', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_total_amount', '<?php _e( 'Amount', 'fast-shop' ) ?>', '%total_amount%', '', '', '<?php _e( 'Amount', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_phone', '<?php _e( 'Phone', 'fast-shop' ) ?>', '%fs_phone%', '', '', '<?php _e( 'Phone', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_fs_city', '<?php _e( 'City', 'fast-shop' ) ?>', '%fs_city%', '', '', '<?php _e( 'City', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_fs_adress', '<?php _e( 'Delivery address', 'fast-shop' ) ?>', '%fs_adress%', '', '', '<?php _e( 'Delivery address', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_site_name', '<?php _e( 'Site name', 'fast-shop' ) ?>', '%site_name%', '', '', '<?php _e( 'Site name', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fname', '<?php esc_attr_e( 'First name', 'fast-shop' ) ?>', '%fs_first_name%', '', '', '<?php esc_attr_e( 'First name', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_lname', '<?php esc_attr_e( 'Last name', 'fast-shop' ) ?>', '%fs_last_name%', '', '', '<?php esc_attr_e( 'Last name', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_besc_attr_email', '<?php esc_attr_e( 'Email', 'fast-shop' ) ?>', '%fsesc_attr_email%', '', '', '<?php esc_attr_e( 'E-mail', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_order_id', '<?php esc_attr_e( 'Order id', 'fast-shop' ) ?>', '%order_id%', '', '', '<?php esc_attr_e( 'Order id', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_total_amount', '<?php esc_attr_e( 'Amount', 'fast-shop' ) ?>', '%total_amount%', '', '', '<?php esc_attr_e( 'Amount', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_phone', '<?php esc_attr_e( 'Phone', 'fast-shop' ) ?>', '%fs_phone%', '', '', '<?php esc_attr_e( 'Phone', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fs_city', '<?php esc_attr_e( 'City', 'fast-shop' ) ?>', '%fs_city%', '', '', '<?php esc_attr_e( 'City', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fs_adress', '<?php esc_attr_e( 'Delivery address', 'fast-shop' ) ?>', '%fs_adress%', '', '', '<?php esc_attr_e( 'Delivery address', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_site_name', '<?php esc_attr_e( 'Site name', 'fast-shop' ) ?>', '%site_name%', '', '', '<?php esc_attr_e( 'Site name', 'fast-shop' ) ?>', 1);
       }
   </script>
 	<?php

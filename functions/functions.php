@@ -172,12 +172,16 @@ function fs_the_price( $post_id = 0, $wrap = "%s <span>%s</span>", $args = array
 	$price    = fs_get_price( $post_id );
 	$price    = apply_filters( 'fs_price_format', $price );
 
+	$wrap = '<span %s>' . $wrap . '</span>';
+	$atts = fs_parse_attr( array(), array(
+		'data-fs-element' => 'price',
+		'data-fs-value'   => $price
+	) );
 	if ( $args['echo'] ) {
-		printf( $wrap, $price, $cur_symb );
+		printf( $wrap, $atts, $price, $cur_symb );
 	} else {
 		return sprintf( $wrap, $price, $cur_symb );
 	}
-
 }
 
 /**
@@ -473,6 +477,41 @@ function fs_delete_position( $product_id, $args ) {
 	return true;
 }
 
+function fs_delete_wishlist_position( $product_id = 0, $args = array() ) {
+	$product_id = fs_get_product_id( $product_id );
+	$args       = wp_parse_args( $args, array(
+		'content' => '🞫',
+		'type'    => 'link',
+		'class'   => 'fs-delete-wishlist-position'
+	) );
+	$html_atts  = fs_parse_attr( array(), array(
+		'class'          => $args['class'],
+		'title'          => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) ),
+		'data-fs-action' => 'delete_wishlist_position',
+		'data-fs-id'     => $product_id
+	) );
+
+	$content = sanitize_text_field( $args['content'] );
+	switch ( $args['type'] ) {
+		case 'link':
+			echo '<a  href="' . esc_attr( add_query_arg( array(
+					'fs-user-api' => 'delete_wishlist_position',
+					'product_id'  => $product_id
+				) ) ) . '" ' . $html_atts . '>' . $content . '</a>';
+			break;
+		case 'button':
+			echo '<button type="button" ' . $html_atts . '>' . $content . '</button>';
+			break;
+		default:
+			echo '<a href="' . esc_attr( add_query_arg( array(
+					'fs-user-api' => 'delete_wishlist_position',
+					'product_id'  => $product_id
+				) ) ) . '" ' . $html_atts . '>' . $content . '</a>';
+			break;
+	}
+
+}
+
 
 /**
  * Выводит к-во всех товаров в корзине
@@ -530,20 +569,21 @@ function fs_get_base_price( $post_id = 0 ) {
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price( $post_id = 0, $wrap = '<span {data}>%s <span class="fs-currency">%s</span></span>' ) {
+function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>' ) {
 	$price = fs_get_base_price( $post_id );
 
 	if ( ! $price ) {
 		return;
 	}
+	$wrap     = '<span %s>' . $wrap . '</span>';
 	$atts     = fs_parse_attr( array(), array(
-		'data-fs-element' => 'old_price',
+		'data-fs-element' => 'base-price',
 		'data-fs-value'   => $price
 	) );
 	$price    = apply_filters( 'fs_price_format', $price );
 	$cur_symb = fs_currency();
-	$wrap     = str_replace( '{data}', $atts, $wrap );
-	printf( $wrap, $price, $cur_symb );
+
+	printf( $wrap, $atts, $price, $cur_symb );
 }
 
 /**
@@ -568,17 +608,27 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		)
 	);
 
+
 	// устанавливаем html атрибуты кнопки
-	$attr_set  = array(
+	$attr_set = array(
 		'data-action'       => 'add-to-cart',
 		'data-product-id'   => $post_id,
 		'data-product-name' => get_the_title( $post_id ),
+		'data-price'        => fs_get_price( $post_id ),
+		'data-currency'     => fs_currency(),
+		'data-sku'          => fs_product_code( $post_id ),
 		'id'                => 'fs-atc-' . $post_id,
 		'data-attr'         => json_encode( $attr['json'] ),
 		'data-image'        => esc_url( get_the_post_thumbnail_url( $post_id ) ),
 		'class'             => $attr['class'],
 		'data-variated'     => intval( get_post_meta( $post_id, $fs_config->meta['variated_on'], 1 ) )
 	);
+	// помещаем название категории в дата атрибут category
+	$category = get_the_terms( $post_id, $fs_config->data['product_taxonomy'] );
+	if ( ! empty( $category ) ) {
+		$attr_set['data-category'] = array_pop( $category )->name;
+	}
+
 	$html_atts = fs_parse_attr( array(), $attr_set );
 	$href      = '#';
 	// дополнительные скрытые инфо-блоки внутри кнопки (прелоадер, сообщение успешного добавления в корзину)
@@ -904,10 +954,7 @@ function fs_currency( $wrap = false ) {
  * @return string
  */
 function fs_option( $option_name, $default = '' ) {
-	$config  = new \FS\FS_Config();
-	$options = $config->options;
-	$option  = ! empty( $options[ $option_name ] ) ? $options[ $option_name ] : $default;
-	$option  = wp_unslash( $option );
+	$option = get_option( $option_name, $default );
 
 	return $option;
 }
@@ -1271,14 +1318,12 @@ function fs_product_code( $product_id = 0, $wrap = '%s', $echo = false ) {
 	$product_id = $product_id == 0 ? $post->ID : $product_id;
 	$articul    = get_post_meta( $product_id, $config->meta['product_article'], 1 );
 	if ( empty( $articul ) ) {
-		return false;
+		$articul = $product_id;
 	}
-	if ( $wrap && $articul ) {
-		if ( $echo ) {
-			echo esc_html( sprintf( $wrap, $articul ) );
-		} else {
-			return $articul;
-		}
+	if ( $echo ) {
+		echo sprintf( $wrap, $articul );
+	} else {
+		return $articul;
 	}
 
 }
@@ -1432,7 +1477,7 @@ function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
  * производит очистку и форматирование атрибутов в строку
  * $default заменяет атрибуты $attr
  *
- * @param  array $attr атрибуты переданные в функцию
+ * @param  array $attr атрибуты которые доступны для изменения динамически
  * @param  array $default атрибуты функции по умолчанию
  *
  * @return string $att          строка атрибутов
@@ -1443,7 +1488,9 @@ function fs_parse_attr( $attr = array(), $default = array() ) {
 	$atributes = array();
 	$att       = '';
 	foreach ( $attr as $key => $att ) {
-		$atributes[] = $key . '="' . $att . '"';
+		if ( ! empty( $att ) ) {
+			$atributes[] = $key . '="' . esc_attr( $att ) . '"';
+		}
 	}
 	if ( ! empty( $atributes ) ) {
 		$att = implode( ' ', $atributes );
@@ -1710,7 +1757,9 @@ function fs_gallery_images_ids( $post_id = 0, $thumbnail = true ) {
 
 	if ( ! empty( $fs_gallery['0'] ) ) {
 		foreach ( $fs_gallery['0'] as $item ) {
-			$gallery       [] = $item;
+			if ( wp_get_attachment_image( $item ) ) {
+				$gallery       [] = $item;
+			}
 		}
 	}
 
@@ -1947,6 +1996,34 @@ function fs_pay_user_message( $pay_method_id ) {
 	$message = get_term_meta( intval( $pay_method_id ), 'pay-message', 1 );
 
 	return apply_filters( 'fs_pay_user_message', $message, $pay_method_id );
+}
+
+/**
+ * Возвращает массив разрешённых типов изображений для загрузки
+ *
+ * @param string $return
+ *
+ * @return array|string
+ */
+function fs_allowed_images_type( $return = 'array' ) {
+	$mime_types = get_allowed_mime_types();
+	$mime       = [];
+	if ( $mime_types ) {
+		foreach ( $mime_types as $mime_type ) {
+			if ( strpos( $mime_type, 'image' ) === 0 ) {
+				if ( $return == 'json' ) {
+					$mime[ $mime_type ] = true;
+				} else {
+					$mime[] = $mime_type;
+				}
+			}
+		}
+	}
+	if ( $return == 'json' ) {
+		return json_encode( $mime );
+	} else {
+		return $mime;
+	}
 }
 
 

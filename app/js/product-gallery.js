@@ -1,0 +1,1 @@
+jQuery("#product_slider").lightGallery();

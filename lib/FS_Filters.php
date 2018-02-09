@@ -17,6 +17,8 @@ class FS_Filters {
 
 
 		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ) );
+		add_action( 'pre_get_posts', array( $this, 'search_query' ) );
+
 
 		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
 
@@ -25,6 +27,51 @@ class FS_Filters {
 
 		add_action( 'template_redirect', array( $this, 'redirect_per_page' ) );
 
+	}
+
+
+	/**
+	 * Добавляет возможность поиска по дополнительным полям
+	 * отфильтровывает не товары
+	 *
+	 * @param $query
+	 */
+	function search_query( $query ) {
+
+		if ( ! is_admin() && $query->is_search && $query->is_main_query() ) {
+			global $fs_config;
+			$search_term = filter_input( INPUT_GET, 's', FILTER_SANITIZE_NUMBER_INT ) ?: 0;
+
+			if ( empty( $search_term ) ) {
+				return $query;
+			}
+
+			$query->set( 'post_type', 'product' );
+			// включаем поиск по артикулу
+			$query->set( 'meta_query', [
+				[
+					'key'     => $fs_config->meta['product_article'],
+					'value'   => trim( $search_term ),
+					'compare' => 'LIKE'
+				]
+			] );
+			// включаем возможность искать по нескольким параметрам
+			add_filter( 'get_meta_sql', function ( $sql ) {
+				global $wpdb;
+
+				static $nr = 0;
+				if ( 0 != $nr ++ ) {
+					return $sql;
+				}
+
+				$sql['where'] = mb_eregi_replace( '^ AND', ' OR', $sql['where'] );
+
+				return $sql;
+
+			} );
+		}
+
+		return $query;
 	}
 
 	public function redirect_per_page() {
@@ -62,12 +109,15 @@ class FS_Filters {
 		if ( is_admin() ) {
 			return;
 		}
-		if ( $query->is_search ) {
-			$query->set( 'post_type', 'product' );
-		}
+
 		if ( ! isset( $_REQUEST['fs_filter'] ) || ! $query->is_main_query() ) {
 			return $query;
 		}
+
+		if ( $query->is_search ) {
+			$query->set( 'post_type', 'product' );
+		}
+
 
 		if ( ! wp_verify_nonce( $_REQUEST['fs_filter'], 'fast-shop' ) ) {
 			exit( 'ошибка безопасности' );
@@ -112,65 +162,36 @@ class FS_Filters {
 
 			switch ( $url['order_type'] ) {
 				case 'price_asc': //сортируем по цене в возрастающем порядке
-
-					$meta_query['price'] = array(
-						'key'     => $config->meta['price'],
-						'compare' => 'EXISTS',
-						'type'    => 'NUMERIC',
-					);
-					$orderby[]           = 'price';
-					$order               = 'ASC';
+					$meta_query['price'] = array( 'key' => $config->meta['price'] );
+					$orderby['price']    = 'ASC';
 					break;
 				case 'price_desc': //сортируем по цене в спадающем порядке
-					$meta_query['price'] = array(
-						'key'     => $config->meta['price'],
-						'compare' => 'EXISTS',
-						'type'    => 'NUMERIC',
-					);
-					$orderby[]           = 'price';
-					$order               = 'DESC';
+					$meta_query['price'] = array( 'key' => $config->meta['price'] );
+					$orderby['price']    = 'DESC';
 					break;
 				case 'views_desc': //сортируем по просмотрам в спадающем порядке
-					$meta_query['views'] = array(
-						'key'     => 'views',
-						'compare' => 'EXISTS',
-						'type'    => 'NUMERIC',
-					);
-					$orderby[]           = 'views';
-					$order               = 'DESC';
+					$meta_query['views'] = array( 'key' => 'views' );
+					$orderby['views']    = 'DESC';
 					break;
 				case 'views_asc': //сортируем по просмотрам в спадающем порядке
-					$meta_query['views'] = array(
-						'key'     => 'views',
-						'compare' => 'EXISTS',
-						'type'    => 'NUMERIC',
-					);
-					$orderby[]           = 'views';
-					$order               = 'ASC';
+					$meta_query['views'] = array( 'key' => 'views' );
+					$orderby['views']    = 'ASC';
 					break;
 				case 'name_asc': //сортируем по названию по алфавиту
-					$orderby[] = 'title';
-					$order     = 'ASC';
+					$orderby['title'] = 'ASC';
 					break;
 				case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
-					$orderby[] = 'title';
-					$order     = 'DESC';
+					$orderby['title'] = 'DESC';
 					break;
 				case 'date_desc':
-					$orderby[] = 'date';
-					$order     = 'DESC';
+					$orderby['date'] = 'DESC';
 					break;
 				case 'date_asc':
-					$orderby[] = 'date';
-					$order     = 'ASC';
+					$orderby['date'] = 'ASC';
 					break;
-				case 'field_action' :
-					$meta_query['action_price'] = array(
-						'key'     => $config->meta['action_price'],
-						'compare' => '>',
-						'value'   => 0
-
-					);
+				case 'action_price' :
+					$meta_query['action_price'] = array( 'key' => $config->meta['action_price'] );
+					$orderby['action_price']    = 'DESC';
 					break;
 
 
@@ -232,8 +253,12 @@ class FS_Filters {
 			$tax_query = array_merge( $query->tax_query->queries, $tax_query );
 			$query->set( 'tax_query', $tax_query );
 		}
-		$query->set( 'orderby', implode( ' ', $orderby ) );
-		$query->set( 'order', $order );
+		if ( ! empty( $orderby ) ) {
+			$query->set( 'orderby', $orderby );
+		}
+		if ( ! empty( $order ) ) {
+			$query->set( 'order', $order );
+		}
 
 		return $query;
 	}//end filter_curr_product()
@@ -264,7 +289,7 @@ class FS_Filters {
 					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
-				echo '<option  value="' . $redirect_url . '" ' . selected( $url['attributes'][ $att->slug ], $att->term_id, 0 ) . '>' . $att->name . '</option>';
+				echo '<option  value="' . esc_url( $redirect_url ) . '" ' . selected( $url['attributes'][ $att->slug ], $att->term_id, 0 ) . '>' . $att->name . '</option>';
 			}
 			echo '</select>';
 		}
@@ -276,7 +301,7 @@ class FS_Filters {
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
 
-				echo '<li><a href="' . $redirect_url . '" data-fs-action="filter" >' . $att->name . '</a></li>';
+				echo '<li><a href="' . esc_url( $redirect_url ) . '" data-fs-action="filter" >' . $att->name . '</a></li>';
 			}
 			echo '</ul>';
 		}

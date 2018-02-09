@@ -21,8 +21,8 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_del_wishlist_pos', array( &$this, 'fs_del_wishlist_pos' ) );
 		add_action( 'wp_ajax_nopriv_fs_del_wishlist_pos', array( &$this, 'fs_del_wishlist_pos' ) );
 //   живой поиск по сайту
-		add_action( 'wp_ajax_fs_livesearch', array( &$this, 'fs_livesearch' ) );
-		add_action( 'wp_ajax_nopriv_fs_livesearch', array( &$this, 'fs_livesearch' ) );
+		add_action( 'wp_ajax_fs_livesearch', array( $this, 'fs_livesearch' ) );
+		add_action( 'wp_ajax_nopriv_fs_livesearch', array( $this, 'fs_livesearch' ) );
 
 //  получение связанных постов категории
 		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
@@ -43,7 +43,36 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_get_variated', array( $this, 'fs_get_variated_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_variated', array( $this, 'fs_get_variated_callback' ) );
 
+		// привязка атрибута к товару
+		add_action( 'wp_ajax_fs_add_att', array( $this, 'fs_add_att_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_add_att', array( $this, 'fs_add_att_callback' ) );
 
+
+	}
+  // привязка атрибута к товару
+	function fs_add_att_callback() {
+		global $fs_config;
+		$post = array_map( 'sanitize_text_field', $_POST );
+
+		$post_terms = wp_set_post_terms( intval( $post['post'] ), intval( $post['term'] ), $fs_config->data['product_att_taxonomy'], true );
+		if ( is_wp_error( $post_terms ) ) {
+			echo json_encode( array(
+				'status'  => 0,
+				'message' => $post_terms->get_error_message()
+			) );
+		} elseif ( $post_terms === false ) {
+			echo json_encode( array(
+				'status'  => 0,
+				'message' => __( 'Возникла непредвиденная ошибка при прикреплении атрибута к товару' )
+			) );
+		} else {
+			echo json_encode( array(
+				'status'  => 1,
+				'term_name'=>get_term_field('name',intval( $post['term'] ),$fs_config->data['product_att_taxonomy']),
+				'message' => __( 'Атрибут успешно прикреплен к товару' )
+			) );
+		}
+		wp_die();
 	}
 
 	function fs_get_variated_callback() {
@@ -62,7 +91,6 @@ class FS_Ajax_Class {
 					foreach ( $atts as $att ) {
 						if ( get_term_meta( $att, 'fs_att_type', 1 ) == 'range' ) {
 							$min_count = intval( get_term_meta( $att, 'fs_att_range_start_value', 1 ) );
-
 						}
 					}
 
@@ -71,6 +99,7 @@ class FS_Ajax_Class {
 					echo json_encode( array(
 						'result'     => 1,
 						'base_price' => apply_filters( 'fs_price_format', $base_price ),
+						'currency'   => fs_currency(),
 						'count'      => max( $min_count, 1 )
 					) );
 					exit();
@@ -392,35 +421,40 @@ class FS_Ajax_Class {
 
 // живой поиск по сайту
 	public function fs_livesearch() {
-		$config = new FS_Config();
-		$search = sanitize_text_field( $_POST['s'] );
+
+		$search = esc_sql( $_POST['s'] );
 		$args   = array(
 			's'              => $search,
 			'post_type'      => 'product',
-			'posts_per_page' => 40
+			'posts_per_page' => 100
 		);
-		$query  = query_posts( $args );
-		if ( $query ) {
-			get_template_part( 'fast-shop/livesearch/livesearch' );
-			wp_reset_query();
-		} else {
+		$query  = new \WP_Query( $args );
+		if ( ! $query->have_posts() ) {
 			$args2 = array(
 				'post_type'      => 'product',
-				'posts_per_page' => 40,
+				'posts_per_page' => 100,
 				'meta_query'     => array(
-					'relation' => 'OR',
+					'relation' => 'AND',
 					array(
-						'key'     => $config->meta['product_article'],
-						'value'   => $search,
-						'compare' => 'LIKE'
+						'key'          => 'fs_articul',
+						'meta_compare' => 'LIKE',
+						'value'        => $search
 					)
 				)
 			);
-			query_posts( $args2 );
-			get_template_part( 'fast-shop/livesearch/livesearch' );
-			wp_reset_query();
+			$query = new \WP_Query( $args2 );
 		}
-		exit;
+		$html = '<span class="fs-ls-close">✖</span>';
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) {
+				$query->the_post();
+				$html .= fs_frontend_template( 'livesearch/livesearch' );
+			}
+		} else {
+			$html .= fs_frontend_template( 'livesearch/livesearch-none' );
+		}
+
+		wp_die( $html );
 	}
 
 //  возвражает список постов определёного термина

@@ -27,7 +27,7 @@ $variated_on = fs_is_variated( $post->ID );
 						<?php
 						$args = array(
 							'show_option_all'  => 'Свойство товара',
-							'show_option_none' => '',
+							'show_option_none' => 'удалить поле',
 							'orderby'          => 'ID',
 							'order'            => 'ASC',
 							'show_last_update' => 0,

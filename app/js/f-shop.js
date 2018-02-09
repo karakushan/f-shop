@@ -206,14 +206,18 @@ jQuery('[data-action=add-to-cart]').on('click', function (event) {
         button: curent,
         id: product_id,
         name: curent.data('product-name'),
+        price: curent.data('price'),
+        currency: curent.data('currency'),
+        sku: curent.data('sku'),
+        category: curent.data('category'),
         attr: attr,
-        image:curent.data('image'),
+        image: curent.data('image'),
         success: true,
         text: {
             success: curent.data('success'),
             error: curent.data('error')
         }
-    }
+    };
 
 
     var productObject = {
@@ -254,20 +258,20 @@ document.addEventListener("fs_before_add_product", function (event) {
 // Событие срабатывает когда товар добавлен в корзину
 document.addEventListener("fs_add_to_cart", function (event) {
     // действие которое инициирует событие
-    fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]')
+    fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]');
     var button = event.detail.button;
     iziToast.show({
         image: event.detail.image,
         theme: 'light',
         title: 'Успех!',
-        message: 'Товар &laquo;'+event.detail.name+'&raquo; добавлен в корзину!',
+        message: 'Товар &laquo;' + event.detail.name + '&raquo; добавлен в корзину!',
         position: 'topCenter',
 
     });
     button.find('.fs-atc-preloader').fadeOut();
     setTimeout(function () {
         button.find('.fs-atc-info').fadeOut();
-    }, 4000)
+    }, 4000);
 
     event.preventDefault();
 }, false);
@@ -304,20 +308,21 @@ jQuery('[data-action="change-attr"]').on('change', function () {
             url: FastShopData.ajaxurl,
             data: {action: "fs_get_variated", product_id: productId, atts: attrObj.attr},
             beforeSend: function () {
-                jQuery("[data-fs-element=\"base_price\"]").addClass('blink');
+                jQuery("[data-fs-element=\"price\"]").addClass('blink');
             },
             success: function (data) {
                 if (IsJsonString(data)) {
                     var json = jQuery.parseJSON(data);
+                    var priceFull=json.base_price + ' <span>' +json.currency+ '</span>';
                     if (json.result) {
-                        jQuery("[data-fs-element=\"base_price\"]").removeClass('blink').text(json.base_price);
+                        jQuery("[data-fs-element=\"price\"]").removeClass('blink').html(priceFull);
                         attrObj.count = json.count;
                         jQuery('[data-fs-action="change_count"]').val(json.count);
-                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility', 'hidden');
+                        jQuery("[data-fs-element=\"base-price\"]").parent().css('visibility', 'hidden');
                         jQuery("[data-fs-element=\"discount\"]").parent().css('visibility', 'hidden');
                     } else {
-                        jQuery("[data-fs-element=\"base_price\"]").text(json.base_price);
-                        jQuery("[data-fs-element=\"old_price\"]").parent().css('visibility', 'visible');
+                        jQuery("[data-fs-element=\"price\"]").html(priceFull);
+                        jQuery("[data-fs-element=\"base-price\"]").parent().css('visibility', 'visible');
                         jQuery("[data-fs-element=\"discount\"]").parent().css('visibility', 'visible');
                     }
                 } else {
@@ -369,7 +374,7 @@ function fs_get_cart(cartTemplate, cartWrap) {
     var parameters = {
         action: 'fs_get_cart',
         template: cartTemplate
-    }
+    };
     jQuery.ajax({
         type: 'POST',
         url: FastShopData.ajaxurl,
@@ -471,50 +476,69 @@ jQuery('[data-fs-action="filter"]').on('change', function (e) {
     }
 });
 //живой поиск по сайту
-jQuery('form[name="live-search"]').on('click', '.close-search', function (event) {
+jQuery('input[name="s"]').on('keyup input click', function (event) {
     event.preventDefault();
-    jQuery(this).parents('.search-results').fadeOut(0);
-});
-jQuery('form[name="live-search"] input[name="s"]').on('keyup focus click input', function (event) {
-    event.preventDefault();
-    var search_input = jQuery(this);
+    var searchField = jQuery(this);
     var search = jQuery(this).val();
-    var parents_form = search_input.parents('form');
-    var results_div = parents_form.find('.search-results');
+    var form = searchField.parents('form');
+    form.css("position", "relative");
+    var results = form.find('.livesearch-wrapper');
     if (search.length > 1) {
         jQuery.ajax({
             url: FastShopData.ajaxurl,
             type: 'POST',
             data: {action: 'fs_livesearch', s: search},
             beforeSend: function () {
-                search_input.next().addClass('search-animate');
+                if (searchField.prev().hasClass('fs-ls-preloader')) {
+                    searchField.prev().fadeIn();
+                } else {
+                    searchField.before('<img src="/wp-content/plugins/f-shop/assets/img/blocks-preloader.svg" class="fs-ls-preloader" style="display: none;">');
+                }
+
             }
         })
             .done(function (data) {
-                results_div.fadeIn(800).html(data);
+                if (data.length) {
+                    if (searchField.next().hasClass('livesearch-wrapper')) {
+                        searchField.next().html(data);
+                    } else {
+                        searchField.after("<div class='livesearch-wrapper'>" + data + "</div>");
+                    }
+                    form.find('.fs-ls-preloader').fadeOut();
+                    form.find('.livesearch-wrapper').fadeIn();
+                }
 
             })
             .always(function () {
-                search_input.next().removeClass('search-animate');
+                searchField.next().removeClass('search-animate');
             });
     } else {
-        results_div.fadeOut(800).html('');
+        results.fadeOut().html('');
     }
 
 
 });
+// Скрываем результаты при потере фокуса input
+jQuery(document).on('click', '.fs-ls-close', function (event) {
+    event.preventDefault();
+    var searchField = jQuery(this);
+    var form = searchField.parents('form');
+    form.find('.livesearch-wrapper').fadeOut().html('');
+});
+
 // открытие модального окна
 jQuery(document).on('click', "[data-fs-action='modal']", function (e) {
     e.preventDefault();
     var modalId = jQuery(this).attr('href');
     jQuery(modalId).fadeIn();
-})
+});
 // закрытие модального окна
 jQuery(document).on('click', "[data-fs-action='modal-close']", function (e) {
     e.preventDefault();
     var modalParentlId = jQuery(this).parents('.fs-modal');
     jQuery(modalParentlId).fadeOut();
-})
+});
+jQuery("#product_slider").lightGallery();
 // слайдер товара
 if (typeof fs_lightslider_options != "undefined") {
     jQuery('#product_slider').lightSlider(fs_lightslider_options);
@@ -764,7 +788,7 @@ jQuery('[data-fs-action="order-send"]').click(function (e) {
         e.preventDefault();
         validator.submit();
     }
-)
+);
 validator.validate({
     ignore: [],
     submitHandler: function (form) {

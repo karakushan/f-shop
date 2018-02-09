@@ -51,21 +51,20 @@ class FS_Init {
 	}
 
 	function fast_shop_scripts() {
-		wp_enqueue_style( 'lightslider', $this->config->data['plugin_url'] . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/css/lightbox.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'font-awesome', $this->config->data['plugin_url'] . 'assets/fontawesome/css/font-awesome.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'izi-toast', $this->config->data['plugin_url'] . 'assets/css/iziToast.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'fs-style', $this->config->data['plugin_url'] . 'assets/css/f-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
+		wp_enqueue_style( 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->config->data['plugin_ver'], 'all' );
+		wp_enqueue_style( 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', array(), $this->config->data['plugin_ver'], 'all' );
+		wp_enqueue_style( 'fs-style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
+		wp_enqueue_style( 'es-lightgallery', FS_PLUGIN_URL. 'assets/plugins/lightGallery/dist/css/lightgallery.min.css' );
 
+		wp_enqueue_script('es-lightgallery',FS_PLUGIN_URL."assets/plugins/lightGallery/dist/js/lightgallery-all.js",array("jquery"),null,true);
 		wp_enqueue_script( "jquery-ui-core", array( 'jquery' ) );
 		wp_enqueue_script( "jquery-ui-slider", array( 'jquery' ) );
-		wp_enqueue_script( 'jquery-validate', $this->config->data['plugin_url'] . 'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'domurl', $this->config->data['plugin_url'] . 'assets/js/url.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'izi-toast', $this->config->data['plugin_url'] . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'lightbox', $this->config->data['plugin_url'] . 'assets/lightbox2/dist/js/lightbox.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'lightslider', $this->config->data['plugin_url'] . 'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'f-shop', $this->config->data['plugin_url'] . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
+		wp_enqueue_script( 'jquery-validate', FS_PLUGIN_URL . 'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( 'domurl', FS_PLUGIN_URL . 'assets/js/url.min.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( 'izi-toast', FS_PLUGIN_URL . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( 'f-shop', FS_PLUGIN_URL . 'assets/js/f-shop.js', array( 'jquery' ), $this->config->data['plugin_ver'], true );
+
 		$price_max = (int) fs_price_max( false );
 		$l10n      = array(
 			'ajaxurl'           => admin_url( "admin-ajax.php" ),
@@ -79,27 +78,34 @@ class FS_Init {
 	}
 
 	public function fast_shop_admin_scripts() {
-		//!!! не удалять, необходимо для работы загрузчика изображений
+		// необходимо для работы загрузчика изображений
 		if ( ! did_action( 'wp_enqueue_media' ) ) {
 			wp_enqueue_media();
 		}
-		wp_enqueue_style( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'spectrum', $this->config->data['plugin_url'] . 'assets/css/spectrum.css' );
-		wp_enqueue_style( 'fs-admin', $this->config->data['plugin_url'] . 'assets/css/fs-admin.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_script( 'fs-jqueryui', $this->config->data['plugin_url'] . 'assets/jquery-ui-1.12.0/jquery-ui.min.js', array( 'jquery' ), null, true );
 
-		wp_enqueue_script( 'spectrum', $this->config->data['plugin_url'] . 'assets/js/spectrum.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( 'js-cookie', $this->config->data['plugin_url'] . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
+		wp_enqueue_style( 'spectrum', FS_PLUGIN_URL . 'assets/css/spectrum.css' );
+		wp_enqueue_style( 'fs-admin', FS_PLUGIN_URL . 'assets/css/fs-admin.css' ); 
+
+		wp_enqueue_script( 'spectrum', FS_PLUGIN_URL . 'assets/js/spectrum.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( 'js-cookie', FS_PLUGIN_URL . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
 		$screen = get_current_screen();
 		if ( $screen->id == 'edit-product' ) {
-			wp_enqueue_script( 'fs-quick-edit', $this->config->data['plugin_url'] . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
+			wp_enqueue_script( 'fs-quick-edit', FS_PLUGIN_URL . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
 		}
 
-
-		wp_enqueue_script( 'fs-admin', $this->config->data['plugin_url'] . 'assets/js/fs-admin.js', array(
+		wp_enqueue_script( 'fs-library', FS_PLUGIN_URL . 'assets/js/fs-library.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( 'fs-admin', FS_PLUGIN_URL . 'assets/js/f-shop-admin.js', array(
 			'jquery',
-			'js-cookie'
+			'js-cookie',
+			'fs-library'
 		), null, true );
+
+		$l10n = array(
+			'allowedImagesType' => fs_allowed_images_type( 'json' ),
+			'mediaNonce'        => wp_create_nonce( 'media-form' )
+
+		);
+		wp_localize_script( 'fs-admin', 'fShop', $l10n );
 	}
 
 	/**

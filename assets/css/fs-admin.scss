@@ -3,6 +3,7 @@
 .fs-preloader {
     display: none;
 }
+
 .fs-primary-button {
     height: 2.35em;
     padding: 0 22px;
@@ -15,6 +16,7 @@
     border-radius: 4px;
     text-transform: uppercase;
     line-height: 2.35em;
+
     &.button-small {
         height: 2.5em;
         line-height: 2.5em;
@@ -42,6 +44,7 @@
     }
 
 }
+
 .fs-metabox {
     width: 100%;
     margin: 0 auto;
@@ -53,12 +56,50 @@
         box-sizing: border-box;
         max-width: 100%;
     }
+    .fs-atts-list-table {
+        table {
+            > thead {
+                > tr {
+                    th:first-child {
+                        width: 150px;
+                    }
+                }
+            }
+        }
 
+    }
     ul {
         width: 20%;
         float: left;
         padding: 0;
         margin: 0;
+        &.fs-childs-list {
+            width: 100%;
+            li {
+                margin-bottom: 10px;
+                border: 1px solid #dbdbdb;
+                padding: 5px 10px;
+                background: #ffffff;
+                display: block;
+                float: left;
+                margin-right: 6px;
+            }
+            .remove-att {
+                border: 1px solid #c90808;
+                padding: 2px 7px;
+                text-transform: uppercase;
+                font-size: 10px;
+                background: #ff5b5b;
+                color: #fff;
+                margin-left: 10px;
+                border-radius: 31px;
+                letter-spacing: .05em;
+                display: inline-block;
+                cursor: pointer;
+                line-height: 1.2em;
+                text-align: center;
+            }
+        }
         @media screen and (max-width: 768px) {
             width: 100%;
             max-width: 100%;
@@ -154,7 +195,14 @@
                 }
             }
             button {
-             @extend .fs-primary-button;
+                &.button-sm {
+                    padding: 5px 10px;
+                    line-height: normal;
+                    height: auto;
+                    font-family: arial;
+                    font-size: 12px;
+                }
+                @extend .fs-primary-button;
 
             }
             .fs-attr-list {
@@ -188,6 +236,10 @@
                 }
             }
             select {
+                &.fs-select-att {
+                    height: auto;
+                    padding: 1px 7px;
+                }
                 height: 2.35em;
                 padding: 0px 10px;
                 &[multiple="multiple"] {
@@ -206,8 +258,6 @@
             }
             .fs-field-row {
                 margin-bottom: 15px;
-                border-bottom: 1px dotted #cdcdcd;
-                padding-bottom: 15px;
                 position: relative;
                 &.fs-rule {
                     background: #e7f1ff;
@@ -778,29 +828,6 @@ td.fs_price.column-fs_price span span {
     border-bottom: 3px solid #ddd;
 }
 
-.fast-shop-settings .ui-tabs.ui-tabs-vertical {
-    width: 805px;
-    max-width: 100%;
-    margin-bottom: 14px;
-}
-.ui-tabs .ui-tabs-nav li.ui-tabs-active {
-    margin-bottom: 3px;
-    padding-bottom: 1px;
-}
-.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
-    float: none;
-    padding: .5em 1em;
-    text-decoration: none;
-    outline: none;
-    box-shadow: none;
-}
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
-    border: none;
-    background: #389eff;
-    font-weight: normal;
-    color: #fff;
-    border-radius: 0;
-}
 .fs-btn {
     display: inline-block;
 
@@ -971,44 +998,10 @@ td.fs_photo.column-fs_photo {
     }
 }
 
-.ui-tabs-vertical {
-    width: 55em;
-}
-
-.ui-tabs-vertical .ui-tabs-nav {
-    float: left;
-    width: 12em;
-}
-
-.ui-tabs-vertical .ui-tabs-nav li {
-    clear: left;
-    width: 100%;
-    border-bottom-width: 1px !important;
-    border-right-width: 0 !important;
-    margin: 0 -1px .2em 0;
-    border-radius: 0;
-}
-
-.ui-tabs-vertical .ui-tabs-nav li a {
-    display: block;
-}
-
-.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active {
-    padding-bottom: 0;
-    padding-right: .1em;
-    border-right-width: 1px;
-}
-
-.ui-tabs-vertical .ui-tabs-panel {
-    padding: 1em;
-    float: right;
-    width: 40em;
-}
-
-.fs-option{
-    label{
+.fs-option {
+    label {
         font-weight: bold;
-        >span {
+        > span {
             padding: 4px 8px;
             background: #eee;
             font-weight: normal;
@@ -1021,26 +1014,72 @@ td.fs_photo.column-fs_photo {
     select,
     input[type=text],
     input[type=number],
-    input[type=email]
-    {
+    input[type=email] {
         width: 274px;
         max-width: 100%;
     }
 
 }
 
+// загрузчик файлов
+#holder {
+    border: 2px dashed #acf;
+    width: 100%;
+    min-height: 191px;
+    margin: 8px auto 0;
+    background-image: url(/wp-content/plugins/f-shop/assets/img/upload.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 66px;
 
+    &.hover {
+        -webkit-transition: all .4s;
+        -moz-transition: all .4s;
+        -ms-transition: all .4s;
+        -o-transition: all .4s;
+        transition: all .4s;
+        background-color: #acf;
+    }
+    img {
+        display: block;
+        margin: 10px auto;
+    }
+    p {
+        margin: 10px;
+        font-size: 14px;
+    }
+}
 
+progress {
+    width: 100%;
+    position: relative;
+    &:before {
+        content: '0%';
+        position: absolute;
+        left: 0;
+        top: 100%;
+        color: #02c913;
+    }
+    &:after {
+        content: '100%';
+        position: absolute;
+        right: 0;
+        top: 100%;
+        color: #02c913;
+    }
+}
 
+.fail {
+    background: #c00;
+    padding: 2px;
+    color: white;
+}
 
+.fs-hidden {
+    display: none !important;
+}
 
-
-
-
-
-
-
-
-
-
-
+.fs-upload-desc {
+    font-weight: bold;
+    font-size: 14px;
+}

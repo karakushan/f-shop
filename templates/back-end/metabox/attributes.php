@@ -6,47 +6,72 @@ $attributes    = get_the_terms( $post->ID, $fs_config->data['product_att_taxonom
 $att_hierarchy = [];
 if ( $attributes ) {
 	foreach ( $attributes as $att ) {
-		if ( ! $att->parent ) {
+		/*if ( ! $att->parent ) {
 			continue;
-		}
+		}*/
 		$att_hierarchy[ $att->parent ][] = $att;
 	}
 
 }
 ?>
 <!--<pre><?php /*print_r( $att_hierarchy ); */ ?></pre>-->
-<table class="fs-admin-atts">
-  <thead>
-  <tr>
-    <th>Группа
-      <button class="add-att button" type="button"><span class="dashicons dashicons-plus"></span></button>
-    </th>
-    <th>Свойства
-      <button class="add-att button" type="button"><span class="dashicons dashicons-plus"></span></button>
-    </th>
-  </tr>
-  </thead>
-  <tbody>
-  <?php if ( $att_hierarchy ): ?>
-	  <?php foreach ( $att_hierarchy as $k => $att_h ): ?>
-		  <?php $parent = get_term( $k, $fs_config->data['product_att_taxonomy'] ) ?>
+<div class="fs-atts-list-table">
+  <table class="wp-list-table widefat fixed striped">
+    <thead>
+    <tr>
+      <th>Атрибут</th>
+      <th>Значение</th>
+    </tr>
+    </thead>
+    <tbody>
+	<?php if ( $att_hierarchy ): ?>
+		<?php foreach ( $att_hierarchy as $k => $att_h ): ?>
+			<?php $parent = get_term( $k, $fs_config->data['product_att_taxonomy'] ) ?>
 
-      <tr>
-        <td><?php echo apply_filters( 'the_title', $parent->name ) ?></td>
-        <td>
+        <tr>
+          <td><?php echo apply_filters( 'the_title', $parent->name ) ?></td>
+          <td>
 
-          <ul class="fs-childs-list">   <?php foreach ( $att_h as $child ): ?>
-              <li><?php echo apply_filters( 'the_title', $child->name ) ?> <span
-                  class="dashicons dashicons-no-alt remove-att" title="do I delete a property?" data-action="remove-att"
-                  data-category-id="<?php echo $child->term_id ?>" data-product-id="<?php echo $post->ID ?>"></span>
-              </li>
-			  <?php endforeach; ?>
-          </ul>
+            <ul class="fs-childs-list">   <?php foreach ( $att_h as $child ): ?>
+                <li><?php echo apply_filters( 'the_title', $child->name ) ?> <a
+                    class="remove-att" title="do I delete a property?" data-action="remove-att"
+                    data-category-id="<?php echo $child->term_id ?>" data-product-id="<?php echo $post->ID ?>">удалить</a>
+                </li>
 
+				<?php endforeach; ?>
 
-        </td>
-      </tr>
-	  <?php endforeach; ?>
-  <?php endif; ?>
-  </tbody>
-</table>
+            </ul>
+	          <?php $args = array(
+		          'show_option_all'    => '',
+		          'show_option_none'   => '',
+		          'orderby'            => 'ID',
+		          'order'              => 'ASC',
+		          'show_last_update'   => 0,
+		          'show_count'         => 0,
+		          'hide_empty'         => 0,
+		          'child_of'           => $parent->term_id,
+		          'exclude'            => '',
+		          'echo'               => 1,
+		          'selected'           => 0,
+		          'hierarchical'       => 0,
+		          'name'               => 'cat',
+		          'id'                 => 'name',
+		          'class'              => 'fs-select-att',
+		          'depth'              => 0,
+		          'tab_index'          => 0,
+		          'taxonomy'           => $fs_config->data['product_att_taxonomy'],
+		          'hide_if_empty'      => false,
+		          'value_field'        => 'term_id', // значение value e option
+		          'required'           => false,
+	          );
+
+	          wp_dropdown_categories( $args ); ?>
+            <button type="button" class="button-sm" data-fs-action="add-atts-from" data-post="<?php echo esc_attr($post->ID) ?>">добавить</button>
+
+          </td>
+        </tr>
+		<?php endforeach; ?>
+	<?php endif; ?>
+    </tbody>
+  </table>
+</div>
