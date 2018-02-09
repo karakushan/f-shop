@@ -252,7 +252,9 @@ function fs_attr_filter( $group_id, $args = array() ) {
 	$terms   = get_terms( array(
 		'taxonomy'   => 'product-attributes',
 		'hide_empty' => false,
-		'parent'     => $group_id
+		'parent'     => $group_id,
+		'orderby'    => 'name',
+		'order'      => 'ASC'
 	) );
 	$arr_url = urldecode( $_SERVER['QUERY_STRING'] );
 	parse_str( $arr_url, $url );
