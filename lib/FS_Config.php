@@ -177,53 +177,80 @@ class FS_Config {
 		);
 
 		self::$form_fields = array(
-			'fs_email'             => array( 'type' => 'email', 'label' => 'Ваш email', 'required' => true ),
-			'fs_first_name'        => array( 'type' => 'text', 'label' => 'Ваше имя', 'required' => true ),
-			'fs_last_name'         => array( 'type' => 'text', 'label' => 'Ваша фамилия', 'required' => true ),
+			'fs_email'             => array(
+				'type'        => 'email',
+				'label'       => 'Ваш email',
+				'placeholder' => 'Ваш email',
+				'required'    => true
+			),
+			'fs_first_name'        => array(
+				'type'        => 'text',
+				'label'       => 'Ваше имя',
+				'placeholder' => 'Ваше имя',
+				'required'    => true
+			),
+			'fs_last_name'         => array(
+				'type'        => 'text',
+				'label'       => 'Ваша фамилия',
+				'placeholder' => 'Ваша фамилия',
+				'required'    => true
+			),
 			'fs_phone'             => array(
-				'type'      => 'tel',
-				'label'     => 'Телефон',
-				'required'  => true,
-				'save_meta' => 1
+				'type'        => 'tel',
+				'label'       => 'Телефон',
+				'placeholder' => 'Телефон',
+				'required'    => true,
+				'save_meta'   => 1
 			),
 			'fs_city'              => array(
-				'type'      => 'text',
-				'label'     => 'Город',
-				'required'  => true,
-				'save_meta' => 1
+				'type'        => 'text',
+				'label'       => 'Город',
+				'placeholder' => 'Город',
+				'required'    => true,
+				'save_meta'   => 1
 			),
 			'fs_adress'            => array(
-				'type'      => 'text',
-				'label'     => 'Адрес доставки',
-				'required'  => false,
-				'save_meta' => 1
+				'type'        => 'text',
+				'label'       => 'Адрес доставки',
+				'placeholder' => 'Адрес доставки',
+				'required'    => false,
+				'save_meta'   => 1
 			),
 			'fs_home_num'          => array(
-				'type'      => 'text',
-				'label'     => 'Номер дома',
-				'required'  => false,
-				'save_meta' => 1
+				'type'        => 'text',
+				'label'       => 'Номер дома',
+				'placeholder' => 'Номер дома',
+				'required'    => false,
+				'save_meta'   => 1
 			),
 			'fs_apartment_num'     => array(
-				'type'      => 'text',
-				'label'     => 'Номер квартиры',
-				'required'  => false,
-				'save_meta' => 1
+				'type'        => 'text',
+				'label'       => 'Номер квартиры',
+				'placeholder' => 'Номер квартиры',
+				'required'    => false,
+				'save_meta'   => 1
 			),
 			'fs_delivery_number'   => array(
-				'type'      => 'text',
-				'label'     => 'Номер отделения',
-				'required'  => false,
-				'save_meta' => 1
+				'type'        => 'text',
+				'label'       => 'Номер отделения',
+				'placeholder' => 'Номер отделения',
+				'required'    => false,
+				'save_meta'   => 1
 			),
 			'fs_delivery_methods'  => array(
-				'type'      => 'radio',
-				'label'     => 'Способ доставки',
-				'required'  => true,
-				'save_meta' => 1
+				'type'        => 'radio',
+				'label'       => 'Способ доставки',
+				'placeholder' => 'Способ доставки',
+				'required'    => true,
+				'save_meta'   => 1
 			),
 			'fs_payment_methods'   => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'save_meta' => 1 ),
-			'fs_comment'           => array( 'type' => 'text', 'label' => 'Комментарий', 'required' => false ),
+			'fs_comment'           => array(
+				'type'        => 'text',
+				'label'       => 'Комментарий',
+				'placeholder' => 'Комментарий',
+				'required'    => false
+			),
 			'fs_customer_register' => array(
 				'type'     => 'checkbox',
 				'label'    => __( 'Register on the site', 'fast-shop' ),

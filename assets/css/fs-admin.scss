@@ -1083,3 +1083,50 @@ progress {
     font-weight: bold;
     font-size: 14px;
 }
+.tooltip{
+    cursor: pointer;
+    color: #0073aa;
+    font-size: 26px;
+    height: 25px;
+    border: none;
+    margin-left: 5px;
+    &:before {
+        content: "\f223";
+        color: #0073aa;
+    }
+}
+.fs-field-wrapper {
+    display: flex;
+    align-items: center;
+    input{
+        margin: 0;
+        padding: 5px 10px;
+    }
+}
+/* This is how you would create a custom secondary theme on top of tooltipster-noir: */
+.tooltipster-sidetip .tooltipster-content {
+    color: #fff;
+    line-height: 18px;
+    padding: 6px 14px;
+}
+.tooltipster-sidetip .tooltipster-box {
+    background: #0073aa;
+    border: 1px solid #01496b;
+    border-radius: 3px;
+}
+.tooltipster-sidetip .tooltipster-arrow-border {
+    border: 9px solid transparent;
+    left: 2px;
+    top: 1px;
+}
+.tooltipster-sidetip.tooltipster-top .tooltipster-arrow-border {
+    border-top-color: #01496b;
+}
+.tooltipster-sidetip.tooltipster-top .tooltipster-arrow-background {
+    border-top-color: #0073aa;
+    left: 4px;
+    top: 1px;
+}
+.tooltipster-sidetip .tooltipster-arrow-background {
+    border: 7px solid transparent;
+}

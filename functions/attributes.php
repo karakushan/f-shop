@@ -406,10 +406,12 @@ function fs_list_post_atts( $post_id = 0 ) {
  * @param int $post_id
  * @param $taxonomy
  *
+ * @param array $args
+ *
  * @return array
  */
-function fs_get_the_terms_group( $post_id = 0, $taxonomy ) {
-	$terms = get_the_terms( $post_id, $taxonomy );
+function fs_get_the_terms_group( $post_id = 0, $taxonomy,$args=array('orderby'=>'none') ) {
+	$terms = wp_get_object_terms( $post_id, $taxonomy,$args );
 	if ( empty( $terms ) ) {
 		return array();
 	}

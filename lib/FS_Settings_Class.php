@@ -45,14 +45,16 @@ class FS_Settings_Class {
 		echo '<div class="wrap fast-shop-settings">';
 		echo ' <h2>' . esc_html__( 'Store settings', 'fast-shop' ) . '</h2>';
 		settings_errors();
-		$tab = 'currencies';
+		$settings=$this->register_settings();
+		$settings_keys=array_keys($settings);
+		$tab = $settings_keys[0];
 		if ( ! empty( $_GET['tab'] ) ) {
 			$tab = esc_attr( $_GET['tab'] );
 		}
 		echo '<form method="post" action="' . esc_url( add_query_arg( array( 'tab' => $tab ), 'options.php' ) ) . '">';
 		echo ' <h2 class="nav-tab-wrapper">';
 
-		foreach ( $this->register_settings() as $key => $setting ) {
+		foreach ( $settings as $key => $setting ) {
 			$class = $tab == $key ? 'nav-tab-active' : '';
 			echo '<a href="' . esc_url( add_query_arg( array( "tab" => $key ) ) ) . '" class="nav-tab ' . esc_attr( $class ) . '">' . esc_html( $setting['name'] ) . '</a>';
 		}
@@ -69,6 +71,28 @@ class FS_Settings_Class {
 	 */
 	function register_settings() {
 		$settings = array(
+			'shoppers' => array(
+				'name'   => __( 'Покупатели', 'fast-shop' ),
+				'fields' => array(
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'autofill',
+						'label' => 'Заполнять данные пользователя автоматически',
+						'help' => 'используется при оформлении заказа, если пользователь авторизован',
+						'value' => fs_option( 'autofill' )
+					),
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'auto_registration',
+						'label' => 'Регистрировать пользователя при покупке',
+						'help' => 'каждый зарегистрированный пользователь получит доступ к личному кабинету, сможет увидеть купленные товары и прочие привилегии',
+						'value' => fs_option( 'auto_registration' )
+					)
+
+				)
+
+
+			),
 			'currencies' => array(
 				'name'   => __( 'Currencies', 'fast-shop' ),
 				'fields' => array(
@@ -115,6 +139,7 @@ class FS_Settings_Class {
 						'type'  => 'email',
 						'name'  => 'manager_email',
 						'label' => 'Куда отправлять письма',
+						'help' => 'можно указать несколько адресатов через запятую',
 						'value' => fs_option( 'manager_email', get_option( 'admin_email' ) )
 					),
 					1 => array(
@@ -221,7 +246,9 @@ class FS_Settings_Class {
 	 * @return string
 	 */
 	function get_tab( $key ) {
-		return ( isset( $_GET[ $key ] ) ? $_GET[ $key ] : 'currencies' );
+		$settings=$this->register_settings();
+		$settings_keys=array_keys($settings);
+		return ( isset( $_GET[ $key ] ) ? $_GET[ $key ] : $settings_keys[0]);
 	}
 
 	/**

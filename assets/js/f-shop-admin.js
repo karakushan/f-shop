@@ -1,5 +1,11 @@
 jQuery(function ($) {
 
+    // Подсказки в настройках плагина
+    $('.tooltip').tooltipster({
+        theme: 'shadow',
+        trigger: 'hover'
+    });
+
     // === АТРИБУТЫ НА ВКЛАДКЕ РЕДАКТИРВОАНИЯ ТОВАРА ===
     $(document).on('click', '[data-fs-action="add-atts-from"]', function (event) {
         event.preventDefault();

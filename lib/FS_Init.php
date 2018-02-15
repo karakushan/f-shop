@@ -84,7 +84,8 @@ class FS_Init {
 		}
 
 		wp_enqueue_style( 'spectrum', FS_PLUGIN_URL . 'assets/css/spectrum.css' );
-		wp_enqueue_style( 'fs-admin', FS_PLUGIN_URL . 'assets/css/fs-admin.css' ); 
+		wp_enqueue_style( 'fs-tooltipster', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/css/tooltipster.bundle.min.css' );
+		wp_enqueue_style( 'fs-admin', FS_PLUGIN_URL . 'assets/css/fs-admin.css' );
 
 		wp_enqueue_script( 'spectrum', FS_PLUGIN_URL . 'assets/js/spectrum.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'js-cookie', FS_PLUGIN_URL . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
@@ -93,6 +94,7 @@ class FS_Init {
 			wp_enqueue_script( 'fs-quick-edit', FS_PLUGIN_URL . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
 		}
 
+		wp_enqueue_script( 'fs-tooltipster', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/js/tooltipster.bundle.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'fs-library', FS_PLUGIN_URL . 'assets/js/fs-library.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'fs-admin', FS_PLUGIN_URL . 'assets/js/f-shop-admin.js', array(
 			'jquery',

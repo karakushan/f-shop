@@ -21,7 +21,7 @@ class FS_Form_Class {
 		//подставляем начальное значение в атрибут value интпута формы
 		$default_value = '';
 		$selected      = '';
-		if ( $curent_user->exists() ) {
+		if ( $curent_user->exists() && fs_option('autofill')=='1') {
 			switch ( $field_name ) {
 				case 'fs_email':
 					$default_value = $curent_user->user_email;
@@ -111,7 +111,6 @@ class FS_Form_Class {
 				break;
 			case 'checkbox':
 				$field .= ' <input type="checkbox" name="' . $field_name . '"  ' . checked( '1', $args['value'], false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '  value="1"  ' . $id . '> ';
-				$field .= '<label for="' . esc_attr( $args['id'] ) . '">' . $args['label'] . '</label>';
 				break;
 			case 'textarea':
 				$field .= '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
@@ -201,10 +200,12 @@ class FS_Form_Class {
 				$field = ob_get_clean();
 				break;
 		}
+		if ( ! empty( $args['help'] ) ) {
+			$field .= '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_attr( $args['help'] ) . '"></span>';
+		}
 		if ( $args['wrapper'] ) {
 			$field .= '</div>';
 		}
-		$field .= $args['after'];
 		echo apply_filters( 'fs_form_field', $field, $field_name, $args );
 	}
 }
