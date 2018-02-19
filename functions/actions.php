@@ -1,5 +1,4 @@
 <?php
-
 // добавляем шорткоды полей в Contact Form 7
 add_action( 'wpcf7_init', 'fs_cf7_add_shortcode' );
 function fs_cf7_add_shortcode() {

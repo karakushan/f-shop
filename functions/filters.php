@@ -9,6 +9,50 @@ function fs_price_format( $price, $delimiter = '' ) {
 	return $price;
 }
 
+add_filter( 'fs_discount_filter', 'fs_discount_filter__callback', 10, 1 );
+
+/**
+ * Вычитывает скидку из общей суммы заказа
+ *
+ * @param $price - цена без скидки
+ *
+ * @return mixed
+ */
+function fs_discount_filter__callback( $price ) {
+
+	global $fs_config;
+	$discounts      = get_terms( array( 'taxonomy' => $fs_config->data['discount_taxonomy'], 'hide_empty' => 0 ) );
+	$discounts_cart = [];
+	if ( $discounts ) {
+		foreach ( $discounts as $discount ) {
+			$discount_type   = get_term_meta( $discount->term_id, 'discount_where_is', 1 );
+			$discount_where  = get_term_meta( $discount->term_id, 'discount_where', 1 );
+			$discount_value  = get_term_meta( $discount->term_id, 'discount_value', 1 );
+			$discount_amount = get_term_meta( $discount->term_id, 'discount_amount', 1 );
+			// если скидка указана в процентах
+			if ( strpos( $discount_amount, '%' ) !== false ) {
+				$discount_amount = floatval( str_replace( '%', '', $discount_amount ) );
+				$discount_amount = $price * $discount_amount / 100;
+			}
+
+			if ( $discount_type == 'sum' && $discount_where == '>=' && $price >= $discount_value ) {
+				$discounts_cart[] = $discount_amount;
+			} elseif ( $discount_type == 'sum' && $discount_where == '>' && $price > $discount_value ) {
+				$discounts_cart[] = $discount_amount;
+			} elseif ( $discount_type == 'sum' && $discount_where == '<=' && $price <= $discount_value ) {
+				$discounts_cart[] = $discount_amount;
+			} elseif ( $discount_type == 'sum' && $discount_where == '<' && $price < $discount_value ) {
+				$discounts_cart[] = $discount_amount;
+			}
+		}
+	}
+	if ( ! empty( $discounts_cart ) && $price > max( $discounts_cart ) ) {
+		$price = $price - max( $discounts_cart );
+	}
+
+	return $price;
+
+}
 
 // создаем новую колонку
 add_filter( 'manage_edit-product_columns', 'add_views_column', 4 );

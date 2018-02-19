@@ -52,6 +52,7 @@ class FS_Config {
 			'product_att_taxonomy' => 'product-attributes',
 			'product_pay_taxonomy' => 'fs-payment-methods',
 			'product_del_taxonomy' => 'fs-delivery-methods',
+			'discount_taxonomy'    => 'fs-discounts',
 			'preloader'            => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif'
 		);
 		$this->data = apply_filters( 'fs_data', $data );

@@ -242,10 +242,11 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
  * возвращает общую сумму всех продуктов в корзине
  *
  * @param array $products - список товаров в массиве
+ * @param boolean $discount - включать ли скидку в расчёт общей суммы (по умолчанию true, то есть да)
  *
  * @return float|int
  */
-function fs_get_total_amount( $products = array() ) {
+function fs_get_total_amount( $products = array(), $discount = true ) {
 	if ( empty( $products ) ) {
 		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : array();
 	}
@@ -259,9 +260,27 @@ function fs_get_total_amount( $products = array() ) {
 
 	}
 	$price = array_sum( $all_price );
+	if ( fs_option( 'discounts_on' ) == 1 && $discount ) {
+		$price = apply_filters( 'fs_discount_filter', $price );
+	}
 
 	return $price;
 }
+
+/**
+ * Возвращает размер скидки
+ *
+ * @param array $products
+ *
+ * @return float|int
+ */
+function fs_get_total_discount( $products = array() ) {
+
+	$discount = fs_get_total_amount( $products, false ) - fs_get_total_amount( $products, true );
+
+	return $discount;
+}
+
 
 /**
  * Выводит количество товаров в корзине

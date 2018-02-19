@@ -71,6 +71,28 @@ class FS_Settings_Class {
 	 */
 	function register_settings() {
 		$settings = array(
+			'general' => array(
+				'name'   => __( 'Главное', 'fast-shop' ),
+				'fields' => array(
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'discounts_on',
+						'label' => 'Включить систему скидок',
+						'help' => 'вы сможете показать лояльное отношение к клиенту и таким способом привлечь покупателей',
+						'value' => fs_option( 'discounts_on' )
+					),
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'multi_currency_on',
+						'label' => 'Включить мультивалютность',
+						'help' => 'Если вы планируете, чтобы стоимость товара конвертировалась автоматически по установленному курсу',
+						'value' => fs_option( 'multi_currency_on' )
+					)
+
+				)
+
+
+			),
 			'shoppers' => array(
 				'name'   => __( 'Покупатели', 'fast-shop' ),
 				'fields' => array(

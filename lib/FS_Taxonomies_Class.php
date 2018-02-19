@@ -104,8 +104,32 @@ class FS_Taxonomies_Class {
 				'show_admin_column'  => true,
 				'hierarchical'       => true,
 				'show_in_quick_edit' => false
-			),
-			'fs-currencies'       => array(
+			)
+		);
+		if ( fs_option( 'discounts_on' ) == 1 ) {
+			$taxonomies['fs-discounts'] = array(
+				'object_type'        => 'product',
+				'label'              => __( 'Discounts', 'fast-shop' ),
+				'labels'             => array(
+					'name'          => __( 'Discounts', 'fast-shop' ),
+					'singular_name' => __( 'Discount', 'fast-shop' ),
+					'add_new_item'  => __( 'Add Discount', 'fast-shop' ),
+					'edit_item'     => 'Edit Discount',
+					'update_item'   => 'Update Discount',
+				),
+				//					исключаем категории из лицевой части
+				"public"             => false,
+				"show_ui"            => true,
+				"publicly_queryable" => false,
+				'metabox'            => false,
+				'show_admin_column'  => false,
+				'hierarchical'       => false,
+				'meta_box_cb'        => false,
+				'show_in_quick_edit' => false
+			);
+		}
+		if (fs_option( 'multi_currency_on' )==1){
+			$taxonomies['fs-currencies']       = array(
 				'object_type'        => 'product',
 				'label'              => __( 'Currencies', 'fast-shop' ),
 				'labels'             => array(
@@ -122,8 +146,8 @@ class FS_Taxonomies_Class {
 				'hierarchical'       => false,
 				'meta_box_cb'        => false,
 				'show_in_quick_edit' => false
-			)
-		);
+			);
+		}
 
 		$taxonomies = apply_filters( 'fs_taxonomies', $taxonomies );
 
@@ -169,6 +193,13 @@ class FS_Taxonomies_Class {
 		add_action( "fs-payment-methods_add_form_fields", array( $this, 'add_fs_payment_methods_fields' ) );
 		add_action( "create_fs-payment-methods", array( $this, 'save_custom_taxonomy_meta' ) );
 		add_action( "edited_fs-payment-methods", array( $this, 'save_custom_taxonomy_meta' ) );
+
+		// поля таксономии кидок
+		add_action( "fs-discounts_edit_form_fields", array( $this, 'edit_fs_discounts_fields' ) );
+//		add_action( "fs-discounts_add_form_fields", array( $this, 'add_fs_discounts_fields' ) );
+
+		add_action( "create_fs-discounts", array( $this, 'save_custom_taxonomy_meta' ) );
+		add_action( "edited_fs-discounts", array( $this, 'save_custom_taxonomy_meta' ) );
 
 	}
 
@@ -311,9 +342,53 @@ class FS_Taxonomies_Class {
 	 */
 	function edit_fs_payment_methods_fields( $term ) {
 		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="slug"> ' . __( 'Сообщение покупателю  для оплаты', 'fast-shop' ) . ' </label></th>
+			<th scope="row"><label for="pay-message"> ' . __( 'Сообщение покупателю  для оплаты', 'fast-shop' ) . ' </label></th>
 						<td><textarea name="fast-shop[pay-message]" id="pay-message">' . esc_html( get_term_meta( $term->term_id, 'pay-message', 1 ) ) . '</textarea>
 			<p class="description">%pay_url% будет заменено на ссылку для оплаты, %pay_name% на название способа оплаты </p></td>
+		</tr> ';
+
+	}
+
+
+	/**
+	 * Создаёт поле "Сообщение покупателю  для оплаты" при редактировании способа оплаты
+	 *
+	 * @param $term объект термина который редактируется
+	 */
+	function edit_fs_discounts_fields( $term ) {
+		$discount_type = get_term_meta( $term->term_id, 'discount_where_is', 1 );
+
+		echo '<tr class="form-field discount-where-is-wrap">'
+		     . '<th scope="row"><label for="discount_where_is"> ' . __( 'Скидка активируется если', 'fast-shop' ) . ' </label></th>'
+		     . '<td><select name="fast-shop[discount_where_is]" id="discount_where_is">'
+		     . '<option>Выберите вариант</option>'
+		     . '<option value="sum" ' . selected( $discount_type, 'sum', 0 ) . '>сумма покупки </option>'
+		     . '</select>'
+		     . '<p class="description">если условие совпадёт, корзина покупателя будет пересчитана с учётом скидки</p></td>
+		</tr> ';
+
+		echo '<tr class="form-field discount-where-wrap">'
+		     . '<th scope="row"><label for="discount_where"> ' . __( 'Условие скидки', 'fast-shop' ) . ' </label></th>'
+		     . '<td><select name="fast-shop[discount_where]" id="discount_where">'
+		     . '<option>Выберите вариант</option>'
+		     . '<option value="' . esc_attr( '>=' ) . '" ' . selected( get_term_meta( $term->term_id, 'discount_where', 1 ), '>=', 0 ) . '>больше или равно</option>'
+		     . '<option value="' . esc_attr( '>' ) . '" ' . selected( get_term_meta( $term->term_id, 'discount_where', 1 ), '>', 0 ) . '>больше</option>'
+		     . '<option value="' . esc_attr( '<' ) . '" ' . selected( get_term_meta( $term->term_id, 'discount_where', 1 ), '<', 0 ) . '>меньше</option>'
+		     . '<option value="' . esc_attr( '<=' ) . '" ' . selected( get_term_meta( $term->term_id, 'discount_where', 1 ), '<=', 0 ) . '>меньше или равно</option>'
+		     . '</select>'
+		     . '</td>
+		</tr> ';
+
+		echo '<tr class="form-field discount-value-wrap">'
+		     . '<th scope="row"><label for="discount_product"> ' . __( 'Значение условия', 'fast-shop' ) . ' </label></th>'
+		     . '<td><input name="fast-shop[discount_value]" id="discount_value" value="' . esc_attr( get_term_meta( $term->term_id, 'discount_value', 1 ) ) . '">'
+		     . '<p class="description">' . esc_attr( 'сумма или количество в виде числа при которых скидка будет активирована.' ) . '</p></td> 
+		</tr> ';
+
+		echo '<tr class="form-field discount-amount-wrap">'
+		     . '<th scope="row"><label for="discount_amount"> ' . __( 'Значение скидки', 'fast-shop' ) . ' </label></th>'
+		     . '<td><input name="fast-shop[discount_amount]" id="discount_amount" value="' . esc_attr( get_term_meta( $term->term_id, 'discount_amount', 1 ) ) . '">'
+		     . '<p class="description">' . esc_attr( 'что будем отминусовывать от скидки, можно указать в виде "10%" или числа .' ) . '</p></td> 
 		</tr> ';
 
 	}
