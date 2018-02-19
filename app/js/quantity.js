@@ -1,6 +1,7 @@
 // Квантификатор товара
 jQuery(document).ready(function (jQuery) {
-    jQuery('[data-fs-count="minus"]').on('click', function () {
+    // уменьшение к-ва товара на единицу
+    jQuery(document).on('click', '[data-fs-count="minus"]', function () {
         var jQueryinput = jQuery(jQuery(this).data('target'));
         var count = parseInt(jQueryinput.val()) - 1;
         count = count < 1 ? 1 : count;
@@ -8,12 +9,15 @@ jQuery(document).ready(function (jQuery) {
         jQueryinput.change();
         return false;
     });
-    jQuery('[data-fs-count="pluss"]').click(function () {
+
+    // увеличение к-ва товара на единицу
+    jQuery(document).on('click', '[data-fs-count="pluss"]', function () {
         var jQueryinput = jQuery(jQuery(this).data('target'));
         jQueryinput.val(parseInt(jQueryinput.val()) + 1);
         jQueryinput.change();
         return false;
     });
+
     //Изменение к-ва добавляемых продуктов
     jQuery('[data-fs-action="change_count"]').on('change input', function (event) {
         event.preventDefault();
@@ -39,7 +43,7 @@ jQuery(document).ready(function (jQuery) {
 
 //Изменение количества продуктов в корзине
 jQuery(document).ready(function (jQuery) {
-    jQuery('[data-fs-type="cart-quantity"]').on('change input', function (event) {
+    jQuery(document).on('change input', '[data-fs-type="cart-quantity"]', function (event) {
         event.preventDefault();
         var productId = jQuery(this).data('product-id');
         var productCount = jQuery(this).val();
@@ -63,8 +67,20 @@ jQuery(document).ready(function (jQuery) {
                 count: productCount
             }
         })
-            .done(function () {
-                location.reload();
+            .done(function (result) {
+                try {
+                    var json = JSON.parse(result);
+                    if (json.status) {
+                        jQuery("[data-fs-element=\"total-amount\"]").text(json.total);
+                        // создаём событие
+                        var cart_change_count = new CustomEvent("fs_cart_change_count", {
+                            detail: {count: productCount, total: json.total}
+                        });
+                        document.dispatchEvent(cart_change_count);
+                    }
+                } catch (e) {
+                    console.log('Ошибка ' + e.name + ":" + e.message + "\n" + e.stack);
+                }
             });
 
 

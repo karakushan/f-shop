@@ -7,7 +7,7 @@ var gulp = require('gulp'),
 gulp.task('concat', function () {
     return gulp.src(['./js/*.js', '!./js/f-shop.js'])
         .pipe(concat('f-shop.js'))
-        .pipe(gulp.dest('./js'));
+        .pipe(gulp.dest('../assets/js/'));
 });
 
 // минификация скриптов
@@ -24,7 +24,7 @@ gulp.task('compress', function (cb) {
 // Отслеживание изменений и перекомпоновка
 gulp.task('watch', function () {
     gulp.watch('./js/*.js', ['concat']);
-    gulp.watch('./js/f-shop.js', ['compress']);
+    // gulp.watch('./js/f-shop.js', ['compress']);
 });
 
 // этот таск запускается автоматом при вводе команды gulp

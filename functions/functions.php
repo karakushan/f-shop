@@ -235,8 +235,7 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
 		$total = fs_get_total_amount( $_SESSION['cart'] );
 	}
 	$total = apply_filters( 'fs_price_format', $total );
-	$total = sprintf( $wrap, $total, fs_currency() );
-	echo $total;
+	printf( $wrap, '<span data-fs-element="total-amount">' . $total . '</span>', fs_currency() );
 }
 
 /**
@@ -604,7 +603,7 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 			'class'     => 'fs-add-to-cart',
 			'type'      => 'button',
 			'echo'      => true,
-			'atts'=>''// возможность добавлять пользовательские атрибуты и код к кнопке
+			'atts'      => ''// возможность добавлять пользовательские атрибуты и код к кнопке
 		)
 	);
 
@@ -639,10 +638,10 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	/* позволяем устанавливать разные html элементы в качестве кнопки */
 	switch ( $attr['type'] ) {
 		case 'link':
-			$atc_button = sprintf( '<a href="%s" %s  %s>%s %s</a>', $href, $html_atts,$attr['atts'], $label, $atc_after );
+			$atc_button = sprintf( '<a href="%s" %s  %s>%s %s</a>', $href, $html_atts, $attr['atts'], $label, $atc_after );
 			break;
 		default:
-			$atc_button = sprintf( '<button type="button" %s %s>%s %s</button>', $html_atts,$attr['atts'], $label, $atc_after );
+			$atc_button = sprintf( '<button type="button" %s %s>%s %s</button>', $html_atts, $attr['atts'], $label, $atc_after );
 			break;
 	}
 	if ( $attr['echo'] ) {
@@ -1109,11 +1108,11 @@ function fs_wishlist_button( $post_id = 0, $args = array() ) {
 	$content   .= $args['content'];
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' '.$args["atts"].'>' . $content . '</a>';
+			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' ' . $args["atts"] . '>' . $content . '</a>';
 			break;
 
 		case 'button':
-			echo '<button ' . $html_atts . ' '.$args["atts"].'>' . $content . '</button>';
+			echo '<button ' . $html_atts . ' ' . $args["atts"] . '>' . $content . '</button>';
 			break;
 	}
 

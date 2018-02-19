@@ -96,6 +96,10 @@ class FS_Cart_Class {
 		if ( $_SESSION['cart'] ) {
 			$_SESSION['cart'][ $product_id ]['count'] = $product_count;
 		}
+		echo json_encode( array(
+			'status' => 1,
+			'total'  => fs_get_total_amount()
+		) );
 		exit;
 	}
 
