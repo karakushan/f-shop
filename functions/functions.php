@@ -282,7 +282,53 @@ function fs_get_total_discount( $products = array() ) {
 }
 
 /**
- * Возвращает размер скидки
+ * Возвращает информацию о первой ближайшей скидке
+ *
+ * @param $price - цена без скидки
+ *
+ * @return mixed
+ */
+function fs_get_first_discount() {
+
+	global $fs_config;
+	$total_amount        = fs_get_total_amount( false, false );
+	$discounts           = get_terms( array( 'taxonomy' => $fs_config->data['discount_taxonomy'], 'hide_empty' => 0 ) );
+	$discounts_cart      = [];
+	$total_discount      = 0;
+	$discount_difference = 0;
+	$discount_diff       = [];
+	if ( $discounts ) {
+		foreach ( $discounts as $k => $discount ) {
+			$discount_type   = get_term_meta( $discount->term_id, 'discount_where_is', 1 );
+			$discount_where  = get_term_meta( $discount->term_id, 'discount_where', 1 );
+			$discount_value  = get_term_meta( $discount->term_id, 'discount_value', 1 );
+			$discount_amount = get_term_meta( $discount->term_id, 'discount_amount', 1 );
+			// если скидка указана в процентах
+			if ( strpos( $discount_amount, '%' ) !== false ) {
+				$discount_amount = floatval( str_replace( '%', '', $discount_amount ) );
+				$discount_amount = $discount_value  * $discount_amount / 100;
+			}
+
+			if ( $discount_type == 'sum' && ( $discount_where == '>=' || $discount_where == '>' ) && $total_amount < $discount_value ) {
+				$discounts_cart[ $k ] = $discount_amount;
+				$discount_diff[ $k ]  = $discount_value - $total_amount;
+			}
+		}
+	}
+	if ( ! empty( $discounts_cart ) ) {
+		$total_discount      = min( $discounts_cart );
+		$discount_difference = min( $discount_diff );
+	}
+
+	return array(
+		'discount'            => $total_discount,
+		'discount_difference' => $discount_difference
+	);
+
+}
+
+/**
+ * Вводит размер скидки
  *
  * @param array $products
  *
