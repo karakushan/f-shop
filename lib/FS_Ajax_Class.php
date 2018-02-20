@@ -213,6 +213,7 @@ class FS_Ajax_Class {
 			die ( 'не пройдена верификация формы nonce' );
 		}
 		$fs_products = $_SESSION['cart'];
+		$fs_custom_products=serialize($_POST['fs_custom_product']);
 		$user_id     = 0;
 		$sum         = fs_get_total_amount( $fs_products );
 		global $wpdb;
@@ -311,6 +312,7 @@ class FS_Ajax_Class {
 					'city'       => $sanitize_field['fs_city']
 				),
 				'_products' => $fs_products,
+				'_custom_products' => $fs_custom_products,
 				'_delivery' => array(
 					'method'    => $sanitize_field['fs_delivery_methods'],
 					'secession' => $sanitize_field['fs_delivery_number'],

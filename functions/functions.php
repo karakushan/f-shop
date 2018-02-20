@@ -281,6 +281,24 @@ function fs_get_total_discount( $products = array() ) {
 	return $discount;
 }
 
+/**
+ * Возвращает размер скидки
+ *
+ * @param array $products
+ *
+ * @param string $wrap
+ *
+ * @return float|int
+ */
+function fs_total_discount( $products = array(), $wrap = '%s %s' ) {
+
+	$discount = fs_get_total_amount( $products, false ) - fs_get_total_amount( $products, true );
+	$discount = apply_filters( 'fs_price_format', $discount );
+	printf( $wrap, '<span data-fs-element="total-discount">' . $discount . '</span>', fs_currency() );
+
+	return $discount;
+}
+
 
 /**
  * Выводит количество товаров в корзине
