@@ -48,7 +48,7 @@ class FS_Action_Class {
 		/* отображение скидки в процентах */
 		add_action( 'fs_discount_percent', 'fs_discount_percent', 10, 2 );
 		/* отображение артикула товара */
-		add_action( 'fs_product_code', 'fs_product_code', 10, 3 );
+		add_action( 'fs_product_code', 'fs_product_code', 10, 2 );
 		/* отображение кнопки добавления в корзину */
 		add_action( 'fs_add_to_cart', 'fs_add_to_cart', 10, 3 );
 

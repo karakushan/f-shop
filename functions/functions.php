@@ -306,7 +306,7 @@ function fs_get_first_discount() {
 			// если скидка указана в процентах
 			if ( strpos( $discount_amount, '%' ) !== false ) {
 				$discount_amount = floatval( str_replace( '%', '', $discount_amount ) );
-				$discount_amount = $discount_value  * $discount_amount / 100;
+				$discount_amount = $discount_value * $discount_amount / 100;
 			}
 
 			if ( $discount_type == 'sum' && ( $discount_where == '>=' || $discount_where == '>' ) && $total_amount < $discount_value ) {
@@ -1392,20 +1392,30 @@ function fs_quick_order_button( $post_id = 0, $attr = array() ) {
  *
  * @return string - артикул товара
  */
-function fs_product_code( $product_id = 0, $wrap = '%s', $echo = false ) {
-	global $post;
+function fs_get_product_code( $product_id = 0 ) {
 	$config     = new \FS\FS_Config();
-	$product_id = $product_id == 0 ? $post->ID : $product_id;
+	$product_id = fs_get_product_id( $product_id );
 	$articul    = get_post_meta( $product_id, $config->meta['product_article'], 1 );
-	if ( empty( $articul ) ) {
-		$articul = $product_id;
-	}
-	if ( $echo ) {
+
+	return $articul;
+}
+
+/**
+ * получает артикул товара по переданному id поста
+ *
+ * @param  int|integer $product_id - id поста
+ * @param  string $wrap - html обёртка для артикула (по умолчанию нет)
+ * @param bool $echo возвращать или выводить, по умолчанию возвращать
+ *
+ * @return string - артикул товара
+ */
+function fs_product_code( $product_id = 0, $wrap = '%s' ) {
+	$articul = fs_get_product_code( $product_id );
+	if ( $articul ) {
 		echo sprintf( $wrap, $articul );
-	} else {
-		return $articul;
 	}
 
+	return;
 }
 
 /**
