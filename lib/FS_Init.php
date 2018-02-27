@@ -33,9 +33,7 @@ class FS_Init {
 		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
 
-		// хуки срабатывают в момент активации и деактивации плагина
-		register_activation_hook( __FILE__, array( $this, 'fs_activate' ) );
-		register_deactivation_hook( __FILE__, array( $this, 'fs_deactivate' ) );
+
 	} // END public function __construct
 
 	function true_load_plugin_textdomain() {
@@ -110,19 +108,5 @@ class FS_Init {
 		wp_localize_script( 'fs-admin', 'fShop', $l10n );
 	}
 
-	/**
-	 *Функция срабатывает один раз при активации плагина
-	 */
-	function fs_activate() {
-		add_role(
-			FS_Config::getUsers( 'new_user_role' ),
-			FS_Config::getUsers( 'new_user_name' ),
-			array(
-				'read'    => true,
-				'level_0' => true
-			) );
-	}
 
-	function fs_deactivate() {
-	}
 }

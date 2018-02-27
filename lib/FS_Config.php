@@ -22,13 +22,14 @@ class FS_Config {
 
 	public $taxonomies;
 	public static $currencies = array();
-	protected static $users = array();
+	public static $users = array();
 	public static $default_currency = 'USD';
 	public static $user_meta = array();
 	public static $prices;
 	public static $form_fields;
-	protected static $nonce = 'fast-shop';
-	protected static $text_domain = 'fast-shop';
+	public static $nonce = 'fast-shop';
+	public static $text_domain = 'fast-shop';
+	public static $pages = array();
 
 
 	protected static $nonce_field = 'fs-secret';
@@ -269,6 +270,45 @@ class FS_Config {
 		self::$users = array(
 			'new_user_role' => 'client',
 			'new_user_name' => __( 'Client', 'fast-shop' )
+		);
+
+		self::$pages = array(
+			'cart'       => array(
+				'title'   => 'Корзина',
+				'content' => '[fs_cart]',
+				'option'  => 'page_cart'
+			),
+			'pay'        => array(
+				'title'   => 'Оплата покупки',
+				'content' => '[fs_pay_methods]',
+				'option'  => 'page_payment'
+			),
+			'thanks'     => array(
+				'title'   => 'Благодарим за покупку',
+				'content' => '[fs_order_thanks]',
+				'option'  => 'page_success'
+			),
+			'wishlist'   => array(
+				'title'   => 'Список желаний',
+				'content' => '[fs_wishlist]',
+				'option'  => 'page_whishlist'
+			),
+			'account'    => array(
+				'title'   => 'Личный кабинет',
+				'content' => '[fs_user_cabinet]',
+				'option'  => 'page_cabinet'
+			),
+			'log-in'     => array(
+				'title'   => 'Вход на сайт',
+				'content' => '[fs_login]',
+				'option'  => 'page_auth'
+			),
+			'order-info' => array(
+				'title'   => 'Информация о заказе',
+				'content' => '[fs_order_info]',
+				'option'  => 'page_order_detail'
+			),
+
 		);
 
 	}

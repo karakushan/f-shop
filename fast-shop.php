@@ -46,3 +46,38 @@ if ( ! class_exists( '\FS\FS_Init', false ) ) {
 	$fs_init              = new \FS\FS_Init;
 	$GLOBALS['fs_config'] = new FS\FS_Config();
 }
+
+
+// хуки срабатывают в момент активации и деактивации плагина
+register_activation_hook( __FILE__, 'fs_activate' );
+register_deactivation_hook( __FILE__, 'fs_deactivate' );
+function fs_activate() {
+	require_once 'lib/FS_Config.php';
+	// Регистрируем роли пользователей
+	add_role(
+		\FS\FS_Config::$users['new_user_role'],
+		\FS\FS_Config::$users['new_user_name'],
+		array(
+			'read'    => true,
+			'level_0' => true
+		) );
+	// Добавляем страницы
+	if ( \FS\FS_Config::$pages ) {
+		foreach ( \FS\FS_Config::$pages as $key => $page ) {
+			$post_id = wp_insert_post( array(
+				'post_title'   => wp_strip_all_tags( $page['title'] ),
+				'post_content' => $page['content'],
+				'post_type' => 'page',
+				'post_status' => 'publish',
+				'post_name'    => 'fs-' . $key
+			) );
+			if ( $post_id ) {
+				update_option( $page['option'], intval( $post_id ) );
+			}
+		}
+	}
+
+}
+
+function fs_deactivate() {
+}
