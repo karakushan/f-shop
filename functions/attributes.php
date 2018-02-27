@@ -138,25 +138,25 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
 function fs_types_sort_filter( $attr = array() ) {
 	$filter      = '';
 	$order_types = array(
-		'date_desc'  => array(
+		'date_desc'    => array(
 			'name' => __( 'First new', 'fast-shop' )
 		),
-		'date_asc'   => array(
+		'date_asc'     => array(
 			'name' => __( 'First old ones', 'fast-shop' )
 		),
-		'price_asc'  => array(
+		'price_asc'    => array(
 			'name' => __( 'Price low to high', 'fast-shop' )
 		),
-		'price_desc' => array(
+		'price_desc'   => array(
 			'name' => __( 'Price high to low', 'fast-shop' )
 		),
-		'name_asc'   => array(
+		'name_asc'     => array(
 			'name' => __( 'Name A to Z', 'fast-shop' )
 		),
-		'name_desc'  => array(
+		'name_desc'    => array(
 			'name' => __( 'Name Z to A', 'fast-shop' )
 		),
-		'action_price'  => array(
+		'action_price' => array(
 			'name' => __( 'First promotion', 'fast-shop' )
 		)
 	);
@@ -250,6 +250,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 		'container_id'        => 'listCheck-' . $group_id,
 		'input_wrapper_class' => 'fs-checkbox-wrapper',
 		'input_class'         => 'checkStyle',
+		'after_input'         => '<span></span>',
 		'label_class'         => 'checkLabel'
 	);
 	$args    = wp_parse_args( $args, $default );
@@ -298,6 +299,9 @@ function fs_attr_filter( $group_id, $args = array() ) {
 			$input_class = 'class="' . sanitize_html_class( $args['input_class'] ) . '"';
 			$label_class = 'class="' . sanitize_html_class( $args['label_class'] ) . '"';
 			echo '<input type="checkbox" ' . $input_class . ' data-fs-action="filter" data-fs-redirect="' . $remove_attr . '" name="attributes[' . $term->slug . ']" value="' . $value . '"  ' . checked( $term->term_id, $product_attributes, 0 ) . ' id="check-' . $term->slug . '">';
+			if ( ! empty( $args['after_input'] ) ) {
+				echo $args['after_input'];
+			}
 			echo '<label for="check-' . $term->slug . '"  ' . $label_class . '>' . $term->name . '</label >';
 			if ( $args['container'] == 'ul' ) {
 				echo '</li>';
@@ -410,8 +414,8 @@ function fs_list_post_atts( $post_id = 0 ) {
  *
  * @return array
  */
-function fs_get_the_terms_group( $post_id = 0, $taxonomy,$args=array('orderby'=>'none') ) {
-	$terms = wp_get_object_terms( $post_id, $taxonomy,$args );
+function fs_get_the_terms_group( $post_id = 0, $taxonomy, $args = array( 'orderby' => 'none' ) ) {
+	$terms = wp_get_object_terms( $post_id, $taxonomy, $args );
 	if ( empty( $terms ) ) {
 		return array();
 	}
