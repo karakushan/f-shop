@@ -662,9 +662,8 @@ function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = arra
  * @param  array $attr дополнительные атрибуты
  */
 function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
-	global $post, $fs_config;
-	$post_id = empty( $post_id ) ? $post->ID : $post_id;
-
+	global $fs_config;
+	$post_id = fs_get_product_id( $post_id );
 	$attr = wp_parse_args( $attr,
 		array(
 			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
@@ -684,7 +683,7 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		'data-product-name' => get_the_title( $post_id ),
 		'data-price'        => fs_get_price( $post_id ),
 		'data-currency'     => fs_currency(),
-		'data-sku'          => fs_product_code( $post_id ),
+		'data-sku'          => fs_get_product_code( $post_id ),
 		'id'                => 'fs-atc-' . $post_id,
 		'data-attr'         => json_encode( $attr['json'] ),
 		'data-image'        => esc_url( get_the_post_thumbnail_url( $post_id ) ),
