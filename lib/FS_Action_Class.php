@@ -74,7 +74,7 @@ class FS_Action_Class {
 		/* Выводит общую сумму всех товаров в корзине */
 		add_action( 'fs_total_amount', 'fs_total_amount', 10, 2 );
 		/* отображение базовой цены без учёта скидки */
-		add_action( 'fs_base_price', 'fs_base_price', 10, 2 );
+		add_action( 'fs_base_price', 'fs_base_price', 10, 3 );
 
 		//===== WISHLIST =====
 		/* отображает кнопку добавления в список желаний */

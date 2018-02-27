@@ -638,21 +638,20 @@ function fs_get_base_price( $post_id = 0 ) {
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>' ) {
+function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = array() ) {
+	$args  = wp_parse_args( $args, array(
+		'class' => 'fs-base-price'
+	) );
 	$price = fs_get_base_price( $post_id );
+
 
 	if ( ! $price ) {
 		return;
 	}
-	$wrap     = '<span %s>' . $wrap . '</span>';
-	$atts     = fs_parse_attr( array(), array(
-		'data-fs-element' => 'base-price',
-		'data-fs-value'   => $price
-	) );
 	$price    = apply_filters( 'fs_price_format', $price );
 	$cur_symb = fs_currency();
 
-	printf( $wrap, $atts, $price, $cur_symb );
+	printf( '<span data-fs-element = "base-price" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
 }
 
 /**
