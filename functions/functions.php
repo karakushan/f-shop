@@ -664,7 +664,7 @@ function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = arra
 function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	global $fs_config;
 	$post_id = fs_get_product_id( $post_id );
-	$attr = wp_parse_args( $attr,
+	$attr    = wp_parse_args( $attr,
 		array(
 			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
 			'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
@@ -1141,12 +1141,12 @@ function fs_price_max( $filter = true ) {
  * функция отображает кнопку "добавить в список желаний"
  *
  * @param  integer $post_id - id записи
+ * @param  string $label - текст кнопки
  * @param  array $args - дополнительные аргументы массивом
  *
  */
-function fs_wishlist_button( $post_id = 0, $args = array() ) {
-	global $post;
-	$post_id = empty( $post_id ) ? $post->ID : $post_id;
+function fs_wishlist_button( $post_id = 0, $label = 'В список желаний', $args = array() ) {
+	$post_id = fs_get_product_id( $post_id );
 	// определим параметры по умолчанию
 	$defaults  = array(
 		'attr'      => '',
@@ -1155,7 +1155,6 @@ function fs_wishlist_button( $post_id = 0, $args = array() ) {
 		'preloader' => '',
 		'class'     => 'fs-whishlist-btn',
 		'id'        => 'fs-whishlist-btn-' . $post_id,
-		'content'   => '',
 		'atts'      => ''
 	);
 	$args      = wp_parse_args( $args, $defaults );
@@ -1167,16 +1166,14 @@ function fs_wishlist_button( $post_id = 0, $args = array() ) {
 		'data-image'      => get_the_post_thumbnail_url( $post_id ),
 		'data-product-id' => $post_id,
 	) );
-	$content   = '<span class="fs-wh-message" style="display:none">' . $args['success'] . '</span>';
-	$content   .= '<span class="fs-wh-preloader" style="display:none"></span>';
-	$content   .= $args['content'];
+
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' ' . $args["atts"] . '>' . $content . '</a>';
+			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' ' . $args["atts"] . '>' . $label . '</a>';
 			break;
 
 		case 'button':
-			echo '<button ' . $html_atts . ' ' . $args["atts"] . '>' . $content . '</button>';
+			echo '<button ' . $html_atts . ' ' . $args["atts"] . '>' . $label . '</button>';
 			break;
 	}
 

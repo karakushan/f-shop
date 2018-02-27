@@ -78,7 +78,7 @@ class FS_Action_Class {
 
 		//===== WISHLIST =====
 		/* отображает кнопку добавления в список желаний */
-		add_action( 'fs_wishlist_button', 'fs_wishlist_button', 10, 2 );
+		add_action( 'fs_wishlist_button', 'fs_wishlist_button', 10, 3 );
 		/* отображает виджет (блок) со списком желаний */
 		add_action( 'fs_wishlist_widget', 'fs_wishlist_widget', 10, 1 );
 
