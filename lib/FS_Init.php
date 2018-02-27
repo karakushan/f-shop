@@ -121,24 +121,6 @@ class FS_Init {
 				'read'    => true,
 				'level_0' => true
 			) );
-		/* регистрируем статусы заказа по умолчанию */
-		$taxonomies = new FS_Taxonomies_Class;
-		$taxonomies->create_taxonomy();
-		$order_statuses = FS_Config::default_order_statuses();
-		foreach ( $order_statuses as $key => $order_status ) {
-			$args     = array(
-				'alias_of'    => '',
-				'description' => $order_status['description'],
-				'parent'      => 0,
-				'slug'        => $key,
-			);
-			$new_term = wp_insert_term( $order_status['name'], 'order-statuses', $args );
-		}
-		if ( ! is_wp_error( $new_term ) ) {
-			echo $new_term->get_error_message();
-		}
-
-
 	}
 
 	function fs_deactivate() {

@@ -70,7 +70,7 @@ class FS_Action_Class {
 
 		//===== PRICE =====
 		/* отображение фактической цены */
-		add_action( 'fs_the_price', 'fs_the_price', 10, 2 );
+		add_action( 'fs_the_price', 'fs_the_price', 10, 3 );
 		/* Выводит общую сумму всех товаров в корзине */
 		add_action( 'fs_total_amount', 'fs_total_amount', 10, 2 );
 		/* отображение базовой цены без учёта скидки */

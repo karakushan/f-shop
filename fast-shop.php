@@ -41,16 +41,7 @@ define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // абсолютный �
 define( 'FS_BASENAME', plugin_basename( __FILE__ ) ); // относительный путь типа my-plugin/my-plugin.php
 define( 'FS_LANG_PATH', dirname( plugin_basename( __FILE__ ) ) . '/languages' ); // относительный путь типа my-plugin/my-plugin.php
 
-define( 'FS_DEBUG', false ); // режим разработки, по умолчанию выключен
-
-/* Включаем режим разработки если константа FS_DEBUG === true */
-if ( FS_DEBUG === true ) {
-	ini_set( 'error_reporting', E_ALL );
-	ini_set( 'display_errors', 1 );
-	ini_set( 'display_startup_errors', 1 );
-}
-
-/* Активируем класс инициализации плагина */
+/* Инициализируем плагин */
 if ( ! class_exists( '\FS\FS_Init', false ) ) {
 	$fs_init              = new \FS\FS_Init;
 	$GLOBALS['fs_config'] = new FS\FS_Config();

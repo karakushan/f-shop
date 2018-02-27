@@ -135,8 +135,8 @@ class FS_Settings_Class {
 					array(
 						'type'  => 'text',
 						'name'  => 'currency_symbol',
-						'label' => 'Символ основной валюты <span>(по умолчанию отображается международный код типа USD):</span>',
-						'value' => fs_option( 'currency_symbol' )
+						'label' => 'Знак валюты <span>(по умолчанию отображается $):</span>',
+						'value' => fs_option( 'currency_symbol','$' )
 					),
 					array(
 						'type'  => 'text',

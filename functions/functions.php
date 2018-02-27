@@ -158,30 +158,19 @@ function fs_row_wholesale_price( $post_id, $count, $curency = true, $wrap = '%s 
 /**
  * Выводит текущую цену с учётом скидки
  *
- * @param int|string $post_id - id товара
+ * @param int|string $product_id - id товара
  * @param string $wrap - html обёртка для цены
  * @param array $args - дополнительные аргументы
  */
-function fs_the_price( $post_id = 0, $wrap = "%s <span>%s</span>", $args = array() ) {
-	global $post;
-	$args     = wp_parse_args( $args, array(
-		'echo' => true
+function fs_the_price( $product_id = 0, $wrap = "%s <span>%s</span>", $args = array() ) {
+	$args       = wp_parse_args( $args, array(
+		'class' => 'fs-price'
 	) );
-	$cur_symb = fs_currency();
-	$post_id  = empty( $post_id ) ? $post->ID : $post_id;
-	$price    = fs_get_price( $post_id );
-	$price    = apply_filters( 'fs_price_format', $price );
-
-	$wrap = '<span %s>' . $wrap . '</span>';
-	$atts = fs_parse_attr( array(), array(
-		'data-fs-element' => 'price',
-		'data-fs-value'   => $price
-	) );
-	if ( $args['echo'] ) {
-		printf( $wrap, $atts, $price, $cur_symb );
-	} else {
-		return sprintf( $wrap, $price, $cur_symb );
-	}
+	$cur_symb   = fs_currency( $product_id );
+	$product_id = fs_get_product_id( $product_id );
+	$price      = fs_get_price( $product_id );
+	$price      = apply_filters( 'fs_price_format', $price );
+	printf( '<span data-fs-element="price" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
 }
 
 /**
@@ -1015,12 +1004,8 @@ function fs_user_viewed() {
  * Получаем симовол валюты
  * @return string
  */
-function fs_currency( $wrap = false ) {
-	$config   = new \FS\FS_Config();
-	$currency = ! empty( $config->options['currency_symbol'] ) ? $config->options['currency_symbol'] : '$';
-	if ( $wrap ) {
-		return sprintf( '<span>%s</span>', $currency );
-	}
+function fs_currency() {
+	$currency = fs_option( 'currency_symbol', '$' );
 
 	return $currency;
 }
