@@ -224,7 +224,7 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
 		$total = fs_get_total_amount( $_SESSION['cart'] );
 	}
 	$total = apply_filters( 'fs_price_format', $total );
-	printf( $wrap, '<span data-fs-element="total-amount">' . $total . '</span>', fs_currency() );
+	printf(  '<span data-fs-element="total-amount">' . $wrap . '</span>', $total, fs_currency() );
 }
 
 /**
@@ -493,7 +493,7 @@ function fs_get_cart( $args = array() ) {
 				'price'      => sprintf( $args['price_format'], $price_show, fs_currency() ),
 				'base_price' => $base_price,
 				'all_price'  => sprintf( $args['price_format'], $all_price, fs_currency() ),
-				'code'       => fs_product_code( $key ),
+				'code'       => fs_get_product_code( $key ),
 				'currency'   => fs_currency()
 			);
 		}
@@ -516,7 +516,7 @@ function fs_get_cart( $args = array() ) {
  */
 function fs_delete_position( $product_id, $args ) {
 	$args      = wp_parse_args( $args, array(
-		'content' => '🞫',
+		'content' => '',
 		'type'    => 'link',
 		'class'   => 'fs-delete-position'
 	) );
