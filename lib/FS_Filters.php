@@ -18,6 +18,7 @@ class FS_Filters {
 
 		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ) );
 		add_action( 'pre_get_posts', array( $this, 'search_query' ) );
+		add_action( 'pre_get_posts', array( $this, 'search_page' ) );
 
 
 		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
@@ -258,6 +259,24 @@ class FS_Filters {
 		}
 		if ( ! empty( $order ) ) {
 			$query->set( 'order', $order );
+		}
+
+		return $query;
+	}//end filter_curr_product()
+
+
+	/**
+	 * Оставляет в результатах поиска только товары
+	 *
+	 * @param $query
+	 */
+	public function search_page( $query ) {
+		if ( is_admin() ) {
+			return;
+		}
+		global $fs_config;
+		if ( $query->is_search ) {
+			$query->set( 'post_type', $fs_config->data['post_type'] );
 		}
 
 		return $query;

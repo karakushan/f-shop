@@ -1873,7 +1873,9 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
  * Создаёт ссылку для отфильтровки товаров по параметрам в каталоге
  *
  * @param null $filter
- * @param string $order
+ * @param string $order -
+ *
+ *
  * @param string $catalog_link
  */
 function fs_filter_link( $filter = null, $order = 'date_desc', $catalog_link = '/product/' ) {
