@@ -9,9 +9,9 @@ class FS_Init {
 
 	public function __construct() {
 		$this->config = new FS_Config();
-
 		add_action( 'wp_enqueue_scripts', array( &$this, 'fast_shop_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'fast_shop_admin_scripts' ) );
+
 		// Инициализация классов Fast Shop
 		$GLOBALS['fs_option'] = get_option( 'fs_option' );
 		new FS_Settings_Class;
@@ -52,9 +52,9 @@ class FS_Init {
 		wp_enqueue_style( 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', array(), $this->config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'fs-style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), $this->config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( 'es-lightgallery', FS_PLUGIN_URL. 'assets/plugins/lightGallery/dist/css/lightgallery.min.css' );
+		wp_enqueue_style( 'es-lightgallery', FS_PLUGIN_URL . 'assets/plugins/lightGallery/dist/css/lightgallery.min.css' );
 
-		wp_enqueue_script('es-lightgallery',FS_PLUGIN_URL."assets/plugins/lightGallery/dist/js/lightgallery-all.js",array("jquery"),null,true);
+		wp_enqueue_script( 'es-lightgallery', FS_PLUGIN_URL . "assets/plugins/lightGallery/dist/js/lightgallery-all.js", array( "jquery" ), null, true );
 		wp_enqueue_script( "jquery-ui-core", array( 'jquery' ) );
 		wp_enqueue_script( "jquery-ui-slider", array( 'jquery' ) );
 		wp_enqueue_script( 'jquery-validate', FS_PLUGIN_URL . 'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true );

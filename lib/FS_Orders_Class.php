@@ -30,7 +30,7 @@ class FS_Orders_Class {
 	function order_detail_shortcode() {
 		$order_id = intval( $_GET['order_detail'] );
 		if ( empty( $order_id ) ) {
-			return '<p class="fs-order-detail">'.__( 'Order number is not specified', 'fast-shop' ).'</p>';
+			return '<p class="fs-order-detail">' . __( 'Order number is not specified', 'fast-shop' ) . '</p>';
 		}
 		$order   = FS_Orders_Class::get_order( $order_id );
 		$payment = new FS_Payment_Class();
@@ -330,8 +330,7 @@ class FS_Orders_Class {
 		return $items_sum;
 	}
 
-	public
-	function delete_orders() {
+	public static function delete_orders() {
 		global $fs_config;
 		$posts = new \WP_Query( array(
 			'post_type'      => array( $fs_config->data['post_type_orders'] ),

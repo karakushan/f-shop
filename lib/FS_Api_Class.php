@@ -12,8 +12,8 @@ namespace FS;
 class FS_Api_Class {
 
 	function __construct() {
-		add_action( 'template_redirect', array( $this, 'plugin_admin_api_actions' ) );
-		add_action( 'template_redirect', array( $this, 'plugin_user_api_actions' ) );
+		add_action( 'wp_loaded', array( $this, 'plugin_admin_api_actions' ) );
+		add_action( 'wp_loaded', array( $this, 'plugin_user_api_actions' ) );
 	}
 
 	/**
@@ -30,38 +30,28 @@ class FS_Api_Class {
 			return;
 		}
 		$api_command = $_GET['fs-api'];
+		global $fs_config;
 		// импортирует свойства товаров из опций
 		if ( $api_command == 'migrate' ) {
 			FS_Migrate_Class::import_option_attr();
 			// удаляет все заказы
 		} elseif ( $api_command == 'drop_orders' ) {
-			$orders_class = new FS_Orders_Class();
-			$orders_class->delete_orders();
+			do_action( 'fs_delete_orders' );
 			// удаляет все товары
 		} elseif ( $api_command == 'drop_products' ) {
-			$product_class = new FS_Product_Class();
-			$product_class->delete_products();
+			do_action( 'fs_delete_products' );
 			// удаляет категории товаров
 		} elseif ( $api_command == 'drop_cat' ) {
-			$tax_class = new FS_Taxonomies_Class();
-			$tax_class->delete_product_categories();
+			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['product_taxonomy'] );
 			// удаляет свойства товаров
 		} elseif ( $api_command == 'drop_att' ) {
-			$tax_class = new FS_Taxonomies_Class();
-			$tax_class->delete_product_attributes();
+			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['product_att_taxonomy'] );
 			// удаляет все товары а вместе с ними категории и свойства
 		} elseif ( $api_command == 'drop_all' ) {
-			$product_class = new FS_Product_Class();
-			$product_class->delete_products();
-
-			$tax_class = new FS_Taxonomies_Class();
-			$tax_class->delete_product_categories();
-
-			$tax_class = new FS_Taxonomies_Class();
-			$tax_class->delete_product_attributes();
-
-			$orders_class = new FS_Orders_Class();
-			$orders_class->delete_orders();
+			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['product_taxonomy'] );
+			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['product_att_taxonomy'] );
+			do_action( 'fs_delete_products' );
+			do_action( 'fs_delete_orders' );
 		}
 
 	}

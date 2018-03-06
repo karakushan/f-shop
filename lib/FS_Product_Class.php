@@ -16,9 +16,10 @@ class FS_Product_Class {
 	 *
 	 * @param bool $attachments - удалять вложения или нет (по умолчанию удаляет)
 	 */
-	public function delete_products( $attachments = true ) {
+	public static function delete_products() {
 		global $fs_config;
-		$posts = new \WP_Query( array(
+		$attachments = true;
+		$posts       = new \WP_Query( array(
 			'post_type'      => array( $fs_config->data['post_type'] ),
 			'posts_per_page' => - 1
 		) );

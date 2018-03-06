@@ -16,11 +16,13 @@ class FS_Taxonomies_Class {
 	public $product_taxonomy;
 
 	function __construct() {
-		add_action( 'init', array( $this, 'create_taxonomy' ), 12 );
+		add_action( 'init', array( $this, 'create_taxonomy' ) );
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
 		// добавляем колонку при просмотре списка терминов таксономии валют
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_edit-fs-currencies_columns', array( $this, 'add_fs_currencies_columns' ) );
+
+
 	}
 
 	/**
@@ -474,50 +476,26 @@ class FS_Taxonomies_Class {
 	}
 
 	/**
-	 * удаляет все категории товаров
+	 * удаляет все термины из таксономии $taxonomy
+	 * не удаляя при этом самой таксономии
+	 *
+	 * @param string $taxonomy - название таксономии
+	 *
+	 * @return bool
 	 */
-	public function delete_product_categories() {
-		global $fs_config;
-		$terms = get_terms( array(
-				'taxonomy'   => $fs_config->data['product_taxonomy'],
-				'hide_empty' => false
-			)
-		);
-		if ( $terms ) {
-			foreach ( $terms as $term ) {
-				if ( is_object( $term ) ) {
-					wp_delete_term( $term->term_id, $fs_config->data['product_taxonomy'] );
-				}
 
-			}
-		}
-
-	}
-
-	/**
-	 * удаляет все свойства товаров
-	 */
-	public function delete_product_attributes() {
-
-		global $fs_config;
-		$att_tax=$fs_config->data['product_att_taxonomy'];
-		if ( ! taxonomy_exists( $att_tax) ) {
+	public static function delete_taxonomy_terms( string $taxonomy ) {
+		if ( ! taxonomy_exists( $taxonomy ) ) {
 			return false;
 		}
 		$terms = get_terms( array(
-				'taxonomy'   => $att_tax,
+				'taxonomy'   => $taxonomy,
 				'hide_empty' => false
 			)
 		);
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
-				if ( ! is_object( $term ) ) {
-					continue;
-				}
-				$delete = wp_delete_term( $term->term_id, $fs_config->data['product_att_taxonomy'], array(
-					'default'       => 0,
-					'force_default' => true
-				) );
+				$delete = wp_delete_term( intval( $term->term_id ), $taxonomy );
 				if ( is_wp_error( $delete ) ) {
 					echo $delete->get_error_message();
 					continue;
@@ -525,8 +503,8 @@ class FS_Taxonomies_Class {
 			}
 		}
 
-	}
 
+	}
 
 	/**
 	 * Регистриует колонку код валюты в таксономии валют

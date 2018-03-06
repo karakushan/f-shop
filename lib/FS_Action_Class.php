@@ -58,9 +58,9 @@ class FS_Action_Class {
 		/* выводит select для указания к-ва выводимых постов на странице (обычно применяется в каталоге или на страницах категорий) */
 		add_action( 'fs_per_page_filter', 'fs_per_page_filter', 10, 2 );
 		/*выводит список группы свойств и сортирует при выборе свойства*/
-		add_action('fs_attr_filter','fs_attr_filter',10,2);
+		add_action( 'fs_attr_filter', 'fs_attr_filter', 10, 2 );
 		/*выводит фильтр для сортировки по диапазону цены (слайдер цены)*/
-		add_action('fs_range_slider','fs_range_slider',10);
+		add_action( 'fs_range_slider', 'fs_range_slider', 10 );
 
 		//===== ATTRIBUTES =====
 		/* выводит фильтр для сортировки по атрибутам */
@@ -109,10 +109,15 @@ class FS_Action_Class {
 		//===== COMPARISON LIST ====
 		add_action( 'fs_add_to_comparison', 'fs_add_to_comparison', 10, 3 );
 
-
+		// ==== API ====
+		/* удаляет все термины из таксономий плагина */
+		add_action( 'fs_delete_taxonomy_terms', array( 'FS\FS_Taxonomies_Class', 'delete_taxonomy_terms' ), 10, 1 );
+		/* удаляет все заказы */
+		add_action( 'fs_delete_orders', array( 'FS\FS_Orders_Class', 'delete_orders' ) );
+		/* удаляет все товары */
+		add_action( 'fs_delete_products', array( 'FS\FS_Product_Class', 'delete_products' ) );
 
 	}
-
 
 
 	/**
