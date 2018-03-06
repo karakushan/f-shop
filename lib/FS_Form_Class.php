@@ -21,7 +21,7 @@ class FS_Form_Class {
 		//подставляем начальное значение в атрибут value интпута формы
 		$default_value = '';
 		$selected      = '';
-		if ( $curent_user->exists() && fs_option('autofill')=='1') {
+		if ( $curent_user->exists() && fs_option( 'autofill' ) == '1' ) {
 			switch ( $field_name ) {
 				case 'fs_email':
 					$default_value = $curent_user->user_email;
@@ -54,7 +54,7 @@ class FS_Form_Class {
 			}
 		}
 		$default     = array(
-			'type'          => FS_Config::$form_fields[ $field_name ]['type'],
+			'type'          => ! empty( FS_Config::$form_fields[ $field_name ]['type'] ) ? FS_Config::$form_fields[ $field_name ]['type'] : 'text',
 			'class'         => '',
 			'wrapper'       => true,
 			'wrapper_class' => 'fs-field-wrapper',
@@ -63,10 +63,10 @@ class FS_Form_Class {
 				'[',
 				']'
 			), array( '_' ), $field_name ),
-			'required'      => FS_Config::$form_fields[ $field_name ]['required'],
+			'required'      => ! empty( FS_Config::$form_fields[ $field_name ]['required'] ) ? FS_Config::$form_fields[ $field_name ]['required'] : false,
 			'title'         => __( 'this field is required', 'fast-shop' ),
-			'placeholder'   => FS_Config::$form_fields[ $field_name ]['placeholder'],
-			'label'         => FS_Config::$form_fields[ $field_name ]['label'],
+			'placeholder'   => ! empty( FS_Config::$form_fields[ $field_name ]['placeholder'] ) ? FS_Config::$form_fields[ $field_name ]['placeholder'] : null,
+			'label'         => ! empty( FS_Config::$form_fields[ $field_name ]['label'] ) ? FS_Config::$form_fields[ $field_name ]['label'] : null,
 			'value'         => $default_value,
 			'html'          => '',
 			'selected'      => $selected,

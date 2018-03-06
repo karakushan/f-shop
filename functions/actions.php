@@ -152,8 +152,10 @@ function fs_orders_bubble() {
 // Добавляем кнопки в текстовый html-редактор
 add_action( 'admin_print_footer_scripts', 'fs_add_sheensay_quicktags' );
 function fs_add_sheensay_quicktags() {
-
-	if ( empty( $_GET['page'] ) && $_GET['page'] != 'fast-shop-settings' || ! wp_script_is( 'quicktags' ) ) {
+	if ( ! isset( $_GET['page'] ) ) {
+		return;
+	}
+	if ( $_GET['page'] != 'fast-shop-settings' || ! wp_script_is( 'quicktags' ) ) {
 		return;
 	} ?>
   <script type="text/javascript">

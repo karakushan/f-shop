@@ -11,8 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class FS_Cart_Class {
 
 	function __construct() {
-		add_action( 'init', array( &$this, 'fast_shop_init_session' ), 1 );
-
 		add_action( 'wp_ajax_add_to_cart', array( &$this, 'add_to_cart_ajax' ) );
 		add_action( 'wp_ajax_nopriv_add_to_cart', array( &$this, 'add_to_cart_ajax' ) );
 
@@ -29,14 +27,6 @@ class FS_Cart_Class {
 		add_action( 'wp_ajax_nopriv_fs_get_cart', array( &$this, 'fs_get_cart_callback' ) );
 
 	}
-
-
-	//Инициализируем сессии
-	function fast_shop_init_session() {
-		@session_start();
-
-	}
-
 
 	/**
 	 * Получает шаблон корзины методом ajax
