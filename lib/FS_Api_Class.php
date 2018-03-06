@@ -12,7 +12,7 @@ namespace FS;
 class FS_Api_Class {
 
 	function __construct() {
-		add_action( 'init', array( $this, 'plugin_admin_api_actions' ) );
+		add_action( 'template_redirect', array( $this, 'plugin_admin_api_actions' ) );
 		add_action( 'template_redirect', array( $this, 'plugin_user_api_actions' ) );
 	}
 

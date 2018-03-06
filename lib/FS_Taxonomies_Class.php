@@ -128,8 +128,8 @@ class FS_Taxonomies_Class {
 				'show_in_quick_edit' => false
 			);
 		}
-		if (fs_option( 'multi_currency_on' )==1){
-			$taxonomies['fs-currencies']       = array(
+		if ( fs_option( 'multi_currency_on' ) == 1 ) {
+			$taxonomies['fs-currencies'] = array(
 				'object_type'        => 'product',
 				'label'              => __( 'Currencies', 'fast-shop' ),
 				'labels'             => array(
@@ -485,7 +485,10 @@ class FS_Taxonomies_Class {
 		);
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
-				wp_delete_term( $term->term_id, $fs_config->data['product_taxonomy'] );
+				if ( is_object( $term ) ) {
+					wp_delete_term( $term->term_id, $fs_config->data['product_taxonomy'] );
+				}
+
 			}
 		}
 
@@ -495,15 +498,30 @@ class FS_Taxonomies_Class {
 	 * удаляет все свойства товаров
 	 */
 	public function delete_product_attributes() {
+
 		global $fs_config;
+		$att_tax=$fs_config->data['product_att_taxonomy'];
+		if ( ! taxonomy_exists( $att_tax) ) {
+			return false;
+		}
 		$terms = get_terms( array(
-				'taxonomy'   => $fs_config->data['product_att_taxonomy'],
+				'taxonomy'   => $att_tax,
 				'hide_empty' => false
 			)
 		);
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
-				wp_delete_term( $term->term_id, $fs_config->data['product_att_taxonomy'] );
+				if ( ! is_object( $term ) ) {
+					continue;
+				}
+				$delete = wp_delete_term( $term->term_id, $fs_config->data['product_att_taxonomy'], array(
+					'default'       => 0,
+					'force_default' => true
+				) );
+				if ( is_wp_error( $delete ) ) {
+					echo $delete->get_error_message();
+					continue;
+				}
 			}
 		}
 

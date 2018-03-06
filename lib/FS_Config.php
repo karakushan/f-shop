@@ -498,5 +498,4 @@ class FS_Config {
 		}
 	}
 
-
 }
