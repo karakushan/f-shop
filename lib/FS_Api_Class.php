@@ -54,6 +54,8 @@ class FS_Api_Class {
 			do_action( 'fs_delete_orders' );
 		}
 
+		do_action( 'fs_custom_api' );
+
 	}
 
 	/**
