@@ -195,7 +195,7 @@ class FS_Settings_Class {
 		);
 
 		if ( taxonomy_exists( $fs_config->data['currencies_taxonomy'] ) ) {
-			$settings['currencies']['fields']=array(
+			$settings['currencies']['fields'] = array(
 				'type'  => 'custom',
 				'name'  => 'default_currency',
 				'label' => 'Валюта по умолчанию',
@@ -212,7 +212,7 @@ class FS_Settings_Class {
 		}
 
 		if ( taxonomy_exists( $fs_config->data['currencies_taxonomy'] ) ) {
-			$settings['currencies']['fields']=array(
+			$settings['currencies']['fields'] = array(
 				'type'  => 'custom',
 				'name'  => 'default_currency',
 				'label' => 'Валюта по умолчанию',
@@ -282,7 +282,6 @@ class FS_Settings_Class {
 	}
 
 
-
 	/**
 	 * Получает активнй таб настроек
 	 *
@@ -298,6 +297,19 @@ class FS_Settings_Class {
 	}
 
 	/**
+	 * Выводит описание секции, таба в настройках
+	 */
+	function get_tab_description() {
+		$settings    = $this->register_settings();
+		$setting_key = $this->get_tab( 'tab' );
+		$setting     = $settings[ $setting_key ];
+		if ( ! empty( $setting['description'] ) ) {
+			echo $setting['description'];
+		}
+
+	}
+
+	/**
 	 * Инициализирует настройки плагина определенные в методе  register_settings()
 	 */
 	function init_settings() {
@@ -306,10 +318,12 @@ class FS_Settings_Class {
 		$setting_key = $this->get_tab( 'tab' );
 		$setting     = $settings[ $setting_key ];
 		$section     = "fs_{$setting_key}_section";
-		add_settings_section( $section, $setting['name'], array(
-			$this,
-			'settings_section_description'
-		), $this->settings_page );
+		add_settings_section(
+			$section,
+			$setting['name'],
+			array( $this, 'get_tab_description' ),
+			$this->settings_page
+		);
 		if ( ! empty( $setting['fields'] ) ) {
 			foreach ( $setting['fields'] as $field ) {
 				$settings_id = $field['name'];
