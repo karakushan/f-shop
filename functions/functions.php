@@ -224,7 +224,7 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
 		$total = fs_get_total_amount( $_SESSION['cart'] );
 	}
 	$total = apply_filters( 'fs_price_format', $total );
-	printf(  '<span data-fs-element="total-amount">' . $wrap . '</span>', $total, fs_currency() );
+	printf( '<span data-fs-element="total-amount">' . $wrap . '</span>', $total, fs_currency() );
 }
 
 /**
@@ -546,21 +546,28 @@ function fs_delete_position( $product_id, $args ) {
 	return true;
 }
 
-function fs_delete_wishlist_position( $product_id = 0, $args = array() ) {
+/**
+ * Удаляет товар из списка желаний
+ *
+ * @param int $product_id - id товара (если указать 0 будет взято ID  товара из цикла)
+ * @param string $content - текст кнопки
+ * @param array $args - дополнительные атрибуты
+ */
+function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args = array() ) {
 	$product_id = fs_get_product_id( $product_id );
 	$args       = wp_parse_args( $args, array(
-		'content' => '🞫',
-		'type'    => 'link',
-		'class'   => 'fs-delete-wishlist-position'
+		'type'  => 'link',
+		'class' => 'fs-delete-wishlist-position',
+		'data'  => array(),
+		'title' => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) )
 	) );
-	$html_atts  = fs_parse_attr( array(), array(
+	$html_atts  = fs_parse_attr( $args['data'], array(
 		'class'          => $args['class'],
-		'title'          => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) ),
+		'title'          => sprintf( $args['title'], get_the_title( $product_id ) ),
 		'data-fs-action' => 'delete_wishlist_position',
 		'data-fs-id'     => $product_id
 	) );
 
-	$content = sanitize_text_field( $args['content'] );
 	switch ( $args['type'] ) {
 		case 'link':
 			echo '<a  href="' . esc_attr( add_query_arg( array(
