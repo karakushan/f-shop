@@ -33,8 +33,19 @@ class FS_Init {
 		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
 
+		add_action( 'init', array( $this, 'session_init' ) );
+
 
 	} // END public function __construct
+
+	/**
+	 * инициализируем сессии
+	 */
+	function session_init() {
+		if ( session_id() == '' ) {
+			session_start();
+		}
+	}
 
 	function true_load_plugin_textdomain() {
 		load_plugin_textdomain( 'fast-shop', false, FS_LANG_PATH );
