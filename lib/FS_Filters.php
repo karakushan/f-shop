@@ -16,7 +16,7 @@ class FS_Filters {
 	function __construct() {
 
 
-		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ), 10, 1 );
+		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ), 12, 1 );
 		add_action( 'pre_get_posts', array( $this, 'search_page' ), 10, 1 );
 		add_action( 'pre_get_posts', array( $this, 'exclude_posts' ), 10, 1 );
 
