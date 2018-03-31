@@ -138,7 +138,7 @@ class FS_Post_Type {
 		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] == self::POST_TYPE && current_user_can( 'edit_post', $post_id ) ) {
 
 			foreach ( @$this->config->meta as $key => $field_name ) {
-				if ( ! isset( $_POST[ $field_name ] ) ) {
+				if ( ! isset( $_POST[ $field_name ] ) || (string) $_POST[ $field_name ] == '' ) {
 					delete_post_meta( $post_id, $field_name );
 					continue;
 				}

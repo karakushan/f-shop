@@ -133,7 +133,9 @@ class FS_Config {
 			// максимальное количество
 			'variant_count_max' => 'fs_variant_count_max',
 			// включает вариативность товара
-			'variated_on'       => 'fs_variated_on'
+			'variated_on'       => 'fs_variated_on',
+			// исключает из архива товаров
+			'exclude_archive'   => 'fs_exclude_archive'
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );

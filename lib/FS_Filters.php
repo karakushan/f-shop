@@ -16,8 +16,9 @@ class FS_Filters {
 	function __construct() {
 
 
-		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ) );
-		add_action( 'pre_get_posts', array( $this, 'search_page' ), 34, 1 );
+		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ), 10, 1 );
+		add_action( 'pre_get_posts', array( $this, 'search_page' ), 10, 1 );
+		add_action( 'pre_get_posts', array( $this, 'exclude_posts' ), 10, 1 );
 
 
 		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
@@ -27,6 +28,31 @@ class FS_Filters {
 
 		add_action( 'template_redirect', array( $this, 'redirect_per_page' ) );
 
+	}
+
+
+	/**
+	 * Исключает некоторые товары из общего архива и категорий
+	 *
+	 * @param $query
+	 */
+	function exclude_posts( $query ) {
+		if ( is_admin() || ! $query->is_main_query() ) {
+			return;
+		}
+		if ( $query->is_archive || $query->is_tax ) {
+			global $fs_config;
+			$meta_query                    = [];
+			$meta_query['exclude_archive'] =
+				array(
+					'key'     => $fs_config->meta['exclude_archive'],
+					'compare' => 'NOT EXISTS',
+
+				);
+			if ( ! empty( $meta_query ) ) {
+				$query->set( 'meta_query', $meta_query );
+			}
+		}
 	}
 
 	public function redirect_per_page() {
@@ -61,9 +87,10 @@ class FS_Filters {
 
 
 	public function filter_curr_product( $query ) {
-		if ( is_admin() ) {
+		if ( is_admin() || ! $query->is_main_query() ) {
 			return;
 		}
+
 
 		if ( ! isset( $_REQUEST['fs_filter'] ) || ! $query->is_main_query() ) {
 			return $query;
@@ -78,7 +105,7 @@ class FS_Filters {
 			exit( 'ошибка безопасности' );
 		}
 
-		$config     = new FS_Config;
+		global $fs_config;
 		$meta_query = array();
 		$orderby    = array();
 		$order      = '';
@@ -87,6 +114,7 @@ class FS_Filters {
 		$arr_url    = urldecode( $_SERVER['QUERY_STRING'] );
 		parse_str( $arr_url, $url );
 
+
 		//Фильтрируем по значениям диапазона цен
 		if ( isset( $url['price_start'] ) && isset( $url['price_end'] ) ) {
 
@@ -94,7 +122,7 @@ class FS_Filters {
 			$price_end                    = ! empty( $url['price_end'] ) ? (int) $url['price_end'] : 99999999999999999;
 			$meta_query['price_interval'] =
 				array(
-					'key'     => $config->meta['price'],
+					'key'     => $fs_config->meta['price'],
 					'value'   => array( $price_start, $price_end ),
 					'compare' => 'BETWEEN',
 					'type'    => 'NUMERIC',
@@ -117,11 +145,11 @@ class FS_Filters {
 
 			switch ( $url['order_type'] ) {
 				case 'price_asc': //сортируем по цене в возрастающем порядке
-					$meta_query['price'] = array( 'key' => $config->meta['price'] );
+					$meta_query['price'] = array( 'key' => $fs_config->meta['price'] );
 					$orderby['price']    = 'ASC';
 					break;
 				case 'price_desc': //сортируем по цене в спадающем порядке
-					$meta_query['price'] = array( 'key' => $config->meta['price'] );
+					$meta_query['price'] = array( 'key' => $fs_config->meta['price'] );
 					$orderby['price']    = 'DESC';
 					break;
 				case 'views_desc': //сортируем по просмотрам в спадающем порядке
@@ -145,7 +173,7 @@ class FS_Filters {
 					$orderby['date'] = 'ASC';
 					break;
 				case 'action_price' :
-					$meta_query['action_price'] = array( 'key' => $config->meta['action_price'] );
+					$meta_query['action_price'] = array( 'key' => $fs_config->meta['action_price'] );
 					$orderby['action_price']    = 'DESC';
 					break;
 
@@ -157,20 +185,31 @@ class FS_Filters {
 			switch ( $_REQUEST['aviable'] ) {
 				case 'aviable':
 					$meta_query['aviable'] = array(
-						'key'     => $config->meta['remaining_amount'],
+						'key'     => $fs_config->meta['remaining_amount'],
 						'compare' => '!=',
 						'value'   => '0'
 					);
 					break;
 				case 'not_available':
 					$meta_query['aviable'] = array(
-						'key'     => $config->meta['remaining_amount'],
+						'key'     => $fs_config->meta['remaining_amount'],
 						'compare' => '==',
 						'value'   => '0'
 					);
 					break;
 			}
 
+		}
+		if ( ! empty( $_REQUEST['filter_by'] ) ) {
+			switch ( $_REQUEST['filter_by'] ) {
+				case 'action_price';
+					$meta_query['action_price'] = array(
+						'key'     => $fs_config->meta['action_price'],
+						'compare' => '>',
+						'value'   => 0
+					);
+					break;
+			}
 		}
 
 		//Фильтруем по свойствам (атрибутам)
@@ -180,22 +219,6 @@ class FS_Filters {
 				'field'    => 'id',
 				'terms'    => array_values( $_REQUEST['attributes'] ),
 				'operator' => 'IN'
-			);
-		}
-
-		//Фильтруем по производителям
-		if ( ! empty( $_REQUEST['tax-manufacturers'] ) ) {
-			$manufacturers = array();
-			if ( is_array( $_REQUEST['tax-manufacturers'] ) ) {
-				$manufacturers = array_values( $_REQUEST['tax-manufacturers'] );
-			} else {
-				$manufacturers[] = (int) $_REQUEST['tax-manufacturers'];
-
-			}
-			$tax_query[] = array(
-				'taxonomy' => 'manufacturers',
-				'field'    => 'id',
-				'terms'    => $manufacturers,
 			);
 		}
 
