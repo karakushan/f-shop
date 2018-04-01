@@ -32,10 +32,11 @@ switch (FastShopData.fs_lang) {
     default:
         fs_message = FastShopLang.ru_RU;
 }
+
 /**
  * функция транслитерации
  */
-function fs_transliteration(text){
+function fs_transliteration(text) {
 // Символ, на который будут заменяться все спецсимволы
     var space = '-';
 // переводим в нижний регистр
@@ -45,23 +46,23 @@ function fs_transliteration(text){
     var transl = {
         'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh',
         'з': 'z', 'и': 'i', 'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n',
-        'о': 'o', 'п': 'p', 'р': 'r','с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h',
-        'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'sh','ъ': space, 'ы': 'y', 'ь': space, 'э': 'e', 'ю': 'yu', 'я': 'ya',
+        'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h',
+        'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'sh', 'ъ': space, 'ы': 'y', 'ь': space, 'э': 'e', 'ю': 'yu', 'я': 'ya',
         ' ': space, '_': space, '`': space, '~': space, '!': space, '@': space,
         '#': space, '$': space, '%': space, '^': space, '&': space, '*': space,
-        '(': space, ')': space,'-': space, '\=': space, '+': space, '[': space,
-        ']': space, '\\': space, '|': space, '/': space,'.': space, ',': space,
+        '(': space, ')': space, '-': space, '\=': space, '+': space, '[': space,
+        ']': space, '\\': space, '|': space, '/': space, '.': space, ',': space,
         '{': space, '}': space, '\'': space, '"': space, ';': space, ':': space,
-        '?': space, '<': space, '>': space, '№':space
+        '?': space, '<': space, '>': space, '№': space
     };
 
     var result = '';
     var curent_sim = '';
 
-    for(var i=0; i < text.length; i++) {
+    for (var i = 0; i < text.length; i++) {
         // Если символ найден в массиве то меняем его
-        if(transl[text[i]] != undefined) {
-            if(curent_sim != transl[text[i]] || curent_sim != space){
+        if (transl[text[i]] != undefined) {
+            if (curent_sim != transl[text[i]] || curent_sim != space) {
                 result += transl[text[i]];
                 curent_sim = transl[text[i]];
             }
@@ -100,7 +101,7 @@ function IsJsonString(str) {
 }
 
 // очищает от пустых элементов массива
-Array.prototype.clean = function(deleteValue) {
+Array.prototype.clean = function (deleteValue) {
     for (var i = 0; i < this.length; i++) {
         if (this[i] == deleteValue) {
             this.splice(i, 1);
@@ -181,7 +182,7 @@ var addUrlParam = function (search, key, val) {
 
 
 //добавление товара в корзину (сессию)
-jQuery('[data-action=add-to-cart]').on('click', function (event) {
+jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
     event.preventDefault();
 
     // проверяем выбрал ли пользователь обязательные атибуты товара, например размер
@@ -257,6 +258,7 @@ document.addEventListener("fs_before_add_product", function (event) {
 
 // Событие срабатывает когда товар добавлен в корзину
 document.addEventListener("fs_add_to_cart", function (event) {
+
     // действие которое инициирует событие
     fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]');
     var button = event.detail.button;
@@ -313,7 +315,7 @@ jQuery('[data-action="change-attr"]').on('change', function () {
             success: function (data) {
                 if (IsJsonString(data)) {
                     var json = jQuery.parseJSON(data);
-                    var priceFull=json.base_price + ' <span>' +json.currency+ '</span>';
+                    var priceFull = json.base_price + ' <span>' + json.currency + '</span>';
                     if (json.result) {
                         jQuery("[data-fs-element=\"price\"]").removeClass('blink').html(priceFull);
                         attrObj.count = json.count;
@@ -927,7 +929,7 @@ document.addEventListener("fs_add_to_wishlist", function (event) {
         image: event.detail.image,
         theme: 'light',
         title: 'Успех!',
-        message: 'Товар &laquo;'+event.detail.name+'&raquo; добавлен в список желаний!',
+        message: 'Товар &laquo;' + event.detail.name + '&raquo; добавлен в список желаний!',
         position: 'topCenter',
 
     });
