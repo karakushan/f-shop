@@ -11,11 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array
  */
-function fs_get_taxonomy_hierarchy( $taxonomy, $parent = 0 ) {
-	// only 1 taxonomy
-	$taxonomy = is_array( $taxonomy ) ? array_shift( $taxonomy ) : $taxonomy;
+function fs_get_taxonomy_hierarchy( $args ) {
 	// get all direct decendants of the $parent
-	$terms = get_terms( $taxonomy, array( 'parent' => $parent ) );
+	$terms = get_terms( $args );
 	// prepare a new array.  these are the children of $parent
 	// we'll ultimately copy all the $terms into this new array, but only after they
 	// find their own children
@@ -23,7 +21,8 @@ function fs_get_taxonomy_hierarchy( $taxonomy, $parent = 0 ) {
 	// go through all the direct decendants of $parent, and gather their children
 	foreach ( $terms as $term ) {
 		// recurse to get the direct decendants of "this" term
-		$term->children = fs_get_taxonomy_hierarchy( $taxonomy, $term->term_id );
+		$args['parent'] = $term->term_id;
+		$term->children = fs_get_taxonomy_hierarchy( $args );
 		// add the term to our new array
 		$children[ $term->term_id ] = $term;
 	}
@@ -31,6 +30,7 @@ function fs_get_taxonomy_hierarchy( $taxonomy, $parent = 0 ) {
 	// send the results back to the caller
 	return $children;
 }
+
 
 function fs_dropdown_attr_group( $group_id = 0, $post_id = 0, $args = array() ) {
 

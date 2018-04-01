@@ -243,24 +243,37 @@ function fs_per_page_filter( $interval = array(), $attr = array() ) {
  * @param array $args
  */
 function fs_attr_filter( $group_id, $args = array() ) {
+	global $fs_config;
 	$default = array(
 		'redirect'            => true,
 		'container'           => 'ul',
+		'childs'              => false, // выводить также подгруппы (по умолчанию нет)
+		'childs_class'        => 'child', // css класс подгруппы
 		'container_class'     => 'listCheck',
 		'container_id'        => 'listCheck-' . $group_id,
 		'input_wrapper_class' => 'fs-checkbox-wrapper',
 		'input_class'         => 'checkStyle',
 		'after_input'         => '<span></span>',
-		'label_class'         => 'checkLabel'
+		'label_class'         => 'checkLabel',
+		'taxonomy'            => $fs_config->data['product_att_taxonomy'],
 	);
 	$args    = wp_parse_args( $args, $default );
-	$terms   = get_terms( array(
-		'taxonomy'   => 'product-attributes',
+
+	$terms_args = array(
+		'taxonomy'   => $args['taxonomy'],
 		'hide_empty' => false,
 		'parent'     => $group_id,
 		'orderby'    => 'name',
-		'order'      => 'ASC'
-	) );
+		'order'      => 'ASC',
+	);
+
+
+	if ( ! $args['childs'] ) {
+		$terms = get_terms( $terms_args );
+	} else {
+		$terms = fs_get_taxonomy_hierarchy( $terms_args );
+	}
+
 	$arr_url = urldecode( $_SERVER['QUERY_STRING'] );
 	parse_str( $arr_url, $url );
 
@@ -303,12 +316,19 @@ function fs_attr_filter( $group_id, $args = array() ) {
 				echo $args['after_input'];
 			}
 			echo '<label for="check-' . $term->slug . '"  ' . $label_class . '>' . $term->name . '</label >';
+			if ( $args['childs'] ) {
+				fs_attr_filter( $term->term_id, $args );
+			}
+
 			if ( $args['container'] == 'ul' ) {
 				echo '</li>';
 			} else {
 				echo '</div>';
 			}
+
+
 		}
+
 		if ( ! empty( $args['container'] ) ) {
 			echo '</' . $args['container'] . '>';
 		}
