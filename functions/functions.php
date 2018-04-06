@@ -1451,7 +1451,7 @@ function fs_get_type_price( $product_id = 0, $price_type = 'price' ) {
  *
  * @return [type]                  [description]
  */
-function fs_gallery_images_url( $product_id = 0 ) {
+function fs_gallery_images_url( $product_id = 0, $size = 'full' ) {
 	global $post;
 	$product_id     = empty( $product_id ) ? $post->ID : $product_id;
 	$gallery        = new \FS\FS_Images_Class;
@@ -1459,7 +1459,7 @@ function fs_gallery_images_url( $product_id = 0 ) {
 	$images         = array();
 	if ( is_array( $gallery_images ) ) {
 		foreach ( $gallery_images as $key => $gallery_image ) {
-			$images[] = wp_get_attachment_url( $gallery_image );
+			$images[] = wp_get_attachment_url( $gallery_image, $size );
 		}
 	}
 
