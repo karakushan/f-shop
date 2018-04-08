@@ -90,6 +90,8 @@ class FS_Orders_Class {
 			echo '</select></p>';
 		}
 		echo '<p><input type="submit" name="save" id="save-post" value="Сохранить" class="button button-primary button-large"></p>';
+	  echo '<div class="clear"></div>';
+		echo '<p><a class="submitdelete deletion" href="' . get_delete_post_link( $post->ID ) . '">' . __( 'Delete' ) . '</a></p>';
 		echo '<div class="clear"></div>';
 	}
 
