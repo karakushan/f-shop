@@ -80,16 +80,17 @@ class FS_Orders_Class {
 	 */
 	function order_status_box() {
 		global $post;
-		echo '<p>' . __( 'Date of purchase', 'fast-shop' ) . ': <b> <br>' . get_the_date( "j F Y H:i" ) . '</b></p>';
-		echo '<p>' . __( 'Last modified', 'fast-shop' ) . ': <br> <b>' . get_the_modified_date( "j F Y H:i" ) . '</b></p>';
+		echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __( 'Date of purchase', 'fast-shop' ) . ': <b> ' . get_the_date( "j.m.Y H:i" ) . '</b></p>';
+		echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __( 'Last modified', 'fast-shop' ) . ':  <b>' . get_the_modified_date( "j.m.Y H:i" ) . '</b></p>';
 		if ( $this->order_statuses ) {
-			echo '<p><select name="post_status">';
+			echo '<p><label for="fs-post_status"><span class="dashicons dashicons-post-status"></span> '.__('Status').'</label>';
+			echo '<p><select id="fs-post_status" name="post_status">';
 			foreach ( $this->order_statuses as $key => $order_status ) {
 				echo '<option value="' . esc_attr( $key ) . '" ' . selected( get_post_status( $post->ID ), $key, 0 ) . '>' . esc_attr( $order_status['name'] ) . '</option>';
 			}
 			echo '</select></p>';
 		}
-		echo '<p><input type="submit" name="save" id="save-post" value="Сохранить" class="button button-primary button-large"></p>';
+		echo '<p><input type="submit" name="save" id="save-post" value="' . __( 'Save' ) . '" class="button button-primary button-large"></p>';
 	  echo '<div class="clear"></div>';
 		echo '<p><a class="submitdelete deletion" href="' . get_delete_post_link( $post->ID ) . '">' . __( 'Delete' ) . '</a></p>';
 		echo '<div class="clear"></div>';
