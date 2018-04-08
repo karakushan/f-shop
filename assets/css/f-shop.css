@@ -794,26 +794,81 @@ td.fs_photo.column-fs_photo img {
       font-weight: 500;
       font-family: Helvetica, Arial, sans-serif; }
 
-.fs-order-detail {
-  margin: 21px 0;
-  border: 1px solid #dddddd;
-  padding: 10px; }
-  .fs-order-detail tfoot {
-    font-weight: bold; }
-  .fs-order-detail .thumb img {
-    height: auto;
-    width: 80px; }
-  .fs-order-detail .table {
-    background: #fff;
-    font-size: 14px; }
-    .fs-order-detail .table thead td {
-      background: #fff; }
-      .fs-order-detail .table thead td:nth-child(3) {
-        width: 116px; }
+.fs-order-detail tfoot {
+  font-weight: bold; }
+.fs-order-detail .thumb img {
+  height: auto;
+  width: 80px; }
+.fs-order-detail .table {
+  background: #fff;
+  font-size: 14px; }
+  .fs-order-detail .table thead td {
+    background: #fff; }
+    .fs-order-detail .table thead td:nth-child(3) {
+      width: 116px; }
 
 .order-detail-title {
   margin: 3px 0 14px 0;
   font-weight: bold;
   text-transform: uppercase; }
+
+.fs-order-info {
+  width: 800px;
+  max-width: 100%;
+  margin: 0 auto 30px;
+  padding: 0;
+  text-transform: none; }
+  .fs-order-info .table {
+    border: 1px solid #dee2e6;
+    margin-bottom: 30px; }
+    .fs-order-info .table tfoot td {
+      font-weight: bold;
+      font-family: Verdana;
+      font-size: 14px; }
+    .fs-order-info .table thead tr th {
+      background-color: #dee2e6;
+      font-weight: normal;
+      color: #000000; }
+    .fs-order-info .table tbody tr td {
+      vertical-align: middle;
+      text-transform: none; }
+      .fs-order-info .table tbody tr td img {
+        width: 100px;
+        border: 1px solid #dee2e6; }
+  .fs-order-info h3 {
+    margin: 0 0 15px;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    border-bottom: 2px solid #d1d0d0;
+    padding-bottom: 10px; }
+  .fs-order-info ul {
+    margin: 0;
+    padding: 0; }
+    .fs-order-info ul li {
+      display: block;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.2;
+      color: #4b4b4b;
+      border-bottom: 1px dotted #d7d7d7;
+      padding: 12px 0; }
+      .fs-order-info ul li > span {
+        font-style: normal;
+        font-family: Verdana;
+        color: #000000; }
+
+.fs-pay-method {
+  width: 320px;
+  margin: 0 auto 30px;
+  max-width: 100%;
+  text-align: center;
+  padding: 10px 20px;
+  border: 1px solid #82B63E;
+  box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.11);
+  background-color: #fff; }
+  .fs-pay-method img {
+    margin-bottom: 30px; }
 
 /*# sourceMappingURL=f-shop.css.map */

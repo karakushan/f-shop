@@ -121,34 +121,6 @@ function fs_dashboard_widgets() {
 	wp_add_dashboard_widget( 'dashboard_widget', __( 'Popular items', 'fast-shop' ), 'fs_popular_db_widget' );
 }
 
-//  отображает к-во непросмотренных заказов рядом с пунктом меню "Заказы"
-add_action( 'admin_menu', 'fs_orders_bubble' );
-
-function fs_orders_bubble() {
-	global $menu, $fs_config;
-
-
-	$custom_post_count = wp_count_posts( $fs_config->data['post_type_orders'] );
-
-	$custom_post_pending_count = $custom_post_count->pending;
-
-	if ( $custom_post_pending_count ) {
-
-		foreach ( $menu as $key => $value ) {
-
-			if ( $menu[ $key ][2] == 'edit.php?post_type=' . $fs_config->data['post_type_orders'] ) {
-
-				$menu[ $key ][0] .= ' <span class="update-plugins count-' . $custom_post_pending_count . '"><span class="plugin-count" aria-hidden="true"> ' . $custom_post_pending_count . '</span><span class="screen-reader-text"> ' . $custom_post_pending_count . '</span></span>';
-
-				return;
-
-			}
-
-		}
-
-	}
-}
-
 // Добавляем кнопки в текстовый html-редактор
 add_action( 'admin_print_footer_scripts', 'fs_add_sheensay_quicktags' );
 function fs_add_sheensay_quicktags() {

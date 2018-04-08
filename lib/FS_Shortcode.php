@@ -32,6 +32,7 @@ class FS_Shortcode {
 		add_shortcode( 'fs_user_info', array( 'FS\Users_Class', 'user_info' ) );
 		add_shortcode( 'fs_user_orders', array( $this, 'user_orders' ) );
 		add_shortcode( 'fs_profile_edit', array( $this, 'profile_edit' ) );
+		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );
 
 
 	}
@@ -107,21 +108,24 @@ class FS_Shortcode {
 	 * @return mixed|void
 	 */
 	public function single_order_info( $atts ) {
-		if ( ! isset( $_SESSION['last_order_id'] ) ) {
+		if ( ! isset( $_REQUEST['order_detail'] ) ) {
 			return;
 		}
+		$order_id = intval( $_REQUEST['order_detail'] );
 		// белый список параметров и значения по умолчанию
 		$atts = shortcode_atts( array(
-			'class' => 'fs-order-info',
+			'class'    => 'fs-order-info',
+			'order_id' => $order_id,
+			'order'    => FS_Orders_Class::get_order( $order_id ),
+			'payment'  => new FS_Payment_Class()
+
 		), $atts );
 
-		$order_id      = (int) $_SESSION['last_order_id'];
-		$atts['order'] = FS_Orders_Class::get_order( $order_id );
+		if ( empty( $order_id ) ) {
+			return '<p class="fs-order-detail">' . __( 'Details of this order are not available for you', 'fast-shop' ) . '</p>';
+		}
 
-
-		$template = fs_frontend_template( 'shortcode/fs-order-info', $atts );
-
-		return $template;
+		return fs_frontend_template( 'shortcode/fs-order-info', $atts );
 
 	}
 
@@ -214,6 +218,25 @@ class FS_Shortcode {
 		$template .= '</form>';
 
 		return $template;
+	}
+
+	/**
+	 * Отображает кнопку для оплаты выбранным способом
+	 * @return string
+	 */
+	function pay_methods() {
+		if ( empty( $_REQUEST['order_id'] ) || empty( $_REQUEST['pay_method'] ) ) {
+			return '<p>' . __( 'The order number or method of payment is not specified.', 'fast_shop' ) . '</p>';
+		}
+		$order_id = intval( $_REQUEST['order_id'] );
+
+		$order = FS_Orders_Class::get_order( $order_id );
+		$html  = '<h3 class="text-center">Оплата заказа №' . esc_attr( $order_id ) . ' с помошью ' . esc_attr( $order->payment ) . '</h3>';
+		$html  .= '<div class="fs-pay-methods">';
+		$html  .= apply_filters( 'fs_pay_methods', $order_id );
+		$html  .= '</div>';
+
+		return $html;
 	}
 
 

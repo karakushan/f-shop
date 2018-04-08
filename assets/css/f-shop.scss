@@ -867,9 +867,6 @@ td.fs_photo.column-fs_photo img {
 }
 
 .fs-order-detail{
-    margin: 21px 0;
-    border: 1px solid #dddddd;
-    padding: 10px;
     tfoot {
         font-weight: bold;
     }
@@ -895,6 +892,90 @@ td.fs_photo.column-fs_photo img {
     margin: 3px 0 14px 0;
     font-weight: bold;
     text-transform: uppercase;
+}
+.fs-order-info {
+    width: 800px;
+    max-width: 100%;
+    margin: 0 auto 30px;
+    padding: 0;
+    text-transform: none;
+    .table {
+        border: 1px solid #dee2e6;
+        margin-bottom: 30px;
+        tfoot {
+            td {
+                font-weight: bold;
+                font-family: Verdana;
+                font-size: 14px;
+            }
+        }
+        thead {
+            tr {
+                th {
+
+                    background-color: #dee2e6;
+
+                    font-weight: normal;
+                    color: #000000;
+                }
+            }
+        }
+        tbody {
+            tr {
+                td {
+                    vertical-align: middle;
+                    text-transform: none;
+                    img {
+                        width: 100px;
+                        border: 1px solid #dee2e6;
+
+                    }
+                }
+            }
+        }
+    }
+    h3 {
+        margin: 0 0 15px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        border-bottom: 2px solid #d1d0d0;
+        padding-bottom: 10px;
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+        li {
+            display: block;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1.2;
+            color: #4b4b4b;
+            border-bottom: 1px dotted #d7d7d7;
+            padding: 12px 0;
+            >span {
+                font-style: normal;
+                font-family: Verdana;
+                color: #000000;
+            }
+
+        }
+    }
+
+}
+.fs-pay-method {
+    width: 320px;
+    margin: 0 auto 30px;
+    max-width: 100%;
+    text-align: center;
+    padding: 10px 20px;
+    border: 1px solid #82B63E;
+    box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.11);
+    background-color: #fff;
+    img {
+        margin-bottom: 30px;
+    }
 }
 
 

@@ -10,11 +10,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class FS_Orders_Class {
 	public $post_type = 'orders';
+	public $order_statuses = [];
 
 	function __construct() {
+		$this->order_statuses = FS_Config::default_order_statuses();
+
+
 		add_filter( 'pre_get_posts', array( $this, 'filter_orders_by_search' ) );
 		//===== ORDER STATUSES ====
-		add_action( 'init', array( $this, 'order_status_custom' ), 15 );
+		add_action( 'init', array( $this, 'order_status_custom' ) );
 		add_action( 'admin_footer-post-new.php', array(
 			$this,
 			'true_append_post_status_list'
@@ -25,6 +29,68 @@ class FS_Orders_Class {
 		add_action( 'transition_post_status', array( $this, 'fs_publish_order_callback' ) );
 
 		add_shortcode( 'fs_order_detail', array( $this, 'order_detail_shortcode' ) );
+
+		// операции с метабоксами - удаление стандартных, добавление новых
+		add_action( 'admin_menu', array( $this, 'remove_submit_order_metabox' ) );
+
+		// срабатывает при сохранении заказа
+//		add_action( 'save_post', array( $this, 'save_order_meta' ), 12, 3 );
+
+
+	}
+
+	/**
+	 * удаляем стандартный метабокс сохранения, публикации поста
+	 * добавляет свой метабокс для изменения статуса заказа
+	 */
+	function remove_submit_order_metabox() {
+		remove_meta_box( 'submitdiv', $this->post_type, 'side' );
+		add_meta_box( 'fs_order_status_box', 'Статус заказа', array(
+			$this,
+			'order_status_box'
+		), $this->post_type, 'side', 'high' );
+
+		$this->orders_bubble();
+	}
+
+	/**
+	 * Показывает количество новых заказов справа около пунктом меню "Заказы"
+	 * не заходя в сам пункт "Заказы"
+	 * создано для удобства и информирования админов
+	 */
+	function orders_bubble() {
+		global $menu, $fs_config;
+		$custom_post_count         = wp_count_posts( $this->post_type );
+		$custom_post_pending_count = $custom_post_count->{$fs_config->data['default_order_status']};
+		if ( ! $custom_post_pending_count ) {
+			return;
+		}
+		foreach ( $menu as $key => $value ) {
+			if ( $menu[ $key ][2] == 'edit.php?post_type=' . $fs_config->data['post_type_orders'] ) {
+				$menu[ $key ][0] .= ' <span class="update-plugins count-' . $custom_post_pending_count . '"><span class="plugin-count" aria-hidden="true"> ' . $custom_post_pending_count . '</span><span class="screen-reader-text"> ' . $custom_post_pending_count . '</span></span>';
+
+				return;
+			}
+		}
+
+	}
+
+	/**
+	 * Метабокс отображает селект с статусами заказа и кнопку сохранения
+	 */
+	function order_status_box() {
+		global $post;
+		echo '<p>' . __( 'Date of purchase', 'fast-shop' ) . ': <b> <br>' . get_the_date( "j F Y H:i" ) . '</b></p>';
+		echo '<p>' . __( 'Last modified', 'fast-shop' ) . ': <br> <b>' . get_the_modified_date( "j F Y H:i" ) . '</b></p>';
+		if ( $this->order_statuses ) {
+			echo '<p><select name="post_status">';
+			foreach ( $this->order_statuses as $key => $order_status ) {
+				echo '<option value="' . esc_attr( $key ) . '" ' . selected( get_post_status( $post->ID ), $key, 0 ) . '>' . esc_attr( $order_status['name'] ) . '</option>';
+			}
+			echo '</select></p>';
+		}
+		echo '<p><input type="submit" name="save" id="save-post" value="Сохранить" class="button button-primary button-large"></p>';
+		echo '<div class="clear"></div>';
 	}
 
 	function order_detail_shortcode() {
@@ -108,12 +174,11 @@ class FS_Orders_Class {
 
 	function true_status_display( $statuses ) {
 		global $post;
-		$all_statuses = $this->get_order_statuses();
-		if ( is_array( $all_statuses ) && ! empty( $all_statuses ) ) {
-			foreach ( $all_statuses as $key => $status ) {
+		if ( $this->order_statuses ) {
+			foreach ( $this->order_statuses as $key => $status ) {
 				if ( get_query_var( 'post_status' ) != $key ) {
 					if ( $post->post_status == $key ) {
-						$statuses[] = $status;
+						$statuses[] = $status['name'];
 					}
 				}
 			}
@@ -126,12 +191,12 @@ class FS_Orders_Class {
 	 * метод регистрирует статусы заказов в системе
 	 */
 	function order_status_custom() {
-		$all_statuses = $this->get_order_statuses();
-		if ( is_array( $all_statuses ) && ! empty( $all_statuses ) ) {
-			foreach ( $all_statuses as $key => $status ) {
+
+		if ( $this->order_statuses ) {
+			foreach ( $this->order_statuses as $key => $status ) {
 				register_post_status( $key, array(
-					'label'                     => $status,
-					'label_count'               => _n_noop( $status . ' <span class="count">(%s)</span>', $status . ' <span
+					'label'                     => $status['name'],
+					'label_count'               => _n_noop( $status['name'] . ' <span class="count">(%s)</span>', $status['name'] . ' <span
         class="count">(%s)</span>' ),
 					'public'                    => true,
 					'show_in_admin_status_list' => true
@@ -148,37 +213,18 @@ class FS_Orders_Class {
 	function true_append_post_status_list() {
 		global $post;
 		if ( $post->post_type == $this->post_type ) {
-			$all_statuses = $this->get_order_statuses();
-			if ( is_array( $all_statuses ) && ! empty( $all_statuses ) ) : ?>
+			if ( $this->order_statuses ) : ?>
               <script> jQuery(function ($) {
-					  <?php foreach ( $all_statuses as $key => $status ): ?>
-                      $('select#post_status').append("<option value=\"<?php echo esc_attr( $key )?>\" <?php selected( $post->post_status, $key ) ?>><?php echo esc_attr( $status )?></option>");
+					  <?php foreach ( $this->order_statuses as $key => $status ): ?>
+                      $('select#post_status').append("<option value=\"<?php echo esc_attr( $key )?>\" <?php selected( $post->post_status, $key ) ?>><?php echo esc_attr( $status['name'] )?></option>");
 					  <?php if ( $post->post_status == $key ): ?>
-                      $('#post-status-display').text('<?php echo esc_attr( $status )?>');
+                      $('#post-status-display').text('<?php echo esc_attr( $status['name'] )?>');
 					  <?php endif; endforeach;  ?>
                   });</script>";
 				<?php
 			endif;
 		}
 	}
-
-	/**
-	 * Возвращает зарегистрированные на сайте статусы заказов
-	 *
-	 * через фильтр "fs_order_statuses" можно добавлять свой
-	 * @return mixed|void
-	 */
-	public
-	function get_order_statuses() {
-		$order_statuses = array(
-			'fs_pending'   => __( 'Pending', 'fast-shop' ),
-			'fs_completed' => __( 'Completed', 'fast-shop' ),
-			'fs_cancelled' => __( 'Cancelled', 'fast-shop' ),
-		);
-
-		return apply_filters( 'fs_order_statuses', $order_statuses );
-	}
-
 
 	/**
 	 * Выводит объект с заказми отдельного пользователя, по умолчанию текущего, который авторизовался
@@ -229,8 +275,7 @@ class FS_Orders_Class {
 	) {
 		$post_status_id = get_post_status( $order_id );
 		if ( $post_status_id ) {
-			$all_post_statuses = self::get_order_statuses();
-			$status            = $all_post_statuses[ $post_status_id ];
+			$status = self::$order_statuses[ $post_status_id ]['name'];
 		} else {
 			$status = __( 'The order status is not defined', 'fast-shop' );
 		}
@@ -279,20 +324,21 @@ class FS_Orders_Class {
 		$order_id = 0
 	) {
 		global $fs_config;
-		$order    = new \stdClass();
-		$user     = get_post_meta( $order_id, '_user', 0 );
-		$items    = get_post_meta( $order_id, '_products', 0 );
-		$delivery = get_post_meta( $order_id, '_delivery', 0 );
-		$pay_id   = get_post_meta( $order_id, '_payment', 1 );
-		if ( ! empty( $pay_id ) && is_numeric( $pay_id ) ) {
-			$order->payment = get_term_field( 'name', $pay_id, $fs_config->data['product_pay_taxonomy'] );
-		} else {
-			$order->payment = $pay_id;
-		}
-		$order->comment  = get_post_meta( $order_id, '_comment', 1 );
-		$order->user     = ! empty( $user[0] ) ? $user[0] : array();
-		$order->items    = ! empty( $items[0] ) ? $items[0] : array();
-		$order->delivery = ! empty( $delivery[0] ) ? $delivery[0] : array();
+		$order               = new \stdClass();
+		$user                = get_post_meta( $order_id, '_user', 0 );
+		$items               = get_post_meta( $order_id, '_products', 0 );
+		$delivery            = get_post_meta( $order_id, '_delivery', 0 );
+		$pay_id              = get_post_meta( $order_id, '_payment', 1 );
+		$order->payment      = get_term_field( 'name', $pay_id, $fs_config->data['product_pay_taxonomy'] );
+		$order->payment_id   = $pay_id;
+		$order->payment_link = add_query_arg( array(
+			'order_id'   => $order_id,
+			'pay_method' => $pay_id
+		), get_the_permalink( fs_option( 'page_payment' ) ) );
+		$order->comment      = get_post_meta( $order_id, '_comment', 1 );
+		$order->user         = ! empty( $user[0] ) ? $user[0] : array();
+		$order->items        = ! empty( $items[0] ) ? $items[0] : array();
+		$order->delivery     = ! empty( $delivery[0] ) ? $delivery[0] : array();
 		if ( ! empty( $order->delivery['method'] ) && is_numeric( $order->delivery['method'] ) ) {
 			$order->delivery['method'] = get_term_field( 'name', $order->delivery['method'], $fs_config->data['product_del_taxonomy'] );
 		}
@@ -377,4 +423,14 @@ class FS_Orders_Class {
 		return $query;
 
 	}
+
+	/**
+	 * Save the metaboxes for this custom post type
+	 *
+	 * @param $post_id
+	 */
+	public function save_order_meta( $post_id, $post, $update ) {
+
+
+	} // END public function save_post($post_id)
 }
