@@ -250,7 +250,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 		'container_id'        => 'listCheck-' . $group_id,
 		'input_wrapper_class' => 'fs-checkbox-wrapper',
 		'input_class'         => 'checkStyle',
-		'after_input'         => '<span></span>',
+		'after_input'         => '',
 		'label_class'         => 'checkLabel'
 	);
 	$args    = wp_parse_args( $args, $default );
