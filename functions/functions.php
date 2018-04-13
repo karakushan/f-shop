@@ -1879,19 +1879,22 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
 /**
  * Создаёт ссылку для отфильтровки товаров по параметрам в каталоге
  *
- * @param null $filter
- * @param string $order -
+ * @param null $filter_by параметр фильтра
+ * @param null $order_by параметр сортировки
  *
- *
- * @param string $catalog_link
+ * @param string $catalog_link ссылка для фильтра
  */
-function fs_filter_link( $filter = null, $order = 'date_desc', $catalog_link = '/product/' ) {
+function fs_filter_link( $filter_by = null, $order_by = null, $catalog_link = null ) {
 	$query['fs_filter'] = wp_create_nonce( 'fast-shop' );
-	if ( ! empty( $order ) ) {
-		$query['order_type'] = $order;
+
+	if ( ! empty( $filter_by ) ) {
+		$query['filter_by'] = $filter_by;
 	}
-	if ( ! empty( $filter ) ) {
-		$query['order_type'] = $filter;
+	if ( ! empty( $order_by ) ) {
+		$query['order_type'] = $order_by;
+	}
+	if ( ! $catalog_link ) {
+		$catalog_link = '/product/';
 	}
 	echo esc_url( add_query_arg( $query, $catalog_link ) );
 }
@@ -2002,7 +2005,7 @@ function fs_get_variated_count( $post_id = 0, $atts = array() ) {
 	if ( ! empty( $variants[0] ) ) {
 		foreach ( $variants[0] as $k => $variant ) {
 			// ищем совпадения варианов в присланными значениями
-			if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
+			if ( ! empty( $variants_count ) && count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
 				$variant_count = max( $variants_count[0][ $k ], 1 );
 			}
 		}

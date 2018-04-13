@@ -112,6 +112,22 @@ class FS_Filters {
 			$query->set( 'paged', $url['paged'] );
 		}
 
+		// фильтр товаров по признакам
+		if ( ! empty( $url['filter_by'] ) ) {
+
+			switch ( $url['filter_by'] ) {
+				case 'action_price' :
+					$meta_query['action_price'] = array(
+						'key'     => $config->meta['action_price'],
+						'compare' => '>',
+						'value'   => 0
+					);
+					$orderby['action_price']    = 'DESC';
+					break;
+			}
+
+		}
+
 		// выполняем сортировку
 		if ( isset( $url['order_type'] ) ) {
 
@@ -145,7 +161,6 @@ class FS_Filters {
 					$orderby['date'] = 'ASC';
 					break;
 				case 'action_price' :
-					$meta_query['action_price'] = array( 'key' => $config->meta['action_price'] );
 					$orderby['action_price']    = 'DESC';
 					break;
 
