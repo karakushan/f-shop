@@ -1,6 +1,7 @@
 <?php
 
 namespace FS;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
@@ -12,21 +13,21 @@ class FS_Ajax_Class {
 
 	function __construct() {
 //  обработка формы заказа
-		add_action( 'wp_ajax_order_send', array( &$this, 'order_send_ajax' ) );
-		add_action( 'wp_ajax_nopriv_order_send', array( &$this, 'order_send_ajax' ) );
+		add_action( 'wp_ajax_order_send', array( $this, 'order_send_ajax' ) );
+		add_action( 'wp_ajax_nopriv_order_send', array( $this, 'order_send_ajax' ) );
 //  добавление в список желаний
-		add_action( 'wp_ajax_fs_addto_wishlist', array( &$this, 'fs_addto_wishlist' ) );
-		add_action( 'wp_ajax_nopriv_fs_addto_wishlist', array( &$this, 'fs_addto_wishlist' ) );
+		add_action( 'wp_ajax_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
+		add_action( 'wp_ajax_nopriv_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
 // удаление из списка желаний
-		add_action( 'wp_ajax_fs_del_wishlist_pos', array( &$this, 'fs_del_wishlist_pos' ) );
-		add_action( 'wp_ajax_nopriv_fs_del_wishlist_pos', array( &$this, 'fs_del_wishlist_pos' ) );
+		add_action( 'wp_ajax_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
+		add_action( 'wp_ajax_nopriv_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
 //   живой поиск по сайту
 		add_action( 'wp_ajax_fs_livesearch', array( $this, 'fs_livesearch' ) );
 		add_action( 'wp_ajax_nopriv_fs_livesearch', array( $this, 'fs_livesearch' ) );
 
 //  получение связанных постов категории
-		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
-		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( &$this, 'get_taxonomy_posts' ) );
+		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( $this, 'get_taxonomy_posts' ) );
+		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( $this, 'get_taxonomy_posts' ) );
 
 // добавление товара к сравнению
 		add_action( 'wp_ajax_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
@@ -49,7 +50,8 @@ class FS_Ajax_Class {
 
 
 	}
-  // привязка атрибута к товару
+
+	// привязка атрибута к товару
 	function fs_add_att_callback() {
 		global $fs_config;
 		$post = array_map( 'sanitize_text_field', $_POST );
@@ -67,9 +69,9 @@ class FS_Ajax_Class {
 			) );
 		} else {
 			echo json_encode( array(
-				'status'  => 1,
-				'term_name'=>get_term_field('name',intval( $post['term'] ),$fs_config->data['product_att_taxonomy']),
-				'message' => __( 'Атрибут успешно прикреплен к товару' )
+				'status'    => 1,
+				'term_name' => get_term_field( 'name', intval( $post['term'] ), $fs_config->data['product_att_taxonomy'] ),
+				'message'   => __( 'Атрибут успешно прикреплен к товару' )
 			) );
 		}
 		wp_die();
@@ -212,10 +214,10 @@ class FS_Ajax_Class {
 		if ( ! $fs_config::verify_nonce() ) {
 			die ( 'не пройдена верификация формы nonce' );
 		}
-		$fs_products = $_SESSION['cart'];
-		$fs_custom_products=serialize($_POST['fs_custom_product']);
-		$user_id     = 0;
-		$sum         = fs_get_total_amount( $fs_products );
+		$fs_products        = $_SESSION['cart'];
+		$fs_custom_products = serialize( $_POST['fs_custom_product'] );
+		$user_id            = 0;
+		$sum                = fs_get_total_amount( $fs_products );
 		global $wpdb;
 		$wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
@@ -294,16 +296,16 @@ class FS_Ajax_Class {
 		$defaults                              = array(
 			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
 			'post_content' => '',
-			'post_status'  => 'pending',
-			'post_type'    => 'orders',
+			'post_status'  => $fs_config->data['default_order_status'],
+			'post_type'    => $fs_config->data['post_type_orders'],
 			'post_author'  => 1,
 			'ping_status'  => get_option( 'default_ping_status' ),
 			'post_parent'  => 0,
 			'menu_order'   => 0,
 			'import_id'    => 0,
 			'meta_input'   => array(
-				'_user_id'  => $user_id,
-				'_user'     => array(
+				'_user_id'         => $user_id,
+				'_user'            => array(
 					'id'         => $user_id,
 					'first_name' => $sanitize_field['fs_first_name'],
 					'last_name'  => $sanitize_field['fs_last_name'],
@@ -311,16 +313,16 @@ class FS_Ajax_Class {
 					'phone'      => $sanitize_field['fs_phone'],
 					'city'       => $sanitize_field['fs_city']
 				),
-				'_products' => $fs_products,
+				'_products'        => $fs_products,
 				'_custom_products' => $fs_custom_products,
-				'_delivery' => array(
+				'_delivery'        => array(
 					'method'    => $sanitize_field['fs_delivery_methods'],
 					'secession' => $sanitize_field['fs_delivery_number'],
 					'adress'    => $sanitize_field['fs_adress']
 				),
-				'_payment'  => $sanitize_field['fs_payment_methods'],
-				'_amount'   => $sum,
-				'_comment'  => $sanitize_field['fs_comment']
+				'_payment'         => $sanitize_field['fs_payment_methods'],
+				'_amount'          => $sum,
+				'_comment'         => $sanitize_field['fs_comment']
 			),
 		);
 		$order_id                              = wp_insert_post( $defaults );

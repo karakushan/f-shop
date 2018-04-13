@@ -55,7 +55,8 @@ class FS_Config {
 			'product_del_taxonomy' => 'fs-delivery-methods',
 			'discount_taxonomy'    => 'fs-discounts',
 			'currencies_taxonomy'  => 'fs-currencies',
-			'preloader'            => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif'
+			'preloader'            => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif',
+			'default_order_status' => 'new' // статус заказа присваиваемый новому заказу
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
@@ -133,7 +134,9 @@ class FS_Config {
 			// максимальное количество
 			'variant_count_max' => 'fs_variant_count_max',
 			// включает вариативность товара
-			'variated_on'       => 'fs_variated_on'
+			'variated_on'       => 'fs_variated_on',
+			// исключает из архива товаров
+			'exclude_archive'   => 'fs_exclude_archive'
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );
@@ -339,10 +342,6 @@ class FS_Config {
 			'delivered'    => array(
 				'name'        => 'Доставляется',
 				'description' => 'Статус присваивается заказам, переданным курьеру. Заказ может сохранять этот статус достаточно долго, в зависимости от того как далеко находится клиент;'
-			),
-			'ready'        => array(
-				'name'        => 'Готов',
-				'description' => 'Cтатус присваивается заказу, если товар доставлен, оплачен, и его можно отправить в архив. Заказы с этим статусом нужны вам только для внутреннего учета.'
 			),
 			'refused'      => array(
 				'name'        => 'Отказан',
