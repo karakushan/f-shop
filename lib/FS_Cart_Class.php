@@ -43,8 +43,8 @@ class FS_Cart_Class {
 	// ajax обработка добавления в корзину
 	function add_to_cart_ajax() {
 		$product_id = (int) $_REQUEST['post_id'];
-		$attr       = ! empty( $_REQUEST['attr']['attr'] ) ? $_REQUEST['attr']['attr'] : array();
-		$count      = (int) $_REQUEST['attr']['count'];
+		$attr       = ! empty( $_REQUEST['attr'] ) ? [ 'attr' ] : array();
+		$count      = (int) $_REQUEST['count'];
 		if ( isset( $_SESSION['cart'][ $product_id ] ) ) {
 			$count_sess                      = $_SESSION['cart'][ $product_id ]['count'];
 			$_SESSION['cart'][ $product_id ] = array(

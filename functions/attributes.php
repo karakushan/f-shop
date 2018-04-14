@@ -462,7 +462,7 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 	}
 	$args  = wp_parse_args( $args, array(
 		'type'          => 'radio',
-		'wpapper'       => 'ul',
+		'wpapper'       =>'ul',
 		'wpapper_class' => 'fs-att-select-w',
 		'class'         => 'fs-att-select'
 	) );
@@ -479,9 +479,10 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 	if ( empty( $terms[ $parent ] ) ) {
 		return;
 	}
-	printf( '<%s class="%s">', $args['wpapper'], sanitize_html_class( $args['wpapper_class'] ) );
+
 	switch ( $args['type'] ) {
 		case 'radio':
+			printf( '<%s class="%s">', $args['wpapper'], sanitize_html_class( $args['wpapper_class'] ) );
 			$i = 0;
 			foreach ( $terms[ $parent ] as $term ) {
 				if ( $args['wpapper'] == 'ul' ) {
@@ -500,17 +501,18 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 			}
 
 			break;
+			printf( '</%s>', $args['wpapper'] );
 		case'select':
 			echo '<select ' . $tag_att . '>';
 			$i = 0;
 			foreach ( $terms[ $parent ] as $k => $term ) {
-				echo '<option value="' . $term->term_id . '"  ' . selected( 0, $i, 0 ) . ' >' . $term->name . '</option>';
+				echo '<option value="' . $term->term_id . '"  ' . selected( 0, $i, 0 ) . '  data-count="">' . $term->name . '</option>';
 				$i ++;
 			}
 			echo '</select>';
 			break;
 	}
-	printf( '</%s>', $args['wpapper'] );
+
 
 }
 

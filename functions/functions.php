@@ -673,7 +673,7 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	$post_id = fs_get_product_id( $post_id );
 	$attr    = wp_parse_args( $attr,
 		array(
-			'json'      => array( 'count' => 1, 'attr' => new stdClass() ),
+			'json'      => array(),
 			'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
 			'class'     => 'fs-add-to-cart',
 			'type'      => 'button',
@@ -693,6 +693,7 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 		'data-sku'          => fs_get_product_code( $post_id ),
 		'id'                => 'fs-atc-' . $post_id,
 		'data-attr'         => json_encode( $attr['json'] ),
+		'data-count'        => 1,
 		'data-image'        => esc_url( get_the_post_thumbnail_url( $post_id ) ),
 		'class'             => $attr['class'],
 		'data-variated'     => intval( get_post_meta( $post_id, $fs_config->meta['variated_on'], 1 ) )

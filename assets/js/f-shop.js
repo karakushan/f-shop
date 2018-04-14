@@ -201,6 +201,7 @@ jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
     var curent = jQuery(this);
     var product_id = curent.data('product-id');
     var attr = curent.data('attr');
+    var count = curent.data('count');
 
     // объект передаваемый в события
     var detail = {
@@ -211,6 +212,7 @@ jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
         currency: curent.data('currency'),
         sku: curent.data('sku'),
         category: curent.data('category'),
+        count: count,
         attr: attr,
         image: curent.data('image'),
         success: true,
@@ -222,10 +224,12 @@ jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
 
 
     var productObject = {
-        "action": 'add_to_cart',
-        "attr": attr,
-        'post_id': product_id
-    };
+            "action": 'add_to_cart',
+            "attr": attr,
+            "count": count,
+            'post_id': product_id
+        }
+    ;
     jQuery.ajax({
         url: FastShopData.ajaxurl,
         data: productObject,
@@ -285,59 +289,61 @@ jQuery('[data-action="change-attr"]').on('change', function () {
     var atcButton = jQuery('#fs-atc-' + productId); // получаем кнопку добавить в корзину
     var attrObj = atcButton.data('attr');// получаем  атрибуты кнопки "добавить в корзину" в виде объекта
     var variated = atcButton.data('variated');// узнаём вариативный товар или нет
+    var parent = curent.parents("[data-fs-type=\"product-item\"]");// обёртка для одной позиции товара
+
 
     // выключаем чекбоксы всей группе атрибутов
-    attrObj.attr = [];
+    attrObj = [];
     jQuery('[name="' + curent.attr('name') + '"]').each(function (index) {
         jQuery(this).prop('checked', false);
     });
     // делаем активным чекбокс на который нажали
     curent.prop('checked', true);
 
-    jQuery('[data-action="change-attr"]').each(function (index) {
-        if (jQuery(this).prop('checked') && jQuery(this).val()) {
-            attrObj.attr[index] = jQuery(this).val();
+    // добавляем значения выбраных элементов в data-attr нашей кнопки "в корзину"
+    parent.find('[data-action="change-attr"]').each(function (index) {
+        // если это радио кнопки выбора атрибутов
+        if (curent.attr("type") == 'radio') {
+            if (jQuery(this).data("product-id") == productId && jQuery(this).val() && jQuery(this).prop("checked")) {
+                attrObj[index] = jQuery(this).val();
+            }
+                // если это select выбора атрибутов
+        } else if (curent.attr("type").attr("type") == 'select') {
+            if (jQuery(this).data("product-id") == productId && jQuery(this).val()) {
+                attrObj[index] = jQuery(this).val();
+            }
         }
+
     });
 
     // производим очистку массыва атрибутов от пустых значений
-    attrObj.attr.clean(undefined);
+    attrObj.clean(undefined);
 
     // делаем аякс запрос для получения вариативной цены и подмены на сайте
     if (variated) {
         jQuery.ajax({
             type: 'POST',
             url: FastShopData.ajaxurl,
-            data: {action: "fs_get_variated", product_id: productId, atts: attrObj.attr},
+            data: {action: "fs_get_variated", product_id: productId, atts: attrObj},
             beforeSend: function () {
-                jQuery("[data-fs-element=\"price\"]").addClass('blink');
+                parent.find("[data-fs-element=\"price\"]").addClass('blink');
             },
             success: function (data) {
                 if (IsJsonString(data)) {
                     var json = jQuery.parseJSON(data);
-                    var priceFull = json.base_price + ' <span>' + json.currency + '</span>';
-                    if (json.result) {
-                        jQuery("[data-fs-element=\"price\"]").removeClass('blink').html(priceFull);
-                        attrObj.count = json.count;
-                        jQuery('[data-fs-action="change_count"]').val(json.count);
-                        jQuery("[data-fs-element=\"base-price\"]").parent().css('visibility', 'hidden');
-                        jQuery("[data-fs-element=\"discount\"]").parent().css('visibility', 'hidden');
-                    } else {
-                        jQuery("[data-fs-element=\"price\"]").html(priceFull);
-                        jQuery("[data-fs-element=\"base-price\"]").parent().css('visibility', 'visible');
-                        jQuery("[data-fs-element=\"discount\"]").parent().css('visibility', 'visible');
-                    }
+                    // создаём событие "fs_after_change_att"
+                    var fs_after_change_att = new CustomEvent("fs_after_change_att", {
+                        detail: {
+                            el: curent,
+                            productId: productId,
+                            data: json
+                        }
+                    });
+                    document.dispatchEvent(fs_after_change_att);
                 } else {
                     console.log(data);
                 }
 
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
-            },
-            complete: function () {
-                //afer ajax call is completed
             }
         });
 
