@@ -303,17 +303,15 @@ jQuery('[data-action="change-attr"]').on('change', function () {
     // добавляем значения выбраных элементов в data-attr нашей кнопки "в корзину"
     parent.find('[data-action="change-attr"]').each(function (index) {
         // если это радио кнопки выбора атрибутов
-        if (curent.attr("type") == 'radio') {
-            if (jQuery(this).data("product-id") == productId && jQuery(this).val() && jQuery(this).prop("checked")) {
+        if (jQuery(this).data("product-id") == productId && jQuery(this).val()) {
+            if (jQuery(this).attr("type") == "radio" && jQuery(this).prop("checked")) {
                 attrObj[index] = jQuery(this).val();
             }
-                // если это select выбора атрибутов
-        } else if (curent.attr("type").attr("type") == 'select') {
-            if (jQuery(this).data("product-id") == productId && jQuery(this).val()) {
+            // если это не радио кнопки выбора атрибутов
+            if (jQuery(this).attr("type") != "radio") {
                 attrObj[index] = jQuery(this).val();
             }
         }
-
     });
 
     // производим очистку массыва атрибутов от пустых значений

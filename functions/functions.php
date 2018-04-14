@@ -902,7 +902,7 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 	) );
 	$pluss      = sprintf( '<button type="button" class="%s" data-fs-count="pluss" data-target="#product-quantify-%s">%s</button> ', $args['pluss_class'], $product_id, $args['pluss_content'] );
 	$minus      = sprintf( '<button type="button" class="%s" data-fs-count="minus" data-target="#product-quantify-%s">%s</button>', $args['minus_class'], $product_id, $args['minus_content'] );
-	$input      = sprintf( '<input type="text" class="%s" name="count" value="1" data-fs-action="change_count" id="product-quantify-%s" data-fs-product-id="%s">', $args['input_class'], $product_id, $product_id );
+	$input      = sprintf( '<input type="text" class="%s" name="count" value="1" data-fs-action="change_count" data-fs-product-id="%s">', $args['input_class'], $product_id, $product_id );
 	$quantity   = str_replace(
 		array(
 			'%pluss%',
