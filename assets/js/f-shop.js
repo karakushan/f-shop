@@ -200,8 +200,12 @@ jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
 
     var curent = jQuery(this);
     var product_id = curent.data('product-id');
-    var attr = curent.data('attr');
-    var count = curent.data('count');
+    var attr = curent.attr('data-attr');
+    var count = curent.attr('data-count');
+
+    if(!attr){
+
+    }
 
     // объект передаваемый в события
     var detail = {
@@ -347,7 +351,7 @@ jQuery('[data-action="change-attr"]').on('change', function () {
 
     }
 
-    jQuery('#fs-atc-' + productId).attr('data-attr', JSON.stringify(attrObj));
+    jQuery('#fs-atc-' + productId).attr('data-attr', attrObj);
 });
 
 //Образует js объект с данными о продукте и помещает в кнопку добавления в корзину в атрибут 'data-json'
@@ -554,7 +558,8 @@ if (typeof fs_lightslider_options != "undefined") {
 jQuery(document).ready(function (jQuery) {
     // уменьшение к-ва товара на единицу
     jQuery(document).on('click', '[data-fs-count="minus"]', function () {
-        var jQueryinput = jQuery(jQuery(this).data('target'));
+        var parent = jQuery(this).parents('[data-fs-element="fs-quantity"]');
+        var jQueryinput = parent.find('input');
         var count = parseInt(jQueryinput.val()) - 1;
         count = count < 1 ? 1 : count;
         jQueryinput.val(count);
@@ -564,7 +569,8 @@ jQuery(document).ready(function (jQuery) {
 
     // увеличение к-ва товара на единицу
     jQuery(document).on('click', '[data-fs-count="pluss"]', function () {
-        var jQueryinput = jQuery(jQuery(this).data('target'));
+        var parent = jQuery(this).parents('[data-fs-element="fs-quantity"]');
+        var jQueryinput = parent.find('input');
         jQueryinput.val(parseInt(jQueryinput.val()) + 1);
         jQueryinput.change();
         return false;
@@ -574,6 +580,7 @@ jQuery(document).ready(function (jQuery) {
     jQuery('[data-fs-action="change_count"]').on('change input', function (event) {
         event.preventDefault();
         /* Act on the event */
+
         var productId = jQuery(this).data('fs-product-id');
         var count = jQuery(this).val();
         if (count < 1) {
@@ -581,9 +588,7 @@ jQuery(document).ready(function (jQuery) {
             count = 1;
         }
         var cartButton = jQuery('#fs-atc-' + productId);
-        var cartButtonAttr = cartButton.data('attr');
-        cartButtonAttr.count = count;
-        cartButton.attr('data-attr', JSON.stringify(cartButtonAttr));
+        cartButton.attr('data-count', count);
         // создаём событие
         var change_count = new CustomEvent("fs_change_count", {
             detail: {count: count}
@@ -623,7 +628,6 @@ jQuery(document).ready(function (jQuery) {
                 try {
                     var json = JSON.parse(result);
                     if (json.status) {
-                        jQuery("[data-fs-element=\"total-amount\"]").text(json.total);
                         // создаём событие
                         var cart_change_count = new CustomEvent("fs_cart_change_count", {
                             detail: {count: productCount, total: json.total}
@@ -921,6 +925,13 @@ document.addEventListener("fs_before_to_wishlist", function (event) {
     // действие которое инициирует событие, здесь может быть любой ваш код
     var button = event.detail.button;
     button.find('.fs-wh-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
+    event.preventDefault();
+}, false);
+
+// Событие срабатывает перед добавлением товара в список желаний
+document.addEventListener("fs_cart_change_count", function (event) {
+    // здесь может быть любой ваш код
+    document.location.reload();
     event.preventDefault();
 }, false);
 

@@ -664,14 +664,23 @@ function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = arra
 /**
  * [Отображает кнопку "в корзину" со всеми необходимыми атрибутамии]
  *
- * @param  int $post_id [id поста (оставьте пустым в цикле wordpress)]
+ * @param  int $product_id [id поста (оставьте пустым в цикле wordpress)]
  * @param  string $label [надпись на кнопке]
  * @param  array $attr дополнительные атрибуты
  */
-function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
+function fs_add_to_cart( $product_id = 0, $label = '', $attr = array() ) {
 	global $fs_config;
-	$post_id = fs_get_product_id( $post_id );
-	$attr    = wp_parse_args( $attr,
+	$product_id  = fs_get_product_id( $product_id );
+	$set_atts = [];
+	if ( fs_is_variated( $product_id ) ) {
+		$variants = get_post_meta( $product_id, 'fs_variant', 0 );
+		if ( ! empty($variants[0][0] ) ) {
+			foreach ( $variants[0][0] as $variant ) {
+				$set_atts[]=$variant;
+			}
+		}
+	}
+	$attr = wp_parse_args( $attr,
 		array(
 			'json'      => array(),
 			'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
@@ -686,20 +695,20 @@ function fs_add_to_cart( $post_id = 0, $label = '', $attr = array() ) {
 	// устанавливаем html атрибуты кнопки
 	$attr_set = array(
 		'data-action'       => 'add-to-cart',
-		'data-product-id'   => $post_id,
-		'data-product-name' => get_the_title( $post_id ),
-		'data-price'        => fs_get_price( $post_id ),
+		'data-product-id'   => $product_id,
+		'data-product-name' => get_the_title( $product_id ),
+		'data-price'        => fs_get_price( $product_id ),
 		'data-currency'     => fs_currency(),
-		'data-sku'          => fs_get_product_code( $post_id ),
-		'id'                => 'fs-atc-' . $post_id,
-		'data-attr'         => json_encode( $attr['json'] ),
+		'data-sku'          => fs_get_product_code( $product_id ),
+		'id'                => 'fs-atc-' . $product_id,
+		'data-attr'         => implode( ',', $set_atts ),
 		'data-count'        => 1,
-		'data-image'        => esc_url( get_the_post_thumbnail_url( $post_id ) ),
+		'data-image'        => esc_url( get_the_post_thumbnail_url( $product_id ) ),
 		'class'             => $attr['class'],
-		'data-variated'     => intval( get_post_meta( $post_id, $fs_config->meta['variated_on'], 1 ) )
+		'data-variated'     => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
 	);
 	// помещаем название категории в дата атрибут category
-	$category = get_the_terms( $post_id, $fs_config->data['product_taxonomy'] );
+	$category = get_the_terms( $product_id, $fs_config->data['product_taxonomy'] );
 	if ( ! empty( $category ) ) {
 		$attr_set['data-category'] = array_pop( $category )->name;
 	}
@@ -900,8 +909,8 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		'input_class'   => 'fs-quantity',
 		'echo'          => true
 	) );
-	$pluss      = sprintf( '<button type="button" class="%s" data-fs-count="pluss" data-target="#product-quantify-%s">%s</button> ', $args['pluss_class'], $product_id, $args['pluss_content'] );
-	$minus      = sprintf( '<button type="button" class="%s" data-fs-count="minus" data-target="#product-quantify-%s">%s</button>', $args['minus_class'], $product_id, $args['minus_content'] );
+	$pluss      = sprintf( '<button type="button" class="%s" data-fs-count="pluss">%s</button> ', $args['pluss_class'], $args['pluss_content'] );
+	$minus      = sprintf( '<button type="button" class="%s" data-fs-count="minus">%s</button>', $args['minus_class'], $args['minus_content'] );
 	$input      = sprintf( '<input type="text" class="%s" name="count" value="1" data-fs-action="change_count" data-fs-product-id="%s">', $args['input_class'], $product_id, $product_id );
 	$quantity   = str_replace(
 		array(
@@ -914,7 +923,7 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 			$input,
 			$minus
 		), $args['position'] );
-	$quantity   = sprintf( '<%s class="%s"> %s </%s>', $args['wrapper'], $args['wrapper_class'], $quantity, $args['wrapper'] );
+	$quantity   = sprintf( '<%s class="%s" data-fs-element="fs-quantity"> %s </%s>', $args['wrapper'], $args['wrapper_class'], $quantity, $args['wrapper'] );
 	if ( $args['echo'] ) {
 		echo $quantity;
 	} else {
@@ -949,7 +958,7 @@ function fs_cart_quantity( $product_id, $value, $args = array() ) {
 		$minus,
 		$input
 	), $args['position'] );
-	printf( '<%s class="%s">%s</%s>',
+	printf( '<%s class="%s"  data-fs-element="fs-quantity">%s</%s>',
 		$args['wrapper'],
 		$args['wrapper_class'],
 		$quantity,
