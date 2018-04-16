@@ -97,7 +97,7 @@ class FS_Settings_Class {
 				'name'   => __( 'Letters', 'fast-shop' ),
 				'fields' => array(
 					0 => array(
-						'type'  => 'email',
+						'type'  => 'text',
 						'name'  => 'manager_email',
 						'label' => 'Куда отправлять письма',
 						'help'  => 'можно указать несколько адресатов через запятую',

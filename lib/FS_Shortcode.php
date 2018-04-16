@@ -55,49 +55,6 @@ class FS_Shortcode {
 	 *
 	 */
 	public function cart_shortcode() {
-
-
-		$template_row_before = TEMPLATEPATH . '/fast-shop/cart/product-row-before.php';
-		$plugin_row_before   = FS_PLUGIN_PATH . 'templates/front-end/cart/product-row-before.php';
-
-		$template_row = TEMPLATEPATH . '/fast-shop/cart/product-row.php';
-		$plugin_row   = FS_PLUGIN_PATH . 'templates/front-end/cart/product-row.php';
-
-		$template_row_after = TEMPLATEPATH . '/fast-shop/cart/product-row-after.php';
-		$plugin_row_after   = FS_PLUGIN_PATH . 'templates/front-end/cart/product-row-after.php';
-
-		$template_none_plugin = FS_PLUGIN_PATH . 'templates/front-end/cart/cart-empty.php';
-		$template_none_theme  = TEMPLATEPATH . '/fast-shop/cart/cart-empty.php';
-		//получаем содержимое корзины (сессии)
-		$carts = fs_get_cart();
-
-		if ( $carts ) {
-			if ( file_exists( $template_row_before ) ) {
-				include( $template_row_before );
-			} else {
-				include( $plugin_row_before );
-			}
-
-			foreach ( $carts as $id => $product ) {
-				$GLOBALS['product'] = $product;
-				if ( file_exists( $template_row ) ) {
-					include( $template_row );
-				} else {
-					include( $plugin_row );
-				}
-			}
-			if ( file_exists( $template_row_after ) ) {
-				include( $template_row_after );
-			} else {
-				include( $plugin_row_after );
-			}
-		} else {
-			if ( file_exists( $template_none_theme ) ) {
-				include( $template_none_theme );
-			} else {
-				include( $template_none_plugin );
-			}
-		}
 	}
 
 	/**

@@ -294,21 +294,6 @@ function fs_footer_html() {
 
 add_action( 'wp_footer', 'fs_footer_html' );
 
-// заменяет имя отправителя писем
-add_filter( 'wp_mail_from_name', 'fs_wp_mail_from_name' );
-function fs_wp_mail_from_name( $from_name ) {
-	return apply_filters( 'the_title', fs_option( 'name_sender', $from_name ) );
-}
-
-//  заменяет почту отправителя писем
-add_filter( 'wp_mail_from', 'fs_wp_mail_from' );
-function fs_wp_mail_from( $from_email ) {
-	$from_email = fs_option( 'email_sender', $from_email );
-
-	return $from_email;
-}
-
-
 add_filter( 'wp_dropdown_cats', 'fs_dropdown_cats_multiple', 10, 2 );
 function fs_dropdown_cats_multiple( $output, $r ) {
 

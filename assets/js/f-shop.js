@@ -203,9 +203,6 @@ jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
     var attr = curent.attr('data-attr');
     var count = curent.attr('data-count');
 
-    if(!attr){
-
-    }
 
     // объект передаваемый в события
     var detail = {
@@ -564,6 +561,7 @@ jQuery(document).ready(function (jQuery) {
         count = count < 1 ? 1 : count;
         jQueryinput.val(count);
         jQueryinput.change();
+
         return false;
     });
 
@@ -591,7 +589,7 @@ jQuery(document).ready(function (jQuery) {
         cartButton.attr('data-count', count);
         // создаём событие
         var change_count = new CustomEvent("fs_change_count", {
-            detail: {count: count}
+            detail: {count: count, productId: productId}
         });
         document.dispatchEvent(change_count);
     });

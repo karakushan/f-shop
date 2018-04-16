@@ -61,21 +61,25 @@ function fs_activate() {
 			'read'    => true,
 			'level_0' => true
 		) );
-	// Добавляем страницы
-	if ( \FS\FS_Config::$pages ) {
-		foreach ( \FS\FS_Config::$pages as $key => $page ) {
-			$post_id = wp_insert_post( array(
-				'post_title'   => wp_strip_all_tags( $page['title'] ),
-				'post_content' => $page['content'],
-				'post_type' => 'page',
-				'post_status' => 'publish',
-				'post_name'    => 'fs-' . $key
-			) );
-			if ( $post_id ) {
-				update_option( $page['option'], intval( $post_id ) );
+	if ( ! get_option( 'fs_has_activated', 0 ) ) {
+// Добавляем страницы
+		if ( \FS\FS_Config::$pages ) {
+			foreach ( \FS\FS_Config::$pages as $key => $page ) {
+				$post_id = wp_insert_post( array(
+					'post_title'   => wp_strip_all_tags( $page['title'] ),
+					'post_content' => $page['content'],
+					'post_type'    => 'page',
+					'post_status'  => 'publish',
+					'post_name'    => 'fs-' . $key
+				) );
+				if ( $post_id ) {
+					update_option( $page['option'], intval( $post_id ) );
+					update_option( 'fs_has_activated', 1 );
+				}
 			}
 		}
 	}
+
 
 }
 
