@@ -83,7 +83,7 @@ class FS_Orders_Class {
 		echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __( 'Date of purchase', 'fast-shop' ) . ': <b> ' . get_the_date( "j.m.Y H:i" ) . '</b></p>';
 		echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __( 'Last modified', 'fast-shop' ) . ':  <b>' . get_the_modified_date( "j.m.Y H:i" ) . '</b></p>';
 		if ( $this->order_statuses ) {
-			echo '<p><label for="fs-post_status"><span class="dashicons dashicons-post-status"></span> '.__('Status').'</label>';
+			echo '<p><label for="fs-post_status"><span class="dashicons dashicons-post-status"></span> ' . __( 'Status' ) . '</label>';
 			echo '<p><select id="fs-post_status" name="post_status">';
 			foreach ( $this->order_statuses as $key => $order_status ) {
 				echo '<option value="' . esc_attr( $key ) . '" ' . selected( get_post_status( $post->ID ), $key, 0 ) . '>' . esc_attr( $order_status['name'] ) . '</option>';
@@ -91,7 +91,7 @@ class FS_Orders_Class {
 			echo '</select></p>';
 		}
 		echo '<p><input type="submit" name="save" id="save-post" value="' . __( 'Save' ) . '" class="button button-primary button-large"></p>';
-	  echo '<div class="clear"></div>';
+		echo '<div class="clear"></div>';
 		echo '<p><a class="submitdelete deletion" href="' . get_delete_post_link( $post->ID ) . '">' . __( 'Delete' ) . '</a></p>';
 		echo '<div class="clear"></div>';
 	}
@@ -272,13 +272,11 @@ class FS_Orders_Class {
 	 *
 	 * @return string
 	 */
-	public
-	static function get_order_status(
-		$order_id
-	) {
+	public function get_order_status( $order_id ) {
 		$post_status_id = get_post_status( $order_id );
-		if ( $post_status_id ) {
-			$status = self::$order_statuses[ $post_status_id ]['name'];
+
+		if ( ! empty( $this->order_statuses[ $post_status_id ]['name'] ) ) {
+			$status = $this->order_statuses[ $post_status_id ]['name'];
 		} else {
 			$status = __( 'The order status is not defined', 'fast-shop' );
 		}
@@ -322,8 +320,7 @@ class FS_Orders_Class {
 	 *
 	 * @return \stdClass
 	 */
-	public
-	static function get_order(
+	public function get_order(
 		$order_id = 0
 	) {
 		global $fs_config;
@@ -346,8 +343,10 @@ class FS_Orders_Class {
 			$order->delivery['method'] = get_term_field( 'name', $order->delivery['method'], $fs_config->data['product_del_taxonomy'] );
 		}
 		$order->sum       = fs_get_total_amount( $order->items );
-		$order->status    = self::get_order_status( $order_id );
+		$order->status    = $this->get_order_status( $order_id );
 		$order->user_name = get_user_meta( $order->user['id'], 'nickname', true );
+		$order->exists    = ! get_post( $order_id ) ? false : true;
+
 
 		return $order;
 	}

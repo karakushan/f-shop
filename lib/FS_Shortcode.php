@@ -68,21 +68,40 @@ class FS_Shortcode {
 		if ( ! isset( $_REQUEST['order_detail'] ) ) {
 			return;
 		}
-		$order_id = intval( $_REQUEST['order_detail'] );
+		$curent_user = wp_get_current_user();
+		$orders_cl   = new FS_Orders_Class;
+		$order_id    = intval( $_REQUEST['order_detail'] );
 		// белый список параметров и значения по умолчанию
 		$atts = shortcode_atts( array(
 			'class'    => 'fs-order-info',
 			'order_id' => $order_id,
-			'order'    => FS_Orders_Class::get_order( $order_id ),
+			'order'    => $orders_cl->get_order( $order_id ),
 			'payment'  => new FS_Payment_Class()
 
 		), $atts );
 
-		if ( empty( $order_id ) ) {
-			return '<p class="fs-order-detail">' . __( 'Details of this order are not available for you', 'fast-shop' ) . '</p>';
+		$errors = new \WP_Error();
+
+		if ( ! is_user_logged_in() ) {
+			$errors->add( 'fs-no-user', __( 'Register to view this page', 'fast-shop' ) );
 		}
 
-		return fs_frontend_template( 'shortcode/fs-order-info', $atts );
+		if ( ! $atts['order']->exists || empty( $order_id ) ) {
+			$errors->add( 'fs-no-order', __( 'Order not found', 'fast-shop' ) );
+		}
+
+		if ( $curent_user->user_login != $atts['order']->user_name ) {
+			$errors->add( 'fs-no-access-order', __( 'Details of this order are not available for you', 'fast-shop' ) );
+		}
+
+		if ( $errors->get_error_code() ) {
+			foreach ( $errors->get_error_messages() as $error ) {
+				echo '<p class="fs-order-detail">' . $error . '</p>';
+			}
+		} else {
+			return fs_frontend_template( 'shortcode/fs-order-info', $atts );
+		}
+
 
 	}
 

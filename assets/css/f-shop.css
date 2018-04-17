@@ -834,7 +834,8 @@ td.fs_photo.column-fs_photo img {
       text-transform: none; }
       .fs-order-info .table tbody tr td img {
         width: 100px;
-        border: 1px solid #dee2e6; }
+        border: 1px solid #dee2e6;
+        height: auto; }
   .fs-order-info h3 {
     margin: 0 0 15px;
     padding: 0;
