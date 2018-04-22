@@ -49,7 +49,7 @@ function fs_dropdown_attr_group( $group_id = 0, $post_id = 0, $args = array() ) 
 		echo '<option value="">Выберите</option>';
 		foreach ( $terms as $term ) {
 			if ( $term->parent == $group_id ) {
-				echo '<option value="' . $term->term_id . '">' . $term->name . '</option>';
+				echo '<option value="' . esc_attr( $term->term_id ) . '">' . esc_attr( $term->name ) . '</option>';
 			}
 		}
 		echo '<select>';
@@ -170,7 +170,7 @@ function fs_the_price( $product_id = 0, $wrap = "%s <span>%s</span>", $args = ar
 	$product_id = fs_get_product_id( $product_id );
 	$price      = fs_get_price( $product_id );
 	$price      = apply_filters( 'fs_price_format', $price );
-	printf( '<span data-fs-element="price" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
+	printf( '<span data-fs-element="price" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . esc_html( $wrap ) . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
 }
 
 /**
@@ -376,7 +376,7 @@ function fs_total_amount_filtering( $products = array(), $show = true, $wrap = '
 	if ( $show == false ) {
 		return $price;
 	} else {
-		echo $price;
+		echo esc_attr( $price );
 	}
 }
 
@@ -402,7 +402,7 @@ function fs_total_wholesale_amount( $products = array(), $echo = true, $wrap = '
 	$amount = apply_filters( 'fs_price_format', $amount );
 	$amount = sprintf( $wrap, $amount, fs_currency() );
 	if ( $echo ) {
-		echo $amount;
+		echo esc_attr( $amount );
 	} else {
 		return $amount;
 	}
@@ -609,7 +609,7 @@ function fs_product_count( $products = array(), $echo = true ) {
 	$count = array_sum( $all_count );
 	$count = (int) $count;
 	if ( $echo ) {
-		echo $count;
+		echo esc_attr( $count );
 	} else {
 		return $count;
 	}
@@ -841,7 +841,7 @@ function fs_cart_widget( $attr = array() ) {
 function fs_cart_url( $show = true ) {
 	$cart_page = get_permalink( fs_option( 'page_cart', 0 ) );
 	if ( $show == true ) {
-		echo $cart_page;
+		echo esc_url( $cart_page );
 	} else {
 		return $cart_page;
 	}
@@ -857,7 +857,7 @@ function fs_cart_url( $show = true ) {
 function fs_checkout_url( $show = true ) {
 	$checkout_page_id = fs_option( 'page_payment', 0 );
 	if ( $show == true ) {
-		echo get_permalink( $checkout_page_id );
+		echo esc_url( get_permalink( $checkout_page_id ) );
 	} else {
 		return get_permalink( $checkout_page_id );
 	}
@@ -960,7 +960,7 @@ function fs_cart_quantity( $product_id, $value, $args = array() ) {
 	), $args['position'] );
 	printf( '<%s class="%s"  data-fs-element="fs-quantity">%s</%s>',
 		$args['wrapper'],
-		$args['wrapper_class'],
+		esc_attr( $args['wrapper_class'] ),
 		$quantity,
 		$args['wrapper']
 	);
@@ -1123,16 +1123,16 @@ function fs_attr_group_filter( $group, $type = 'option', $option_default = 'Вы
 function fs_range_slider() {
 
 	$price_max = fs_price_max();
-	$curency   = fs_currency();
-	$slider    = '<div class="slider">
+	$curency   = fs_currency(); ?>
+  <div class="slider">
     <div data-fs-element="range-slider" id="range-slider"></div>
     <div class="fs-price-show">
-        <span data-fs-element="range-start">0 <span>' . $curency . '</span></span>
-        <span data-fs-element="range-end">' . $price_max . ' <span>' . $curency . '</span>
+      <span data-fs-element="range-start">0 <span><?php echo $curency ?></span></span>
+      <span data-fs-element="range-end"><?php echo $price_max ?> <span><?php echo $curency ?></span>
     </span>
-</div>
-</div>';
-	echo $slider;
+    </div>
+  </div>
+	<?php
 }//end range_slider()
 
 /**
