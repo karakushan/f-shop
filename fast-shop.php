@@ -43,7 +43,7 @@ define( 'FS_LANG_PATH', dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 /* Инициализируем плагин */
 if ( ! class_exists( '\FS\FS_Init', false ) ) {
-	$fs_init              = new \FS\FS_Init;
+	$GLOBALS['f_shop']    = new \FS\FS_Init;
 	$GLOBALS['fs_config'] = new FS\FS_Config();
 }
 
