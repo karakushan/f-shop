@@ -55,6 +55,7 @@ class FS_Shortcode {
 	 *
 	 */
 	public function cart_shortcode() {
+		return fs_frontend_template( 'order/products-list' );
 	}
 
 	/**

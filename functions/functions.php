@@ -487,13 +487,13 @@ function fs_get_cart( $args = array() ) {
 				'id'         => $key,
 				'name'       => get_the_title( $key ),
 				'count'      => $c,
-				'thumb'      => get_the_post_thumbnail_url( $key, $args['thumbnail_size'] ),
+				'thumb'      => get_the_post_thumbnail( $key, $args['thumbnail_size'] ),
 				'attr'       => $attr,
 				'link'       => get_permalink( $key ),
 				'price'      => sprintf( $args['price_format'], $price_show, fs_currency() ),
 				'base_price' => $base_price,
 				'all_price'  => sprintf( $args['price_format'], $all_price, fs_currency() ),
-				'code'       => fs_get_product_code( $key ),
+				'sku'        => fs_get_product_code( $key ),
 				'currency'   => fs_currency()
 			);
 		}
@@ -670,13 +670,13 @@ function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = arra
  */
 function fs_add_to_cart( $product_id = 0, $label = '', $attr = array() ) {
 	global $fs_config;
-	$product_id  = fs_get_product_id( $product_id );
-	$set_atts = [];
+	$product_id = fs_get_product_id( $product_id );
+	$set_atts   = [];
 	if ( fs_is_variated( $product_id ) ) {
 		$variants = get_post_meta( $product_id, 'fs_variant', 0 );
-		if ( ! empty($variants[0][0] ) ) {
+		if ( ! empty( $variants[0][0] ) ) {
 			foreach ( $variants[0][0] as $variant ) {
-				$set_atts[]=$variant;
+				$set_atts[] = $variant;
 			}
 		}
 	}
