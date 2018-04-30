@@ -170,7 +170,7 @@ function fs_the_price( $product_id = 0, $wrap = "%s <span>%s</span>", $args = ar
 	$product_id = fs_get_product_id( $product_id );
 	$price      = fs_get_price( $product_id );
 	$price      = apply_filters( 'fs_price_format', $price );
-	printf( '<span data-fs-element="price" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . esc_html( $wrap ) . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
+	printf( '<span data-fs-element="price" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
 }
 
 /**

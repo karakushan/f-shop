@@ -31,15 +31,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/* Подключаем composer (автозагрузка классов, подробнее: https://getcomposer.org/)*/
-require_once __DIR__ . '/vendor/autoload.php';
+/* автозагрузка классов */
+require_once __DIR__ . '/autoload.php';
+/* подключение файлов функций */
+require_once __DIR__ . '/functions/functions.php';
+require_once __DIR__ . '/functions/actions.php';
+require_once __DIR__ . '/functions/attributes.php';
+require_once __DIR__ . '/functions/filters.php';
 
 /* Основные константы для упрощения режим разработки, сокращения написания путей и пр. */
 define( 'FS_PLUGIN_VER', '1.2' ); // версия плагина
+define( 'FS_PLUGIN_PREFIX', 'fs_' ); // префикс файлов
 define( 'FS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) ); // абсолютный системный путь
 define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // абсолютный путь с http(s)
 define( 'FS_BASENAME', plugin_basename( __FILE__ ) ); // относительный путь типа my-plugin/my-plugin.php
 define( 'FS_LANG_PATH', dirname( plugin_basename( __FILE__ ) ) . '/languages' ); // путь к папке с переводами
+
+$GLOBALS['fs_error'] = new WP_Error();
 
 /* Инициализируем плагин */
 if ( ! class_exists( '\FS\FS_Init', false ) ) {
