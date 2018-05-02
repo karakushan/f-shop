@@ -52,10 +52,9 @@ class FS_Api_Class {
 			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['product_att_taxonomy'] );
 			do_action( 'fs_delete_products' );
 			do_action( 'fs_delete_orders' );
+		} else {
+			do_action( 'fs_admin_custom_api', $api_command );
 		}
-
-		do_action( 'fs_custom_api' );
-
 	}
 
 	/**
@@ -75,6 +74,8 @@ class FS_Api_Class {
 				unset( $_SESSION['fs_wishlist'][ $product_id ] );
 				wp_redirect( remove_query_arg( array( 'fs-user-api', 'product_id' ) ) );
 			}
+		} else {
+			do_action( 'fs_user_custom_api', $api_command );
 		}
 
 	}

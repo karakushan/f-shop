@@ -31,6 +31,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+ini_set( 'max_execution_time', 0 ); //0=NOLIMIT
+set_time_limit( 0 );
+
 /* Подключаем composer (автозагрузка классов, подробнее: https://getcomposer.org/)*/
 require_once __DIR__ . '/vendor/autoload.php';
 
