@@ -1,11 +1,94 @@
-<tr style="background-color:white">
-<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo $id ?></td>
-	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo fs_product_code($id) ?></td>
-	<td style="border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><a href="<?php echo get_permalink($id) ?>" style="color:rgb(0,153,255)" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=uk&q=<?php echo get_permalink($id) ?>&source=gmail&ust=1481615972810000&usg=AFQjCNHcicJw0rhYpLSnLJduK-9aKidVlw"><?php echo get_the_title($id) ?></a></td>
-	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo $product['count'] ?> шт.</td>
-	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php fs_the_wholesale_price($id) ?></td>
-	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo number_format(fs_get_price($id,false), 2, ',', ' '); ?> <?php echo fs_currency() ?></td>
-	
-	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo fs_row_wholesale_price($id,$product['count'])?></td>
-	<td style="text-align:center;border-width:1px;border-style:solid;border-color:rgb(212,223,230);padding:3px 5px"><?php echo fs_row_price($id,$product['count'],true,'%s <span>%s</span>',false) ?></td>
-</tr>
+<?php $cart = fs_get_cart() ?>
+<?php if ( count( $cart ) ): ?>
+  <div class="width">
+    <div class="width widthTable">
+      <table>
+        <thead>
+        <tr>
+          <td>
+            Фото
+          </td>
+          <td>
+            Товар
+          </td>
+          <td>
+            артикул
+          </td>
+          <td>
+            цена
+          </td>
+          <td>
+            количество
+          </td>
+          <td>
+            стоимость
+          </td>
+          <td></td>
+        </tr>
+        </thead>
+        <tbody>
+		<?php foreach ( $cart as $c ): ?>
+          <tr>
+            <td>
+				<?php echo $c['thumb'] ?>
+            </td>
+            <td>
+              <div class="info">
+                <span class="name"><?php echo $c['name'] ?></span>
+                <span class="size">Размер: S</span>
+                <span class="color">
+                                    Цвет:
+                                    <span class="colorB" style="background-color: #fd6ec3"></span>
+                                    <span class="nameColor">розовый</span>
+                                </span>
+              </div>
+            </td>
+            <td>
+				<?php echo $c['sku'] ?>
+            </td>
+            <td>
+				<?php echo $c['all_price'] ?>
+            </td>
+            <td>
+				<?php do_action( 'fs_cart_quantity', $c['id'], $c['count'], array(
+					'wrapper_class' => 'count',
+					'position'      => '%input% %pluss%  %minus%',
+					'pluss'         => array( 'class' => 'plus', 'content' => '' ),
+					'minus'         => array( 'class' => 'minus', 'content' => '' ),
+					'input'         => array( 'class' => 'fs-cart-quantity' )
+				) ) ?>
+            </td>
+            <td>
+				<?php echo $c['all_price'] ?>
+            </td>
+            <td>
+				<?php fs_delete_position( $c['id'], array( 'class' => 'remove' ) ) ?>
+            </td>
+          </tr>
+		<?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+    <div class="width btnBlockBasket">
+      <a href="">
+        продолжить покупки
+      </a>
+      <a href="" class="blue">
+        очистить корзину
+      </a>
+    </div>
+    <div class="width informBasket">
+      <p>
+        Стоимость товаров: <?php fs_total_amount() ?>
+      </p>
+      <p>
+        Доставка: 0 грн
+      </p>
+      <p>
+        <b>
+          Итого: <?php fs_total_amount() ?>
+        </b>
+      </p>
+    </div>
+  </div>
+<?php endif; ?>

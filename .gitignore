@@ -1,4 +1,3 @@
 *.orig
 /app/node_modules/
 
-/vendor/
