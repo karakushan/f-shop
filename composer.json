@@ -1,0 +1,15 @@
+{
+  "name": "karak/f-shop",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "FS\\": "lib"
+    },
+    "files": [
+      "functions/functions.php",
+      "functions/actions.php",
+      "functions/attributes.php",
+      "functions/filters.php"
+    ]
+  }
+}
