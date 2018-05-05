@@ -47,9 +47,13 @@ class FS_Api_Class {
 		} elseif ( $api_command == 'drop_att' ) {
 			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['product_att_taxonomy'] );
 			// удаляет все товары а вместе с ними категории и свойства
+		} elseif ( $api_command == 'drop_curr' ) {
+			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['currencies_taxonomy'] );
+			// удаляет все товары а вместе с ними категории и свойства
 		} elseif ( $api_command == 'drop_all' ) {
 			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['product_taxonomy'] );
 			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['product_att_taxonomy'] );
+			do_action( 'fs_delete_taxonomy_terms', $fs_config->data['currencies_taxonomy'] );
 			do_action( 'fs_delete_products' );
 			do_action( 'fs_delete_orders' );
 		} else {
