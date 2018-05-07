@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-07 10:27+0000\n"
+"POT-Creation-Date: 2018-05-07 10:57+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -276,19 +276,19 @@ msgstr ""
 msgid "Select page"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:85
+#: lib/FS_Orders_Class.php:86
 msgid "Date of purchase"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:86
+#: lib/FS_Orders_Class.php:87
 msgid "Last modified"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:104
+#: lib/FS_Orders_Class.php:105
 msgid "Order number is not specified"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:283
+#: lib/FS_Orders_Class.php:284
 msgid "The order status is not defined"
 msgstr ""
 
@@ -367,15 +367,19 @@ msgstr ""
 msgid "Store settings"
 msgstr ""
 
-#: lib/FS_Shortcode.php:102
+#: lib/FS_Shortcode.php:48
+msgid "No items found in shopping cart"
+msgstr ""
+
+#: lib/FS_Shortcode.php:113
 msgid "Register to view this page"
 msgstr ""
 
-#: lib/FS_Shortcode.php:106
+#: lib/FS_Shortcode.php:117
 msgid "Order not found"
 msgstr ""
 
-#: lib/FS_Shortcode.php:110
+#: lib/FS_Shortcode.php:121
 msgid "Details of this order are not available for you"
 msgstr ""
 

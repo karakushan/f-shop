@@ -13,6 +13,7 @@ class FS_Orders_Class {
 	public $order_statuses = [];
 	public $last_order_id = null;
 
+
 	function __construct() {
 		$this->order_statuses = FS_Config::default_order_statuses();
 

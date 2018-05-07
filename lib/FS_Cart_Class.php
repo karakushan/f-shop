@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class FS_Cart_Class {
 
+	public $cart = null;
+
 	function __construct() {
 		add_action( 'wp_ajax_add_to_cart', array( &$this, 'add_to_cart_ajax' ) );
 		add_action( 'wp_ajax_nopriv_add_to_cart', array( &$this, 'add_to_cart_ajax' ) );
@@ -22,9 +24,14 @@ class FS_Cart_Class {
 		add_action( 'wp_ajax_delete_product', array( &$this, 'delete_product_ajax' ) );
 		add_action( 'wp_ajax_nopriv_delete_product', array( &$this, 'delete_product_ajax' ) );
 
-// получаем содержимое корзины
+		// получаем содержимое корзины
 		add_action( 'wp_ajax_fs_get_cart', array( &$this, 'fs_get_cart_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_cart', array( &$this, 'fs_get_cart_callback' ) );
+
+		// присваиваем переменной $cart содержимое корзины
+		if ( ! empty( $_SESSION['cart'] ) ) {
+			$this->cart = $_SESSION['cart'];
+		}
 
 	}
 

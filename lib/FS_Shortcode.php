@@ -24,6 +24,7 @@ class FS_Shortcode {
 		add_shortcode( 'fs_last_order_info', array( $this, 'last_order_info' ) );
 		add_shortcode( 'fs_last_order_id', array( $this, 'last_order_id' ) );
 		add_shortcode( 'fs_last_order_amount', array( $this, 'last_order_amount' ) );
+		add_shortcode( 'fs_have_cart_items', array( $this, 'have_cart_items' ) );
 		add_shortcode( 'fs_order_thanks', array( $this, 'fs_order_thanks' ) );
 		add_shortcode( 'fs_review_form', array( $this, 'review_form' ) );
 		add_shortcode( 'fs_checkout', array( $this, 'checkout_form' ) );
@@ -36,6 +37,16 @@ class FS_Shortcode {
 		add_shortcode( 'fs_profile_edit', array( $this, 'profile_edit' ) );
 		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );
 
+
+	}
+
+	function have_cart_items( $args, $content ) {
+		$cart_class = new FS_Cart_Class();
+		if ( count( $cart_class->cart ) ) {
+			return apply_filters('the_content',$content);
+		} else {
+			return '<p>' . esc_html__( 'No items found in shopping cart', 'fast-shop' ) . '</p>';
+		}
 
 	}
 

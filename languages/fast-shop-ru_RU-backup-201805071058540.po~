@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-07 10:57+0000\n"
-"PO-Revision-Date: 2018-05-07 10:58+0000\n"
+"POT-Creation-Date: 2018-05-07 10:27+0000\n"
+"PO-Revision-Date: 2018-05-07 10:28+0000\n"
 "Last-Translator: sarafan-admin <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -278,19 +278,19 @@ msgstr "это поле обязательное"
 msgid "Select page"
 msgstr "Выберите страницу"
 
-#: lib/FS_Orders_Class.php:86
+#: lib/FS_Orders_Class.php:85
 msgid "Date of purchase"
 msgstr "Дата покупки"
 
-#: lib/FS_Orders_Class.php:87
+#: lib/FS_Orders_Class.php:86
 msgid "Last modified"
 msgstr "Последнее изменение"
 
-#: lib/FS_Orders_Class.php:105
+#: lib/FS_Orders_Class.php:104
 msgid "Order number is not specified"
 msgstr "Номер заказа не указан"
 
-#: lib/FS_Orders_Class.php:284
+#: lib/FS_Orders_Class.php:283
 msgid "The order status is not defined"
 msgstr "Статус заказа не определен"
 
@@ -369,21 +369,17 @@ msgstr "Выберите валюту"
 msgid "Store settings"
 msgstr "Настройки магазина"
 
-#: lib/FS_Shortcode.php:48
-msgid "No items found in shopping cart"
-msgstr "Не найдено товаров в корзине"
-
-#: lib/FS_Shortcode.php:113
+#: lib/FS_Shortcode.php:102
 msgid "Register to view this page"
-msgstr "Зарегистрируйтесь для просмотра данной страницы"
+msgstr ""
 
-#: lib/FS_Shortcode.php:117
+#: lib/FS_Shortcode.php:106
 msgid "Order not found"
-msgstr "Заказ не найден"
+msgstr ""
 
-#: lib/FS_Shortcode.php:121
+#: lib/FS_Shortcode.php:110
 msgid "Details of this order are not available for you"
-msgstr "Вы не имеете права просматривать детали данного заказа"
+msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:36 lib/FS_Taxonomies_Class.php:38
 #: lib/FS_Taxonomies_Class.php:40 lib/FS_Taxonomies_Class.php:41
