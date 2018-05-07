@@ -187,9 +187,10 @@ function shiba_add_quick_edit( $column_name, $post_type ) {
 // изменяем запрос при сортировке колонки
 add_filter( 'pre_get_posts', 'fs_sort_admin_by', 30 );
 function fs_sort_admin_by( $object ) {
-//	эсли это не админка или нет параметра orderby то выходим из функции
-	if ( ! is_admin() || empty( $_GET['orderby'] ) && isset( $_GET['post_type'] ) && $_GET['post_type'] != 'product' ) {
-		return;
+	global $pagenow;
+	// Выходим если нет всех условий для сортировки
+	if ( ! $object->is_admin() && $pagenow != 'edit.php' && ( empty( $_GET['post_type'] ) || $_GET['post_type'] != 'product' )  ) {
+		return $object;
 	}
 //	сортируем по цене
 	if ( ! empty( $_GET['orderby'] ) && $_GET['orderby'] == 'fs_price' ) {
