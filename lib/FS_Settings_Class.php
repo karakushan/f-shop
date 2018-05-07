@@ -90,50 +90,48 @@ class FS_Settings_Class {
 						'value' => fs_option( 'price_cents', '0' )
 					),
 				)
-
-
 			),
 			'letters'    => array(
 				'name'   => __( 'Letters', 'fast-shop' ),
 				'fields' => array(
-					0 => array(
+					array(
 						'type'  => 'text',
 						'name'  => 'manager_email',
 						'label' => 'Куда отправлять письма',
 						'help'  => 'можно указать несколько адресатов через запятую',
 						'value' => fs_option( 'manager_email', get_option( 'admin_email' ) )
 					),
-					1 => array(
+					array(
 						'type'  => 'text',
 						'name'  => 'site_logo',
 						'label' => 'Ссылка на изображение логотипа',
 						'value' => fs_option( 'site_logo' )
 					),
-					2 => array(
+					array(
 						'type'  => 'email',
 						'name'  => 'email_sender',
 						'label' => 'Email отправителя писем',
 						'value' => fs_option( 'email_sender' )
 					),
-					3 => array(
+					array(
 						'type'  => 'text',
 						'name'  => 'name_sender',
 						'label' => 'Название отправителя писем',
 						'value' => fs_option( 'name_sender', get_bloginfo( 'name' ) )
 					),
-					4 => array(
+					array(
 						'type'  => 'text',
 						'name'  => 'customer_mail_header',
 						'label' => 'Заголовок письма заказчику',
 						'value' => fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' )
 					),
-					5 => array(
+					array(
 						'type'  => 'editor',
 						'name'  => 'customer_mail',
 						'label' => 'Текст письма заказчику после отправки заказа',
 						'value' => fs_option( 'customer_mail' )
 					),
-					6 => array(
+					array(
 						'type'  => 'editor',
 						'name'  => 'admin_mail',
 						'label' => 'Текст письма администратору после отправки заказа',
@@ -146,43 +144,43 @@ class FS_Settings_Class {
 			'pages'      => array(
 				'name'   => __( 'Page', 'fast-shop' ),
 				'fields' => array(
-					0 => array(
+					array(
 						'type'  => 'pages',
 						'name'  => 'page_cart',
 						'label' => 'Страница корзины',
 						'value' => fs_option( 'page_cart', 0 )
 					),
-					1 => array(
+					array(
 						'type'  => 'pages',
 						'name'  => 'page_payment',
 						'label' => 'Страница оплаты',
 						'value' => fs_option( 'page_payment', 0 )
 					),
-					2 => array(
+					array(
 						'type'  => 'pages',
 						'name'  => 'page_success',
 						'label' => 'Страница успешной отправки заказа',
 						'value' => fs_option( 'page_success', 0 )
 					),
-					3 => array(
+					array(
 						'type'  => 'pages',
 						'name'  => 'page_whishlist',
 						'label' => 'Страница списка желаний',
 						'value' => fs_option( 'page_whishlist', 0 )
 					),
-					4 => array(
+					array(
 						'type'  => 'pages',
 						'name'  => 'page_cabinet',
 						'label' => 'Страница личного кабинета',
 						'value' => fs_option( 'page_cabinet', 0 )
 					),
-					5 => array(
+					array(
 						'type'  => 'pages',
 						'name'  => 'page_auth',
 						'label' => 'Страница авторизации',
 						'value' => fs_option( 'page_auth', 0 )
 					),
-					6 => array(
+					array(
 						'type'  => 'pages',
 						'name'  => 'page_order_detail',
 						'label' => 'Страница информации о заказе',
@@ -195,7 +193,7 @@ class FS_Settings_Class {
 		);
 
 		if ( taxonomy_exists( $fs_config->data['currencies_taxonomy'] ) ) {
-			$settings['currencies']['fields'] = array(
+			$settings['currencies']['fields'] []= array(
 				'type'  => 'custom',
 				'name'  => 'default_currency',
 				'label' => 'Валюта по умолчанию',
@@ -204,24 +202,7 @@ class FS_Settings_Class {
 					'echo'             => false,
 					'hide_empty'       => false,
 					'selected'         => fs_option( 'default_currency' ),
-					'name'             => 'fs_option[default_currency]',
-					'show_option_none' => __( 'Select currency', 'fast-shop' )
-				) ),
-				'value' => fs_option( 'default_currency' )
-			);
-		}
-
-		if ( taxonomy_exists( $fs_config->data['currencies_taxonomy'] ) ) {
-			$settings['currencies']['fields'] = array(
-				'type'  => 'custom',
-				'name'  => 'default_currency',
-				'label' => 'Валюта по умолчанию',
-				'html'  => wp_dropdown_categories( array(
-					'taxonomy'         => 'fs-currencies',
-					'echo'             => false,
-					'hide_empty'       => false,
-					'selected'         => fs_option( 'default_currency' ),
-					'name'             => 'fs_option[default_currency]',
+					'name'             => 'default_currency',
 					'show_option_none' => __( 'Select currency', 'fast-shop' )
 				) ),
 				'value' => fs_option( 'default_currency' )
@@ -324,8 +305,11 @@ class FS_Settings_Class {
 			array( $this, 'get_tab_description' ),
 			$this->settings_page
 		);
-		if ( ! empty( $setting['fields'] ) ) {
+		if ( count( $setting['fields'] ) ) {
 			foreach ( $setting['fields'] as $field ) {
+				if ( empty( $field['name'] ) ) {
+					continue;
+				}
 				$settings_id = $field['name'];
 				add_settings_field(
 					$settings_id,
