@@ -2,8 +2,6 @@
 
 namespace FS;
 
-use ES_LIB\ES_config;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
@@ -26,8 +24,6 @@ class FS_Shortcode {
 		add_shortcode( 'fs_last_order_amount', array( $this, 'last_order_amount' ) );
 		add_shortcode( 'fs_have_cart_items', array( $this, 'have_cart_items' ) );
 		add_shortcode( 'fs_order_thanks', array( $this, 'fs_order_thanks' ) );
-		add_shortcode( 'fs_review_form', array( $this, 'review_form' ) );
-		add_shortcode( 'fs_checkout', array( $this, 'checkout_form' ) );
 		add_shortcode( 'fs_order_send', array( $this, 'order_send' ) );
 		add_shortcode( 'fs_user_cabinet', array( $this, 'user_cabinet' ) );
 		add_shortcode( 'fs_single_order', array( $this, 'single_order' ) );
@@ -51,7 +47,7 @@ class FS_Shortcode {
 	 *
 	 * @param $content
 	 *
-	 * @return mixed|string|void
+	 * @return mixed|string
 	 */
 	function have_cart_items( $atts, $content ) {
 		$atts = shortcode_atts( array(
@@ -81,7 +77,7 @@ class FS_Shortcode {
 	 * этот шорткод выводит инфу о последнем заказе текущего посетителя
 	 *
 	 *
-	 * @return mixed|void
+	 * @return mixed
 	 */
 	function last_order_info() {
 		$orders_cl = new FS_Orders_Class;
@@ -93,7 +89,7 @@ class FS_Shortcode {
 	/**
 	 * Содержимое шорткода [fs_order_thanks]
 	 *
-	 * @return mixed|void
+	 * @return mixed
 	 */
 	function fs_order_thanks() {
 		return fs_frontend_template( 'order/thanks' );
@@ -101,7 +97,8 @@ class FS_Shortcode {
 
 	/**
 	 * виджет корзины товаров
-	 * @return [type] [description]
+	 *
+	 * @return string
 	 */
 	public function cart_widget() {
 		ob_start();
@@ -125,7 +122,7 @@ class FS_Shortcode {
 	 *
 	 * @param $atts
 	 *
-	 * @return mixed|void
+	 * @return mixed
 	 */
 	public function single_order_info( $atts ) {
 		$curent_user = wp_get_current_user();
@@ -140,6 +137,7 @@ class FS_Shortcode {
 
 		), $atts );
 
+		$html   = '';
 		$errors = new \WP_Error();
 
 		if ( ! is_user_logged_in() ) {
@@ -156,11 +154,13 @@ class FS_Shortcode {
 
 		if ( $errors->get_error_code() ) {
 			foreach ( $errors->get_error_messages() as $error ) {
-				echo '<p class="fs-order-detail">' . $error . '</p>';
+				$html .= '<p class="fs-order-detail">' . $error . '</p>';
 			}
 		} else {
-			return fs_frontend_template( 'shortcode/fs-order-info', $atts );
+			$html = fs_frontend_template( 'shortcode/fs-order-info', $atts );
 		}
+
+		return $html;
 
 
 	}
@@ -174,29 +174,12 @@ class FS_Shortcode {
 
 	public function last_order_amount() {
 		$order_id   = empty( $_SESSION['last_order_id'] ) ? 0 : (int) $_SESSION['last_order_id'];
-		$order      = new \FS\FS_Orders_Class;
-		$order_info = $order->get_order_data( $order_id );
+		$order      = new FS_Orders_Class;
+		$order_info = $order->get_order( $order_id );
 		$summa      = (float) $order_info->summa;
 		$summa      = apply_filters( 'fs_price_format', $summa );
 
 		return $summa;
-	}
-
-
-	public function review_form() {
-		global $fs_config;
-		require $fs_config['plugin_path'] . 'templates/back-end/review-form.php';
-	}
-
-	function checkout_form() {
-		global $fs_config;
-		$checkout_form_theme  = TEMPLATEPATH . '/fast-shop/checkout/checkout.php';
-		$checkout_form_plugin = $fs_config['plugin_path'] . 'templates/front-end/checkout/checkout.php';
-		if ( file_exists( $checkout_form_theme ) ) {
-			include( $checkout_form_theme );
-		} else {
-			include( $checkout_form_plugin );
-		}
 	}
 
 	/**
@@ -264,13 +247,13 @@ class FS_Shortcode {
 		if ( empty( $_REQUEST['order_id'] ) || empty( $_REQUEST['pay_method'] ) ) {
 			return '<p>' . __( 'The order number or method of payment is not specified.', 'fast_shop' ) . '</p>';
 		}
-		$order_id = intval( $_REQUEST['order_id'] );
-
-		$order = FS_Orders_Class::get_order( $order_id );
-		$html  = '<h3 class="text-center">Оплата заказа №' . esc_attr( $order_id ) . ' с помошью ' . esc_attr( $order->payment ) . '</h3>';
-		$html  .= '<div class="fs-pay-methods">';
-		$html  .= apply_filters( 'fs_pay_methods', $order_id );
-		$html  .= '</div>';
+		$order_id     = intval( $_REQUEST['order_id'] );
+		$orders_class = new FS_Orders_Class();
+		$order        = $orders_class->get_order( $order_id );
+		$html         = '<h3 class="text-center">Оплата заказа №' . esc_attr( $order_id ) . ' с помошью ' . esc_attr( $order->payment ) . '</h3>';
+		$html         .= '<div class="fs-pay-methods">';
+		$html         .= apply_filters( 'fs_pay_methods', $order_id );
+		$html         .= '</div>';
 
 		return $html;
 	}
