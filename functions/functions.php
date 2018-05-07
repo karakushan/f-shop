@@ -824,7 +824,7 @@ function fs_post_views( $post_id = '' ) {
  *
  * @param array $attr - массив атрибутов html элемента обёртки
  *
- * @return показывает виджет корзины
+ * @return mixed показывает виджет корзины
  */
 function fs_cart_widget( $attr = array() ) {
 
@@ -1084,7 +1084,8 @@ function fs_delete_cart( $args = array() ) {
 /**
  * Выводит процент или сумму скидки(в зависимости от настрорек)
  *
- * @param  string $product_id - id товара(записи)
+ * @param int|string $product_id - id товара(записи)
+ * @param bool $echo
  * @param  string $wrap - html обёртка для скидки
  *
  * @return выводит или возвращает скидку если таковая имеется или пустая строка
@@ -1471,6 +1472,31 @@ function fs_gallery_images_url( $product_id = 0, $size = 'full' ) {
 	if ( is_array( $gallery_images ) ) {
 		foreach ( $gallery_images as $key => $gallery_image ) {
 			$images[] = wp_get_attachment_url( $gallery_image, $size );
+		}
+	}
+
+	return $images;
+}
+
+
+/**
+ * получаем полные изображения галереи товара
+ *
+ * @param  int|integer $product_id [description]
+ *
+ * @param string $size размер миниатюр
+ *
+ * @return array список изображений в массиве
+ */
+function fs_gallery_images( $product_id = 0, $size = 'full' ) {
+	global $post;
+	$product_id     = empty( $product_id ) ? $post->ID : $product_id;
+	$gallery        = new \FS\FS_Images_Class;
+	$gallery_images = $gallery->fs_galery_images( $product_id );
+	$images         = array();
+	if ( is_array( $gallery_images ) ) {
+		foreach ( $gallery_images as $key => $gallery_image ) {
+			$images[] = wp_get_attachment_image( $gallery_image, $size );
 		}
 	}
 

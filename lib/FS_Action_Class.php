@@ -63,8 +63,6 @@ class FS_Action_Class {
 		add_action( 'fs_range_slider', 'fs_range_slider', 10 );
 
 		//===== ATTRIBUTES =====
-		/* выводит фильтр для сортировки по атрибутам */
-		add_action( 'fs_attr_filter', 'fs_attr_filter', 10, 2 );
 		/* Выводит список всех установленных атрибутов товара. Данные выводятся в  в виде: группа : свойство (свойства) */
 		add_action( 'fs_the_atts_list', 'fs_the_atts_list', 10, 2 );
 
