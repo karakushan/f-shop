@@ -70,14 +70,19 @@ class FS_Shortcode {
 			} else {
 				$content = $atts['empty_text'];
 			}
-
-
 		}
 
 		return $content;
 
 	}
 
+	/**
+	 * Метод-колбек шорткода [fs_last_order_info]
+	 * этот шорткод выводит инфу о последнем заказе текущего посетителя
+	 *
+	 *
+	 * @return mixed|void
+	 */
 	function last_order_info() {
 		$orders_cl = new FS_Orders_Class;
 		$order     = $orders_cl->get_order( $orders_cl->last_order_id );
