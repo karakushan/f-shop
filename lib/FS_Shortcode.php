@@ -40,13 +40,41 @@ class FS_Shortcode {
 
 	}
 
-	function have_cart_items( $args, $content ) {
+	/**
+	 * Шорткод проверяет наличие товаров в корзине и выводит их список
+	 * или информацию об пустой корзине
+	 *
+	 * @param $atts - массив настроек шорткода
+	 *        'empty_text' - текст пустой корзины
+	 *        'empty_wrapper' - wrapper (по умолчанию p)
+	 *        'empty_class' - класс враппера (по умолчанию fs-empty-cart)
+	 *
+	 * @param $content
+	 *
+	 * @return mixed|string|void
+	 */
+	function have_cart_items( $atts, $content ) {
+		$atts = shortcode_atts( array(
+			'empty_text'    => __( 'No items found in shopping cart', 'fast-shop' ),
+			'empty_wrapper' => 'p',
+			'empty_class'   => 'fs-empty-cart',
+		), $atts );
+
 		$cart_class = new FS_Cart_Class();
+
 		if ( count( $cart_class->cart ) ) {
-			return apply_filters('the_content',$content);
+			$content = apply_filters( 'the_content', $content );
 		} else {
-			return '<p>' . esc_html__( 'No items found in shopping cart', 'fast-shop' ) . '</p>';
+			if ( ! empty( $atts['empty_wrapper'] ) && ! empty( $atts['empty_text'] ) ) {
+				$content = sprintf( '<%1s class="%2$s">%3$s</%1$s>', $atts['empty_wrapper'], esc_attr( $atts['empty_class'] ), $atts['empty_text'] );
+			} else {
+				$content = $atts['empty_text'];
+			}
+
+
 		}
+
+		return $content;
 
 	}
 
