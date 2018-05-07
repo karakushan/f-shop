@@ -1550,13 +1550,20 @@ function fs_change_price_percent( $product_id = 0 ) {
  * Выводит скидку на товар в процентах
  *
  * @param int $product_id - ID товара(записи)
- * @param string $wrap - html теги, обёртка для скидки
+ * @param string $format - html теги, обёртка для скидки
+ * @param array $args
  */
-function fs_discount_percent( $product_id = 0, $wrap = '<span>-%s%s</span>' ) {
+function fs_discount_percent( $product_id = 0, $format = '-%s%s', $args = array() ) {
+	$args     = wp_parse_args( $args,
+		array(
+			'class' => 'fs-discount'
+		)
+	);
 	$discount = fs_change_price_percent( $product_id );
 	if ( $discount > 0 ) {
-		$discount = sprintf( '<span data-fs-element="discount">%s</span>', $discount );
-		printf( $wrap, $discount, '%' );
+		printf( '<span data-fs-element="discount" class="%s">', esc_attr( $args['class'] ) );
+		printf( $format, $discount, '%' );
+		print( '</span>' );
 	}
 
 }

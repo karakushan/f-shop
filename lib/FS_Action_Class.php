@@ -46,7 +46,7 @@ class FS_Action_Class {
 	function register_plugin_action() {
 		//===== PRODUCT =====
 		/* отображение скидки в процентах */
-		add_action( 'fs_discount_percent', 'fs_discount_percent', 10, 2 );
+		add_action( 'fs_discount_percent', 'fs_discount_percent', 10, 3 );
 		/* отображение артикула товара */
 		add_action( 'fs_product_code', 'fs_product_code', 10, 2 );
 		/* отображение кнопки добавления в корзину */
