@@ -18,16 +18,18 @@ class FS_Shortcode {
 	function __construct() {
 		$this->config = new FS_Config();
 
-		add_shortcode( 'fs_cart', array( &$this, 'cart_shortcode' ) );
-		add_shortcode( 'fs_cart_widget', array( &$this, 'cart_widget' ) );
-		add_shortcode( 'fs_order_info', array( &$this, 'single_order_info' ) );
-		add_shortcode( 'fs_last_order_id', array( &$this, 'last_order_id' ) );
-		add_shortcode( 'fs_last_order_amount', array( &$this, 'last_order_amount' ) );
-		add_shortcode( 'fs_review_form', array( &$this, 'review_form' ) );
-		add_shortcode( 'fs_checkout', array( &$this, 'checkout_form' ) );
-		add_shortcode( 'fs_order_send', array( &$this, 'order_send' ) );
-		add_shortcode( 'fs_user_cabinet', array( &$this, 'user_cabinet' ) );
-		add_shortcode( 'fs_single_order', array( &$this, 'single_order' ) );
+		add_shortcode( 'fs_cart', array( $this, 'cart_shortcode' ) );
+		add_shortcode( 'fs_cart_widget', array( $this, 'cart_widget' ) );
+		add_shortcode( 'fs_order_info', array( $this, 'single_order_info' ) );
+		add_shortcode( 'fs_last_order_info', array( $this, 'last_order_info' ) );
+		add_shortcode( 'fs_last_order_id', array( $this, 'last_order_id' ) );
+		add_shortcode( 'fs_last_order_amount', array( $this, 'last_order_amount' ) );
+		add_shortcode( 'fs_order_thanks', array( $this, 'fs_order_thanks' ) );
+		add_shortcode( 'fs_review_form', array( $this, 'review_form' ) );
+		add_shortcode( 'fs_checkout', array( $this, 'checkout_form' ) );
+		add_shortcode( 'fs_order_send', array( $this, 'order_send' ) );
+		add_shortcode( 'fs_user_cabinet', array( $this, 'user_cabinet' ) );
+		add_shortcode( 'fs_single_order', array( $this, 'single_order' ) );
 		add_shortcode( 'fs_register_form', 'fs_register_form' );
 		add_shortcode( 'fs_user_info', array( 'FS\Users_Class', 'user_info' ) );
 		add_shortcode( 'fs_user_orders', array( $this, 'user_orders' ) );
@@ -35,6 +37,22 @@ class FS_Shortcode {
 		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );
 
 
+	}
+
+	function last_order_info() {
+		$orders_cl = new FS_Orders_Class;
+		$order     = $orders_cl->get_order( $orders_cl->last_order_id );
+
+		return fs_frontend_template( 'order/last-order-info', array( 'order' => $order ) );
+	}
+
+	/**
+	 * Содержимое шорткода [fs_order_thanks]
+	 *
+	 * @return mixed|void
+	 */
+	function fs_order_thanks() {
+		return fs_frontend_template( 'order/thanks' );
 	}
 
 	/**
@@ -66,12 +84,9 @@ class FS_Shortcode {
 	 * @return mixed|void
 	 */
 	public function single_order_info( $atts ) {
-		if ( ! isset( $_REQUEST['order_detail'] ) ) {
-			return;
-		}
 		$curent_user = wp_get_current_user();
 		$orders_cl   = new FS_Orders_Class;
-		$order_id    = intval( $_REQUEST['order_detail'] );
+		$order_id    = ! empty( $_REQUEST['order_detail'] ) ? intval( $_REQUEST['order_detail'] ) : $orders_cl->last_order_id;
 		// белый список параметров и значения по умолчанию
 		$atts = shortcode_atts( array(
 			'class'    => 'fs-order-info',

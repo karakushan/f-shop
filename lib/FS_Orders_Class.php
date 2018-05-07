@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class FS_Orders_Class {
 	public $post_type = 'orders';
 	public $order_statuses = [];
+	public $last_order_id = null;
 
 	function __construct() {
 		$this->order_statuses = FS_Config::default_order_statuses();
@@ -33,9 +34,10 @@ class FS_Orders_Class {
 		// операции с метабоксами - удаление стандартных, добавление новых
 		add_action( 'admin_menu', array( $this, 'remove_submit_order_metabox' ) );
 
-		// срабатывает при сохранении заказа
-//		add_action( 'save_post', array( $this, 'save_order_meta' ), 12, 3 );
-
+		// Присваиваем значение переменной $last_order
+		if ( ! empty( $_SESSION['last_order_id'] ) ) {
+			$this->last_order_id = intval( $_SESSION['last_order_id'] );
+		}
 
 	}
 
