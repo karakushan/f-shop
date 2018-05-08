@@ -1,4 +1,4 @@
-.clearfix:after, .fs-metabox .fs-grid:after {
+.clearfix:after, .fs-metabox:after, .fs-metabox ul.tab-header:after, .fs-metabox .fs-tabs:after, .fs-metabox .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper:after, .fs-metabox .fs-grid:after {
   display: block;
   clear: both;
   content: ''; }
@@ -6,60 +6,33 @@
 .fs-preloader {
   display: none; }
 
-.fs-primary-button, .fs-metabox .fs-tabs > .fs-tab button {
-  height: 2.35em;
-  padding: 0 22px;
-  background: #389eff;
-  color: #fff;
-  border: none;
-  letter-spacing: .025em;
-  font-size: 14px;
-  box-shadow: inset 0px -3px 0px #00000029;
-  border-radius: 4px;
-  text-transform: uppercase;
-  line-height: 2.35em; }
-  .fs-primary-button.button-small, .fs-metabox .fs-tabs > .fs-tab button.button-small {
-    height: 2.5em;
-    line-height: 2.5em;
-    font-size: 12px;
-    letter-spacing: .05em; }
-  .fs-primary-button.add-att, .fs-metabox .fs-tabs > .fs-tab button.add-att {
-    line-height: 1;
-    float: right;
-    height: 25px;
-    /* font-size: 4px; */
-    padding: 4px; }
-  .fs-primary-button:hover, .fs-metabox .fs-tabs > .fs-tab button:hover {
-    cursor: pointer;
-    -webkit-transition: all .4s;
-    -moz-transition: all .4s;
-    -ms-transition: all .4s;
-    -o-transition: all .4s;
-    transition: all .4s;
-    background: #0f8aff; }
-  .fs-primary-button:focus, .fs-metabox .fs-tabs > .fs-tab button:focus {
-    outline: none; }
+.fs-primary-button.button-small, .fs-metabox .fs-tabs > .fs-tab button.button-small {
+  height: 2.5em;
+  line-height: 2.5em;
+  font-size: 12px;
+  letter-spacing: .05em; }
+.fs-primary-button.add-att, .fs-metabox .fs-tabs > .fs-tab button.add-att {
+  line-height: 1;
+  float: right;
+  height: 25px;
+  /* font-size: 4px; */
+  padding: 4px; }
 
 .fs-metabox {
-  width: 100%;
-  margin: 0 auto;
-  color: #444;
-  font-weight: 400;
-  letter-spacing: .025em;
-  max-width: 100%; }
-  .fs-metabox * {
-    box-sizing: border-box;
-    max-width: 100%; }
+  position: relative; }
   .fs-metabox .fs-atts-list-table table > thead > tr th:first-child {
     width: 150px; }
-  .fs-metabox ul {
+  .fs-metabox ul.tab-header {
+    position: relative;
     width: 20%;
+    border: 0 none;
+    padding: 0 !important;
+    margin: 0;
     float: left;
-    padding: 0;
-    margin: 0; }
-    .fs-metabox ul.fs-childs-list {
+    background: #F9F9F9; }
+    .fs-metabox ul.tab-header.fs-childs-list {
       width: 100%; }
-      .fs-metabox ul.fs-childs-list li {
+      .fs-metabox ul.tab-header.fs-childs-list li {
         margin-bottom: 10px;
         border: 1px solid #dbdbdb;
         padding: 5px 10px;
@@ -67,7 +40,7 @@
         display: block;
         float: left;
         margin-right: 6px; }
-      .fs-metabox ul.fs-childs-list .remove-att {
+      .fs-metabox ul.tab-header.fs-childs-list .remove-att {
         border: 1px solid #c90808;
         padding: 2px 7px;
         text-transform: uppercase;
@@ -82,58 +55,60 @@
         line-height: 1.2em;
         text-align: center; }
     @media screen and (max-width: 768px) {
-      .fs-metabox ul {
+      .fs-metabox ul.tab-header {
         width: 100%;
         max-width: 100%; } }
-    .fs-metabox ul li {
+    .fs-metabox ul.tab-header li {
       display: block;
-      margin-bottom: 4px;
-      position: relative; }
-      .fs-metabox ul li.fs-link-active a {
-        background-color: #23282d;
-        color: #fff;
-        padding-left: 25px;
-        outline: none;
-        box-shadow: none; }
-      .fs-metabox ul li.fs-link-active:before {
-        content: "";
-        position: absolute;
-        width: 4px;
-        height: 100%;
-        background-color: #389eff; }
-      .fs-metabox ul li a {
-        padding: 10px 16px;
-        background-color: #cccccc;
-        display: block;
+      margin: 0;
+      position: relative;
+      padding: 0; }
+      .fs-metabox ul.tab-header li.fs-link-active a {
+        border-color: #DFDFDF;
+        color: #000;
+        color: #000;
+        background: #fff;
+        border-right-color: #fff; }
+      .fs-metabox ul.tab-header li a {
+        border: 1px solid #ededed;
+        font-size: 13px;
+        line-height: 18px;
+        color: #0073aa;
+        padding: 10px;
+        font-weight: normal;
+        border-radius: 0;
+        background: #F9F9F9;
+        background: transparent;
         text-decoration: none;
-        font-size: 1.2em;
-        letter-spacing: .025em;
-        color: #444;
-        -webkit-transition: all .4s;
-        -moz-transition: all .4s;
-        -ms-transition: all .4s;
-        -o-transition: all .4s;
-        transition: all .4s; }
+        display: block;
+        border-width: 0 1px 1px 0; }
+        .fs-metabox ul.tab-header li a:hover, .fs-metabox ul.tab-header li a:focus, .fs-metabox ul.tab-header li a:active, .fs-metabox ul.tab-header li a:visited {
+          outline: none;
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          box-shadow: none; }
   .fs-metabox .fs-tabs {
+    margin: 0;
+    padding: 15px;
     width: 80%;
-    float: left; }
+    float: right;
+    box-sizing: border-box; }
     @media screen and (max-width: 768px) {
       .fs-metabox .fs-tabs {
         width: 100%; } }
     .fs-metabox .fs-tabs > .fs-tab {
-      float: left;
-      display: none;
-      min-height: 178px;
-      margin-left: 2px;
-      padding: 29px 41px;
-      background-color: #f8f8f8;
-      width: 100%;
-      border: 1px solid #eaeaea; }
+      display: none; }
       @media screen and (max-width: 768px) {
         .fs-metabox .fs-tabs > .fs-tab {
           margin: 0; } }
       .fs-metabox .fs-tabs > .fs-tab h3 {
-        margin: 0 0 10px 0; }
+        margin: 0;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 14px;
+        letter-spacing: .025em;
+        display: block;
+        padding: 0; }
       .fs-metabox .fs-tabs > .fs-tab h4 {
         margin: 0 0 2px 0; }
       .fs-metabox .fs-tabs > .fs-tab .fs-help {
@@ -148,14 +123,12 @@
         .fs-metabox .fs-tabs > .fs-tab label span {
           font-weight: 400;
           font-size: .9em;
-          padding: 0px 8px;
-          color: #00a0d2;
+          padding: 0px 9px;
+          color: #0073aa;
           border-radius: 3px;
-          border: 1px solid #00a0d2;
-          background: #f6f6f6;
+          background: #f9f9f9;
           display: inline-block;
-          margin-left: 7px;
-          text-transform: uppercase;
+          margin-left: 2px;
           letter-spacing: .05em; }
       .fs-metabox .fs-tabs > .fs-tab button.button-sm {
         padding: 5px 10px;
@@ -171,39 +144,34 @@
           .fs-metabox .fs-tabs > .fs-tab .fs-attr-list ul li span:hover {
             cursor: pointer; }
       .fs-metabox .fs-tabs > .fs-tab input[type=text] {
-        height: 2.35em;
-        padding: 0px 15px; }
-        .fs-metabox .fs-tabs > .fs-tab input[type=text]:focus {
-          border: 1px solid #5b9dd9;
-          outline: none; }
-        .fs-metabox .fs-tabs > .fs-tab input[type=text].placeholder {
-          color: #969696; }
-        .fs-metabox .fs-tabs > .fs-tab input[type=text]:-moz-placeholder {
-          color: #969696; }
-        .fs-metabox .fs-tabs > .fs-tab input[type=text]::-moz-placeholder {
-          color: #969696; }
-        .fs-metabox .fs-tabs > .fs-tab input[type=text]:-ms-input-placeholder {
-          color: #969696; }
-        .fs-metabox .fs-tabs > .fs-tab input[type=text]::-webkit-input-placeholder {
-          color: #969696; }
+        height: 28px;
+        padding: 0px 10px;
+        width: 224px;
+        max-width: 100%; }
       .fs-metabox .fs-tabs > .fs-tab select {
-        height: 2.35em;
-        padding: 0px 10px; }
-        .fs-metabox .fs-tabs > .fs-tab select.fs-select-att {
-          height: auto;
-          padding: 1px 7px; }
+        height: 28px;
+        padding: 0px 10px;
+        width: 224px;
+        max-width: 100%; }
         .fs-metabox .fs-tabs > .fs-tab select[multiple="multiple"] {
           height: 90px; }
-        .fs-metabox .fs-tabs > .fs-tab select:focus {
-          border: 1px solid #5b9dd9;
-          outline: none; }
       .fs-metabox .fs-tabs > .fs-tab #fs-variants-wrapper {
         margin-top: 15px;
         max-height: 542px;
         overflow: auto; }
       .fs-metabox .fs-tabs > .fs-tab .fs-field-row {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         position: relative; }
+        .fs-metabox .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper {
+          margin-bottom: 20px; }
+          .fs-metabox .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper input {
+            float: left; }
+          .fs-metabox .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper label {
+            float: left;
+            font-weight: normal;
+            line-height: 0.6em;
+            margin-bottom: 0;
+            margin-left: 8px; }
         .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule {
           background: #e7f1ff;
           padding: 5px 20px; }
@@ -260,7 +228,7 @@
         opacity: .7;
         cursor: pointer; }
 
-.clearfix:after, .fs-metabox .fs-grid:after {
+.clearfix:after, .fs-metabox:after, .fs-metabox ul.tab-header:after, .fs-metabox .fs-tabs:after, .fs-metabox .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper:after, .fs-metabox .fs-grid:after {
   visibility: hidden;
   display: block;
   font-size: 0;
@@ -268,14 +236,14 @@
   clear: both;
   height: 0; }
 
-.clearfix, .fs-metabox .fs-grid {
+.clearfix, .fs-metabox, .fs-metabox ul.tab-header, .fs-metabox .fs-tabs, .fs-metabox .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper, .fs-metabox .fs-grid {
   display: inline-block; }
 
 /* start commented backslash hack \*/
-* html .clearfix, * html .fs-metabox .fs-grid, .fs-metabox * html .fs-grid {
+* html .clearfix, * html .fs-metabox, * html .fs-metabox ul.tab-header, .fs-metabox * html ul.tab-header, * html .fs-metabox .fs-tabs, .fs-metabox * html .fs-tabs, * html .fs-metabox .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper, .fs-metabox .fs-tabs > .fs-tab .fs-field-row * html .checkbox-wrapper, * html .fs-metabox .fs-grid, .fs-metabox * html .fs-grid {
   height: 1%; }
 
-.clearfix, .fs-metabox .fs-grid {
+.clearfix, .fs-metabox, .fs-metabox ul.tab-header, .fs-metabox .fs-tabs, .fs-metabox .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper, .fs-metabox .fs-grid {
   display: block; }
 
 .fs-add-attr {
@@ -852,5 +820,9 @@ progress {
 
 .tooltipster-sidetip .tooltipster-arrow-background {
   border: 7px solid transparent; }
+
+#fast_shop_product_metabox .inside {
+  margin: 0 !important;
+  padding: 0 !important; }
 
 /*# sourceMappingURL=fs-admin.css.map */

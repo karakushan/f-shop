@@ -5,17 +5,7 @@
 }
 
 .fs-primary-button {
-    height: 2.35em;
-    padding: 0 22px;
-    background: #389eff;
-    color: #fff;
-    border: none;
-    letter-spacing: .025em;
-    font-size: 14px;
-    box-shadow: inset 0px -3px 0px #00000029;
-    border-radius: 4px;
-    text-transform: uppercase;
-    line-height: 2.35em;
+
 
     &.button-small {
         height: 2.5em;
@@ -30,32 +20,14 @@
         /* font-size: 4px; */
         padding: 4px;
     }
-    &:hover {
-        cursor: pointer;
-        -webkit-transition: all .4s;
-        -moz-transition: all .4s;
-        -ms-transition: all .4s;
-        -o-transition: all .4s;
-        transition: all .4s;
-        background: darken(#389eff, 8%);
-    }
-    &:focus {
-        outline: none;
-    }
+
+
 
 }
 
 .fs-metabox {
-    width: 100%;
-    margin: 0 auto;
-    color: #444;
-    font-weight: 400;
-    letter-spacing: .025em;
-    max-width: 100%;
-    * {
-        box-sizing: border-box;
-        max-width: 100%;
-    }
+    position: relative;
+    @extend .clearfix;
     .fs-atts-list-table {
         table {
             > thead {
@@ -68,11 +40,15 @@
         }
 
     }
-    ul {
+    ul.tab-header {
+        position: relative;
         width: 20%;
-        float: left;
-        padding: 0;
+        border: 0 none;
+        padding: 0 !important;
         margin: 0;
+        float: left;
+        background: #F9F9F9;
+        @extend .clearfix;
         &.fs-childs-list {
             width: 100%;
             li {
@@ -106,63 +82,64 @@
         }
         li {
             display: block;
-            margin-bottom: 4px;
+            margin: 0;
             position: relative;
+            padding: 0;
             &.fs-link-active {
-
                 a {
-                    background-color: #23282d;
-                    color: #fff;
-                    padding-left: 25px;
-                    outline: none;
-                    box-shadow: none;
+                    border-color: #DFDFDF;
+                    color: #000;
+                    color: #000;
+                    background: #fff;
+                    border-right-color: #fff;
                 }
-                &:before {
-                    content: "";
-                    position: absolute;
-                    width: 4px;
-                    height: 100%;
-                    background-color: #389eff;
-                }
-
             }
             a {
-                padding: 10px 16px;
-                background-color: #cccccc;
-                display: block;
+                border: 1px solid #ededed;
+                font-size: 13px;
+                line-height: 18px;
+                color: #0073aa;
+                padding: 10px;
+                font-weight: normal;
+                border-radius: 0;
+                background: #F9F9F9;
+                background: transparent;
                 text-decoration: none;
-                font-size: 1.2em;
-                letter-spacing: .025em;
-                color: #444;
-                -webkit-transition: all .4s;
-                -moz-transition: all .4s;
-                -ms-transition: all .4s;
-                -o-transition: all .4s;
-                transition: all .4s;
+                display: block;
+                border-width: 0 1px 1px 0;
+                &:hover, &:focus, &:active, &:visited {
+                    outline: none;
+                    -webkit-box-shadow: none;
+                    -moz-box-shadow: none;
+                    box-shadow: none;
+                }
             }
         }
     }
     .fs-tabs {
+        margin: 0;
+        padding: 15px;
         width: 80%;
-        float: left;
+        float: right;
+        box-sizing: border-box;
+        @extend .clearfix;
         @media screen and (max-width: 768px) {
             width: 100%;
         }
         > .fs-tab {
-            float: left;
             display: none;
-            min-height: 178px;
-            margin-left: 2px;
-            padding: 29px 41px;
-            background-color: #f8f8f8;
-            width: 100%;
-            border: 1px solid #eaeaea;
             @media screen and (max-width: 768px) {
                 margin: 0;
             }
 
             h3 {
-                margin: 0 0 10px 0;
+                margin: 0;
+                text-transform: uppercase;
+                font-weight: bold;
+                font-size: 14px;
+                letter-spacing: .025em;
+                display: block;
+                padding: 0;
             }
             h4 {
                 margin: 0 0 2px 0;
@@ -183,14 +160,12 @@
                 span {
                     font-weight: 400;
                     font-size: .9em;
-                    padding: 0px 8px;
-                    color: #00a0d2;
+                    padding: 0px 9px;
+                    color: #0073aa;
                     border-radius: 3px;
-                    border: 1px solid #00a0d2;
-                    background: #f6f6f6;
+                    background: #f9f9f9;
                     display: inline-block;
-                    margin-left: 7px;
-                    text-transform: uppercase;
+                    margin-left: 2px;
                     letter-spacing: .05em;
                 }
             }
@@ -222,32 +197,19 @@
             }
             input {
                 &[type=text] {
-                    height: 2.35em;
-                    padding: 0px 15px;
-
-                    &:focus {
-                        border: 1px solid #5b9dd9;
-                        outline: none;
-                    }
-                    @include placeholder {
-                        color: #969696;
-
-                    }
+                    height: 28px;
+                    padding: 0px 10px;
+                    width: 224px;
+                    max-width: 100%;
                 }
             }
             select {
-                &.fs-select-att {
-                    height: auto;
-                    padding: 1px 7px;
-                }
-                height: 2.35em;
+                height: 28px;
                 padding: 0px 10px;
+                width: 224px;
+                max-width: 100%;
                 &[multiple="multiple"] {
                     height: 90px;
-                }
-                &:focus {
-                    border: 1px solid #5b9dd9;
-                    outline: none;
                 }
             }
             #fs-variants-wrapper {
@@ -257,8 +219,23 @@
 
             }
             .fs-field-row {
-                margin-bottom: 15px;
+                margin-bottom: 20px;
                 position: relative;
+                .checkbox-wrapper {
+                    margin-bottom: 20px;
+                    @extend .clearfix;
+
+                    input {
+                        float: left;
+                    }
+                    label {
+                        float: left;
+                        font-weight: normal;
+                        line-height: 0.6em;
+                        margin-bottom: 0;
+                        margin-left: 8px;
+                    }
+                }
                 &.fs-rule {
                     background: #e7f1ff;
                     padding: 5px 20px;
@@ -1083,7 +1060,8 @@ progress {
     font-weight: bold;
     font-size: 14px;
 }
-.tooltip{
+
+.tooltip {
     cursor: pointer;
     color: #0073aa;
     font-size: 26px;
@@ -1095,38 +1073,53 @@ progress {
         color: #0073aa;
     }
 }
+
 .fs-field-wrapper {
     display: flex;
     align-items: center;
-    input{
+    input {
         margin: 0;
         padding: 5px 10px;
     }
 }
+
 /* This is how you would create a custom secondary theme on top of tooltipster-noir: */
 .tooltipster-sidetip .tooltipster-content {
     color: #fff;
     line-height: 18px;
     padding: 6px 14px;
 }
+
 .tooltipster-sidetip .tooltipster-box {
     background: #0073aa;
     border: 1px solid #01496b;
     border-radius: 3px;
 }
+
 .tooltipster-sidetip .tooltipster-arrow-border {
     border: 9px solid transparent;
     left: 2px;
     top: 1px;
 }
+
 .tooltipster-sidetip.tooltipster-top .tooltipster-arrow-border {
     border-top-color: #01496b;
 }
+
 .tooltipster-sidetip.tooltipster-top .tooltipster-arrow-background {
     border-top-color: #0073aa;
     left: 4px;
     top: 1px;
 }
+
 .tooltipster-sidetip .tooltipster-arrow-background {
     border: 7px solid transparent;
+}
+
+#fast_shop_product_metabox {
+    .inside {
+        margin: 0 !important;
+        padding: 0 !important;
+
+    }
 }

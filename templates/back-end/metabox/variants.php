@@ -4,6 +4,7 @@
 global $fs_config;
 $variated_on = fs_is_variated( $post->ID );
 ?>
+
 <p><input type="checkbox" name="fs_variated_on" value="1" id="fs_variated" <?php checked( $variated_on, 1 ) ?>> <label
     for="fs_variated" style="display: inline-block;">Сделать товар вариативным</label></p>
 <?php if ( $variated_on ): ?>
@@ -69,3 +70,4 @@ $variated_on = fs_is_variated( $post->ID );
 	  <?php endif; ?>
   </div>
 <?php endif ?>
+<div class="clearfix"></div>

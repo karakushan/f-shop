@@ -2,7 +2,7 @@
 <p>Для выбора нескольких изображений одновременно, из медиа-библиотеки, нажмите "Ctrl" на клавиатуре и кликните по
   выбираемым изображениям.</p>
 <div class="fs-field-row clearfix">
-  <button type="button" class="fs-button" id="fs-add-gallery">Выбрать из медиатеки</button>
+  <button type="button" class="button button-secondary" id="fs-add-gallery">Выбрать из медиатеки</button>
 </div>
 <?php
 $gallery = fs_gallery_images_ids( $post_id = 0, false );

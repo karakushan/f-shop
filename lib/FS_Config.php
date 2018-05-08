@@ -136,7 +136,11 @@ class FS_Config {
 			// включает вариативность товара
 			'variated_on'       => 'fs_variated_on',
 			// исключает из архива товаров
-			'exclude_archive'   => 'fs_exclude_archive'
+			'exclude_archive'   => 'fs_exclude_archive',
+			// включает метку Хит продаж
+			'label_bestseller'  => 'fs_on_bestseller',
+			// включает метку Акция
+			'label_promotion'   => 'fs_on_promotion'
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );

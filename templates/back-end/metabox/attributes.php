@@ -66,7 +66,7 @@ if ( $attributes ) {
 	          );
 
 	          wp_dropdown_categories( $args ); ?>
-            <button type="button" class="button-sm" data-fs-action="add-atts-from" data-post="<?php echo esc_attr($post->ID) ?>">добавить</button>
+            <button type="button" class="button button-secondary" data-fs-action="add-atts-from" data-post="<?php echo esc_attr($post->ID) ?>">добавить</button>
 
           </td>
         </tr>

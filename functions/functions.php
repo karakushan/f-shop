@@ -1504,6 +1504,21 @@ function fs_gallery_images( $product_id = 0, $size = 'full' ) {
 }
 
 /**
+ * Проверяет выводить ли метку Хит продаж
+ *
+ * @param int $product_id
+ *
+ * @return bool
+ */
+function fs_is_bestseller( $product_id = 0 ) {
+	global $fs_config;
+	$product_id = fs_get_product_id( $product_id );
+
+	return get_post_meta( $product_id, $fs_config->meta['label_bestseller'], 1 ) ? true : false;
+
+}
+
+/**
  * возвращает объект  с похожими или связанными товарами
  *
  * @param  int|integer $product_id идентификатор товара(поста)
