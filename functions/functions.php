@@ -2179,7 +2179,7 @@ function fs_items_on_page( $format = '' ) {
 	if ( $posts_per_page > $found_posts ) {
 		$posts_per_page = $found_posts;
 	}
-	$format = empty( $format ) ? esc_html_e( 'Showing %1$d products from %1$d', 'fast-shop' ) : $format;
+	$format = empty( $format ) ? esc_html_e( 'Showing %1$d products from %2$d', 'fast-shop' ) : $format;
 	printf( $format, $posts_per_page, $found_posts );
 }
 

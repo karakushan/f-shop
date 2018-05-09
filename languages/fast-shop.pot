@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-09 10:15+0000\n"
+"POT-Creation-Date: 2018-05-09 14:13+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -164,7 +164,12 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:360 lib/FS_Post_Type.php:93
+#: functions/functions.php:2182
+#, php-format
+msgid "Showing %1$d products from %2$d"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:357 lib/FS_Post_Type.php:93
 msgid "Order"
 msgstr ""
 
@@ -371,20 +376,8 @@ msgstr ""
 msgid "Store settings"
 msgstr ""
 
-#: lib/FS_Shortcode.php:54
-msgid "No items found in shopping cart"
-msgstr ""
-
-#: lib/FS_Shortcode.php:144
-msgid "Register to view this page"
-msgstr ""
-
-#: lib/FS_Shortcode.php:148
-msgid "Order not found"
-msgstr ""
-
-#: lib/FS_Shortcode.php:152
-msgid "Details of this order are not available for you"
+#: lib/FS_Shortcode.php:50
+msgid "Wish list is empty"
 msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:36 lib/FS_Taxonomies_Class.php:38
