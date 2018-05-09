@@ -21,9 +21,6 @@ class FS_Ajax_Class {
 // удаление из списка желаний
 		add_action( 'wp_ajax_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
 		add_action( 'wp_ajax_nopriv_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
-//   живой поиск по сайту
-		add_action( 'wp_ajax_fs_livesearch', array( $this, 'fs_livesearch' ) );
-		add_action( 'wp_ajax_nopriv_fs_livesearch', array( $this, 'fs_livesearch' ) );
 
 //  получение связанных постов категории
 		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( $this, 'get_taxonomy_posts' ) );
@@ -421,44 +418,6 @@ class FS_Ajax_Class {
 			) );
 		}
 		exit;
-	}
-
-// живой поиск по сайту
-	public function fs_livesearch() {
-
-		$search = esc_sql( $_POST['s'] );
-		$args   = array(
-			's'              => $search,
-			'post_type'      => 'product',
-			'posts_per_page' => 100
-		);
-		$query  = new \WP_Query( $args );
-		if ( ! $query->have_posts() ) {
-			$args2 = array(
-				'post_type'      => 'product',
-				'posts_per_page' => 100,
-				'meta_query'     => array(
-					'relation' => 'AND',
-					array(
-						'key'          => 'fs_articul',
-						'meta_compare' => 'LIKE',
-						'value'        => $search
-					)
-				)
-			);
-			$query = new \WP_Query( $args2 );
-		}
-		$html = '<span class="fs-ls-close">✖</span>';
-		if ( $query->have_posts() ) {
-			while ( $query->have_posts() ) {
-				$query->the_post();
-				$html .= fs_frontend_template( 'livesearch/livesearch' );
-			}
-		} else {
-			$html .= fs_frontend_template( 'livesearch/livesearch-none' );
-		}
-
-		wp_die( $html );
 	}
 
 //  возвражает список постов определёного термина
