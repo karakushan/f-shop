@@ -283,10 +283,16 @@ function fs_attr_filter( $group_id, $args = array() ) {
 		}
 		foreach ( $terms as $key => $term ) {
 			$product_attributes = isset( $_GET['attributes'][ $term->slug ] ) ? $_GET['attributes'][ $term->slug ] : '';
-			if ( $args['container'] == 'ul' ) {
-				echo '<li class="' . esc_attr( $args['input_wrapper_class'] ) . '">';
+			if ( $term->term_id == $product_attributes ) {
+				$input_wrapper_class = ' active';
 			} else {
-				echo '<div class="' . esc_attr( $args['input_wrapper_class'] ) . '">';
+				$input_wrapper_class = '';
+			}
+
+			if ( $args['container'] == 'ul' ) {
+				echo '<li class="' . esc_attr( $args['input_wrapper_class'] . $input_wrapper_class ) . '">';
+			} else {
+				echo '<div class="' . esc_attr( $args['input_wrapper_class'] . $input_wrapper_class ) . '">';
 			}
 
 			if ( ! empty( $url['attributes'] ) ) {
@@ -462,7 +468,7 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 	}
 	$args  = wp_parse_args( $args, array(
 		'type'          => 'radio',
-		'wpapper'       =>'ul',
+		'wpapper'       => 'ul',
 		'wpapper_class' => 'fs-att-select-w',
 		'class'         => 'fs-att-select'
 	) );
