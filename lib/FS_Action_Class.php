@@ -56,7 +56,7 @@ class FS_Action_Class {
 		/* выводит select для сортировки по параметрам (обычно применяется в каталоге или на страницах категорий) */
 		add_action( 'fs_types_sort_filter', 'fs_types_sort_filter', 10, 1 );
 		/* выводит select для указания к-ва выводимых постов на странице (обычно применяется в каталоге или на страницах категорий) */
-		add_action( 'fs_per_page_filter', 'fs_per_page_filter', 10, 2 );
+		add_action( 'fs_per_page_filter', array( 'FS\FS_Filters', 'per_page_filter' ), 10, 1 );
 		/*выводит список группы свойств и сортирует при выборе свойства*/
 		add_action( 'fs_attr_filter', 'fs_attr_filter', 10, 2 );
 		/*выводит фильтр для сортировки по диапазону цены (слайдер цены)*/

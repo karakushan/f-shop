@@ -189,7 +189,7 @@ class FS_Filters {
 					$orderby['date'] = 'ASC';
 					break;
 				case 'action_price' :
-					$orderby['action_price']    = 'DESC';
+					$orderby['action_price'] = 'DESC';
 					break;
 
 
@@ -321,28 +321,29 @@ class FS_Filters {
 	/**
 	 * метод позволяет вывести поле типа select  для изменения к-ва выводимых постов на странице
 	 *
-	 * @param  [array] $post_count массив к-ва выводимых записей например array(10,20,30,40)
+	 * @param array $args дополнительные настройки
 	 *
-	 * @return [type]             html код селекта с опциями
+	 * @echo  string;
 	 */
-	public function posts_per_page_filter( $post_count = array(), $attr ) {
-		$req    = isset( $_REQUEST['per_page'] ) ? $_REQUEST['per_page'] : get_option( "posts_per_page" );
-		$nonce  = wp_create_nonce( 'fast-shop' );
-		$attr   = fs_parse_attr( $attr );
-		$filter = '<select name="post_count" ' . $attr . ' onchange="document.location=this.options[this.selectedIndex].value">';
-		if ( $post_count ) {
-			foreach ( $post_count as $key => $count ) {
-				$filter .= '<option value="' . add_query_arg( array(
-						"fs_filter" => $nonce,
-						"per_page"  => $count,
-						'paged'     => 1
-					) ) . '" ' . selected( $count, $req, false ) . '>' . $count . '</option>';
-			}
+	public function per_page_filter( $args ) {
+		$req   = isset( $_REQUEST['per_page'] ) ? $_REQUEST['per_page'] : get_option( "posts_per_page" );
+		$args  = wp_parse_args( $args,
+			array(
+				'interval' => array( 15, 30, 45, 90 ),
+				'class'    => 'fs-count-filter'
+			) );
+		$nonce = wp_create_nonce( 'fast-shop' );
+
+		echo '<select name="post_count" class="' . esc_attr( $args['class'] ) . '" onchange="document.location=this.options[this.selectedIndex].value">';
+		foreach ( $args['interval'] as $key => $count ) {
+			$redirect_url = add_query_arg( array(
+				"fs_filter" => $nonce,
+				"per_page"  => $count,
+				'paged'     => 1
+			) );
+			echo '<option value="' . esc_attr( $redirect_url ) . '" ' . selected( $count, $req, false ) . '>' . esc_html( $count ) . '</option>';
 		}
-
-		$filter .= '</select>';
-
-		return $filter;
+		echo '</select>';
 	}
 
 }

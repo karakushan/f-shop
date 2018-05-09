@@ -218,23 +218,6 @@ function fs_aviable_select_filter( $first_option = 'сделайте выбор'
 	return $filter;
 }
 
-/**
- * @param array $interval массив содержащий  интервалы выводимых товаров на странице
- *
- * @param array $attr
- *
- * @return string выводит переключатель к-ва товаров
- */
-function fs_per_page_filter( $interval = array(), $attr = array() ) {
-	$filters = new FS\FS_Filters;
-	if ( empty( $interval ) ) {
-		$interval = array( 12, 24, 36, 48, 60, 100 );
-	}
-	$page_filter = $filters->posts_per_page_filter( $interval, $attr );
-	echo $page_filter;
-
-	return;
-}
 
 /**
  * Функция выводит фильтр по атрибутам товара
