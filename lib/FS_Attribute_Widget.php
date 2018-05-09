@@ -56,14 +56,14 @@ class FS_Attribute_Widget extends \WP_Widget {
 		);
 		?>
       <p>
-        <label for="<?php echo $this->get_field_id( 'title' ); ?>">Заголовок</label>
-        <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
-               name="<?php echo $this->get_field_name( 'title' ); ?>" type="text"
+        <label for="<?php echo esc_attr($this->get_field_id( 'title' )); ?>"><?php esc_html_e('Title','fast-shop') ?></label>
+        <input class="widefat" id="<?php echo esc_attr($this->get_field_id( 'title' )); ?>"
+               name="<?php echo esc_attr($this->get_field_name( 'title' )); ?>" type="text"
                value="<?php echo esc_attr( $title ); ?>"/>
       </p>
       <p>
         <label
-          for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>"><?php esc_html_e( 'Feature Group', 'fast-shop' ) ?></label>
+          for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>"><?php esc_html_e( 'Feature Group', 'fast-shop' ) ?></label><br>
 		  <?php wp_dropdown_categories( $args ); ?>
       </p>
 		<?php
