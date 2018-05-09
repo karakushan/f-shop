@@ -2167,4 +2167,20 @@ function fs_allowed_images_type( $return = 'array' ) {
 	}
 }
 
+/**
+ * Выводит текст типа "Показано товаров 12 из 36"
+ *
+ * @param string $format
+ */
+function fs_items_on_page( $format = '' ) {
+	global $wp_query;
+	$found_posts    = intval( $wp_query->found_posts );
+	$posts_per_page = intval( $wp_query->query_vars['posts_per_page'] );
+	if ( $posts_per_page > $found_posts ) {
+		$posts_per_page = $found_posts;
+	}
+	$format = empty( $format ) ? esc_html_e( 'Showing %1$d products from %1$d', 'fast-shop' ) : $format;
+	printf( $format, $posts_per_page, $found_posts );
+}
+
 
