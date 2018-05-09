@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-07 10:57+0000\n"
+"POT-Creation-Date: 2018-05-09 10:15+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -80,39 +80,11 @@ msgstr ""
 msgid "Site name"
 msgstr ""
 
-#: functions/attributes.php:142
-msgid "First new"
-msgstr ""
-
-#: functions/attributes.php:145
-msgid "First old ones"
-msgstr ""
-
-#: functions/attributes.php:148
-msgid "Price low to high"
-msgstr ""
-
-#: functions/attributes.php:151
-msgid "Price high to low"
-msgstr ""
-
-#: functions/attributes.php:154
-msgid "Name A to Z"
-msgstr ""
-
-#: functions/attributes.php:157
-msgid "Name Z to A"
-msgstr ""
-
-#: functions/attributes.php:160
-msgid "First promotion"
-msgstr ""
-
-#: functions/attributes.php:198 functions/filters.php:94
+#: functions/attributes.php:137 functions/filters.php:94
 msgid "in stock"
 msgstr ""
 
-#: functions/attributes.php:199 functions/filters.php:96
+#: functions/attributes.php:138 functions/filters.php:96
 msgid "not available"
 msgstr ""
 
@@ -183,17 +155,25 @@ msgstr ""
 msgid "Remove all items"
 msgstr ""
 
-#: functions/functions.php:1171
+#: functions/functions.php:1172
 msgid "Item added to wishlist"
 msgstr ""
 
-#: functions/functions.php:1312 templates/front-end/auth/profile.php:20
+#: functions/functions.php:1313 templates/front-end/auth/profile.php:20
 #: templates/front-end/auth/register.php:25
 msgid "Login"
 msgstr ""
 
 #: lib/FS_Ajax_Class.php:360 lib/FS_Post_Type.php:93
 msgid "Order"
+msgstr ""
+
+#: lib/FS_Attribute_Widget.php:59
+msgid "Title"
+msgstr ""
+
+#: lib/FS_Attribute_Widget.php:66
+msgid "Feature Group"
 msgstr ""
 
 #: lib/FS_Config.php:69
@@ -220,39 +200,39 @@ msgstr ""
 msgid "Варианты"
 msgstr ""
 
-#: lib/FS_Config.php:157
+#: lib/FS_Config.php:161
 msgid "Базовая цена"
 msgstr ""
 
-#: lib/FS_Config.php:160
+#: lib/FS_Config.php:164
 msgid "Основной тип цены"
 msgstr ""
 
-#: lib/FS_Config.php:164
+#: lib/FS_Config.php:168
 msgid "Акционная цена"
 msgstr ""
 
-#: lib/FS_Config.php:167
+#: lib/FS_Config.php:171
 msgid "Этот тип изменяет базовую цену отображаемую по умолчанию"
 msgstr ""
 
-#: lib/FS_Config.php:262
+#: lib/FS_Config.php:266
 msgid "Register on the site"
 msgstr ""
 
-#: lib/FS_Config.php:269
+#: lib/FS_Config.php:273
 msgid "US dollar"
 msgstr ""
 
-#: lib/FS_Config.php:270
+#: lib/FS_Config.php:274
 msgid "Ukrainian hryvnia"
 msgstr ""
 
-#: lib/FS_Config.php:271
+#: lib/FS_Config.php:275
 msgid "Russian ruble"
 msgstr ""
 
-#: lib/FS_Config.php:276
+#: lib/FS_Config.php:280
 msgid "Client"
 msgstr ""
 
@@ -266,6 +246,30 @@ msgstr ""
 
 #: lib/FS_Filters.php:77 lib/FS_Taxonomies_Class.php:39
 msgid "Product category"
+msgstr ""
+
+#: lib/FS_Filters.php:361
+msgid "recently added"
+msgstr ""
+
+#: lib/FS_Filters.php:364
+msgid "later added"
+msgstr ""
+
+#: lib/FS_Filters.php:367
+msgid "from cheap to expensive"
+msgstr ""
+
+#: lib/FS_Filters.php:370
+msgid "from expensive to cheap"
+msgstr ""
+
+#: lib/FS_Filters.php:373
+msgid "by title A to Z"
+msgstr ""
+
+#: lib/FS_Filters.php:376
+msgid "by title Z to A"
 msgstr ""
 
 #: lib/FS_Form_Class.php:67
@@ -367,19 +371,19 @@ msgstr ""
 msgid "Store settings"
 msgstr ""
 
-#: lib/FS_Shortcode.php:48
+#: lib/FS_Shortcode.php:54
 msgid "No items found in shopping cart"
 msgstr ""
 
-#: lib/FS_Shortcode.php:113
+#: lib/FS_Shortcode.php:144
 msgid "Register to view this page"
 msgstr ""
 
-#: lib/FS_Shortcode.php:117
+#: lib/FS_Shortcode.php:148
 msgid "Order not found"
 msgstr ""
 
-#: lib/FS_Shortcode.php:121
+#: lib/FS_Shortcode.php:152
 msgid "Details of this order are not available for you"
 msgstr ""
 
@@ -515,16 +519,24 @@ msgstr ""
 msgid "Remove from gallery"
 msgstr ""
 
-#: templates/back-end/metabox/other.php:6
+#: templates/back-end/metabox/other.php:4
 msgid "Article"
 msgstr ""
 
-#: templates/back-end/metabox/other.php:10
+#: templates/back-end/metabox/other.php:9
 msgid "Запас товара на складе"
 msgstr ""
 
-#: templates/back-end/metabox/other.php:15
+#: templates/back-end/metabox/other.php:21
 msgid "Исключить из архива товаров"
+msgstr ""
+
+#: templates/back-end/metabox/other.php:29
+msgid "Включить метку \"Хит продаж\""
+msgstr ""
+
+#: templates/back-end/metabox/other.php:38
+msgid "Включить метку \"Акция\""
 msgstr ""
 
 #: templates/back-end/metabox/related.php:2

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-07 10:57+0000\n"
-"PO-Revision-Date: 2018-05-07 10:58+0000\n"
+"POT-Creation-Date: 2018-05-09 10:15+0000\n"
+"PO-Revision-Date: 2018-05-09 10:17+0000\n"
 "Last-Translator: sarafan-admin <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -82,39 +82,11 @@ msgstr "Адрес доставки"
 msgid "Site name"
 msgstr "Название сайта"
 
-#: functions/attributes.php:142
-msgid "First new"
-msgstr "Сначала новые"
-
-#: functions/attributes.php:145
-msgid "First old ones"
-msgstr "Сначала старые"
-
-#: functions/attributes.php:148
-msgid "Price low to high"
-msgstr "По цене от меньшего к большему"
-
-#: functions/attributes.php:151
-msgid "Price high to low"
-msgstr "По цене от большего к меньшему"
-
-#: functions/attributes.php:154
-msgid "Name A to Z"
-msgstr "По имени от А до Я"
-
-#: functions/attributes.php:157
-msgid "Name Z to A"
-msgstr "По имени от Я до А"
-
-#: functions/attributes.php:160
-msgid "First promotion"
-msgstr ""
-
-#: functions/attributes.php:198 functions/filters.php:94
+#: functions/attributes.php:137 functions/filters.php:94
 msgid "in stock"
 msgstr "в наличии"
 
-#: functions/attributes.php:199 functions/filters.php:96
+#: functions/attributes.php:138 functions/filters.php:96
 msgid "not available"
 msgstr "нет  в наличии"
 
@@ -185,11 +157,11 @@ msgstr "Ошибка добавления товара в список срав�
 msgid "Remove all items"
 msgstr "Удалить все товары"
 
-#: functions/functions.php:1171
+#: functions/functions.php:1172
 msgid "Item added to wishlist"
 msgstr "Товар добавлен в список желаний"
 
-#: functions/functions.php:1312 templates/front-end/auth/profile.php:20
+#: functions/functions.php:1313 templates/front-end/auth/profile.php:20
 #: templates/front-end/auth/register.php:25
 msgid "Login"
 msgstr "Логин"
@@ -197,6 +169,14 @@ msgstr "Логин"
 #: lib/FS_Ajax_Class.php:360 lib/FS_Post_Type.php:93
 msgid "Order"
 msgstr "Заказ"
+
+#: lib/FS_Attribute_Widget.php:59
+msgid "Title"
+msgstr "Название"
+
+#: lib/FS_Attribute_Widget.php:66
+msgid "Feature Group"
+msgstr "Группа характеристик"
 
 #: lib/FS_Config.php:69
 msgid "Prices"
@@ -222,39 +202,39 @@ msgstr "Связанное"
 msgid "Варианты"
 msgstr ""
 
-#: lib/FS_Config.php:157
+#: lib/FS_Config.php:161
 msgid "Базовая цена"
 msgstr ""
 
-#: lib/FS_Config.php:160
+#: lib/FS_Config.php:164
 msgid "Основной тип цены"
 msgstr ""
 
-#: lib/FS_Config.php:164
+#: lib/FS_Config.php:168
 msgid "Акционная цена"
 msgstr ""
 
-#: lib/FS_Config.php:167
+#: lib/FS_Config.php:171
 msgid "Этот тип изменяет базовую цену отображаемую по умолчанию"
 msgstr ""
 
-#: lib/FS_Config.php:262
+#: lib/FS_Config.php:266
 msgid "Register on the site"
 msgstr "Зарегистрироваться на сайте"
 
-#: lib/FS_Config.php:269
+#: lib/FS_Config.php:273
 msgid "US dollar"
 msgstr "Доллар США"
 
-#: lib/FS_Config.php:270
+#: lib/FS_Config.php:274
 msgid "Ukrainian hryvnia"
 msgstr "Украинская гривна"
 
-#: lib/FS_Config.php:271
+#: lib/FS_Config.php:275
 msgid "Russian ruble"
 msgstr "Русский рубль"
 
-#: lib/FS_Config.php:276
+#: lib/FS_Config.php:280
 msgid "Client"
 msgstr "Клиент"
 
@@ -269,6 +249,30 @@ msgstr "Произошла непредвиденная ошибка в проц
 #: lib/FS_Filters.php:77 lib/FS_Taxonomies_Class.php:39
 msgid "Product category"
 msgstr "Категории товаров"
+
+#: lib/FS_Filters.php:361
+msgid "recently added"
+msgstr "недавно добавленные"
+
+#: lib/FS_Filters.php:364
+msgid "later added"
+msgstr "давно добавленные"
+
+#: lib/FS_Filters.php:367
+msgid "from cheap to expensive"
+msgstr "от дешевых к дорогим"
+
+#: lib/FS_Filters.php:370
+msgid "from expensive to cheap"
+msgstr "от дорогих к дешевым"
+
+#: lib/FS_Filters.php:373
+msgid "by title A to Z"
+msgstr "по названию от А до Я"
+
+#: lib/FS_Filters.php:376
+msgid "by title Z to A"
+msgstr "по названию от Я до А"
 
 #: lib/FS_Form_Class.php:67
 msgid "this field is required"
@@ -369,19 +373,19 @@ msgstr "Выберите валюту"
 msgid "Store settings"
 msgstr "Настройки магазина"
 
-#: lib/FS_Shortcode.php:48
+#: lib/FS_Shortcode.php:54
 msgid "No items found in shopping cart"
 msgstr "Не найдено товаров в корзине"
 
-#: lib/FS_Shortcode.php:113
+#: lib/FS_Shortcode.php:144
 msgid "Register to view this page"
 msgstr "Зарегистрируйтесь для просмотра данной страницы"
 
-#: lib/FS_Shortcode.php:117
+#: lib/FS_Shortcode.php:148
 msgid "Order not found"
 msgstr "Заказ не найден"
 
-#: lib/FS_Shortcode.php:121
+#: lib/FS_Shortcode.php:152
 msgid "Details of this order are not available for you"
 msgstr "Вы не имеете права просматривать детали данного заказа"
 
@@ -518,16 +522,24 @@ msgstr "В текущее время у вас нет ни одного зака
 msgid "Remove from gallery"
 msgstr "Удалить из галереи"
 
-#: templates/back-end/metabox/other.php:6
+#: templates/back-end/metabox/other.php:4
 msgid "Article"
 msgstr "Артикул"
 
-#: templates/back-end/metabox/other.php:10
+#: templates/back-end/metabox/other.php:9
 msgid "Запас товара на складе"
 msgstr ""
 
-#: templates/back-end/metabox/other.php:15
+#: templates/back-end/metabox/other.php:21
 msgid "Исключить из архива товаров"
+msgstr ""
+
+#: templates/back-end/metabox/other.php:29
+msgid "Включить метку \"Хит продаж\""
+msgstr ""
+
+#: templates/back-end/metabox/other.php:38
+msgid "Включить метку \"Акция\""
 msgstr ""
 
 #: templates/back-end/metabox/related.php:2

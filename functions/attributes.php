@@ -128,68 +128,7 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
 }
 
 
-/**
- * выводит фильтр сортировки по разным параметрам
- *
- * @param array $attr дополниетльные атрибуты html тега
- *
- * @return string              выводит html элемент типа select
- */
-function fs_types_sort_filter( $attr = array() ) {
-	$filter      = '';
-	$order_types = array(
-		'date_desc'    => array(
-			'name' => __( 'First new', 'fast-shop' )
-		),
-		'date_asc'     => array(
-			'name' => __( 'First old ones', 'fast-shop' )
-		),
-		'price_asc'    => array(
-			'name' => __( 'Price low to high', 'fast-shop' )
-		),
-		'price_desc'   => array(
-			'name' => __( 'Price high to low', 'fast-shop' )
-		),
-		'name_asc'     => array(
-			'name' => __( 'Name A to Z', 'fast-shop' )
-		),
-		'name_desc'    => array(
-			'name' => __( 'Name Z to A', 'fast-shop' )
-		),
-		'action_price' => array(
-			'name' => __( 'First promotion', 'fast-shop' )
-		)
-	);
-	$order_types = apply_filters( 'fs_types_sort_name', $order_types );
 
-	$attr = fs_parse_attr( $attr, array(
-		'class'          => 'fs-types-sort-filter',
-		'id'             => 'fs-types-sort-filter',
-		'name'           => 'order_type',
-		'data-fs-action' => 'filter'
-	) );
-
-	if ( $order_types ) {
-		$filter .= '<select  ' . $attr . '>';
-
-		foreach ( $order_types as $key => $order_type ) {
-			if ( isset( $_GET['order_type'] ) ) {
-				$selected = selected( $key, $_GET['order_type'], 0 );
-			} else {
-				$selected = '';
-			}
-			$filter .= '<option value="' . add_query_arg( array(
-					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
-					'order_type' => $key
-				) ) . '" ' . $selected . '>' . $order_type['name'] . '</option>';
-		}
-		$filter .= '</select>';
-	}
-
-	echo $filter;
-
-	return;
-}
 
 // селект фильтр для фильтрования товаров по наличию
 function fs_aviable_select_filter( $first_option = 'сделайте выбор' ) {

@@ -325,7 +325,7 @@ class FS_Filters {
 	 *
 	 * @echo  string;
 	 */
-	public function per_page_filter( $args ) {
+	public static function per_page_filter( $args ) {
 		$req   = isset( $_REQUEST['per_page'] ) ? $_REQUEST['per_page'] : get_option( "posts_per_page" );
 		$args  = wp_parse_args( $args,
 			array(
@@ -344,6 +344,53 @@ class FS_Filters {
 			echo '<option value="' . esc_attr( $redirect_url ) . '" ' . selected( $count, $req, false ) . '>' . esc_html( $count ) . '</option>';
 		}
 		echo '</select>';
+	}
+
+	/**
+	 * выводит фильтр сортировки на странице архива по разным параметрам
+	 *
+	 * @param array $attr дополниетльные атрибуты html тега
+	 *
+	 * @return string              выводит html элемент типа select
+	 */
+	public static function fs_types_sort_filter( $attr = array() ) {
+		$attr = wp_parse_args( $attr, array(
+			'class'   => 'fs-types-sort-filter',
+			'filters' => array(
+				'date_desc'  => array(
+					'name' => __( 'recently added', 'fast-shop' )// недавно добавленные
+				),
+				'date_asc'   => array(
+					'name' => __( 'later added', 'fast-shop' ) // давно добавленные
+				),
+				'price_asc'  => array(
+					'name' => __( 'from cheap to expensive', 'fast-shop' ) // от дешевых к дорогим
+				),
+				'price_desc' => array(
+					'name' => __( 'from expensive to cheap', 'fast-shop' ) // от дорогих к дешевым
+				),
+				'name_asc'   => array(
+					'name' => __( 'by title A to Z', 'fast-shop' ) // по названию от А до Я
+				),
+				'name_desc'  => array(
+					'name' => __( 'by title Z to A', 'fast-shop' ) // по названию от Я до А
+				)
+			)
+		) );
+
+		if ( count( $attr['filters'] ) ) {
+			echo '<select name="order_type"  class="' . esc_attr( $attr['class'] ) . '" data-fs-action="filter">';
+			foreach ( $attr['filters'] as $key => $order_type ) {
+				$redirect_url = add_query_arg( array(
+					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
+					'order_type' => $key
+				) );
+				echo '<option value="' . esc_url( $redirect_url ) . '" ' . selected( $key, (string) $_GET['order_type'], 0 ) . '>' . esc_html( $order_type['name'] ) . '</option>';
+			}
+			echo '</select>';
+		}
+
+		return;
 	}
 
 }
