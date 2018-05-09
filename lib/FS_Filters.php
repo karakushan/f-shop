@@ -146,7 +146,7 @@ class FS_Filters {
 			switch ( $url['filter_by'] ) {
 				case 'action_price' :
 					$meta_query['action_price'] = array(
-						'key'     => $config->meta['action_price'],
+						'key'     => $fs_config->meta['action_price'],
 						'compare' => '>',
 						'value'   => 0
 					);
@@ -162,11 +162,11 @@ class FS_Filters {
 			switch ( $url['order_type'] ) {
 				case 'price_asc': //сортируем по цене в возрастающем порядке
 					$meta_query['price'] = array( 'key' => $fs_config->meta['price'] );
-					$orderby['price']    = 'ASC';
+					$orderby['meta_value_num']    = 'ASC';
 					break;
 				case 'price_desc': //сортируем по цене в спадающем порядке
 					$meta_query['price'] = array( 'key' => $fs_config->meta['price'] );
-					$orderby['price']    = 'DESC';
+					$orderby['meta_value_num']    = 'DESC';
 					break;
 				case 'views_desc': //сортируем по просмотрам в спадающем порядке
 					$meta_query['views'] = array( 'key' => 'views' );
