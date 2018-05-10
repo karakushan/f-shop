@@ -70,10 +70,10 @@ class FS_Shortcode {
 	 * Шорткод проверяет наличие товаров в корзине и выводит их список
 	 * или информацию об пустой корзине
 	 *
-	 * @param $atts - массив настроек шорткода
-	 *        'empty_text' - текст пустой корзины
-	 *        'empty_wrapper' - wrapper (по умолчанию p)
-	 *        'empty_class' - класс враппера (по умолчанию fs-empty-cart)
+	 * @param $atts -массив настроек шорткода
+	 *       'empty_text'-текст пустой корзины
+	 *       'empty_wrapper'-wrapper (по умолчанию p)
+	 *       'empty_class'-класс враппера (по умолчанию fs-empty-cart)
 	 *
 	 * @param $content
 	 *
@@ -81,9 +81,9 @@ class FS_Shortcode {
 	 */
 	function have_cart_items( $atts, $content ) {
 		$atts = shortcode_atts( array(
-			'empty_text'    => __( 'No items found in shopping cart', 'fast - shop' ),
+			'empty_text'    => __( 'No items found in shopping cart', 'fast-shop' ),
 			'empty_wrapper' => 'p',
-			'empty_class'   => 'fs - empty- cart',
+			'empty_class'   => 'fs-empty-cart',
 		), $atts );
 
 		$cart_class = new FS_Cart_Class();
@@ -92,7 +92,7 @@ class FS_Shortcode {
 			$content = apply_filters( 'the_content', $content );
 		} else {
 			if ( ! empty( $atts['empty_wrapper'] ) && ! empty( $atts['empty_text'] ) ) {
-				$content = sprintf( ' <%1s class="%2$s" >%3$s </%1$s > ', $atts['empty_wrapper'], esc_attr( $atts['empty_class'] ), $atts['empty_text'] );
+				$content = sprintf( '<%1s class="%2$s" >%3$s </%1$s>', $atts['empty_wrapper'], esc_attr( $atts['empty_class'] ), $atts['empty_text'] );
 			} else {
 				$content = $atts['empty_text'];
 			}
@@ -113,7 +113,7 @@ class FS_Shortcode {
 		$orders_cl = new FS_Orders_Class;
 		$order     = $orders_cl->get_order( $orders_cl->last_order_id );
 
-		return fs_frontend_template( 'order / last - order - info', array( 'order' => $order ) );
+		return fs_frontend_template( 'order/last-order-info', array( 'order' => $order ) );
 	}
 
 	/**
@@ -122,7 +122,7 @@ class FS_Shortcode {
 	 * @return mixed
 	 */
 	function fs_order_thanks() {
-		return fs_frontend_template( 'order / thanks' );
+		return fs_frontend_template( 'order/thanks' );
 	}
 
 	/**
@@ -144,7 +144,7 @@ class FS_Shortcode {
 	 *
 	 */
 	public function cart_shortcode() {
-		return fs_frontend_template( 'order / products - list' );
+		return fs_frontend_template( 'order/products-list' );
 	}
 
 	/**
@@ -160,7 +160,7 @@ class FS_Shortcode {
 		$order_id    = ! empty( $_REQUEST['order_detail'] ) ? intval( $_REQUEST['order_detail'] ) : $orders_cl->last_order_id;
 // белый список параметров и значения по умолчанию
 		$atts = shortcode_atts( array(
-			'class'    => 'fs - order - info',
+			'class'    => 'fs-order-info',
 			'order_id' => $order_id,
 			'order'    => $orders_cl->get_order( $order_id ),
 			'payment'  => new FS_Payment_Class()
@@ -171,23 +171,23 @@ class FS_Shortcode {
 		$errors = new \WP_Error();
 
 		if ( ! is_user_logged_in() ) {
-			$errors->add( 'fs - no - user', __( 'Register to view this page', 'fast - shop' ) );
+			$errors->add( 'fs-no-user', __( 'Register to view this page', 'fast-shop' ) );
 		}
 
 		if ( ! $atts['order']->exists || empty( $order_id ) ) {
-			$errors->add( 'fs - no - order', __( 'Order not found', 'fast - shop' ) );
+			$errors->add( 'fs-no-order', __( 'Order not found', 'fast-shop' ) );
 		}
 
 		if ( $curent_user->user_login != $atts['order']->user_name ) {
-			$errors->add( 'fs - no - access - order', __( 'Details of this order are not available for you', 'fast - shop' ) );
+			$errors->add( 'fs-no-access-order', __( 'Details of this order are not available for you', 'fast-shop' ) );
 		}
 
 		if ( $errors->get_error_code() ) {
 			foreach ( $errors->get_error_messages() as $error ) {
-				$html .= ' < p class="fs-order-detail" > ' . $error . '</p > ';
+				$html .= '<p class="fs-order-detail">' . $error . '</p>';
 			}
 		} else {
-			$html = fs_frontend_template( 'shortcode / fs - order - info', $atts );
+			$html = fs_frontend_template( 'shortcode / fs-order-info', $atts );
 		}
 
 		return $html;
@@ -221,10 +221,10 @@ class FS_Shortcode {
 	 */
 	public function order_send( $atts = array() ) {
 		$atts     = shortcode_atts( array(
-			'class' => 'order - send'
+			'class' => 'order-send'
 		), $atts );
-		$template = fs_form_header( array( 'name' => 'fs - order - send', 'class' => $atts['class'] ), 'order_send' );
-		$template .= fs_frontend_template( 'order / order - form' );
+		$template = fs_form_header( array( 'name' => 'fs-order-send', 'class' => $atts['class'] ), 'order_send' );
+		$template .= fs_frontend_template( 'order/order-form' );
 		$template .= fs_form_bottom( '' );
 
 		return $template;
@@ -236,7 +236,7 @@ class FS_Shortcode {
 			$temp = fs_user_cabinet();
 		} else {
 
-			if ( isset( $_GET['fs - page'] ) && $_GET['fs - page'] == 'register' ) {
+			if ( isset( $_GET['fs-page'] ) && $_GET['fs-page'] == 'register' ) {
 				if ( is_user_logged_in() ) {
 					$temp = fs_login_form();
 				} else {
@@ -258,14 +258,13 @@ class FS_Shortcode {
 			'class'      => ''
 		), $args );
 		$template = '
-			     < form action = "#" name = "fs-order-send" class="' . $args['class'] . '" method = "POST" >
-  <div class="products_wrapper" ></div >
-  <input type = "hidden" id = "_wpnonce" name = "_wpnonce" value = "' . wp_create_nonce( 'fast-shop' ) . '" >
-  <input type = "hidden" name = "action" value = "order_send" >
-  <input type = "hidden" name = "order_type" value = "single" > ';
-		$template .= fs_frontend_template( 'order / single - order', $args );
-		$template .= '
-                                                            </form > ';
+			     <form action="#" name="fs-order-send" class="' . $args['class'] . '" method="POST">
+  <div class="products_wrapper"></div>
+  <input type="hidden" id="_wpnonce" name="_wpnonce" value="' . wp_create_nonce( 'fast-shop' ) . '">
+  <input type="hidden" name="action" value="order_send">
+  <input type="hidden" name="order_type" value="single">';
+		$template .= fs_frontend_template( 'order/single-order', $args );
+		$template .= '</form>';
 
 		return $template;
 	}
@@ -276,18 +275,15 @@ class FS_Shortcode {
 	 */
 	function pay_methods() {
 		if ( empty( $_REQUEST['order_id'] ) || empty( $_REQUEST['pay_method'] ) ) {
-			return ' < p>' . __( 'The order number or method of payment is not specified . ', 'fast_shop' ) . ' </p > ';
+			return '<p>' . __( 'The order number or method of payment is not specified .', 'fast_shop' ) . '</p>';
 		}
 		$order_id     = intval( $_REQUEST['order_id'] );
 		$orders_class = new FS_Orders_Class();
 		$order        = $orders_class->get_order( $order_id );
-		$html         = ' < h3 class="text-center" > Оплата заказа №' . esc_attr( $order_id ) . ' с помошью ' . esc_attr(
-				$order->payment ) . ' </h3 > ';
-		$html         .= '
-<div class="fs-pay-methods" > ';
+		$html         = '<h3 class="text-center">Оплата заказа №' . esc_attr( $order_id ) . 'с помошью' . esc_attr( $order->payment ) . '</h3>';
+		$html         .= '<div class="fs-pay-methods">';
 		$html         .= apply_filters( 'fs_pay_methods', $order_id );
-		$html         .= '
-                                         </div > ';
+		$html         .= '</div>';
 
 		return $html;
 	}
