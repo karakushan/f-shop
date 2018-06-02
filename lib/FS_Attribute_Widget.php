@@ -83,12 +83,13 @@ class FS_Attribute_Widget extends \WP_Widget {
 
 	public function widget( $args, $instance ) {
 		$title = apply_filters( 'widget_title', $instance['title'] );
+		$type  = ! empty( $instance['fs_att_types'] ) ? $instance['fs_att_types'] : 'text';
 		echo $args['before_widget'];
 		if ( ! empty( $title ) ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
 		do_action( 'fs_attr_filter', $instance['fs_att_group'], array(
-			'type' => $instance['fs_att_types']
+			'type' => $type
 		) );
 		echo $args['after_widget'];
 	}

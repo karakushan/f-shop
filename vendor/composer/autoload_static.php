@@ -27,39 +27,11 @@ class ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c
         ),
     );
 
-    public static $classMap = array (
-        'FS\\FS_Action_Class' => __DIR__ . '/../..' . '/lib/FS_Action_Class.php',
-        'FS\\FS_Ajax_Class' => __DIR__ . '/../..' . '/lib/FS_Ajax_Class.php',
-        'FS\\FS_Api_Class' => __DIR__ . '/../..' . '/lib/FS_Api_Class.php',
-        'FS\\FS_Cart_Class' => __DIR__ . '/../..' . '/lib/FS_Cart_Class.php',
-        'FS\\FS_Cart_Widget' => __DIR__ . '/../..' . '/lib/FS_Cart_Widget.php',
-        'FS\\FS_Config' => __DIR__ . '/../..' . '/lib/FS_Config.php',
-        'FS\\FS_Delivery_Class' => __DIR__ . '/../..' . '/lib/FS_Delivery_Class.php',
-        'FS\\FS_Export_Class' => __DIR__ . '/../..' . '/lib/FS_Export_Class.php',
-        'FS\\FS_Filters' => __DIR__ . '/../..' . '/lib/FS_Filters.php',
-        'FS\\FS_Form_Class' => __DIR__ . '/../..' . '/lib/FS_Form_Class.php',
-        'FS\\FS_Images_Class' => __DIR__ . '/../..' . '/lib/FS_Images_Class.php',
-        'FS\\FS_Init' => __DIR__ . '/../..' . '/lib/FS_Init.php',
-        'FS\\FS_Migrate_Class' => __DIR__ . '/../..' . '/lib/FS_Migrate_Class.php',
-        'FS\\FS_Orders_Class' => __DIR__ . '/../..' . '/lib/FS_Orders_Class.php',
-        'FS\\FS_Payment_Class' => __DIR__ . '/../..' . '/lib/FS_Payment_Class.php',
-        'FS\\FS_Post_Type' => __DIR__ . '/../..' . '/lib/FS_Post_Type.php',
-        'FS\\FS_Post_Types' => __DIR__ . '/../..' . '/lib/FS_Post_Types.php',
-        'FS\\FS_Product_Class' => __DIR__ . '/../..' . '/lib/FS_Product_Class.php',
-        'FS\\FS_Rating_Class' => __DIR__ . '/../..' . '/lib/FS_Rating_Class.php',
-        'FS\\FS_Settings_Class' => __DIR__ . '/../..' . '/lib/FS_Settings_Class.php',
-        'FS\\FS_Shortcode' => __DIR__ . '/../..' . '/lib/FS_Shortcode.php',
-        'FS\\FS_Taxonomies_Class' => __DIR__ . '/../..' . '/lib/FS_Taxonomies_Class.php',
-        'FS\\FS_Users_Class' => __DIR__ . '/../..' . '/lib/FS_Users_Class.php',
-        'FS\\FS_Widget_CLass' => __DIR__ . '/../..' . '/lib/FS_Widget_CLass.php',
-    );
-
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c::$classMap;
 
         }, null, ClassLoader::class);
     }

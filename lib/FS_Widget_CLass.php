@@ -18,5 +18,6 @@ class FS_Widget_CLass {
 	function register_widgets() {
 		register_widget( '\FS\FS_Cart_Widget' );
 		register_widget( '\FS\FS_Attribute_Widget' );
+		register_widget( '\FS\FS_Price_Widget' );
 	}
 }
