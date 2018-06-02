@@ -1978,6 +1978,8 @@ function fs_order_by_links( $args = array() ) {
 
 	/** @var array $order_by_keys содержит список ключей для GET запроса */
 	$order_by_keys = $fs_config->get_orderby_keys();
+	$html          = '';
+	$order_by      = ! empty( $_GET['order_type'] ) ? $_GET['order_type'] : 'date_desc';
 
 	if ( $order_by_keys ) {
 		foreach ( $order_by_keys as $key => $order_by_arr ) {
@@ -1989,19 +1991,30 @@ function fs_order_by_links( $args = array() ) {
 			}
 			// выводим код перед ссылкой
 			if ( $args['before'] ) {
-				echo $args['before'];
+				$html .= $args['before'];
 			}
 			// собственно одна из ссылок
-			echo '<a href="' . esc_url( add_query_arg( array(
-					'order_type' => $key,
-					'fs_filter'  => wp_create_nonce( 'fast-shop' )
-				), $args['current_page'] ) ) . '">' . esc_html( $order_by_arr['name'] ) . '</a>';
+			$html .= '<a href="';
+			$html .= esc_url( add_query_arg(
+					array(
+						'order_type' => $key,
+						'fs_filter'  => wp_create_nonce( 'fast-shop' )
+					), $args['current_page'] )
+			);
+			$html .= '"';
+			if ( $order_by == $key ) {
+				$html .= ' class="active"';
+			}
+			$html .= '>';
+			$html .= esc_html( $order_by_arr['name'] ) . '</a>';
 			// выводим код после ссылки
 			if ( $args['after'] ) {
-				echo $args['after'];
+				$html .= $args['after'];
 			}
 		}
 	}
+
+	echo $html;
 }
 
 
