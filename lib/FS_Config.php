@@ -18,8 +18,6 @@ class FS_Config {
 	public $options;
 	public $tabs;
 	public $texts;
-
-
 	public $taxonomies;
 	public static $currencies = array();
 	public static $users = array();
@@ -64,44 +62,7 @@ class FS_Config {
 		$this->texts = self::get_texts();
 
 		//Табы отображаемые в метабоксе в редактировании товара
-		$this->tabs = array(
-			array(
-				'title'    => __( 'Prices', 'fast-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'prices'
-			),
-			array(
-				'title'    => __( 'Gallery', 'fast-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'gallery'
-			),
-			array(
-				'title'    => __( 'Attributes', 'fast-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'attributes'
-			),
-			array(
-				'title'    => __( 'Other', 'fast-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'other'
-			),
-			array(
-				'title'    => __( 'Associated', 'fast-shop' ),
-				'on'       => false,
-				'body'     => '',
-				'template' => 'related'
-			),
-			array(
-				'title'    => __( 'Варианты', 'fast-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'variants'
-			),
-		);
+		$this->tabs = $this->get_product_tabs();
 
 		//Массив настроек сайта
 		$this->options = get_option( 'fs_option', array() );
@@ -319,6 +280,84 @@ class FS_Config {
 
 		);
 
+	}
+
+	/**
+	 * Получает массив который содержит списко вкладок настроек товара
+	 *
+	 * @return mixed|void
+	 */
+	public function get_product_tabs() {
+		$tabs = array(
+			'prices'     => array(
+				'title'    => __( 'Prices', 'fast-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'prices'
+			),
+			'gallery'    => array(
+				'title'    => __( 'Gallery', 'fast-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'gallery'
+			),
+			'attributes' => array(
+				'title'    => __( 'Attributes', 'fast-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'attributes'
+			),
+			'other'      => array(
+				'title'    => __( 'Other', 'fast-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'other'
+			),
+			'related'    => array(
+				'title'    => __( 'Associated', 'fast-shop' ),
+				'on'       => false, // Сейчас в разработке
+				'body'     => '',
+				'template' => 'related'
+			),
+			'variants'   => array(
+				'title'    => __( 'Variation', 'fast-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'variants'
+			),
+		);
+
+		return apply_filters( 'fs_product_tabs', $tabs );
+	}
+
+	/**
+	 * Возвращает список ключей для сортировки в каталоге
+	 *
+	 * @return mixed|void
+	 */
+	public function get_orderby_keys() {
+		$keys = array(
+			'date_desc'  => array(
+				'name' => __( 'recently added', 'fast-shop' )// недавно добавленные
+			),
+			'date_asc'   => array(
+				'name' => __( 'later added', 'fast-shop' ) // давно добавленные
+			),
+			'price_asc'  => array(
+				'name' => __( 'from cheap to expensive', 'fast-shop' ) // от дешевых к дорогим
+			),
+			'price_desc' => array(
+				'name' => __( 'from expensive to cheap', 'fast-shop' ) // от дорогих к дешевым
+			),
+			'name_asc'   => array(
+				'name' => __( 'by title A to Z', 'fast-shop' ) // по названию от А до Я
+			),
+			'name_desc'  => array(
+				'name' => __( 'by title Z to A', 'fast-shop' ) // по названию от Я до А
+			)
+		);
+
+		return apply_filters( 'fs_orderby_keys', $keys );
 	}
 
 	public static function default_order_statuses() {

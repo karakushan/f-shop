@@ -1944,7 +1944,10 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
  * @param string $catalog_link ссылка для фильтра
  */
 function fs_filter_link( $filter_by = null, $order_by = null, $catalog_link = null ) {
+	global $fs_config;
+
 	$query['fs_filter'] = wp_create_nonce( 'fast-shop' );
+	$catalog_link       = $catalog_link ? $catalog_link : get_post_type_archive_link( $fs_config->data['post_type'] );
 
 	if ( ! empty( $filter_by ) ) {
 		$query['filter_by'] = $filter_by;
@@ -1952,11 +1955,55 @@ function fs_filter_link( $filter_by = null, $order_by = null, $catalog_link = nu
 	if ( ! empty( $order_by ) ) {
 		$query['order_type'] = $order_by;
 	}
-	if ( ! $catalog_link ) {
-		$catalog_link = '/product/';
-	}
+
 	echo esc_url( add_query_arg( $query, $catalog_link ) );
 }
+
+
+/**
+ * Выводит список ссылок для сортировки по параметрам в каталоге
+ *
+ * @param array $args массив дополнительных параметров
+ */
+function fs_order_by_links( $args = array() ) {
+	global $fs_config;
+
+	/** @var array $args список аргументов функции */
+	$args = wp_parse_args( $args, array(
+		'current_page' => get_post_type_archive_link( $fs_config->data['post_type'] ),// ссылка на текущую страницу
+		'before'       => '',// код перед ссылкой
+		'after'        => '',// код после ссылки
+		'exclude'      => array()// исключенные ключи
+	) );
+
+	/** @var array $order_by_keys содержит список ключей для GET запроса */
+	$order_by_keys = $fs_config->get_orderby_keys();
+
+	if ( $order_by_keys ) {
+		foreach ( $order_by_keys as $key => $order_by_arr ) {
+			// исключаем GET параметр
+			if ( $args['exclude'] ) {
+				if ( in_array( $key, $args['exclude'] ) ) {
+					continue;
+				}
+			}
+			// выводим код перед ссылкой
+			if ( $args['before'] ) {
+				echo $args['before'];
+			}
+			// собственно одна из ссылок
+			echo '<a href="' . esc_url( add_query_arg( array(
+					'order_type' => $key,
+					'fs_filter'  => wp_create_nonce( 'fast-shop' )
+				), $args['current_page'] ) ) . '">' . esc_html( $order_by_arr['name'] ) . '</a>';
+			// выводим код после ссылки
+			if ( $args['after'] ) {
+				echo $args['after'];
+			}
+		}
+	}
+}
+
 
 /**
  * Ищет в массиве $haystack значения массива $needles

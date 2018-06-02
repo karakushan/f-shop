@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-09 14:13+0000\n"
-"PO-Revision-Date: 2018-05-09 14:14+0000\n"
-"Last-Translator: sarafan-admin <karakushan@gmail.com>\n"
+"POT-Creation-Date: 2018-06-02 17:37+0000\n"
+"PO-Revision-Date: 2018-06-02 17:38+0000\n"
+"Last-Translator: stoles-admin <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -166,7 +166,7 @@ msgstr "Товар добавлен в список желаний"
 msgid "Login"
 msgstr "Логин"
 
-#: functions/functions.php:2182
+#: functions/functions.php:2229
 #, php-format
 msgid "Showing %1$d products from %2$d"
 msgstr "Показано %1$d товаров из %2$d"
@@ -183,65 +183,89 @@ msgstr "Название"
 msgid "Feature Group"
 msgstr "Группа характеристик"
 
-#: lib/FS_Config.php:69
-msgid "Prices"
-msgstr "Цены"
-
-#: lib/FS_Config.php:75
-msgid "Gallery"
-msgstr "Галерея"
-
-#: lib/FS_Config.php:81
-msgid "Attributes"
-msgstr "Атрибуты"
-
-#: lib/FS_Config.php:87
-msgid "Other"
-msgstr "Другое"
-
-#: lib/FS_Config.php:93
-msgid "Associated"
-msgstr "Связанное"
-
-#: lib/FS_Config.php:99
-msgid "Варианты"
-msgstr ""
-
-#: lib/FS_Config.php:161
+#: lib/FS_Config.php:122
 msgid "Базовая цена"
 msgstr ""
 
-#: lib/FS_Config.php:164
+#: lib/FS_Config.php:125
 msgid "Основной тип цены"
 msgstr ""
 
-#: lib/FS_Config.php:168
+#: lib/FS_Config.php:129
 msgid "Акционная цена"
 msgstr ""
 
-#: lib/FS_Config.php:171
+#: lib/FS_Config.php:132
 msgid "Этот тип изменяет базовую цену отображаемую по умолчанию"
 msgstr ""
 
-#: lib/FS_Config.php:266
+#: lib/FS_Config.php:227
 msgid "Register on the site"
 msgstr "Зарегистрироваться на сайте"
 
-#: lib/FS_Config.php:273
+#: lib/FS_Config.php:234
 msgid "US dollar"
 msgstr "Доллар США"
 
-#: lib/FS_Config.php:274
+#: lib/FS_Config.php:235
 msgid "Ukrainian hryvnia"
 msgstr "Украинская гривна"
 
-#: lib/FS_Config.php:275
+#: lib/FS_Config.php:236
 msgid "Russian ruble"
 msgstr "Русский рубль"
 
-#: lib/FS_Config.php:280
+#: lib/FS_Config.php:241
 msgid "Client"
 msgstr "Клиент"
+
+#: lib/FS_Config.php:293
+msgid "Prices"
+msgstr "Цены"
+
+#: lib/FS_Config.php:299
+msgid "Gallery"
+msgstr "Галерея"
+
+#: lib/FS_Config.php:305
+msgid "Attributes"
+msgstr "Атрибуты"
+
+#: lib/FS_Config.php:311
+msgid "Other"
+msgstr "Другое"
+
+#: lib/FS_Config.php:317
+msgid "Associated"
+msgstr "Связанное"
+
+#: lib/FS_Config.php:323
+msgid "Variation"
+msgstr "Вариации"
+
+#: lib/FS_Config.php:341 lib/FS_Filters.php:361
+msgid "recently added"
+msgstr "недавно добавленные"
+
+#: lib/FS_Config.php:344 lib/FS_Filters.php:364
+msgid "later added"
+msgstr "давно добавленные"
+
+#: lib/FS_Config.php:347 lib/FS_Filters.php:367
+msgid "from cheap to expensive"
+msgstr "от дешевых к дорогим"
+
+#: lib/FS_Config.php:350 lib/FS_Filters.php:370
+msgid "from expensive to cheap"
+msgstr "от дорогих к дешевым"
+
+#: lib/FS_Config.php:353 lib/FS_Filters.php:373
+msgid "by title A to Z"
+msgstr "по названию от А до Я"
+
+#: lib/FS_Config.php:356 lib/FS_Filters.php:376
+msgid "by title Z to A"
+msgstr "по названию от Я до А"
 
 #: lib/FS_Export_Class.php:163
 msgid "Update/create database was successful!"
@@ -254,30 +278,6 @@ msgstr "Произошла непредвиденная ошибка в проц
 #: lib/FS_Filters.php:77 lib/FS_Taxonomies_Class.php:39
 msgid "Product category"
 msgstr "Категории товаров"
-
-#: lib/FS_Filters.php:361
-msgid "recently added"
-msgstr "недавно добавленные"
-
-#: lib/FS_Filters.php:364
-msgid "later added"
-msgstr "давно добавленные"
-
-#: lib/FS_Filters.php:367
-msgid "from cheap to expensive"
-msgstr "от дешевых к дорогим"
-
-#: lib/FS_Filters.php:370
-msgid "from expensive to cheap"
-msgstr "от дорогих к дешевым"
-
-#: lib/FS_Filters.php:373
-msgid "by title A to Z"
-msgstr "по названию от А до Я"
-
-#: lib/FS_Filters.php:376
-msgid "by title Z to A"
-msgstr "по названию от Я до А"
 
 #: lib/FS_Form_Class.php:67
 msgid "this field is required"
@@ -381,6 +381,22 @@ msgstr "Настройки магазина"
 #: lib/FS_Shortcode.php:50
 msgid "Wish list is empty"
 msgstr "Список желаний пустой"
+
+#: lib/FS_Shortcode.php:84
+msgid "No items found in shopping cart"
+msgstr ""
+
+#: lib/FS_Shortcode.php:174
+msgid "Register to view this page"
+msgstr ""
+
+#: lib/FS_Shortcode.php:178
+msgid "Order not found"
+msgstr ""
+
+#: lib/FS_Shortcode.php:182
+msgid "Details of this order are not available for you"
+msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:36 lib/FS_Taxonomies_Class.php:38
 #: lib/FS_Taxonomies_Class.php:40 lib/FS_Taxonomies_Class.php:41
