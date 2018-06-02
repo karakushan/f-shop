@@ -26,12 +26,11 @@ class FS_Attribute_Widget extends \WP_Widget {
 	 */
 	public function form( $instance ) {
 		global $fs_config;
-		if ( isset( $instance['title'] ) ) {
-			$title = $instance['title'];
-		}
-		if ( isset( $instance['fs_att_group'] ) ) {
-			$fs_att_group = $instance['fs_att_group'];
-		}
+
+		$title        = ! empty( $instance['title'] ) ? $instance['title'] : '';
+		$fs_att_group = ! empty( $instance['fs_att_group'] ) ? $instance['fs_att_group'] : '';
+		$fs_att_types = ! empty( $instance['fs_att_types'] ) ? $instance['fs_att_types'] : '';
+
 		$args = array(
 			'show_option_all'  => '',
 			'show_option_none' => '',
@@ -56,15 +55,28 @@ class FS_Attribute_Widget extends \WP_Widget {
 		);
 		?>
       <p>
-        <label for="<?php echo esc_attr($this->get_field_id( 'title' )); ?>"><?php esc_html_e('Title','fast-shop') ?></label>
-        <input class="widefat" id="<?php echo esc_attr($this->get_field_id( 'title' )); ?>"
-               name="<?php echo esc_attr($this->get_field_name( 'title' )); ?>" type="text"
+        <label
+          for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'fast-shop' ) ?></label>
+        <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+               name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
                value="<?php echo esc_attr( $title ); ?>"/>
       </p>
       <p>
         <label
           for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>"><?php esc_html_e( 'Feature Group', 'fast-shop' ) ?></label><br>
 		  <?php wp_dropdown_categories( $args ); ?>
+      </p>
+      <p>
+        <label
+          for="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>"><?php esc_html_e( 'Type', 'fast-shop' ) ?></label><br>
+        <select name="<?php echo esc_attr( $this->get_field_name( 'fs_att_types' ) ); ?>"
+                id="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>">
+          <option><?php esc_html_e( 'Normal', 'fast-shop' ) ?></option>
+          <option
+            value="color" <?php selected( 'color', $fs_att_types ) ?>><?php esc_html_e( 'Color', 'fast-shop' ) ?></option>
+          <option
+            value="image" <?php selected( 'image', $fs_att_types ) ?>><?php esc_html_e( 'Image', 'fast-shop' ) ?></option>
+        </select>
       </p>
 		<?php
 	}
@@ -75,7 +87,9 @@ class FS_Attribute_Widget extends \WP_Widget {
 		if ( ! empty( $title ) ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
-		do_action( 'fs_attr_filter', $instance['fs_att_group'] );
+		do_action( 'fs_attr_filter', $instance['fs_att_group'], array(
+			'type' => $instance['fs_att_types']
+		) );
 		echo $args['after_widget'];
 	}
 
@@ -86,6 +100,7 @@ class FS_Attribute_Widget extends \WP_Widget {
 		$instance                 = array();
 		$instance['title']        = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
 		$instance['fs_att_group'] = intval( $new_instance['fs_att_group'] );
+		$instance['fs_att_types'] = ! empty( $new_instance['fs_att_types'] ) ? strip_tags( $new_instance['fs_att_types'] ) : '';
 
 		return $instance;
 	}

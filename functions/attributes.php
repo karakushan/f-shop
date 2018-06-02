@@ -128,8 +128,6 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
 }
 
 
-
-
 // селект фильтр для фильтрования товаров по наличию
 function fs_aviable_select_filter( $first_option = 'сделайте выбор' ) {
 	$filter        = '';
@@ -169,15 +167,19 @@ function fs_attr_filter( $group_id, $args = array() ) {
 	$default = array(
 		'redirect'            => true,
 		'container'           => 'ul',
-		'childs'              => false, // выводить также подгруппы (по умолчанию нет)
-		'childs_class'        => 'child', // css класс подгруппы
-		'container_class'     => 'listCheck',
-		'container_id'        => 'listCheck-' . $group_id,
+		'childs'              => false,
+		// выводить также подгруппы (по умолчанию нет)
+		'childs_class'        => 'child',
+		// css класс подгруппы
+		'container_class'     => 'fs-attr-filter',
+		'container_id'        => 'fs-attr-filter-' . $group_id,
 		'input_wrapper_class' => 'fs-checkbox-wrapper',
 		'input_class'         => 'checkStyle',
 		'after_input'         => '',
 		'label_class'         => 'checkLabel',
 		'taxonomy'            => $fs_config->data['product_att_taxonomy'],
+		'type'                => 'normal'
+		// тип отображения, по умолчанию normal - обычные чекбоксы (color - квадратики с цветом, image - изображения)
 	);
 	$args    = wp_parse_args( $args, $default );
 
@@ -189,6 +191,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 		'order'      => 'ASC',
 	);
 
+	$container_class = $args['container_class'] . ' fs-type-' . $args['type'];
 
 	if ( ! $args['childs'] ) {
 		$terms = get_terms( $terms_args );
@@ -201,7 +204,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 
 	if ( $terms ) {
 		if ( ! empty( $args['container'] ) ) {
-			echo '<' . $args['container'] . ' class="' . sanitize_html_class( $args['container_class'] ) . '"  id="' . sanitize_html_class( $args['container_id'] ) . '">';
+			echo '<' . $args['container'] . ' class="' . esc_attr( $container_class ) . '"  id="' . sanitize_html_class( $args['container_id'] ) . '">';
 		}
 		foreach ( $terms as $key => $term ) {
 			$product_attributes = isset( $_GET['attributes'][ $term->slug ] ) ? $_GET['attributes'][ $term->slug ] : '';
@@ -209,6 +212,16 @@ function fs_attr_filter( $group_id, $args = array() ) {
 				$input_wrapper_class = ' active';
 			} else {
 				$input_wrapper_class = '';
+			}
+
+			$color_box_style = '';
+			if ( $args['type'] == 'color' ) {
+				$label_color     = get_term_meta( $term->term_id, 'fs_att_color_value', 1 );
+				$color_box_style = ! empty( $label_color ) ? 'background-color:' . $label_color : '';
+			} elseif ( $args['type'] == 'image' ) {
+				$label_image_id  = get_term_meta( $term->term_id, 'fs_att_image_value', 1 );
+				$label_image_url = wp_get_attachment_image_url( $label_image_id, 'full' );
+				$color_box_style = 'background-image:' . $label_image_url;
 			}
 
 			if ( $args['container'] == 'ul' ) {
@@ -237,13 +250,18 @@ function fs_attr_filter( $group_id, $args = array() ) {
 			if ( ! $args['redirect'] ) {
 				$value = $term->term_id;
 			}
-			$input_class = 'class="' . sanitize_html_class( $args['input_class'] ) . '"';
-			$label_class = 'class="' . sanitize_html_class( $args['label_class'] ) . '"';
-			echo '<input type="checkbox" ' . $input_class . ' data-fs-action="filter" data-fs-redirect="' . $remove_attr . '" name="attributes[' . $term->slug . ']" value="' . $value . '"  ' . checked( $term->term_id, $product_attributes, 0 ) . ' id="check-' . $term->slug . '">';
+
+			echo '<input type="checkbox" class="' . esc_attr( $args['input_class'] ) . '" data-fs-action="filter" data-fs-redirect="' . esc_url( $remove_attr ) . '" name="attributes[' . esc_attr( $term->slug ) . ']" value="' . esc_attr( $value ) . '"  ' . checked( $term->term_id, $product_attributes, 0 ) . ' id="check-' . esc_attr( $term->slug ) . '">';
 			if ( ! empty( $args['after_input'] ) ) {
 				echo $args['after_input'];
 			}
-			echo '<label for="check-' . $term->slug . '"  ' . $label_class . '>' . $term->name . '</label >';
+
+			$label_before_text = '';
+			if ( $args['type'] == 'color' ) {
+				$label_before_text = '<span class="fs-color-box" style="' . esc_attr( $color_box_style ) . '"></span>';
+			}
+
+			echo '<label for="check-' . esc_attr( $term->slug ) . '"  class="' . esc_attr( $args['label_class'] ) . '">' . $label_before_text . ' ' . $term->name . '</label >';
 			if ( $args['childs'] ) {
 				fs_attr_filter( $term->term_id, $args );
 			}
