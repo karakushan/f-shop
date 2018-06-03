@@ -880,6 +880,17 @@ td.fs_photo.column-fs_photo img {
   height: 20px;
   margin-right: 10px; }
 
+.fs-info-block {
+  padding: 15px;
+  border-left: 4px solid #00aaff;
+  display: flex;
+  align-items: center;
+  background-color: #fafafa; }
+  .fs-info-block .icon {
+    color: #00aaff;
+    font-size: 24px;
+    margin-right: 10px; }
+
 .fs-cart-listing {
   margin-bottom: 30px; }
   .fs-cart-listing .fs-qty-wrapper {

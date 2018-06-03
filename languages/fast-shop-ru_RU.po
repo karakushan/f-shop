@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-03 16:17+0000\n"
-"PO-Revision-Date: 2018-06-03 16:21+0000\n"
+"POT-Creation-Date: 2018-06-03 17:18+0000\n"
+"PO-Revision-Date: 2018-06-03 17:20+0000\n"
 "Last-Translator: stoles-admin <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -95,12 +95,13 @@ msgid "ID"
 msgstr ""
 
 #: functions/filters.php:63 functions/filters.php:165
-#: templates/front-end/cart/list-products.php:25
+#: templates/front-end/cart/list-products.php:26
 #: templates/front-end/mail/themes/oxygen.php:456
 msgid "Price"
 msgstr "Цена"
 
 #: functions/filters.php:64 functions/filters.php:171
+#: templates/front-end/cart/list-products.php:23
 msgid "Vendor code"
 msgstr "Артикул"
 
@@ -108,7 +109,7 @@ msgstr "Артикул"
 msgid "Stock in stock"
 msgstr "Наличие на складе"
 
-#: functions/filters.php:66 templates/front-end/cart/list-products.php:16
+#: functions/filters.php:66 templates/front-end/cart/list-products.php:17
 msgid "Photo"
 msgstr "Фото"
 
@@ -236,51 +237,55 @@ msgstr "Русский рубль"
 msgid "Client"
 msgstr "Клиент"
 
-#: lib/FS_Config.php:293
+#: lib/FS_Config.php:251 templates/front-end/cart/list-products.php:115
+msgid "Checkout"
+msgstr "Оформить заказ"
+
+#: lib/FS_Config.php:298
 msgid "Prices"
 msgstr "Цены"
 
-#: lib/FS_Config.php:299
+#: lib/FS_Config.php:304
 msgid "Gallery"
 msgstr "Галерея"
 
-#: lib/FS_Config.php:305
+#: lib/FS_Config.php:310
 msgid "Attributes"
 msgstr "Атрибуты"
 
-#: lib/FS_Config.php:311
+#: lib/FS_Config.php:316
 msgid "Other"
 msgstr "Другое"
 
-#: lib/FS_Config.php:317
+#: lib/FS_Config.php:322
 msgid "Associated"
 msgstr "Связанное"
 
-#: lib/FS_Config.php:323
+#: lib/FS_Config.php:328
 msgid "Variation"
 msgstr "Вариации"
 
-#: lib/FS_Config.php:341 lib/FS_Filters.php:361
+#: lib/FS_Config.php:346 lib/FS_Filters.php:361
 msgid "recently added"
 msgstr "недавно добавленные"
 
-#: lib/FS_Config.php:344 lib/FS_Filters.php:364
+#: lib/FS_Config.php:349 lib/FS_Filters.php:364
 msgid "later added"
 msgstr "давно добавленные"
 
-#: lib/FS_Config.php:347 lib/FS_Filters.php:367
+#: lib/FS_Config.php:352 lib/FS_Filters.php:367
 msgid "from cheap to expensive"
 msgstr "от дешевых к дорогим"
 
-#: lib/FS_Config.php:350 lib/FS_Filters.php:370
+#: lib/FS_Config.php:355 lib/FS_Filters.php:370
 msgid "from expensive to cheap"
 msgstr "от дорогих к дешевым"
 
-#: lib/FS_Config.php:353 lib/FS_Filters.php:373
+#: lib/FS_Config.php:358 lib/FS_Filters.php:373
 msgid "by title A to Z"
 msgstr "по названию от А до Я"
 
-#: lib/FS_Config.php:356 lib/FS_Filters.php:376
+#: lib/FS_Config.php:361 lib/FS_Filters.php:376
 msgid "by title Z to A"
 msgstr "по названию от Я до А"
 
@@ -324,7 +329,7 @@ msgstr "Статус заказа не определен"
 msgid "Products"
 msgstr "Товары"
 
-#: lib/FS_Post_Type.php:49 templates/front-end/cart/list-products.php:19
+#: lib/FS_Post_Type.php:49 templates/front-end/cart/list-products.php:20
 msgid "Product"
 msgstr "Товар"
 
@@ -405,7 +410,7 @@ msgstr ""
 
 #: lib/FS_Shortcode.php:174
 msgid "Register to view this page"
-msgstr ""
+msgstr "Зарегистрируйтесь, чтобы иметь доступ к этой странице"
 
 #: lib/FS_Shortcode.php:178
 msgid "Order not found"
@@ -413,7 +418,7 @@ msgstr ""
 
 #: lib/FS_Shortcode.php:182
 msgid "Details of this order are not available for you"
-msgstr ""
+msgstr "Детали этого заказа не доступны для Вас"
 
 #: lib/FS_Taxonomies_Class.php:36 lib/FS_Taxonomies_Class.php:38
 #: lib/FS_Taxonomies_Class.php:40 lib/FS_Taxonomies_Class.php:41
@@ -470,7 +475,7 @@ msgid "Discounts"
 msgstr "Скидки"
 
 #: lib/FS_Taxonomies_Class.php:117
-#: templates/front-end/cart/list-products.php:102
+#: templates/front-end/cart/list-products.php:104
 msgid "Discount"
 msgstr "Скидка"
 
@@ -524,12 +529,12 @@ msgid "Значение скидки"
 msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:518
-#: templates/front-end/cart/list-products.php:31
+#: templates/front-end/cart/list-products.php:32
 msgid "Cost"
 msgstr "Стоимость"
 
 #: templates/back-end/orders.php:36
-#: templates/front-end/cart/list-products.php:106
+#: templates/front-end/cart/list-products.php:108
 #: templates/front-end/mail/themes/oxygen.php:459
 #: templates/front-end/mail/themes/oxygen.php:512
 msgid "Total"
@@ -655,25 +660,25 @@ msgstr "мужчина"
 msgid "female"
 msgstr "женщина"
 
-#: templates/front-end/cart/list-products.php:22
-msgid "Vendor Code"
-msgstr ""
-
-#: templates/front-end/cart/list-products.php:28
+#: templates/front-end/cart/list-products.php:29
 msgid "Quantity"
 msgstr "Количество"
 
-#: templates/front-end/cart/list-products.php:83
+#: templates/front-end/cart/list-products.php:84
 msgid "Continue shopping"
 msgstr "Продолжить покупки"
 
-#: templates/front-end/cart/list-products.php:98
+#: templates/front-end/cart/list-products.php:100
 msgid "Cost of goods"
 msgstr "Стоимость товаров"
 
-#: templates/front-end/cart/list-products.php:113
-msgid "Checkout"
-msgstr "Оформить заказ"
+#: templates/front-end/cart/list-products.php:118
+msgid "Your basket is empty"
+msgstr "Ваша корзина пуста"
+
+#: templates/front-end/cart/list-products.php:118
+msgid "To the catalog"
+msgstr "В каталог"
 
 #: templates/front-end/order/last-order-info.php:11
 msgid "Name"

@@ -990,8 +990,26 @@ td.fs_photo.column-fs_photo img {
     margin-right: 10px;
 }
 
+// Классы предупреждений, информации и ошибок
+.fs-info-block {
+    padding: 15px;
+    border-left: 4px solid #00aaff;
+    display: flex;
+    align-items: center;
+    background-color: #fafafa;
+    .icon {
+        color: #00aaff;
+        font-size: 24px;
+        margin-right: 10px;
+
+    }
+}
+
+// --- Классы предупреждений, информации и ошибок
+
 .fs-cart-listing {
     margin-bottom: 30px;
+
     .fs-qty-wrapper {
         position: relative;
         display: inline-table;
