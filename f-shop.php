@@ -31,9 +31,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-ini_set( 'max_execution_time', 0 ); //0=NOLIMIT
-set_time_limit( 0 );
-
 /* Основные константы для упрощения режим разработки, сокращения написания путей и пр. */
 define( 'FS_PLUGIN_VER', '1.2' ); // версия плагина
 define( 'FS_PLUGIN_PREFIX', 'fs_' ); // префикс файлов
@@ -75,7 +72,7 @@ function fs_activate() {
 					'post_content' => $page['content'],
 					'post_type'    => 'page',
 					'post_status'  => 'publish',
-					'post_name'    => 'fs-' . $key
+					'post_name'    => $key
 				) );
 				if ( $post_id ) {
 					update_option( $page['option'], intval( $post_id ) );

@@ -866,7 +866,7 @@ td.fs_photo.column-fs_photo img {
     }
 }
 
-.fs-order-detail{
+.fs-order-detail {
     tfoot {
         font-weight: bold;
     }
@@ -893,6 +893,7 @@ td.fs_photo.column-fs_photo img {
     font-weight: bold;
     text-transform: uppercase;
 }
+
 .fs-order-info {
     width: 800px;
     max-width: 100%;
@@ -955,7 +956,7 @@ td.fs_photo.column-fs_photo img {
             color: #4b4b4b;
             border-bottom: 1px dotted #d7d7d7;
             padding: 12px 0;
-            >span {
+            > span {
                 font-style: normal;
                 font-family: Verdana;
                 color: #000000;
@@ -965,6 +966,7 @@ td.fs_photo.column-fs_photo img {
     }
 
 }
+
 .fs-pay-method {
     width: 320px;
     margin: 0 auto 30px;
@@ -978,6 +980,7 @@ td.fs_photo.column-fs_photo img {
         margin-bottom: 30px;
     }
 }
+
 .fs-color-box {
     border: 1px solid #e9e9e9;
     display: inline-block;
@@ -986,6 +989,55 @@ td.fs_photo.column-fs_photo img {
     height: 20px;
     margin-right: 10px;
 }
+
+.fs-cart-listing {
+    margin-bottom: 30px;
+    .fs-qty-wrapper {
+        position: relative;
+        display: inline-table;
+        vertical-align: middle;
+        button {
+            border: none;
+            background: none;
+            font-size: 14px;
+        }
+        input {
+            width: 50px;
+            height: 28px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1;
+            padding: 0;
+            box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.0784313725490196);
+        }
+
+    }
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        vertical-align: middle;
+    }
+    .fs-products-after {
+        margin-bottom: 30px;
+    }
+    .fs-remove-position {
+        border: 1px solid $c-red;
+        height: 24px;
+        width: 24px;
+        color: #ffffff;
+        font-size: 18px;
+        padding: 0;
+        font-weight: 700;
+        border-radius: 0;
+        background: $c-red;
+        line-height: 1;
+        &:hover {
+            color: $c-red;
+            background: #fff;
+        }
+    }
+}
+
 
 
 

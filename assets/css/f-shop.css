@@ -880,4 +880,43 @@ td.fs_photo.column-fs_photo img {
   height: 20px;
   margin-right: 10px; }
 
+.fs-cart-listing {
+  margin-bottom: 30px; }
+  .fs-cart-listing .fs-qty-wrapper {
+    position: relative;
+    display: inline-table;
+    vertical-align: middle; }
+    .fs-cart-listing .fs-qty-wrapper button {
+      border: none;
+      background: none;
+      font-size: 14px; }
+    .fs-cart-listing .fs-qty-wrapper input {
+      width: 50px;
+      height: 28px;
+      text-align: center;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1;
+      padding: 0;
+      box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.0784313725); }
+  .fs-cart-listing .table > tbody > tr > td, .fs-cart-listing .table > tbody > tr > th, .fs-cart-listing .table > tfoot > tr > td, .fs-cart-listing .table > tfoot > tr > th, .fs-cart-listing .table > thead > tr > td, .fs-cart-listing .table > thead > tr > th {
+    vertical-align: middle; }
+  .fs-cart-listing .fs-products-after {
+    margin-bottom: 30px; }
+  .fs-cart-listing .fs-remove-position {
+    border: 1px solid #F8342D;
+    height: 24px;
+    width: 24px;
+    color: #ffffff;
+    font-size: 18px;
+    padding: 0;
+    font-weight: 700;
+    border-radius: 0;
+    background: #F8342D;
+    line-height: 1; }
+    .fs-cart-listing .fs-remove-position:hover {
+      color: #F8342D;
+      background: #fff; }
+
 /*# sourceMappingURL=f-shop.css.map */

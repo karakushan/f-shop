@@ -152,6 +152,12 @@ class FS_Settings_Class {
 					),
 					array(
 						'type'  => 'pages',
+						'name'  => 'page_checkout',
+						'label' => 'Страница оформление покупки',
+						'value' => fs_option( 'page_checkout', 0 )
+					),
+					array(
+						'type'  => 'pages',
 						'name'  => 'page_payment',
 						'label' => 'Страница оплаты',
 						'value' => fs_option( 'page_payment', 0 )
@@ -193,7 +199,7 @@ class FS_Settings_Class {
 		);
 
 		if ( taxonomy_exists( $fs_config->data['currencies_taxonomy'] ) ) {
-			$settings['currencies']['fields'] []= array(
+			$settings['currencies']['fields'] [] = array(
 				'type'  => 'custom',
 				'name'  => 'default_currency',
 				'label' => 'Валюта по умолчанию',

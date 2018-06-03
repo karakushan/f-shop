@@ -144,7 +144,7 @@ class FS_Shortcode {
 	 *
 	 */
 	public function cart_shortcode() {
-		return fs_frontend_template( 'order/products-list' );
+		return fs_frontend_template( 'cart/list-products' );
 	}
 
 	/**

@@ -530,7 +530,7 @@ function fs_delete_position( $product_id, $args ) {
 
 	) );
 
-	$content = sanitize_text_field( $args['content'] );
+	$content = $args['content'];
 
 	switch ( $args['type'] ) {
 		case 'link':
@@ -545,6 +545,17 @@ function fs_delete_position( $product_id, $args ) {
 	}
 
 	return true;
+}
+
+/**
+ * Возвращает ссылку на каталог товаров
+ *
+ * @return false|string
+ */
+function fs_get_catalog_link() {
+	global $fs_config;
+
+	return get_post_type_archive_link( $fs_config->data['post_type'] );
 }
 
 /**
@@ -800,6 +811,18 @@ function fs_order_send( $label = 'Отправить заказ', $attr = array(
 	echo "<button type=\"submit\" $attr >$label <span class=\"fs-preloader\">$preloader</span></button>";
 }
 
+/**
+ * Возвращает ссылку на страницу  оформления покупки
+ *
+ * @return false|string
+ */
+function fs_get_checkout_page_link() {
+	$page_id = fs_option( 'page_checkout', 0 );
+	if ( $page_id ) {
+		return get_the_permalink( $page_id );
+	}
+}
+
 function fs_order_send_form() {
 	$form = new \FS\FS_Shortcode;
 	echo $form->order_send();
@@ -944,8 +967,8 @@ function fs_cart_quantity( $product_id, $value, $args = array() ) {
 	$product_id = intval( $product_id );
 	$args       = wp_parse_args( $args, array(
 		'wrapper'       => 'div',
-		'wrapper_class' => sanitize_html_class( 'fs-qty-wrapper' ),
-		'position'      => '%pluss% %input% %minus%',
+		'wrapper_class' => 'fs-qty-wrapper',
+		'position'      => '%minus% %input% %pluss%  ',
 		'pluss'         => array( 'class' => sanitize_html_class( 'fs-pluss' ), 'content' => '+' ),
 		'minus'         => array( 'class' => sanitize_html_class( 'fs-minus' ), 'content' => '-' ),
 		'input'         => array( 'class' => 'fs-cart-quantity' )

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-09 14:13+0000\n"
+"POT-Creation-Date: 2018-06-02 17:37+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: functions/functions.php:2182
+#: functions/functions.php:2229
 #, php-format
 msgid "Showing %1$d products from %2$d"
 msgstr ""
@@ -181,64 +181,88 @@ msgstr ""
 msgid "Feature Group"
 msgstr ""
 
-#: lib/FS_Config.php:69
-msgid "Prices"
-msgstr ""
-
-#: lib/FS_Config.php:75
-msgid "Gallery"
-msgstr ""
-
-#: lib/FS_Config.php:81
-msgid "Attributes"
-msgstr ""
-
-#: lib/FS_Config.php:87
-msgid "Other"
-msgstr ""
-
-#: lib/FS_Config.php:93
-msgid "Associated"
-msgstr ""
-
-#: lib/FS_Config.php:99
-msgid "Варианты"
-msgstr ""
-
-#: lib/FS_Config.php:161
+#: lib/FS_Config.php:122
 msgid "Базовая цена"
 msgstr ""
 
-#: lib/FS_Config.php:164
+#: lib/FS_Config.php:125
 msgid "Основной тип цены"
 msgstr ""
 
-#: lib/FS_Config.php:168
+#: lib/FS_Config.php:129
 msgid "Акционная цена"
 msgstr ""
 
-#: lib/FS_Config.php:171
+#: lib/FS_Config.php:132
 msgid "Этот тип изменяет базовую цену отображаемую по умолчанию"
 msgstr ""
 
-#: lib/FS_Config.php:266
+#: lib/FS_Config.php:227
 msgid "Register on the site"
 msgstr ""
 
-#: lib/FS_Config.php:273
+#: lib/FS_Config.php:234
 msgid "US dollar"
 msgstr ""
 
-#: lib/FS_Config.php:274
+#: lib/FS_Config.php:235
 msgid "Ukrainian hryvnia"
 msgstr ""
 
-#: lib/FS_Config.php:275
+#: lib/FS_Config.php:236
 msgid "Russian ruble"
 msgstr ""
 
-#: lib/FS_Config.php:280
+#: lib/FS_Config.php:241
 msgid "Client"
+msgstr ""
+
+#: lib/FS_Config.php:293
+msgid "Prices"
+msgstr ""
+
+#: lib/FS_Config.php:299
+msgid "Gallery"
+msgstr ""
+
+#: lib/FS_Config.php:305
+msgid "Attributes"
+msgstr ""
+
+#: lib/FS_Config.php:311
+msgid "Other"
+msgstr ""
+
+#: lib/FS_Config.php:317
+msgid "Associated"
+msgstr ""
+
+#: lib/FS_Config.php:323
+msgid "Variation"
+msgstr ""
+
+#: lib/FS_Config.php:341 lib/FS_Filters.php:361
+msgid "recently added"
+msgstr ""
+
+#: lib/FS_Config.php:344 lib/FS_Filters.php:364
+msgid "later added"
+msgstr ""
+
+#: lib/FS_Config.php:347 lib/FS_Filters.php:367
+msgid "from cheap to expensive"
+msgstr ""
+
+#: lib/FS_Config.php:350 lib/FS_Filters.php:370
+msgid "from expensive to cheap"
+msgstr ""
+
+#: lib/FS_Config.php:353 lib/FS_Filters.php:373
+msgid "by title A to Z"
+msgstr ""
+
+#: lib/FS_Config.php:356 lib/FS_Filters.php:376
+msgid "by title Z to A"
 msgstr ""
 
 #: lib/FS_Export_Class.php:163
@@ -251,30 +275,6 @@ msgstr ""
 
 #: lib/FS_Filters.php:77 lib/FS_Taxonomies_Class.php:39
 msgid "Product category"
-msgstr ""
-
-#: lib/FS_Filters.php:361
-msgid "recently added"
-msgstr ""
-
-#: lib/FS_Filters.php:364
-msgid "later added"
-msgstr ""
-
-#: lib/FS_Filters.php:367
-msgid "from cheap to expensive"
-msgstr ""
-
-#: lib/FS_Filters.php:370
-msgid "from expensive to cheap"
-msgstr ""
-
-#: lib/FS_Filters.php:373
-msgid "by title A to Z"
-msgstr ""
-
-#: lib/FS_Filters.php:376
-msgid "by title Z to A"
 msgstr ""
 
 #: lib/FS_Form_Class.php:67
@@ -378,6 +378,22 @@ msgstr ""
 
 #: lib/FS_Shortcode.php:50
 msgid "Wish list is empty"
+msgstr ""
+
+#: lib/FS_Shortcode.php:84
+msgid "No items found in shopping cart"
+msgstr ""
+
+#: lib/FS_Shortcode.php:174
+msgid "Register to view this page"
+msgstr ""
+
+#: lib/FS_Shortcode.php:178
+msgid "Order not found"
+msgstr ""
+
+#: lib/FS_Shortcode.php:182
+msgid "Details of this order are not available for you"
 msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:36 lib/FS_Taxonomies_Class.php:38

@@ -247,6 +247,11 @@ class FS_Config {
 				'content' => '[fs_cart]',
 				'option'  => 'page_cart'
 			),
+			'ckeckout'   => array(
+				'title'   => __( 'Checkout', 'fast-shop' ),
+				'content' => '[fs_checkout]',
+				'option'  => 'page_checkout'
+			),
 			'pay'        => array(
 				'title'   => 'Оплата покупки',
 				'content' => '[fs_pay_methods]',
