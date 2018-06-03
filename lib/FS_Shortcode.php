@@ -23,8 +23,8 @@ class FS_Shortcode {
 		add_shortcode( 'fs_last_order_id', array( $this, 'last_order_id' ) );
 		add_shortcode( 'fs_last_order_amount', array( $this, 'last_order_amount' ) );
 		add_shortcode( 'fs_have_cart_items', array( $this, 'have_cart_items' ) );
-		add_shortcode( 'fs_order_thanks', array( $this, 'fs_order_thanks' ) );
-		add_shortcode( 'fs_order_send', array( $this, 'order_send' ) );
+		add_shortcode( 'fs_checkout_success', array( $this, 'fs_checkout_success' ) );
+		add_shortcode( 'fs_checkout', array( $this, 'order_send' ) );
 		add_shortcode( 'fs_user_cabinet', array( $this, 'user_cabinet' ) );
 		add_shortcode( 'fs_single_order', array( $this, 'single_order' ) );
 		add_shortcode( 'fs_register_form', 'fs_register_form' );
@@ -121,8 +121,8 @@ class FS_Shortcode {
 	 *
 	 * @return mixed
 	 */
-	function fs_order_thanks() {
-		return fs_frontend_template( 'order/thanks' );
+	function fs_checkout_success() {
+		return fs_frontend_template( 'checkout/checkout-success' );
 	}
 
 	/**
@@ -221,10 +221,10 @@ class FS_Shortcode {
 	 */
 	public function order_send( $atts = array() ) {
 		$atts     = shortcode_atts( array(
-			'class' => 'order-send'
+			'class' => 'fs-checkout-form'
 		), $atts );
 		$template = fs_form_header( array( 'name' => 'fs-order-send', 'class' => $atts['class'] ), 'order_send' );
-		$template .= fs_frontend_template( 'order/order-form' );
+		$template .= fs_frontend_template( 'checkout/checkout' );
 		$template .= fs_form_bottom( '' );
 
 		return $template;

@@ -891,6 +891,29 @@ td.fs_photo.column-fs_photo img {
     font-size: 24px;
     margin-right: 10px; }
 
+.fs-checkout-form input.error {
+  border: 1px solid #ff4e4e; }
+.fs-checkout-form label.error {
+  background: #ff4e4e;
+  padding: 7px 14px;
+  line-height: 1;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 300;
+  position: relative;
+  border-radius: 3px;
+  letter-spacing: .05em; }
+  .fs-checkout-form label.error:before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 4px 6px 4px;
+    border-color: transparent transparent #ff4e4e transparent;
+    top: -6px;
+    position: absolute;
+    left: 10px; }
+
 .fs-cart-listing {
   margin-bottom: 30px; }
   .fs-cart-listing .fs-qty-wrapper {

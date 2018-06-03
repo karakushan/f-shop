@@ -806,7 +806,7 @@ function fs_add_to_comparison( $post_id = 0, $label = '', $attr = array() ) {
 function fs_order_send( $label = 'Отправить заказ', $attr = array(), $preloader = '<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>' ) {
 	$attr = fs_parse_attr( $attr, array(
 		'data-fs-action' => "order-send",
-		'class'          => 'fs-order-send'
+		'class'          => 'fs-order-send btn btn-success btn-lg'
 	) );
 	echo "<button type=\"submit\" $attr >$label <span class=\"fs-preloader\">$preloader</span></button>";
 }

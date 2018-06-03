@@ -1005,7 +1005,34 @@ td.fs_photo.column-fs_photo img {
     }
 }
 
-// --- Классы предупреждений, информации и ошибок
+// Оформление заказа
+.fs-checkout-form {
+    input.error {
+        border: 1px solid #ff4e4e;
+    }
+    label.error {
+        background: #ff4e4e;
+        padding: 7px 14px;
+        line-height: 1;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 300;
+        position: relative;
+        border-radius: 3px;
+        letter-spacing: .05em;
+        &:before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 4px 6px 4px;
+            border-color: transparent transparent #ff4e4e transparent;
+            top: -6px;
+            position: absolute;
+            left: 10px;
+        }
+    }
+}
 
 .fs-cart-listing {
     margin-bottom: 30px;

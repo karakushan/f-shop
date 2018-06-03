@@ -55,8 +55,8 @@ class FS_Form_Class {
 		}
 		$default     = array(
 			'type'          => ! empty( FS_Config::$form_fields[ $field_name ]['type'] ) ? FS_Config::$form_fields[ $field_name ]['type'] : 'text',
-			'class'         => '',
-			'wrapper'       => true,
+			'class'         => 'form-control',
+			'wrapper'       => false,
 			'wrapper_class' => 'fs-field-wrapper',
 			'label_class'   => 'fs-form-label',
 			'id'            => str_replace( array(
@@ -64,15 +64,15 @@ class FS_Form_Class {
 				']'
 			), array( '_' ), $field_name ),
 			'required'      => ! empty( FS_Config::$form_fields[ $field_name ]['required'] ) ? FS_Config::$form_fields[ $field_name ]['required'] : false,
-			'title'         => __( 'this field is required', 'fast-shop' ),
+			'title'         => ! empty( FS_Config::$form_fields[ $field_name ]['title'] ) ? FS_Config::$form_fields[ $field_name ]['title'] : __( 'this field is required', 'fast-shop' ),
 			'placeholder'   => ! empty( FS_Config::$form_fields[ $field_name ]['placeholder'] ) ? FS_Config::$form_fields[ $field_name ]['placeholder'] : null,
 			'label'         => ! empty( FS_Config::$form_fields[ $field_name ]['label'] ) ? FS_Config::$form_fields[ $field_name ]['label'] : null,
-			'value'         => $default_value,
+			'value'         => ! empty( FS_Config::$form_fields[ $field_name ]['value'] ) ? FS_Config::$form_fields[ $field_name ]['value'] : '',
 			'html'          => '',
 			'selected'      => $selected,
 			'options'       => array(),
 			'format'        => '%input% %label%',
-			'el'            => 'select',
+			'el'            => 'radio',
 			'first_option'  => __( 'Select' ),
 			'before'        => '',
 			'after'         => '',
@@ -96,6 +96,9 @@ class FS_Form_Class {
 		if ( $args['wrapper'] ) {
 			$field .= '<div class="' . esc_attr( $args['wrapper_class'] ) . '">';
 		}
+		if ( ! empty( $args['label'] ) && ! in_array( $args['type'], array( 'checkbox', 'radio' ) ) ) {
+			$field .= '<label>' . esc_html( $args['label'] ) . '</label>';
+		}
 		switch ( $args['type'] ) {
 			case 'text':
 				$field .= ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
@@ -110,7 +113,7 @@ class FS_Form_Class {
 				$field .= ' <input type="radio" name="' . $field_name . '"  ' . checked( 'on', $value, false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 				break;
 			case 'checkbox':
-				$field .= ' <input type="checkbox" name="' . $field_name . '"  ' . checked( '1', $args['value'], false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . '  value="1"  ' . $id . '> ';
+				$field .= '<div class="checkbox"><label><input type="checkbox" name="' . esc_attr( $field_name ) . '"  value="1" ' . checked( '1', $args['value'], false ) . '> ' . esc_html( $args['label'] ) . ' </label> </div>';
 				break;
 			case 'textarea':
 				$field .= '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
@@ -157,11 +160,12 @@ class FS_Form_Class {
 						'taxonomy'   => $fs_config->data['product_pay_taxonomy']
 					) );
 					if ( $pay_methods ) {
-						foreach ( $pay_methods as $pay_method ) {
-							$field .= str_replace( array( '%input%', '%label%' ), array(
-								'<input type="radio" name="' . $field_name . '" value="' . $pay_method->term_id . '" class="' . $args['class'] . '" id="fs - del - ' . $pay_method->term_id . '">',
-								'<label for="fs - del - ' . $pay_method->term_id . '" class="' . $args['label_class'] . '">' . $pay_method->name . '</label>'
-							), $args['format'] );
+						foreach ( $pay_methods as $key => $pay_method ) {
+							$field .= '<div class="radio">';
+							$field .= '<label>';
+							$field .= '<input type="radio" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( 'fs-term-' . $pay_method->term_id ) . '" value="' . esc_attr( $pay_method->term_id ) . '" ' . checked( 0, $key, 0 ) . '>' . esc_html( $pay_method->name );
+							$field .= '</label>';
+							$field .= '</div>';
 						}
 					}
 
@@ -184,11 +188,12 @@ class FS_Form_Class {
 						'taxonomy'   => $fs_config->data['product_del_taxonomy']
 					) );
 					if ( $del_methods ) {
-						foreach ( $del_methods as $del_method ) {
-							$field .= str_replace( array( '%input%', '%label%' ), array(
-								'<input type="radio" name="' . $field_name . '" value="' . $del_method->term_id . '" class="' . $args['class'] . '" id="fs - del - ' . $del_method->term_id . '">',
-								'<label for="fs - del - ' . $del_method->term_id . '" class="' . $args['label_class'] . '">' . $del_method->name . '</label>'
-							), $args['format'] );
+						foreach ( $del_methods as $key => $del_method ) {
+							$field .= '<div class="radio">';
+							$field .= '<label>';
+							$field .= '<input type="radio" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( 'fs-term-' . $del_method->term_id ) . '" value="' . esc_attr( $del_method->term_id ) . '" ' . checked( 0, $key, 0 ) . '>' . esc_html( $del_method->name );
+							$field .= '</label>';
+							$field .= '</div>';
 						}
 					}
 

@@ -150,75 +150,82 @@ class FS_Config {
 		self::$form_fields = array(
 			'fs_email'             => array(
 				'type'        => 'email',
-				'label'       => 'Ваш email',
+				'label'       => '',
 				'placeholder' => 'Ваш email',
+				'title'       => 'Ведите корректный email',
 				'required'    => true
 			),
 			'fs_first_name'        => array(
 				'type'        => 'text',
-				'label'       => 'Ваше имя',
+				'label'       => '',
 				'placeholder' => 'Ваше имя',
 				'required'    => true
 			),
 			'fs_last_name'         => array(
 				'type'        => 'text',
-				'label'       => 'Ваша фамилия',
+				'label'       => '',
 				'placeholder' => 'Ваша фамилия',
 				'required'    => true
 			),
 			'fs_phone'             => array(
 				'type'        => 'tel',
-				'label'       => 'Телефон',
+				'label'       => '',
 				'placeholder' => 'Телефон',
+				'title'       => 'Ведите корректный номер телефона',
 				'required'    => true,
 				'save_meta'   => 1
 			),
 			'fs_city'              => array(
 				'type'        => 'text',
-				'label'       => 'Город',
+				'label'       => '',
 				'placeholder' => 'Город',
 				'required'    => true,
 				'save_meta'   => 1
 			),
 			'fs_adress'            => array(
 				'type'        => 'text',
-				'label'       => 'Адрес доставки',
+				'label'       => '',
 				'placeholder' => 'Адрес доставки',
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_home_num'          => array(
 				'type'        => 'text',
-				'label'       => 'Номер дома',
+				'label'       => '',
 				'placeholder' => 'Номер дома',
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_apartment_num'     => array(
 				'type'        => 'text',
-				'label'       => 'Номер квартиры',
+				'label'       => '',
 				'placeholder' => 'Номер квартиры',
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_delivery_number'   => array(
 				'type'        => 'text',
-				'label'       => 'Номер отделения',
+				'label'       => '',
 				'placeholder' => 'Номер отделения',
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_delivery_methods'  => array(
-				'type'        => 'radio',
-				'label'       => 'Способ доставки',
+				'type'        => 'del_methods',
+				'label'       => __( 'Delivery method', 'fast-shop' ),
 				'placeholder' => 'Способ доставки',
 				'required'    => true,
 				'save_meta'   => 1
 			),
-			'fs_payment_methods'   => array( 'type' => 'radio', 'label' => 'Способ оплаты', 'save_meta' => 1 ),
+			'fs_payment_methods'   => array(
+				'type'      => 'pay_methods',
+				'label'     => __( 'Payment method', 'fast-shop' ),
+				'required'  => true,
+				'save_meta' => 1
+			),
 			'fs_comment'           => array(
-				'type'        => 'text',
-				'label'       => 'Комментарий',
+				'type'        => 'textarea',
+				'label'       => '',
 				'placeholder' => 'Комментарий',
 				'required'    => false
 			),
@@ -259,7 +266,7 @@ class FS_Config {
 			),
 			'thanks'     => array(
 				'title'   => 'Благодарим за покупку',
-				'content' => '[fs_order_thanks]',
+				'content' => '[fs_checkout_success]',
 				'option'  => 'page_success'
 			),
 			'wishlist'   => array(
