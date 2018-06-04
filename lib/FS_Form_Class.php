@@ -113,7 +113,7 @@ class FS_Form_Class {
 				$field .= ' <input type="radio" name="' . $field_name . '"  ' . checked( 'on', $value, false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 				break;
 			case 'checkbox':
-				$field .= '<div class="checkbox"><label><input type="checkbox" name="' . esc_attr( $field_name ) . '"  value="1" ' . checked( '1', $args['value'], false ) . '> ' . esc_html( $args['label'] ) . ' </label> </div>';
+				$field .= '<div class="fs-checkbox"><input type="checkbox" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '"  value="1" ' . checked( '1', $args['value'], false ) . '><label for="' . esc_attr( $field_name ) . '">' . esc_html( $args['label'] ) . ' </label> </div>';
 				break;
 			case 'textarea':
 				$field .= '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
@@ -161,10 +161,9 @@ class FS_Form_Class {
 					) );
 					if ( $pay_methods ) {
 						foreach ( $pay_methods as $key => $pay_method ) {
-							$field .= '<div class="radio">';
-							$field .= '<label>';
-							$field .= '<input type="radio" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( 'fs-term-' . $pay_method->term_id ) . '" value="' . esc_attr( $pay_method->term_id ) . '" ' . checked( 0, $key, 0 ) . '>' . esc_html( $pay_method->name );
-							$field .= '</label>';
+							$field .= '<div class="fs-radio">';
+							$field .= '<input type="radio" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( 'fs-term-' . $pay_method->term_id ) . '" value="' . esc_attr( $pay_method->term_id ) . '" ' . checked( 0, $key, 0 ) . '>';
+							$field .= '<label for="' . esc_attr( 'fs-term-' . $pay_method->term_id ) . '">' . esc_html( $pay_method->name ) . '</label>';
 							$field .= '</div>';
 						}
 					}
@@ -189,10 +188,9 @@ class FS_Form_Class {
 					) );
 					if ( $del_methods ) {
 						foreach ( $del_methods as $key => $del_method ) {
-							$field .= '<div class="radio">';
-							$field .= '<label>';
-							$field .= '<input type="radio" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( 'fs-term-' . $del_method->term_id ) . '" value="' . esc_attr( $del_method->term_id ) . '" ' . checked( 0, $key, 0 ) . '>' . esc_html( $del_method->name );
-							$field .= '</label>';
+							$field .= '<div class="fs-radio">';
+							$field .= '<input type="radio" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( 'fs-term-' . $del_method->term_id ) . '" value="' . esc_attr( $del_method->term_id ) . '" ' . checked( 0, $key, 0 ) . '>';
+							$field .= '<label for="' . esc_attr( 'fs-term-' . $del_method->term_id ) . '">' . esc_html( $del_method->name ) . '</label>';
 							$field .= '</div>';
 						}
 					}

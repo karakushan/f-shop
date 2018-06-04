@@ -507,41 +507,35 @@ function fs_get_cart( $args = array() ) {
 /**
  * выводит кнопку удаления товара из корзины
  *
- * @param $product_id - ID удаляемого товара
- * @param $args - массив аргументов для кнопки или ссылки
+ * @param int $product_id - ID удаляемого товара
+ * @param  array $args - массив аргументов для кнопки или ссылки
  *        'text'  - содержимое кнопки, по умолчанию '&#10005;',
  *        'type'  - тип тега ссылка 'link' или 'button',
  *        'class' - класс для кнопки, ссылки (по умолчанию класс 'fs-delete-position')
  *
  * @return bool
  */
-function fs_delete_position( $product_id, $args ) {
-	$args      = wp_parse_args( $args, array(
+function fs_delete_position( $product_id = 0, $args = array() ) {
+	if ( ! $product_id || ! is_numeric( $product_id ) ) {
+		return false;
+	}
+
+	$args = wp_parse_args( $args, array(
 		'content' => '',
 		'type'    => 'link',
 		'class'   => 'fs-delete-position'
 	) );
-	$html_atts = fs_parse_attr( array(), array(
-		'class'        => $args['class'],
-		'title'        => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) ),
-		'data-fs-type' => 'product-delete',
-		'data-fs-id'   => $product_id,
-		'data-fs-name' => get_the_title( $product_id )
 
-	) );
-
-	$content = $args['content'];
+	$title = sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) );
 
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#" ' . $html_atts . '>' . $content . '</a>';
+			echo '<a href="#" class="' . esc_attr( $args['class'] ) . '" data-fs-type="product-delete" data-fs-id="' . esc_attr( $product_id ) . '" data-fs-name="' . esc_attr( get_the_title( $product_id ) ) . '" title="' . esc_attr( $title ) . '">' . $args['content'] . '</a>';
 			break;
 		case 'button':
-			echo '<button type="button" ' . $html_atts . '>' . $content . '</button>';
+			echo '<button type="button" class="' . esc_attr( $args['class'] ) . '" data-fs-type="product-delete" data-fs-id="' . esc_attr( $product_id ) . '" data-fs-name="' . esc_attr( get_the_title( $product_id ) ) . '" title="' . esc_attr( $title ) . '">' . $args['content'] . '</button>';
 			break;
-		default:
-			echo '<a href="#" ' . $html_atts . '>' . $content . '</a>';
-			break;
+
 	}
 
 	return true;
