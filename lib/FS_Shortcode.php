@@ -187,7 +187,7 @@ class FS_Shortcode {
 				$html .= '<p class="fs-order-detail">' . $error . '</p>';
 			}
 		} else {
-			$html = fs_frontend_template( 'shortcode / fs-order-info', $atts );
+			$html = fs_frontend_template( 'shortcode/fs-order-info', $atts );
 		}
 
 		return $html;
