@@ -1181,7 +1181,7 @@ function fs_price_max( $filter = true ) {
  * @param  array $args - дополнительные аргументы массивом
  *
  */
-function fs_wishlist_button( $post_id = 0, $label = 'В список желаний', $args = array() ) {
+function fs_add_to_wishlist( $post_id = 0, $label = 'В список желаний', $args = array() ) {
 	$post_id = fs_get_product_id( $post_id );
 	// определим параметры по умолчанию
 	$defaults  = array(
@@ -2260,4 +2260,28 @@ function fs_items_on_page( $format = '' ) {
 	printf( $format, $posts_per_page, $found_posts );
 }
 
+/**
+ * Копирует папки и файлы и @var $from в @var $to учитывая структуру
+ *
+ * @param string $from из какой папки копировать файлы
+ * @param string $to куда копировать
+ * @param bool $rewrite
+ */
+function fs_copy_all( $from, $to, $rewrite = true ) {
+	if ( is_dir( $from ) ) {
+		@mkdir( $to );
+		$d = dir( $from );
+		while ( false !== ( $entry = $d->read() ) ) {
+			if ( $entry == "." || $entry == ".." ) {
+				continue;
+			}
+			fs_copy_all( "$from/$entry", "$to/$entry", $rewrite );
+		}
+		$d->close();
+	} else {
+		if ( ! file_exists( $to ) || $rewrite ) {
+			copy( $from, $to );
+		}
+	}
+}
 

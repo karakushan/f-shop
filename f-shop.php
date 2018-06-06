@@ -34,6 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /* Основные константы для упрощения режим разработки, сокращения написания путей и пр. */
 define( 'FS_PLUGIN_VER', '1.2' ); // версия плагина
 define( 'FS_PLUGIN_PREFIX', 'fs_' ); // префикс файлов
+define( 'FS_PLUGIN_NAME', 'fast-shop' ); // название плагина
 define( 'FS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) ); // абсолютный системный путь
 define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // абсолютный путь с http(s)
 define( 'FS_BASENAME', plugin_basename( __FILE__ ) ); // относительный путь типа my-plugin/my-plugin.php
@@ -64,7 +65,7 @@ function fs_activate() {
 			'level_0' => true
 		) );
 	if ( ! get_option( 'fs_has_activated', 0 ) ) {
-// Добавляем страницы
+		// Добавляем страницы
 		if ( \FS\FS_Config::$pages ) {
 			foreach ( \FS\FS_Config::$pages as $key => $page ) {
 				$post_id = wp_insert_post( array(
@@ -81,9 +82,16 @@ function fs_activate() {
 			}
 		}
 	}
+	// копируем шаблоны плагина в директорию текущей темы
+	if ( ! get_option( 'fs_copy_templates' ) ) {
+		fs_copy_all( FS_PLUGIN_PATH . 'templates/front-end/', TEMPLATEPATH . DIRECTORY_SEPARATOR . FS_PLUGIN_NAME, true );
+		update_option( 'fs_copy_templates', 1 );
+	}
 
 
 }
+
 
 function fs_deactivate() {
 }
+
