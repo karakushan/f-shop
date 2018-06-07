@@ -712,7 +712,7 @@ td.fs_photo.column-fs_photo img {
   margin: 30px auto;
   border: 1px solid #f1f1f1;
   padding: 20px;
-  box-shadow: -4px 5px 4px rgba(0, 0, 0, 0.0705882353);
+  box-shadow: -4px 5px 4px rgba(0, 0, 0, 0.07059);
   max-width: 100%; }
   .fs-pay-wrapper .amount {
     text-transform: uppercase;
@@ -933,7 +933,7 @@ td.fs_photo.column-fs_photo img {
       font-weight: 300;
       line-height: 1;
       padding: 0;
-      box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.0784313725); }
+      box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.07843); }
   .fs-cart-listing .table > tbody > tr > td, .fs-cart-listing .table > tbody > tr > th, .fs-cart-listing .table > tfoot > tr > td, .fs-cart-listing .table > tfoot > tr > th, .fs-cart-listing .table > thead > tr > td, .fs-cart-listing .table > thead > tr > th {
     vertical-align: middle; }
   .fs-cart-listing .fs-products-after {
@@ -952,5 +952,120 @@ td.fs_photo.column-fs_photo img {
     .fs-cart-listing .fs-remove-position:hover {
       color: #F8342D;
       background: #fff; }
+
+.fs-rating .star-rating {
+  line-height: 32px;
+  font-size: 1.25em; }
+  .fs-rating .star-rating > span {
+    margin: 0 1px;
+    display: inline-block; }
+    .fs-rating .star-rating > span:hover {
+      cursor: pointer; }
+.fs-rating .star-rating .fa-star {
+  color: #ffbb00; }
+.fs-rating .rating-loading {
+  width: 25px;
+  height: 25px;
+  font-size: 0;
+  color: #fff;
+  background: url(../img/loading.gif) top left no-repeat;
+  border: none; }
+.fs-rating .rating-container .rating-stars {
+  position: relative;
+  cursor: pointer;
+  vertical-align: middle;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap; }
+.fs-rating .rating-container .rating-input {
+  position: absolute;
+  cursor: pointer;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  font-size: 1px;
+  border: none;
+  background: 0 0;
+  padding: 0;
+  margin: 0; }
+.fs-rating .rating-disabled .rating-input, .fs-rating .rating-disabled .rating-stars {
+  cursor: not-allowed; }
+.fs-rating .rating-container .star {
+  display: inline-block;
+  margin: 0 3px;
+  text-align: center; }
+.fs-rating .rating-container .empty-stars {
+  color: #aaa; }
+.fs-rating .rating-container .filled-stars {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: auto;
+  color: #fde16d;
+  white-space: nowrap;
+  overflow: hidden;
+  -webkit-text-stroke: 1px #777;
+  text-shadow: 1px 1px #999; }
+.fs-rating .rating-rtl {
+  float: right; }
+.fs-rating .rating-animate .filled-stars {
+  transition: width .25s ease;
+  -o-transition: width .25s ease;
+  -moz-transition: width .25s ease;
+  -webkit-transition: width 0.25s ease; }
+.fs-rating .rating-rtl .filled-stars {
+  left: auto;
+  right: 0;
+  -moz-transform: matrix(-1, 0, 0, 1, 0, 0) translate3d(0, 0, 0);
+  -webkit-transform: matrix(-1, 0, 0, 1, 0, 0) translate3d(0, 0, 0);
+  -o-transform: matrix(-1, 0, 0, 1, 0, 0) translate3d(0, 0, 0);
+  transform: matrix(-1, 0, 0, 1, 0, 0) translate3d(0, 0, 0); }
+.fs-rating .rating-rtl.is-star .filled-stars {
+  right: 0.06em; }
+.fs-rating .rating-rtl.is-heart .empty-stars {
+  margin-right: 0.07em; }
+.fs-rating .rating-lg {
+  font-size: 3.91em; }
+.fs-rating .rating-md {
+  font-size: 3.13em; }
+.fs-rating .rating-sm {
+  font-size: 2.5em; }
+.fs-rating .rating-xs {
+  font-size: 2em; }
+.fs-rating .rating-xl {
+  font-size: 4.89em; }
+.fs-rating .rating-container .clear-rating {
+  color: #aaa;
+  cursor: not-allowed;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 60%;
+  padding-right: 5px; }
+.fs-rating .clear-rating-active {
+  cursor: pointer !important; }
+.fs-rating .clear-rating-active:hover {
+  color: #843534; }
+.fs-rating .rating-container .caption .label {
+  display: inline-block;
+  padding: .25em .4em;
+  line-height: 1;
+  text-align: center;
+  vertical-align: baseline;
+  border-radius: 0.25rem; }
+.fs-rating .rating-container .caption {
+  color: #999;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 60%;
+  margin-top: -.6em;
+  margin-left: 5px;
+  margin-right: 0; }
+.fs-rating .rating-rtl .caption {
+  margin-right: 5px;
+  margin-left: 0; }
+@media print {
+  .fs-rating .rating-container .clear-rating {
+    display: none; } }
 
 /*# sourceMappingURL=f-shop.css.map */

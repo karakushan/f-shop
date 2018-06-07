@@ -45,7 +45,23 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_add_att', array( $this, 'fs_add_att_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_add_att', array( $this, 'fs_add_att_callback' ) );
 
+		// setting a product rating
+		add_action( 'wp_ajax_fs_set_rating', array( $this, 'fs_set_rating_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_set_rating', array( $this, 'fs_set_rating_callback' ) );
+	}
 
+
+	/**
+	 * setting a product rating callback function
+	 */
+	function fs_set_rating_callback() {
+		if ( ! empty( $_POST ) ) {
+			$product_id     = intval( $_POST['product'] );
+			$product_rating = intval( $_POST['value'] );
+			add_post_meta( $product_id, 'fs_product_rating', $product_rating );
+
+		}
+		exit();
 	}
 
 	// привязка атрибута к товару

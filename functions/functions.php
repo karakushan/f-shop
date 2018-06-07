@@ -61,8 +61,7 @@ function fs_dropdown_attr_group( $group_id = 0, $post_id = 0, $args = array() ) 
  * @param array $args - массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
  */
 function fs_lightslider( $post_id = 0, $args = array() ) {
-	global $post;
-	$post_id = empty( $post_id ) ? $post->ID : (int) $post_id;
+	$post_id = fs_get_product_id( $post_id );
 	$galery  = new FS\FS_Images_Class();
 	$galery->lightslider( $post_id, $args );
 }

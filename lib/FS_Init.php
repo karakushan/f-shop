@@ -23,6 +23,7 @@ class FS_Init {
 	public $fs_settings;
 	public $fs_option;
 	public $fs_widget;
+	public $fs_product;
 
 
 	/**
@@ -51,6 +52,7 @@ class FS_Init {
 		$this->fs_api        = new FS_Api_Class();
 		$this->fs_payment    = new FS_Payment_Class();
 		$this->fs_widget     = new FS_Widget_CLass();
+		$this->fs_product    = new FS_Product_Class();
 
 		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
@@ -95,6 +97,7 @@ class FS_Init {
 	 */
 	function fast_shop_scripts() {
 		wp_enqueue_style( 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
+		wp_enqueue_style( FS_PLUGIN_PREFIX . 'font_awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'fs-style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'es-lightgallery', FS_PLUGIN_URL . 'assets/plugins/lightGallery/dist/css/lightgallery.min.css' );

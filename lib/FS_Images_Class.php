@@ -65,7 +65,9 @@ class FS_Images_Class {
 			"gallery"   => true,
 			"item"      => 1,
 			"vertical"  => false,
-			"thumbItem" => 3
+			"thumbItem" => 3,
+			"prevHtml"  => '',
+			"nextHtml"  => ''
 		);
 		$args    = wp_parse_args( $args, $default );
 		$galery  = $this->fs_galery_list( $post_id );
