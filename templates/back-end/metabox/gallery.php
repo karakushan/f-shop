@@ -8,7 +8,9 @@
 $gallery = fs_gallery_images_ids( $post_id = 0, false );
 ?>
 <div class="fs-field-row fs-gallery clearfix">
-  <p>Вы можете перетаскивать изображения для изменения позиции в галерее.</p>
+	<?php if ( $gallery ): ?>
+      <p>Вы можете перетаскивать изображения для изменения позиции в галерее.</p>
+	<?php endif ?>
   <div class="fs-grid fs-sortable-items" id="fs-gallery-wrapper">
 	  <?php if ( $gallery ) ?>
 	  <?php foreach ( $gallery as $key => $img ): ?>
@@ -20,20 +22,4 @@ $gallery = fs_gallery_images_ids( $post_id = 0, false );
         </div>
 	  <?php endforeach ?>
   </div>
-</div>
-<div class="fs-field-row">
-  <div class="fs-upload-desc">Перетащите изображения с компьютера в пунктирную область ниже. Изображение будет загружено
-    автоматически. Разрешённые форматы: png, jpeg, gif.
-  </div>
-  <div id="holder" class="fs-upload">
-  </div>
-  <p id="upload" class="hidden"><label>Функция Drag & drop не поддерживается вашим браузером. Попробуйте загрузить с
-      помощью поля загрузки файлов:
-      <br><input type="file"></label></p>
-  <p id="filereader">File API & FileReader API не поддерживается</p>
-  <p id="formdata">XHR2's FormData не поддерживается</p>
-  <p id="progress">XHR2's upload progress не поддерживается</p>
-  <p>Прогресс загрузки файлов: <br>
-    <progress id="uploadprogress" max="100" value="0">0</progress>
-  </p>
 </div>
