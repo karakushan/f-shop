@@ -66,7 +66,6 @@ class FS_Form_Class {
 			'required'      => ! empty( FS_Config::$form_fields[ $field_name ]['required'] ) ? FS_Config::$form_fields[ $field_name ]['required'] : false,
 			'title'         => ! empty( FS_Config::$form_fields[ $field_name ]['title'] ) ? FS_Config::$form_fields[ $field_name ]['title'] : __( 'this field is required', 'fast-shop' ),
 			'placeholder'   => ! empty( FS_Config::$form_fields[ $field_name ]['placeholder'] ) ? FS_Config::$form_fields[ $field_name ]['placeholder'] : null,
-			'label'         => ! empty( FS_Config::$form_fields[ $field_name ]['label'] ) ? FS_Config::$form_fields[ $field_name ]['label'] : null,
 			'value'         => ! empty( FS_Config::$form_fields[ $field_name ]['value'] ) ? FS_Config::$form_fields[ $field_name ]['value'] : '',
 			'html'          => '',
 			'selected'      => $selected,
@@ -96,9 +95,7 @@ class FS_Form_Class {
 		if ( $args['wrapper'] ) {
 			$field .= '<div class="' . esc_attr( $args['wrapper_class'] ) . '">';
 		}
-		if ( ! empty( $args['label'] ) && ! in_array( $args['type'], array( 'checkbox', 'radio' ) ) ) {
-			$field .= '<label>' . esc_html( $args['label'] ) . '</label>';
-		}
+
 		switch ( $args['type'] ) {
 			case 'text':
 				$field .= ' <input type="text" name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . ' ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
@@ -113,7 +110,11 @@ class FS_Form_Class {
 				$field .= ' <input type="radio" name="' . $field_name . '"  ' . checked( 'on', $value, false ) . ' ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $value . ' ' . $id . '> ';
 				break;
 			case 'checkbox':
-				$field .= '<div class="fs-checkbox"><input type="checkbox" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '"  value="1" ' . checked( '1', $args['value'], false ) . '><label for="' . esc_attr( $field_name ) . '">' . esc_html( $args['label'] ) . ' </label> </div>';
+				$field .= '<div class="fs-checkbox"><input type="checkbox" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_name ) . '"  value="1" ' . checked( '1', $args['value'], false ) . '><label for="' . esc_attr( $field_name ) . '">' . esc_html( $args['label'] );
+				if ( ! empty( $args['help'] ) ) {
+					$field .= '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_attr( $args['help'] ) . '"></span>';
+				}
+				$field .= '</label> </div>';
 				break;
 			case 'textarea':
 				$field .= '<textarea name="' . $field_name . '"  ' . $class . ' ' . $title . ' ' . $required . '  ' . $placeholder . ' ' . $id . '></textarea>';
@@ -203,7 +204,7 @@ class FS_Form_Class {
 				$field = ob_get_clean();
 				break;
 		}
-		if ( ! empty( $args['help'] ) ) {
+		if ( ! empty( $args['help'] ) && ! in_array( $args['type'], array( 'checkbox' ) ) ) {
 			$field .= '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_attr( $args['help'] ) . '"></span>';
 		}
 		if ( $args['wrapper'] ) {
@@ -211,4 +212,5 @@ class FS_Form_Class {
 		}
 		echo apply_filters( 'fs_form_field', $field, $field_name, $args );
 	}
+
 }
