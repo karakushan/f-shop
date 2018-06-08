@@ -448,14 +448,18 @@ jQuery(document).on('click', '[data-action="add-to-comparison"]', function (even
             product_name: el.data('product-name')
         },
     })
+        .success(function (data) {
+
+            iziToast.show({
+                theme: 'light',
+                title: 'Успех!',
+                message: 'Товар добавлен в список  сравнения!',
+                position: 'topCenter',
+
+            });
+        })
         .done(function (data) {
-            if (!IsJsonString(data)) return;
-            var json = jQuery.parseJSON(data);
             el.find('.fs-atc-preloader').fadeOut();
-            el.find('.fs-atc-info').fadeIn().html(el.data('success'));
-            setTimeout(function () {
-                el.find('.fs-atc-info').fadeOut(1000)
-            }, 3000);
         });
 });
 
@@ -875,6 +879,7 @@ jQuery('[data-fs-action="wishlist"]').on('click', function (event) {
         url: FastShopData.ajaxurl,
         data: {action: 'fs_addto_wishlist', product_id: product_id},
         beforeSend: function () {
+            curentBlock.find(".fs-atc-preloader").fadeIn();
             // генерируем событие добавления в список желаний
             var before_to_wishlist = new CustomEvent("fs_before_to_wishlist", {
                 detail: {
@@ -901,6 +906,8 @@ jQuery('[data-fs-action="wishlist"]').on('click', function (event) {
                 }
             });
             document.dispatchEvent(add_to_wishlist);
+
+            curentBlock.find(".fs-atc-preloader").fadeOut();
 
         });
 });

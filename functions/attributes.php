@@ -402,10 +402,10 @@ function fs_get_the_terms_group( $post_id = 0, $taxonomy, $args = array( 'orderb
  */
 function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) {
 
-	global $post, $fs_config;
-	if ( empty( $product_id ) ) {
-		$product_id = $post->ID;
-	}
+	global $fs_config;
+
+	$product_id = fs_get_product_id( $product_id );
+
 	$args  = wp_parse_args( $args, array(
 		'type'          => 'radio',
 		'wpapper'       => 'ul',
@@ -428,16 +428,23 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 
 	switch ( $args['type'] ) {
 		case 'radio':
-			printf( '<%s class="%s">', $args['wpapper'], sanitize_html_class( $args['wpapper_class'] ) );
+			echo '<' . $args['wpapper'] . ' class="' . esc_attr( $args['wpapper_class'] ) . '">';
 			$i = 0;
 			foreach ( $terms[ $parent ] as $term ) {
+				$list_class = get_term_meta( $term->term_id, 'fs_att_type', 1 ) ? 'type-' . get_term_meta( $term->term_id, 'fs_att_type', 1 ) : 'type-none';
 				if ( $args['wpapper'] == 'ul' ) {
-					echo ' <li>';
+					echo ' <li class="' . esc_attr( $list_class ) . '">';
 				} elseif ( 'div' ) {
-					echo ' <div>';
+					echo ' <div class="' . esc_attr( $list_class ) . '">';
 				}
 				echo '<input type="radio" ' . $tag_att . ' ' . checked( 0, $i, 0 ) . '    value="' . esc_attr( $term->term_id ) . '" id="fs-att-' . esc_attr( $term->term_id ) . '">
-                  <label for="fs-att-' . esc_attr( $term->term_id ) . '">' . esc_html( $term->name ) . '</label>';
+                  <label for="fs-att-' . esc_attr( $term->term_id ) . '">';
+				if ( get_term_meta( $term->term_id, 'fs_att_type', 1 ) == 'color' ) {
+					echo '<span class="color" style="background-color:' . get_term_meta( $term->term_id, 'fs_att_color_value', 1 ) . '"></span>';
+				} else {
+					echo esc_html( $term->name );
+				}
+				echo '</label>';
 				if ( $args['wpapper'] == 'ul' ) {
 					echo ' </li>';
 				} elseif ( 'div' ) {
@@ -447,7 +454,7 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 			}
 
 			break;
-			printf( '</%s>', $args['wpapper'] );
+			echo '<' . $args['wpapper'] . '>';
 		case'select':
 			echo '<select ' . $tag_att . '>';
 			$i = 0;

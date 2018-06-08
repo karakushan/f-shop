@@ -1187,7 +1187,7 @@ function fs_add_to_wishlist( $post_id = 0, $label = 'В список желан�
 		'attr'      => '',
 		'success'   => __( 'Item added to wishlist', 'fast-shop' ),
 		'type'      => 'button',
-		'preloader' => '',
+		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
 		'class'     => 'fs-whishlist-btn',
 		'id'        => 'fs-whishlist-btn-' . $post_id,
 		'atts'      => ''
@@ -1204,11 +1204,11 @@ function fs_add_to_wishlist( $post_id = 0, $label = 'В список желан�
 
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' ' . $args["atts"] . '>' . $label . '</a>';
+			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' ' . $args["atts"] . '>' . $label . '<span class="fs-atc-preloader" style="display:none">' . $args['preloader'] . '</span></a>';
 			break;
 
 		case 'button':
-			echo '<button ' . $html_atts . ' ' . $args["atts"] . '>' . $label . '</button>';
+			echo '<button ' . $html_atts . ' ' . $args["atts"] . '>' . $label . '<span class="fs-atc-preloader" style="display:none">' . $args['preloader'] . '</span></button>';
 			break;
 	}
 

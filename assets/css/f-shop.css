@@ -737,6 +737,9 @@ td.fs_photo.column-fs_photo img {
   border: 1px solid #e6e6e6;
   font-size: 16px; }
 
+[data-action="add-to-comparison"] {
+  position: relative; }
+
 .fs-ls-preloader {
   position: absolute;
   left: -43px;
