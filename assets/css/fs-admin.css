@@ -102,13 +102,15 @@
         .fs-metabox .fs-tabs > .fs-tab {
           margin: 0; } }
       .fs-metabox .fs-tabs > .fs-tab h3 {
-        margin: 0;
+        margin-top: 0;
         text-transform: uppercase;
         font-weight: bold;
         font-size: 14px;
         letter-spacing: .025em;
         display: block;
         padding: 0; }
+      .fs-metabox .fs-tabs > .fs-tab p.description {
+        margin-bottom: 25px; }
       .fs-metabox .fs-tabs > .fs-tab h4 {
         margin: 0 0 2px 0; }
       .fs-metabox .fs-tabs > .fs-tab .fs-help {
@@ -426,7 +428,7 @@ td.fs_price.column-fs_price span span {
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
-  box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.0705882353); }
+  box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.07059); }
 
 .delete-image {
   line-height: 1;

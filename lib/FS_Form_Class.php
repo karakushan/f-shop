@@ -9,6 +9,49 @@
 namespace FS;
 class FS_Form_Class {
 
+	public function __construct() {
+
+
+
+	}
+
+
+	/**
+	 * Returns all registered field types
+	 *
+	 * @return mixed|void
+	 */
+	function registered_field_types() {
+		$types = array( 'text', 'textarea', 'editor', 'checkbox', 'radio', 'gallery', 'image', 'media' );
+
+		return apply_filters( 'fs_registered_field_types', $types );
+
+	}
+
+	/**
+	 * Displays a field of a certain type
+	 *
+	 * @param $name
+	 * @param string $type
+	 * @param array $args
+	 */
+	function render_field( $name, $type = 'text', $args = [] ) {
+		$args = wp_parse_args( $args, array(
+			'value'         => '',
+			'class'         => 'fs-' . $type . 'field',
+			'id'            => 'fs-' . $name . '-' . $type,
+			'default'       => '',
+			'textarea_rows' => 8,
+			'editor_args'   => array(
+				'textarea_rows' => 8,
+				'textarea_name' => $name
+			)
+		) );
+		if ( in_array( $type, $this->registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
+			include FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
+		}
+	}
+
 	/**
 	 * @param string $field_name ключ поля в FS_Config::$form_fields
 	 * @param array $args атрибуты input (class,id,value,checked)

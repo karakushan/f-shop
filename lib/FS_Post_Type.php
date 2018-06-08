@@ -21,8 +21,7 @@ class FS_Post_Type {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'save_post', array( $this, 'save_fs_fields' ) );
 		$this->product_id = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
-
-		$this->config = new FS_Config();
+		$this->config     = new FS_Config();
 	} // END public function __construct()
 
 
@@ -135,44 +134,48 @@ class FS_Post_Type {
 			return;
 		}
 
+		$save_meta = $this->meta_save_fields();
+
 		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] == self::POST_TYPE && current_user_can( 'edit_post', $post_id ) ) {
 
-			foreach ( @$this->config->meta as $key => $field_name ) {
-				if ( ! isset( $_POST[ $field_name ] ) || (string) $_POST[ $field_name ] == '' ) {
-					delete_post_meta( $post_id, $field_name );
-					continue;
+			if ( is_array( $save_meta ) && count( $save_meta ) ) {
+				foreach ( $save_meta as $key => $field_name ) {
+					if ( ! isset( $_POST[ $field_name ] ) || (string) $_POST[ $field_name ] == '' ) {
+						delete_post_meta( $post_id, $field_name );
+						continue;
+					}
+					switch ( $field_name ) {
+						case 'fs_price':
+							$price = (float) str_replace( array( ',' ), array( '.' ), sanitize_text_field( $_POST[ $field_name ] ) );
+							update_post_meta( $post_id, $field_name, $price );
+							break;
+						case 'fs_related_products':
+							if ( empty( $field_value ) ) {
+								delete_post_meta( $post_id, $field_name );
+							} else {
+								update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
+							}
+							break;
+						case 'fs_variant':
+							if ( empty( $_POST[ $field_name ] ) ) {
+								delete_post_meta( $post_id, $field_name );
+							} else {
+								update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
+							}
+							break;
+						default:
+							if ( is_array( $_POST[ $field_name ] ) ) {
+
+								$field_sanitize = array_map( 'sanitize_text_field', $_POST[ $field_name ] );
+								update_post_meta( $post_id, $field_name, $field_sanitize );
+							} else {
+								update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
+							}
+							break;
+					}
+
+
 				}
-				switch ( $field_name ) {
-					case 'fs_price':
-						$price = (float) str_replace( array( ',' ), array( '.' ), sanitize_text_field( $_POST[ $field_name ] ) );
-						update_post_meta( $post_id, $field_name, $price );
-						break;
-					case 'fs_related_products':
-						if ( empty( $field_value ) ) {
-							delete_post_meta( $post_id, $field_name );
-						} else {
-							update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
-						}
-						break;
-					case 'fs_variant':
-						if ( empty( $_POST[ $field_name ] ) ) {
-							delete_post_meta( $post_id, $field_name );
-						} else {
-							update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
-						}
-						break;
-					default:
-						if ( is_array( $_POST[ $field_name ] ) ) {
-
-							$field_sanitize = array_map( 'sanitize_text_field', $_POST[ $field_name ] );
-							update_post_meta( $post_id, $field_name, $field_sanitize );
-						} else {
-							update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
-						}
-						break;
-				}
-
-
 			}
 		}
 		// if($_POST['post_type'] == self::POST_TYPE && current_user_can('edit_post', $post_id))
@@ -224,19 +227,45 @@ class FS_Post_Type {
 
 	} // END public function add_meta_boxes()
 
+
+	/**
+	 *Registers new metafields dynamically from tabs
+	 *
+	 * @return array
+	 */
+	function meta_save_fields() {
+		global $fs_config;
+		$product_tabs = $fs_config->get_product_tabs();
+		$meta_fields  = $fs_config->meta;
+		if ( ! empty( $product_tabs ) ) {
+			foreach ( $product_tabs as $product_tab ) {
+				if ( ! empty( $product_tab['fields'] ) ) {
+					foreach ( $product_tab['fields'] as $key => $field ) {
+						$meta_fields[ $key ] = $key;
+					}
+				}
+
+			}
+		}
+
+		return $meta_fields;
+	}
+
 	/**
 	 * called off of the add meta box
 	 *
 	 * @param $post
 	 */
 	public function add_inner_meta_boxes( $post ) {
+		global $fs_config;
+		$form_class       = new FS_Form_Class();
+		$product_tabs     = $fs_config->get_product_tabs();
 		$this->product_id = $post->ID;
 		$cookie           = isset( $_COOKIE['fs_active_tab'] ) ? $_COOKIE['fs_active_tab'] : null;
 		echo '<div class="fs-metabox" id="fs-metabox">';
-
-		if ( ! empty( $this->config->tabs ) && is_array( $this->config->tabs ) ) {
+		if ( count( $product_tabs ) ) {
 			echo '<ul class="tab-header">';
-			foreach ( $this->config->tabs as $key => $tab ) {
+			foreach ( $product_tabs as $key => $tab ) {
 				if ( ! $tab['on'] ) {
 					continue;
 				}
@@ -257,7 +286,7 @@ class FS_Post_Type {
 			}
 			echo '</ul>';
 			echo "<div class=\"fs-tabs\">";
-			foreach ( $this->config->tabs as $key_body => $tab_body ) {
+			foreach ( $product_tabs as $key_body => $tab_body ) {
 				if ( ! $tab_body['on'] ) {
 					continue;
 				}
@@ -277,14 +306,31 @@ class FS_Post_Type {
 
 
 				echo '<div class="fs-tab ' . $class_tab . '" id="tab-' . $key_body . '">';
-				if ( empty( $tab_body['body'] ) && ! empty( $tab_body['template'] ) ) {
+				if ( ! empty( $tab_body['fields'] ) ) {
+					if ( ! empty( $tab_body['title'] ) ) {
+						echo '<h3>' . $tab_body['title'] . '</h3>';
+					}
+					if ( ! empty( $tab_body['description'] ) ) {
+						echo '<p class="description">' . $tab_body['description'] . '</p>';
+					}
+					foreach ( $tab_body['fields'] as $key => $field ) {
+						$filter_meta[ $key ] = $key;
+					}
+
+					foreach ( $tab_body['fields'] as $key => $field ) {
+
+						$form_class->render_field( $key, $field['type'], array(
+							'value' => get_post_meta( $post->ID, $key, true )
+						) );
+					}
+				} elseif ( ! empty( $tab_body['template'] ) ) {
 					$template_file = sprintf( FS_PLUGIN_PATH . 'templates/back-end/metabox/%s.php', $tab_body['template'] );
 					if ( file_exists( $template_file ) ) {
 						include( $template_file );
 					} else {
 						_e( 'Template file not found', 'fast-shop' );
 					}
-				} else {
+				} elseif ( ! empty( $tab_body['body'] ) ) {
 					echo $tab_body['body'];
 				}
 				echo '</div>';

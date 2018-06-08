@@ -6,7 +6,6 @@
 
 .fs-primary-button {
 
-
     &.button-small {
         height: 2.5em;
         line-height: 2.5em;
@@ -20,8 +19,6 @@
         /* font-size: 4px; */
         padding: 4px;
     }
-
-
 
 }
 
@@ -133,13 +130,16 @@
             }
 
             h3 {
-                margin: 0;
+                margin-top: 0;
                 text-transform: uppercase;
                 font-weight: bold;
                 font-size: 14px;
                 letter-spacing: .025em;
                 display: block;
                 padding: 0;
+            }
+            p.description{
+                margin-bottom: 25px;
             }
             h4 {
                 margin: 0 0 2px 0;
