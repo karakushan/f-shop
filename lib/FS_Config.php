@@ -101,7 +101,9 @@ class FS_Config {
 			// включает метку Хит продаж
 			'label_bestseller'  => 'fs_on_bestseller',
 			// включает метку Акция
-			'label_promotion'   => 'fs_on_promotion'
+			'label_promotion'   => 'fs_on_promotion',
+			// включает метку Новинка
+			'label_novelty'   => 'fs_on_novelty'
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );

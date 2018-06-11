@@ -37,4 +37,13 @@
     <label
       for="fs_on_promotion"><?php _e( 'Включить метку "Акция"', 'fast-shop' ) ?> </label>
   </div>
+</div><div class="fs-field-row clearfix">
+  <div class="checkbox-wrapper">
+
+    <input type="checkbox" id="<?php echo esc_attr( $this->config->meta['label_novelty'] ) ?>"
+           name="<?php echo esc_attr( $this->config->meta['label_novelty'] ) ?>" <?php checked( get_post_meta( $post->ID, $this->config->meta['label_novelty'], 1 ), 1 ) ?>
+           value="1">
+    <label
+      for="<?php echo esc_attr( $this->config->meta['label_novelty'] ) ?>"><?php _e( 'Включить метку "Новинка"', 'fast-shop' ) ?> </label>
+  </div>
 </div>

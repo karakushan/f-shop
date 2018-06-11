@@ -1273,21 +1273,27 @@ function fs_transliteration( $s ) {
  * Подключает шаблон $template из директории темы, если шаблон остсуствует ищет в папке "/templates/front-end/" плагина
  *
  * @param $template - название папки и шаблона без расширения
+ * @param array $args - дополнительные аргументы
+ *
+ * @return mixed|void
  */
 function fs_frontend_template( $template, $args = array() ) {
-	global $wpdb;
-	extract( wp_parse_args( $args, array() ) );
+	$args            = wp_parse_args( $args, array(
+		'theme_base_path'  => TEMPLATEPATH . DIRECTORY_SEPARATOR . 'fast-shop' . DIRECTORY_SEPARATOR,
+		'plugin_base_path' => FS_PLUGIN_PATH . 'templates' . DIRECTORY_SEPARATOR . 'front-end' . DIRECTORY_SEPARATOR,
+		'vars'             => array()
+	) );
+	$template_plugin = $args['plugin_base_path'] . $template . '.php';
+	$template_theme  = $args['theme_base_path'] . $template . '.php';
+	extract( $args['vars'] );
 
-
-	$template_plugin = FS_PLUGIN_PATH . '/templates/front-end/' . $template . '.php';
-	$template_theme  = TEMPLATEPATH . '/fast-shop/' . $template . '.php';
 	ob_start();
 	if ( file_exists( $template_theme ) ) {
 		include( $template_theme );
 	} elseif ( file_exists( $template_plugin ) ) {
 		include( $template_plugin );
 	} else {
-		echo 'файл шаблона ' . $template . ' не найден в функции ' . __FUNCTION__;
+		printf( __( 'Template file %s not found in function %s', 'fast-shop' ), $template, __FUNCTION__ );
 	}
 	$template = ob_get_clean();
 
@@ -1326,10 +1332,10 @@ function fs_login_form( $echo = true, $args = array() ) {
 	$args     = wp_parse_args( $args, array(
 		'name'  => "fs-login",
 		'id'    => "fs-login",
-		'title' => __( 'Login', 'fast-shop' )
+		'title' => __( 'Login', 'fast - shop' )
 	) );
 	$template = fs_form_header( $args, 'fs_login' );
-	$template .= fs_frontend_template( 'auth/login' );
+	$template .= fs_frontend_template( 'auth / login' );
 	$template .= fs_form_bottom();
 	if ( $echo ) {
 		echo $template;
@@ -1344,7 +1350,7 @@ function fs_login_form( $echo = true, $args = array() ) {
  * @return mixed|void
  */
 function fs_register_form() {
-	$template = fs_frontend_template( 'auth/register' );
+	$template = fs_frontend_template( 'auth / register' );
 
 	return $template;
 }
@@ -1354,22 +1360,22 @@ function fs_register_form() {
  * @return mixed|void
  */
 function fs_user_cabinet() {
-	$template = fs_frontend_template( 'auth/cabinet' );;
+	$template = fs_frontend_template( 'auth / cabinet' );;
 
 	return apply_filters( 'fs_user_cabinet', $template );
 }
 
 function fs_page_content() {
-	if ( empty( $_GET['fs-page'] ) ) {
+	if ( empty( $_GET['fs - page'] ) ) {
 		$page = 'profile';
 	}
-	$page     = filter_input( INPUT_GET, 'fs-page', FILTER_SANITIZE_URL );
+	$page     = filter_input( INPUT_GET, 'fs - page', FILTER_SANITIZE_URL );
 	$template = '';
 	$pages    = array( 'profile', 'conditions' );
 	if ( in_array( $page, $pages ) ) {
-		$template = fs_frontend_template( 'auth/' . $page );
+		$template = fs_frontend_template( 'auth / ' . $page );
 	} else {
-		$template = fs_frontend_template( 'auth/profile' );
+		$template = fs_frontend_template( 'auth / profile' );
 	}
 
 	echo $template;
@@ -1384,8 +1390,8 @@ function fs_page_content() {
 function fs_quick_order_button( $post_id = 0, $attr = array() ) {
 	global $post;
 	$attr    = wp_parse_args( $attr, array(
-		'data-toggle' => "modal",
-		'href'        => '#fast-order'
+		'data - toggle' => "modal",
+		'href'          => '#fast-order'
 	) );
 	$str_att = array();
 	if ( $attr ) {

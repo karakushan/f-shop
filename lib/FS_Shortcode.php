@@ -46,22 +46,28 @@ class FS_Shortcode {
 	 */
 	function wishlist_shortcode( $atts ) {
 		$atts  = shortcode_atts( array(
-			'template'   => 'fast-shop/wishlist/wishlist-product',
-			'empty_text' => __( 'Wish list is empty', 'fast-shop' ),
+			'wrapper_class' => 'fs-wislist-poducts',
+			'before_loops'  => '<div class="row">',
+			'after_loops'   => '</div>',
+			'empty_text'    => __( 'Wish list is empty', 'fast-shop' ),
+			'template'      => 'wishlist/wishlist-product'
 		), $atts );
 		$query = fs_get_wishlist();
-		$html  = '';
+		$html  = '<div class="' . esc_attr( $atts['wrapper_class'] ) . '">';
+
 		if ( $query->have_posts() ) {
-			$html .= '<div class="row">';
+			$html .= $atts['before_loops'];
 			while ( $query->have_posts() ) {
 				$query->the_post();
-				$html .= fs_frontend_template( 'wishlist/wishlist-product' );
+				$html .= fs_frontend_template( $atts['template'] );
 
 			}
-			$html .= '</div>';
+			$html .= $atts['after_loops'];
 		} else {
 			$html .= '<p>' . esc_html( $atts['empty_text'] ) . '</p >';
 		}
+
+		$html .= '</div>';
 
 		return $html;
 	}
