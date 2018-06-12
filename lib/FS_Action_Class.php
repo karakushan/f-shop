@@ -44,6 +44,8 @@ class FS_Action_Class {
 	 * метод регистрирует хуки-события плагина
 	 */
 	function register_plugin_action() {
+		global $fs_product;
+
 		//===== PRODUCT =====
 		/* отображение скидки в процентах */
 		add_action( 'fs_discount_percent', 'fs_discount_percent', 10, 3 );
@@ -51,6 +53,8 @@ class FS_Action_Class {
 		add_action( 'fs_product_code', 'fs_product_code', 10, 2 );
 		/* отображение кнопки добавления в корзину */
 		add_action( 'fs_add_to_cart', 'fs_add_to_cart', 10, 3 );
+		/* рейтинг товара */
+		add_action( 'fs_product_rating', array( $fs_product, 'product_rating' ), 10, 2 );
 
 		//===== FILTERS =====
 		/* выводит select для сортировки по параметрам (обычно применяется в каталоге или на страницах категорий) */

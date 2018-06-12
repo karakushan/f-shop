@@ -109,6 +109,7 @@ class FS_Init {
 		wp_enqueue_script( 'domurl', FS_PLUGIN_URL . 'assets/js/url.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'izi-toast', FS_PLUGIN_URL . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true );
+		wp_enqueue_script( 'f-shop-dev', FS_PLUGIN_URL . 'assets/js/fshop-dev.js', array( 'jquery' ), $this->fs_config->data['plugin_ver'], true );
 		wp_enqueue_script( 'f-shop', FS_PLUGIN_URL . 'assets/js/f-shop.js', array( 'jquery' ), $this->fs_config->data['plugin_ver'], true );
 
 		$price_max = (int) fs_price_max( false );

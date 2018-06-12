@@ -1102,8 +1102,12 @@ td.fs_photo.column-fs_photo img {
     }
 
     .star-rating .fa-star {
-        color: #ffbb00;
+        color: #c7c7c7;
+        &.active {
+            color: #ffbb00;
+        }
     }
+    
     .rating-loading {
         width: 25px;
         height: 25px;

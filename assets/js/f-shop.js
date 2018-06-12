@@ -816,57 +816,67 @@ validator.validate({
     }
 });
 
-// item rating
-var $star_rating = jQuery('.fs-rating .star-rating>span');
+(function ($) {
+    // Рейтинг товара
+    $('[data-fs-element="rating"]').on('click', '[data-fs-element="rating-item"]', function (e) {
+        e.preventDefault();
 
-var SetRatingStar = function () {
-    return $star_rating.each(function () {
-        if (parseInt($star_rating.siblings('input.rating-value').val()) >= parseInt(jQuery(this).data('rating'))) {
-            return jQuery(this).removeClass('fa-star-o').addClass('fa-star');
+        var ratingVal = $(this).data('rating');
+        var wrapper = $(this).parents("[data-fs-element=\"rating\"]");
+        var productId = wrapper.find('input').data('product-id');
+        wrapper.find('input').val(ratingVal);
+
+
+        if (!localStorage.getItem('fs_user_voted_' + productId)) {
+
+            wrapper.find('[data-fs-element="rating-item"]').each(function (index, value) {
+                if ($(this).data('rating') <= ratingVal) {
+                    $(this).addClass('active');
+                } else {
+                    $(this).removeClass('active');
+                }
+            });
+
+            jQuery.ajax({
+                type: 'POST',
+                url: FastShopData.ajaxurl,
+                data: {
+                    action: "fs_set_rating",
+                    value: ratingVal,
+                    product: productId
+                },
+                cache: false,
+                success: function (data) {
+                    localStorage.setItem("fs_user_voted_" + productId, 1)
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log('error...', xhr);
+                    //error logging
+                },
+                complete: function () {
+                    iziToast.show({
+                        theme: 'light',
+                        title: 'Позравляем!',
+                        message: 'Ваш голос засчитан!',
+                        position: 'topCenter',
+
+                    });
+                }
+            })
         } else {
-            return jQuery(this).removeClass('fa-star').addClass('fa-star-o');
+            iziToast.show({
+                theme: 'light',
+                title: 'Информация!',
+                message: 'Ваш голос не засчитан потому что Вы уже проголосовали за этот товар!',
+                position: 'topCenter',
+
+            });
         }
+
     });
-};
 
-$star_rating.on('click', function () {
-    var ratingVal = jQuery(this).data('rating');
-    var productId = $star_rating.siblings('input.rating-value').data('product-id');
-    $star_rating.siblings('input.rating-value').val(ratingVal);
-    if (!localStorage.getItem('fs_user_voted_' + productId)) {
-        jQuery.ajax({
-            type: 'POST',
-            url: FastShopData.ajaxurl,
-            data: {
-                action: "fs_set_rating",
-                value: ratingVal,
-                product: productId
-            },
-            cache: false,
-            success: function (data) {
-                localStorage.setItem("fs_user_voted_" + productId, 1)
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
-            },
-            complete: function () {
-                //afer ajax call is completed
-            }
-        })
-    } else {
-        iziToast.show({
-            theme: 'light',
-            title: 'Информация!',
-            message: 'Ваш голос не засчитан потому что Вы уже проголосовали за этот товар!',
-            position: 'topCenter',
 
-        });
-    }
-
-    return SetRatingStar();
-});
-SetRatingStar();
+}(jQuery));
 
 
 //добавление товара в список желаний

@@ -965,7 +965,9 @@ td.fs_photo.column-fs_photo img {
     .fs-rating .star-rating > span:hover {
       cursor: pointer; }
 .fs-rating .star-rating .fa-star {
-  color: #ffbb00; }
+  color: #c7c7c7; }
+  .fs-rating .star-rating .fa-star.active {
+    color: #ffbb00; }
 .fs-rating .rating-loading {
   width: 25px;
   height: 25px;

@@ -46,20 +46,25 @@ class FS_Product_Class {
 	 * @param int $product_id
 	 * @param array $args
 	 */
-	public function product_rating( $product_id = 0, $args = array() ) {
+	public static function product_rating( $product_id = 0, $args = array() ) {
 		$product_id = fs_get_product_id( $product_id );
 		$args       = wp_parse_args( $args, array(
 			'wrapper_class' => 'fs-rating',
 			'stars'         => 5,
-			'default_value' => $this->get_vote_counting( $product_id ),
-			'star_class'    => 'fa fa-star-o'
+			'default_value' => self::get_vote_counting( $product_id ),
+			'star_class'    => 'fa fa-star'
 		) );
 		?>
       <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>">
-        <div class="star-rating">
+        <div class="star-rating" data-fs-element="rating">
 			<?php if ( $args['stars'] ) {
 				for ( $count = 1; $count <= $args['stars']; $count ++ ) {
-					echo '<span class="' . esc_attr( $args['star_class'] ) . '" data-rating="' . esc_attr( $count ) . '"></span>';
+					if ( $count <= $args['default_value'] ) {
+						$star_class = $args['star_class'] . ' active';
+					} else {
+						$star_class = $args['star_class'];
+					}
+					echo '<span class="' . esc_attr( $star_class ) . '" data-fs-element="rating-item" data-rating="' . esc_attr( $count ) . '"></span>';
 				}
 			} ?>
           <input type="hidden" name="fs-rating-value" data-product-id="<?php echo esc_attr( $product_id ) ?>"
