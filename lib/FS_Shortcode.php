@@ -87,18 +87,21 @@ class FS_Shortcode {
 	 */
 	function have_cart_items( $atts, $content ) {
 		$atts = shortcode_atts( array(
-			'empty_text'    => __( 'No items found in shopping cart', 'fast-shop' ),
-			'empty_wrapper' => 'p',
-			'empty_class'   => 'fs-empty-cart',
+			'empty_text'  => '',
+			'empty_class' => 'fs-info-block fs-empty-cart ',
 		), $atts );
 
 		$cart_class = new FS_Cart_Class();
 
+
 		if ( count( $cart_class->cart ) ) {
 			$content = apply_filters( 'the_content', $content );
 		} else {
-			if ( ! empty( $atts['empty_wrapper'] ) && ! empty( $atts['empty_text'] ) ) {
-				$content = sprintf( '<%1s class="%2$s" >%3$s </%1$s>', $atts['empty_wrapper'], esc_attr( $atts['empty_class'] ), $atts['empty_text'] );
+			if ( empty( $atts['empty_text'] ) ) {
+				$content = '<p class="' . esc_attr( $atts['empty_class'] ) . '">';
+				$content .= '<span class="icon glyphicon glyphicon-info-sign"></span>';
+				$content .= esc_html__( 'Your basket is empty', 'fast-shop' );
+				$content .= '.&nbsp;<a href="' . esc_url( fs_get_catalog_link() ) . '">' . esc_html__( 'To the catalog', 'fast-shop' ) . '</a></p>';
 			} else {
 				$content = $atts['empty_text'];
 			}
@@ -190,7 +193,7 @@ class FS_Shortcode {
 
 		if ( $errors->get_error_code() ) {
 			foreach ( $errors->get_error_messages() as $error ) {
-				$html .= '<p class="fs-order-detail">' . $error . '</p>';
+				$html .= '<p class="fs - order - detail">' . $error . '</p>';
 			}
 		} else {
 			$html = fs_frontend_template( 'shortcode/fs-order-info', $atts );
@@ -264,13 +267,14 @@ class FS_Shortcode {
 			'class'      => ''
 		), $args );
 		$template = '
-			     <form action="#" name="fs-order-send" class="' . $args['class'] . '" method="POST">
-  <div class="products_wrapper"></div>
-  <input type="hidden" id="_wpnonce" name="_wpnonce" value="' . wp_create_nonce( 'fast-shop' ) . '">
-  <input type="hidden" name="action" value="order_send">
-  <input type="hidden" name="order_type" value="single">';
-		$template .= fs_frontend_template( 'order/single-order', $args );
-		$template .= '</form>';
+<form action="#" name="fs-order-send" class="' . $args['class'] . '" method="POST">
+             < div class="products_wrapper" ></div >
+  <input type = "hidden" id = "_wpnonce" name = "_wpnonce" value = "' . wp_create_nonce( 'fast-shop' ) . '" >
+  <input type = "hidden" name = "action" value = "order_send" >
+  <input type = "hidden" name = "order_type" value = "single" > ';
+		$template .= fs_frontend_template( 'order / single - order', $args );
+		$template .= '
+                                                                  </form > ';
 
 		return $template;
 	}
@@ -281,15 +285,18 @@ class FS_Shortcode {
 	 */
 	function pay_methods() {
 		if ( empty( $_REQUEST['order_id'] ) || empty( $_REQUEST['pay_method'] ) ) {
-			return '<p>' . __( 'The order number or method of payment is not specified .', 'fast_shop' ) . '</p>';
+			return ' < p>' . __( 'The order number or method of payment is not specified . ', 'fast_shop' ) . ' </p > ';
 		}
 		$order_id     = intval( $_REQUEST['order_id'] );
 		$orders_class = new FS_Orders_Class();
 		$order        = $orders_class->get_order( $order_id );
-		$html         = '<h3 class="text-center">Оплата заказа №' . esc_attr( $order_id ) . 'с помошью' . esc_attr( $order->payment ) . '</h3>';
-		$html         .= '<div class="fs-pay-methods">';
+		$html         = ' < h3 class="text-center" > Оплата заказа №' . esc_attr( $order_id ) . 'с помошью' . esc_attr(
+				$order->payment ) . ' </h3 > ';
+		$html         .= '
+<div class="fs-pay-methods" > ';
 		$html         .= apply_filters( 'fs_pay_methods', $order_id );
-		$html         .= '</div>';
+		$html         .= '
+                                                       </div > ';
 
 		return $html;
 	}
