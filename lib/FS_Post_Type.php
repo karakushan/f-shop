@@ -261,7 +261,7 @@ class FS_Post_Type {
 		$form_class       = new FS_Form_Class();
 		$product_tabs     = $fs_config->get_product_tabs();
 		$this->product_id = $post->ID;
-		$cookie           = isset( $_COOKIE['fs_active_tab'] ) ? $_COOKIE['fs_active_tab'] : null;
+		$cookie           = isset( $_COOKIE['fs_active_tab'] ) ? $_COOKIE['fs_active_tab'] : 'prices';
 		echo '<div class="fs-metabox" id="fs-metabox">';
 		if ( count( $product_tabs ) ) {
 			echo '<ul class="tab-header">';
@@ -290,18 +290,11 @@ class FS_Post_Type {
 				if ( ! $tab_body['on'] ) {
 					continue;
 				}
-				if ( $cookie ) {
-					if ( $key_body == $cookie ) {
-						$class_tab = 'fs-tab-active';
-					} else {
-						$class_tab = '';
-					}
+
+				if ( $key_body == $cookie ) {
+					$class_tab = 'fs-tab-active';
 				} else {
-					if ( $key_body == 0 ) {
-						$class_tab = 'fs-tab-active';
-					} else {
-						$class_tab = '';
-					}
+					$class_tab = '';
 				}
 
 
