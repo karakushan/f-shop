@@ -101,6 +101,7 @@ class FS_Init {
 		wp_enqueue_style( 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'fs-style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
 		wp_enqueue_style( 'es-lightgallery', FS_PLUGIN_URL . 'assets/plugins/lightGallery/dist/css/lightgallery.min.css' );
+		wp_enqueue_style( FS_PLUGIN_PREFIX.'jquery-ui', FS_PLUGIN_URL . 'assets/css/jquery-ui.min.css' );
 
 		wp_enqueue_script( 'es-lightgallery', FS_PLUGIN_URL . "assets/plugins/lightGallery/dist/js/lightgallery-all.js", array( "jquery" ), null, true );
 		wp_enqueue_script( "jquery-ui-core", array( 'jquery' ) );
