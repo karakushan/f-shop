@@ -609,40 +609,69 @@ var p_start = u.query.price_start == undefined ? 0 : u.query.price_start;
 var p_end = u.query.price_end == undefined ? FastShopData.fs_slider_max : u.query.price_end;
 
 
-jQuery('[data-fs-element="range-slider"]').slider({
-    range: true,
-    min: 0,
-    max: FastShopData.fs_slider_max,
-    values: [p_start, p_end],
-    slide: function (event, ui) {
-        jQuery('[data-fs-element="range-end"] ').html('<span>' + ui.values[1] + '</span> ' + FastShopData.fs_currency);
-        jQuery('[data-fs-element="range-start"] ').html(ui.values[0] + ' ' + FastShopData.fs_currency);
-        jQuery("#slider-range > .ui-slider-handle:nth-child(2)").html('<span><span class="val">' + ui.values[0] + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
-        jQuery("#slider-range > .ui-slider-handle:nth-child(3)").html('<span><span class="val">' + ui.values[1] + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
-        jQuery('[data-fs-element="range-start-input"]').val(ui.values[0]);
-        jQuery('[data-fs-element="range-end-input"]').val(ui.values[1]);
-    },
-    change: function (event, ui) {
+jQuery('[data-fs-element="range-slider"]').each(function (index, value) {
+    var rangeSLider = jQuery(this);
+    var sliderWrapper = rangeSLider.parents("[data-fs-element=\"jquery-ui-slider\"]");
+    var sliderEnd = sliderWrapper.find('[data-fs-element="range-end"]');
+    var sliderStart = sliderWrapper.find('[data-fs-element="range-start"]');
+    rangeSLider.slider({
+        range: true,
+        min: 0,
+        max: FastShopData.fs_slider_max,
+        values: [p_start, p_end],
+        slide: function (event, ui) {
+            if (sliderStart.data("currency")) {
+                sliderStart.html(p_start + ' ' + FastShopData.fs_currency);
+            } else {
+                sliderStart.html(ui.values[0]);
+            }
+            if (sliderEnd.data("currency")) {
+                sliderEnd.html(p_end + ' ' + FastShopData.fs_currency);
+            } else {
+                sliderEnd.html(ui.values[1]);
+            }
+            sliderWrapper.find('[data-fs-element="range-start-input"]').val(ui.values[0]);
+            sliderWrapper.find('[data-fs-element="range-end-input"]').val(ui.values[1]);
+        },
+        change: function (event, ui) {
 
-        u.query.fs_filter = FastShopData.fs_nonce;
-        u.query.price_start = ui.values[0];
-        u.query.price_end = ui.values[1];
-        // console.log(u.toString());
-        window.location.href = u.toString();
+            u.query.fs_filter = FastShopData.fs_nonce;
+            u.query.price_start = ui.values[0];
+            u.query.price_end = ui.values[1];
+            // console.log(u.toString());
+            window.location.href = u.toString();
 
 
+        }
+    });
+
+    if (sliderStart.data("currency")) {
+        sliderStart.html(p_start + ' ' + FastShopData.fs_currency);
+    } else {
+        sliderStart.html(p_start);
     }
+    if (sliderEnd.data("currency")) {
+        sliderEnd.html(p_end + ' ' + FastShopData.fs_currency);
+    } else {
+        sliderEnd.html(p_end);
+    }
+
+    sliderWrapper.find('[data-fs-element="range-start-input"]').val(p_start);
+    sliderWrapper.find('[data-fs-element="range-end-input"]').val(p_end);
 });
-jQuery('[data-fs-element="range-end"] ').html(p_end + ' ' + FastShopData.fs_currency);
-jQuery('[data-fs-element="range-start"] ').html(p_start + ' ' + FastShopData.fs_currency);
 
-jQuery('[data-fs-element="range-start-input"]').val(p_start);
-jQuery('[data-fs-element="range-end-input"]').val(p_end);
+jQuery(document).on('input keyup', '[data-fs-element="range-start-input"]', function (event) {
+    document.location.href = jQuery(this).data('url')+'&price_start='+jQuery(this).val();
+});
+jQuery(document).on('input keyup', '[data-fs-element="range-end-input"]', function (event) {
+    document.location.href = jQuery(this).data('url')+'&price_end='+jQuery(this).val();
+});
 
-jQuery("#slider-range > .ui-slider-handle:nth-child(2)").html('<span><span class="val">' + p_start + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
+
+/*jQuery("#slider-range > .ui-slider-handle:nth-child(2)").html('<span><span class="val">' + p_start + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
 jQuery("#slider-range > .ui-slider-handle:nth-child(3)").html('<span><span class="val">' + p_end + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
 jQuery("#minPrice .val").html(p_start + ' ' + FastShopData.fs_currency);
-jQuery("#maxPrice .val").html(p_end + ' ' + FastShopData.fs_currency);
+jQuery("#maxPrice .val").html(p_end + ' ' + FastShopData.fs_currency);*/
 
 // валидация формы редактирования личных данных
 var userInfoEdit = jQuery('form[name="fs-profile-edit"]');

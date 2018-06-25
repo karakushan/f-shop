@@ -697,22 +697,12 @@ td.fs_photo.column-fs_photo img {
   .fs-qty-wrap .fs-minus {
     bottom: 2.5px; }
 
-[data-fs-element="range-start"] {
-  float: left;
-  margin: 20px 0;
-  font-weight: bold; }
-
-[data-fs-element="range-end"] {
-  float: right;
-  margin: 20px 0;
-  font-weight: bold; }
-
 .fs-pay-wrapper {
   width: 360px;
   margin: 30px auto;
   border: 1px solid #f1f1f1;
   padding: 20px;
-  box-shadow: -4px 5px 4px rgba(0, 0, 0, 0.07059);
+  box-shadow: -4px 5px 4px rgba(0, 0, 0, 0.0705882353);
   max-width: 100%; }
   .fs-pay-wrapper .amount {
     text-transform: uppercase;
@@ -936,7 +926,7 @@ td.fs_photo.column-fs_photo img {
       font-weight: 300;
       line-height: 1;
       padding: 0;
-      box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.07843); }
+      box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.0784313725); }
   .fs-cart-listing .table > tbody > tr > td, .fs-cart-listing .table > tbody > tr > th, .fs-cart-listing .table > tfoot > tr > td, .fs-cart-listing .table > tfoot > tr > th, .fs-cart-listing .table > thead > tr > td, .fs-cart-listing .table > thead > tr > th {
     vertical-align: middle; }
   .fs-cart-listing .fs-products-after {

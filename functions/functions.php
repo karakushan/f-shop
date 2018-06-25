@@ -1139,18 +1139,12 @@ function fs_attr_group_filter( $group, $type = 'option', $option_default = 'Вы
  * @param int $price_max
  */
 function fs_range_slider() {
+	echo fs_frontend_template( 'widget/jquery-ui-slider/ui-slider', array(
+		'price_max' => fs_price_max(),
+		'currency'  => fs_currency()
 
-	$price_max = fs_price_max();
-	$curency   = fs_currency(); ?>
-  <div class="slider">
-    <div data-fs-element="range-slider" id="range-slider"></div>
-    <div class="fs-price-show">
-      <span data-fs-element="range-start">0 <span><?php echo $curency ?></span></span>
-      <span data-fs-element="range-end"><?php echo $price_max ?> <span><?php echo $curency ?></span>
-    </span>
-    </div>
-  </div>
-	<?php
+	) );
+
 }//end range_slider()
 
 /**
@@ -1960,22 +1954,35 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
 /**
  * Создаёт ссылку для отфильтровки товаров по параметрам в каталоге
  *
- * @param null $filter_by параметр фильтра
- * @param null $order_by параметр сортировки
- *
- * @param string $catalog_link ссылка для фильтра
+ * @param array $query строка запроса
+ * @param string $catalog_link ссылка на страницу на которой отобразить результаты
+ * @param array $unset параметры, которые нужно удалить из строки запроса
  */
-function fs_filter_link( $filter_by = null, $order_by = null, $catalog_link = null ) {
-	global $fs_config;
+function fs_filter_link( $query = [], $catalog_link = null, $unset = [] ) {
 
-	$query['fs_filter'] = wp_create_nonce( 'fast-shop' );
-	$catalog_link       = $catalog_link ? $catalog_link : get_post_type_archive_link( $fs_config->data['post_type'] );
+	// разбор строки урл
+	$curent_url = parse_url( $_SERVER['REQUEST_URI'] );
+	parse_str( $curent_url['query'], $current_query );
 
-	if ( ! empty( $filter_by ) ) {
-		$query['filter_by'] = $filter_by;
+	// заменяем дефолт параметры
+	$query = wp_parse_args( $query, $current_query );
+
+	//если не найдена fs_filter устанавливаем его
+	if ( empty( $query['fs_filter'] ) ) {
+		$query['fs_filter'] = wp_create_nonce( 'fast-shop' );
 	}
-	if ( ! empty( $order_by ) ) {
-		$query['order_type'] = $order_by;
+
+	// устанавливаем базовый путь без query_string
+	$catalog_link = $catalog_link ? $catalog_link : $curent_url['path'];
+
+	// Если нужно, удаляем некоторые параметры указанные в переменной $unset
+	if ( ! empty( $unset ) ) {
+		foreach ( $unset as $uns ) {
+			if ( ! empty( $query[ $uns ] ) ) {
+				unset( $query[ $uns] );
+			}
+		}
+
 	}
 
 	echo esc_url( add_query_arg( $query, $catalog_link ) );
