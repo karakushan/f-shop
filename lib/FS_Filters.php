@@ -161,12 +161,12 @@ class FS_Filters {
 
 			switch ( $url['order_type'] ) {
 				case 'price_asc': //сортируем по цене в возрастающем порядке
-					$meta_query['price'] = array( 'key' => $fs_config->meta['price'] );
-					$orderby['meta_value_num']    = 'ASC';
+					$meta_query['price']       = array( 'key' => $fs_config->meta['price'] );
+					$orderby['meta_value_num'] = 'ASC';
 					break;
 				case 'price_desc': //сортируем по цене в спадающем порядке
-					$meta_query['price'] = array( 'key' => $fs_config->meta['price'] );
-					$orderby['meta_value_num']    = 'DESC';
+					$meta_query['price']       = array( 'key' => $fs_config->meta['price'] );
+					$orderby['meta_value_num'] = 'DESC';
 					break;
 				case 'views_desc': //сортируем по просмотрам в спадающем порядке
 					$meta_query['views'] = array( 'key' => 'views' );
@@ -378,6 +378,8 @@ class FS_Filters {
 			)
 		) );
 
+		$order_type_get = ! empty( $_GET['order_type'] ) ? $_GET['order_type'] : '';
+
 		if ( count( $attr['filters'] ) ) {
 			echo '<select name="order_type"  class="' . esc_attr( $attr['class'] ) . '" data-fs-action="filter">';
 			foreach ( $attr['filters'] as $key => $order_type ) {
@@ -385,7 +387,7 @@ class FS_Filters {
 					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
 					'order_type' => $key
 				) );
-				echo '<option value="' . esc_url( $redirect_url ) . '" ' . selected( $key, (string) $_GET['order_type'], 0 ) . '>' . esc_html( $order_type['name'] ) . '</option>';
+				echo '<option value="' . esc_url( $redirect_url ) . '" ' . selected( $key, $order_type_get, 0 ) . '>' . esc_html( $order_type['name'] ) . '</option>';
 			}
 			echo '</select>';
 		}

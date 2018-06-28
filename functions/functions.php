@@ -1216,8 +1216,8 @@ function fs_add_to_wishlist( $post_id = 0, $label = 'В список желан�
  * @param string $label
  * @param array $args
  */
-function fs_wishlist_button($post_id = 0, $label = 'В список желаний', $args = array()){
-	fs_add_to_wishlist( $post_id , $label, $args );
+function fs_wishlist_button( $post_id = 0, $label = 'В список желаний', $args = array() ) {
+	fs_add_to_wishlist( $post_id, $label, $args );
 }
 
 /**
@@ -1974,7 +1974,11 @@ function fs_filter_link( $query = [], $catalog_link = null, $unset = [] ) {
 
 	// разбор строки урл
 	$curent_url = parse_url( $_SERVER['REQUEST_URI'] );
-	parse_str( $curent_url['query'], $current_query );
+
+	$current_query = [];
+	if ( ! empty( $curent_url['query'] ) ) {
+		parse_str( $curent_url['query'], $current_query );
+	}
 
 	// заменяем дефолт параметры
 	$query = wp_parse_args( $query, $current_query );
@@ -1991,7 +1995,7 @@ function fs_filter_link( $query = [], $catalog_link = null, $unset = [] ) {
 	if ( ! empty( $unset ) ) {
 		foreach ( $unset as $uns ) {
 			if ( ! empty( $query[ $uns ] ) ) {
-				unset( $query[ $uns] );
+				unset( $query[ $uns ] );
 			}
 		}
 
