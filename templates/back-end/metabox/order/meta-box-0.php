@@ -26,7 +26,7 @@
 			  echo '<ul class="product-att">';
 			  foreach ( $product['attr'] as $att ) {
 				  $term = get_term( $att, $fs_config->data['product_att_taxonomy'] );
-				  echo '<li><b>' . get_term_field( 'name', $term->parent, $fs_config->data['product_att_taxonomy'] ) . '</b>: ' . $term->name . '</li>';
+				  echo '<li><b>' . apply_filters('the_title',get_term_field( 'name', $term->parent, $fs_config->data['product_att_taxonomy'] )) . '</b>: ' . apply_filters('the_title',$term->name) . '</li>';
 			  }
 			  echo '</ul>';
 		  }
