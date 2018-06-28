@@ -1209,6 +1209,18 @@ function fs_add_to_wishlist( $post_id = 0, $label = 'В список желан�
 }
 
 /**
+ * Синоним функции fs_add_to_wishlist()
+ * устаревшая функция
+ *
+ * @param int $post_id
+ * @param string $label
+ * @param array $args
+ */
+function fs_wishlist_button($post_id = 0, $label = 'В список желаний', $args = array()){
+	fs_add_to_wishlist( $post_id , $label, $args );
+}
+
+/**
  * Функция транслитерации русских букв
  *
  * @param $s
