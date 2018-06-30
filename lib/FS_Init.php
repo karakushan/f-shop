@@ -147,10 +147,10 @@ class FS_Init {
 
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/js/tooltipster.bundle.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'library', FS_PLUGIN_URL . 'assets/js/fs-library.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( FS_PLUGIN_PREFIX . 'admin', FS_PLUGIN_URL . 'assets/js/f-shop-admin.js', array(
+		wp_enqueue_script( FS_PLUGIN_PREFIX . 'admin', FS_PLUGIN_URL . 'assets/js/fs-admin.js', array(
 			'jquery',
-			'js-cookie',
-			'fs-library'
+			FS_PLUGIN_PREFIX .'js-cookie',
+			FS_PLUGIN_PREFIX .'library'
 		), null, true );
 
 		$l10n = array(

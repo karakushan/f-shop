@@ -602,8 +602,9 @@ jQuery(document).ready(function (jQuery) {
 
     });
 });
-//слайдер диапазона цены
 
+
+//слайдер диапазона цены
 var u = new Url;
 var p_start = u.query.price_start == undefined ? 0 : u.query.price_start;
 var p_end = u.query.price_end == undefined ? FastShopData.fs_slider_max : u.query.price_end;

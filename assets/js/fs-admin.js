@@ -1,3 +1,24 @@
+/*
+* В дальнейшем разработка должна вестись в пространстве имён fShop
+* также это подразумевает, что существующие функции будут перезаписаны
+* в соответствии с этим видением
+*
+*/
+(function ($) {
+    $.fn.fShop = function (options) {
+        // Создаём настройки по-умолчанию, расширяя их с помощью параметров, которые были переданы
+        var settings = $.extend({}, options);
+
+        var methods = {}
+
+        return this.each(function () {
+        });
+    };
+})(jQuery);
+
+jQuery(window).fShop();
+
+
 jQuery(function ($) {
 
     // Подсказки в настройках плагина
@@ -27,7 +48,7 @@ jQuery(function ($) {
                 // do something with ajax data
                 var json = JSON.parse(result);
                 if (json.status) {
-                    el.parents('td').find('.fs-childs-list').append('<li>'+json.term_name+' <a class="remove-att" title="do I delete a property?" data-action="remove-att" data-category-id="'+data.term+'" data-product-id="'+data.term+'">удалить</a></li>')
+                    el.parents('td').find('.fs-childs-list').append('<li>' + json.term_name + ' <a class="remove-att" title="do I delete a property?" data-action="remove-att" data-category-id="' + data.term + '" data-product-id="' + data.term + '">удалить</a></li>')
                 }
 
             },
@@ -381,115 +402,6 @@ jQuery(document).on('change', '.fs_select_variant', function (event) {
         }
     }
 });
-
-// ==== drag and drop загрузчик файлов ====
-var holder = document.getElementById('holder');
-if (holder) {
-    var tests = {
-            filereader: typeof FileReader != 'undefined',
-            dnd: 'draggable' in document.createElement('span'),
-            formdata: !!window.FormData,
-            progress: "upload" in new XMLHttpRequest
-        },
-        support = {
-            filereader: document.getElementById('filereader'),
-            formdata: document.getElementById('formdata'),
-            progress: document.getElementById('progress')
-        },
-        acceptedTypes = fShop.allowedImagesType,
-        progress = document.getElementById('uploadprogress'),
-        fileupload = document.getElementById('upload');
-
-
-    "filereader formdata progress".split(' ').forEach(function (api) {
-        if (tests[api] === false) {
-            support[api].className = 'fail';
-        } else {
-            // FFS. I could have done el.hidden = true, but IE doesn't support
-            // hidden, so I tried to create a polyfill that would extend the
-            // Element.prototype, but then IE10 doesn't even give me access
-            // to the Element object. Brilliant.
-            support[api].className = 'hidden';
-        }
-    });
-
-    function previewfile(file) {
-        if (tests.filereader === true && acceptedTypes[file.type] === true) {
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                var image = new Image();
-                image.src = event.target.result;
-                image.width = 250; // a fake resize
-                holder.appendChild(image);
-            };
-
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function filesUpload(formData, file) {
-        // document.getElementById('uploadprogress-name').innerText=file.name;
-        progress.value = 0;
-        var xhr = new XMLHttpRequest();
-
-        xhr.onload = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                var json = JSON.parse(xhr.responseText);
-                var image = '<div class="fs-col-4"> <div class="fs-remove-img"></div> <input type="hidden" name="fs_galery[]" value="' + json.data.id + '"> <img src="' + json.data.url + '" alt="fs gallery image #' + json.data.id + '"> </div>';
-                jQuery('#fs-gallery-wrapper').append(image);
-                progress.value = 0;
-
-            }
-            progress.value = progress.innerHTML = 100;
-        };
-
-
-        if (tests.progress) {
-            xhr.upload.onprogress = function (event) {
-                if (event.lengthComputable) {
-                    var complete = (event.loaded / event.total * 100 | 0);
-                    progress.value = progress.innerHTML = complete;
-                }
-            }
-        }
-        xhr.open("POST", "/wp-admin/async-upload.php", true);
-        xhr.send(formData);
-    }
-
-    function readfiles(files) {
-        var formData = tests.formdata ? new FormData() : null;
-        formData.append("action", "upload-attachment");
-        formData.append("_wpnonce", fShop.mediaNonce);
-        for (var i = 0; i < files.length; i++) {
-            if (tests.formdata) formData.append('async-upload', files[i]);
-            previewfile(files[i]);
-            filesUpload(formData, files[i]);
-        }
-    }
-
-    if (tests.dnd) {
-        holder.ondragover = function () {
-            this.className = 'hover';
-            return false;
-        };
-        holder.ondragend = function () {
-            this.className = '';
-            return false;
-        };
-        holder.ondrop = function (e) {
-            this.className = '';
-            e.preventDefault();
-            readfiles(e.dataTransfer.files);
-        }
-    } else {
-        fileupload.className = 'hidden';
-        fileupload.querySelector('input').onchange = function () {
-            readfiles(this.files);
-        };
-    }
-}
-
-
 
 
 
