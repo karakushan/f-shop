@@ -17,6 +17,7 @@ class FS_Shortcode {
 		$this->config = new FS_Config();
 
 		add_shortcode( 'fs_cart', array( $this, 'cart_shortcode' ) );
+		add_shortcode( 'fs_login_form', array( 'FS\FS_Users_Class', 'login_form' ) );
 		add_shortcode( 'fs_cart_widget', array( $this, 'cart_widget' ) );
 		add_shortcode( 'fs_order_info', array( $this, 'single_order_info' ) );
 		add_shortcode( 'fs_last_order_info', array( $this, 'last_order_info' ) );
@@ -28,7 +29,7 @@ class FS_Shortcode {
 		add_shortcode( 'fs_user_cabinet', array( $this, 'user_cabinet' ) );
 		add_shortcode( 'fs_single_order', array( $this, 'single_order' ) );
 		add_shortcode( 'fs_register_form', 'fs_register_form' );
-		add_shortcode( 'fs_user_info', array( 'FS\Users_Class', 'user_info' ) );
+		add_shortcode( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info' ) );
 		add_shortcode( 'fs_user_orders', array( $this, 'user_orders' ) );
 		add_shortcode( 'fs_profile_edit', array( $this, 'profile_edit' ) );
 		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );
