@@ -306,7 +306,7 @@ class FS_Config {
 			'prices'     => array(
 				'title'       => __( 'Цены', 'fast-shop' ),
 				'on'          => true,
-				'description' => __( 'В этой вкладке вы можете настроить цену товара', 'fast-shop' ),
+				'description' => __( 'В этой вкладке вы можете настроить цены товаров', 'fast-shop' ),
 				'fields'      => array(
 					$this->meta['price']        => array(
 						'label' => __( 'Базовая цена', 'fast-shop' ),

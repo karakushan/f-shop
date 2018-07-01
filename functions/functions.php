@@ -838,20 +838,32 @@ function fs_post_views( $post_id = '' ) {
 /**
  * показывает вижет корзины в шаблоне
  *
- * @param array $attr - массив атрибутов html элемента обёртки
+ * @param array $args - массив атрибутов html элемента обёртки
  *
  * @return mixed показывает виджет корзины
  */
-function fs_cart_widget( $attr = array() ) {
+function fs_cart_widget( $args = array() ) {
+	$args = wp_parse_args( $args, array(
+		'class' => 'fs-cart-widget',
+		'empty' => false
+	) );
 
-	$template = fs_frontend_template( 'cart-widget/widget' );
-	$attr_set = array(
-		'data-fs-element' => 'cart-widget'
-	);
-	$attr     = fs_parse_attr( $attr, $attr_set );
-	echo "<div  $attr>";
-	echo $template;
-	echo "</div>";
+	$template = '<div data-fs-element="cart-widget" class="' . esc_attr( $args['class'] ) . '">';
+
+	// если параметр  $args['empty']  == true это значит использовать отдельный шаблон для пустой корзины
+	if ( $args['empty'] ) {
+		if ( fs_total_count() ) {
+			$template .= fs_frontend_template( 'cart-widget/widget' );
+		} else {
+			$template .= fs_frontend_template( 'cart-widget/cart-empty' );
+		}
+	} else {
+		$template .= fs_frontend_template( 'cart-widget/widget' );
+	}
+
+	$template .= "</div>";
+
+	echo apply_filters( 'fs_cart_widget_template', $template );
 }
 
 // Показывает ссылку на страницу корзины
