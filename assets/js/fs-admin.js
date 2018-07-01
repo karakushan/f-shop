@@ -23,7 +23,7 @@ jQuery(function ($) {
 
     // Подсказки в настройках плагина
     $('.tooltip').tooltipster({
-        theme: 'shadow',
+        theme: 'tooltipster-light',
         trigger: 'hover'
     });
 

@@ -103,7 +103,7 @@ class FS_Config {
 			// включает метку Акция
 			'label_promotion'   => 'fs_on_promotion',
 			// включает метку Новинка
-			'label_novelty'   => 'fs_on_novelty'
+			'label_novelty'     => 'fs_on_novelty'
 		);
 
 		$this->meta = apply_filters( 'fs_meta', $meta );
@@ -304,10 +304,27 @@ class FS_Config {
 	public function get_product_tabs() {
 		$tabs = array(
 			'prices'     => array(
-				'title'    => __( 'Prices', 'fast-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'prices'
+				'title'       => __( 'Цены', 'fast-shop' ),
+				'on'          => true,
+				'description' => __( 'В этой вкладке вы можете настроить цену товара', 'fast-shop' ),
+				'fields'      => array(
+					$this->meta['price']        => array(
+						'label' => __( 'Базовая цена', 'fast-shop' ),
+						'type'  => 'text',
+						'help'  => __( 'Это основная цена на сайте. Поле обязательное!', 'fast-shop' )
+					),
+					$this->meta['action_price'] => array(
+						'label' => __( 'Акционная цена', 'fast-shop' ),
+						'type'  => 'text',
+						'help'  => __( 'Если это поле заполнено, то базовая цена теряет свою актуальность. Но вы можете отображать её на сайте.', 'fast-shop' )
+					),
+					$this->meta['currency']     => array(
+						'label'    => __( 'Валюта товара', 'fast-shop' ),
+						'type'     => 'dropdown_categories',
+						'help'     => __( 'Поле можно использовать если вы включили мультивалютность в настроках.', 'fast-shop' ),
+						'taxonomy' => $this->data['currencies_taxonomy']
+					)
+				)
 			),
 			'gallery'    => array(
 				'title'    => __( 'Gallery', 'fast-shop' ),

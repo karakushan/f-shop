@@ -122,16 +122,11 @@
         display: block;
         margin-bottom: 4px;
         font-weight: bold; }
-        .fs-metabox .fs-tabs > .fs-tab label span {
-          font-weight: 400;
-          font-size: .9em;
-          padding: 0px 9px;
-          color: #0073aa;
-          border-radius: 3px;
-          background: #f9f9f9;
-          display: inline-block;
-          margin-left: 2px;
-          letter-spacing: .05em; }
+        .fs-metabox .fs-tabs > .fs-tab label .tooltip {
+          font-size: 20px;
+          position: relative;
+          top: -5px;
+          left: -5px; }
       .fs-metabox .fs-tabs > .fs-tab button.button-sm {
         padding: 5px 10px;
         line-height: normal;
@@ -150,6 +145,8 @@
         padding: 0px 10px;
         width: 224px;
         max-width: 100%; }
+      .fs-metabox .fs-tabs > .fs-tab textarea {
+        width: 100%; }
       .fs-metabox .fs-tabs > .fs-tab select {
         height: 28px;
         padding: 0px 10px;
@@ -428,7 +425,7 @@ td.fs_price.column-fs_price span span {
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
-  box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.07059); }
+  box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.0705882353); }
 
 .delete-image {
   line-height: 1;
@@ -787,7 +784,7 @@ progress {
   margin-left: 5px; }
   .tooltip:before {
     content: "\f223";
-    color: #0073aa; }
+    color: #00a0d2; }
 
 .fs-field-wrapper {
   display: flex;
@@ -795,33 +792,6 @@ progress {
   .fs-field-wrapper input {
     margin: 0;
     padding: 5px 10px; }
-
-/* This is how you would create a custom secondary theme on top of tooltipster-noir: */
-.tooltipster-sidetip .tooltipster-content {
-  color: #fff;
-  line-height: 18px;
-  padding: 6px 14px; }
-
-.tooltipster-sidetip .tooltipster-box {
-  background: #0073aa;
-  border: 1px solid #01496b;
-  border-radius: 3px; }
-
-.tooltipster-sidetip .tooltipster-arrow-border {
-  border: 9px solid transparent;
-  left: 2px;
-  top: 1px; }
-
-.tooltipster-sidetip.tooltipster-top .tooltipster-arrow-border {
-  border-top-color: #01496b; }
-
-.tooltipster-sidetip.tooltipster-top .tooltipster-arrow-background {
-  border-top-color: #0073aa;
-  left: 4px;
-  top: 1px; }
-
-.tooltipster-sidetip .tooltipster-arrow-background {
-  border: 7px solid transparent; }
 
 #fast_shop_product_metabox .inside {
   margin: 0 !important;

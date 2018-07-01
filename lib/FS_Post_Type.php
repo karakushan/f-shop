@@ -311,10 +311,14 @@ class FS_Post_Type {
 					}
 
 					foreach ( $tab_body['fields'] as $key => $field ) {
-
-						$form_class->render_field( $key, $field['type'], array(
-							'value' => get_post_meta( $post->ID, $key, true )
-						) );
+						if ( empty( $field['type'] ) ) {
+							echo 'Не указан аргумент "type"';
+							continue;
+						}
+						echo '<div class="fs-field-row clearfix">';
+						$field['value'] = get_post_meta( $post->ID, $key, true );
+						$form_class->render_field( $key, $field['type'], $field );
+						echo '</div>';
 					}
 				} elseif ( ! empty( $tab_body['template'] ) ) {
 					$template_file = sprintf( FS_PLUGIN_PATH . 'templates/back-end/metabox/%s.php', $tab_body['template'] );

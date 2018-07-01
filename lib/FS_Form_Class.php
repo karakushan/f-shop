@@ -12,7 +12,6 @@ class FS_Form_Class {
 	public function __construct() {
 
 
-
 	}
 
 
@@ -22,7 +21,18 @@ class FS_Form_Class {
 	 * @return mixed|void
 	 */
 	function registered_field_types() {
-		$types = array( 'text', 'textarea', 'editor', 'checkbox', 'radio', 'gallery', 'image', 'media' );
+		$types = array(
+			'text',
+			'textarea',
+			'editor',
+			'checkbox',
+			'radio',
+			'gallery',
+			'image',
+			'media',
+			'number',
+			'dropdown_categories'
+		);
 
 		return apply_filters( 'fs_registered_field_types', $types );
 
@@ -37,18 +47,33 @@ class FS_Form_Class {
 	 */
 	function render_field( $name, $type = 'text', $args = [] ) {
 		$args = wp_parse_args( $args, array(
-			'value'         => '',
-			'class'         => 'fs-' . $type . 'field',
-			'id'            => 'fs-' . $name . '-' . $type,
-			'default'       => '',
-			'textarea_rows' => 8,
-			'editor_args'   => array(
+			'value'          => '',
+			'label'          => '',
+			'label_position' => 'before',
+			'taxonomy'       => 'category',
+			'help'           => '',
+			'class'          => sanitize_title( 'fs-' . $type . 'field' ),
+			'id'             => sanitize_title( 'fs-' . $name . '-' . $type ),
+			'default'        => '',
+			'textarea_rows'  => 8,
+			'editor_args'    => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $name
 			)
 		) );
 		if ( in_array( $type, $this->registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
+			if ( $args['label'] && $args['label_position'] == 'before' ) {
+				echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] );
+				if ( $args['help'] ) {
+					echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
+				}
+				echo '</label>';
+			}
 			include FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
+
+			if ( $args['label'] && $args['label_position'] == 'after' ) {
+				echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			}
 		}
 	}
 
