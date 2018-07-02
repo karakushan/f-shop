@@ -89,6 +89,13 @@ class FS_Settings_Class {
 						'label' => 'Использовать копейки?',
 						'value' => fs_option( 'price_cents', '0' )
 					),
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'price_conversion',
+						'label' => 'Конвертация стоимости товара в зависимости от языка',
+						'help'=>'Если выбрано, то цена будет автоматически конвертироваться в необходимую валюту. Важно! Для того, чтобы это сработало необходимо указать локаль в настрйках валюты.',
+						'value' => fs_option( 'price_conversion', '0' )
+					),
 				)
 			),
 			'letters'    => array(

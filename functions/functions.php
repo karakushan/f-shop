@@ -1044,15 +1044,53 @@ function fs_user_viewed() {
 	return $posts;
 }
 
+
 /**
- * Получаем симовол валюты
+ * Возвращает ID валюты товара
+ *
+ * важно знать что "ID валюты товара" должно быть равно
+ * ID одной из добавленных терминов таксономии валюты
+ * то-есть возвращается целое число а не код или симовл валюты
+ *
+ * @param int $product_id
+ *
+ * @return array $product_currency;
+ */
+function fs_get_product_currency( $product_id = 0 ) {
+	global $fs_config;
+	$product_currency        = [];
+	$product_id              = fs_get_product_id( $product_id );
+	$product_currency_id     = intval( get_post_meta( $product_id, $fs_config->meta['currency'], 1 ) );
+	$product_currency_symbol = get_term_meta( $product_currency_id, 'fs_currency_display', 1 );
+	$product_currency_code   = get_term_meta( $product_currency_id, 'currency-code', 1 );
+	$site_currency_id        = intval( fs_option( 'default_currency', 0 ) );
+
+
+	//если у товара не найден ID валюта возвращаем  ID валюты по умолчанию
+	if ( ! $product_currency_id ) {
+		$product_currency_id = $site_currency_id;
+	}
+	$product_currency['id']     = $product_currency_id;
+	$product_currency['symbol'] = $product_currency_symbol ? $product_currency_symbol : fs_option( 'currency_symbol', '$' );
+	$product_currency['code']   = $product_currency_code ? $product_currency_code : 'USD';
+
+	return $product_currency;
+}
+
+/**
+ * Возвращаем символ валюты
+ *
+ * @param int $product_id - ID товара (по умолчанию ID берётся из global $post)
+ *
  * @return string
  */
-function fs_currency() {
-	$currency = fs_option( 'currency_symbol', '$' );
+function fs_currency( $product_id = 0 ) {
+	$product_currency = fs_get_product_currency( $product_id );
 
-	return $currency;
+
+	return apply_filters( 'fs_currency', $product_currency['symbol'] );
 }
+
 
 /**
  * Возвращает данные опции

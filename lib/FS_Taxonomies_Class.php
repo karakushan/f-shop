@@ -16,6 +16,9 @@ class FS_Taxonomies_Class {
 	public $product_taxonomy;
 
 	function __construct() {
+
+		$this->config = new FS_Config();
+
 		add_action( 'init', array( $this, 'create_taxonomy' ) );
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
 		// добавляем колонку при просмотре списка терминов таксономии валют
@@ -308,10 +311,14 @@ class FS_Taxonomies_Class {
 </div> ';
 	}
 
+
+	/**
+	 * Добавляем свои поля на вкладке добавления валюты
+	 */
 	function add_fs_currencies_fields() {
 		echo '<tr class="form-field term-currency-code-wrap">
 			<th scope="row"><label for="slug"> ' . __( 'Currency code', 'fast-shop' ) . ' </label></th>
-						<td><input name="fast-shop[currency-code]" id="currency-code" type="text" value="" size="5">
+						<td><input name="fast-shop[currency-code]" id="currency-code" type="text" value="" size="5" required>
 			<p class="description"> ' . __( 'International Currency Symbol', 'fast-shop' ) . ' </p></td>
 		</tr> ';
 
@@ -320,12 +327,35 @@ class FS_Taxonomies_Class {
 						<td><input name="fast-shop[cost-basic]" id="currency-code" type="text" value="" size="5"> 
 			<p class="description"> ' . __( 'Only digits with a dot are allowed', 'fast-shop' ) . ' </p></td>
 		</tr> ';
+
+
+		// === Отображение валюты на сайте ===
+		echo '<tr class="form-field term-currency-code-wrap">
+			<th scope="row"><label for="fs-currency-display"> ' . __( 'Отображение валюты на сайте', 'fast-shop' ) . ' </label></th>
+						<td><input name="fast-shop[fs_currency_display]" id="fs-currency-display" type="text" value="" size="5">
+			<p class="description"> ' . __( 'Если не указать будет отображаться код валюты типа USD', 'fast-shop' ) . ' </p></td>
+		</tr> ';
+
+		// === Поле выбора языка валюты ===
+		echo '<tr class="form-field term-currency-code-wrap">
+			<th scope="row"><label for="fs-currency-locales"> ' . __( 'Язык валюты', 'fast-shop' ) . ' </label></th>
+						<td>';
+		if ( $this->config->get_locales() ) {
+			echo '<select name="fast-shop[fs_currency_locales]" id="fs-currency-locales">';
+			echo '<option value="">' . esc_html__( 'Доступные языки', 'fast-shop' ) . '</option>';
+			foreach ( $this->config->get_locales() as $key => $locale ) {
+				echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $locale ) . '</option>';
+			}
+			echo '</select>';
+		}
+		echo '<p class="description"> ' . __( 'Выберите язык из выпадающего списка', 'fast-shop' ) . ' </p></td>
+		</tr> ';
 	}
 
 	function edit_fs_currencies_fields( $term ) {
 		echo '<tr class="form-field term-currency-code-wrap">
 			<th scope="row"><label for="slug"> ' . __( 'Currency code', 'fast-shop' ) . ' </label></th>
-						<td><input name="fast-shop[currency-code]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'currency-code', 1 ) . '" size="5">
+						<td><input name="fast-shop[currency-code]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'currency-code', 1 ) . '" size="5" required>
 			<p class="description"> ' . __( 'International Currency Symbol', 'fast-shop' ) . ' </p></td>
 		</tr> ';
 
@@ -334,6 +364,31 @@ class FS_Taxonomies_Class {
 			<th scope="row"><label for="slug"> ' . __( 'Cost in basic currency', 'fast-shop' ) . ' </label></th>
 						<td><input name="fast-shop[cost-basic]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'cost-basic', 1 ) . '" size="5">
 			<p class="description"> ' . __( 'Only digits with a dot are allowed', 'fast-shop' ) . ' </p></td>
+		</tr> ';
+
+
+		// === Отображение валюты на сайте ===
+		echo '<tr class="form-field term-currency-code-wrap">
+			<th scope="row"><label for="slug"> ' . __( 'Отображение валюты на сайте', 'fast-shop' ) . ' </label></th>
+						<td><input name="fast-shop[fs_currency_display]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'fs_currency_display', 1 ) . '" size="5">
+			<p class="description"> ' . __( 'Если не указать будет отображаться код валюты типа USD', 'fast-shop' ) . ' </p></td>
+		</tr> ';
+
+
+		// === Поле выбора языка валюты ===
+		echo '<tr class="form-field term-currency-code-wrap">
+			<th scope="row"><label for="fs-currency-locales"> ' . __( 'Язык валюты', 'fast-shop' ) . ' </label></th>
+						<td>';
+
+		if ( $this->config->get_locales() ) {
+			echo '<select name="fast-shop[fs_currency_locales]" id="fs-currency-locales">';
+			echo '<option value="">' . esc_html__( 'Доступные языки', 'fast-shop' ) . '</option>';
+			foreach ( $this->config->get_locales() as $key => $locale ) {
+				echo '<option ' . selected( $key, get_term_meta( $term->term_id, 'fs_currency_locales', 1 ) ) . ' value="' . esc_attr( $key ) . '">' . esc_html( $locale ) . '</option>';
+			}
+			echo '</select>';
+		}
+		echo '<p class="description"> ' . __( 'Выберите язык из выпадающего списка', 'fast-shop' ) . ' </p></td>
 		</tr> ';
 	}
 
