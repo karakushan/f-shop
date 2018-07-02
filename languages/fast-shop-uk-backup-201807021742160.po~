@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-02 17:33+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2018-07-02 17:42+0000\n"
+"PO-Revision-Date: 2018-07-02 17:40+0000\n"
 "Last-Translator: cube44-admin <karakushan@gmail.com>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -91,7 +91,7 @@ msgstr "Ваш e-mail"
 
 #: lib/FS_Config.php:156
 msgid "Keep the correct email"
-msgstr "Введіть коректний e-mail"
+msgstr "Введіть коректний номер телефону"
 
 #: lib/FS_Config.php:162
 msgid "Firts name"

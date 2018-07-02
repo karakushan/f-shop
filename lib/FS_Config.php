@@ -152,69 +152,68 @@ class FS_Config {
 			'fs_email'             => array(
 				'type'        => 'email',
 				'label'       => '',
-				'placeholder' => 'Ваш email',
-				'title'       => 'Ведите корректный email',
+				'placeholder' => __( 'Your email', 'fast-shop' ),
+				'title'       => __( 'Keep the correct email', 'fast-shop' ),
 				'required'    => true
 			),
 			'fs_first_name'        => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => 'Ваше имя',
+				'placeholder' => __( 'Firts name', 'fast-shop' ),
 				'required'    => true
 			),
 			'fs_last_name'         => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => 'Ваша фамилия',
+				'placeholder' => __('Last name', 'fast-shop' ),
 				'required'    => true
 			),
 			'fs_phone'             => array(
 				'type'        => 'tel',
 				'label'       => '',
-				'placeholder' => 'Телефон',
-				'title'       => 'Ведите корректный номер телефона',
+				'placeholder' => __( 'Телефон', 'fast-shop' ),
+				'title'       => __('Keep the correct phone number', 'fast-shop' ),
 				'required'    => true,
 				'save_meta'   => 1
 			),
 			'fs_city'              => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => 'Город',
+				'placeholder' => __('City', 'fast-shop' ),
 				'required'    => true,
 				'save_meta'   => 1
 			),
 			'fs_adress'            => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => 'Адрес доставки',
+				'placeholder' =>__( 'Delivery address', 'fast-shop' ) ,
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_home_num'          => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => 'Номер дома',
+				'placeholder' =>__( 'House number', 'fast-shop' ) ,
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_apartment_num'     => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => 'Номер квартиры',
+				'placeholder' => __( 'Apartment number', 'fast-shop' ),
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_delivery_number'   => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => 'Номер отделения',
+				'placeholder' =>__( 'Branch number', 'fast-shop' ) ,
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_delivery_methods'  => array(
 				'type'        => 'del_methods',
 				'label'       => __( 'Delivery method', 'fast-shop' ),
-				'placeholder' => 'Способ доставки',
 				'required'    => true,
 				'save_meta'   => 1
 			),
@@ -227,7 +226,7 @@ class FS_Config {
 			'fs_comment'           => array(
 				'type'        => 'textarea',
 				'label'       => '',
-				'placeholder' => 'Комментарий',
+				'placeholder' =>__('Comment', 'fast-shop' ) ,
 				'required'    => false
 			),
 			'fs_customer_register' => array(

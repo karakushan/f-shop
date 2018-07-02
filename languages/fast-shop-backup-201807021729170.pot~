@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-03 16:17+0000\n"
+"POT-Creation-Date: 2018-06-03 17:18+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -93,12 +93,13 @@ msgid "ID"
 msgstr ""
 
 #: functions/filters.php:63 functions/filters.php:165
-#: templates/front-end/cart/list-products.php:25
+#: templates/front-end/cart/list-products.php:26
 #: templates/front-end/mail/themes/oxygen.php:456
 msgid "Price"
 msgstr ""
 
 #: functions/filters.php:64 functions/filters.php:171
+#: templates/front-end/cart/list-products.php:23
 msgid "Vendor code"
 msgstr ""
 
@@ -106,7 +107,7 @@ msgstr ""
 msgid "Stock in stock"
 msgstr ""
 
-#: functions/filters.php:66 templates/front-end/cart/list-products.php:16
+#: functions/filters.php:66 templates/front-end/cart/list-products.php:17
 msgid "Photo"
 msgstr ""
 
@@ -234,51 +235,55 @@ msgstr ""
 msgid "Client"
 msgstr ""
 
-#: lib/FS_Config.php:293
+#: lib/FS_Config.php:251 templates/front-end/cart/list-products.php:115
+msgid "Checkout"
+msgstr ""
+
+#: lib/FS_Config.php:298
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:299
+#: lib/FS_Config.php:304
 msgid "Gallery"
 msgstr ""
 
-#: lib/FS_Config.php:305
+#: lib/FS_Config.php:310
 msgid "Attributes"
 msgstr ""
 
-#: lib/FS_Config.php:311
+#: lib/FS_Config.php:316
 msgid "Other"
 msgstr ""
 
-#: lib/FS_Config.php:317
+#: lib/FS_Config.php:322
 msgid "Associated"
 msgstr ""
 
-#: lib/FS_Config.php:323
+#: lib/FS_Config.php:328
 msgid "Variation"
 msgstr ""
 
-#: lib/FS_Config.php:341 lib/FS_Filters.php:361
+#: lib/FS_Config.php:346 lib/FS_Filters.php:361
 msgid "recently added"
 msgstr ""
 
-#: lib/FS_Config.php:344 lib/FS_Filters.php:364
+#: lib/FS_Config.php:349 lib/FS_Filters.php:364
 msgid "later added"
 msgstr ""
 
-#: lib/FS_Config.php:347 lib/FS_Filters.php:367
+#: lib/FS_Config.php:352 lib/FS_Filters.php:367
 msgid "from cheap to expensive"
 msgstr ""
 
-#: lib/FS_Config.php:350 lib/FS_Filters.php:370
+#: lib/FS_Config.php:355 lib/FS_Filters.php:370
 msgid "from expensive to cheap"
 msgstr ""
 
-#: lib/FS_Config.php:353 lib/FS_Filters.php:373
+#: lib/FS_Config.php:358 lib/FS_Filters.php:373
 msgid "by title A to Z"
 msgstr ""
 
-#: lib/FS_Config.php:356 lib/FS_Filters.php:376
+#: lib/FS_Config.php:361 lib/FS_Filters.php:376
 msgid "by title Z to A"
 msgstr ""
 
@@ -322,7 +327,7 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: lib/FS_Post_Type.php:49 templates/front-end/cart/list-products.php:19
+#: lib/FS_Post_Type.php:49 templates/front-end/cart/list-products.php:20
 msgid "Product"
 msgstr ""
 
@@ -468,7 +473,7 @@ msgid "Discounts"
 msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:117
-#: templates/front-end/cart/list-products.php:102
+#: templates/front-end/cart/list-products.php:104
 msgid "Discount"
 msgstr ""
 
@@ -522,12 +527,12 @@ msgid "Значение скидки"
 msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:518
-#: templates/front-end/cart/list-products.php:31
+#: templates/front-end/cart/list-products.php:32
 msgid "Cost"
 msgstr ""
 
 #: templates/back-end/orders.php:36
-#: templates/front-end/cart/list-products.php:106
+#: templates/front-end/cart/list-products.php:108
 #: templates/front-end/mail/themes/oxygen.php:459
 #: templates/front-end/mail/themes/oxygen.php:512
 msgid "Total"
@@ -652,24 +657,24 @@ msgstr ""
 msgid "female"
 msgstr ""
 
-#: templates/front-end/cart/list-products.php:22
-msgid "Vendor Code"
-msgstr ""
-
-#: templates/front-end/cart/list-products.php:28
+#: templates/front-end/cart/list-products.php:29
 msgid "Quantity"
 msgstr ""
 
-#: templates/front-end/cart/list-products.php:83
+#: templates/front-end/cart/list-products.php:84
 msgid "Continue shopping"
 msgstr ""
 
-#: templates/front-end/cart/list-products.php:98
+#: templates/front-end/cart/list-products.php:100
 msgid "Cost of goods"
 msgstr ""
 
-#: templates/front-end/cart/list-products.php:113
-msgid "Checkout"
+#: templates/front-end/cart/list-products.php:118
+msgid "Your basket is empty"
+msgstr ""
+
+#: templates/front-end/cart/list-products.php:118
+msgid "To the catalog"
 msgstr ""
 
 #: templates/front-end/order/last-order-info.php:11
