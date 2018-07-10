@@ -1,4 +1,3 @@
-<?php $user = wp_get_current_user(); ?>
 <div class="form-group">
 	<?php fs_form_field( 'fs_first_name' ) ?>
 </div>

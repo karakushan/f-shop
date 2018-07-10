@@ -262,14 +262,21 @@ class FS_Users_Class {
 	 * @return mixed|string|void
 	 */
 	public static function login_form( $args = array() ) {
-		$args     = wp_parse_args( $args, array(
-			'class'  => 'fs-login-form',
-			'name'   => 'fs-login',
-			'method' => 'post'
+		$args = wp_parse_args( $args, array(
+			'class'          => 'fs-login-form',
+			'name'           => 'fs-login',
+			'method'         => 'post',
+			'logged_in_text' => __( 'Вы уже вошли на сайт.', 'fast-shop' )
+
 		) );
-		$template = apply_filters( 'fs_form_header', $args, 'fs_login' );
-		$template .= fs_frontend_template( 'auth/login', array( 'field' => array() ) );
-		$template .= apply_filters( 'fs_form_bottom', '' );
+
+		if ( is_user_logged_in() ) {
+			$template = '<p>' . $args['logged_in_text'] . '</p>';
+		} else {
+			$template = apply_filters( 'fs_form_header', $args, 'fs_login' );
+			$template .= fs_frontend_template( 'auth/login', array( 'field' => array() ) );
+			$template .= apply_filters( 'fs_form_bottom', '' );
+		}
 
 		return $template;
 	}
