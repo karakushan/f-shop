@@ -351,29 +351,17 @@ jQuery('[data-action="change-attr"]').on('change', function () {
     jQuery('#fs-atc-' + productId).attr('data-attr', attrObj);
 });
 
-//Образует js объект с данными о продукте и помещает в кнопку добавления в корзину в атрибут 'data-json'
+//Записываем выбранные характеристики товара в data-attr
 jQuery('[data-fs-element="attr"]').on('change input', function (event) {
     event.preventDefault();
-    var productId = jQuery(this).data('product-id');
-    var cartbutton = jQuery('#fs-atc-' + productId);
-    var productObject = cartbutton.data('attr');
-    var attrName = jQuery(this).attr('name');
-    var attrVal = jQuery(this).val();
-    //если покупатель вбил неправильное к-во товаров
-    if (jQuery(this).attr('name') == 'count') {
-        if (!isNumeric(attrVal) || attrVal <= 0) {
-            jQuery(this).val(1);
-            attrVal = 1;
-            jQuery(this).parent().css({'position': 'relative'});
-            jQuery(this).prev('.count-error').text(fs_message.count_error).fadeIn(400);
-        } else {
-            jQuery(this).prev('.count-error').text('').fadeOut(800);
-        }
-        productObject.count = attrVal;
-    }
-    productObject.attr[attrName] = attrVal;
-    var jsontostr = JSON.stringify(productObject);
-    cartbutton.attr('data-attr', jsontostr);
+    var el = jQuery(this);
+    var productId = el.data('product-id');
+    var cartbutton = jQuery('.fs-atc-' + productId);
+    var productObject = cartbutton.first().data('attr');
+    var attrName = el.attr('name');
+    var attrVal = el.val();
+    productObject[attrName] = attrVal;
+    if (typeof productObject == 'object') cartbutton.attr('data-attr', JSON.stringify(productObject));
 });
 
 // получает корзину через шаблон "cartTemplate"  и выводит её внутри "cartWrap"
@@ -662,10 +650,10 @@ jQuery('[data-fs-element="range-slider"]').each(function (index, value) {
 });
 
 jQuery(document).on('input keyup', '[data-fs-element="range-start-input"]', function (event) {
-    document.location.href = jQuery(this).data('url')+'&price_start='+jQuery(this).val();
+    document.location.href = jQuery(this).data('url') + '&price_start=' + jQuery(this).val();
 });
 jQuery(document).on('input keyup', '[data-fs-element="range-end-input"]', function (event) {
-    document.location.href = jQuery(this).data('url')+'&price_end='+jQuery(this).val();
+    document.location.href = jQuery(this).data('url') + '&price_end=' + jQuery(this).val();
 });
 
 

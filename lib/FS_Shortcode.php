@@ -92,10 +92,10 @@ class FS_Shortcode {
 			'empty_class' => 'fs-info-block fs-empty-cart ',
 		), $atts );
 
-		$cart_class = new FS_Cart_Class();
+		$cart = fs_get_cart();
 
 
-		if ( count( $cart_class->cart ) ) {
+		if ( count( $cart ) ) {
 			$content = apply_filters( 'the_content', $content );
 		} else {
 			if ( empty( $atts['empty_text'] ) ) {

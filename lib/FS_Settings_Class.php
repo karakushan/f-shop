@@ -52,18 +52,10 @@ class FS_Settings_Class {
 					array(
 						'type'  => 'checkbox',
 						'name'  => 'autofill',
-						'label' => 'Заполнять данные пользователя автоматически',
+						'label' => 'Заполнять данные авторизованого пользователя автоматически',
 						'help'  => 'используется при оформлении заказа, если пользователь авторизован',
 						'value' => fs_option( 'autofill' )
-					),
-					array(
-						'type'  => 'checkbox',
-						'name'  => 'auto_registration',
-						'label' => 'Регистрировать пользователя при покупке',
-						'help'  => 'каждый зарегистрированный пользователь получит доступ к личному кабинету, сможет увидеть купленные товары и прочие привилегии',
-						'value' => fs_option( 'auto_registration' )
 					)
-
 				)
 
 
@@ -93,7 +85,7 @@ class FS_Settings_Class {
 						'type'  => 'checkbox',
 						'name'  => 'price_conversion',
 						'label' => 'Конвертация стоимости товара в зависимости от языка',
-						'help'=>'Если выбрано, то цена будет автоматически конвертироваться в необходимую валюту. Важно! Для того, чтобы это сработало необходимо указать локаль в настрйках валюты.',
+						'help'  => 'Если выбрано, то цена будет автоматически конвертироваться в необходимую валюту. Важно! Для того, чтобы это сработало необходимо указать локаль в настрйках валюты.',
 						'value' => fs_option( 'price_conversion', '0' )
 					),
 				)
@@ -348,6 +340,9 @@ class FS_Settings_Class {
 		if ( in_array( $args[1]['type'], array( 'text', 'email', 'number' ) ) ) {
 			$args[1]['class'] = 'regular-text';
 		}
-		$form_class->fs_form_field( $args[0], $args[1] );
+		$args[1]['label']          = '';
+		$args[1]['label_position'] = 'after';
+
+		$form_class->render_field( $args[0], $args[1]['type'], $args[1] );
 	}
 }

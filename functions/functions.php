@@ -671,9 +671,9 @@ function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = arra
  *
  * @param  int $product_id [id поста (оставьте пустым в цикле wordpress)]
  * @param  string $label [надпись на кнопке]
- * @param  array $attr дополнительные атрибуты
+ * @param  array $args дополнительные атрибуты
  */
-function fs_add_to_cart( $product_id = 0, $label = '', $attr = array() ) {
+function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 	global $fs_config;
 	$product_id = fs_get_product_id( $product_id );
 	$set_atts   = [];
@@ -685,40 +685,39 @@ function fs_add_to_cart( $product_id = 0, $label = '', $attr = array() ) {
 			}
 		}
 	}
-	$attr = wp_parse_args( $attr,
-		array(
-			'json'      => array(),
-			'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
-			'class'     => 'fs-add-to-cart',
-			'type'      => 'button',
-			'echo'      => true,
-			'atts'      => ''// возможность добавлять пользовательские атрибуты и код к кнопке
+
+	// Параметры по умолчанию
+	$args_default = array(
+		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
+		'class'     => 'fs-add-to-cart',
+		'type'      => 'button',
+		'echo'      => true,
+		'data'      => array(
+			'data-action'       => 'add-to-cart',
+			'data-product-id'   => $product_id,
+			'data-product-name' => get_the_title( $product_id ),
+			'data-price'        => fs_get_price( $product_id ),
+			'data-currency'     => fs_currency(),
+			'data-sku'          => fs_get_product_code( $product_id ),
+			'id'                => 'fs-atc-' . $product_id,
+			'data-attr'         => '{}',
+			'data-count'        => 1,
+			'data-image'        => esc_url( get_the_post_thumbnail_url( $product_id ) ),
+			'data-variated'     => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
 		)
 	);
+	$args         = wp_parse_args( $args, $args_default );
+
+	$args['data']['class'] = $args['class'] . ' fs-atc-' . $product_id;
 
 
-	// устанавливаем html атрибуты кнопки
-	$attr_set = array(
-		'data-action'       => 'add-to-cart',
-		'data-product-id'   => $product_id,
-		'data-product-name' => get_the_title( $product_id ),
-		'data-price'        => fs_get_price( $product_id ),
-		'data-currency'     => fs_currency(),
-		'data-sku'          => fs_get_product_code( $product_id ),
-		'id'                => 'fs-atc-' . $product_id,
-		'data-attr'         => implode( ',', $set_atts ),
-		'data-count'        => 1,
-		'data-image'        => esc_url( get_the_post_thumbnail_url( $product_id ) ),
-		'class'             => $attr['class'],
-		'data-variated'     => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
-	);
 	// помещаем название категории в дата атрибут category
 	$category = get_the_terms( $product_id, $fs_config->data['product_taxonomy'] );
 	if ( ! empty( $category ) ) {
-		$attr_set['data-category'] = array_pop( $category )->name;
+		$args['data']['data-category'] = array_pop( $category )->name;
 	}
-
-	$html_atts = fs_parse_attr( array(), $attr_set );
+	// Парсим атрибуты html тега
+	$html_atts = fs_parse_attr( array(), $args['data'] );
 	$href      = '#';
 	// дополнительные скрытые инфо-блоки внутри кнопки (прелоадер, сообщение успешного добавления в корзину)
 	$atc_after = '<span class="fs-atc-info" style="display:none"></span>';
@@ -726,15 +725,15 @@ function fs_add_to_cart( $product_id = 0, $label = '', $attr = array() ) {
 
 
 	/* позволяем устанавливать разные html элементы в качестве кнопки */
-	switch ( $attr['type'] ) {
+	switch ( $args['type'] ) {
 		case 'link':
-			$atc_button = sprintf( '<a href="%s" %s  %s>%s %s</a>', $href, $html_atts, $attr['atts'], $label, $atc_after );
+			$atc_button = sprintf( '<a href="%s" %s  %s>%s %s</a>', $href, $html_atts, $args['atts'], $label, $atc_after );
 			break;
 		default:
-			$atc_button = sprintf( '<button type="button" %s %s>%s %s</button>', $html_atts, $attr['atts'], $label, $atc_after );
+			$atc_button = sprintf( '<button type="button" %s %s>%s %s</button>', $html_atts, $args['atts'], $label, $atc_after );
 			break;
 	}
-	if ( $attr['echo'] ) {
+	if ( $args['echo'] ) {
 		echo apply_filters( 'fs_add_to_cart_filter', $atc_button );
 	} else {
 		return apply_filters( 'fs_add_to_cart_filter', $atc_button );
@@ -1688,8 +1687,8 @@ function fs_discount_percent( $product_id = 0, $format = '-%s%s', $args = array(
 }
 
 /**
- * производит очистку и форматирование атрибутов в строку
- * $default заменяет атрибуты $attr
+ * Преобразует массив аргументов в строку для использования в атрибутах тегов
+ * принцип работы похож на wp_parse_args()
  *
  * @param  array $attr атрибуты которые доступны для изменения динамически
  * @param  array $default атрибуты функции по умолчанию
@@ -1698,15 +1697,16 @@ function fs_discount_percent( $product_id = 0, $format = '-%s%s', $args = array(
  */
 function fs_parse_attr( $attr = array(), $default = array() ) {
 	$attr      = wp_parse_args( $attr, $default );
-	$attr      = array_map( 'esc_attr', $attr );
 	$atributes = array();
-	$att       = '';
 	foreach ( $attr as $key => $att ) {
-		if ( ! empty( $att ) ) {
-			$atributes[] = $key . '="' . esc_attr( $att ) . '"';
+		if ( empty( $att ) ) {
+			continue;
 		}
+		$atributes[] = $key . '="' . $att . '"';
+
 	}
-	if ( ! empty( $atributes ) ) {
+
+	if ( count( $atributes ) ) {
 		$att = implode( ' ', $atributes );
 	}
 
