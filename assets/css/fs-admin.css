@@ -797,4 +797,12 @@ progress {
   margin: 0 !important;
   padding: 0 !important; }
 
+.fs-code {
+  max-height: 188px;
+  overflow: auto;
+  display: block;
+  background: #fff;
+  padding: 0 24px;
+  border: 1px solid #e5e5e5; }
+
 /*# sourceMappingURL=fs-admin.css.map */

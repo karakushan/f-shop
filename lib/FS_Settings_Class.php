@@ -23,6 +23,21 @@ class FS_Settings_Class {
 	 */
 	function register_settings() {
 		global $fs_config;
+		// Дебаг сессий
+		ob_start();
+		echo '<code class="fs-code"><pre>';
+		print_r( $_SESSION );
+		echo '</pre></code>';
+		$session = ob_get_clean();
+
+		// Дебаг COOKIE
+		ob_start();
+		echo '<code class="fs-code"><pre>';
+		print_r( $_COOKIE );
+		echo '</pre></code>';
+		$cookie = ob_get_clean();
+
+
 		$settings = array(
 			'general'    => array(
 				'name'   => __( 'Главное', 'fast-shop' ),
@@ -191,6 +206,26 @@ class FS_Settings_Class {
 						'label' => 'Страница информации о заказе',
 						'value' => fs_option( 'page_order_detail', 0 )
 					),
+				)
+
+
+			),
+			'debug'      => array(
+				'name'        => __( 'Отладка', 'fast-shop' ),
+				'description' => 'Здесь отображаются данные отладки в виде  текста',
+				'fields'      => array(
+					array(
+						'type'  => 'html',
+						'name'  => FS_PLUGIN_PREFIX . 'debug_session',
+						'label' => 'Сессии',
+						'value' => $session
+					),
+					array(
+						'type'  => 'html',
+						'name'  => FS_PLUGIN_PREFIX . 'debug_cookie',
+						'label' => 'Cookie',
+						'value' => $cookie
+					)
 				)
 
 
