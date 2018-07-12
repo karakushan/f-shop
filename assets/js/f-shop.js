@@ -234,6 +234,7 @@ jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
     jQuery.ajax({
         url: FastShopData.ajaxurl,
         data: productObject,
+        type: "POST",
         beforeSend: function () {
             // создаём событие
             var before_add_product = new CustomEvent("fs_before_add_product", {
@@ -360,8 +361,9 @@ jQuery('[data-fs-element="attr"]').on('change input', function (event) {
     var productObject = cartbutton.first().data('attr');
     var attrName = el.attr('name');
     var attrVal = el.val();
-    productObject[attrName] = attrVal;
-    if (typeof productObject == 'object') cartbutton.attr('data-attr', JSON.stringify(productObject));
+    productObject[attrName] = Number(attrVal);
+    console.log(productObject);
+    cartbutton.attr('data-attr', JSON.stringify(productObject));
 });
 
 // получает корзину через шаблон "cartTemplate"  и выводит её внутри "cartWrap"

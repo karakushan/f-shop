@@ -700,8 +700,8 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 			'data-currency'     => fs_currency(),
 			'data-sku'          => fs_get_product_code( $product_id ),
 			'id'                => 'fs-atc-' . $product_id,
-			'data-attr'         => '{}',
 			'data-count'        => 1,
+			'data-attr'         => json_encode( new stdClass()),
 			'data-image'        => esc_url( get_the_post_thumbnail_url( $product_id ) ),
 			'data-variated'     => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
 		)
@@ -727,10 +727,10 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 	/* позволяем устанавливать разные html элементы в качестве кнопки */
 	switch ( $args['type'] ) {
 		case 'link':
-			$atc_button = sprintf( '<a href="%s" %s  %s>%s %s</a>', $href, $html_atts, $args['atts'], $label, $atc_after );
+			$atc_button = sprintf( '<a href="%s" %s>%s %s</a>', $href, $html_atts, $label, $atc_after );
 			break;
 		default:
-			$atc_button = sprintf( '<button type="button" %s %s>%s %s</button>', $html_atts, $args['atts'], $label, $atc_after );
+			$atc_button = sprintf( '<button type="button" %s>%s %s</button>', $html_atts, $label, $atc_after );
 			break;
 	}
 	if ( $args['echo'] ) {

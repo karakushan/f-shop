@@ -13,20 +13,20 @@ class FS_Cart_Class {
 	public $cart = null;
 
 	function __construct() {
-		add_action( 'wp_ajax_add_to_cart', array( &$this, 'add_to_cart_ajax' ) );
-		add_action( 'wp_ajax_nopriv_add_to_cart', array( &$this, 'add_to_cart_ajax' ) );
+		add_action( 'wp_ajax_add_to_cart', array( $this, 'add_to_cart_ajax' ) );
+		add_action( 'wp_ajax_nopriv_add_to_cart', array( $this, 'add_to_cart_ajax' ) );
 
 		//Обновление корзины ajax
-		add_action( 'wp_ajax_update_cart', array( &$this, 'update_cart_ajax' ) );
-		add_action( 'wp_ajax_nopriv_update_cart', array( &$this, 'update_cart_ajax' ) );//
+		add_action( 'wp_ajax_update_cart', array( $this, 'update_cart_ajax' ) );
+		add_action( 'wp_ajax_nopriv_update_cart', array( $this, 'update_cart_ajax' ) );//
 
 		//Удаление товара из корзины ajax
-		add_action( 'wp_ajax_delete_product', array( &$this, 'delete_product_ajax' ) );
-		add_action( 'wp_ajax_nopriv_delete_product', array( &$this, 'delete_product_ajax' ) );
+		add_action( 'wp_ajax_delete_product', array( $this, 'delete_product_ajax' ) );
+		add_action( 'wp_ajax_nopriv_delete_product', array( $this, 'delete_product_ajax' ) );
 
 		// получаем содержимое корзины
-		add_action( 'wp_ajax_fs_get_cart', array( &$this, 'fs_get_cart_callback' ) );
-		add_action( 'wp_ajax_nopriv_fs_get_cart', array( &$this, 'fs_get_cart_callback' ) );
+		add_action( 'wp_ajax_fs_get_cart', array( $this, 'fs_get_cart_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_get_cart', array( $this, 'fs_get_cart_callback' ) );
 
 		// присваиваем переменной $cart содержимое корзины
 		if ( ! empty( $_SESSION['cart'] ) ) {
@@ -49,9 +49,9 @@ class FS_Cart_Class {
 
 	// ajax обработка добавления в корзину
 	function add_to_cart_ajax() {
-		$product_id = (int) $_REQUEST['post_id'];
-		$attr       = ! empty( $_REQUEST['attr'] ) ? explode( ',', $_REQUEST['attr'] ) : array();
-		$count      = (int) $_REQUEST['count'];
+		$product_id = intval( $_POST['post_id'] );
+		$attr       = ! empty( $_POST['attr'] ) ? json_decode( wp_unslash( $_POST['attr'] ), true ) : array();
+		$count      = intval( $_POST['count'] );
 		if ( isset( $_SESSION['cart'][ $product_id ] ) ) {
 			$count_sess                      = $_SESSION['cart'][ $product_id ]['count'];
 			$_SESSION['cart'][ $product_id ] = array(
