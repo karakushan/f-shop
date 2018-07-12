@@ -218,8 +218,8 @@ class FS_Config {
 				'save_meta' => 1
 			),
 			'fs_payment_methods'   => array(
-				'type'      => 'dropdown_categories',
-				'taxonomy'  => $this->data['product_pay_taxonomy'],
+				'type'     => 'dropdown_categories',
+				'taxonomy' => $this->data['product_pay_taxonomy'],
 
 				'required'  => true,
 				'save_meta' => 1
@@ -231,8 +231,9 @@ class FS_Config {
 				'required'    => false
 			),
 			'fs_customer_register' => array(
-				'type'     => 'checkbox',
-				'label'    => __( 'Register on the site', 'fast-shop' ),
+				'type'           => 'checkbox',
+				'label'          => __( 'Register on the site', 'fast-shop' ),
+				'label_position' => 'after',
 				'value'    => 1,
 				'required' => false
 			),

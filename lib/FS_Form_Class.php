@@ -23,6 +23,8 @@ class FS_Form_Class {
 	function registered_field_types() {
 		$types = array(
 			'text',
+			'email',
+			'tel',
 			'textarea',
 			'editor',
 			'checkbox',
@@ -94,31 +96,32 @@ class FS_Form_Class {
 	 */
 	function fs_form_field( $field_name, $args = array() ) {
 		$default = array(
-			'type'          => ! empty( FS_Config::$form_fields[ $field_name ]['type'] ) ? FS_Config::$form_fields[ $field_name ]['type'] : 'text',
-			'class'         => 'form-control',
-			'wrapper'       => false,
-			'autofill'      => true,
-			'wrapper_class' => 'fs-field-wrapper',
-			'label_class'   => 'fs-form-label',
-			'taxonomy'      =>! empty( FS_Config::$form_fields[ $field_name ]['taxonomy'] ) ? FS_Config::$form_fields[ $field_name ]['taxonomy'] : 'category',
-			'id'           => str_replace( array(
+			'type'           => ! empty( FS_Config::$form_fields[ $field_name ]['type'] ) ? FS_Config::$form_fields[ $field_name ]['type'] : 'text',
+			'class'          => 'form-control',
+			'wrapper'        => false,
+			'autofill'       => true,
+			'wrapper_class'  => 'fs-field-wrapper',
+			'label_class'    => 'fs-form-label',
+			'taxonomy'       => ! empty( FS_Config::$form_fields[ $field_name ]['taxonomy'] ) ? FS_Config::$form_fields[ $field_name ]['taxonomy'] : 'category',
+			'id'             => str_replace( array(
 				'[',
 				']'
 			), array( '_' ), $field_name ),
-			'required'     => ! empty( FS_Config::$form_fields[ $field_name ]['required'] ) ? FS_Config::$form_fields[ $field_name ]['required'] : false,
-			'title'        => ! empty( FS_Config::$form_fields[ $field_name ]['title'] ) ? FS_Config::$form_fields[ $field_name ]['title'] : __( 'this field is required', 'fast-shop' ),
-			'placeholder'  => ! empty( FS_Config::$form_fields[ $field_name ]['placeholder'] ) ? FS_Config::$form_fields[ $field_name ]['placeholder'] : null,
-			'value'        => '',
-			'label'        => ! empty( FS_Config::$form_fields[ $field_name ]['label'] ) ? FS_Config::$form_fields[ $field_name ]['label'] : '',
-			'html'         => '',
-			'selected'     => '',
-			'options'      => array(),
-			'format'       => '%input% %label%',
-			'el'           => 'radio',
-			'first_option' => __( 'Select' ),
-			'before'       => '',
-			'after'        => '',
-			'editor_args'  => array(
+			'required'       => ! empty( FS_Config::$form_fields[ $field_name ]['required'] ) ? FS_Config::$form_fields[ $field_name ]['required'] : false,
+			'title'          => ! empty( FS_Config::$form_fields[ $field_name ]['title'] ) ? FS_Config::$form_fields[ $field_name ]['title'] : __( 'this field is required', 'fast-shop' ),
+			'placeholder'    => ! empty( FS_Config::$form_fields[ $field_name ]['placeholder'] ) ? FS_Config::$form_fields[ $field_name ]['placeholder'] : null,
+			'value'          => ! empty( FS_Config::$form_fields[ $field_name ]['value'] ) ? FS_Config::$form_fields[ $field_name ]['value'] : '',
+			'label'          => ! empty( FS_Config::$form_fields[ $field_name ]['label'] ) ? FS_Config::$form_fields[ $field_name ]['label'] : '',
+			'label_position' => ! empty( FS_Config::$form_fields[ $field_name ]['label_position'] ) ? FS_Config::$form_fields[ $field_name ]['label_position'] : 'after',
+			'html'           => '',
+			'selected'       => '',
+			'options'        => array(),
+			'format'         => '%input% %label%',
+			'el'             => 'radio',
+			'first_option'   => __( 'Select' ),
+			'before'         => '',
+			'after'          => '',
+			'editor_args'    => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $field_name,
 				'tinymce'       => false,
