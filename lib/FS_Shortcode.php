@@ -21,8 +21,8 @@ class FS_Shortcode {
 		add_shortcode( 'fs_cart_widget', array( $this, 'cart_widget' ) );
 		add_shortcode( 'fs_order_info', array( $this, 'single_order_info' ) );
 		add_shortcode( 'fs_last_order_info', array( $this, 'last_order_info' ) );
-		add_shortcode( 'fs_last_order_id', array( $this, 'last_order_id' ) );
-		add_shortcode( 'fs_last_order_amount', array( $this, 'last_order_amount' ) );
+		add_shortcode( 'fs_last_order_id', array( 'FS\FS_Orders_Class', 'get_last_order_id' ) );
+		add_shortcode( 'fs_last_order_amount', array( 'FS\FS_Orders_Class', 'get_last_order_amount' ) );
 		add_shortcode( 'fs_have_cart_items', array( $this, 'have_cart_items' ) );
 		add_shortcode( 'fs_checkout_success', array( $this, 'fs_checkout_success' ) );
 		add_shortcode( 'fs_checkout', array( $this, 'order_send' ) );
@@ -205,22 +205,6 @@ class FS_Shortcode {
 
 	}
 
-//Возвращает id последнего заказа
-	public function last_order_id() {
-		$order_id = empty( $_SESSION['last_order_id'] ) ? 0 : (int) $_SESSION['last_order_id'];
-
-		return $order_id;
-	}
-
-	public function last_order_amount() {
-		$order_id   = empty( $_SESSION['last_order_id'] ) ? 0 : (int) $_SESSION['last_order_id'];
-		$order      = new FS_Orders_Class;
-		$order_info = $order->get_order( $order_id );
-		$summa      = (float) $order_info->summa;
-		$summa      = apply_filters( 'fs_price_format', $summa );
-
-		return $summa;
-	}
 
 	/**
 	 * шорткод для отображения формы оформления заказа

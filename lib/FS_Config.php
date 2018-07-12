@@ -165,35 +165,35 @@ class FS_Config {
 			'fs_last_name'         => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __('Last name', 'fast-shop' ),
+				'placeholder' => __( 'Last name', 'fast-shop' ),
 				'required'    => true
 			),
 			'fs_phone'             => array(
 				'type'        => 'tel',
 				'label'       => '',
 				'placeholder' => __( 'Телефон', 'fast-shop' ),
-				'title'       => __('Keep the correct phone number', 'fast-shop' ),
+				'title'       => __( 'Keep the correct phone number', 'fast-shop' ),
 				'required'    => true,
 				'save_meta'   => 1
 			),
 			'fs_city'              => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __('City', 'fast-shop' ),
+				'placeholder' => __( 'City', 'fast-shop' ),
 				'required'    => true,
 				'save_meta'   => 1
 			),
 			'fs_adress'            => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' =>__( 'Delivery address', 'fast-shop' ) ,
+				'placeholder' => __( 'Delivery address', 'fast-shop' ),
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_home_num'          => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' =>__( 'House number', 'fast-shop' ) ,
+				'placeholder' => __( 'House number', 'fast-shop' ),
 				'required'    => false,
 				'save_meta'   => 1
 			),
@@ -207,26 +207,27 @@ class FS_Config {
 			'fs_delivery_number'   => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' =>__( 'Branch number', 'fast-shop' ) ,
+				'placeholder' => __( 'Branch number', 'fast-shop' ),
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_delivery_methods'  => array(
-				'type'        => 'del_methods',
-				'label'       => __( 'Delivery method', 'fast-shop' ),
-				'required'    => true,
-				'save_meta'   => 1
+				'type'      => 'dropdown_categories',
+				'taxonomy'  => $this->data['product_del_taxonomy'],
+				'required'  => true,
+				'save_meta' => 1
 			),
 			'fs_payment_methods'   => array(
-				'type'      => 'pay_methods',
-				'label'     => __( 'Payment method', 'fast-shop' ),
+				'type'      => 'dropdown_categories',
+				'taxonomy'  => $this->data['product_pay_taxonomy'],
+
 				'required'  => true,
 				'save_meta' => 1
 			),
 			'fs_comment'           => array(
 				'type'        => 'textarea',
 				'label'       => '',
-				'placeholder' =>__('Comment', 'fast-shop' ) ,
+				'placeholder' => __( 'Comment', 'fast-shop' ),
 				'required'    => false
 			),
 			'fs_customer_register' => array(

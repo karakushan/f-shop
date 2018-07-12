@@ -35,11 +35,34 @@ class FS_Orders_Class {
 		// операции с метабоксами - удаление стандартных, добавление новых
 		add_action( 'admin_menu', array( $this, 'remove_submit_order_metabox' ) );
 
-		// Присваиваем значение переменной $last_order
-		if ( ! empty( $_SESSION['last_order_id'] ) ) {
-			$this->last_order_id = intval( $_SESSION['last_order_id'] );
+
+		$this->last_order_id = $this->get_last_order_id();
+
+	}
+
+	/**
+	 * Возвращает ID последнего заказа
+	 */
+	public function get_last_order_id() {
+		$id = 0;
+		if ( ! empty( $_SESSION['fs_last_order_id'] ) ) {
+			$id = intval( $_SESSION['fs_last_order_id'] );
 		}
 
+		return $id;
+	}
+
+	/**
+	 * Возвращает общую сумму последнего заказа
+	 */
+	public function get_last_order_amount() {
+		$order_id   = $this->get_last_order_id();
+		$order      = new FS_Orders_Class;
+		$order_info = $order->get_order( $order_id );
+		$amount     = floatval( $order_info->summa );
+		$amount     = apply_filters( 'fs_price_format', $amount );
+
+		return $amount;
 	}
 
 	/**

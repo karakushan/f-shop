@@ -344,7 +344,7 @@ class FS_Ajax_Class {
 		$sanitize_field['site_name']           = get_bloginfo( 'name' );
 		$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
 		$sanitize_field['fs_payment_methods']  = fs_get_payment( $sanitize_field['fs_payment_methods'] );
-		$_SESSION['last_order_id']             = $order_id;
+		$_SESSION['fs_last_order_id']          = $order_id;
 
 // текст письма заказчику
 		$user_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'customer_mail' ) );

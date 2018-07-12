@@ -879,7 +879,7 @@ td.fs_photo.column-fs_photo img {
   display: flex;
   align-items: center;
   background-color: #fafafa; }
-  .fs-info-block .icon {
+  .fs-info-block i {
     color: #00aaff;
     font-size: 24px;
     margin-right: 10px; }
