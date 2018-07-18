@@ -52,7 +52,7 @@ class FS_Form_Class {
 	function render_field( $name, $type = 'text', $args = [] ) {
 		$args = wp_parse_args( $args, array(
 			'value'          => '',
-			'required'       => true,
+			'required'       => false,
 			'title'          => '',
 			'label'          => '',
 			'placeholder'    => '',
