@@ -234,8 +234,8 @@ class FS_Config {
 				'type'           => 'checkbox',
 				'label'          => __( 'Register on the site', 'fast-shop' ),
 				'label_position' => 'after',
-				'value'    => 1,
-				'required' => false
+				'value'          => 1,
+				'required'       => false
 			),
 		);
 
@@ -320,8 +320,9 @@ class FS_Config {
 					),
 					$this->meta['currency']     => array(
 						'label'    => __( 'Валюта товара', 'fast-shop' ),
+						'on'       => fs_option( 'multi_currency_on' ) ? true : false,
 						'type'     => 'dropdown_categories',
-						'help'     => __( 'Поле можно использовать если вы включили мультивалютность в настроках.', 'fast-shop' ),
+						'help'     => __( 'Поле активно если вы включили мультивалютность в настроках.', 'fast-shop' ),
 						'taxonomy' => $this->data['currencies_taxonomy']
 					)
 				)

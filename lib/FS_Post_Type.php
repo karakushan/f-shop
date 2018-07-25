@@ -311,6 +311,10 @@ class FS_Post_Type {
 					}
 
 					foreach ( $tab_body['fields'] as $key => $field ) {
+						if ( isset( $field['on'] ) && $field['on'] != true ) {
+							continue;
+						}
+
 						if ( empty( $field['type'] ) ) {
 							echo 'Не указан аргумент "type"';
 							continue;
