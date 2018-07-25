@@ -311,13 +311,13 @@ class FS_Post_Type {
 					}
 
 					foreach ( $tab_body['fields'] as $key => $field ) {
+						// если у поля есть атрибут "on" и он выключён то выходим из цикла
 						if ( isset( $field['on'] ) && $field['on'] != true ) {
 							continue;
 						}
-
+						// если не указан атрибут type
 						if ( empty( $field['type'] ) ) {
-							echo 'Не указан аргумент "type"';
-							continue;
+							$field['type'] = 'text';
 						}
 						echo '<div class="fs-field-row clearfix">';
 						$field['value'] = get_post_meta( $post->ID, $key, true );
