@@ -45,12 +45,12 @@ class FS_Images_Class {
 					continue;
 				}
 				$image    = $image[0];
-				$images_n .= "<li data-thumb=\"$image\" style=\"background-image:url($image)\" data-src=\"$image\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\"></a></li>";
+				$images_n .= "<li data-thumb=\"$image\" style=\"background-image:url($image)\" data-src=\"$image\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\" itemprop=\"image\"></a></li>";
 			}
 		}
 
 		if ( empty( $images_n ) ) {
-			$images_n .= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\"><img src=\"$image_placeholder\" width=\"100%\"></li>";
+			$images_n .= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\"><img src=\"$image_placeholder\" itemprop=\"image\" width=\"100%\"></li>";
 		}
 
 		return apply_filters( 'fs_galery_list', $images_n, $post_id );

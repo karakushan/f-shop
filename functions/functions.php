@@ -701,7 +701,7 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 			'data-sku'          => fs_get_product_code( $product_id ),
 			'id'                => 'fs-atc-' . $product_id,
 			'data-count'        => 1,
-			'data-attr'         => json_encode( new stdClass()),
+			'data-attr'         => json_encode( new stdClass() ),
 			'data-image'        => esc_url( get_the_post_thumbnail_url( $product_id ) ),
 			'data-variated'     => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
 		)
@@ -2361,5 +2361,34 @@ function fs_copy_all( $from, $to, $rewrite = true ) {
 			copy( $from, $to );
 		}
 	}
+}
+
+/**
+ * Возвращает мета данные о категории товара в виде объекта
+ * price_max - максимальная цена
+ * price_min - минимальная цена
+ * sum - общая стоимость товаров
+ * count - количество товаров в категории
+ *
+ * @param int $category_id
+ *
+ * @return false|int
+ */
+function fs_get_category_meta( $category_id = 0 ) {
+	global $wpdb, $fs_config;
+	if ( ! $category_id ) {
+		$category_id = get_queried_object_id();
+	}
+
+	$meta = $wpdb->get_row( $wpdb->prepare( "SELECT MAX(CAST( meta_value AS UNSIGNED)) as price_max, MIN(CAST( meta_value AS UNSIGNED)) as price_min, SUM(CAST( meta_value AS UNSIGNED)) as sum, COUNT(post_id) as count FROM wp_postmeta WHERE post_id IN (SELECT object_id FROM  $wpdb->term_relationships WHERE term_taxonomy_id=%d AND object_id IN (SELECT ID from $wpdb->posts WHERE post_status='publish')) AND meta_key='%s'", $category_id, $fs_config->meta['price'] ) );
+	if ( ! $meta ) {
+		$meta            = new stdClass();
+		$meta->price_max = 0;
+		$meta->price_min = 0;
+		$meta->sum       = 0;
+		$meta->count     = 0;
+	}
+
+	return $meta;
 }
 
