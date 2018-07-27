@@ -572,6 +572,21 @@ class FS_Config {
 		}
 	}
 
+	function get_taxonomy_fields() {
+		$fields = array(
+			'catalog' => array(
+				'_thumbnail_id' => array(
+					'name' => __( 'Миниатюра', 'fast-shop' ),
+					'type' => 'image',
+					'args' => array()
+				)
+			)
+
+		);
+
+		return apply_filters( 'fs_taxonomy_fields', $fields );
+	}
+
 	public function get_locales() {
 		$all_locales = array(
 			'aa_DJ'  => 'Afar (Djibouti)',

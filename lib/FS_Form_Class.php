@@ -59,8 +59,8 @@ class FS_Form_Class {
 			'label_position' => 'before',
 			'taxonomy'       => 'category',
 			'help'           => '',
-			'class'          => sanitize_title( 'fs-' . $type . 'field' ),
-			'id'             => sanitize_title( 'fs-' . $name . '-' . $type ),
+			'class'          => str_replace( '_', '-', sanitize_title( 'fs-' . $type . '-field' ) ),
+			'id'             => str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $type ) ),
 			'default'        => '',
 			'textarea_rows'  => 8,
 			'editor_args'    => array(

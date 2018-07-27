@@ -21,6 +21,42 @@ jQuery(window).fShop();
 
 jQuery(function ($) {
 
+    /*
+    Это универсальный загрузчик медиафайлов из медиатеки
+    вызывается в php методе render_field() из класа FS_Form_Class при типе поля image
+    TODO: остальные загрузчики, которые остались от прежних версий плагина необходимо удалять и переделывать
+    */
+    $(document).on('click', '[data-fs-action="select-image"]', function (event) {
+        event.preventDefault();
+        var send_attachment_bkp = wp.media.editor.send.attachment;
+        var button = $(this);
+        var parent = button.parents("figure");
+        wp.media.editor.open(button);
+        wp.media.editor.send.attachment = function (props, attachment) {
+            parent.find('input').val(attachment.id);
+            parent.find('button').fadeIn();
+            parent.css({
+                'background-image': 'url(' + attachment.url + ')'
+            });
+        };
+
+    });
+    /*
+    * Удаляет изображение прикреплённое к полю типа image
+    * */
+    $(document).on('click', '[data-fs-action="delete-image"]', function (event) {
+        event.preventDefault();
+        var button = $(this);
+        var parent = button.parents("figure");
+        if (confirm(button.data("text"))) {
+            parent.find('input').val("")
+            parent.css({
+                'background-image': 'url(' + button.data("noimage") + ')'
+            });
+        }
+        button.fadeOut();
+    });
+
     // Подсказки в настройках плагина
     $('.tooltip').tooltipster({
         theme: 'tooltipster-light',

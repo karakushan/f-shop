@@ -181,6 +181,12 @@ class FS_Taxonomies_Class {
 
 		// дополнительные поля таксономий, поля отображаются при добавлении или редактировании таксономии
 
+		// поля таксономии категорий товара
+		add_action( "catalog_edit_form_fields", array( $this, 'edit_taxonomy_fields' ), 10, 2 );
+		add_action( "catalog_add_form_fields", array( $this, 'add_taxonomy_fields' ), 10, 1 );
+		add_action( "create_catalog", array( $this, 'save_taxonomy_fields' ), 10, 2 );
+		add_action( "edited_catalog", array( $this, 'save_taxonomy_fields' ), 10, 2 );
+
 		// поля таксономии харакеристик товара
 		add_action( "product-attributes_edit_form_fields", array( $this, 'edit_product_attr_fields' ) );
 		add_action( "product-attributes_add_form_fields", array( $this, 'add_product_attr_fields' ) );
@@ -206,6 +212,71 @@ class FS_Taxonomies_Class {
 		add_action( "create_fs-discounts", array( $this, 'save_custom_taxonomy_meta' ) );
 		add_action( "edited_fs-discounts", array( $this, 'save_custom_taxonomy_meta' ) );
 
+	}
+
+	/**
+	 * Метод выводит мета поля таксономии
+	 * массив полей берётся из класа FS_Config
+	 * из метода get_taxonomy_fields()
+	 * который позволяет устанавливать свои поля серез фильтр fs_taxonomy_fields
+	 * TODO: в дальнейшем метаполя всех таксономий выводить с помощью этого метода
+	 *
+	 * @param $term
+	 * @param $taxonomy
+	 */
+	function edit_taxonomy_fields( $term, $taxonomy ) {
+		global $fs_config;
+		$form   = new FS_Form_Class();
+		$fields = $fs_config->get_taxonomy_fields();
+		if ( count( $fields[ $taxonomy ] ) ) {
+			foreach ( $fields[ $taxonomy ] as $name => $field ) {
+				$field['args']['value'] = get_term_meta( $term->term_id, $name, 1 );
+				echo '<tr class="form-field taxonomy-thumbnail-wrap">';
+				echo '<th scope="row"><label for="taxonomy-thumbnail">' . esc_attr( $field['name'] ) . '</label></th>';
+				echo '<td>';
+				$form->render_field( $name, $field['type'], $field['args'] );
+				echo '</td>';
+				echo '</tr>';
+			}
+		}
+	}
+
+	function add_taxonomy_fields( $taxonomy ) {
+		global $fs_config;
+		$form   = new FS_Form_Class();
+		$fields = $fs_config->get_taxonomy_fields();
+		if ( count( $fields[ $taxonomy ] ) ) {
+			foreach ( $fields[ $taxonomy ] as $name => $field ) {
+				$id = str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $field['type'] ) );
+				echo '<div class="form-field ' . esc_attr( $name ) . '-wrap">';
+				echo '<label for="' . esc_attr( $id ) . '">' . esc_attr( $field['name'] ) . '</label>';
+				$form->render_field( $name, $field['type'], $field['args'] );
+				echo '</div>';
+			}
+		}
+	}
+
+	/**
+	 * Сохраняет все метаполя таксономии
+	 * если значение пустое, поле удаляется из БД
+	 * TODO: удалить дубликаты этой функции
+	 *
+	 * @param $term_id
+	 */
+	function save_taxonomy_fields( $term_id ) {
+		global $fs_config;
+		$term     = get_term( $term_id );
+		$taxonomy = $term->taxonomy;
+		$fields   = $fs_config->get_taxonomy_fields();
+		if ( count( $fields[ $taxonomy ] ) ) {
+			foreach ( $fields[ $taxonomy ] as $name => $field ) {
+				if ( isset( $_POST[ $name ] ) && $_POST[ $name ] != '' ) {
+					update_term_meta( $term_id, $name, $_POST[ $name ] );
+				} else {
+					delete_term_meta( $term_id, $name );
+				}
+			}
+		}
 	}
 
 	function edit_product_attr_fields( $term ) {

@@ -1097,3 +1097,39 @@ progress {
     padding: 0 24px;
     border: 1px solid #e5e5e5;
 }
+
+.fs-image-field{
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    height: 150px;
+    border: 4px solid #fff;
+    position: relative;
+    background-image: url(/wp-content/plugins/f-shop/assets/img/no-image.png);
+    background-size: cover;
+    background-position: center center;
+    .controls{
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        top: 4px;
+    }
+    .button{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 5px;
+        line-height: 1;
+        margin: 0 2px;
+        padding: 0 15px;
+        font-size: 20px;
+        &.dashicons-camera{
+            color: #0073aa;
+        }
+        &.dashicons-trash{
+            color: #ff0000;
+        }
+    }
+
+}
