@@ -34,6 +34,7 @@ class FS_Form_Class {
 			'media',
 			'number',
 			'dropdown_categories',
+			'radio_categories',
 			'pages',
 			'html'
 		);
