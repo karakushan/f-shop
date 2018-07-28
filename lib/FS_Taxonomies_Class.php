@@ -241,6 +241,11 @@ class FS_Taxonomies_Class {
 		}
 	}
 
+	/**
+	 * Сохраняет значение мета - полей при добавлении нового термина
+	 *
+	 * @param $taxonomy
+	 */
 	function add_taxonomy_fields( $taxonomy ) {
 		global $fs_config;
 		$form   = new FS_Form_Class();

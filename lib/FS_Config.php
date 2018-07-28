@@ -575,7 +575,12 @@ class FS_Config {
 	function get_taxonomy_fields() {
 		$fields = array(
 			'catalog' => array(
-				'_thumbnail_id' => array(
+				'_content' => array(
+					'name' => __( 'Текст категории', 'fast-shop' ),
+					'type' => 'editor',
+					'args' => array()
+				),
+				'_thumbnail_id'     => array(
 					'name' => __( 'Миниатюра', 'fast-shop' ),
 					'type' => 'image',
 					'args' => array()

@@ -45,12 +45,12 @@ class FS_Images_Class {
 					continue;
 				}
 				$image    = $image[0];
-				$images_n .= "<li data-thumb=\"$image\" style=\"background-image:url($image)\" data-src=\"$image\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\" itemprop=\"image\"></a></li>";
+				$images_n .= "<li data-thumb=\"$image\" style=\"background-image:url($image)\" data-src=\"$image\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\" itemprop=\"image\" data-zoom-image=\"$image\"></a></li>";
 			}
 		}
 
 		if ( empty( $images_n ) ) {
-			$images_n .= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\"><img src=\"$image_placeholder\" itemprop=\"image\" width=\"100%\"></li>";
+			$images_n .= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\"><img src=\"$image_placeholder\" itemprop=\"image\" width=\"100%\" data-zoom-image=\"$image\"></li>";
 		}
 
 		return apply_filters( 'fs_galery_list', $images_n, $post_id );
@@ -88,22 +88,37 @@ class FS_Images_Class {
 	 * @return array          список id вложений в массиве
 	 */
 	public function fs_galery_images( $post_id = 0, $thumbnail = true ) {
-		global $post;
-		$images      = array();
+
 		$gallery_img = array();
-		$post_id     = ! empty( $post_id ) ? (int) $post_id : $post->ID;
+		$post_id     = fs_get_product_id( $post_id );
 		$gallery     = get_post_meta( $post_id, 'fs_galery', false );
-		$thumb_id    = get_post_thumbnail_id( $post_id );
+		$thumb_id    = intval( get_post_thumbnail_id( $post_id ) );
+		$attachments = get_posts( array(
+			'post_type'      => 'attachment',
+			'posts_per_page' => - 1,
+			'post_parent'    => $post_id,
+			'fields'         => 'ids',
+			'exclude'        => array( $thumb_id ),
+		) );
 		// добавляем в галерею изображение миниатюры поста, конечно если $thumbnail верно
 		if ( $thumb_id && $thumbnail == true ) {
 			$gallery_img[] = $thumb_id;
 		}
-		$images = ! empty( $gallery[0] ) ? $gallery[0] : array();
-		if ( $images ) {
-			foreach ( $images as $key => $image ) {
-				$gallery_img[] = $image;
+		if ( $gallery ) {
+			$images = ! empty( $gallery[0] ) ? $gallery[0] : array();
+			if ( $images ) {
+				foreach ( $images as $key => $image ) {
+					$gallery_img[] = $image;
+				}
 			}
 		}
+
+		if ( count( $attachments ) ) {
+			foreach ( $attachments as $attachment ) {
+				$gallery_img [] = $attachment;
+			}
+		}
+
 		$gallery_img = array_unique( $gallery_img );
 
 		return apply_filters( 'fs_galery_images', $gallery_img, $post_id );
