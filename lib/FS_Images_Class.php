@@ -45,7 +45,7 @@ class FS_Images_Class {
 					continue;
 				}
 				$image    = $image[0];
-				$images_n .= "<li data-thumb=\"$image\" style=\"background-image:url($image)\" data-src=\"$image\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\" itemprop=\"image\" data-zoom-image=\"$image\"></a></li>";
+				$images_n .= "<li data-thumb=\"$image\"  data-src=\"$image\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\" itemprop=\"image\" data-zoom-image=\"$image\"></a></li>";
 			}
 		}
 
