@@ -359,7 +359,7 @@
         <table cellspacing="0" cellpadding="0" width="600" class="w320">
           <tr>
             <td class="free-text">
-				<?php echo $message ?>
+				<?php echo apply_filters( 'the_content', $message ) ?>
             </td>
           </tr>
           <tr>

@@ -272,7 +272,7 @@ function fs_email_template( $vars ) {
 
 	$search  = fs_mail_keys( $vars );
 	$replace = array_values( $vars );
-	$html    = fs_frontend_template( 'mail/themes/' . $template, $vars );
+	$html    = fs_frontend_template( 'mail/themes/' . $template, array( 'vars' => $vars ) );
 	$html    = str_replace( $search, $replace, $html );
 
 	return $html;
