@@ -324,11 +324,11 @@
                 <table cellpadding="0" cellspacing="0" width="600" class="w320">
                   <tr>
                     <td class="pull-left mobile-header-padding-left"
-                        style="vertical-align: middle;">
+                        style="vertical-align: middle;padding-bottom: 10px;">
 						<?php if ( fs_option( 'site_logo' ) ): ?>
                           <a href="<?php echo esc_url( get_bloginfo( 'url' ) ) ?>" target="_blank">
-                            <img src="<?php echo fs_option( 'site_logo' ) ?>" height="56"
-                                 alt="<?php bloginfo( 'name' ) ?>"></a>
+							  <?php echo wp_get_attachment_image( fs_option( 'site_logo' ), 'full' ) ?>
+                          </a>
 						<?php else: ?>
                           <a href="<?php echo esc_url( get_bloginfo( 'url' ) ) ?>">
                             <span
@@ -394,7 +394,7 @@
                             <tr>
                               <td class="mini-block">
                                 <span class="header-sm">Информация о заказе</span><br/>
-                                <b>Номер заказа:</b>%order_id%
+                                <b>Номер заказа:</b>%order_id% <br>
                                 <b>Имя:</b> %fs_first_name% %fs_last_name%<br/>
                                 <b>Телефон:</b> %fs_phone%<br/>
                                 <b>Город:</b> %fs_city% <br/>
@@ -418,8 +418,7 @@
                               <td class="mini-block">
                                 <span class="header-sm">Оплата</span><br/>
                                 <b>Способ оплаты:</b> %fs_payment_methods%<br>
-                                Оплата станет доступной после подтверждения заказа менеджером. <br>
-                                Если заказ будет подтверждён - информация об оплате придёт в следующем письме.
+
                               </td>
                             </tr>
                           </table>
@@ -527,7 +526,7 @@
         <table cellspacing="0" cellpadding="0" width="600" class="w320">
           <tr>
             <td style="padding: 25px 0 25px">
-				<?php echo fs_option( 'form_footer_text' ) ?>
+				<?php echo fs_option( 'fs_mail_footer_message', sprintf( '<p style="text-align: center;">Интернет магазин "%s" функционирует благодаря плагину <a href="https://f-shop.top/" target="_blank" rel="noopener">F-Shop.</a></p>', get_bloginfo( 'name' ) ) ) ?>
             </td>
           </tr>
         </table>

@@ -116,9 +116,9 @@ class FS_Settings_Class {
 						'value' => fs_option( 'manager_email', get_option( 'admin_email' ) )
 					),
 					array(
-						'type'  => 'text',
+						'type'  => 'image',
 						'name'  => 'site_logo',
-						'label' => 'Ссылка на изображение логотипа',
+						'label' => 'Логотип',
 						'value' => fs_option( 'site_logo' )
 					),
 					array(
@@ -143,14 +143,22 @@ class FS_Settings_Class {
 						'type'  => 'editor',
 						'name'  => 'customer_mail',
 						'label' => 'Текст письма заказчику после отправки заказа',
-						'value' => fs_option( 'customer_mail' )
+						'value' => fs_option( 'customer_mail', '<h3 style="text-align: center;">Благодарим за покупку.</h3>
+<p style="text-align: center;">Заказ #%order_id% успешно создан. Заказ считается подтвержденным после обратной связи с нашим оператором на указанный
+Вами номер телефона.</p>' )
 					),
 					array(
 						'type'  => 'editor',
 						'name'  => 'admin_mail',
 						'label' => 'Текст письма администратору после отправки заказа',
-						'value' => fs_option( 'admin_mail' )
+						'value' => fs_option( 'admin_mail', '<h3 style="text-align: center;">На сайте новый заказ #%order_id%</h3>' )
 					),
+					array(
+						'type'  => 'editor',
+						'name'  => 'fs_mail_footer_message',
+						'label' => 'Текст в самом низу письма',
+						'value' => fs_option( 'fs_mail_footer_message', sprintf( '<p style="text-align: center;">Интернет магазин "%s" функционирует благодаря плагину <a href="https://f-shop.top/" target="_blank" rel="noopener">F-Shop.</a></p>', get_bloginfo( 'name' ) ) )
+					)
 				)
 
 

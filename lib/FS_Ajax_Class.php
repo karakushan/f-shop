@@ -346,17 +346,21 @@ class FS_Ajax_Class {
 		$sanitize_field['fs_payment_methods']  = fs_get_payment( $sanitize_field['fs_payment_methods'] );
 		$_SESSION['fs_last_order_id']          = $order_id;
 
-// текст письма заказчику
-		$user_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'customer_mail' ) );
+		// текст письма заказчику
+		$sanitize_field['message'] = fs_option( 'customer_mail' );
+		$user_message              = apply_filters( 'fs_email_template', $sanitize_field );
 
-// текст письма админу
-		$admin_message = apply_filters( 'fs_email_template', $sanitize_field, fs_option( 'admin_mail', get_bloginfo( 'admin_email' ) ) );
+		// текст письма админу
+		$sanitize_field['message'] = fs_option( 'admin_mail' );
+		$admin_message             = apply_filters( 'fs_email_template', $sanitize_field );
 
-//Отсылаем письмо с данными заказа заказчику
+		//Отсылаем письмо с данными заказа заказчику
 		$customer_mail_header = fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
-		wp_mail( $sanitize_field['fs_email'], $customer_mail_header, $user_message, $headers );
+		if ( $sanitize_field['fs_email'] ) {
+			wp_mail( $sanitize_field['fs_email'], $customer_mail_header, $user_message, $headers );
+		}
 
-//Отсылаем письмо с данными заказа админу
+		//Отсылаем письмо с данными заказа админу
 		$admin_email       = fs_option( 'manager_email', get_option( 'admin_email' ) );
 		$admin_mail_header = fs_option( 'admin_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
 		wp_mail( $admin_email, $admin_mail_header, $admin_message, $headers );

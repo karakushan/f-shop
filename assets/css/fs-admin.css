@@ -835,4 +835,7 @@ progress {
     .fs-image-field .button.dashicons-trash {
       color: #ff0000; }
 
+.fast-shop-settings textarea {
+  width: 100%; }
+
 /*# sourceMappingURL=fs-admin.css.map */

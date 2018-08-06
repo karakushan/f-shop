@@ -189,7 +189,7 @@ add_filter( 'pre_get_posts', 'fs_sort_admin_by', 30 );
 function fs_sort_admin_by( $object ) {
 	global $pagenow;
 	// Выходим если нет всех условий для сортировки
-	if ( ! $object->is_admin() && $pagenow != 'edit.php' && ( empty( $_GET['post_type'] ) || $_GET['post_type'] != 'product' )  ) {
+	if ( ! $object->is_admin() && $pagenow != 'edit.php' && ( empty( $_GET['post_type'] ) || $_GET['post_type'] != 'product' ) ) {
 		return $object;
 	}
 //	сортируем по цене
@@ -267,14 +267,12 @@ function fs_form_bottom( $form_bottom = '' ) {
  *
  * @return mixed|string|void
  */
-function fs_email_template( $vars, $message ) {
+function fs_email_template( $vars ) {
 	$template = 'oxygen';
 
 	$search  = fs_mail_keys( $vars );
 	$replace = array_values( $vars );
-	$html    = fs_frontend_template( 'mail/themes/' . $template, $args = array(
-		'message' => $message
-	) );
+	$html    = fs_frontend_template( 'mail/themes/' . $template, $vars );
 	$html    = str_replace( $search, $replace, $html );
 
 	return $html;
