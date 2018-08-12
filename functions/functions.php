@@ -1471,7 +1471,7 @@ function fs_quick_order_button( $post_id = 0, $attr = array() ) {
 function fs_get_product_code( $product_id = 0 ) {
 	$config     = new \FS\FS_Config();
 	$product_id = fs_get_product_id( $product_id );
-	$articul    = get_post_meta( $product_id, $config->meta['product_article'], 1 );
+	$articul    = get_post_meta( $product_id, $config->meta['sku'], 1 );
 
 	return $articul;
 }

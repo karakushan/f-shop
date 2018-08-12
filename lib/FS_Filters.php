@@ -6,7 +6,7 @@ namespace FS;
  * @package FS
  */
 class FS_Filters {
-	private $exclude=array(
+	private $exclude = array(
 		'fs_filter',
 		'price_start',
 		'price_end',
@@ -16,8 +16,6 @@ class FS_Filters {
 	function __construct() {
 		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ), 10, 1 );
 		add_action( 'pre_get_posts', array( $this, 'exclude_posts' ), 10, 1 );
-
-
 		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
 
 		// фильтр по категориям товаров в админке
@@ -39,7 +37,7 @@ class FS_Filters {
 		}
 		if ( $query->is_archive || $query->is_tax ) {
 			global $fs_config;
-			$meta_query                   =[];
+			$meta_query                    = [];
 			$meta_query['exclude_archive'] =
 				array(
 					'key'     => $fs_config->meta['exclude_archive'],
@@ -65,7 +63,7 @@ class FS_Filters {
 	 */
 	function category_filter_admin() {
 		global $typenow;
-		$get_parr=isset( $_GET['catalog'] ) ? $_GET['catalog'] : '';
+		$get_parr = isset( $_GET['catalog'] ) ? $_GET['catalog'] : '';
 		if ( $typenow != 'product' ) {
 			return;
 		}
@@ -84,46 +82,53 @@ class FS_Filters {
 
 
 	public function filter_curr_product( $query ) {
-		global $fs_config;
+		global $fs_config, $wpdb;
 
 		// Если это админка или не главный запрос
 		if ( $query->is_admin || ! $query->is_main_query() ) {
 			return $query;
 		}
 
-		// Если находимся на странице поиска
+		// If we are on the search page
 		if ( $query->is_search ) {
-			$query->set( 'meta_query', array(
-					'relation' => 'OR',
-					array(
-						'key'     => $fs_config->meta['product_article'],
-						'value'   => $query->query_vars['s'],
-						'compare' => '=',
-					)
-				)
-			);
-			// возвращаем только товары
-			$query->set( 'post_type', 'product' );
-			$query->set( 'orderby', 'date' );
-			$query->set( 'order', 'DESC' );
+			if ( ! empty( $_GET['s'] ) ) {
+				// Search by sku
+				$query->set( 'meta_query', [
+					[
+						'key'     => $fs_config->meta['sku'],
+						'value'   => $_GET['s'],
+						'compare' => '='
+					]
+				] );
+				add_filter( 'get_meta_sql', function ( $sql ) {
+					static $nr = 0;
+					if ( 0 != $nr ++ ) {
+						return $sql;
+					}
+					$sql['where'] = mb_eregi_replace( '^ AND', ' OR', $sql['where'] );
 
-			return;
+					return $sql;
+				} );
+
+			}
+			$query->set( 'post_type', 'product' );
+
 		} elseif ( $query->is_tax ) {
 
-			$meta_query=array();
-			$orderby   =array();
-			$order     ='';
-			$tax_query =array();
-			$per_page  =get_option( "posts_per_page" );
-			$arr_url   =urldecode( $_SERVER['QUERY_STRING'] );
+			$meta_query = array();
+			$orderby    = array();
+			$order      = '';
+			$tax_query  = array();
+			$per_page   = get_option( "posts_per_page" );
+			$arr_url    = urldecode( $_SERVER['QUERY_STRING'] );
 			parse_str( $arr_url, $url );
 
 
 			//Фильтрируем по значениям диапазона цен
 			if ( isset( $url['price_start'] ) && isset( $url['price_end'] ) ) {
 
-				$price_start                 =! empty( $url['price_start'] ) ? (int) $url['price_start'] : 0;
-				$price_end                   =! empty( $url['price_end'] ) ? (int) $url['price_end'] : 99999999999999999;
+				$price_start                  = ! empty( $url['price_start'] ) ? (int) $url['price_start'] : 0;
+				$price_end                    = ! empty( $url['price_end'] ) ? (int) $url['price_end'] : 99999999999999999;
 				$meta_query['price_interval'] =
 					array(
 						'key'     => $fs_config->meta['price'],
@@ -135,8 +140,8 @@ class FS_Filters {
 
 			//Фильтрируем по к-во выводимых постов на странице
 			if ( isset( $url['per_page'] ) ) {
-				$per_page                                =$url['per_page'];
-				$_SESSION['fs_user_settings']['per_page']=$per_page;
+				$per_page                                 = $url['per_page'];
+				$_SESSION['fs_user_settings']['per_page'] = $per_page;
 			}
 
 			//Устанавливаем страницу пагинации
@@ -149,12 +154,12 @@ class FS_Filters {
 
 				switch ( $url['filter_by'] ) {
 					case 'action_price' :
-						$meta_query['action_price']=array(
+						$meta_query['action_price'] = array(
 							'key'     => $fs_config->meta['action_price'],
 							'compare' => '> ',
 							'value'   => 0
 						);
-						$orderby['action_price']   ='DESC';
+						$orderby['action_price']    = 'DESC';
 						break;
 				}
 
@@ -165,35 +170,35 @@ class FS_Filters {
 
 				switch ( $url['order_type'] ) {
 					case 'price_asc': //сортируем по цене в возрастающем порядке
-						$meta_query['price']      =array( 'key' => $fs_config->meta['price'] );
-						$orderby['meta_value_num']='ASC';
+						$meta_query['price']       = array( 'key' => $fs_config->meta['price'] );
+						$orderby['meta_value_num'] = 'ASC';
 						break;
 					case 'price_desc': //сортируем по цене в спадающем порядке
-						$meta_query['price']      =array( 'key' => $fs_config->meta['price'] );
-						$orderby['meta_value_num']='DESC';
+						$meta_query['price']       = array( 'key' => $fs_config->meta['price'] );
+						$orderby['meta_value_num'] = 'DESC';
 						break;
 					case 'views_desc': //сортируем по просмотрам в спадающем порядке
-						$meta_query['views']=array( 'key' => 'views' );
-						$orderby['views']   ='DESC';
+						$meta_query['views'] = array( 'key' => 'views' );
+						$orderby['views']    = 'DESC';
 						break;
 					case 'views_asc': //сортируем по просмотрам в спадающем порядке
-						$meta_query['views']=array( 'key' => 'views' );
-						$orderby['views']   ='ASC';
+						$meta_query['views'] = array( 'key' => 'views' );
+						$orderby['views']    = 'ASC';
 						break;
 					case 'name_asc': //сортируем по названию по алфавиту
-						$orderby['title']='ASC';
+						$orderby['title'] = 'ASC';
 						break;
 					case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
-						$orderby['title']='DESC';
+						$orderby['title'] = 'DESC';
 						break;
 					case 'date_desc':
-						$orderby['date']='DESC';
+						$orderby['date'] = 'DESC';
 						break;
 					case 'date_asc':
-						$orderby['date']='ASC';
+						$orderby['date'] = 'ASC';
 						break;
 					case 'action_price' :
-						$orderby['action_price']='DESC';
+						$orderby['action_price'] = 'DESC';
 						break;
 
 
@@ -203,14 +208,14 @@ class FS_Filters {
 			if ( ! empty( $_REQUEST['aviable'] ) ) {
 				switch ( $_REQUEST['aviable'] ) {
 					case 'aviable':
-						$meta_query['aviable']=array(
+						$meta_query['aviable'] = array(
 							'key'     => $fs_config->meta['remaining_amount'],
 							'compare' => ' != ',
 							'value'   => '0'
 						);
 						break;
 					case 'not_available':
-						$meta_query['aviable']=array(
+						$meta_query['aviable'] = array(
 							'key'     => $fs_config->meta['remaining_amount'],
 							'compare' => ' == ',
 							'value'   => '0'
@@ -222,7 +227,7 @@ class FS_Filters {
 			if ( ! empty( $_REQUEST['filter_by'] ) ) {
 				switch ( $_REQUEST['filter_by'] ) {
 					case 'action_price';
-						$meta_query['action_price']=array(
+						$meta_query['action_price'] = array(
 							'key'     => $fs_config->meta['action_price'],
 							'compare' => '> ',
 							'value'   => 0
@@ -233,7 +238,7 @@ class FS_Filters {
 
 			//Фильтруем по свойствам (атрибутам)
 			if ( ! empty( $_REQUEST['attributes'] ) ) {
-				$tax_query[]=array(
+				$tax_query[] = array(
 					'taxonomy' => 'product-attributes',
 					'field'    => 'id',
 					'terms'    => array_values( $_REQUEST['attributes'] ),
@@ -247,7 +252,7 @@ class FS_Filters {
 				$query->set( 'meta_query', $meta_query );
 			}
 			if ( ! empty( $tax_query ) ) {
-				$tax_query=array_merge( $query->tax_query->queries, $tax_query );
+				$tax_query = array_merge( $query->tax_query->queries, $tax_query );
 				$query->set( 'tax_query', $tax_query );
 			}
 			if ( ! empty( $orderby ) ) {
@@ -257,7 +262,6 @@ class FS_Filters {
 				$query->set( 'order', $order );
 			}
 
-			return $query;
 		}
 
 
@@ -269,15 +273,15 @@ class FS_Filters {
 	 * @param string $type
 	 * @param string $option_default
 	 */
-	public function attr_group_filter( $group, $type='option', $option_default='Выберите значение' ) {
+	public function attr_group_filter( $group, $type = 'option', $option_default = 'Выберите значение' ) {
 //		получаем группу атрибутов
-		$fs_atributes=get_terms( array(
+		$fs_atributes = get_terms( array(
 			'parent'     => $group,
 			'taxonomy'   => 'product-attributes',
 			'hide_empty' => false
 		) );
 
-		$arr_url=urldecode( $_SERVER['QUERY_STRING'] );
+		$arr_url = urldecode( $_SERVER['QUERY_STRING'] );
 		parse_str( $arr_url, $url );
 
 		if ( $type == 'option' ) {
@@ -285,7 +289,7 @@ class FS_Filters {
 					'attributes'
 				) ) . '"> ' . $option_default . '</option> ';
 			foreach ( $fs_atributes as $key => $att ) {
-				$redirect_url=add_query_arg( array(
+				$redirect_url = add_query_arg( array(
 					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
@@ -296,7 +300,7 @@ class FS_Filters {
 		if ( $type == 'list' ) {
 			echo ' <ul>';
 			foreach ( $fs_atributes as $key => $att ) {
-				$redirect_url=add_query_arg( array(
+				$redirect_url = add_query_arg( array(
 					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
@@ -315,17 +319,17 @@ class FS_Filters {
 	 * @echo  string;
 	 */
 	public static function per_page_filter( $args ) {
-		$req  =isset( $_REQUEST['per_page'] ) ? $_REQUEST['per_page'] : get_option( "posts_per_page" );
-		$args =wp_parse_args( $args,
+		$req   = isset( $_REQUEST['per_page'] ) ? $_REQUEST['per_page'] : get_option( "posts_per_page" );
+		$args  = wp_parse_args( $args,
 			array(
 				'interval' => array( 15, 30, 45, 90 ),
 				'class'    => 'fs-count-filter'
 			) );
-		$nonce=wp_create_nonce( 'fast-shop' );
+		$nonce = wp_create_nonce( 'fast-shop' );
 
 		echo ' <select name="post_count" class="' . esc_attr( $args['class'] ) . '" onchange="document.location=this.options[this.selectedIndex].value"> ';
 		foreach ( $args['interval'] as $key => $count ) {
-			$redirect_url=add_query_arg( array(
+			$redirect_url = add_query_arg( array(
 				"fs_filter" => $nonce,
 				"per_page"  => $count,
 				'paged'     => 1
@@ -342,8 +346,8 @@ class FS_Filters {
 	 *
 	 * @return string              выводит html элемент типа select
 	 */
-	public static function fs_types_sort_filter( $attr=array() ) {
-		$attr=wp_parse_args( $attr, array(
+	public static function fs_types_sort_filter( $attr = array() ) {
+		$attr = wp_parse_args( $attr, array(
 			'class'   => 'fs-types-sort-filter',
 			'filters' => array(
 				'date_desc'  => array(
@@ -367,12 +371,12 @@ class FS_Filters {
 			)
 		) );
 
-		$order_type_get=! empty( $_GET['order_type'] ) ? $_GET['order_type'] : '';
+		$order_type_get = ! empty( $_GET['order_type'] ) ? $_GET['order_type'] : '';
 
 		if ( count( $attr['filters'] ) ) {
 			echo ' <select name="order_type"  class="' . esc_attr( $attr['class'] ) . '" data-fs-action="filter"> ';
 			foreach ( $attr['filters'] as $key => $order_type ) {
-				$redirect_url=add_query_arg( array(
+				$redirect_url = add_query_arg( array(
 					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
 					'order_type' => $key
 				) );

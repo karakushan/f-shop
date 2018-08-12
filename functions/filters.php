@@ -85,7 +85,7 @@ function fill_views_column( $colname, $post_id ) {
 
 			break;
 		case "fs_vendor_code":
-			echo get_post_meta( $post_id, $config->meta['product_article'], 1 );
+			echo get_post_meta( $post_id, $config->meta['sku'], 1 );
 			break;
 		case "fs_stock":
 			$stock      = get_post_meta( $post_id, $config->meta['remaining_amount'], 1 );

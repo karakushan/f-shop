@@ -76,7 +76,7 @@ class FS_Config {
 			// валюта товара
 			'currency'          => 'fs_currency',
 			//артикул
-			'product_article'   => 'fs_articul',
+			'sku'   => '_fs_sku',
 			//запас товаров на складе
 			'remaining_amount'  => 'fs_remaining_amount',
 			//галерея

@@ -2,7 +2,7 @@
 <p>Здесь можно управлять дополнительными данными товара.</p>
 <div class="fs-field-row clearfix">
   <label for="fs_product_article"><?php _e( 'Article', 'fast-shop' ) ?></label>
-  <input type="text" name="<?php echo $this->config->meta['product_article'] ?>" id="fs_product_article"
+  <input type="text" name="<?php echo $this->config->meta['sku'] ?>" id="fs_product_article"
          value="<?php echo fs_product_code(); ?>" id="price">
 </div>
 <div class="fs-field-row clearfix">
