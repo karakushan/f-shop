@@ -76,7 +76,7 @@ class FS_Config {
 			// валюта товара
 			'currency'          => 'fs_currency',
 			//артикул
-			'sku'   => '_fs_sku',
+			'sku'               => 'fs_articul',
 			//запас товаров на складе
 			'remaining_amount'  => 'fs_remaining_amount',
 			//галерея
@@ -575,12 +575,12 @@ class FS_Config {
 	function get_taxonomy_fields() {
 		$fields = array(
 			'catalog' => array(
-				'_content' => array(
+				'_content'      => array(
 					'name' => __( 'Текст категории', 'fast-shop' ),
 					'type' => 'editor',
 					'args' => array()
 				),
-				'_thumbnail_id'     => array(
+				'_thumbnail_id' => array(
 					'name' => __( 'Миниатюра', 'fast-shop' ),
 					'type' => 'image',
 					'args' => array()
