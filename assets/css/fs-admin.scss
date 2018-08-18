@@ -138,7 +138,7 @@
                 display: block;
                 padding: 0;
             }
-            p.description{
+            p.description {
                 margin-bottom: 25px;
             }
             h4 {
@@ -199,7 +199,7 @@
                     max-width: 100%;
                 }
             }
-            textarea{
+            textarea {
                 width: 100%;
             }
             select {
@@ -1089,6 +1089,7 @@ progress {
 
     }
 }
+
 .fs-code {
     max-height: 188px;
     overflow: auto;
@@ -1098,7 +1099,7 @@ progress {
     border: 1px solid #e5e5e5;
 }
 
-.fs-image-field{
+.fs-image-field {
     margin: 0;
     padding: 0;
     width: 200px;
@@ -1108,14 +1109,14 @@ progress {
     background-image: url(/wp-content/plugins/f-shop/assets/img/no-image.png);
     background-size: cover;
     background-position: center center;
-    .controls{
+    .controls {
         position: absolute;
         display: flex;
         justify-content: center;
         width: 100%;
         top: 4px;
     }
-    .button{
+    .button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1124,18 +1125,24 @@ progress {
         margin: 0 2px;
         padding: 0 15px;
         font-size: 20px;
-        &.dashicons-camera{
+        &.dashicons-camera {
             color: #0073aa;
         }
-        &.dashicons-trash{
+        &.dashicons-trash {
             color: #ff0000;
         }
     }
 
 }
 
-.fast-shop-settings{
-    textarea{
+.fast-shop-settings {
+    textarea {
         width: 100%;
     }
+}
+
+td.fs_menu_order.column-fs_menu_order {
+    cursor: move;
+    text-align: center;
+    vertical-align: middle;
 }

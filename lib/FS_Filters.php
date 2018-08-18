@@ -14,17 +14,41 @@ class FS_Filters {
 	);
 
 	function __construct() {
-		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ), 10, 1 );
-		add_action( 'pre_get_posts', array( $this, 'exclude_posts' ), 10, 1 );
+		if ( ! is_admin() ) {
+			add_action( 'pre_get_posts', array( $this, 'exclude_posts' ), 10, 1 );
+			add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ), 10, 1 );
+		}
+		if ( is_admin() ) {
+			add_action( 'pre_get_posts', array( $this, 'filter_products_admin' ), 12, 1 );
+		}
+
 		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
 
 		// фильтр по категориям товаров в админке
 		add_action( 'restrict_manage_posts', array( $this, 'category_filter_admin' ) );
 
 		add_action( 'template_redirect', array( $this, 'redirect_per_page' ) );
-
 	}
 
+	function filter_products_admin( $query ) {
+		global $pagenow, $fs_config;
+		if ( $query->get( 'post_type' ) != 'product' && $pagenow != 'edit.php' ) {
+			return;
+		}
+
+		if ( ! empty( $_GET['orderby'] ) ) {
+			switch ( $_GET['orderby'] ) {
+				//	сортируем по цене
+				case "fs_price":
+					$query->set( 'orderby', 'meta_value_num' );
+					$query->set( 'meta_key', $fs_config->meta['price'] );
+					$query->set( 'order', (string) $_GET['order'] );
+					break;
+			}
+		} else {
+			$query->set( 'orderby', array( 'menu_order' => 'ASC' ) );
+		}
+	}
 
 	/**
 	 * Исключает некоторые товары из общего архива и категорий
@@ -88,6 +112,7 @@ class FS_Filters {
 		if ( $query->is_admin || ! $query->is_main_query() ) {
 			return $query;
 		}
+
 
 		// If we are on the search page
 		if ( $query->is_search ) {
@@ -203,6 +228,9 @@ class FS_Filters {
 
 
 				}
+			} else {
+
+				$orderby['menu_order'] = 'ASC';
 			}
 
 			if ( ! empty( $_REQUEST['aviable'] ) ) {

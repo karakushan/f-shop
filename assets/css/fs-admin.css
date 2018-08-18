@@ -838,4 +838,9 @@ progress {
 .fast-shop-settings textarea {
   width: 100%; }
 
+td.fs_menu_order.column-fs_menu_order {
+  cursor: move;
+  text-align: center;
+  vertical-align: middle; }
+
 /*# sourceMappingURL=fs-admin.css.map */

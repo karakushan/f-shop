@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 class FS_Post_Type {
-	const POST_TYPE = "product";
 	protected $config;
 	public $custom_tab_title;
 	public $custom_tab_body;
@@ -16,6 +15,7 @@ class FS_Post_Type {
 	 * The Constructor
 	 */
 	public function __construct() {
+		global $fs_config;
 		// register actions
 		add_action( 'init', array( $this, 'init' ), 12 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
@@ -40,8 +40,9 @@ class FS_Post_Type {
 	 * Create the post type
 	 */
 	public function create_post_type() {
+		global $fs_config;
 		/* регистрируем тип постов  - товары */
-		register_post_type( self::POST_TYPE,
+		register_post_type( $fs_config->data['post_type'],
 			array(
 				'labels'             => array(
 					'name'               => __( 'Products', 'fast-shop' ),
@@ -79,7 +80,8 @@ class FS_Post_Type {
 					'editor',
 					'excerpt',
 					'thumbnail',
-					'comments'
+					'comments',
+					'page-attributes'
 				)
 			)
 		);
@@ -133,10 +135,18 @@ class FS_Post_Type {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
-
+		global $fs_config, $wpdb;
 		$save_meta = $this->meta_save_fields();
 
-		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] == self::POST_TYPE && current_user_can( 'edit_post', $post_id ) ) {
+		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] == $fs_config->data['post_type'] && current_user_can( 'edit_post', $post_id ) ) {
+
+			// ставим позицию 99999, то есть в самом конце для постов с позицией 0 или меньше
+			$posts = $wpdb->get_results( "SELECT id FROM $wpdb->posts WHERE menu_order<=0 AND post_type='product'" );
+			if ( $posts ) {
+				foreach ( $posts as $post ) {
+					$wpdb->update( $wpdb->posts, array( 'menu_order' => 99999 ), array( 'ID' => $post->ID ) );
+				}
+			}
 
 			if ( is_array( $save_meta ) && count( $save_meta ) ) {
 				foreach ( $save_meta as $key => $field_name ) {
@@ -178,7 +188,6 @@ class FS_Post_Type {
 				}
 			}
 		}
-		// if($_POST['post_type'] == self::POST_TYPE && current_user_can('edit_post', $post_id))
 	} // END public function save_post($post_id)
 
 	/**
@@ -193,13 +202,14 @@ class FS_Post_Type {
 	 * hook into WP's add_meta_boxes action hook
 	 */
 	public function add_meta_boxes() {
+		global $fs_config;
 		remove_meta_box( 'order-statusesdiv', 'orders', 'side' );
 		// Add this metabox to every selected post
 		add_meta_box(
-			sprintf( 'fast_shop_%s_metabox', self::POST_TYPE ),
+			sprintf( 'fast_shop_%s_metabox', $fs_config->data['post_type'] ),
 			__( 'Product settings', 'fast-shop' ),
 			array( &$this, 'add_inner_meta_boxes' ),
-			self::POST_TYPE,
+			$fs_config->data['post_type'],
 			'normal',
 			'high'
 		);

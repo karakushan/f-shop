@@ -48,8 +48,41 @@ class FS_Ajax_Class {
 		// setting a product rating
 		add_action( 'wp_ajax_fs_set_rating', array( $this, 'fs_set_rating_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_set_rating', array( $this, 'fs_set_rating_callback' ) );
+
+		// Обновление позиции товаров
+		add_action( 'wp_ajax_fs_update_position', array( $this, 'fs_update_position_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_update_position', array( $this, 'fs_update_position_callback' ) );
+
 	}
 
+	/**
+	 * Обновление позиции товаров
+	 */
+	function fs_update_position_callback() {
+		global $wpdb;
+		$ids = array_map( 'intval', $_POST['ids'] );
+
+		// ставим позицию 99999, то есть в самом конце для постов с позицией 0 или меньше
+		$posts = $wpdb->get_results( "SELECT id FROM $wpdb->posts WHERE menu_order<=0 AND post_type='product'" );
+		if ( $posts ) {
+			foreach ( $posts as $post ) {
+				$wpdb->update( $wpdb->posts, array( 'menu_order' => 99999 ), array( 'ID' => $post->ID ) );
+			}
+		}
+
+		// для выбранных записей устанавливаем позиции согласно сортировке
+		if ( count( $ids ) ) {
+			foreach ( $ids as $position => $id ) {
+				$data = array(
+					'ID'         => $id,
+					'menu_order' => $position
+				);
+				wp_update_post( $data );
+			}
+		}
+		echo json_encode( array( "status" => 1 ) );
+		exit();
+	}
 
 	/**
 	 * setting a product rating callback function

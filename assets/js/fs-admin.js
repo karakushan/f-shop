@@ -20,7 +20,38 @@ jQuery(window).fShop();
 
 
 jQuery(function ($) {
+    // изменяет позиции товаров при перетаскивании
+    $('body.post-type-product .wp-list-table tbody').sortable({
+            placeholder: 'ui-state-highlight ui-sort-position',
+            helper: 'clone',
+            update: function (event, ui) {
+                var postIds = [];
+                $(this).find("tr").each(function (index, value) {
+                    postIds[index] = $(this).attr('id').replace("post-", "");
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    //data: JSON.stringify(parameters),
+                    data: {action: "fs_update_position", ids: postIds},
+                    // dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        console.log(data);
+                        // do something with ajax data
 
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        console.log('error...', xhr);
+                        //error logging
+                    },
+                    complete: function () {
+                        //afer ajax call is completed
+                    }
+                });
+            }
+        }
+    );
     /*
     Это универсальный загрузчик медиафайлов из медиатеки
     вызывается в php методе render_field() из класа FS_Form_Class при типе поля image

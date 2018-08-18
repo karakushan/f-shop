@@ -57,8 +57,12 @@ function fs_discount_filter__callback( $price ) {
 // создаем новую колонку
 add_filter( 'manage_edit-product_columns', 'add_views_column', 4 );
 function add_views_column( $columns ) {
-	$num         = 2; // после какой по счету колонки вставлять новые
+	$num         = 1; // после какой по счету колонки вставлять новые
 	$new_columns = array(
+		/*		'fs_order'       => __( 'Position', 'fast-shop' ),
+			'title'          => __( 'Title', 'fast-shop' ),*/
+		'fs_menu_order'  => __( 'Sort', 'fast-shop' ),
+		'title'          => __( 'Title', 'fast-shop' ),
 		'fs_id'          => __( 'ID', 'fast-shop' ),
 		'fs_price'       => __( 'Price', 'fast-shop' ),
 		'fs_vendor_code' => __( 'Vendor code', 'fast-shop' ),
@@ -75,7 +79,11 @@ function add_views_column( $columns ) {
 add_filter( 'manage_product_posts_custom_column', 'fill_views_column', 5, 2 );
 function fill_views_column( $colname, $post_id ) {
 	$config = new \FS\FS_Config();
+	$post   = get_post( $post_id );
 	switch ( $colname ) {
+		case "fs_menu_order":
+			echo '<img src="' . FS_PLUGIN_URL . 'assets/img/sort.svg" width="40" title="Потяните вверх или вниз, чтобы изменить позицию">';
+			break;
 		case "fs_id":
 			echo $post_id;
 			break;
@@ -184,36 +192,12 @@ function shiba_add_quick_edit( $column_name, $post_type ) {
 	}
 }
 
-// изменяем запрос при сортировке колонки
-add_filter( 'pre_get_posts', 'fs_sort_admin_by', 30 );
-function fs_sort_admin_by( $object ) {
-	global $pagenow;
-	// Выходим если нет всех условий для сортировки
-	if ( ! $object->is_admin() && $pagenow != 'edit.php' && ( empty( $_GET['post_type'] ) || $_GET['post_type'] != 'product' ) ) {
-		return $object;
-	}
-//	сортируем по цене
-	if ( ! empty( $_GET['orderby'] ) && $_GET['orderby'] == 'fs_price' ) {
-		$config = new \FS\FS_Config();
-		$object->set( 'orderby', 'meta_value_num' );
-		$object->set( 'meta_key', $config->meta['price'] );
-		$object->set( 'order', (string) $_GET['order'] );
-
-	} //	сортируем по дате
-    elseif ( ! empty( $_GET['orderby'] ) && $_GET['orderby'] == 'date' ) {
-		$object->set( 'orderby', 'date' );
-		$object->set( 'order', (string) $_GET['order'] );
-	}//	сортируем по умолчанию по  дате
-	else {
-		$object->set( 'orderby', 'date' );
-		$object->set( 'order', 'DESC' );
-	}
-}
 
 // добавляем возможность сортировать колонку
 add_filter( 'manage_edit-product_sortable_columns', 'add_views_sortable_column' );
 function add_views_sortable_column( $sortable_columns ) {
 	$sortable_columns['fs_price'] = 'fs_price';
+	$sortable_columns['fs_id']    = 'ID';
 
 	return $sortable_columns;
 }
