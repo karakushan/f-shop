@@ -24,6 +24,8 @@ jQuery(function ($) {
     $('body.post-type-product .wp-list-table tbody').sortable({
             placeholder: 'ui-state-highlight ui-sort-position',
             helper: 'clone',
+            axis: "y",
+            handle: '.fs_menu_order',
             update: function (event, ui) {
                 var postIds = [];
                 $(this).find("tr").each(function (index, value) {
@@ -37,7 +39,7 @@ jQuery(function ($) {
                     // dataType: 'json',
                     cache: false,
                     success: function (data) {
-                        console.log(data);
+                        // console.log(data);
                         // do something with ajax data
 
                     },

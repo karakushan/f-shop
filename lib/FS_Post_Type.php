@@ -140,7 +140,7 @@ class FS_Post_Type {
 		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] == $fs_config->data['post_type'] && current_user_can( 'edit_post', $post_id ) ) {
 
 			// ставим позицию 99999, то есть в самом конце для постов с позицией 0 или меньше
-			$posts = $wpdb->get_results( "SELECT id FROM $wpdb->posts WHERE menu_order<=0 AND post_type='product'" );
+			$posts = $wpdb->get_results( "SELECT * FROM $wpdb->posts WHERE menu_order<=0 AND post_type='product'" );
 			if ( $posts ) {
 				foreach ( $posts as $post ) {
 					$wpdb->update( $wpdb->posts, array( 'menu_order' => 99999 ), array( 'ID' => $post->ID ) );

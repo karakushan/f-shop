@@ -63,7 +63,7 @@ class FS_Ajax_Class {
 		$ids = array_map( 'intval', $_POST['ids'] );
 
 		// ставим позицию 99999, то есть в самом конце для постов с позицией 0 или меньше
-		$posts = $wpdb->get_results( "SELECT id FROM $wpdb->posts WHERE menu_order<=0 AND post_type='product'" );
+		$posts = $wpdb->get_results( "SELECT * FROM $wpdb->posts WHERE menu_order<=0 AND post_type='product'" );
 		if ( $posts ) {
 			foreach ( $posts as $post ) {
 				$wpdb->update( $wpdb->posts, array( 'menu_order' => 99999 ), array( 'ID' => $post->ID ) );
@@ -75,7 +75,7 @@ class FS_Ajax_Class {
 			foreach ( $ids as $position => $id ) {
 				$data = array(
 					'ID'         => $id,
-					'menu_order' => $position
+					'menu_order' => $position + 1
 				);
 				wp_update_post( $data );
 			}
@@ -407,8 +407,12 @@ class FS_Ajax_Class {
 			);
 		} else {
 			/* обновляем название заказа для админки */
-			wp_update_post( array( 'ID' => $order_id, 'post_title' => __( 'Order', 'fast-shop' ) . ' №' . $order_id ) );
-
+			wp_update_post( array(
+					'ID'         => $order_id,
+					'post_title' => sprintf( 'Заказ №%d от %s %s (%s)',
+						$order_id, $sanitize_field['fs_first_name'], $sanitize_field['fs_last_name'], date( 'd.m.y H:i', time() ) )
+				)
+			);
 
 			$result = array(
 				'success'  => true,

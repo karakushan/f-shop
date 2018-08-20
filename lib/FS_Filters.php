@@ -33,6 +33,24 @@ class FS_Filters {
 	function filter_products_admin( $query ) {
 		global $pagenow, $fs_config;
 		if ( $query->get( 'post_type' ) == $fs_config->data['post_type'] && $pagenow == 'edit.php' ) {
+			if ( ! empty( $_GET['s'] ) ) {
+				$query->set( 'meta_query', [
+					[
+						'key'     => $fs_config->meta['sku'],
+						'value'   => $_GET['s'],
+						'compare' => '='
+					]
+				] );
+				add_filter( 'get_meta_sql', function ( $sql ) {
+					static $nr = 0;
+					if ( 0 != $nr ++ ) {
+						return $sql;
+					}
+					$sql['where'] = mb_eregi_replace( '^ AND', ' OR', $sql['where'] );
+
+					return $sql;
+				} );
+			}
 			if ( ! empty( $_GET['orderby'] ) ) {
 				switch ( $_GET['orderby'] ) {
 					//	сортируем по цене
