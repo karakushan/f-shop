@@ -71,7 +71,7 @@ class FS_Attribute_Widget extends \WP_Widget {
           for="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>"><?php esc_html_e( 'Type', 'fast-shop' ) ?></label><br>
         <select name="<?php echo esc_attr( $this->get_field_name( 'fs_att_types' ) ); ?>"
                 id="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>">
-          <option><?php esc_html_e( 'Normal', 'fast-shop' ) ?></option>
+          <option value="normal"><?php esc_html_e( 'Normal', 'fast-shop' ) ?></option>
           <option
             value="color" <?php selected( 'color', $fs_att_types ) ?>><?php esc_html_e( 'Color', 'fast-shop' ) ?></option>
           <option
