@@ -75,14 +75,14 @@ function fs_add_sheensay_quicktags() {
 }
 
 // Скрываем кнопку "добавить заказ"
-add_action('admin_head',function (){
-  $current_screeen=get_current_screen();
-  if($current_screeen->id=='edit-orders'){
-    echo '<style>';
-    echo '.page-title-action{display:none}';
-    echo '</style>';
-  }
-});
+add_action( 'admin_head', function () {
+	$current_screen = get_current_screen();
+	if ( in_array( $current_screen->id, array( 'edit-orders', 'orders' ) ) ) {
+		echo '<style>';
+		echo '.page-title-action{display:none}';
+		echo '</style>';
+	}
+} );
 
 
 

@@ -61,6 +61,7 @@ function add_views_column( $columns ) {
 	$new_columns = array(
 		/*		'fs_order'       => __( 'Position', 'fast-shop' ),
 			'title'          => __( 'Title', 'fast-shop' ),*/
+
 		'fs_menu_order'  => __( 'Sort', 'fast-shop' ),
 		'title'          => __( 'Title', 'fast-shop' ),
 		'fs_id'          => __( 'ID', 'fast-shop' ),
@@ -71,6 +72,10 @@ function add_views_column( $columns ) {
 		'fs-product-cat' => __( 'Product categories', 'fast-shop' )
 
 	);
+
+	if ( ! fs_option( 'fs_product_sort_on' ) ) {
+		unset( $new_columns['fs_menu_order'] );
+	}
 
 	return array_slice( $columns, 0, $num ) + $new_columns + array_slice( $columns, $num );
 }

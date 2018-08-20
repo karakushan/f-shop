@@ -34,6 +34,7 @@ class FS_Shortcode {
 		add_shortcode( 'fs_profile_edit', array( $this, 'profile_edit' ) );
 		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );
 		add_shortcode( 'fs_wishlist', array( $this, 'wishlist_shortcode' ) );
+		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
 
 
 	}
