@@ -67,7 +67,8 @@ function add_views_column( $columns ) {
 		'fs_price'       => __( 'Price', 'fast-shop' ),
 		'fs_vendor_code' => __( 'Vendor code', 'fast-shop' ),
 		'fs_stock'       => __( 'Stock in stock', 'fast-shop' ),
-		'fs_photo'       => __( 'Photo', 'fast-shop' )
+		'fs_photo'       => __( 'Photo', 'fast-shop' ),
+		'fs-product-cat' => __( 'Product categories', 'fast-shop' )
 
 	);
 
@@ -81,6 +82,11 @@ function fill_views_column( $colname, $post_id ) {
 	$config = new \FS\FS_Config();
 	$post   = get_post( $post_id );
 	switch ( $colname ) {
+		case "fs-product-cat":
+			echo '<div class="fs-product-cat-wrap">';
+			echo get_the_term_list( $post_id, $config->data['product_taxonomy'], '', ', ', '' );
+			echo '</div>';
+			break;
 		case "fs_menu_order":
 			echo '<img src="' . FS_PLUGIN_URL . 'assets/img/sort.svg" width="40" title="Потяните вверх или вниз, чтобы изменить позицию">';
 			break;

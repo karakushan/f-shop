@@ -55,9 +55,8 @@ class FS_Taxonomies_Class {
 				"public"             => true,
 				"show_ui"            => true,
 				"publicly_queryable" => true,
-				'show_admin_column'  => true,
-			)
-		,
+				'show_admin_column'  => false
+			),
 			'fs-payment-methods'  => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Payment methods', 'fast-shop' ),

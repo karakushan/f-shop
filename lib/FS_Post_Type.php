@@ -110,17 +110,16 @@ class FS_Post_Type {
 				'capability_type'    => 'post',
 				'menu_icon'          => 'dashicons-list-view',
 				'map_meta_cap'       => true,
-				'show_in_nav_menus'  => true,
+				'show_in_nav_menus'  => false,
 				'menu_position'      => 6,
 				'can_export'         => true,
 				'has_archive'        => true,
 				'rewrite'            => true,
 				'query_var'          => true,
-				'taxonomies'         => array( 'order-statuses' ),
 				'description'        => __( "Здесь размещены заказы с вашего сайта." ),
 				'supports'           => array(
-					'title',
-					'comments'
+					'title'
+
 				)
 			)
 		);

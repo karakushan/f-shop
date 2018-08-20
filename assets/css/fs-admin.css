@@ -647,6 +647,9 @@ td.fs_price.column-fs_price span span {
 
 td.fs_photo.column-fs_photo {
   vertical-align: middle; }
+  td.fs_photo.column-fs_photo img {
+    max-width: 100%;
+    height: auto; }
 
 .fs_admin_col_photo {
   height: 150px;
@@ -842,5 +845,9 @@ td.fs_menu_order.column-fs_menu_order {
   cursor: move;
   text-align: center;
   vertical-align: middle; }
+
+.fs-product-cat-wrap {
+  max-height: 140px;
+  overflow: auto; }
 
 /*# sourceMappingURL=fs-admin.css.map */

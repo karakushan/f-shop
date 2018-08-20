@@ -9,9 +9,96 @@
 namespace FS;
 
 
+
 class FS_Migrate_Class {
 
 	function __construct() {
+
+		add_action( 'wp_loaded', array( $this, 'fs_api' ) );
+	}
+
+	/**
+	 * Запускает миграцию при наличии спец. гет параметров
+	 */
+	function fs_api() {
+		if ( ! empty( $_GET['fs-api'] ) && $_GET['fs-api'] == 'migrate_orders' ) {
+			$this->migrate_orders();
+		}
+	}
+
+	/**
+	 * Конвертирует заказы из более раних версий плагина
+	 *
+	 * @param string $db_name название базы из которой будем импортировать
+	 * @param string $table таблица заказов
+	 */
+	function migrate_orders( $db_name = '', $table = 'wp_fs_orders' ) {
+		set_time_limit(0);
+		if ( ! empty( $_GET['db'] ) ) {
+			$db_name = esc_sql( $_GET['db'] );
+		}
+
+		if ( ! empty( $_GET['table'] ) ) {
+			$table = esc_sql( $_GET['table'] );
+		}
+
+		if ( empty( $db_name ) ) {
+			$db_name = DB_NAME;
+		}
+
+		global $wpdb2, $fs_config;
+
+		$wpdb2  = new \wpdb( DB_USER, DB_PASSWORD, DB_NAME, DB_HOST );
+		$orders = $wpdb2->get_results( "SELECT * FROM $table" );
+		if ( $orders ) {
+			foreach ( $orders as $order ) {
+
+				$products = unserialize( $order->products );
+
+				$order_id = wp_insert_post(
+					array(
+						'post_title'     => $order->first_name . ' ' . $order->last_name . ' / ' . date( 'd.m.Y H:i', strtotime( $order->date ) ),
+						'post_content'   => '',
+						'post_status'    => 'processed',
+						'post_type'      => $fs_config->data['post_type_orders'],
+						'post_author'    => 1,
+						'post_date'      => $order->date,
+						'ping_status'    => get_option( 'default_ping_status' ),
+						'post_parent'    => 0,
+						'comment_status' => 'closed',
+						'menu_order'     => 0,
+						'import_id'      => 0,
+						'meta_input'     => array(
+							'_user_id'         => $order->user_id,
+							'_user'            => array(
+								'id'         => $order->user_id,
+								'first_name' => $order->first_name,
+								'last_name'  => $order->last_name,
+								'email'      => $order->email,
+								'phone'      => $order->phone,
+								'city'       => $order->city
+							),
+							'_products'        => $products,
+							'_custom_products' => $products,
+							'_delivery'        => array(
+								'method'    => $order->delivery,
+								'secession' => $order->delivery_number,
+								'adress'    => $order->address
+							),
+							'_payment'         => $order->payment,
+							'_amount'          => $order->summa,
+							'_comment'         => $order->comments
+						),
+					) );
+				if ( $order_id ) {
+					/* обновляем название заказа для админки */
+					wp_update_post( array(
+						'ID'         => $order_id,
+						'post_title' => sprintf( 'Заказ №%d от %s %s (%s)', $order_id, $order->first_name, $order->last_name, date( 'd.m.y H:i', strtotime( $order->date ) ) )
+					) );
+				}
+			}
+		}
 
 	}
 

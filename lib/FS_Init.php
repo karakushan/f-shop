@@ -24,6 +24,7 @@ class FS_Init {
 	public $fs_option;
 	public $fs_widget;
 	public $fs_product;
+	public $fs_migrate;
 
 
 	/**
@@ -53,6 +54,7 @@ class FS_Init {
 		$this->fs_payment    = new FS_Payment_Class();
 		$this->fs_widget     = new FS_Widget_CLass();
 		$this->fs_product    = new FS_Product_Class();
+		$this->fs_migrate    = new FS_Migrate_Class();
 
 		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
@@ -152,8 +154,8 @@ class FS_Init {
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'library', FS_PLUGIN_URL . 'assets/js/fs-library.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'admin', FS_PLUGIN_URL . 'assets/js/fs-admin.js', array(
 			'jquery',
-			FS_PLUGIN_PREFIX .'js-cookie',
-			FS_PLUGIN_PREFIX .'library'
+			FS_PLUGIN_PREFIX . 'js-cookie',
+			FS_PLUGIN_PREFIX . 'library'
 		), null, true );
 
 		$l10n = array(

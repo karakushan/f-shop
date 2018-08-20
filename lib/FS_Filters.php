@@ -32,22 +32,23 @@ class FS_Filters {
 
 	function filter_products_admin( $query ) {
 		global $pagenow, $fs_config;
-		if ( $query->get( 'post_type' ) != 'product' && $pagenow != 'edit.php' ) {
-			return;
+		if ( $query->get( 'post_type' ) == $fs_config->data['post_type'] && $pagenow == 'edit.php' ) {
+			if ( ! empty( $_GET['orderby'] ) ) {
+				switch ( $_GET['orderby'] ) {
+					//	сортируем по цене
+					case "fs_price":
+						$query->set( 'orderby', 'meta_value_num' );
+						$query->set( 'meta_key', $fs_config->meta['price'] );
+						$query->set( 'order', (string) $_GET['order'] );
+						break;
+				}
+			} else {
+				$query->set( 'orderby', array( 'menu_order' => 'ASC' ) );
+			}
+		} elseif ( $query->get( 'post_type' ) == $fs_config->data['post_type_orders'] && $pagenow == 'edit.php' ) {
+			$query->set( 'orderby', array( 'date' => 'DESC' ) );
 		}
 
-		if ( ! empty( $_GET['orderby'] ) ) {
-			switch ( $_GET['orderby'] ) {
-				//	сортируем по цене
-				case "fs_price":
-					$query->set( 'orderby', 'meta_value_num' );
-					$query->set( 'meta_key', $fs_config->meta['price'] );
-					$query->set( 'order', (string) $_GET['order'] );
-					break;
-			}
-		} else {
-			$query->set( 'orderby', array( 'menu_order' => 'ASC' ) );
-		}
 	}
 
 	/**

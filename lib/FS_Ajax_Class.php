@@ -408,10 +408,7 @@ class FS_Ajax_Class {
 		} else {
 			/* обновляем название заказа для админки */
 			wp_update_post( array( 'ID' => $order_id, 'post_title' => __( 'Order', 'fast-shop' ) . ' №' . $order_id ) );
-			/* обновляем статус поста на новый */
-			if ( $term = term_exists( 'new', 'order-statuses' ) ) {
-				wp_set_post_terms( $order_id, array( $term ['term_id'] ), 'order-statuses', false );
-			}
+
 
 			$result = array(
 				'success'  => true,
