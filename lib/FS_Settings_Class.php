@@ -56,12 +56,32 @@ class FS_Settings_Class {
 						'help'  => 'Если вы планируете, чтобы стоимость товара конвертировалась автоматически по установленному курсу',
 						'value' => fs_option( 'multi_currency_on' )
 					),
+
+
+				)
+
+
+			),
+			'products'   => array(
+				'name'   => __( 'Products', 'fast-shop' ),
+				'fields' => array(
 					array(
 						'type'  => 'checkbox',
 						'name'  => 'fs_product_sort_on',
 						'label' => 'Включить сортировку товаров перетаскиванием',
 						'help'  => 'Позволяет быстро изменять позиции товаров на сайте, перетаскиванием их в админпанели',
 						'value' => fs_option( 'fs_product_sort_on' )
+					),
+					array(
+						'type'   => 'select',
+						'name'   => 'fs_product_sort_by',
+						'values' => array(
+							'none'       => 'По умолчанию',
+							'menu_order' => 'По полю сортировки'
+						),
+						'label'  => 'Сортировать товары в каталоге по',
+						'help'   => 'Это определяет в каком порядке товары отображаются на сайте. По умолчанию Wordpress сортирует по ID.',
+						'value'  => fs_option( 'fs_product_sort_by' )
 					)
 
 				)

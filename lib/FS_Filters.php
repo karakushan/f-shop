@@ -211,8 +211,9 @@ class FS_Filters {
 
 				}
 			} else {
-
-				$orderby['menu_order'] = 'ASC';
+				if ( fs_option( 'fs_product_sort_by' ) == 'menu_order' ) {
+					$orderby['menu_order'] = 'ASC';
+				}
 			}
 
 			if ( ! empty( $_REQUEST['aviable'] ) ) {
