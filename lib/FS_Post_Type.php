@@ -149,10 +149,15 @@ class FS_Post_Type {
 
 			if ( is_array( $save_meta ) && count( $save_meta ) ) {
 				foreach ( $save_meta as $key => $field_name ) {
-					if ( ! isset( $_POST[ $field_name ] ) || (string) $_POST[ $field_name ] == '' ) {
+					if ( ! is_array( $_POST[ $field_name ] ) && ! isset( $_POST[ $field_name ] ) || (string) $_POST[ $field_name ] == '' ) {
 						delete_post_meta( $post_id, $field_name );
 						continue;
 					}
+					if (is_array( $_POST[ $field_name ] ) && empty($_POST[ $field_name ])){
+						delete_post_meta( $post_id, $field_name );
+						continue;
+					}
+
 					switch ( $field_name ) {
 						case 'fs_price':
 							$price = (float) str_replace( array( ',' ), array( '.' ), sanitize_text_field( $_POST[ $field_name ] ) );

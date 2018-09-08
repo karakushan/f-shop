@@ -5,7 +5,8 @@
   <button type="button" class="button button-secondary" id="fs-add-gallery">Выбрать из медиатеки</button>
 </div>
 <?php
-$gallery = fs_gallery_images_ids( $post_id = 0, false );
+$gallery_class = new \FS\FS_Images_Class();
+$gallery       = $gallery_class->fs_galery_images( 0, false );
 ?>
 <div class="fs-field-row fs-gallery clearfix">
 	<?php if ( $gallery ): ?>

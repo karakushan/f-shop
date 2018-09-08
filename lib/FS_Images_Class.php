@@ -93,13 +93,7 @@ class FS_Images_Class {
 		$post_id     = fs_get_product_id( $post_id );
 		$gallery     = get_post_meta( $post_id, 'fs_galery', false );
 		$thumb_id    = intval( get_post_thumbnail_id( $post_id ) );
-		$attachments = get_posts( array(
-			'post_type'      => 'attachment',
-			'posts_per_page' => - 1,
-			'post_parent'    => $post_id,
-			'fields'         => 'ids',
-			'exclude'        => array( $thumb_id ),
-		) );
+
 		// добавляем в галерею изображение миниатюры поста, конечно если $thumbnail верно
 		if ( $thumb_id && $thumbnail == true ) {
 			$gallery_img[] = $thumb_id;
@@ -110,12 +104,6 @@ class FS_Images_Class {
 				foreach ( $images as $key => $image ) {
 					$gallery_img[] = $image;
 				}
-			}
-		}
-
-		if ( count( $attachments ) ) {
-			foreach ( $attachments as $attachment ) {
-				$gallery_img [] = $attachment;
 			}
 		}
 

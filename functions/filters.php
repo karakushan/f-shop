@@ -188,7 +188,7 @@ function shiba_add_quick_edit( $column_name, $post_type ) {
           </label>
           <label>
             <span class="title"><?php _e( 'Vendor code', 'fast-shop' ) ?></span>
-            <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['product_article'] ?>"
+            <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['sku'] ?>"
                                                  class="fs_vendor_code" value=""></span>
           </label>
           <label>
