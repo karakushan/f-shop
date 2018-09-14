@@ -327,7 +327,8 @@
                         style="vertical-align: middle;padding-bottom: 10px;">
 						<?php if ( fs_option( 'site_logo' ) ): ?>
                           <a href="<?php echo esc_url( get_bloginfo( 'url' ) ) ?>" target="_blank">
-							  <?php echo wp_get_attachment_image( fs_option( 'site_logo' ), 'full' ) ?>
+                            <img src="<?php echo wp_get_attachment_image_url( fs_option( 'site_logo' ), 'full' ) ?>"
+                                 alt="<?php esc_html( get_bloginfo( 'name' ) ) ?>" height="54">
                           </a>
 						<?php else: ?>
                           <a href="<?php echo esc_url( get_bloginfo( 'url' ) ) ?>">
@@ -393,13 +394,14 @@
                                  style="border-collapse:separate !important;">
                             <tr>
                               <td class="mini-block">
-                                <span class="header-sm">Информация о заказе</span><br/>
-                                <b>Номер заказа:</b>%order_id% <br>
-                                <b>Имя:</b> %fs_first_name% %fs_last_name%<br/>
-                                <b>Телефон:</b> %fs_phone%<br/>
-                                <b>Город:</b> %fs_city% <br/>
-                                <b>Адрес:</b> %fs_adress% <br/>
-                                <b>Способ доставки:</b> %fs_delivery_methods% %fs_delivery_number%<br/>
+                                <span
+                                  class="header-sm"><?php _e( 'Information about order', 'fast-shop' ); ?></span><br/>
+                                <b><?php _e( 'Order number', 'fast-shop' ); ?>:</b>%order_id% <br>
+                                <b><?php _e( 'Name', 'fast-shop' ); ?>:</b> %fs_first_name% %fs_last_name%<br/>
+                                <b><?php _e( 'Phone number', 'fast-shop' ); ?>:</b> %fs_phone%<br/>
+                                <b><?php _e( 'City', 'fast-shop' ); ?>:</b> %fs_city% <br/>
+                                <b><?php _e( 'Address', 'fast-shop' ); ?>:</b> %fs_adress% <br/>
+
                               </td>
                             </tr>
 
@@ -416,9 +418,9 @@
                                  style="border-collapse:separate !important;">
                             <tr>
                               <td class="mini-block">
-                                <span class="header-sm">Оплата</span><br/>
-                                <b>Способ оплаты:</b> %fs_payment_methods%<br>
-
+                                <span class="header-sm"><?php _e( 'Shipping and payment', 'fast-shop' ); ?></span><br/>
+                                <b><?php _e( 'Delivery method', 'fast-shop' ); ?>:</b> %fs_delivery_methods% %fs_delivery_number%<br/>
+                                <b><?php _e( 'Payment method', 'fast-shop' ); ?>:</b> %fs_payment_methods%
                               </td>
                             </tr>
                           </table>
@@ -526,7 +528,7 @@
         <table cellspacing="0" cellpadding="0" width="600" class="w320">
           <tr>
             <td style="padding: 25px 0 25px">
-				<?php echo fs_option( 'fs_mail_footer_message', sprintf( '<p style="text-align: center;">Интернет магазин "%s" функционирует благодаря плагину <a href="https://f-shop.top/" target="_blank" rel="noopener">F-Shop.</a></p>', get_bloginfo( 'name' ) ) ) ?>
+				<?php echo fs_option( 'fs_mail_footer_message', sprintf( '<p style="text-align: center;">Online shop "% s" works on plugin <a href="https://f-shop.top/" target="_blank" rel="noopener">F-Shop.</a></p>', get_bloginfo( 'name' ) ) ) ?>
             </td>
           </tr>
         </table>

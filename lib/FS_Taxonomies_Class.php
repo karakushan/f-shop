@@ -177,32 +177,26 @@ class FS_Taxonomies_Class {
 			}
 		}
 
+		// создание дополнительных полей на странице добавления и редактирования таксономии
+		if ( $this->shop_taxonomies() ) {
+			foreach ( $this->shop_taxonomies() as $key => $taxonomy ) {
+				if ( in_array( $key, array( 'product-attributes',  'fs-discounts' ) ) ) {
+					continue;
+				}
+				// поля таксономии категорий товара
+				add_action( "{$key}_edit_form_fields", array( $this, 'edit_taxonomy_fields' ), 10, 2 );
+				add_action( "{$key}_add_form_fields", array( $this, 'add_taxonomy_fields' ), 10, 1 );
+				add_action( "create_{$key}", array( $this, 'save_taxonomy_fields' ), 10, 2 );
+				add_action( "edited_{$key}", array( $this, 'save_taxonomy_fields' ), 10, 2 );
+			}
+		}
 
-		// дополнительные поля таксономий, поля отображаются при добавлении или редактировании таксономии
-
-		// поля таксономии категорий товара
-		add_action( "catalog_edit_form_fields", array( $this, 'edit_taxonomy_fields' ), 10, 2 );
-		add_action( "catalog_add_form_fields", array( $this, 'add_taxonomy_fields' ), 10, 1 );
-		add_action( "create_catalog", array( $this, 'save_taxonomy_fields' ), 10, 2 );
-		add_action( "edited_catalog", array( $this, 'save_taxonomy_fields' ), 10, 2 );
 
 		// поля таксономии харакеристик товара
 		add_action( "product-attributes_edit_form_fields", array( $this, 'edit_product_attr_fields' ) );
 		add_action( "product-attributes_add_form_fields", array( $this, 'add_product_attr_fields' ) );
 		add_action( "create_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
 		add_action( "edited_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
-
-		// поля таксономии валют
-		add_action( "fs-currencies_edit_form_fields", array( $this, 'edit_fs_currencies_fields' ) );
-		add_action( "fs-currencies_add_form_fields", array( $this, 'add_fs_currencies_fields' ) );
-		add_action( "create_fs-currencies", array( $this, 'save_custom_taxonomy_meta' ) );
-		add_action( "edited_fs-currencies", array( $this, 'save_custom_taxonomy_meta' ) );
-
-		// поля таксономии способов оплаты
-		add_action( "fs-payment-methods_edit_form_fields", array( $this, 'edit_fs_payment_methods_fields' ) );
-		add_action( "fs-payment-methods_add_form_fields", array( $this, 'add_fs_payment_methods_fields' ) );
-		add_action( "create_fs-payment-methods", array( $this, 'save_custom_taxonomy_meta' ) );
-		add_action( "edited_fs-payment-methods", array( $this, 'save_custom_taxonomy_meta' ) );
 
 		// поля таксономии кидок
 		add_action( "fs-discounts_edit_form_fields", array( $this, 'edit_fs_discounts_fields' ) );
@@ -232,8 +226,12 @@ class FS_Taxonomies_Class {
 				$field['args']['value'] = get_term_meta( $term->term_id, $name, 1 );
 				echo '<tr class="form-field taxonomy-thumbnail-wrap">';
 				echo '<th scope="row"><label for="taxonomy-thumbnail">' . esc_attr( $field['name'] ) . '</label></th>';
+
 				echo '<td>';
 				$form->render_field( $name, $field['type'], $field['args'] );
+				if ( ! empty( $field['help'] ) ) {
+					printf( '<p class="description">%s</p>', $field['help'] );
+				}
 				echo '</td>';
 				echo '</tr>';
 			}
@@ -255,6 +253,9 @@ class FS_Taxonomies_Class {
 				echo '<div class="form-field ' . esc_attr( $name ) . '-wrap">';
 				echo '<label for="' . esc_attr( $id ) . '">' . esc_attr( $field['name'] ) . '</label>';
 				$form->render_field( $name, $field['type'], $field['args'] );
+				if ( ! empty( $field['help'] ) ) {
+					printf( '<p class="description">%s</p>', $field['help'] );
+				}
 				echo '</div>';
 			}
 		}
@@ -387,156 +388,6 @@ class FS_Taxonomies_Class {
 	}
 
 
-	/**
-	 * Добавляем свои поля на вкладке добавления валюты
-	 */
-	function add_fs_currencies_fields() {
-		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="slug"> ' . __( 'Currency code', 'fast-shop' ) . ' </label></th>
-						<td><input name="fast-shop[currency-code]" id="currency-code" type="text" value="" size="5" required>
-			<p class="description"> ' . __( 'International Currency Symbol', 'fast-shop' ) . ' </p></td>
-		</tr> ';
-
-		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="slug"> ' . __( 'Cost in basic currency', 'fast-shop' ) . ' </label></th>
-						<td><input name="fast-shop[cost-basic]" id="currency-code" type="text" value="" size="5"> 
-			<p class="description"> ' . __( 'Only digits with a dot are allowed', 'fast-shop' ) . ' </p></td>
-		</tr> ';
-
-
-		// === Отображение валюты на сайте ===
-		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="fs-currency-display"> ' . __( 'Отображение валюты на сайте', 'fast-shop' ) . ' </label></th>
-						<td><input name="fast-shop[fs_currency_display]" id="fs-currency-display" type="text" value="" size="5">
-			<p class="description"> ' . __( 'Если не указать будет отображаться код валюты типа USD', 'fast-shop' ) . ' </p></td>
-		</tr> ';
-
-		// === Поле выбора языка валюты ===
-		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="fs-currency-locales"> ' . __( 'Язык валюты', 'fast-shop' ) . ' </label></th>
-						<td>';
-		if ( $this->config->get_locales() ) {
-			echo '<select name="fast-shop[fs_currency_locales]" id="fs-currency-locales">';
-			echo '<option value="">' . esc_html__( 'Доступные языки', 'fast-shop' ) . '</option>';
-			foreach ( $this->config->get_locales() as $key => $locale ) {
-				echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $locale ) . '</option>';
-			}
-			echo '</select>';
-		}
-		echo '<p class="description"> ' . __( 'Выберите язык из выпадающего списка', 'fast-shop' ) . ' </p></td>
-		</tr> ';
-	}
-
-	function edit_fs_currencies_fields( $term ) {
-		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="slug"> ' . __( 'Currency code', 'fast-shop' ) . ' </label></th>
-						<td><input name="fast-shop[currency-code]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'currency-code', 1 ) . '" size="5" required>
-			<p class="description"> ' . __( 'International Currency Symbol', 'fast-shop' ) . ' </p></td>
-		</tr> ';
-
-
-		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="slug"> ' . __( 'Cost in basic currency', 'fast-shop' ) . ' </label></th>
-						<td><input name="fast-shop[cost-basic]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'cost-basic', 1 ) . '" size="5">
-			<p class="description"> ' . __( 'Only digits with a dot are allowed', 'fast-shop' ) . ' </p></td>
-		</tr> ';
-
-
-		// === Отображение валюты на сайте ===
-		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="slug"> ' . __( 'Отображение валюты на сайте', 'fast-shop' ) . ' </label></th>
-						<td><input name="fast-shop[fs_currency_display]" id="currency-code" type="text" value="' . get_term_meta( $term->term_id, 'fs_currency_display', 1 ) . '" size="5">
-			<p class="description"> ' . __( 'Если не указать будет отображаться код валюты типа USD', 'fast-shop' ) . ' </p></td>
-		</tr> ';
-
-
-		// === Поле выбора языка валюты ===
-		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="fs-currency-locales"> ' . __( 'Язык валюты', 'fast-shop' ) . ' </label></th>
-						<td>';
-
-		if ( $this->config->get_locales() ) {
-			echo '<select name="fast-shop[fs_currency_locales]" id="fs-currency-locales">';
-			echo '<option value="">' . esc_html__( 'Доступные языки', 'fast-shop' ) . '</option>';
-			foreach ( $this->config->get_locales() as $key => $locale ) {
-				echo '<option ' . selected( $key, get_term_meta( $term->term_id, 'fs_currency_locales', 1 ) ) . ' value="' . esc_attr( $key ) . '">' . esc_html( $locale ) . '</option>';
-			}
-			echo '</select>';
-		}
-		echo '<p class="description"> ' . __( 'Выберите язык из выпадающего списка', 'fast-shop' ) . ' </p></td>
-		</tr> ';
-	}
-
-	/**
-	 * Создаёт поле "Сообщение покупателю  для оплаты" при редактировании способа оплаты
-	 *
-	 * @param $term объект термина который редактируется
-	 */
-	function edit_fs_payment_methods_fields( $term ) {
-		echo '<tr class="form-field term-currency-code-wrap">
-			<th scope="row"><label for="pay-message"> ' . __( 'Сообщение покупателю  для оплаты', 'fast-shop' ) . ' </label></th>
-						<td><textarea name="fast-shop[pay-message]" id="pay-message">' . esc_html( get_term_meta( $term->term_id, 'pay-message', 1 ) ) . '</textarea>
-			<p class="description">%pay_url% будет заменено на ссылку для оплаты, %pay_name% на название способа оплаты </p></td>
-		</tr> ';
-
-	}
-
-
-	/**
-	 * Создаёт поле "Сообщение покупателю  для оплаты" при редактировании способа оплаты
-	 *
-	 * @param $term объект термина который редактируется
-	 */
-	function edit_fs_discounts_fields( $term ) {
-		$discount_type = get_term_meta( $term->term_id, 'discount_where_is', 1 );
-
-		echo '<tr class="form-field discount-where-is-wrap">'
-		     . '<th scope="row"><label for="discount_where_is"> ' . __( 'Скидка активируется если', 'fast-shop' ) . ' </label></th>'
-		     . '<td><select name="fast-shop[discount_where_is]" id="discount_where_is">'
-		     . '<option>Выберите вариант</option>'
-		     . '<option value="sum" ' . selected( $discount_type, 'sum', 0 ) . '>сумма покупки </option>'
-		     . '</select>'
-		     . '<p class="description">если условие совпадёт, корзина покупателя будет пересчитана с учётом скидки</p></td>
-		</tr> ';
-
-		echo '<tr class="form-field discount-where-wrap">'
-		     . '<th scope="row"><label for="discount_where"> ' . __( 'Условие скидки', 'fast-shop' ) . ' </label></th>'
-		     . '<td><select name="fast-shop[discount_where]" id="discount_where">'
-		     . '<option>Выберите вариант</option>'
-		     . '<option value="' . esc_attr( '>=' ) . '" ' . selected( get_term_meta( $term->term_id, 'discount_where', 1 ), '>=', 0 ) . '>больше или равно</option>'
-		     . '<option value="' . esc_attr( '>' ) . '" ' . selected( get_term_meta( $term->term_id, 'discount_where', 1 ), '>', 0 ) . '>больше</option>'
-		     . '<option value="' . esc_attr( '<' ) . '" ' . selected( get_term_meta( $term->term_id, 'discount_where', 1 ), '<', 0 ) . '>меньше</option>'
-		     . '<option value="' . esc_attr( '<=' ) . '" ' . selected( get_term_meta( $term->term_id, 'discount_where', 1 ), '<=', 0 ) . '>меньше или равно</option>'
-		     . '</select>'
-		     . '</td>
-		</tr> ';
-
-		echo '<tr class="form-field discount-value-wrap">'
-		     . '<th scope="row"><label for="discount_product"> ' . __( 'Значение условия', 'fast-shop' ) . ' </label></th>'
-		     . '<td><input name="fast-shop[discount_value]" id="discount_value" value="' . esc_attr( get_term_meta( $term->term_id, 'discount_value', 1 ) ) . '">'
-		     . '<p class="description">' . esc_attr( 'сумма или количество в виде числа при которых скидка будет активирована.' ) . '</p></td> 
-		</tr> ';
-
-		echo '<tr class="form-field discount-amount-wrap">'
-		     . '<th scope="row"><label for="discount_amount"> ' . __( 'Значение скидки', 'fast-shop' ) . ' </label></th>'
-		     . '<td><input name="fast-shop[discount_amount]" id="discount_amount" value="' . esc_attr( get_term_meta( $term->term_id, 'discount_amount', 1 ) ) . '">'
-		     . '<p class="description">' . esc_attr( 'что будем отминусовывать от скидки, можно указать в виде "10%" или числа .' ) . '</p></td> 
-		</tr> ';
-
-	}
-
-	/**
-	 * Создаёт поле "Сообщение покупателю  для оплаты" при добававлении способа оплаты
-	 */
-	function add_fs_payment_methods_fields() {
-		echo '<div class="form-field pay-message-code-wrap">
-			<label for="pay-message"> ' . __( 'Сообщение покупателю  для оплаты', 'fast-shop' ) . ' </label>
-						<textarea name="fast-shop[pay-message]" id="pay-message" cols="40" rows="5"></textarea>
-			<p class="description">%pay_url% будет заменено на ссылку для оплаты, %pay_name% на название способа оплаты </p>
-		</div> ';
-
-	}
-
 
 	/**
 	 * метод срабатывает в момент сохранения доп. полей таксономии
@@ -655,11 +506,11 @@ class FS_Taxonomies_Class {
 		switch ( $column_name ) {
 			case 'сurrency-code':
 				//do your stuff here with $term or $term_id
-				$content = get_term_meta( $term_id, 'currency-code', 1 );
+				$content = get_term_meta( $term_id, '_fs_currency_code', 1 );
 				break;
 			case 'cost-basic':
 				//do your stuff here with $term or $term_id
-				$content = get_term_meta( $term_id, 'cost-basic', 1 );
+				$content = get_term_meta( $term_id, '_fs_currency_cost', 1 );
 				break;
 			default:
 				break;

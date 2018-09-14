@@ -9,4 +9,5 @@
        class="<?php echo esc_attr( $args['class'] ) ?>" value="<?php echo esc_html( $args['value'] ) ?>"
        placeholder="<?php echo esc_html( $args['placeholder'] ) ?>"
        title="<?php echo esc_attr( $args['title'] ) ?>"
+       step="<?php echo esc_attr( $args['step'] ) ?>"
     <?php if($args['required']) echo 'required' ?>>

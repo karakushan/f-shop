@@ -9,6 +9,7 @@
         id="<?php echo esc_attr( $args['id'] ) ?>"
         class="<?php echo esc_attr( $args['class'] ) ?>" <?php if ( $args['required'] )
 	echo 'required' ?>>
+  <option value=""><?php echo esc_html(  $args['first_option'] ) ?></option>
 	<?php if ( $args['values'] ): ?>
 		<?php foreach ( $args['values'] as $key => $value ): ?>
         <option

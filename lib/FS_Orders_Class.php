@@ -14,7 +14,8 @@ class FS_Orders_Class {
 	public $last_order_id = null;
 
 
-	function __construct() {
+	function __construct(  ) {
+
 		$this->order_statuses = FS_Config::default_order_statuses();
 
 
@@ -264,8 +265,7 @@ class FS_Orders_Class {
 	 *
 	 * @return array|null|object объект с заказами
 	 */
-	public
-	static function get_user_orders(
+	public function get_user_orders(
 		$user_id = 0, $status = false, $args = array()
 	) {
 
@@ -310,10 +310,7 @@ class FS_Orders_Class {
 		return $status;
 	}
 
-	public
-	static function get_order_items(
-		$order_id
-	) {
+	public function get_order_items( $order_id ) {
 		$order_id = (int) $order_id;
 		$products = get_post_meta( $order_id, '_products', 0 );
 		$products = $products[0];
@@ -346,11 +343,11 @@ class FS_Orders_Class {
 	 *
 	 * @return \stdClass
 	 */
-	public function get_order(
-		$order_id = 0
-	) {
+	public function get_order( $order_id = 0 ) {
+
 		global $fs_config;
-		$order               = new \stdClass();
+
+		$order = get_post( $order_id );
 		$user                = get_post_meta( $order_id, '_user', 0 );
 		$items               = get_post_meta( $order_id, '_products', 0 );
 		$delivery            = get_post_meta( $order_id, '_delivery', 0 );
@@ -370,7 +367,7 @@ class FS_Orders_Class {
 		}
 		$order->sum       = fs_get_total_amount( $order->items );
 		$order->status    = $this->get_order_status( $order_id );
-		$order->user_name = get_user_meta( $order->user['id'], 'nickname', true );
+		$order->user_name = ! empty( $order->user ) ? get_user_meta( $order->user['id'], 'nickname', true ) : '';
 		$order->exists    = ! get_post( $order_id ) ? false : true;
 
 

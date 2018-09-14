@@ -572,9 +572,14 @@ class FS_Config {
 		}
 	}
 
+	/**
+	 * Регистрация дополнительных полей таксономий
+	 *
+	 * @return mixed|void
+	 */
 	function get_taxonomy_fields() {
 		$fields = array(
-			'catalog' => array(
+			'catalog'             => array(
 				'_content'      => array(
 					'name' => __( 'Текст категории', 'fast-shop' ),
 					'type' => 'editor',
@@ -584,6 +589,59 @@ class FS_Config {
 					'name' => __( 'Миниатюра', 'fast-shop' ),
 					'type' => 'image',
 					'args' => array()
+				)
+			),
+			'fs-payment-methods'  => array(
+				'_thumbnail_id'    => array(
+					'name' => __( 'Миниатюра', 'fast-shop' ),
+					'type' => 'image',
+					'args' => array()
+				),
+				'_fs_pay_message'  => array(
+					'name' => __( 'Messages to the buyer for payment in this way', 'fast-shop' ),
+					'help' => __( 'This message is sent to the buyer at the time the manager confirms the order. You can use meta data of type: <code>%order_id%</code> - order number, <code>%pay_name%</code> - name of the payment method, <code>%pay_url%</code> - payment reference .', 'fast-shop' ),
+					'type' => 'textarea',
+					'args' => array()
+				),
+				'_fs_pay_inactive' => array(
+					'name' => __( 'Unavailable for payment', 'fast-shop' ),
+					'help' => __( 'If you turn off, then the payment method will not be visible to users, only in the admin panel.', 'fast-shop' ),
+					'type' => 'checkbox',
+					'args' => array()
+				)
+			),
+			'fs-delivery-methods' => array(
+				'_thumbnail_id'     => array(
+					'name' => __( 'Миниатюра', 'fast-shop' ),
+					'type' => 'image',
+					'args' => array()
+				),
+				'_fs_delivery_cost' => array(
+					'name' => __( 'Стоимость доставки в базовой валюте', 'fast-shop' ),
+					'type' => 'text',
+					'args' => array( 'style' => 'width:72px;' )
+				)
+			),
+			'fs-currencies'       => array(
+				'_fs_currency_code'    => array(
+					'name' => __( 'International currency code', 'fast-shop' ),
+					'type' => 'text',
+					'args' => array()
+				),
+				'_fs_currency_cost'    => array(
+					'name' => __( 'Cost in base currency', 'fast-shop' ),
+					'type' => 'number',
+					'args' => array( 'step' => 0.01 )
+				),
+				'_fs_currency_display' => array(
+					'name' => __( 'Display on the site', 'fast-shop' ),
+					'type' => 'text',
+					'args' => array()
+				),
+				'_fs_currency_locale'  => array(
+					'name' => __( 'Currency Language (locale)', 'fast-shop' ),
+					'type' => 'select',
+					'args' => array( 'values' => $this->get_locales(), )
 				)
 			)
 

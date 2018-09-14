@@ -61,6 +61,10 @@ class FS_Form_Class {
 			'label_position' => 'before',
 			'taxonomy'       => 'category',
 			'help'           => '',
+			'size'           => '',
+			'style'          => '',
+			'step'           => 1,
+			'first_option'   => __( 'Select'),
 			'class'          => str_replace( '_', '-', sanitize_title( 'fs-' . $type . '-field' ) ),
 			'id'             => str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $type ) ),
 			'default'        => '',
@@ -80,7 +84,7 @@ class FS_Form_Class {
 			}
 			include FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
 
-			if ( ( !empty($args['label']) || !empty($args['help']) ) && $args['label_position'] == 'after' ) {
+			if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
 				echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] );
 				if ( $args['help'] ) {
 					echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';

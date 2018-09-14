@@ -19,10 +19,18 @@ class FS_Payment_Class {
 	 * Возвращает все зарегистрированные способы оплаты в виде масссива
 	 * @return mixed|void
 	 */
-	function payment_methods( $order_id = 0 ) {
-		$methods = array();
+	function payment_methods() {
+		$methods = array(
+			'liqpay' => array(
+				'name'        => 'Liqpay',
+				'html'        => '',
+				'description' => 'liqpay desc',
+				'logo'        => 'https://via.placeholder.com/300x300'
+			)
+		);
 
-		return apply_filters( "fs_payment_methods", $methods, $order_id );
+
+		return apply_filters( "fs_payment_methods", $methods );
 	}
 
 	/**
@@ -31,40 +39,53 @@ class FS_Payment_Class {
 	 * Выводит необходимые формы, кнопки, ссылки для оплаты выбранным методом
 	 * Также после оплаты идёт переадресация на эту страницу
 	 *
-	 * @param int $order_id
+	 * @param array $atts - атрибуты шорткода
 	 *
 	 * @return string
 	 */
-	function order_pay( $order_id = 0 ) {
-		$html = '';
-		if ( empty( $order_id ) && ! empty( $_GET['order_id'] ) ) {
-			$order_id = intval( $_GET['order_id'] );
-		}
-		$order = FS_Orders_Class::get_order( $order_id );
-		switch ( (string) $_GET['fs-action'] ) {
-			case 'order_status':
-				$order_status =FS_Orders_Class::get_order_status($order_id);
-				$html         .= '<div class="fs-order-status">Статус заказа №' . $order_id . ': <b>' . $order_status . '</b></div>';
-				break;
-			case 'payment_method':
-				$method_name    = sanitize_text_field( $_GET['payment_method'] );
-				$payment_method = $this->payment_methods( $order_id );
-				$html           .= '<h3>Оплата заказа №' . $order_id . ' с помощью ' . $payment_method[ $method_name ]['name'] . '</h3>';
-				$html           .= '<div class="fs-pay-wrapper">';
-				$html           .= '<div class="amount">Сумма покупки: ' . $order->sum . ' ' . fs_currency() . '</div>';
-				$html           .= $payment_method[ $method_name ]['image'];
-				$html           .= $payment_method[ $method_name ]['html'];
-				$html           .= '</div>';
-				break;
+	function order_pay( $atts ) {
+		$atts            = shortcode_atts( array(
+			'item-wrapper-class' => 'col-lg-2 col-sm-6',
+			'item-class'         => 'fs-pay-item'
+		), $atts );
+		$order_class     = new FS_Orders_Class();
+		$order_id        = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
+		$order           = $order_class->get_order( $order_id );
+		$payment_methods = $this->payment_methods();
 
-			default:
-				$html .= '<p>Похоже вы попали на эту страницу случайно</p>';
-				break;
+		do_action( 'fs_order_pay_before' );
+		$html = '<div class="fs-order-pay">';
+		$html .= '<h3>Доступные способы оплаты онлайн</h3>';
+		$html .= '<p>Если выбранный ранее способ оплаты не подходит вам, вы можете оплатить одним из способов ниже:</p>';
+		$html .= '<div class="row">';
 
+		if ( $payment_methods ) {
+			foreach ( $payment_methods as $id => $payment_method ) {
+				$html .= '<div class="' . esc_attr( $atts['item-wrapper-class'] ) . '">';
+				$html .= '<a href="' . esc_url( add_query_arg( array( 'pay_method' => $id ) ) ) . '" class="' . esc_attr( $atts['item-class'] ) . '" id="' . esc_attr( $id ) . '">';
+				$html .= '<figure><img src="' . esc_url( $payment_method['logo'] ) . '" alt="' . esc_attr( $payment_method['name'] ) . '"></figure>';
+				$html .= '<h4>' . esc_html( $payment_method['name'] ) . '</h4>';
+				$html .= '</a>';
+				$html .= '</div>';
+
+			}
 		}
+		$html .= '</div>';
+		if ( in_array( get_post_status( $order_id ), array( 'paid' ) ) ) {
+			return sprintf( '<h2>Заказ #%d успешно оплачен</h2>', $order_id );
+		} else {
+			if ( ! empty( $_GET['pay_method'] ) && ! empty( $payment_methods[ $_GET['pay_method'] ] ) ) {
+
+				$html .= sprintf( '<h2>Оплата <span>%s <span>%s</span></span> с  помощью  <span>%s</span></h2>', apply_filters( 'fs_price_format', $order->sum ), fs_currency(), $payment_methods[ $_GET['pay_method'] ]['name'] );
+				if ( ! empty( $payment_methods[ $_GET['pay_method'] ]['description'] ) ) {
+					$html .= sprintf( '<p>%s</p>', $payment_methods[ $_GET['pay_method'] ]['description'] );
+				}
+				$html .= $payment_methods[ $_GET['pay_method'] ]['html'];
+			}
+		}
+
 
 		return $html;
-
 	}
 
 
@@ -77,7 +98,7 @@ class FS_Payment_Class {
 		if ( $this->payment_methods( $order_id ) ) {
 			foreach ( $this->payment_methods( $order_id ) as $k => $payment_method ) {
 				printf( '<a href="%s">%s</a>', esc_url( add_query_arg( array(
-					'fs-action'         => 'payment_method',
+					'fs-action'      => 'payment_method',
 					'order_id'       => $order_id,
 					'payment_method' => $k
 				), get_permalink( fs_option( 'page_payment' ) ) ) ), $payment_method['name'] );

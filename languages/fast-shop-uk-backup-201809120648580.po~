@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-02 17:33+0000\n"
+"POT-Creation-Date: 2018-09-12 06:47+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2018-07-02 17:40+0000\n"
+"PO-Revision-Date: 2018-09-12 06:48+0000\n"
 "Last-Translator: cube44-admin <karakushan@gmail.com>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -27,15 +27,19 @@ msgstr ""
 msgid "E-mail"
 msgstr ""
 
-#: functions/filters.php:62
+#: functions/filters.php:65
+msgid "Sort"
+msgstr ""
+
+#: functions/filters.php:67
 msgid "ID"
 msgstr ""
 
-#: functions/filters.php:144
+#: functions/filters.php:163
 msgid "email"
 msgstr ""
 
-#: functions/functions.php:1352
+#: functions/functions.php:1351
 #, php-format
 msgid "Template file %s not found in function %s"
 msgstr ""
@@ -45,31 +49,7 @@ msgstr ""
 msgid "Showing %1$d products from %2$d"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:59 lib/FS_Price_Widget.php:32
-msgid "Title"
-msgstr "Заголовок"
-
-#: lib/FS_Attribute_Widget.php:66
-msgid "Feature Group"
-msgstr "Група характеристик"
-
-#: lib/FS_Attribute_Widget.php:71
-msgid "Type"
-msgstr "Тип"
-
-#: lib/FS_Attribute_Widget.php:74
-msgid "Normal"
-msgstr "Звичайний"
-
-#: lib/FS_Attribute_Widget.php:76
-msgid "Color"
-msgstr "Колір"
-
-#: lib/FS_Attribute_Widget.php:78
-msgid "Image"
-msgstr "Зображення"
-
-#: lib/FS_Config.php:123 lib/FS_Config.php:310
+#: lib/FS_Config.php:123 lib/FS_Config.php:312
 msgid "Базовая цена"
 msgstr ""
 
@@ -77,7 +57,7 @@ msgstr ""
 msgid "Основной тип цены"
 msgstr ""
 
-#: lib/FS_Config.php:130 lib/FS_Config.php:315
+#: lib/FS_Config.php:130 lib/FS_Config.php:317
 msgid "Акционная цена"
 msgstr ""
 
@@ -85,158 +65,134 @@ msgstr ""
 msgid "Этот тип изменяет базовую цену отображаемую по умолчанию"
 msgstr ""
 
-#: lib/FS_Config.php:155
-msgid "Your email"
-msgstr "Ваш e-mail"
-
-#: lib/FS_Config.php:156
-msgid "Keep the correct email"
-msgstr "Введіть коректний номер телефону"
-
-#: lib/FS_Config.php:162
-msgid "Firts name"
-msgstr "Ваше ім`я"
-
 #: lib/FS_Config.php:174
 msgid "Телефон"
 msgstr ""
 
-#: lib/FS_Config.php:175
-msgid "Keep the correct phone number"
-msgstr "Введіть коректний номер телефону"
-
-#: lib/FS_Config.php:196
-msgid "House number"
-msgstr "Номер будинку"
-
-#: lib/FS_Config.php:203
-msgid "Apartment number"
-msgstr "Номер квартири"
-
-#: lib/FS_Config.php:210
-msgid "Branch number"
-msgstr "Номер відділення"
-
-#: lib/FS_Config.php:229
-msgid "Comment"
-msgstr "Коментар"
-
-#: lib/FS_Config.php:258 templates/front-end/cart/list-products.php:115
-msgid "Checkout"
-msgstr "Відправка замовлення"
-
-#: lib/FS_Config.php:305
+#: lib/FS_Config.php:307
 msgid "Цены"
 msgstr ""
 
-#: lib/FS_Config.php:307
+#: lib/FS_Config.php:309
 msgid "В этой вкладке вы можете настроить цены товаров"
 msgstr ""
 
-#: lib/FS_Config.php:312
+#: lib/FS_Config.php:314
 msgid "Это основная цена на сайте. Поле обязательное!"
 msgstr ""
 
-#: lib/FS_Config.php:317
+#: lib/FS_Config.php:319
 msgid ""
 "Если это поле заполнено, то базовая цена теряет свою актуальность. Но вы "
 "можете отображать её на сайте."
 msgstr ""
 
-#: lib/FS_Config.php:320
+#: lib/FS_Config.php:322
 msgid "Валюта товара"
 msgstr ""
 
-#: lib/FS_Config.php:322
-msgid "Поле можно использовать если вы включили мультивалютность в настроках."
+#: lib/FS_Config.php:325
+msgid "Поле активно если вы включили мультивалютность в настроках."
 msgstr ""
 
-#: lib/FS_Config.php:352
-msgid "Variation"
-msgstr "Варіації"
+#: lib/FS_Config.php:584
+msgid "Текст категории"
+msgstr ""
 
-#: lib/FS_Config.php:370 lib/FS_Filters.php:361
-msgid "recently added"
-msgstr "недавно додані"
+#: lib/FS_Config.php:589 lib/FS_Config.php:596 lib/FS_Config.php:615
+msgid "Миниатюра"
+msgstr ""
 
-#: lib/FS_Config.php:373 lib/FS_Filters.php:364
-msgid "later added"
-msgstr "давніше додані"
+#: lib/FS_Config.php:620
+msgid "Стоимость доставки в базовой валюте"
+msgstr ""
 
-#: lib/FS_Config.php:376 lib/FS_Filters.php:367
-msgid "from cheap to expensive"
-msgstr "від дешевих до дорогих"
+#: lib/FS_Config.php:627
+msgid "International currency code"
+msgstr "Міжнародний код валюти"
 
-#: lib/FS_Config.php:379 lib/FS_Filters.php:370
-msgid "from expensive to cheap"
-msgstr "від дорогих до дешевих"
+#: lib/FS_Config.php:632
+msgid "Cost in base currency"
+msgstr "Вартість у базовій валюті"
 
-#: lib/FS_Config.php:382 lib/FS_Filters.php:373
-msgid "by title A to Z"
-msgstr "за назвою від А до Я"
+#: lib/FS_Config.php:637
+msgid "Display on the site"
+msgstr "Відображення на сайті"
 
-#: lib/FS_Config.php:385 lib/FS_Filters.php:376
-msgid "by title Z to A"
-msgstr "за назвою від Я до А"
+#: lib/FS_Config.php:642
+msgid "Currency Language (locale)"
+msgstr ""
 
-#: lib/FS_Settings_Class.php:28
+#: lib/FS_Form_Class.php:67
+msgid "Select"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:43
 msgid "Главное"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:50
+#: lib/FS_Settings_Class.php:92
 msgid "Покупатели"
 msgstr ""
 
-#: lib/FS_Shortcode.php:53
-msgid "Wish list is empty"
-msgstr "Список побажань порожній"
+#: lib/FS_Settings_Class.php:249
+msgid "Отладка"
+msgstr ""
 
-#: lib/FS_Shortcode.php:104 templates/front-end/cart/list-products.php:119
-msgid "Your basket is empty"
-msgstr "Ваш кошик порожній"
-
-#: lib/FS_Shortcode.php:105 templates/front-end/cart/list-products.php:121
-msgid "To the catalog"
-msgstr "Перейти в  каталог"
-
-#: lib/FS_Taxonomies_Class.php:334 lib/FS_Taxonomies_Class.php:372
+#: lib/FS_Taxonomies_Class.php:410 lib/FS_Taxonomies_Class.php:448
 msgid "Отображение валюты на сайте"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:336 lib/FS_Taxonomies_Class.php:374
+#: lib/FS_Taxonomies_Class.php:412 lib/FS_Taxonomies_Class.php:450
 msgid "Если не указать будет отображаться код валюты типа USD"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:341 lib/FS_Taxonomies_Class.php:380
+#: lib/FS_Taxonomies_Class.php:417 lib/FS_Taxonomies_Class.php:456
 msgid "Язык валюты"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:345 lib/FS_Taxonomies_Class.php:385
+#: lib/FS_Taxonomies_Class.php:421 lib/FS_Taxonomies_Class.php:461
 msgid "Доступные языки"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:351 lib/FS_Taxonomies_Class.php:391
+#: lib/FS_Taxonomies_Class.php:427 lib/FS_Taxonomies_Class.php:467
 msgid "Выберите язык из выпадающего списка"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:402 lib/FS_Taxonomies_Class.php:458
+#: lib/FS_Taxonomies_Class.php:478 lib/FS_Taxonomies_Class.php:535
 msgid "Сообщение покупателю  для оплаты"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:419
+#: lib/FS_Taxonomies_Class.php:495
 msgid "Скидка активируется если"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:428
+#: lib/FS_Taxonomies_Class.php:504
 msgid "Условие скидки"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:440
+#: lib/FS_Taxonomies_Class.php:516
 msgid "Значение условия"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:446
+#: lib/FS_Taxonomies_Class.php:522
 msgid "Значение скидки"
+msgstr ""
+
+#: lib/FS_Users_Class.php:269
+msgid "Вы уже вошли на сайт."
+msgstr ""
+
+#: templates/back-end/fields/image.php:15
+msgid "Добавить/Заменить"
+msgstr ""
+
+#: templates/back-end/fields/image.php:19
+msgid "Удалить"
+msgstr ""
+
+#: templates/back-end/fields/image.php:20
+msgid "Вы точно намерены удалить изображение?"
 msgstr ""
 
 #: templates/back-end/metabox/other.php:21
@@ -254,18 +210,6 @@ msgstr ""
 #: templates/back-end/metabox/other.php:47
 msgid "Включить метку \"Новинка\""
 msgstr ""
-
-#: templates/front-end/cart/list-products.php:29
-msgid "Quantity"
-msgstr "Кількість"
-
-#: templates/front-end/cart/list-products.php:84
-msgid "Continue shopping"
-msgstr "Продовжити покупки"
-
-#: templates/front-end/cart/list-products.php:100
-msgid "Cost of goods"
-msgstr "Вартість товарів"
 
 #. Name of the plugin
 msgid "F-Shop"
@@ -331,54 +275,67 @@ msgstr "Адреса доставки"
 msgid "Site name"
 msgstr "Назва сайту"
 
-#: functions/attributes.php:135 functions/filters.php:94
+#: functions/attributes.php:135 functions/filters.php:113
 msgid "in stock"
 msgstr "на складі"
 
-#: functions/attributes.php:136 functions/filters.php:96
+#: functions/attributes.php:136 functions/filters.php:115
 msgid "not available"
 msgstr "нема в наявності"
 
-#: functions/filters.php:63 functions/filters.php:165
+#: functions/filters.php:66 lib/FS_Attribute_Widget.php:59
+#: lib/FS_Price_Widget.php:32
+msgid "Title"
+msgstr "Заголовок"
+
+#: functions/filters.php:68 functions/filters.php:184
 #: templates/front-end/cart/list-products.php:26
-#: templates/front-end/mail/themes/oxygen.php:456
+#: templates/front-end/mail/themes/oxygen.php:455
 msgid "Price"
 msgstr "Ціна"
 
-#: functions/filters.php:64 functions/filters.php:171
+#: functions/filters.php:69 functions/filters.php:190
 #: templates/front-end/cart/list-products.php:23
 msgid "Vendor code"
 msgstr "Код виробника (артикул)"
 
-#: functions/filters.php:65 functions/filters.php:176
+#: functions/filters.php:70 functions/filters.php:195
 msgid "Stock in stock"
 msgstr "Є в наявності"
 
-#: functions/filters.php:66 templates/front-end/cart/list-products.php:17
+#: functions/filters.php:71 templates/front-end/cart/list-products.php:17
 msgid "Photo"
 msgstr "Фото"
 
-#: functions/filters.php:105
+#: functions/filters.php:72 lib/FS_Taxonomies_Class.php:39
+#: lib/FS_Taxonomies_Class.php:41 lib/FS_Taxonomies_Class.php:43
+#: lib/FS_Taxonomies_Class.php:44 lib/FS_Taxonomies_Class.php:45
+#: lib/FS_Taxonomies_Class.php:46 lib/FS_Taxonomies_Class.php:48
+#: lib/FS_Taxonomies_Class.php:50 lib/FS_Taxonomies_Class.php:51
+msgid "Product categories"
+msgstr "Категорії товару"
+
+#: functions/filters.php:124
 msgid "no photo"
 msgstr "нема фото"
 
-#: functions/filters.php:117
+#: functions/filters.php:136
 msgid "Total cost"
 msgstr "Загальна сумма"
 
-#: functions/filters.php:118
+#: functions/filters.php:137
 msgid "Customer"
 msgstr "Замовник"
 
-#: functions/filters.php:143
+#: functions/filters.php:162
 msgid "phone"
 msgstr "телефон"
 
-#: functions/filters.php:145
+#: functions/filters.php:164
 msgid "city"
 msgstr "місто"
 
-#: functions/filters.php:176
+#: functions/filters.php:195
 msgid "units"
 msgstr "одиниць"
 
@@ -387,72 +344,169 @@ msgstr "одиниць"
 msgid "Remove items %s"
 msgstr "Видалити товар %s"
 
-#: functions/functions.php:760
+#: functions/functions.php:759
 #, php-format
 msgid "Item «%s» added to comparison"
 msgstr "Товар «%s» додано до порівняння"
 
-#: functions/functions.php:761
+#: functions/functions.php:760
 msgid "Error adding product to comparison"
 msgstr "Виникла помилка при доданні товару в список порівняння"
 
-#: functions/functions.php:1128
+#: functions/functions.php:1127
 msgid "Remove all items"
 msgstr "Видалити всі товари"
 
-#: functions/functions.php:1232
+#: functions/functions.php:1231
 msgid "Item added to wishlist"
 msgstr "Товар додано в список бажань"
 
-#: lib/FS_Ajax_Class.php:373 lib/FS_Post_Type.php:92
-msgid "Order"
-msgstr "Замовлення"
+#: lib/FS_Attribute_Widget.php:66
+msgid "Feature Group"
+msgstr "Група характеристик"
 
-#: lib/FS_Config.php:216 lib/FS_Taxonomies_Class.php:83
-msgid "Delivery method"
-msgstr "Спосіб доставки"
+#: lib/FS_Attribute_Widget.php:71
+msgid "Type"
+msgstr "Тип"
 
-#: lib/FS_Config.php:222 lib/FS_Taxonomies_Class.php:66
-#: templates/front-end/auth/profile.php:53
-#: templates/front-end/auth/register.php:61
-msgid "Payment method"
-msgstr "Спосіб оплати"
+#: lib/FS_Attribute_Widget.php:74
+msgid "Normal"
+msgstr "Звичайний"
 
-#: lib/FS_Config.php:234
+#: lib/FS_Attribute_Widget.php:76
+msgid "Color"
+msgstr "Колір"
+
+#: lib/FS_Attribute_Widget.php:78
+msgid "Image"
+msgstr "Зображення"
+
+#: lib/FS_Config.php:155
+msgid "Your email"
+msgstr "Ваш e-mail"
+
+#: lib/FS_Config.php:156
+msgid "Keep the correct email"
+msgstr "Введіть коректний e-mail"
+
+#: lib/FS_Config.php:162
+msgid "Firts name"
+msgstr "Ваше ім`я"
+
+#: lib/FS_Config.php:175
+msgid "Keep the correct phone number"
+msgstr "Введіть коректний номер телефону"
+
+#: lib/FS_Config.php:196
+msgid "House number"
+msgstr "Номер будинку"
+
+#: lib/FS_Config.php:203
+msgid "Apartment number"
+msgstr "Номер квартири"
+
+#: lib/FS_Config.php:210
+msgid "Branch number"
+msgstr "Номер відділення"
+
+#: lib/FS_Config.php:230
+msgid "Comment"
+msgstr "Коментар"
+
+#: lib/FS_Config.php:235
 msgid "Register on the site"
 msgstr "Зареєструватися на сайті"
 
-#: lib/FS_Config.php:241
+#: lib/FS_Config.php:243
 msgid "US dollar"
 msgstr "Долар США"
 
-#: lib/FS_Config.php:242
+#: lib/FS_Config.php:244
 msgid "Ukrainian hryvnia"
 msgstr "Гривня"
 
-#: lib/FS_Config.php:243
+#: lib/FS_Config.php:245
 msgid "Russian ruble"
 msgstr "Російський рубль"
 
-#: lib/FS_Config.php:248
+#: lib/FS_Config.php:250
 msgid "Client"
 msgstr "Клієнт"
 
-#: lib/FS_Config.php:328
+#: lib/FS_Config.php:260 templates/front-end/cart/list-products.php:115
+msgid "Checkout"
+msgstr "Відправка замовлення"
+
+#: lib/FS_Config.php:331
 msgid "Gallery"
 msgstr "Галерея"
 
-#: lib/FS_Config.php:334
+#: lib/FS_Config.php:337
 msgid "Attributes"
 msgstr "Атрибути"
 
-#: lib/FS_Config.php:340
+#: lib/FS_Config.php:343
 msgid "Other"
 msgstr "Інше"
 
-#: lib/FS_Config.php:346
+#: lib/FS_Config.php:349
 msgid "Associated"
 msgstr "Схоже"
+
+#: lib/FS_Config.php:355
+msgid "Variation"
+msgstr "Варіації"
+
+#: lib/FS_Config.php:373 lib/FS_Filters.php:365
+msgid "recently added"
+msgstr "недавно додані"
+
+#: lib/FS_Config.php:376 lib/FS_Filters.php:368
+msgid "later added"
+msgstr "давніше додані"
+
+#: lib/FS_Config.php:379 lib/FS_Filters.php:371
+msgid "from cheap to expensive"
+msgstr "від дешевих до дорогих"
+
+#: lib/FS_Config.php:382 lib/FS_Filters.php:374
+msgid "from expensive to cheap"
+msgstr "від дорогих до дешевих"
+
+#: lib/FS_Config.php:385 lib/FS_Filters.php:377
+msgid "by title A to Z"
+msgstr "за назвою від А до Я"
+
+#: lib/FS_Config.php:388 lib/FS_Filters.php:380
+msgid "by title Z to A"
+msgstr "за назвою від Я до А"
+
+#: lib/FS_Config.php:601
+msgid "Messages to the buyer for payment in this way"
+msgstr "Повідомлення покупцю для оплати даним способом"
+
+#: lib/FS_Config.php:602
+msgid ""
+"This message is sent to the buyer at the time the manager confirms the order."
+" You can use meta data of type: <code>%order_id%</code> - order number, "
+"<code>%pay_name%</code> - name of the payment method, <code>%pay_url%</code> "
+"- payment reference ."
+msgstr ""
+"Це повідомлення відсилається покупцеві в той момент коли менеджер "
+"підтверджує замовлення. Ви можете вживати мета дані типу: <code>"
+"%order_id%</code> - номер замовлення, <code>%pay_name% </code> - назва "
+"способу оплати, <code>%pay_url%</code> - посилання для оплати ."
+
+#: lib/FS_Config.php:607
+msgid "Unavailable for payment"
+msgstr "Недоступний для оплати"
+
+#: lib/FS_Config.php:608
+msgid ""
+"If you turn off, then the payment method will not be visible to users, only "
+"in the admin panel."
+msgstr ""
+"Якщо вимкнути, то спосіб плати не буде видно користувачам, тільки в адмінці."
 
 #: lib/FS_Export_Class.php:163
 msgid "Update/create database was successful!"
@@ -462,120 +516,124 @@ msgstr "Обновлення/створення бази пройшло успі
 msgid "An error occurred during the process of database updates!"
 msgstr "Під час процесу оновлення бази даних сталася помилка!"
 
-#: lib/FS_Filters.php:77 lib/FS_Taxonomies_Class.php:42
+#: lib/FS_Filters.php:86 lib/FS_Taxonomies_Class.php:42
 msgid "Product category"
 msgstr "Категорія товару"
 
-#: lib/FS_Form_Class.php:135
+#: lib/FS_Form_Class.php:117
 msgid "this field is required"
 msgstr "це поле є обов'язковим"
 
-#: lib/FS_Form_Class.php:207
-msgid "Select page"
-msgstr "Виберіть сторінку"
-
-#: lib/FS_Orders_Class.php:86
+#: lib/FS_Orders_Class.php:109
 msgid "Date of purchase"
 msgstr "Дата покупки"
 
-#: lib/FS_Orders_Class.php:87
+#: lib/FS_Orders_Class.php:110
 msgid "Last modified"
 msgstr "Останні зміни"
 
-#: lib/FS_Orders_Class.php:105
+#: lib/FS_Orders_Class.php:128
 msgid "Order number is not specified"
 msgstr "Номер замовлення не знайдено"
 
-#: lib/FS_Orders_Class.php:284
+#: lib/FS_Orders_Class.php:306
 msgid "The order status is not defined"
 msgstr "Статус замовлення не визначено"
 
-#: lib/FS_Post_Type.php:47 lib/FS_Post_Type.php:58
+#: lib/FS_Post_Type.php:48 lib/FS_Post_Type.php:59 lib/FS_Settings_Class.php:66
 msgid "Products"
 msgstr "Товари"
 
-#: lib/FS_Post_Type.php:48 templates/front-end/cart/list-products.php:20
+#: lib/FS_Post_Type.php:49 templates/front-end/cart/list-products.php:20
 msgid "Product"
 msgstr "Товар"
 
-#: lib/FS_Post_Type.php:49
+#: lib/FS_Post_Type.php:50
 msgid "Add product"
 msgstr "Додати товар"
 
-#: lib/FS_Post_Type.php:51
+#: lib/FS_Post_Type.php:52
 msgid "Edit product"
 msgstr "Редагувати товар"
 
-#: lib/FS_Post_Type.php:91 lib/FS_Post_Type.php:102
+#: lib/FS_Post_Type.php:93 lib/FS_Post_Type.php:104
 #: templates/back-end/orders.php:2
 msgid "Orders"
 msgstr "Замовлення"
 
-#: lib/FS_Post_Type.php:93
+#: lib/FS_Post_Type.php:94
+msgid "Order"
+msgstr "Замовлення"
+
+#: lib/FS_Post_Type.php:95
 msgid "Add Order"
 msgstr "Створити замовлення"
 
-#: lib/FS_Post_Type.php:95
+#: lib/FS_Post_Type.php:97
 msgid "Edit order"
 msgstr "Змінити замовлення"
 
-#: lib/FS_Post_Type.php:200
+#: lib/FS_Post_Type.php:214
 msgid "Product settings"
 msgstr "Налаштування товару"
 
-#: lib/FS_Post_Type.php:210
+#: lib/FS_Post_Type.php:224
 msgid "List of products"
 msgstr "Список товарів"
 
-#: lib/FS_Post_Type.php:220
+#: lib/FS_Post_Type.php:234
 msgid "Customer data"
 msgstr "Дані замовника"
 
-#: lib/FS_Post_Type.php:328
+#: lib/FS_Post_Type.php:346
 msgid "Template file not found"
 msgstr "Файл шаблону не знайдено"
 
-#: lib/FS_Settings_Class.php:72 lib/FS_Taxonomies_Class.php:139
-#: lib/FS_Taxonomies_Class.php:141
+#: lib/FS_Settings_Class.php:106 lib/FS_Taxonomies_Class.php:138
+#: lib/FS_Taxonomies_Class.php:140
 msgid "Currencies"
 msgstr "Валюти"
 
-#: lib/FS_Settings_Class.php:102
+#: lib/FS_Settings_Class.php:136
 msgid "Letters"
 msgstr "Пошта"
 
-#: lib/FS_Settings_Class.php:152
+#: lib/FS_Settings_Class.php:194
 msgid "Page"
 msgstr "Службові сторінки"
 
-#: lib/FS_Settings_Class.php:219
+#: lib/FS_Settings_Class.php:281
 msgid "Select currency"
 msgstr "Виберіть валюту"
 
-#: lib/FS_Settings_Class.php:243 lib/FS_Settings_Class.php:244
-#: lib/FS_Settings_Class.php:256
+#: lib/FS_Settings_Class.php:305 lib/FS_Settings_Class.php:306
+#: lib/FS_Settings_Class.php:318
 msgid "Store settings"
 msgstr "Налаштування магазину"
 
-#: lib/FS_Shortcode.php:184
+#: lib/FS_Shortcode.php:54
+msgid "Wish list is empty"
+msgstr "Список побажань порожній"
+
+#: lib/FS_Shortcode.php:105 templates/front-end/cart/list-products.php:119
+msgid "Your basket is empty"
+msgstr "Ваш кошик порожній"
+
+#: lib/FS_Shortcode.php:106 templates/front-end/cart/list-products.php:121
+msgid "To the catalog"
+msgstr "Перейти в  каталог"
+
+#: lib/FS_Shortcode.php:185
 msgid "Register to view this page"
 msgstr "Зареєструватися на сайті"
 
-#: lib/FS_Shortcode.php:188
+#: lib/FS_Shortcode.php:189
 msgid "Order not found"
 msgstr "Замовлення не знайдено"
 
-#: lib/FS_Shortcode.php:192
+#: lib/FS_Shortcode.php:193
 msgid "Details of this order are not available for you"
 msgstr "Деталі цього замовлення недоступні для вас"
-
-#: lib/FS_Taxonomies_Class.php:39 lib/FS_Taxonomies_Class.php:41
-#: lib/FS_Taxonomies_Class.php:43 lib/FS_Taxonomies_Class.php:44
-#: lib/FS_Taxonomies_Class.php:45 lib/FS_Taxonomies_Class.php:46
-#: lib/FS_Taxonomies_Class.php:48 lib/FS_Taxonomies_Class.php:50
-#: lib/FS_Taxonomies_Class.php:51
-msgid "Product categories"
-msgstr "Категорії товару"
 
 #: lib/FS_Taxonomies_Class.php:47
 msgid "Category editing"
@@ -585,78 +643,87 @@ msgstr "Редагування категорії"
 msgid "Add category"
 msgstr "Додати категорію"
 
-#: lib/FS_Taxonomies_Class.php:63 lib/FS_Taxonomies_Class.php:65
+#: lib/FS_Taxonomies_Class.php:62 lib/FS_Taxonomies_Class.php:64
 msgid "Payment methods"
 msgstr "Способи оплати"
 
-#: lib/FS_Taxonomies_Class.php:67
+#: lib/FS_Taxonomies_Class.php:65 templates/front-end/auth/profile.php:53
+#: templates/front-end/auth/register.php:61
+msgid "Payment method"
+msgstr "Спосіб оплати"
+
+#: lib/FS_Taxonomies_Class.php:66
 msgid "Add a payment method"
 msgstr "Додати спосіб оплати"
 
-#: lib/FS_Taxonomies_Class.php:80 lib/FS_Taxonomies_Class.php:82
+#: lib/FS_Taxonomies_Class.php:79 lib/FS_Taxonomies_Class.php:81
 msgid "Delivery methods"
 msgstr "Способи доставки"
 
-#: lib/FS_Taxonomies_Class.php:84
+#: lib/FS_Taxonomies_Class.php:82
+msgid "Delivery method"
+msgstr "Спосіб доставки"
+
+#: lib/FS_Taxonomies_Class.php:83
 msgid "Add a delivery method"
 msgstr "Додати спосіб доставки"
 
-#: lib/FS_Taxonomies_Class.php:97 lib/FS_Taxonomies_Class.php:99
-#: lib/FS_Taxonomies_Class.php:100
+#: lib/FS_Taxonomies_Class.php:96 lib/FS_Taxonomies_Class.php:98
+#: lib/FS_Taxonomies_Class.php:99
 msgid "Product attributes"
 msgstr "Характеристики товару"
 
-#: lib/FS_Taxonomies_Class.php:101
+#: lib/FS_Taxonomies_Class.php:100
 msgid "Add property / group of properties"
 msgstr "Додати характеристику/групу характеристик"
 
-#: lib/FS_Taxonomies_Class.php:117 lib/FS_Taxonomies_Class.php:119
+#: lib/FS_Taxonomies_Class.php:116 lib/FS_Taxonomies_Class.php:118
 msgid "Discounts"
 msgstr "Знижки"
 
-#: lib/FS_Taxonomies_Class.php:120
+#: lib/FS_Taxonomies_Class.php:119
 #: templates/front-end/cart/list-products.php:104
 msgid "Discount"
 msgstr "Знижка"
 
-#: lib/FS_Taxonomies_Class.php:121
+#: lib/FS_Taxonomies_Class.php:120
 msgid "Add Discount"
 msgstr "Додати знижку"
 
-#: lib/FS_Taxonomies_Class.php:142
+#: lib/FS_Taxonomies_Class.php:141
 msgid "Currency"
 msgstr "Валюта"
 
-#: lib/FS_Taxonomies_Class.php:143
+#: lib/FS_Taxonomies_Class.php:142
 msgid "Add Currency"
 msgstr "Додати валюту"
 
-#: lib/FS_Taxonomies_Class.php:320 lib/FS_Taxonomies_Class.php:357
-#: lib/FS_Taxonomies_Class.php:572
+#: lib/FS_Taxonomies_Class.php:396 lib/FS_Taxonomies_Class.php:433
+#: lib/FS_Taxonomies_Class.php:650
 msgid "Currency code"
 msgstr "Код валюти"
 
-#: lib/FS_Taxonomies_Class.php:322 lib/FS_Taxonomies_Class.php:359
+#: lib/FS_Taxonomies_Class.php:398 lib/FS_Taxonomies_Class.php:435
 msgid "International Currency Symbol"
 msgstr "Міжнародне позначення валюти"
 
-#: lib/FS_Taxonomies_Class.php:326 lib/FS_Taxonomies_Class.php:364
+#: lib/FS_Taxonomies_Class.php:402 lib/FS_Taxonomies_Class.php:440
 msgid "Cost in basic currency"
 msgstr "Вартість  в базовій валюті"
 
-#: lib/FS_Taxonomies_Class.php:328 lib/FS_Taxonomies_Class.php:366
+#: lib/FS_Taxonomies_Class.php:404 lib/FS_Taxonomies_Class.php:442
 msgid "Only digits with a dot are allowed"
 msgstr "Дозволено тільки цифри і точки"
 
-#: lib/FS_Taxonomies_Class.php:573
+#: lib/FS_Taxonomies_Class.php:651
 #: templates/front-end/cart/list-products.php:32
 msgid "Cost"
 msgstr "Вартість"
 
 #: templates/back-end/orders.php:36
 #: templates/front-end/cart/list-products.php:108
-#: templates/front-end/mail/themes/oxygen.php:459
-#: templates/front-end/mail/themes/oxygen.php:512
+#: templates/front-end/mail/themes/oxygen.php:458
+#: templates/front-end/mail/themes/oxygen.php:511
 msgid "Total"
 msgstr "Всього"
 
@@ -672,7 +739,7 @@ msgstr[2] "%s замовлень"
 msgid "At the current time you have no order."
 msgstr "В даний час у вас немає замовлень."
 
-#: templates/back-end/metabox/gallery.php:20
+#: templates/back-end/metabox/gallery.php:21
 msgid "Remove from gallery"
 msgstr "Видалити з галереї"
 
@@ -773,6 +840,18 @@ msgstr "чоловік"
 msgid "female"
 msgstr "жінка"
 
+#: templates/front-end/cart/list-products.php:29
+msgid "Quantity"
+msgstr "Кількість"
+
+#: templates/front-end/cart/list-products.php:84
+msgid "Continue shopping"
+msgstr "Продовжити покупки"
+
+#: templates/front-end/cart/list-products.php:100
+msgid "Cost of goods"
+msgstr "Вартість товарів"
+
 #: templates/front-end/order/last-order-info.php:11
 msgid "Name"
 msgstr "Ім`я"
@@ -801,11 +880,11 @@ msgstr "Замовлення на сайті"
 msgid "My Account"
 msgstr "Мій аккаунт"
 
-#: templates/front-end/mail/themes/oxygen.php:448
+#: templates/front-end/mail/themes/oxygen.php:447
 msgid "Item"
 msgstr "Позиція"
 
-#: templates/front-end/mail/themes/oxygen.php:452
+#: templates/front-end/mail/themes/oxygen.php:451
 msgid "Qty"
 msgstr "К-сть"
 
