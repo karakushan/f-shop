@@ -372,31 +372,36 @@ class FS_Settings_Class {
 		$settings = $this->register_settings();
 		// Регистрируем секции и опции в движке
 		$setting_key = $this->get_tab( 'tab' );
-		$setting     = $settings[ $setting_key ];
-		$section     = "fs_{$setting_key}_section";
-		add_settings_section(
-			$section,
-			$setting['name'],
-			array( $this, 'get_tab_description' ),
-			$this->settings_page
-		);
-		if ( count( $setting['fields'] ) ) {
-			foreach ( $setting['fields'] as $field ) {
-				if ( empty( $field['name'] ) ) {
-					continue;
+
+		if (! empty( $settings[ $setting_key ] )){
+			$setting = $settings[ $setting_key ] ;
+			$section = "fs_{$setting_key}_section";
+			add_settings_section(
+				$section,
+				$setting['name'],
+				array( $this, 'get_tab_description' ),
+				$this->settings_page
+			);
+			if ( count( $setting['fields'] ) ) {
+				foreach ( $setting['fields'] as $field ) {
+					if ( empty( $field['name'] ) ) {
+						continue;
+					}
+					$settings_id = $field['name'];
+					add_settings_field(
+						$settings_id,
+						$field['label'],
+						array( $this, 'setting_field_callback' ),
+						$this->settings_page,
+						$section,
+						array( $settings_id, $field )
+					);
+					register_setting( $section, $settings_id, null );
 				}
-				$settings_id = $field['name'];
-				add_settings_field(
-					$settings_id,
-					$field['label'],
-					array( $this, 'setting_field_callback' ),
-					$this->settings_page,
-					$section,
-					array( $settings_id, $field )
-				);
-				register_setting( $section, $settings_id, null );
 			}
 		}
+
+
 
 	}
 

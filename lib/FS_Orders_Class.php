@@ -14,22 +14,21 @@ class FS_Orders_Class {
 	public $last_order_id = null;
 
 
-	function __construct(  ) {
+	function __construct() {
 
 		$this->order_statuses = FS_Config::default_order_statuses();
 
 
 		add_filter( 'pre_get_posts', array( $this, 'filter_orders_by_search' ) );
+
 		//===== ORDER STATUSES ====
 		add_action( 'init', array( $this, 'order_status_custom' ) );
-		add_action( 'admin_footer-post-new.php', array(
-			$this,
-			'true_append_post_status_list'
-		) ); // страница создания нового поста
+		add_action( 'admin_footer-post-new.php', array( $this, 'true_append_post_status_list' ) );
 		add_action( 'admin_footer-post.php', array( $this, 'true_append_post_status_list' ) );
 		add_filter( 'display_post_states', array( $this, 'true_status_display' ) );
 
-		add_action( 'transition_post_status', array( $this, 'fs_publish_order_callback' ) );
+		// Срабатывает в момент изменения статуса заказа
+		add_action( 'transition_post_status', array( $this, 'fs_change_order_status' ) );
 
 		add_shortcode( 'fs_order_detail', array( $this, 'order_detail_shortcode' ) );
 
@@ -180,24 +179,48 @@ class FS_Orders_Class {
 		return $html;
 	}
 
-	/*
-  *  Это событие отправляет покупателю сведения об оплате выбранным способом
-  *  срабатывает в момент создания заказа
-  */
-	function fs_publish_order_callback( $new_status ) {
-		global $post;
+	/**
+	 *  Это событие отправляет покупателю сведения об оплате выбранным способом
+	 *  срабатывает в момент изменения статуса заказа с "новый" на "обработан"
+	 *
+	 * @param $new_status
+	 */
+	function fs_change_order_status( $new_status ) {
+		global $post, $fs_config;
 
-		if ( $post && $post->post_type == $this->post_type && $new_status == 'fs_pending' ) {
-			$pay_method_id     = get_post_meta( $post->ID, '_payment', 1 );
-			$message_no_filter = get_term_meta( $pay_method_id, 'pay-message', 1 );
-			$message           = apply_filters( 'fs_pay_user_message', $message_no_filter, $pay_method_id, $post->ID );
-			$message_decode    = wp_specialchars_decode( $message, ENT_QUOTES );
-			$user_data         = get_post_meta( $post->ID, '_user', 1 );
-			$headers           = array(
-				'content-type: text/html'
-			);
+		// Если новый статус заказа "обработан" (processed)
+		if ( $post && $post->post_type == $this->post_type && $new_status == 'processed' ) {
+			// Получаем ID выбраного способа оплаты
+			$pay_method_id = get_post_meta( $post->ID, '_payment', 1 );
+			// Получаем кастомное сообшение пользователю, извещение об возможности оплаты
+			$message_no_filter = get_term_meta( $pay_method_id, '_fs_pay_message', 1 );
+			$pay_term          = get_term( $pay_method_id, $fs_config->data['product_pay_taxonomy'] );
+			if ( empty( $message_no_filter ) ) {
+				$message_no_filter = __( 'Your order #%order_id% has been successfully approved. The next stage is payment of the order. You can pay for the purchase by <a href="%pay_url%">link</a>. You have chosen the payment method: %pay_name%.
+Good luck!', 'fast-shop' );
+			}
+			// Создаём ссылку для оплаты покупки
+			$pay_link = add_query_arg( array(
+				'pay_method' => $pay_term->slug,
+				'order_id'   => $post->ID
+			), get_permalink( fs_option( 'page_payment' ) ) );
+			$message  = apply_filters( 'fs_pay_user_message', $message_no_filter );
+			// Производим замену мета данных типа %var%
+			$message = str_replace( array(
+				'%order_id%',
+				'%pay_url%',
+				'%pay_name%'
+			), array(
+				$post->ID,
+				esc_url( $pay_link ),
+				$pay_term->name
+			), $message );
+
+			$message_decode = wp_specialchars_decode( $message, ENT_QUOTES );
+			$user_data      = get_post_meta( $post->ID, '_user', 1 );
+
 			if ( is_email( $user_data['email'] ) && ! empty( $message ) ) {
-				wp_mail( $user_data['email'], 'Сведения об оплате', $message_decode, $headers );
+				wp_mail( $user_data['email'], __( 'Your order is approved', 'fast-shop' ), $message_decode, $fs_config->email_headers() );
 			}
 		}
 	}
@@ -347,7 +370,7 @@ class FS_Orders_Class {
 
 		global $fs_config;
 
-		$order = get_post( $order_id );
+		$order               = get_post( $order_id );
 		$user                = get_post_meta( $order_id, '_user', 0 );
 		$items               = get_post_meta( $order_id, '_products', 0 );
 		$delivery            = get_post_meta( $order_id, '_delivery', 0 );

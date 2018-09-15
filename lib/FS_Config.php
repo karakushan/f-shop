@@ -19,6 +19,7 @@ class FS_Config {
 	public $tabs;
 	public $texts;
 	public $taxonomies;
+
 	public static $currencies = array();
 	public static $users = array();
 	public static $default_currency = 'USD';
@@ -898,6 +899,19 @@ class FS_Config {
 		);
 
 		return apply_filters( 'fs_locales', $all_locales );
+	}
+
+	function email_headers( $html = true ) {
+		$headers = array();
+		if ( $html ) {
+			$headers[] = 'content-type: text/html';
+		}
+		// Имейл отправителя по умолчанию
+		$sender_email = 'manager@' . $_SERVER['SERVER_NAME'];
+
+		$headers[] = sprintf( 'From: %s <%s>', fs_option( 'name_sender', get_bloginfo( 'name' ) ), fs_option( 'email_sender', $sender_email ) );
+
+		return apply_filters( 'fs_email_headers', $headers );
 	}
 
 }
