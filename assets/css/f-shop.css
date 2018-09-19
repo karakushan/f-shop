@@ -1063,4 +1063,27 @@ td.fs_photo.column-fs_photo img {
   .fs-rating .rating-container .clear-rating {
     display: none; } }
 
+.fs-order-pay {
+  margin-bottom: 50px; }
+  .fs-order-pay .fs-pay-item {
+    text-align: center; }
+    .fs-order-pay .fs-pay-item h4 {
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      font-size: 16px;
+      max-width: 100%; }
+    .fs-order-pay .fs-pay-item figure {
+      width: 165px;
+      height: 165px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #eee;
+      margin-bottom: 10px;
+      transition: all .2s; }
+      .fs-order-pay .fs-pay-item figure:hover {
+        border: 4px solid #eee;
+        box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.05); }
+
 /*# sourceMappingURL=f-shop.css.map */
