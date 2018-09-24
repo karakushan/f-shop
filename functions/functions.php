@@ -883,7 +883,7 @@ function fs_cart_url( $show = true ) {
  * @return строку содержащую ссылку на соответствующую страницу
  */
 function fs_checkout_url( $show = true ) {
-	$checkout_page_id = fs_option( 'page_payment', 0 );
+	$checkout_page_id = fs_option( 'page_checkout', 0 );
 	if ( $show == true ) {
 		echo esc_url( get_permalink( $checkout_page_id ) );
 	} else {
