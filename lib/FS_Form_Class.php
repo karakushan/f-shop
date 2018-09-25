@@ -23,6 +23,7 @@ class FS_Form_Class {
 	function registered_field_types() {
 		$types = array(
 			'text',
+			'hidden',
 			'email',
 			'tel',
 			'textarea',
