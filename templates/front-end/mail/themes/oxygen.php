@@ -420,7 +420,9 @@
                               <td class="mini-block">
                                 <span class="header-sm"><?php _e( 'Shipping and payment', 'fast-shop' ); ?></span><br/>
                                 <b><?php _e( 'Delivery method', 'fast-shop' ); ?>:</b> %fs_delivery_methods% %fs_delivery_number%<br/>
-                                <b><?php _e( 'Payment method', 'fast-shop' ); ?>:</b> %fs_payment_methods%
+                                <b><?php _e( 'Payment method', 'fast-shop' ); ?>:</b> %fs_payment_methods% <br><br>
+                                <span class="header-sm"><?php _e( 'Comment', 'fast-shop' ); ?></span><br/>
+                                <span>%fs_comment%</span>
                               </td>
                             </tr>
                           </table>
