@@ -271,8 +271,7 @@ document.addEventListener("fs_add_to_cart", function (event) {
     iziToast.show({
         image: event.detail.image,
         theme: 'light',
-        title: 'Успех!',
-        message: 'Товар &laquo;' + event.detail.name + '&raquo; добавлен в корзину!',
+        message: button.data("success-message"),
         position: 'topCenter',
 
     });
@@ -390,7 +389,7 @@ function fs_get_cart(cartTemplate, cartWrap) {
 //очищаем корзину
 jQuery('[data-fs-type="delete-cart"]').on('click', function (event) {
     event.preventDefault();
-    if (confirm(fs_message.delete_all_text)) {
+    if (confirm(jQuery(this).data("confirm"))) {
         document.location.href = jQuery(this).data('url');
     }
 });
@@ -398,9 +397,10 @@ jQuery('[data-fs-type="delete-cart"]').on('click', function (event) {
 //Удаление продукта из корзины
 jQuery(document).on('click', '[data-fs-type="product-delete"]', function (event) {
     event.preventDefault();
+    var el = jQuery(this);
     var productId = jQuery(this).data('fs-id');
     var productName = jQuery(this).data('fs-name');
-    if (confirm(fs_message.delete_text.replace('%s', productName))) {
+    if (confirm(el.data("confirm"))) {
         jQuery.ajax({
             url: FastShopData.ajaxurl,
             type: 'POST',
@@ -657,12 +657,6 @@ jQuery(document).on('input keyup', '[data-fs-element="range-start-input"]', func
 jQuery(document).on('input keyup', '[data-fs-element="range-end-input"]', function (event) {
     document.location.href = jQuery(this).data('url') + '&price_end=' + jQuery(this).val();
 });
-
-
-/*jQuery("#slider-range > .ui-slider-handle:nth-child(2)").html('<span><span class="val">' + p_start + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
-jQuery("#slider-range > .ui-slider-handle:nth-child(3)").html('<span><span class="val">' + p_end + '</span>&nbsp;' + FastShopData.fs_currency + '</span>');
-jQuery("#minPrice .val").html(p_start + ' ' + FastShopData.fs_currency);
-jQuery("#maxPrice .val").html(p_end + ' ' + FastShopData.fs_currency);*/
 
 // валидация формы редактирования личных данных
 var userInfoEdit = jQuery('form[name="fs-profile-edit"]');
@@ -989,8 +983,7 @@ document.addEventListener("fs_add_to_wishlist", function (event) {
     iziToast.show({
         image: event.detail.image,
         theme: 'light',
-        title: 'Успех!',
-        message: 'Товар &laquo;' + event.detail.name + '&raquo; добавлен в список желаний!',
+        message: button.data("success-message"),
         position: 'topCenter',
 
     });

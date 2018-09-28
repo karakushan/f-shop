@@ -339,7 +339,8 @@ class FS_Ajax_Class {
 
 
 // Вставляем заказ в базу данных
-		$defaults                              = array(
+		$pay_method                            = get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] );
+		$new_order_data                        = array(
 			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
 			'post_content' => '',
 			'post_status'  => $fs_config->data['default_order_status'],
@@ -366,17 +367,17 @@ class FS_Ajax_Class {
 					'secession' => $sanitize_field['fs_delivery_number'],
 					'adress'    => $sanitize_field['fs_adress']
 				),
-				'_payment'         => $sanitize_field['fs_payment_methods'],
+				'_payment'         => $pay_method ? $pay_method->term_id : 0,
 				'_amount'          => $sum,
 				'_comment'         => $sanitize_field['fs_comment']
 			),
 		);
-		$order_id                              = wp_insert_post( $defaults );
+		$order_id                              = wp_insert_post( $new_order_data );
 		$sanitize_field['order_id']            = $order_id;
 		$sanitize_field['total_amount']        = $sum . ' ' . fs_currency();
 		$sanitize_field['site_name']           = get_bloginfo( 'name' );
 		$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
-		$sanitize_field['fs_payment_methods']  = fs_get_payment( $sanitize_field['fs_payment_methods'] );
+		$sanitize_field['fs_payment_methods']  = $pay_method->name;
 		$_SESSION['fs_last_order_id']          = $order_id;
 
 		// текст письма заказчику
@@ -420,7 +421,12 @@ class FS_Ajax_Class {
 				'products' => $fs_products,
 				'order_id' => $order_id,
 				'sum'      => $sum,
-				'redirect' => get_permalink( fs_option( 'page_success' ) )
+				'redirect' => add_query_arg(
+					array(
+						'order_id'   => $order_id,
+						'pay_method' => $pay_method ? $pay_method->slug : ''
+					),
+					get_permalink( fs_option( 'fs_checkout_redirect', fs_option( 'page_success', 0 ) ) ) )
 			);
 			unset( $_SESSION['cart'] );
 		}

@@ -515,29 +515,34 @@ function fs_get_cart( $args = array() ) {
  * @return bool
  */
 function fs_delete_position( $product_id = 0, $args = array() ) {
-	if ( ! $product_id || ! is_numeric( $product_id ) ) {
-		return false;
-	}
-
-	$args = wp_parse_args( $args, array(
-		'content' => '',
+	$product_id = fs_get_product_id( $product_id );
+	$args       = wp_parse_args( $args, array(
+		'content' => '&#10006;',
 		'type'    => 'link',
-		'class'   => 'fs-delete-position'
+		'atts'    => array(
+			'data-confirm' => sprintf( __( 'Are you sure you want to delete the item &laquo;%s&raquo; from the basket?', 'fast-shop' ), get_the_title( $product_id ) ),
+			'class'        => 'fs-delete-position',
+			'title'        => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) ),
+			'data-fs-name' => get_the_title( $product_id ),
+			'data-fs-id'   => $product_id,
+			'data-fs-type' => "product-delete"
+
+		)
 	) );
 
-	$title = sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) );
+	$atts = fs_parse_attr( array(), $args['atts'] );
 
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#" class="' . esc_attr( $args['class'] ) . '" data-fs-type="product-delete" data-fs-id="' . esc_attr( $product_id ) . '" data-fs-name="' . esc_attr( get_the_title( $product_id ) ) . '" title="' . esc_attr( $title ) . '">' . $args['content'] . '</a>';
+			echo '<a href="" ' . $atts . '>' . $args['content'] . '</a>';
 			break;
 		case 'button':
-			echo '<button type="button" class="' . esc_attr( $args['class'] ) . '" data-fs-type="product-delete" data-fs-id="' . esc_attr( $product_id ) . '" data-fs-name="' . esc_attr( get_the_title( $product_id ) ) . '" title="' . esc_attr( $title ) . '">' . $args['content'] . '</button>';
+			echo '<button type="button" ' . $atts . '>' . $args['content'] . '</button>';
 			break;
 
 	}
 
-	return true;
+	return;
 }
 
 /**
@@ -693,17 +698,18 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 		'type'      => 'button',
 		'echo'      => true,
 		'data'      => array(
-			'data-action'       => 'add-to-cart',
-			'data-product-id'   => $product_id,
-			'data-product-name' => get_the_title( $product_id ),
-			'data-price'        => fs_get_price( $product_id ),
-			'data-currency'     => fs_currency(),
-			'data-sku'          => fs_get_product_code( $product_id ),
-			'id'                => 'fs-atc-' . $product_id,
-			'data-count'        => 1,
-			'data-attr'         => json_encode( new stdClass() ),
-			'data-image'        => esc_url( get_the_post_thumbnail_url( $product_id ) ),
-			'data-variated'     => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
+			'data-success-message' => sprintf( __( 'Success! Item &laquo;%s&raquo; successfully added to cart. <a href="%s">Go to shopping cart</a>', 'fast-shop' ), get_the_title( $product_id ), fs_cart_url( false ) ),
+			'data-action'          => 'add-to-cart',
+			'data-product-id'      => $product_id,
+			'data-product-name'    => get_the_title( $product_id ),
+			'data-price'           => fs_get_price( $product_id ),
+			'data-currency'        => fs_currency(),
+			'data-sku'             => fs_get_product_code( $product_id ),
+			'id'                   => 'fs-atc-' . $product_id,
+			'data-count'           => 1,
+			'data-attr'            => json_encode( new stdClass() ),
+			'data-image'           => esc_url( get_the_post_thumbnail_url( $product_id ) ),
+			'data-variated'        => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
 		)
 	);
 	$args         = wp_parse_args( $args, $args_default );
@@ -798,6 +804,7 @@ function fs_add_to_comparison( $post_id = 0, $label = '', $attr = array() ) {
 function fs_order_send( $label = 'Отправить заказ', $attr = array(), $preloader = '<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>' ) {
 	$attr = fs_parse_attr( $attr, array(
 		'data-fs-action' => "order-send",
+		'data-redirect'  => 'page_success',// 'page_payment'
 		'class'          => 'fs-order-send btn btn-success btn-lg'
 	) );
 	echo "<button type=\"submit\" $attr >$label <span class=\"fs-preloader\">$preloader</span></button>";
@@ -1057,12 +1064,12 @@ function fs_user_viewed() {
  */
 function fs_get_product_currency( $product_id = 0 ) {
 	global $fs_config;
-	$product_currency        = [];
-	$product_id              = fs_get_product_id( $product_id );
-	$product_currency_id     = intval( get_post_meta( $product_id, $fs_config->meta['currency'], 1 ) );
-	$product_currency_symbol = get_term_meta( $product_currency_id, 'fs_currency_display', 1 );
-	$product_currency_code   = get_term_meta( $product_currency_id, 'currency-code', 1 );
-	$site_currency_id        = intval( fs_option( 'default_currency', 0 ) );
+	$product_currency    = [];
+	$product_id          = fs_get_product_id( $product_id );
+	$product_currency_id = intval( get_post_meta( $product_id, $fs_config->meta['currency'], 1 ) );
+	// $product_currency_symbol = get_term_meta( $product_currency_id, 'fs_currency_display', 1 );
+	$product_currency_code = get_term_meta( $product_currency_id, 'currency-code', 1 );
+	$site_currency_id      = intval( fs_option( 'default_currency', 0 ) );
 
 
 	//если у товара не найден ID валюта возвращаем  ID валюты по умолчанию
@@ -1070,7 +1077,7 @@ function fs_get_product_currency( $product_id = 0 ) {
 		$product_currency_id = $site_currency_id;
 	}
 	$product_currency['id']     = $product_currency_id;
-	$product_currency['symbol'] = $product_currency_symbol ? $product_currency_symbol : fs_option( 'currency_symbol', '$' );
+	$product_currency['symbol'] = fs_option( 'currency_symbol', '$' );
 	$product_currency['code']   = $product_currency_code ? $product_currency_code : 'USD';
 
 	return $product_currency;
@@ -1131,6 +1138,7 @@ function fs_delete_cart( $args = array() ) {
 	$html_att = fs_parse_attr( array(), array(
 		'class'        => $args['class'],
 		'data-fs-type' => "delete-cart",
+		'data-confirm' => __( 'Are you sure you want to empty the trash?', 'fast-shop' ),
 		'data-url'     => wp_nonce_url( add_query_arg( array( "fs_action" => "delete-cart" ) ), "fs_action" )
 
 	) );
@@ -1218,31 +1226,32 @@ function fs_price_max( $filter = true ) {
 /**
  * функция отображает кнопку "добавить в список желаний"
  *
- * @param  integer $post_id - id записи
+ * @param  integer $product_id - id записи
  * @param  string $label - текст кнопки
  * @param  array $args - дополнительные аргументы массивом
  *
  */
-function fs_add_to_wishlist( $post_id = 0, $label = 'В список желаний', $args = array() ) {
-	$post_id = fs_get_product_id( $post_id );
+function fs_add_to_wishlist( $product_id = 0, $label = 'В список желаний', $args = array() ) {
+	$product_id = fs_get_product_id( $product_id );
 	// определим параметры по умолчанию
 	$defaults  = array(
-		'attr'      => '',
-		'success'   => __( 'Item added to wishlist', 'fast-shop' ),
-		'type'      => 'button',
-		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
-		'class'     => 'fs-whishlist-btn',
-		'id'        => 'fs-whishlist-btn-' . $post_id,
-		'atts'      => ''
+		'attr'           => '',
+		'success_mesage' => sprintf( __( 'Success! Item &laquo;%s&raquo; successfully added to wishlist. <a href="%s">Go to wishlist</a>', 'fast-shop' ), get_the_title( $product_id ), fs_wishlist_url() ),
+		'type'           => 'button',
+		'preloader'      => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
+		'class'          => 'fs-whishlist-btn',
+		'id'             => 'fs-whishlist-btn-' . $product_id,
+		'atts'           => ''
 	);
 	$args      = wp_parse_args( $args, $defaults );
 	$html_atts = fs_parse_attr( array(), array(
-		'data-fs-action'  => "wishlist",
-		'class'           => $args['class'],
-		'id'              => $args['id'],
-		'data-name'       => get_the_title( $post_id ),
-		'data-image'      => get_the_post_thumbnail_url( $post_id ),
-		'data-product-id' => $post_id,
+		'data-fs-action'       => "wishlist",
+		'data-success-message' => $args['success_mesage'],
+		'class'                => $args['class'],
+		'id'                   => $args['id'],
+		'data-name'            => get_the_title( $product_id ),
+		'data-image'           => get_the_post_thumbnail_url( $product_id ),
+		'data-product-id'      => $product_id,
 	) );
 
 	switch ( $args['type'] ) {
@@ -1702,7 +1711,7 @@ function fs_parse_attr( $attr = array(), $default = array() ) {
 		if ( empty( $att ) ) {
 			continue;
 		}
-		$atributes[] = $key . '="' . $att . '"';
+		$atributes[] = $key . '="' . esc_attr( $att ) . '"';
 
 	}
 
@@ -1753,8 +1762,8 @@ function fs_wishlist_count() {
 /**
  * выводит ссылку на список желаний
  */
-function fs_wishlist_link() {
-	the_permalink( fs_option( 'page_whishlist' ) );
+function fs_wishlist_url() {
+	return get_the_permalink( intval( fs_option( 'page_whishlist' ) ) );
 }
 
 /**

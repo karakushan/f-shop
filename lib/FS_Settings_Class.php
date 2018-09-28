@@ -127,9 +127,10 @@ class FS_Settings_Class {
 						'type'  => 'checkbox',
 						'name'  => 'price_conversion',
 						'label' => 'Конвертация стоимости товара в зависимости от языка',
-						'help'  => 'Если выбрано, то цена будет автоматически конвертироваться в необходимую валюту. Важно! Для того, чтобы это сработало необходимо указать локаль в настрйках валюты.',
+						'help'  => 'Если выбрано, то цена будет автоматически конвертироваться в необходимую валюту. Важно! Для того, чтобы это сработало необходимо указать локаль в настройках валюты.',
 						'value' => fs_option( 'price_conversion', '0' )
-					),
+					)
+
 				)
 			),
 			'letters'    => array(
@@ -245,6 +246,20 @@ class FS_Settings_Class {
 
 
 			),
+			'Orders'     => array(
+				'name'   => __( 'Orders', 'fast-shop' ),
+				'fields' => array(
+					array(
+						'type'  => 'pages',
+						'name'  => 'fs_checkout_redirect',
+						'label' => 'Передресовывать после оформления покупки',
+						'value' => fs_option( 'fs_checkout_redirect', fs_option( 'page_success', 0 ) )
+					),
+
+				)
+
+
+			),
 			'debug'      => array(
 				'name'        => __( 'Отладка', 'fast-shop' ),
 				'description' => 'Здесь отображаются данные отладки в виде  текста',
@@ -269,18 +284,11 @@ class FS_Settings_Class {
 
 		if ( taxonomy_exists( $fs_config->data['currencies_taxonomy'] ) ) {
 			$settings['currencies']['fields'] [] = array(
-				'type'  => 'custom',
-				'name'  => 'default_currency',
-				'label' => 'Валюта по умолчанию',
-				'html'  => wp_dropdown_categories( array(
-					'taxonomy'         => 'fs-currencies',
-					'echo'             => false,
-					'hide_empty'       => false,
-					'selected'         => fs_option( 'default_currency' ),
-					'name'             => 'default_currency',
-					'show_option_none' => __( 'Select currency', 'fast-shop' )
-				) ),
-				'value' => fs_option( 'default_currency' )
+				'type'     => 'dropdown_categories',
+				'taxonomy' => 'fs-currencies',
+				'name'     => 'default_currency',
+				'label'    => 'Валюта по умолчанию',
+				'value'    => fs_option( 'default_currency' )
 			);
 		}
 		$settings = apply_filters( 'fs_plugin_settings', $settings );
@@ -373,8 +381,8 @@ class FS_Settings_Class {
 		// Регистрируем секции и опции в движке
 		$setting_key = $this->get_tab( 'tab' );
 
-		if (! empty( $settings[ $setting_key ] )){
-			$setting = $settings[ $setting_key ] ;
+		if ( ! empty( $settings[ $setting_key ] ) ) {
+			$setting = $settings[ $setting_key ];
 			$section = "fs_{$setting_key}_section";
 			add_settings_section(
 				$section,
@@ -400,7 +408,6 @@ class FS_Settings_Class {
 				}
 			}
 		}
-
 
 
 	}

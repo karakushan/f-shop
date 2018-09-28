@@ -172,7 +172,7 @@ class FS_Config {
 			'fs_phone'             => array(
 				'type'        => 'tel',
 				'label'       => '',
-				'placeholder' => __( 'Телефон', 'fast-shop' ),
+				'placeholder' => __( 'Phone number', 'fast-shop' ),
 				'title'       => __( 'Keep the correct phone number', 'fast-shop' ),
 				'required'    => true,
 				'save_meta'   => 1
@@ -214,14 +214,15 @@ class FS_Config {
 			),
 			'fs_delivery_methods'  => array(
 				'type'      => 'dropdown_categories',
+				'first_option'=>__("Select delivery method",'fast-shop'),
 				'taxonomy'  => $this->data['product_del_taxonomy'],
 				'required'  => true,
 				'save_meta' => 1
 			),
 			'fs_payment_methods'   => array(
 				'type'     => 'dropdown_categories',
+				'first_option'=>__("Choose a payment method",'fast-shop'),
 				'taxonomy' => $this->data['product_pay_taxonomy'],
-
 				'required'  => true,
 				'save_meta' => 1
 			),

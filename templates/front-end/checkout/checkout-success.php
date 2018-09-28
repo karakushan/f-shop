@@ -7,7 +7,6 @@
  */
 ?>
 <p class="fs-info-block"><i class="fas fa-info-circle"></i>
-  Заказ №<?php echo do_shortcode( '[fs_last_order_id]' ) ?> успешно создан. Проверьте вашу почту для дальнейших
-  инструкций.
+	<?php printf( __( 'Order #%s was successfully created. Check your mail for further instructions.' ), \FS\FS_Orders_Class::get_last_order_id() ) ?>
 </p>
 

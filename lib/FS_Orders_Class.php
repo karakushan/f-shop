@@ -43,7 +43,7 @@ class FS_Orders_Class {
 	/**
 	 * Возвращает ID последнего заказа
 	 */
-	public function get_last_order_id() {
+	public static function get_last_order_id() {
 		$id = 0;
 		if ( ! empty( $_SESSION['fs_last_order_id'] ) ) {
 			$id = intval( $_SESSION['fs_last_order_id'] );

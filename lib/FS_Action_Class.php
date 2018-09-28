@@ -20,7 +20,7 @@ class FS_Action_Class {
 		// конвертация стоимости товара в зависимости от локали
 		if ( fs_option( 'price_conversion', 0 ) ) {
 			add_filter( 'fs_price_filter', array( $this, 'price_currency_convert' ), 12, 2 );
-			add_filter( 'fs_currency', array( $this, 'locale_currency' ), 10, 1 );
+
 		}
 
 	}
@@ -49,27 +49,6 @@ class FS_Action_Class {
 		}
 
 		return floatval( $price );
-	}
-
-	/**
-	 * Возвращает валюту в зависимости от локали
-	 *
-	 * @param $currency
-	 *
-	 * @return mixed
-	 */
-	function locale_currency( $currency ) {
-		global $wpdb;
-		$current_locale = get_locale();
-
-		$search_locale = $wpdb->get_row( "SELECT * FROM $wpdb->termmeta WHERE meta_key='fs_currency_locales' AND meta_value='$current_locale'" );
-		if ( $search_locale ) {
-			$currency_display = get_term_meta( $search_locale->term_id, 'fs_currency_display', 1 );
-			$currency_code    = get_term_meta( $search_locale->term_id, 'currency-code', 1 );
-			$currency         = $currency_display ? $currency_display : $currency_code;
-		}
-
-		return $currency;
 	}
 
 	public

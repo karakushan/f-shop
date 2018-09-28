@@ -125,7 +125,7 @@ class FS_Form_Class {
 			'options'        => array(),
 			'format'         => '%input% %label%',
 			'el'             => 'radio',
-			'first_option'   => __( 'Select' ),
+			'first_option'   => ! empty( FS_Config::$form_fields[ $field_name ]['first_option'] ) ? FS_Config::$form_fields[ $field_name ]['first_option'] : __('Select'),
 			'before'         => '',
 			'after'          => '',
 			'editor_args'    => array(

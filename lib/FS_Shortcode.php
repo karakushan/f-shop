@@ -271,18 +271,15 @@ class FS_Shortcode {
 	 */
 	function pay_methods() {
 		if ( empty( $_REQUEST['order_id'] ) || empty( $_REQUEST['pay_method'] ) ) {
-			return ' < p>' . __( 'The order number or method of payment is not specified . ', 'fast_shop' ) . ' </p > ';
+			return ' <p>' . __( 'The order number or method of payment is not specified . ', 'fast_shop' ) . ' </p > ';
 		}
 		$order_id     = intval( $_REQUEST['order_id'] );
 		$orders_class = new FS_Orders_Class();
 		$order        = $orders_class->get_order( $order_id );
-		$html         = ' < h3 class="text-center" > Оплата заказа №' . esc_attr( $order_id ) . 'с помошью' . esc_attr(
-				$order->payment ) . ' </h3 > ';
-		$html         .= '
-<div class="fs-pay-methods" > ';
+		$html         = sprintf( '<h3 class="text-center">Paying for order #%d using %s</h3 >', esc_attr( $order_id ), esc_attr( $order->payment ) );
+		$html         .= '<div class="fs-pay-methods">';
 		$html         .= apply_filters( 'fs_pay_methods', $order_id );
-		$html         .= '
-                                                       </div > ';
+		$html         .= '</div> ';
 
 		return $html;
 	}
