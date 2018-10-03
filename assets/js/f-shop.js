@@ -282,6 +282,7 @@ document.addEventListener("fs_add_to_cart", function (event) {
 
     event.preventDefault();
 }, false);
+
 // изменяем атрибуты товара по изменению input radio
 jQuery('[data-action="change-attr"]').on('change', function () {
 
@@ -394,6 +395,52 @@ jQuery('[data-fs-type="delete-cart"]').on('click', function (event) {
     }
 });
 
+// Показывает поля адреса при выборе доставки по адресу
+jQuery(document).on('change', '[name="fs_delivery_methods"]', function (event) {
+    var deliveryId = jQuery(this).val();
+
+    if (deliveryId) {
+        var parameters = {
+            action: 'fs_show_shipping',
+            delivery: deliveryId
+        };
+        jQuery.ajax({
+            type: 'POST',
+            url: FastShopData.ajaxurl,
+            data: parameters,
+            success: function (result) {
+                try {
+                    var json = JSON.parse(result);
+                    if (json.show) {
+                        jQuery("#fs-shipping-fields")
+                            .html(json.html)
+                            .addClass('active')
+                            .fadeIn();
+                    } else {
+                        jQuery("#fs-shipping-fields")
+                            .html('')
+                            .removeClass('active')
+                            .fadeOut();
+                    }
+                } catch (e) {
+                    console.log('Ошибка ' + e.name + ":" + e.message + "\n" + e.stack);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            }
+        });
+    } else {
+        jQuery("#fs-shipping-fields")
+            .html('')
+            .removeClass('active')
+            .fadeOut();
+    }
+
+
+});
+
 //Удаление продукта из корзины
 jQuery(document).on('click', '[data-fs-type="product-delete"]', function (event) {
     event.preventDefault();
@@ -461,6 +508,7 @@ jQuery('[data-fs-action="quick_order_button"]').on('click', function (event) {
     jQuery('[name="fs_cart[product_name]"]').val(pName);
     jQuery('[name="fs_cart[product_id]"]').val(pId);
 });
+
 //Переадресовываем все фильтры на значение, которое они возвращают
 jQuery('[data-fs-action="filter"]').on('change', function (e) {
     e.preventDefault();

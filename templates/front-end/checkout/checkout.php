@@ -11,14 +11,11 @@
 	<?php fs_form_field( 'fs_phone' ) ?>
 </div>
 <div class="form-group">
-	<?php fs_form_field( 'fs_city' ) ?>
+	<?php fs_form_field( 'fs_delivery_methods' ) ?>
 </div>
-<div class="form-group">
-	<?php fs_form_field( 'fs_delivery_number' ) ?>
-</div>
-<div class="form-group">
-	<?php fs_form_field( 'fs_comment' ) ?>
-</div>
+<div id="fs-shipping-fields"></div>
+
+
 
 <div class="row">
   <div class="col-lg-6">
@@ -28,7 +25,7 @@
   </div>
   <div class="col-lg-6">
     <div class="form-group">
-		<?php fs_form_field( 'fs_delivery_methods' ) ?>
+		<?php fs_form_field( 'fs_comment' ) ?>
     </div>
   </div>
 </div>

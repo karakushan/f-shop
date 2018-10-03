@@ -38,23 +38,24 @@ class FS_Config {
 	function __construct() {
 		//Массив общих настроек плагина. При изменении настройки все настройки меняются глобально.
 		$data       = array(
-			'plugin_path'          => FS_PLUGIN_PATH,
-			'plugin_url'           => FS_PLUGIN_URL,
-			'plugin_ver'           => '1.1',
-			'plugin_name'          => 'f-shop',
-			'plugin_user_template' => get_template_directory() . '/fast-shop/',
-			'plugin_template'      => FS_PLUGIN_PATH . 'templates/front-end/',
-			'plugin_settings'      => 'fast-shop-settings',
-			'post_type'            => 'product',
-			'post_type_orders'     => 'orders',
-			'product_taxonomy'     => 'catalog',
-			'product_att_taxonomy' => 'product-attributes',
-			'product_pay_taxonomy' => 'fs-payment-methods',
-			'product_del_taxonomy' => 'fs-delivery-methods',
-			'discount_taxonomy'    => 'fs-discounts',
-			'currencies_taxonomy'  => 'fs-currencies',
-			'preloader'            => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif',
-			'default_order_status' => 'new' // статус заказа присваиваемый новому заказу
+			'plugin_path'            => FS_PLUGIN_PATH,
+			'plugin_url'             => FS_PLUGIN_URL,
+			'plugin_ver'             => '1.1',
+			'plugin_name'            => 'f-shop',
+			'plugin_user_template'   => get_template_directory() . '/fast-shop/',
+			'plugin_template'        => FS_PLUGIN_PATH . 'templates/front-end/',
+			'plugin_settings'        => 'fast-shop-settings',
+			'post_type'              => 'product',
+			'post_type_orders'       => 'orders',
+			'product_taxonomy'       => 'catalog',
+			'product_att_taxonomy'   => 'product-attributes',
+			'product_pay_taxonomy'   => 'fs-payment-methods',
+			'product_del_taxonomy'   => 'fs-delivery-methods',
+			'product_taxes_taxonomy' => 'fs-taxes', // Taxes Taxonomy
+			'discount_taxonomy'      => 'fs-discounts',
+			'currencies_taxonomy'    => 'fs-currencies',
+			'preloader'              => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif',
+			'default_order_status'   => 'new' // статус заказа присваиваемый новому заказу
 		);
 		$this->data = apply_filters( 'fs_data', $data );
 
@@ -184,10 +185,17 @@ class FS_Config {
 				'required'    => true,
 				'save_meta'   => 1
 			),
+			'fs_region'              => array(
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'State / province', 'fast-shop' ),
+				'required'    => true,
+				'save_meta'   => 1
+			),
 			'fs_adress'            => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __( 'Delivery address', 'fast-shop' ),
+				'placeholder' => __( 'Address', 'fast-shop' ),
 				'required'    => false,
 				'save_meta'   => 1
 			),
@@ -213,18 +221,18 @@ class FS_Config {
 				'save_meta'   => 1
 			),
 			'fs_delivery_methods'  => array(
-				'type'      => 'dropdown_categories',
-				'first_option'=>__("Select delivery method",'fast-shop'),
-				'taxonomy'  => $this->data['product_del_taxonomy'],
-				'required'  => true,
-				'save_meta' => 1
+				'type'         => 'dropdown_categories',
+				'first_option' => __( "Choose delivery method", 'fast-shop' ),
+				'taxonomy'     => $this->data['product_del_taxonomy'],
+				'required'     => true,
+				'save_meta'    => 1
 			),
 			'fs_payment_methods'   => array(
-				'type'     => 'dropdown_categories',
-				'first_option'=>__("Choose a payment method",'fast-shop'),
-				'taxonomy' => $this->data['product_pay_taxonomy'],
-				'required'  => true,
-				'save_meta' => 1
+				'type'         => 'dropdown_categories',
+				'first_option' => __( "Choose a payment method", 'fast-shop' ),
+				'taxonomy'     => $this->data['product_pay_taxonomy'],
+				'required'     => true,
+				'save_meta'    => 1
 			),
 			'fs_comment'           => array(
 				'type'        => 'textarea',
@@ -581,7 +589,7 @@ class FS_Config {
 	 */
 	function get_taxonomy_fields() {
 		$fields = array(
-			'catalog'             => array(
+			'catalog'                             => array(
 				'_content'      => array(
 					'name' => __( 'Текст категории', 'fast-shop' ),
 					'type' => 'editor',
@@ -593,7 +601,7 @@ class FS_Config {
 					'args' => array()
 				)
 			),
-			'fs-payment-methods'  => array(
+			'fs-payment-methods'                  => array(
 				'_thumbnail_id'    => array(
 					'name' => __( 'Миниатюра', 'fast-shop' ),
 					'type' => 'image',
@@ -612,7 +620,7 @@ class FS_Config {
 					'args' => array()
 				)
 			),
-			'fs-delivery-methods' => array(
+			'fs-delivery-methods'                 => array(
 				'_thumbnail_id'     => array(
 					'name' => __( 'Миниатюра', 'fast-shop' ),
 					'type' => 'image',
@@ -622,9 +630,14 @@ class FS_Config {
 					'name' => __( 'Стоимость доставки в базовой валюте', 'fast-shop' ),
 					'type' => 'text',
 					'args' => array( 'style' => 'width:72px;' )
+				),
+				'_fs_delivery_address' => array(
+					'name' => __( 'Подключать поля адреса при выборе данного метода', 'fast-shop' ),
+					'type' => 'checkbox',
+					'args' => array()
 				)
 			),
-			'fs-currencies'       => array(
+			'fs-currencies'                       => array(
 				'_fs_currency_code'    => array(
 					'name' => __( 'International currency code', 'fast-shop' ),
 					'type' => 'text',
@@ -644,6 +657,14 @@ class FS_Config {
 					'name' => __( 'Currency Language (locale)', 'fast-shop' ),
 					'type' => 'select',
 					'args' => array( 'values' => $this->get_locales(), )
+				)
+			),
+			// Дополнительные поля налога
+			$this->data['product_taxes_taxonomy'] => array(
+				'_fs_tax_value' => array(
+					'name' => __( 'The amount or value of tax as a percentage', 'fast-shop' ),
+					'type' => 'text',
+					'args' => array()
 				)
 			)
 

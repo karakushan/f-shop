@@ -53,6 +53,10 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_update_position', array( $this, 'fs_update_position_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_update_position', array( $this, 'fs_update_position_callback' ) );
 
+		// Возврщает HTML код шаблона расположеного по адресу /templates/front-end/checkout/shipping-fields.php
+		add_action( 'wp_ajax_fs_show_shipping', array( $this, 'fs_show_shipping_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_show_shipping', array( $this, 'fs_show_shipping_callback' ) );
+
 	}
 
 	/**
@@ -514,5 +518,18 @@ class FS_Ajax_Class {
 
 		echo json_encode( array( 'body' => $body ) );
 		exit;
+	}
+
+
+	/**
+	 * Возврщает HTML код шаблона расположеного по адресу /templates/front-end/checkout/shipping-fields.php
+	 */
+	function fs_show_shipping_callback() {
+		$term_id = intval( $_POST['delivery'] );
+		echo json_encode( array(
+			'show' => get_term_meta( $term_id, '_fs_delivery_address', 1 ),
+			'html' => fs_frontend_template( 'checkout/shipping-fields' )
+		) );
+		wp_die();
 	}
 } 

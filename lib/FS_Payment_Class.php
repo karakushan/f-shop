@@ -21,6 +21,7 @@ class FS_Payment_Class {
 	 */
 	function payment_methods() {
 		$methods = array();
+
 		return apply_filters( "fs_payment_methods", $methods );
 	}
 
@@ -54,7 +55,10 @@ class FS_Payment_Class {
 		if ( $payment_methods ) {
 			foreach ( $payment_methods as $id => $payment_method ) {
 				$html .= '<div class="' . esc_attr( $atts['item-wrapper-class'] ) . '">';
-				$html .= '<a href="' . esc_url( add_query_arg( array( 'pay_method' => $id ), get_the_permalink() ) ) . '" class="' . esc_attr( $atts['item-class'] ) . '" id="' . esc_attr( $id ) . '">';
+				$html .= '<a href="' . esc_url( add_query_arg( array(
+						'pay_method' => $id,
+						'order_id'   => $order_id
+					), get_the_permalink() ) ) . '" class="' . esc_attr( $atts['item-class'] ) . '" id="' . esc_attr( $id ) . '">';
 				$html .= '<figure><img src="' . esc_url( $payment_method['logo'] ) . '" alt="' . esc_attr( $payment_method['name'] ) . '"></figure>';
 				$html .= '<h4>' . esc_html( $payment_method['name'] ) . '</h4>';
 				$html .= '</a>';
@@ -77,6 +81,7 @@ class FS_Payment_Class {
 		}
 
 		$html .= '</div><!--END .fs-order-pay-->';
+
 		return $html;
 	}
 

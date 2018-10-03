@@ -33,8 +33,9 @@ class FS_Taxonomies_Class {
 	 * @return array|mixed|void
 	 */
 	function shop_taxonomies() {
+		global $fs_config;
 		$taxonomies = array(
-			'catalog'             => array(
+			'catalog'                                  => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Product categories', 'fast-shop' ),
 				'labels'             => array(
@@ -57,7 +58,7 @@ class FS_Taxonomies_Class {
 				"publicly_queryable" => true,
 				'show_admin_column'  => false
 			),
-			'fs-payment-methods'  => array(
+			'fs-payment-methods'                       => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Payment methods', 'fast-shop' ),
 				'labels'             => array(
@@ -74,7 +75,7 @@ class FS_Taxonomies_Class {
 				'show_admin_column'  => false,
 
 			),
-			'fs-delivery-methods' => array(
+			'fs-delivery-methods'                      => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Delivery methods', 'fast-shop' ),
 				'labels'             => array(
@@ -91,7 +92,7 @@ class FS_Taxonomies_Class {
 				'show_admin_column'  => false,
 				'show_in_quick_edit' => false
 			),
-			'product-attributes'  => array(
+			'product-attributes'                       => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Product attributes', 'fast-shop' ),
 				'labels'             => array(
@@ -103,6 +104,24 @@ class FS_Taxonomies_Class {
 				"public"             => true,
 				"show_ui"            => true,
 				"publicly_queryable" => true,
+
+				'metabox'            => null,
+				'show_admin_column'  => true,
+				'hierarchical'       => true,
+				'show_in_quick_edit' => false
+			),
+			$fs_config->data['product_taxes_taxonomy'] => array(
+				'object_type'        => $fs_config->data['post_type'],
+				'label'              => __( 'Taxes', 'fast-shop' ),
+				'labels'             => array(
+					'name'          => __( 'Taxes', 'fast-shop' ),
+					'singular_name' => __( 'Taxes', 'fast-shop' ),
+					'add_new_item'  => __( 'Add tax', 'fast-shop' ),
+				),
+				//					исключаем категории из лицевой части
+				"public"             => true,
+				"show_ui"            => true,
+				"publicly_queryable" => false,
 
 				'metabox'            => null,
 				'show_admin_column'  => true,
@@ -180,7 +199,7 @@ class FS_Taxonomies_Class {
 		// создание дополнительных полей на странице добавления и редактирования таксономии
 		if ( $this->shop_taxonomies() ) {
 			foreach ( $this->shop_taxonomies() as $key => $taxonomy ) {
-				if ( in_array( $key, array( 'product-attributes',  'fs-discounts' ) ) ) {
+				if ( in_array( $key, array( 'product-attributes', 'fs-discounts' ) ) ) {
 					continue;
 				}
 				// поля таксономии категорий товара
@@ -386,7 +405,6 @@ class FS_Taxonomies_Class {
 
 </div> ';
 	}
-
 
 
 	/**
