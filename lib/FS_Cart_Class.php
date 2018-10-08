@@ -111,5 +111,18 @@ class FS_Cart_Class {
 		exit;
 	}
 
+	/**
+	 * Возвращает корзину
+	 *
+	 * @return array
+	 */
+	public static function get_cart() {
+		if ( ! empty( $_SESSION['cart'] ) ) {
+			return $_SESSION['cart'];
+		} else {
+			return [];
+		}
+	}
+
 
 }

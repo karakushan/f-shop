@@ -225,12 +225,12 @@ jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
 
 
     var productObject = {
-            "action": 'add_to_cart',
-            "attr": attr,
-            "count": count,
-            'post_id': product_id
-        }
-    ;
+        "action": 'add_to_cart',
+        "attr": attr,
+        "count": count,
+        'post_id': product_id
+    }
+
     jQuery.ajax({
         url: FastShopData.ajaxurl,
         data: productObject,
@@ -411,6 +411,10 @@ jQuery(document).on('change', '[name="fs_delivery_methods"]', function (event) {
             success: function (result) {
                 try {
                     var json = JSON.parse(result);
+                    if (json.price) {
+                        jQuery("[data-fs-element=\"delivery-cost\"]").html(json.price);
+                        jQuery("[data-fs-element=\"total-amount\"]").html(json.total);
+                    }
                     if (json.show) {
                         jQuery("#fs-shipping-fields")
                             .html(json.html)

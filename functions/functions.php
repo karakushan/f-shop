@@ -217,27 +217,18 @@ function fs_get_wholesale_price( $post_id = 0 ) {
  *
  */
 function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
-	if ( empty( $_SESSION['cart'] ) ) {
-		$total = 0;
-	} else {
-		$total = fs_get_total_amount( $_SESSION['cart'] );
-	}
+	$total = fs_get_total_amount();
 	$total = apply_filters( 'fs_price_format', $total );
 	printf( '<span data-fs-element="total-amount">' . $wrap . '</span>', $total, fs_currency() );
 }
 
 /**
- * возвращает общую сумму всех продуктов в корзине
- *
- * @param array $products - список товаров в массиве
- * @param boolean $discount - включать ли скидку в расчёт общей суммы (по умолчанию true, то есть да)
+ * Возвращает стоимость товаров в корзине без учета всех скидок, налогов и прочего
  *
  * @return float|int
  */
-function fs_get_total_amount( $products = array(), $discount = true ) {
-	if ( empty( $products ) ) {
-		$products = ! empty( $_SESSION['cart'] ) ? $_SESSION['cart'] : array();
-	}
+function fs_get_cart_cost() {
+	$products  = \FS\FS_Cart_Class::get_cart();
 	$all_price = array();
 	foreach ( $products as $key => $count ) {
 		if ( fs_is_variated( $key ) ) {
@@ -248,11 +239,54 @@ function fs_get_total_amount( $products = array(), $discount = true ) {
 
 	}
 	$price = array_sum( $all_price );
-	if ( fs_option( 'discounts_on' ) == 1 && $discount ) {
-		$price = apply_filters( 'fs_discount_filter', $price );
-	}
 
 	return $price;
+}
+
+/**
+ * Выводит стоимость товаров в корзине без учета всех скидок, налогов и прочего
+ *
+ * @param array $args
+ */
+function fs_cart_cost( $args = [] ) {
+	$args = wp_parse_args( $args, array(
+		'format' => '<span data-fs-element="cart-cost">%price% <span>%currency%</span></span>'
+	) );
+
+	$cart_cost = fs_get_cart_cost();
+
+	$cart_cost = apply_filters( 'fs_price_format', $cart_cost );
+	$replace   = array(
+		'%price%'    => esc_attr( $cart_cost ),
+		'%currency%' => esc_attr( fs_currency() )
+	);
+	echo str_replace( array_keys( $replace ), array_values( $replace ), $args['format'] );
+
+}
+
+/**
+ * Возвращает общую сумму всех продуктов в корзине
+ *
+ * @param float $delivery_cost
+ *
+ * @return float|int
+ * @internal param int $delivery_term_id
+ *
+ * @internal param int $shipping_cost
+ */
+function fs_get_total_amount( $delivery_cost = 0 ) {
+	/*
+	 *  Сумма покупки расчитывается следующим образом:
+	 *  (Стоимость всех товаров в корзине + Стоимость доставки) - Скидка + Налоги
+	 */
+
+	$amount = fs_get_cart_cost(); // Стоимость товаров в корзине
+
+	$amount = $amount + $delivery_cost;// Стоимость товара вместе с доставкой
+	//$amount = apply_filters( 'fs_discount_filter', $amount );// Отнимаем скидку
+	$amount = apply_filters( 'fs_taxes_filter', $amount );// Добавляем налоги
+
+	return $amount;
 }
 
 /**
@@ -1091,10 +1125,14 @@ function fs_get_product_currency( $product_id = 0 ) {
  * @return string
  */
 function fs_currency( $product_id = 0 ) {
-	$product_currency = fs_get_product_currency( $product_id );
+	if ( $product_id ) {
+		$product_currency = fs_get_product_currency( $product_id );
+		$currency         = $product_currency['symbol'];
+	} else {
+		$currency = fs_option( 'currency_symbol', '$' );
+	}
 
-
-	return apply_filters( 'fs_currency', $product_currency['symbol'] );
+	return apply_filters( 'fs_currency', $currency );
 }
 
 
@@ -2241,11 +2279,11 @@ function fs_get_variated_count( $post_id = 0, $atts = array() ) {
 /**
  * Возвращает ID товара
  *
- * @param mixed $product ID поста
+ * @param integer $product ID поста
  *
  * @return int
  */
-function fs_get_product_id( $product = null ) {
+function fs_get_product_id( $product = 0 ) {
 	if ( empty( $product ) ) {
 		global $post;
 		$product = $post->ID;
@@ -2442,3 +2480,57 @@ function fs_get_category_image( $term_id = 0, $size = 'thumbnail', $args = array
 
 }
 
+/**
+ * Отображает налоги в виде списка
+ *
+ * @param array $args список аргументов
+ *
+ * @return mixed|void
+ */
+function fs_taxes_list( $args = [] ) {
+
+	$args = wp_parse_args( $args, array(
+		'taxonomy'   => 'fs-taxes',
+		'hide_empty' => false,
+		'wrapper'    => 'li',
+		'echo'       => true,
+		'format'     => '<span>%name%(%value%)</span> <span>%cost% <span>%currency%</span></span>'
+	) );
+
+	$terms = get_terms( $args );
+	foreach ( $terms as $term ) {
+		$tax   = get_term_meta( $term->term_id, '_fs_tax_value', 1 );
+		$total = fs_get_total_amount();
+
+		if ( strpos( $tax, '%' ) ) {
+			$tax_num    = str_replace( '%', '', $tax );
+			$tax_amount = $total * $tax_num / 100;
+			$tax_amount = apply_filters( 'fs_price_format', $tax_amount );
+		} else {
+			$tax_amount = apply_filters( 'fs_price_format', floatval( $tax ) );
+		}
+
+		$taxes_html = '';
+		if ( $args['wrapper'] ) {
+			$taxes_html = '<' . $args['wrapper'] . '>';
+		}
+
+		$replace    = array(
+			'%name%'     => esc_attr( $term->name ),
+			'%value%'    => esc_attr( $tax ),
+			'%cost%'     => esc_attr( $tax_amount ),
+			'%currency%' => esc_attr( fs_currency() )
+		);
+		$taxes_html .= str_replace( array_keys( $replace ), array_values( $replace ), $args['format'] );
+
+		if ( $args['wrapper'] ) {
+			$taxes_html .= '</' . $args['wrapper'] . '>';
+		}
+
+		if ( $args['echo'] ) {
+			echo apply_filters( 'fs_taxex_list', $taxes_html );
+		} else {
+			return apply_filters( 'fs_taxex_list', $taxes_html );
+		}
+	}
+}

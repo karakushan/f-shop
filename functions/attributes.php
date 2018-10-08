@@ -353,15 +353,18 @@ function fs_list_post_atts( $post_id = 0 ) {
 
 			echo '<div class="fs-attr-group-name">' . esc_html( $group ) . '</div>';
 			echo '<ul class="fs-attr-groups-list">';
-			foreach ( $parent as $child ) {
+			$count=0;
+			foreach ( $parent as $chilld_id => $child ) {
 				$attr_type = get_term_meta( $child->term_id, 'fs_att_type', 1 );
 				if ( $attr_type == 'image' ) {
 					$image_id = get_term_meta( $child->term_id, 'fs_att_image_value', 1 );
-					$img_url  = wp_get_attachment_thumb_url( $image_id );
-					echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\"><input type=\"radio\"  name=\"$group_slug\" value=\"$child->term_id\" data-fs-element=\"attr\" data-product-id=\"$post_id\"></label></li>";
+					$img_url  = wp_get_attachment_image_url( $image_id, 'full' );
+					echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\">";
+					echo "<input type=\"radio\"  name=\"$group_slug\" value=\"$child->term_id\" data-fs-element=\"attr\" data-product-id=\"$post_id\" " . checked( 0,$count, false ) . "></label></li>";
 				} else {
 					echo "<li><label>" . $child->name . "</label><input type=\"radio\" name=\"$group_slug\" value=\"$child->term_id\"></li>";
 				}
+				$count++;
 			}
 			echo '</ul>';
 

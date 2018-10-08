@@ -264,10 +264,11 @@ class FS_Ajax_Class {
 		if ( ! $fs_config::verify_nonce() ) {
 			die ( 'не пройдена верификация формы nonce' );
 		}
-		$fs_products        = $_SESSION['cart'];
-		$fs_custom_products = serialize( $_POST['fs_custom_product'] );
+		$fs_products        = FS_Cart_Class::get_cart();
+		$fs_custom_products = ! empty( $_POST['fs_custom_product'] ) ? serialize( $_POST['fs_custom_product'] ) : '';
 		$user_id            = 0;
-		$sum                = fs_get_total_amount( $fs_products );
+		$delivery_cost      = floatval( get_term_meta( intval( $_POST['fs_delivery_methods'] ), '_fs_delivery_cost', 1 ) );
+		$sum                = fs_get_total_amount( $delivery_cost );
 		global $wpdb;
 		$wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
@@ -525,10 +526,16 @@ class FS_Ajax_Class {
 	 * Возврщает HTML код шаблона расположеного по адресу /templates/front-end/checkout/shipping-fields.php
 	 */
 	function fs_show_shipping_callback() {
-		$term_id = intval( $_POST['delivery'] );
+		$term_id             = intval( $_POST['delivery'] );
+		$delivery_cost_clean = floatval( get_term_meta( $term_id, '_fs_delivery_cost', 1 ) );
+		$delivery_cost       = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $delivery_cost_clean ), fs_currency() );
+		$total_amount        = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', fs_get_total_amount( $delivery_cost_clean ) ), fs_currency() );
+
 		echo json_encode( array(
-			'show' => get_term_meta( $term_id, '_fs_delivery_address', 1 ),
-			'html' => fs_frontend_template( 'checkout/shipping-fields' )
+			'show'  => get_term_meta( $term_id, '_fs_delivery_address', 1 ),
+			'price' => $delivery_cost,
+			'total' => $total_amount,
+			'html'  => fs_frontend_template( 'checkout/shipping-fields' )
 		) );
 		wp_die();
 	}

@@ -388,7 +388,7 @@ Good luck!', 'fast-shop' );
 		if ( ! empty( $order->delivery['method'] ) && is_numeric( $order->delivery['method'] ) ) {
 			$order->delivery['method'] = get_term_field( 'name', $order->delivery['method'], $fs_config->data['product_del_taxonomy'] );
 		}
-		$order->sum       = fs_get_total_amount( $order->items );
+		$order->sum       = floatval( get_post_meta( $order_id, '_amount', 1 ) );
 		$order->status    = $this->get_order_status( $order_id );
 		$order->user_name = ! empty( $order->user ) ? get_user_meta( $order->user['id'], 'nickname', true ) : '';
 		$order->exists    = ! get_post( $order_id ) ? false : true;
