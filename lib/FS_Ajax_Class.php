@@ -12,10 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class FS_Ajax_Class {
 
 	function __construct() {
-//  обработка формы заказа
+		//  обработка формы заказа
 		add_action( 'wp_ajax_order_send', array( $this, 'order_send_ajax' ) );
 		add_action( 'wp_ajax_nopriv_order_send', array( $this, 'order_send_ajax' ) );
-//  добавление в список желаний
+		//  добавление в список желаний
 		add_action( 'wp_ajax_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
 		add_action( 'wp_ajax_nopriv_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
 // удаление из списка желаний
@@ -344,8 +344,8 @@ class FS_Ajax_Class {
 
 
 // Вставляем заказ в базу данных
-		$pay_method                            = get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] );
-		$new_order_data                        = array(
+		$pay_method     = get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] );
+		$new_order_data = array(
 			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
 			'post_content' => '',
 			'post_status'  => $fs_config->data['default_order_status'],
@@ -377,32 +377,8 @@ class FS_Ajax_Class {
 				'_comment'         => $sanitize_field['fs_comment']
 			),
 		);
-		$order_id                              = wp_insert_post( $new_order_data );
-		$sanitize_field['order_id']            = $order_id;
-		$sanitize_field['total_amount']        = $sum . ' ' . fs_currency();
-		$sanitize_field['site_name']           = get_bloginfo( 'name' );
-		$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
-		$sanitize_field['fs_payment_methods']  = $pay_method->name;
-		$_SESSION['fs_last_order_id']          = $order_id;
+		$order_id       = wp_insert_post( $new_order_data );
 
-		// текст письма заказчику
-		$sanitize_field['message'] = fs_option( 'customer_mail' );
-		$user_message              = apply_filters( 'fs_email_template', $sanitize_field );
-
-		// текст письма админу
-		$sanitize_field['message'] = fs_option( 'admin_mail' );
-		$admin_message             = apply_filters( 'fs_email_template', $sanitize_field );
-
-		//Отсылаем письмо с данными заказа заказчику
-		$customer_mail_header = fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
-		if ( $sanitize_field['fs_email'] ) {
-			wp_mail( $sanitize_field['fs_email'], $customer_mail_header, $user_message, $headers );
-		}
-
-		//Отсылаем письмо с данными заказа админу
-		$admin_email       = fs_option( 'manager_email', get_option( 'admin_email' ) );
-		$admin_mail_header = fs_option( 'admin_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
-		wp_mail( $admin_email, $admin_mail_header, $admin_message, $headers );
 
 		/* Если есть ошибки выводим их*/
 		if ( is_wp_error( $order_id ) ) {
@@ -412,6 +388,35 @@ class FS_Ajax_Class {
 				'text'    => $order_id->get_error_messages()
 			);
 		} else {
+			// Здесь уже можно навешивать сторонние обработчики
+			do_action( 'fs_create_order', $order_id );
+
+			$sanitize_field['order_id']            = $order_id;
+			$sanitize_field['total_amount']        = $sum . ' ' . fs_currency();
+			$sanitize_field['site_name']           = get_bloginfo( 'name' );
+			$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
+			$sanitize_field['fs_payment_methods']  = $pay_method->name;
+			$_SESSION['fs_last_order_id']          = $order_id;
+
+			// текст письма заказчику
+			$sanitize_field['message'] = fs_option( 'customer_mail' );
+			$user_message              = apply_filters( 'fs_email_template', $sanitize_field );
+
+			// текст письма админу
+			$sanitize_field['message'] = fs_option( 'admin_mail' );
+			$admin_message             = apply_filters( 'fs_email_template', $sanitize_field );
+
+			//Отсылаем письмо с данными заказа заказчику
+			$customer_mail_header = fs_option( 'customer_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
+			if ( $sanitize_field['fs_email'] ) {
+				wp_mail( $sanitize_field['fs_email'], $customer_mail_header, $user_message, $headers );
+			}
+
+			//Отсылаем письмо с данными заказа админу
+			$admin_email       = fs_option( 'manager_email', get_option( 'admin_email' ) );
+			$admin_mail_header = fs_option( 'admin_mail_header', 'Заказ товара на сайте «' . get_bloginfo( 'name' ) . '»' );
+			wp_mail( $admin_email, $admin_mail_header, $admin_message, $headers );
+
 			/* обновляем название заказа для админки */
 			wp_update_post( array(
 					'ID'         => $order_id,
