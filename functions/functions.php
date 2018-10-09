@@ -2393,8 +2393,10 @@ function fs_items_on_page( $format = '' ) {
  * @param bool $rewrite
  */
 function fs_copy_all( $from, $to, $rewrite = true ) {
-	if ( is_dir( $from ) ) {
-		@mkdir( $to );
+	if ( is_dir( $from ) && file_exists( $from ) ) {
+		if ( ! file_exists( $to ) ) {
+			mkdir( $to );
+		}
 		$d = dir( $from );
 		while ( false !== ( $entry = $d->read() ) ) {
 			if ( $entry == "." || $entry == ".." ) {

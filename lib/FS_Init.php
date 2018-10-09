@@ -108,7 +108,10 @@ class FS_Init {
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'lightgallery', FS_PLUGIN_URL . "assets/plugins/lightGallery/dist/js/lightgallery-all.js", array( "jquery" ), null, true );
 		wp_enqueue_script( 'jquery-ui-core', array( 'jquery' ) );
 		wp_enqueue_script( 'jquery-ui-slider', array( 'jquery' ) );
-		wp_enqueue_script(FS_PLUGIN_PREFIX .'jqueryui-touch-punch','//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js',array('jquery','jquery-ui-core'),false,true);
+		wp_enqueue_script( FS_PLUGIN_PREFIX . 'jqueryui-touch-punch', '//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js', array(
+			'jquery',
+			'jquery-ui-core'
+		), false, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'jquery-validate', FS_PLUGIN_URL . 'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'domurl', FS_PLUGIN_URL . 'assets/js/url.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );

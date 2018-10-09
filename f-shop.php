@@ -48,6 +48,18 @@ $GLOBALS['fs_error'] = new WP_Error();
 if ( ! class_exists( '\FS\FS_Init', false ) ) {
 	$GLOBALS['f_shop']    = new \FS\FS_Init;
 	$GLOBALS['fs_config'] = new FS\FS_Config();
+
+
+}
+
+// Добавляем команды WP CLI
+if ( class_exists( 'WP_CLI' )){
+	$migrate = function ( $args = array(), $assoc_args = array() ) {
+		\FS\FS_Migrate_Class::migrate_orders();
+		WP_CLI::success( 'Base migration ended with success.' );
+	};
+
+	WP_CLI::add_command( 'fs_migrate_orders', $migrate );
 }
 
 
