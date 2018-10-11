@@ -336,37 +336,3 @@ function fs_price_filter_callback( $post_id, $price ) {
 
 	return (float) $price;
 }
-
-// Добавляет налоги к стоимости товаров и доставки
-add_filter( 'fs_taxes_filter', 'fs_taxes_filter_callback', 10, 1 );
-function fs_taxes_filter_callback( $amount ) {
-	$args = array(
-		'taxonomy'   => 'fs-taxes',
-		'hide_empty' => false
-	);
-
-	$terms        = get_terms( $args );
-	$taxes_amount = [];
-	foreach ( $terms as $term ) {
-		$tax   = get_term_meta( $term->term_id, '_fs_tax_value', 1 );
-		$total = fs_get_cart_cost();
-		if ( strpos( $tax, '%' ) !== false ) {
-			$tax_num        = str_replace( '%', '', $tax );
-			$taxes_amount[] = $total * $tax_num / 100;
-		} elseif ( is_numeric( $tax ) ) {
-			$taxes_amount[] = floatval( $tax );
-		} else {
-			$taxes_amount[] = 0;
-		}
-	}
-	$amount = floatval( $amount + array_sum( $taxes_amount ) );
-
-	return $amount;
-}
-
-
-
-
-
-
-

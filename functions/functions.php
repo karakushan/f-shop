@@ -282,9 +282,47 @@ function fs_get_total_amount( $delivery_cost = 0 ) {
 
 	$amount = fs_get_cart_cost(); // Стоимость товаров в корзине
 
-	$amount = $amount + $delivery_cost;// Стоимость товара вместе с доставкой
-	//$amount = apply_filters( 'fs_discount_filter', $amount );// Отнимаем скидку
-	$amount = apply_filters( 'fs_taxes_filter', $amount );// Добавляем налоги
+	$amount = $amount + $delivery_cost;// Стоимость товара вместе с доставкой без учета налогов
+
+	// $amount = apply_filters( 'fs_discount_filter', $amount );// Отнимаем скидку
+	$taxes_amount = fs_get_taxes_amount( $amount );// Вычисляем налоги
+
+	$amount = $amount + $taxes_amount; // Расчёт общей суммы
+
+	return floatval( $amount );
+}
+
+/**
+ * Расчитывает и возвращает сумму налогов
+ *
+ * @param $amount
+ *
+ * @return float
+ */
+function fs_get_taxes_amount( $amount ) {
+	$args = array(
+		'taxonomy'   => 'fs-taxes',
+		'hide_empty' => false
+	);
+
+	$terms        = get_terms( $args );
+	$taxes_amount = [];
+
+	if ( $terms ) {
+		foreach ( $terms as $term ) {
+			$tax = get_term_meta( $term->term_id, '_fs_tax_value', 1 );
+
+			if ( strpos( $tax, '%' ) !== false ) {
+				$tax_num        = floatval( str_replace( '%', '', $tax ) );
+				$taxes_amount[] = $amount * $tax_num / 100;
+			} elseif ( is_numeric( $tax ) ) {
+				$taxes_amount[] = floatval( $tax );
+			} else {
+				$taxes_amount[] = 0;
+			}
+		}
+	}
+	$amount = floatval( array_sum( $taxes_amount ) );
 
 	return $amount;
 }
@@ -2487,52 +2525,60 @@ function fs_get_category_image( $term_id = 0, $size = 'thumbnail', $args = array
  *
  * @param array $args список аргументов
  *
+ * @param float $total - сумма от которой считаются налоги
+ *
  * @return mixed|void
  */
-function fs_taxes_list( $args = [] ) {
+function fs_taxes_list( $args = [], $total = 0.0 ) {
 
 	$args = wp_parse_args( $args, array(
-		'taxonomy'   => 'fs-taxes',
-		'hide_empty' => false,
-		'wrapper'    => 'li',
-		'echo'       => true,
-		'format'     => '<span>%name%(%value%)</span> <span>%cost% <span>%currency%</span></span>'
+		'taxonomy'      => 'fs-taxes',
+		'hide_empty'    => false,
+		'wrapper'       => 'div',
+		'wrapper_class' => 'fs-taxes-list',
+		'echo'          => true,
+		'format'        => '<span>%name%(%value%)</span> <span>%cost% <span>%currency%</span></span>'
 	) );
 
 	$terms = get_terms( $args );
-	foreach ( $terms as $term ) {
-		$tax   = get_term_meta( $term->term_id, '_fs_tax_value', 1 );
-		$total = fs_get_total_amount();
+	if ( $total == 0.0 ) {
+		$total = fs_get_cart_cost();
+	}
 
-		if ( strpos( $tax, '%' ) ) {
-			$tax_num    = str_replace( '%', '', $tax );
-			$tax_amount = $total * $tax_num / 100;
-			$tax_amount = apply_filters( 'fs_price_format', $tax_amount );
-		} else {
-			$tax_amount = apply_filters( 'fs_price_format', floatval( $tax ) );
-		}
+	if ( $terms ) {
+		foreach ( $terms as $term ) {
+			$tax = get_term_meta( $term->term_id, '_fs_tax_value', 1 );
 
-		$taxes_html = '';
-		if ( $args['wrapper'] ) {
-			$taxes_html = '<' . $args['wrapper'] . '>';
-		}
+			if ( strpos( $tax, '%' ) ) {
+				$tax_num    = floatval( str_replace( '%', '', $tax ) );
+				$tax_amount = $total * $tax_num / 100;
+				$tax_amount = apply_filters( 'fs_price_format', $tax_amount );
+			} else {
+				$tax_amount = apply_filters( 'fs_price_format', floatval( $tax ) );
+			}
 
-		$replace    = array(
-			'%name%'     => esc_attr( $term->name ),
-			'%value%'    => esc_attr( $tax ),
-			'%cost%'     => esc_attr( $tax_amount ),
-			'%currency%' => esc_attr( fs_currency() )
-		);
-		$taxes_html .= str_replace( array_keys( $replace ), array_values( $replace ), $args['format'] );
+			$taxes_html = '';
+			if ( $args['wrapper'] ) {
+				$taxes_html = '<' . esc_attr($args['wrapper']) . ' data-fs-element="taxes-list" class="'.esc_attr($args['wrapper_class']).'">';
+			}
 
-		if ( $args['wrapper'] ) {
-			$taxes_html .= '</' . $args['wrapper'] . '>';
-		}
+			$replace    = array(
+				'%name%'     => esc_attr( $term->name ),
+				'%value%'    => esc_attr( $tax ),
+				'%cost%'     => esc_attr( $tax_amount ),
+				'%currency%' => esc_attr( fs_currency() )
+			);
+			$taxes_html .= str_replace( array_keys( $replace ), array_values( $replace ), $args['format'] );
 
-		if ( $args['echo'] ) {
-			echo apply_filters( 'fs_taxex_list', $taxes_html );
-		} else {
-			return apply_filters( 'fs_taxex_list', $taxes_html );
+			if ( $args['wrapper'] ) {
+				$taxes_html .= '</' . $args['wrapper'] . '>';
+			}
+
+			if ( $args['echo'] ) {
+				echo apply_filters( 'fs_taxex_list', $taxes_html );
+			} else {
+				return apply_filters( 'fs_taxex_list', $taxes_html );
+			}
 		}
 	}
 }

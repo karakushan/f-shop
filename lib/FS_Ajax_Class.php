@@ -535,9 +535,10 @@ class FS_Ajax_Class {
 		$delivery_cost_clean = floatval( get_term_meta( $term_id, '_fs_delivery_cost', 1 ) );
 		$delivery_cost       = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $delivery_cost_clean ), fs_currency() );
 		$total_amount        = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', fs_get_total_amount( $delivery_cost_clean ) ), fs_currency() );
-
+		$total               = $delivery_cost_clean + fs_get_cart_cost();
 		echo json_encode( array(
 			'show'  => get_term_meta( $term_id, '_fs_delivery_address', 1 ),
+			'taxes' => fs_taxes_list( array( 'echo' => false, 'wrapper' => false ), $total ),
 			'price' => $delivery_cost,
 			'total' => $total_amount,
 			'html'  => fs_frontend_template( 'checkout/shipping-fields' )

@@ -11,6 +11,7 @@ namespace FS;
 
 class FS_Payment_Class {
 
+
 	function __construct() {
 		add_shortcode( 'fs_order_pay', array( $this, 'order_pay' ) );
 	}
@@ -36,13 +37,15 @@ class FS_Payment_Class {
 	 * @return string
 	 */
 	function order_pay( $atts ) {
-		$atts        = shortcode_atts( array(
+		global $fs_config;
+
+		$atts = shortcode_atts( array(
 			'item-wrapper-class' => 'col-lg-2 col-sm-6',
 			'item-class'         => 'fs-pay-item'
 		), $atts );
-		$order_class = new FS_Orders_Class();
-		$order_id    = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
 
+		$order_class     = new FS_Orders_Class();
+		$order_id        = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
 		$order           = $order_class->get_order( $order_id );
 		$payment_methods = $this->payment_methods();
 
@@ -54,13 +57,16 @@ class FS_Payment_Class {
 
 		if ( $payment_methods ) {
 			foreach ( $payment_methods as $id => $payment_method ) {
+				$term     = get_term_by( 'slug', $id, $fs_config->data['product_pay_taxonomy'] );
+				$pay_name = $term ? $term->name : $payment_method['name'];
+
 				$html .= '<div class="' . esc_attr( $atts['item-wrapper-class'] ) . '">';
 				$html .= '<a href="' . esc_url( add_query_arg( array(
 						'pay_method' => $id,
 						'order_id'   => $order_id
 					), get_the_permalink() ) ) . '" class="' . esc_attr( $atts['item-class'] ) . '" id="' . esc_attr( $id ) . '">';
-				$html .= '<figure><img src="' . esc_url( $payment_method['logo'] ) . '" alt="' . esc_attr( $payment_method['name'] ) . '"></figure>';
-				$html .= '<h4>' . esc_html( $payment_method['name'] ) . '</h4>';
+				$html .= '<figure><img src="' . esc_url( $payment_method['logo'] ) . '" alt="' . esc_attr( $pay_name ) . '"></figure>';
+				$html .= '<h4>' . esc_html( $pay_name ) . '</h4>';
 				$html .= '</a>';
 				$html .= '</div>';
 

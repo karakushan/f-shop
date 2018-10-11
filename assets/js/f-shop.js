@@ -398,49 +398,48 @@ jQuery('[data-fs-type="delete-cart"]').on('click', function (event) {
 // Показывает поля адреса при выборе доставки по адресу
 jQuery(document).on('change', '[name="fs_delivery_methods"]', function (event) {
     var deliveryId = jQuery(this).val();
+    if (!deliveryId.length) deliveryId = 0;
 
-    if (deliveryId) {
-        var parameters = {
-            action: 'fs_show_shipping',
-            delivery: deliveryId
-        };
-        jQuery.ajax({
-            type: 'POST',
-            url: FastShopData.ajaxurl,
-            data: parameters,
-            success: function (result) {
-                try {
-                    var json = JSON.parse(result);
-                    if (json.price) {
-                        jQuery("[data-fs-element=\"delivery-cost\"]").html(json.price);
-                        jQuery("[data-fs-element=\"total-amount\"]").html(json.total);
-                    }
-                    if (json.show) {
-                        jQuery("#fs-shipping-fields")
-                            .html(json.html)
-                            .addClass('active')
-                            .fadeIn();
-                    } else {
-                        jQuery("#fs-shipping-fields")
-                            .html('')
-                            .removeClass('active')
-                            .fadeOut();
-                    }
-                } catch (e) {
-                    console.log('Ошибка ' + e.name + ":" + e.message + "\n" + e.stack);
+    var parameters = {
+        action: 'fs_show_shipping',
+        delivery: deliveryId
+    };
+    jQuery.ajax({
+        type: 'POST',
+        url: FastShopData.ajaxurl,
+        data: parameters,
+        success: function (result) {
+            try {
+                var json = JSON.parse(result);
+                if (json.price) {
+                    jQuery("[data-fs-element=\"delivery-cost\"]").html(json.price);
+                    jQuery("[data-fs-element=\"total-amount\"]").html(json.total);
+                    jQuery("[data-fs-element=\"taxes-list\"]").replaceWith(json.taxes);
                 }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
+                if (json.show) {
+                    jQuery("#fs-shipping-fields")
+                        .html(json.html)
+                        .addClass('active')
+                        .fadeIn();
+                } else {
+                    jQuery("#fs-shipping-fields")
+                        .html('')
+                        .removeClass('active')
+                        .fadeOut();
+                }
+            } catch (e) {
+                jQuery("#fs-shipping-fields")
+                    .html('')
+                    .removeClass('active')
+                    .fadeOut();
+                console.log('Ошибка ' + e.name + ":" + e.message + "\n" + e.stack);
             }
-        });
-    } else {
-        jQuery("#fs-shipping-fields")
-            .html('')
-            .removeClass('active')
-            .fadeOut();
-    }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log('error...', xhr);
+            //error logging
+        }
+    });
 
 
 });
