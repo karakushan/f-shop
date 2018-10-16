@@ -227,7 +227,7 @@ class FS_Shortcode {
 
 	function user_cabinet() {
 		$user = wp_get_current_user();
-		if ( is_user_logged_in() && in_array( 'wholesale_buyer', $user->roles ) ) {
+		if ( is_user_logged_in()) {
 			$temp = fs_user_cabinet();
 		} else {
 

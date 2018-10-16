@@ -270,8 +270,10 @@ class FS_Users_Class {
 
 		) );
 
+		$template = '';
 		if ( is_user_logged_in() ) {
-			$template = '<p>' . $args['logged_in_text'] . '</p>';
+			$template .= '<p class="text-center">' . $args['logged_in_text'] . '</p>';
+			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">В личный кабинет</a></p>';
 		} else {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_login' );
 			$template .= fs_frontend_template( 'auth/login', array( 'field' => array() ) );

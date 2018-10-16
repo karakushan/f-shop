@@ -258,7 +258,7 @@ jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
 document.addEventListener("fs_before_add_product", function (event) {
     // действие которое инициирует событие, здесь может быть любой ваш код
     var button = event.detail.button;
-    button.find('.fs-atc-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
+    button.find('.fs-atc-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader" width="16">');
     event.preventDefault();
 }, false);
 
@@ -362,7 +362,6 @@ jQuery('[data-fs-element="attr"]').on('change input', function (event) {
     var attrName = el.attr('name');
     var attrVal = el.val();
     productObject[attrName] = Number(attrVal);
-    console.log(productObject);
     cartbutton.attr('data-attr', JSON.stringify(productObject));
 });
 
@@ -663,12 +662,12 @@ jQuery('[data-fs-element="range-slider"]').each(function (index, value) {
         values: [p_start, p_end],
         slide: function (event, ui) {
             if (sliderStart.data("currency")) {
-                sliderStart.html(p_start + ' ' + FastShopData.fs_currency);
+                sliderStart.html(ui.values[0] + ' <span>' + FastShopData.fs_currency + '</span>');
             } else {
                 sliderStart.html(ui.values[0]);
             }
             if (sliderEnd.data("currency")) {
-                sliderEnd.html(p_end + ' ' + FastShopData.fs_currency);
+                sliderEnd.html(ui.values[1] + ' <span>' + FastShopData.fs_currency + '</span>');
             } else {
                 sliderEnd.html(ui.values[1]);
             }
@@ -688,12 +687,12 @@ jQuery('[data-fs-element="range-slider"]').each(function (index, value) {
     });
 
     if (sliderStart.data("currency")) {
-        sliderStart.html(p_start + ' ' + FastShopData.fs_currency);
+        sliderStart.html(p_start + ' <span>' + FastShopData.fs_currency + '</span>');
     } else {
         sliderStart.html(p_start);
     }
     if (sliderEnd.data("currency")) {
-        sliderEnd.html(p_end + ' ' + FastShopData.fs_currency);
+        sliderEnd.html(p_end + ' <span>' + FastShopData.fs_currency + '</span>');
     } else {
         sliderEnd.html(p_end);
     }

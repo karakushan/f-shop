@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Recursively get taxonomy and its children
  *
  * @param string $taxonomy
- * @param int $parent - parent term id
+ * @param int $parent-parent term id
  *
  * @return array
  */
@@ -39,14 +39,15 @@ function fs_dropdown_attr_group( $group_id = 0, $post_id = 0, $args = array() ) 
 		$post_id = $post->ID;
 	}
 	$args  = wp_parse_args( $args, array(
-		'class' => ''
+		'class' => '',
+		'first'=>__('Select')
 	) );
 	$class = ! empty( $args['class'] ) ? 'class="' . $args['class'] . '"' : '';
 	$terms = get_the_terms( $post_id, 'product-attributes' );
 
 	if ( $terms ) {
 		echo '<select name="' . $group_id . '" ' . $class . ' data-fs-element="attr" data-product-id="' . $post_id . '">';
-		echo '<option value="">Выберите</option>';
+		echo '<option value="">'.esc_attr($args['first']).'</option>';
 		foreach ( $terms as $term ) {
 			if ( $term->parent == $group_id ) {
 				echo '<option value="' . esc_attr( $term->term_id ) . '">' . esc_attr( $term->name ) . '</option>';
@@ -57,8 +58,8 @@ function fs_dropdown_attr_group( $group_id = 0, $post_id = 0, $args = array() ) 
 }
 
 /**
- * @param integer $post_id - id записи
- * @param array $args - массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
+ * @param integer $post_id-id записи
+ * @param array $args-массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
  */
 function fs_lightslider( $post_id = 0, $args = array() ) {
 	$post_id = fs_get_product_id( $post_id );
@@ -69,8 +70,8 @@ function fs_lightslider( $post_id = 0, $args = array() ) {
 /**
  * Возвращает массив изображений галереи товара
  *
- * @param int $post_id - id поста
- * @param bool $thumbnail - включать ли миниатюру поста в список
+ * @param int $post_id-id поста
+ * @param bool $thumbnail-включать ли миниатюру поста в список
  *
  * @return array
  */
@@ -86,9 +87,9 @@ function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
 
 //Получает текущую цену с учётом скидки
 /**
- * @param int $post_id - id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
+ * @param int $post_id-id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
  *
- * @return float $price - значение цены
+ * @return float $price-значение цены
  */
 function fs_get_price( $post_id = 0 ) {
 	global $fs_config;
@@ -116,8 +117,8 @@ function fs_get_price( $post_id = 0 ) {
 
 //Отображает общую сумму продуктов с одним артикулом
 /**
- * @param $post_id - id
- * @param $count - к-во товаров
+ * @param $post_id-id
+ * @param $count-к-во товаров
  * @param string $wrap формат отображения цены вместе с валютой
  *
  * @return int|mixed|string
@@ -157,9 +158,9 @@ function fs_row_wholesale_price( $post_id, $count, $curency = true, $wrap = '%s 
 /**
  * Выводит текущую цену с учётом скидки
  *
- * @param int|string $product_id - id товара
- * @param string $wrap - html обёртка для цены
- * @param array $args - дополнительные аргументы
+ * @param int|string $product_id-id товара
+ * @param string $wrap-html обёртка для цены
+ * @param array $args-дополнительные аргументы
  */
 function fs_the_price( $product_id = 0, $wrap = "%s <span>%s</span>", $args = array() ) {
 	$args       = wp_parse_args( $args, array(
@@ -175,8 +176,8 @@ function fs_the_price( $product_id = 0, $wrap = "%s <span>%s</span>", $args = ar
 /**
  * Выводит текущую оптовую цену с учётом скидки вместе с валютой сайта
  *
- * @param string $post_id - id товара
- * @param string $wrap - html обёртка для цены
+ * @param string $post_id-id товара
+ * @param string $wrap-html обёртка для цены
  */
 function fs_the_wholesale_price( $post_id = 0, $wrap = "<span>%s</span>" ) {
 	$price = fs_get_wholesale_price( $post_id );
@@ -187,9 +188,9 @@ function fs_the_wholesale_price( $post_id = 0, $wrap = "<span>%s</span>" ) {
 /**
  * Получает текущую оптовую цену с учётом скидки
  *
- * @param string $post_id - id товара
+ * @param string $post_id-id товара
  *
- * @return float price      - значение цены
+ * @return float price     -значение цены
  */
 function fs_get_wholesale_price( $post_id = 0 ) {
 	$config = new \FS\FS_Config();
@@ -209,7 +210,7 @@ function fs_get_wholesale_price( $post_id = 0 ) {
 /**
  * Выводит общую сумму всех продуктов в корзине
  *
- * @param string $wrap - формат отображения цены с валютой
+ * @param string $wrap-формат отображения цены с валютой
  *
  * @param bool $echo выводить (по умолчанию) или возвращать
  *
@@ -277,7 +278,7 @@ function fs_cart_cost( $args = [] ) {
 function fs_get_total_amount( $delivery_cost = 0 ) {
 	/*
 	 *  Сумма покупки расчитывается следующим образом:
-	 *  (Стоимость всех товаров в корзине + Стоимость доставки) - Скидка + Налоги
+	 *  (Стоимость всех товаров в корзине + Стоимость доставки)-Скидка + Налоги
 	 */
 
 	$amount = fs_get_cart_cost(); // Стоимость товаров в корзине
@@ -314,7 +315,7 @@ function fs_get_taxes_amount( $amount ) {
 
 			if ( strpos( $tax, '%' ) !== false ) {
 				$tax_num        = floatval( str_replace( '%', '', $tax ) );
-				$taxes_amount[] = $amount * $tax_num / 100;
+				$taxes_amount[] = $amount * $tax_num/100;
 			} elseif ( is_numeric( $tax ) ) {
 				$taxes_amount[] = floatval( $tax );
 			} else {
@@ -336,7 +337,7 @@ function fs_get_taxes_amount( $amount ) {
  */
 function fs_get_total_discount( $products = array() ) {
 
-	$discount = fs_get_total_amount( $products, false ) - fs_get_total_amount( $products, true );
+	$discount = fs_get_total_amount( $products, false )-fs_get_total_amount( $products, true );
 
 	return $discount;
 }
@@ -344,7 +345,7 @@ function fs_get_total_discount( $products = array() ) {
 /**
  * Возвращает информацию о первой ближайшей скидке
  *
- * @param $price - цена без скидки
+ * @param $price-цена без скидки
  *
  * @return mixed
  */
@@ -366,12 +367,12 @@ function fs_get_first_discount() {
 			// если скидка указана в процентах
 			if ( strpos( $discount_amount, '%' ) !== false ) {
 				$discount_amount = floatval( str_replace( '%', '', $discount_amount ) );
-				$discount_amount = $discount_value * $discount_amount / 100;
+				$discount_amount = $discount_value * $discount_amount/100;
 			}
 
 			if ( $discount_type == 'sum' && ( $discount_where == '>=' || $discount_where == '>' ) && $total_amount < $discount_value ) {
 				$discounts_cart[ $k ] = $discount_amount;
-				$discount_diff[ $k ]  = $discount_value - $total_amount;
+				$discount_diff[ $k ]  = $discount_value-$total_amount;
 			}
 		}
 	}
@@ -398,7 +399,7 @@ function fs_get_first_discount() {
  */
 function fs_total_discount( $products = array(), $wrap = '%s %s' ) {
 
-	$discount = fs_get_total_amount( $products, false ) - fs_get_total_amount( $products, true );
+	$discount = fs_get_total_amount( $products, false )-fs_get_total_amount( $products, true );
 	$discount = apply_filters( 'fs_price_format', $discount );
 	printf( $wrap, '<span data-fs-element="total-discount">' . esc_attr( $discount ) . '</span>', fs_currency() );
 }
@@ -454,8 +455,8 @@ function fs_total_amount_filtering( $products = array(), $show = true, $wrap = '
 /**
  * выводит или отдаёт общую сумму всех товаров по оптовой цене
  *
- * @param bool $echo - выводить или возвращать (по умолчанию показывать)
- * @param string $wrap - обёртка для выводимой цены
+ * @param bool $echo-выводить или возвращать (по умолчанию показывать)
+ * @param string $wrap-обёртка для выводимой цены
  *
  * @return mixed|number|void
  */
@@ -482,11 +483,11 @@ function fs_total_wholesale_amount( $products = array(), $echo = true, $wrap = '
 /**
  * Получаем содержимое корзины в виде массива
  * @return массив элементов корзины в виде:
- *         'id' - id товара,
- *         'name' - название товара,
- *         'count' - количество единиц одного продукта,
- *         'price' - цена за единицу,
- *         'all_price' - общая цена
+ *         'id'-id товара,
+ *         'name'-название товара,
+ *         'count'-количество единиц одного продукта,
+ *         'price'-цена за единицу,
+ *         'all_price'-общая цена
  */
 function fs_get_cart( $args = array() ) {
 
@@ -578,11 +579,11 @@ function fs_get_cart( $args = array() ) {
 /**
  * выводит кнопку удаления товара из корзины
  *
- * @param int $product_id - ID удаляемого товара
- * @param  array $args - массив аргументов для кнопки или ссылки
- *        'text'  - содержимое кнопки, по умолчанию '&#10005;',
- *        'type'  - тип тега ссылка 'link' или 'button',
- *        'class' - класс для кнопки, ссылки (по умолчанию класс 'fs-delete-position')
+ * @param int $product_id-ID удаляемого товара
+ * @param  array $args-массив аргументов для кнопки или ссылки
+ *        'text' -содержимое кнопки, по умолчанию '&#10005;',
+ *        'type' -тип тега ссылка 'link' или 'button',
+ *        'class'-класс для кнопки, ссылки (по умолчанию класс 'fs-delete-position')
  *
  * @return bool
  */
@@ -631,9 +632,9 @@ function fs_get_catalog_link() {
 /**
  * Удаляет товар из списка желаний
  *
- * @param int $product_id - id товара (если указать 0 будет взято ID  товара из цикла)
- * @param string $content - текст кнопки
- * @param array $args - дополнительные атрибуты
+ * @param int $product_id-id товара (если указать 0 будет взято ID  товара из цикла)
+ * @param string $content-текст кнопки
+ * @param array $args-дополнительные атрибуты
  */
 function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args = array() ) {
 	$product_id = fs_get_product_id( $product_id );
@@ -700,7 +701,7 @@ function fs_product_count( $products = array(), $echo = true ) {
 /**
  * получает базовую цену (перечёркнутую) без учёта скидки
  *
- * @param int $post_id - id товара
+ * @param int $post_id-id товара
  *
  * @return float $price
  */
@@ -722,8 +723,8 @@ function fs_get_base_price( $post_id = 0 ) {
 /**
  * Выводит текущую цену с символом валюты без учёта скидки
  *
- * @param int $post_id - id товара
- * @param string $wrap - html обёртка для цены
+ * @param int $post_id-id товара
+ * @param string $wrap-html обёртка для цены
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
@@ -765,7 +766,7 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 
 	// Параметры по умолчанию
 	$args_default = array(
-		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
+		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader" width="16">',
 		'class'     => 'fs-add-to-cart',
 		'type'      => 'button',
 		'echo'      => true,
@@ -869,9 +870,9 @@ function fs_add_to_comparison( $post_id = 0, $label = '', $attr = array() ) {
 /**
  * Отображает кнопку сабмита формы заказа
  *
- * @param string $label - надпись на кнопке
- * @param array $attr - html атрибуты элемента button
- * @param string $preloader - код прелоадера, который будет показан перед отправкой
+ * @param string $label-надпись на кнопке
+ * @param array $attr-html атрибуты элемента button
+ * @param string $preloader-код прелоадера, который будет показан перед отправкой
  */
 function fs_order_send( $label = 'Отправить заказ', $attr = array(), $preloader = '<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>' ) {
 	$attr = fs_parse_attr( $attr, array(
@@ -916,7 +917,7 @@ function fs_post_views( $post_id = '' ) {
 /**
  * показывает вижет корзины в шаблоне
  *
- * @param array $args - массив атрибутов html элемента обёртки
+ * @param array $args-массив атрибутов html элемента обёртки
  *
  * @return mixed показывает виджет корзины
  */
@@ -976,7 +977,7 @@ function fs_checkout_url( $show = true ) {
  *
  * @param int $post_id id записи
  *
- * @return bool  true - товар есть на складе, false - нет
+ * @return bool  true-товар есть на складе, false-нет
  */
 function fs_aviable_product( $post_id = 0 ) {
 	global $post;
@@ -997,8 +998,8 @@ function fs_aviable_product( $post_id = 0 ) {
 /**
  * Отображает или возвращает поле для изменения количества добавляемых товаров в корзину
  *
- * @param int $product_id - ID товара
- * @param array $args - массив аргументов
+ * @param int $product_id-ID товара
+ * @param array $args-массив аргументов
  *
  * @return mixed
  */
@@ -1158,7 +1159,7 @@ function fs_get_product_currency( $product_id = 0 ) {
 /**
  * Возвращаем символ валюты
  *
- * @param int $product_id - ID товара (по умолчанию ID берётся из global $post)
+ * @param int $product_id-ID товара (по умолчанию ID берётся из global $post)
  *
  * @return string
  */
@@ -1177,8 +1178,8 @@ function fs_currency( $product_id = 0 ) {
 /**
  * Возвращает данные опции
  *
- * @param $option_name - название опции
- * @param $default - значение по умолчанию
+ * @param $option_name-название опции
+ * @param $default-значение по умолчанию
  *
  * @return string
  */
@@ -1233,9 +1234,9 @@ function fs_delete_cart( $args = array() ) {
 /**
  * Выводит процент или сумму скидки(в зависимости от настрорек)
  *
- * @param int|string $product_id - id товара(записи)
+ * @param int|string $product_id-id товара(записи)
  * @param bool $echo
- * @param  string $wrap - html обёртка для скидки
+ * @param  string $wrap-html обёртка для скидки
  *
  * @return выводит или возвращает скидку если таковая имеется или пустая строка
  */
@@ -1302,9 +1303,9 @@ function fs_price_max( $filter = true ) {
 /**
  * функция отображает кнопку "добавить в список желаний"
  *
- * @param  integer $product_id - id записи
- * @param  string $label - текст кнопки
- * @param  array $args - дополнительные аргументы массивом
+ * @param  integer $product_id-id записи
+ * @param  string $label-текст кнопки
+ * @param  array $args-дополнительные аргументы массивом
  *
  */
 function fs_add_to_wishlist( $product_id = 0, $label = 'В список желаний', $args = array() ) {
@@ -1412,8 +1413,8 @@ function fs_transliteration( $s ) {
 /**
  * Подключает шаблон $template из директории темы, если шаблон остсуствует ищет в папке "/templates/front-end/" плагина
  *
- * @param $template - название папки и шаблона без расширения
- * @param array $args - дополнительные аргументы
+ * @param $template-название папки и шаблона без расширения
+ * @param array $args-дополнительные аргументы
  *
  * @return mixed|void
  */
@@ -1462,7 +1463,7 @@ function fs_get_current_user() {
 /**
  * Получает шаблон формы входа
  *
- * @param bool $echo - выводить(по умолчанию) или возвращать
+ * @param bool $echo-выводить(по умолчанию) или возвращать
  *
  * @param array $args
  *
@@ -1472,10 +1473,10 @@ function fs_login_form( $echo = true, $args = array() ) {
 	$args     = wp_parse_args( $args, array(
 		'name'  => "fs-login",
 		'id'    => "fs-login",
-		'title' => __( 'Login', 'fast - shop' )
+		'title' => __( 'Login', 'fast-shop' )
 	) );
 	$template = fs_form_header( $args, 'fs_login' );
-	$template .= fs_frontend_template( 'auth / login' );
+	$template .= fs_frontend_template( 'auth/login' );
 	$template .= fs_form_bottom();
 	if ( $echo ) {
 		echo $template;
@@ -1490,7 +1491,7 @@ function fs_login_form( $echo = true, $args = array() ) {
  * @return mixed|void
  */
 function fs_register_form() {
-	$template = fs_frontend_template( 'auth / register' );
+	$template = fs_frontend_template( 'auth/register' );
 
 	return $template;
 }
@@ -1500,22 +1501,22 @@ function fs_register_form() {
  * @return mixed|void
  */
 function fs_user_cabinet() {
-	$template = fs_frontend_template( 'auth / cabinet' );;
+	$template = fs_frontend_template( 'auth/cabinet' );;
 
 	return apply_filters( 'fs_user_cabinet', $template );
 }
 
 function fs_page_content() {
-	if ( empty( $_GET['fs - page'] ) ) {
+	if ( empty( $_GET['fs-page'] ) ) {
 		$page = 'profile';
 	}
-	$page     = filter_input( INPUT_GET, 'fs - page', FILTER_SANITIZE_URL );
+	$page     = filter_input( INPUT_GET, 'fs-page', FILTER_SANITIZE_URL );
 	$template = '';
 	$pages    = array( 'profile', 'conditions' );
 	if ( in_array( $page, $pages ) ) {
-		$template = fs_frontend_template( 'auth / ' . $page );
+		$template = fs_frontend_template( 'auth/' . $page );
 	} else {
-		$template = fs_frontend_template( 'auth / profile' );
+		$template = fs_frontend_template( 'auth/profile' );
 	}
 
 	echo $template;
@@ -1530,7 +1531,7 @@ function fs_page_content() {
 function fs_quick_order_button( $post_id = 0, $attr = array() ) {
 	global $post;
 	$attr    = wp_parse_args( $attr, array(
-		'data - toggle' => "modal",
+		'data-toggle' => "modal",
 		'href'          => '#fast-order'
 	) );
 	$str_att = array();
@@ -1547,11 +1548,11 @@ function fs_quick_order_button( $post_id = 0, $attr = array() ) {
 /**
  * получает артикул товара по переданному id поста
  *
- * @param  int|integer $product_id - id поста
- * @param  string $wrap - html обёртка для артикула (по умолчанию нет)
+ * @param  int|integer $product_id-id поста
+ * @param  string $wrap-html обёртка для артикула (по умолчанию нет)
  * @param bool $echo возвращать или выводить, по умолчанию возвращать
  *
- * @return string - артикул товара
+ * @return string-артикул товара
  */
 function fs_get_product_code( $product_id = 0 ) {
 	$config     = new \FS\FS_Config();
@@ -1564,11 +1565,11 @@ function fs_get_product_code( $product_id = 0 ) {
 /**
  * получает артикул товара по переданному id поста
  *
- * @param  int|integer $product_id - id поста
- * @param  string $wrap - html обёртка для артикула (по умолчанию нет)
+ * @param  int|integer $product_id-id поста
+ * @param  string $wrap-html обёртка для артикула (по умолчанию нет)
  * @param bool $echo возвращать или выводить, по умолчанию возвращать
  *
- * @return string - артикул товара
+ * @return string-артикул товара
  */
 function fs_product_code( $product_id = 0, $wrap = '%s' ) {
 	$articul = fs_get_product_code( $product_id );
@@ -1582,7 +1583,7 @@ function fs_product_code( $product_id = 0, $wrap = '%s' ) {
 /**
  * возвращает количество или запас товаров на складе (если значение пустое выводится 1)
  *
- * @param  int|integer $product_id - id товара (записи wordpress)
+ * @param  int|integer $product_id-id товара (записи wordpress)
  *
  * @return int|integer                  запас товаров на складе
  */
@@ -1599,7 +1600,7 @@ function fs_remaining_amount( $product_id = 0 ) {
 
 /**
  * возвращает все зарегистрированные типы цен
- * @return array -  массив всех зарегистрированных цен
+ * @return array- массив всех зарегистрированных цен
  */
 function fs_get_all_prices() {
 	$config_prices = \FS\FS_Config::$prices;
@@ -1742,7 +1743,7 @@ function fs_change_price_percent( $product_id = 0 ) {
 	$action_price = (float) $action_price;
 	if ( ! empty( $action_price ) && ! empty( $base_price ) && $action_price < $base_price ) {
 
-		$change_price = ( $base_price - $action_price ) / $base_price * 100;
+		$change_price = ( $base_price-$action_price )/$base_price * 100;
 		$change_price = round( $change_price );
 	}
 
@@ -1752,8 +1753,8 @@ function fs_change_price_percent( $product_id = 0 ) {
 /**
  * Выводит скидку на товар в процентах
  *
- * @param int $product_id - ID товара(записи)
- * @param string $format - html теги, обёртка для скидки
+ * @param int $product_id-ID товара(записи)
+ * @param string $format-html теги, обёртка для скидки
  * @param array $args
  */
 function fs_discount_percent( $product_id = 0, $format = '-%s%s', $args = array() ) {
@@ -1858,7 +1859,7 @@ function fs_wishlist_widget( $html_attr = array() ) {
 }
 
 /**
- * @param int $order_id - id заказа
+ * @param int $order_id-id заказа
  *
  * @return bool|object возвращает объект с данными заказа или false
  */
@@ -1898,7 +1899,7 @@ function fs_form_field( $field_name, $args = array() ) {
 /**
  * создаёт переменные в письмах из массива ключей
  *
- * @param array $keys - ключи массива
+ * @param array $keys-ключи массива
  *
  * @return array массив из значений типа %variable%
  */
@@ -1943,8 +1944,8 @@ function fs_attr_list( $attr_group = 0 ) {
  * Выводит список всех атрибутов товара в виде:
  *   Название группы свойств : свойство (свойства)
  *
- * @param int $post_id - ID товара
- * @param array $args - дополнительные аргументы вывода
+ * @param int $post_id-ID товара
+ * @param array $args-дополнительные аргументы вывода
  */
 function fs_the_atts_list( $post_id = 0, $args = array() ) {
 	global $post, $fs_config;
@@ -2037,9 +2038,9 @@ function fs_get_image_sizes( $unset_disabled = true ) {
 /**
  * Возвращает массив состоящий id прикреплённых к посту вложений
  *
- * @param int $post_id - ID поста
+ * @param int $post_id-ID поста
  *
- * @param bool $thumbnail - включать ли миниатюру в галерею,
+ * @param bool $thumbnail-включать ли миниатюру в галерею,
  * если да, то миниатюра будет выведена первым изображением
  *
  * @return array
@@ -2066,7 +2067,7 @@ function fs_gallery_images_ids( $post_id = 0, $thumbnail = true ) {
 }
 
 /**
- * Выводит миниатюру товара, если миниатюра не установлена - заглушку
+ * Выводит миниатюру товара, если миниатюра не установлена-заглушку
  *
  * @param int $product_id ID товара (поста)
  * @param string $size размер миниатюры
@@ -2081,12 +2082,12 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $echo = tru
 	if ( has_post_thumbnail( $product_id ) ) {
 		$image = get_the_post_thumbnail_url( $product_id, $size );
 	} else {
-		$image = FS_PLUGIN_URL . 'assets / img / no - image . png';
+		$image = FS_PLUGIN_URL . 'assets/img/no-image . png';
 	}
 	$atts  = fs_parse_attr( $args, array(
 		'src'   => $image,
-		'class' => 'fs - product - thumbnail',
-		'id'    => 'fs - product - thumbnail - ' . $product_id,
+		'class' => 'fs-product-thumbnail',
+		'id'    => 'fs-product-thumbnail-' . $product_id,
 		'alt'   => get_the_title( $product_id ),
 	) );
 	$image = ' <img ' . $atts . ' > ';
@@ -2335,7 +2336,7 @@ function fs_get_product_id( $product = 0 ) {
 /**
  * Выводит метку об акции, популярном товаре, или недавно добавленом
  *
- * @param int $product_id - уникальный ID товара (записи ВП)
+ * @param int $product_id-уникальный ID товара (записи ВП)
  * @param array $labels HTML код метки
  *              могут быть метки типа: 'action','popular','new'
  */
@@ -2369,7 +2370,7 @@ function fs_product_label( $product_id = 0, $labels = array() ) {
  * сообщение может содержать две переменные:
  *
  *
- * @param $pay_method_id - ID выбраного метода оплаты
+ * @param $pay_method_id-ID выбраного метода оплаты
  *
  * @return mixed|void
  */
@@ -2452,10 +2453,10 @@ function fs_copy_all( $from, $to, $rewrite = true ) {
 
 /**
  * Возвращает мета данные о категории товара в виде объекта
- * price_max - максимальная цена
- * price_min - минимальная цена
- * sum - общая стоимость товаров
- * count - количество товаров в категории
+ * price_max-максимальная цена
+ * price_min-минимальная цена
+ * sum-общая стоимость товаров
+ * count-количество товаров в категории
  *
  * @param int $category_id
  *
@@ -2525,7 +2526,7 @@ function fs_get_category_image( $term_id = 0, $size = 'thumbnail', $args = array
  *
  * @param array $args список аргументов
  *
- * @param float $total - сумма от которой считаются налоги
+ * @param float $total-сумма от которой считаются налоги
  *
  * @return mixed|void
  */
@@ -2551,7 +2552,7 @@ function fs_taxes_list( $args = [], $total = 0.0 ) {
 
 			if ( strpos( $tax, '%' ) ) {
 				$tax_num    = floatval( str_replace( '%', '', $tax ) );
-				$tax_amount = $total * $tax_num / 100;
+				$tax_amount = $total * $tax_num/100;
 				$tax_amount = apply_filters( 'fs_price_format', $tax_amount );
 			} else {
 				$tax_amount = apply_filters( 'fs_price_format', floatval( $tax ) );
