@@ -162,12 +162,14 @@ class FS_Config {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Firts name', 'fast-shop' ),
+				'title'       => __( 'This field is required.', 'fast-shop' ),
 				'required'    => true
 			),
 			'fs_last_name'         => array(
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Last name', 'fast-shop' ),
+				'title'       => __( 'This field is required.', 'fast-shop' ),
 				'required'    => true
 			),
 			'fs_phone'             => array(
@@ -182,12 +184,21 @@ class FS_Config {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'City', 'fast-shop' ),
+				'title'       => __( 'This field is required.', 'fast-shop' ),
 				'required'    => true,
 				'save_meta'   => 1
 			),
-			'fs_region'              => array(
+			'fs_zip_code'          => array(
 				'type'        => 'text',
 				'label'       => '',
+				'placeholder' => __( 'Zip Code', 'fast-shop' ),
+				'required'    => false,
+				'save_meta'   => 1
+			),
+			'fs_region'            => array(
+				'type'        => 'text',
+				'label'       => '',
+				'title'       => __( 'This field is required.', 'fast-shop' ),
 				'placeholder' => __( 'State / province', 'fast-shop' ),
 				'required'    => true,
 				'save_meta'   => 1
@@ -621,12 +632,12 @@ class FS_Config {
 				)
 			),
 			'fs-delivery-methods'                 => array(
-				'_thumbnail_id'     => array(
+				'_thumbnail_id'        => array(
 					'name' => __( 'Миниатюра', 'fast-shop' ),
 					'type' => 'image',
 					'args' => array()
 				),
-				'_fs_delivery_cost' => array(
+				'_fs_delivery_cost'    => array(
 					'name' => __( 'Стоимость доставки в базовой валюте', 'fast-shop' ),
 					'type' => 'text',
 					'args' => array( 'style' => 'width:72px;' )
@@ -663,6 +674,42 @@ class FS_Config {
 			$this->data['product_taxes_taxonomy'] => array(
 				'_fs_tax_value' => array(
 					'name' => __( 'The amount or value of tax as a percentage', 'fast-shop' ),
+					'type' => 'text',
+					'args' => array()
+				)
+			),
+			// Дополнительные поля скидок
+			$this->data['discount_taxonomy']      => array(
+				'discount_where_is' => array(
+					'name' => __( 'Скидка активируется при условии', 'fast-shop' ),
+					'type' => 'select',
+
+					'args' => array(
+						'values' => array(
+							'sum'   => __( 'Общая сумма товаров в корзине', 'fast-shop' ),
+							'count' => __( 'Количество товаров в корзине', 'fast-shop' )
+						)
+					)
+				),
+				'discount_where'    => array(
+					'name' => __( 'Условие скидки', 'fast-shop' ),
+					'type' => 'select',
+					'args' => array(
+						'values' => array(
+							'>=' => __( 'Больше или равно', 'fast-shop' ),
+							'>'  => __( 'Больше', 'fast-shop' ),
+							'<'  => __( 'Меньше', 'fast-shop' ),
+							'<=' => __( 'Меньше или равно', 'fast-shop' )
+						)
+					)
+				),
+				'discount_value'    => array(
+					'name' => __( 'Значение условия', 'fast-shop' ),
+					'type' => 'text',
+					'args' => array()
+				),
+				'discount_amount'   => array(
+					'name' => __( 'Сумма скидки', 'fast-shop' ),
 					'type' => 'text',
 					'args' => array()
 				)

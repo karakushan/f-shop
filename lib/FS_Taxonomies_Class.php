@@ -199,7 +199,7 @@ class FS_Taxonomies_Class {
 		// создание дополнительных полей на странице добавления и редактирования таксономии
 		if ( $this->shop_taxonomies() ) {
 			foreach ( $this->shop_taxonomies() as $key => $taxonomy ) {
-				if ( in_array( $key, array( 'product-attributes', 'fs-discounts' ) ) ) {
+				if ( in_array( $key, array( 'product-attributes' ) ) ) {
 					continue;
 				}
 				// поля таксономии категорий товара
@@ -216,14 +216,6 @@ class FS_Taxonomies_Class {
 		add_action( "product-attributes_add_form_fields", array( $this, 'add_product_attr_fields' ) );
 		add_action( "create_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
 		add_action( "edited_product-attributes", array( $this, 'save_custom_taxonomy_meta' ) );
-
-		// поля таксономии кидок
-		add_action( "fs-discounts_edit_form_fields", array( $this, 'edit_fs_discounts_fields' ) );
-//		add_action( "fs-discounts_add_form_fields", array( $this, 'add_fs_discounts_fields' ) );
-
-		add_action( "create_fs-discounts", array( $this, 'save_custom_taxonomy_meta' ) );
-		add_action( "edited_fs-discounts", array( $this, 'save_custom_taxonomy_meta' ) );
-
 	}
 
 	/**
