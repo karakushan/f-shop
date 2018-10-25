@@ -76,9 +76,10 @@ class FS_Payment_Class {
 		if ( in_array( get_post_status( $order_id ), array( 'paid' ) ) ) {
 			return sprintf( '<h2>' . __( 'Order #%d paid successfully', 'fast-shop' ) . '</h2>', $order_id );
 		} else {
-			if ( ! empty( $_GET['pay_method'] ) && ! empty( $payment_methods[ $_GET['pay_method'] ] ) ) {
+			$term     = get_term_by( 'slug', $_GET['pay_method'], $fs_config->data['product_pay_taxonomy'] );
+			if ( ! empty( $_GET['pay_method'] ) && ! empty( $payment_methods[ $_GET['pay_method'] ] ) && $term) {
 
-				$html .= sprintf( '<h2>' . __( 'Payment  <span>%s <span>%s</span></span> with  <span>%s</span>', 'fast-shop' ) . '</h2>', apply_filters( 'fs_price_format', $order->sum ), fs_currency(), $payment_methods[ $_GET['pay_method'] ]['name'] );
+				$html .= sprintf( '<h2>' . __( 'Payment  <span>%s <span>%s</span></span> with  <span>%s</span>', 'fast-shop' ) . '</h2>', apply_filters( 'fs_price_format', $order->sum ), fs_currency(), $term->name );
 				if ( ! empty( $payment_methods[ $_GET['pay_method'] ]['description'] ) ) {
 					$html .= sprintf( '<p>%s</p>', $payment_methods[ $_GET['pay_method'] ]['description'] );
 				}

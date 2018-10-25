@@ -642,7 +642,7 @@ function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args 
 		'type'  => 'link',
 		'class' => 'fs-delete-wishlist-position',
 		'data'  => array(),
-		'title' => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) )
+		'title' => sprintf( __( 'Remove from wishlist', 'fast-shop' ), get_the_title( $product_id ) )
 	) );
 	$html_atts  = fs_parse_attr( $args['data'], array(
 		'class'          => $args['class'],
