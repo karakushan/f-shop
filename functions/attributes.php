@@ -75,32 +75,39 @@ function fs_get_attribute( $attr_id, $product_id = 0, $args = array() ) {
  *
  * @return array массив объектов поста
  */
-function fs_current_screen_attributes( $parent_term_id ) {
-	global $wp_query;
-	$posts = new WP_Query( array(
+function fs_current_screen_attributes( $parent_term_id = 0 ) {
+	global $fs_config;
+	if ( ! $parent_term_id ) {
+		$parent_term_id = get_queried_object_id();
+	}
+
+	$posts = get_posts( array(
 		'posts_per_page' => - 1,
 		'fields'         => 'ids',
 		'tax_query'      => array(
-			array(
-				'taxonomy' => 'catalog',
-				'field'    => 'id',
-				'terms'    => $wp_query->queried_object_id
-			)
+			'taxonomy' => $fs_config->data['product_taxonomy'],
+			'field'    => 'term_id',
+			'terms'    => $parent_term_id
 		)
-	) );
 
-	$ids       = $posts->posts;
-	$obj_terms = array();
-	$terms     = wp_get_object_terms( $ids, 'product-attributes' );
-	foreach ( $terms as $key => $term ) {
-		if ( $term->parent != $parent_term_id ) {
-			continue;
-		}
-		$obj_terms[] = $term;
-	}
+	) );
 	wp_reset_postdata();
 
-	return $obj_terms;
+	$terms = [];
+	foreach ( $posts as $post_data ) {
+		$terms_post = get_the_terms( $post_data->ID, $fs_config->data['product_att_taxonomy'] );
+		if ( $terms_post ) {
+			foreach ( $terms_post as $term_post ) {
+				$terms[] = $term_post->parent;
+			}
+		}
+
+
+	}
+
+	$terms = array_unique( $terms );
+
+	return $terms;
 }
 
 // select фильтр сортировки по таксономии
@@ -353,18 +360,18 @@ function fs_list_post_atts( $post_id = 0 ) {
 
 			echo '<div class="fs-attr-group-name">' . esc_html( $group ) . '</div>';
 			echo '<ul class="fs-attr-groups-list">';
-			$count=0;
+			$count = 0;
 			foreach ( $parent as $chilld_id => $child ) {
 				$attr_type = get_term_meta( $child->term_id, 'fs_att_type', 1 );
 				if ( $attr_type == 'image' ) {
 					$image_id = get_term_meta( $child->term_id, 'fs_att_image_value', 1 );
 					$img_url  = wp_get_attachment_image_url( $image_id, 'full' );
 					echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\">";
-					echo "<input type=\"radio\"  name=\"$group_slug\" value=\"$child->term_id\" data-fs-element=\"attr\" data-product-id=\"$post_id\" " . checked( 0,$count, false ) . "></label></li>";
+					echo "<input type=\"radio\"  name=\"$group_slug\" value=\"$child->term_id\" data-fs-element=\"attr\" data-product-id=\"$post_id\" " . checked( 0, $count, false ) . "></label></li>";
 				} else {
 					echo "<li><label>" . $child->name . "</label><input type=\"radio\" name=\"$group_slug\" value=\"$child->term_id\"></li>";
 				}
-				$count++;
+				$count ++;
 			}
 			echo '</ul>';
 
