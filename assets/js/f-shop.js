@@ -185,23 +185,18 @@ var addUrlParam = function (search, key, val) {
 jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
     event.preventDefault();
 
-    // проверяем выбрал ли пользователь обязательные атибуты товара, например размер
-    var fsAttrReq = true;
-    jQuery('[name="fs-attr"]').each(function () {
-        if (jQuery(this).val() == '') {
-            fsAttrReq = false;
-            // создаём событие
-            var no_selected_attr = new CustomEvent("fs_no_selected_attr");
-            document.dispatchEvent(no_selected_attr);
-        }
-    });
-
-    if (!fsAttrReq) return fsAttrReq;
 
     var curent = jQuery(this);
     var product_id = curent.data('product-id');
-    var attr = curent.attr('data-attr');
     var count = curent.attr('data-count');
+
+    // подтягиваем атрибуты товаров
+    var attr = {};
+    jQuery('[data-fs-element="attr"]').each(function () {
+        if (jQuery(this).data("product-id") == product_id && jQuery(this).prop("checked")) {
+            attr[jQuery(this).attr("name")] = jQuery(this).val();
+        }
+    });
 
 
     // объект передаваемый в события
@@ -447,27 +442,71 @@ jQuery(document).on('change', '[name="fs_delivery_methods"]', function (event) {
 jQuery(document).on('click', '[data-fs-type="product-delete"]', function (event) {
     event.preventDefault();
     var el = jQuery(this);
-    var productId = jQuery(this).data('fs-id');
-    var productName = jQuery(this).data('fs-name');
+    var item = el.data('cart-item');
+    var sendData = {
+        action: 'fs_delete_product',
+        item: item
+    };
     if (confirm(el.data("confirm"))) {
         jQuery.ajax({
             url: FastShopData.ajaxurl,
             type: 'POST',
-            dataType: 'html',
-            data: {
-                action: 'delete_product',
-                product: productId
+            data: sendData
+        }).success(function (result) {
+            if (result.success) {
+                iziToast.show({
+                    theme: 'light',
+                    message: result.data.message,
+                    position: 'topCenter',
+
+                });
+                setTimeout(function () {
+                    location.reload();
+                }, 5000);
+            } else {
+                iziToast.show({
+                    theme: 'light',
+                    message: result.data.message,
+                    position: 'topCenter',
+                });
             }
         })
-            .done(function () {
-                location.reload();
-            })
-            .fail(function () {
-                console.log("ошибка удаления товара из корзины");
-            })
-            .always(function () {
+        ;
+    }
+});
 
-            });
+//Удаление всех товаров из корзины
+jQuery(document).on('click', '[data-fs-element="delete-cart"]', function (event) {
+    event.preventDefault();
+    var el = jQuery(this);
+    var sendData = {
+        action: 'fs_delete_cart',
+    };
+    if (confirm(el.data("confirm"))) {
+        jQuery.ajax({
+            url: FastShopData.ajaxurl,
+            type: 'POST',
+            data: sendData
+        }).success(function (result) {
+            if (result.success) {
+                iziToast.show({
+                    theme: 'light',
+                    message: result.data.message,
+                    position: 'topCenter',
+
+                });
+                setTimeout(function () {
+                    location.reload();
+                }, 5000);
+            } else {
+                iziToast.show({
+                    theme: 'light',
+                    message: result.data.message,
+                    position: 'topCenter',
+                });
+            }
+        })
+        ;
     }
 });
 

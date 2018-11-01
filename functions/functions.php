@@ -557,8 +557,8 @@ function fs_get_cart( $args = array() ) {
 					}
 				}
 			}
-			$base_price              = fs_get_base_price( $product_id ) ? sprintf( $args['price_format'], fs_get_base_price( $product_id ), fs_currency() ) : '';
-			$products[ $product_id ] = array(
+			$base_price       = fs_get_base_price( $product_id ) ? sprintf( $args['price_format'], fs_get_base_price( $product_id ), fs_currency() ) : '';
+			$products[ $key ] = array(
 				'id'         => $product_id,
 				'name'       => get_the_title( $product_id ),
 				'count'      => $c,
@@ -582,27 +582,26 @@ function fs_get_cart( $args = array() ) {
 /**
  * выводит кнопку удаления товара из корзины
  *
- * @param int $product_id -ID удаляемого товара
+ * @param int $cart_item -ID удаляемого товара
+ * @param int $product_id
  * @param  array $args -массив аргументов для кнопки или ссылки
  *        'text' -содержимое кнопки, по умолчанию '&#10005;',
  *        'type' -тип тега ссылка 'link' или 'button',
  *        'class'-класс для кнопки, ссылки (по умолчанию класс 'fs-delete-position')
  *
- * @return bool
+ * @return void
  */
-function fs_delete_position( $product_id = 0, $args = array() ) {
-	$product_id = fs_get_product_id( $product_id );
-	$args       = wp_parse_args( $args, array(
+function fs_delete_position( $cart_item = 0, $product_id = 0, $args = array() ) {
+	$name = get_the_title( $product_id );
+	$args = wp_parse_args( $args, array(
 		'content' => '&#10006;',
 		'type'    => 'link',
 		'atts'    => array(
-			'data-confirm' => sprintf( __( 'Are you sure you want to delete the item &laquo;%s&raquo; from the basket?', 'fast-shop' ), get_the_title( $product_id ) ),
-			'class'        => 'fs-delete-position',
-			'title'        => sprintf( __( 'Remove items %s', 'fast-shop' ), get_the_title( $product_id ) ),
-			'data-fs-name' => get_the_title( $product_id ),
-			'data-fs-id'   => $product_id,
-			'data-fs-type' => "product-delete"
-
+			'data-confirm'   => sprintf( __( 'Are you sure you want to delete the item &laquo;%s&raquo; from the basket?', 'fast-shop' ), $name ),
+			'class'          => 'fs-delete-position',
+			'title'          => sprintf( __( 'Remove items %s', 'fast-shop' ), $name ),
+			'data-cart-item' => $cart_item,
+			'data-fs-type'   => "product-delete"
 		)
 	) );
 
@@ -1219,10 +1218,10 @@ function fs_delete_cart( $args = array() ) {
 		'type'  => 'button'
 	) );
 	$html_att = fs_parse_attr( array(), array(
-		'class'        => $args['class'],
-		'data-fs-type' => "delete-cart",
-		'data-confirm' => __( 'Are you sure you want to empty the trash?', 'fast-shop' ),
-		'data-url'     => wp_nonce_url( add_query_arg( array( "fs_action" => "delete-cart" ) ), "fs_action" )
+		'class'           => $args['class'],
+		'data-fs-element' => "delete-cart",
+		'data-confirm'    => __( 'Are you sure you want to empty the trash?', 'fast-shop' ),
+		'data-url'        => wp_nonce_url( add_query_arg( array( "fs_action" => "delete-cart" ) ), "fs_action" )
 
 	) );
 	switch ( $args['type'] ) {
@@ -1791,9 +1790,6 @@ function fs_parse_attr( $attr = array(), $default = array() ) {
 	$attr      = wp_parse_args( $attr, $default );
 	$atributes = array();
 	foreach ( $attr as $key => $att ) {
-		if ( empty( $att ) ) {
-			continue;
-		}
 		$atributes[] = $key . '="' . esc_attr( $att ) . '"';
 
 	}

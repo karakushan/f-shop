@@ -95,15 +95,14 @@ class FS_Shortcode {
 
 		$cart = fs_get_cart();
 
-
-		if ( count( $cart ) ) {
+		if ( $cart ) {
+			fs_debug_data( $content );
 			$content = apply_filters( 'the_content', $content );
 		} else {
 			if ( empty( $atts['empty_text'] ) ) {
 				$content = '<p class="' . esc_attr( $atts['empty_class'] ) . '">';
-				$content .= '<span class="icon glyphicon glyphicon-info-sign"></span>';
 				$content .= esc_html__( 'Your basket is empty', 'fast-shop' );
-				$content .= '.&nbsp;<a href="' . esc_url( fs_get_catalog_link() ) . '">' . esc_html__( 'To the catalog', 'fast-shop' ) . '</a></p>';
+				$content .= '</p>';
 			} else {
 				$content = $atts['empty_text'];
 			}
@@ -155,7 +154,7 @@ class FS_Shortcode {
 	 *
 	 */
 	public function cart_shortcode() {
-		return fs_frontend_template( 'cart/list-products' );
+		return fs_frontend_template( 'cart/list-products', array( 'vars' => array( 'cart' => fs_get_cart() ) ) );
 	}
 
 	/**
@@ -227,7 +226,7 @@ class FS_Shortcode {
 
 	function user_cabinet() {
 		$user = wp_get_current_user();
-		if ( is_user_logged_in()) {
+		if ( is_user_logged_in() ) {
 			$temp = fs_user_cabinet();
 		} else {
 

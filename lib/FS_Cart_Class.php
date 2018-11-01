@@ -21,8 +21,12 @@ class FS_Cart_Class {
 		add_action( 'wp_ajax_nopriv_update_cart', array( $this, 'update_cart_ajax' ) );//
 
 		//Удаление товара из корзины ajax
-		add_action( 'wp_ajax_delete_product', array( $this, 'delete_product_ajax' ) );
-		add_action( 'wp_ajax_nopriv_delete_product', array( $this, 'delete_product_ajax' ) );
+		add_action( 'wp_ajax_fs_delete_product', array( $this, 'delete_product_ajax' ) );
+		add_action( 'wp_ajax_nopriv_fs_delete_product', array( $this, 'delete_product_ajax' ) );
+
+		//Удаление всех товаров из корзины ajax
+		add_action( 'wp_ajax_fs_delete_cart', array( $this, 'remove_cart_ajax' ) );
+		add_action( 'wp_ajax_nopriv_fs_delete_cart', array( $this, 'remove_cart_ajax' ) );
 
 		// получаем содержимое корзины
 		add_action( 'wp_ajax_fs_get_cart', array( $this, 'fs_get_cart_callback' ) );
@@ -49,21 +53,13 @@ class FS_Cart_Class {
 
 	// ajax обработка добавления в корзину
 	function add_to_cart_ajax() {
-		$product_id = intval( $_POST['post_id'] );
-		$attr       = ! empty( $_POST['attr'] ) ? json_decode( wp_unslash( $_POST['attr'] ), true ) : array();
-		$count      = intval( $_POST['count'] );
-		if ( isset( $_SESSION['cart'][ $product_id ] ) ) {
-			$count_sess                      = $_SESSION['cart'][ $product_id ]['count'];
-			$_SESSION['cart'][ $product_id ] = array(
-				'count' => $count_sess + $count,
-				'attr'  => $attr
-			);
-		} else {
-			$_SESSION['cart'][ $product_id ] = array(
-				'count' => $count,
-				'attr'  => $attr
-			);
-		}
+		$attr = ! empty( $_POST['attr'] ) ? $_POST['attr'] : array();
+
+		$_SESSION['cart'][] = array(
+			'ID'    => intval( $_POST['post_id'] ),
+			'count' => intval( $_POST['count'] ),
+			'attr'  => $attr
+		);
 
 		fs_cart_widget( array( 'class' => 'cart' ) );
 
@@ -71,18 +67,51 @@ class FS_Cart_Class {
 
 	}
 
-//Метод удаляет конкретный товар или все товары из корзины покупателя
-	public function fs_remove_product( $product_id = '', $redirect = false ) {
-		if ( $product_id == '' ) {
-			unset( $_SESSION['cart'] );
-		} else {
-			$product_id = intval( $_REQUEST['product_id'] );
-			unset( $_SESSION['cart'][ $product_id ] );
+
+	/**
+	 * Метод удаляет конкретный товар или все товары из корзины покупателя
+	 *
+	 * @param int $cart_item
+	 *
+	 * @return bool|\WP_Error
+	 */
+	public function fs_remove_product( $cart_item = 0 ) {
+		if ( empty( $_SESSION['cart'] ) || ! is_array( $_SESSION['cart'] ) ) {
+			return new \WP_Error( __METHOD__, __( 'Cart is empty', 'fast-shop' ) );
 		}
 
-		if ( $redirect === true ) {
-			wp_redirect( remove_query_arg( array( 'fs_action', 'fs_request', 'product_id' ) ) );
-			exit();
+		unset( $_SESSION['cart'][ $cart_item ] );
+
+		return true;
+	}
+
+	/**
+	 * Уничтожает корзину полностью
+	 * @return bool
+	 */
+	function remove_cart() {
+		unset( $_SESSION['cart'] );
+
+		if ( empty( $_SESSION['cart'] ) ) {
+			return true;
+		} else {
+			return false;
+		}
+
+
+	}
+
+	/**
+	 * Уничтожает корзину полностью через ajax
+	 *
+	 * @return bool
+	 */
+	function remove_cart_ajax() {
+		$remove = $this->remove_cart();
+		if ( $remove ) {
+			wp_send_json_success( array( 'message' => __( 'All items have been successfully removed from the cart.', 'fast-shop' ) ) );
+		} else {
+			wp_send_json_error( array( 'message' => __( 'An error occurred while removing items from the cart or the cart is empty.', 'fast-shop' ) ) );
 		}
 	}
 
@@ -102,13 +131,15 @@ class FS_Cart_Class {
 
 	//удаление товара в корзине аяксом
 	public function delete_product_ajax() {
-		$product_id = (int) $_REQUEST['product'];
-		if ( $_SESSION['cart'] ) {
-			if ( $_SESSION['cart'][ $product_id ] ) {
-				unset( $_SESSION['cart'][ $product_id ] );
-			}
+		$remove = $this->fs_remove_product( $_POST['item'] );
+		if ( $remove ) {
+			wp_send_json_success( array( 'message' => sprintf( __( 'Position successful removed from the basket', 'fast-shop' ), $_POST['item'] ) ) );
 		}
-		exit;
+		if ( is_wp_error( $remove ) ) {
+			wp_send_json_error( array( 'message' => sprintf( $remove->get_error_message(), $_POST['item'] ) ) );
+		} else {
+			wp_send_json_error( array( 'message' => sprintf( __( 'An error occurred while removing position from the cart', 'fast-shop' ), $_POST['item'] ) ) );
+		}
 	}
 
 	/**
