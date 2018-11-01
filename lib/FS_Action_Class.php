@@ -10,45 +10,10 @@ class FS_Action_Class {
 
 	function __construct() {
 		$this->config = new FS_Config();
-
-
 		add_action( 'init', array( &$this, 'fs_catch_action' ), 2 );
 		add_action( 'init', array( &$this, 'register_plugin_action' ), 10 );
 		add_action( 'init', array( &$this, 'register_plugin_filters' ), 10 );
 		add_action( 'admin_menu', array( $this, 'remove_admin_submenus' ), 999 );
-
-		// конвертация стоимости товара в зависимости от локали
-		if ( fs_option( 'price_conversion', 0 ) ) {
-			add_filter( 'fs_price_filter', array( $this, 'price_currency_convert' ), 12, 2 );
-
-		}
-
-	}
-
-	/**
-	 * конвертация стоимости товара в зависимости от локали
-	 *
-	 * @param $product_id
-	 * @param $price
-	 *
-	 * @return mixed
-	 */
-	function price_currency_convert( $product_id, $price ) {
-		global $wpdb;
-		$current_locale   = get_locale();
-		$product_currency = fs_get_product_currency( $product_id );
-
-		$search_locale = $wpdb->get_row( "SELECT * FROM $wpdb->termmeta WHERE meta_key='fs_currency_locales' AND meta_value='$current_locale'" );
-		if ( $search_locale ) {
-			// получаем множитель стоимости для текущей локали (языка)
-			$currency_cost = get_term_meta( $search_locale->term_id, 'cost-basic', 1 );
-			// если валюта товара и валюта локали не совпадают, то конвертируем её
-			if ( $product_currency['id'] != $search_locale->term_id ) {
-				$price = $price / $currency_cost;
-			}
-		}
-
-		return floatval( $price );
 	}
 
 	public

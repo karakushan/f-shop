@@ -177,28 +177,29 @@ function shiba_add_quick_edit( $column_name, $post_type ) {
 		$config = new \FS\FS_Config();
 		?>
 
-      <fieldset class="inline-edit-col-left inline-edit-fast-shop">
-        <legend class="inline-edit-legend">Настройки товара</legend>
-        <div class="inline-edit-col">
-          <label>
-            <span class="title"><?php _e( 'Price', 'fast-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
-            <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['price'] ?>"
-                                                 class="fs_price"
-                                                 value="" required></span>
-          </label>
-          <label>
-            <span class="title"><?php _e( 'Vendor code', 'fast-shop' ) ?></span>
-            <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['sku'] ?>"
-                                                 class="fs_vendor_code" value=""></span>
-          </label>
-          <label>
+        <fieldset class="inline-edit-col-left inline-edit-fast-shop">
+            <legend class="inline-edit-legend">Настройки товара</legend>
+            <div class="inline-edit-col">
+                <label>
+                    <span class="title"><?php _e( 'Price', 'fast-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
+                    <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['price'] ?>"
+                                                         class="fs_price"
+                                                         value="" required></span>
+                </label>
+                <label>
+                    <span class="title"><?php _e( 'Vendor code', 'fast-shop' ) ?></span>
+                    <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['sku'] ?>"
+                                                         class="fs_vendor_code" value=""></span>
+                </label>
+                <label>
             <span class="title"><?php _e( 'Stock in stock', 'fast-shop' ) ?> (<?php _e( 'units', 'fast-shop' ) ?>
-              )</span>
-            <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['remaining_amount'] ?>"
-                                                 class="fs_stock" value=""></span>
-          </label>
-        </div>
-      </fieldset>
+                )</span>
+                    <span class="input-text-wrap"><input type="text"
+                                                         name="<?php echo $config->meta['remaining_amount'] ?>"
+                                                         class="fs_stock" value=""></span>
+                </label>
+            </div>
+        </fieldset>
 		<?php
 	}
 }
@@ -309,30 +310,33 @@ function fs_dropdown_cats_multiple( $output, $r ) {
 // вносит коррективы в цену с учётом настроек валюты
 add_filter( 'fs_price_filter', 'fs_price_filter_callback', 10, 2 );
 function fs_price_filter_callback( $post_id, $price ) {
-	global $fs_config;
-	$active_currency_id = fs_option( 'default_currency' );
-	$post_currency_id   = get_post_meta( $post_id, $fs_config->meta['currency'], 1 );
+	if ( fs_option( 'multi_currency_on' ) != 1 ) {
+		return $price;
+	}
+	global $fs_config, $wpdb;
+	$default_currency     = fs_option( 'default_currency' );
+	$locale               = get_locale();
+	$locale_currency_id   = $wpdb->get_var( "SELECT term_id FROM $wpdb->termmeta WHERE meta_key='_fs_currency_locale' AND meta_value='$locale'" );
+	$locale_currency_cost = get_term_meta( $locale_currency_id, '_fs_currency_cost', true );
+	$product_currency_id  = get_post_meta( $post_id, $fs_config->meta['currency'], 1 );
+
+	if ( ! $locale_currency_id && $default_currency ) {
+		$locale_currency_id = $default_currency;
+	}
+
+	if(empty($product_currency_id)){
+		$product_currency_id=$default_currency;
+    }
 
 	// если валюта не указана, то выходим
-	if ( empty( $post_currency_id ) ) {
-		return (float) $price;
+	if ( empty( $product_currency_id ) || empty( $locale_currency_id ) || $product_currency_id == $locale_currency_id ) {
+		return $price;
 	}
-
-	// если термин валюты или таксономия не найдены, то выходим
-	$currency_term = get_term( (int) $post_currency_id );
-	if ( is_wp_error( $currency_term ) || ! $currency_term ) {
-		return (float) $price;
-	}
-
 	// это сработает если валюта товара отличается от валюты по умолчанию
-	if ( $post_currency_id != $active_currency_id ) {
-		$active_currency_rate = get_term_meta( $post_currency_id, 'cost-basic', 1 );
-		// проверяем указана ли стоимость валюты товара в базовой валюте, и есть ли вообще такое поле
-		if ( ! empty( $active_currency_rate ) && $active_currency_rate > 0 ) {
-			$price = (float) $price * (float) $active_currency_rate;
-		}
+	if ( $product_currency_id != $locale_currency_id && $locale_currency_cost > 0 ) {
+		$price = $price / $locale_currency_cost;
+		$price = floatval( $price );
 	}
 
-
-	return (float) $price;
+	return $price;
 }

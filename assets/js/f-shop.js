@@ -833,25 +833,27 @@ loginForm.validate({
 
 
 // валидация и отправка формы заказа
-var validator = jQuery('[name="fs-order-send"]');
-jQuery('[data-fs-action="order-send"]').click(function (e) {
+var order_send = jQuery('[name="fs-order-send"]');
+var orderSendBtn = order_send.find('[data-fs-action="order-send"]');
+
+orderSendBtn.click(function (e) {
         e.preventDefault();
-        validator.submit();
+        order_send.submit();
     }
 );
-validator.validate({
+order_send.validate({
     ignore: [],
     submitHandler: function (form) {
         jQuery.ajax({
             url: FastShopData.ajaxurl,
             type: 'POST',
-            data: validator.serialize(),
+            data: order_send.serialize(),
             beforeSend: function () {
-                jQuery('[data-fs-action="order-send"]').html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
+                orderSendBtn.html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
             }
         })
             .done(function (response) {
-                jQuery('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
+                orderSendBtn.find('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
                 if (!IsJsonString(response)) return false;
                 var jsonData = JSON.parse(response);
                 /* если статус заказ успешный */
@@ -865,14 +867,14 @@ validator.validate({
                     });
                     document.dispatchEvent(send_order);
 
-                    jQuery('[data-fs-action="order-send"]').html('Отправлено');
+                    orderSendBtn.html(orderSendBtn.data("after-send"));
                     if (jsonData.redirect != false) document.location.href = jsonData.redirect;
                 } else {
                     if (jsonData.error_code != 'undefined') {
                         console.log(jsonData.error_code);
                     }
-                    jQuery('[name="fs-order-send"] .fs-form-info').addClass('error').html(jsonData.text).fadeIn();
-                    jQuery('[data-fs-action="order-send"]').html('Отправить');
+                    order_send.find('.fs-form-info').addClass('error').html(jsonData.text).fadeIn();
+                    orderSendBtn.html(orderSendBtn.data("content"));
                 }
             });
 
