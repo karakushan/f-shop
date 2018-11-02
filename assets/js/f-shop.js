@@ -610,8 +610,26 @@ jQuery(document).ready(function (jQuery) {
     jQuery(document).on('click', '[data-fs-count="pluss"]', function () {
         var parent = jQuery(this).parents('[data-fs-element="fs-quantity"]');
         var jQueryinput = parent.find('input');
-        jQueryinput.val(parseInt(jQueryinput.val()) + 1);
-        jQueryinput.change();
+        var maxAttr = jQueryinput.attr("max");
+        var max = parseInt(maxAttr);
+
+        if (typeof maxAttr == "undefined") {
+            jQueryinput.val(parseInt(jQueryinput.val()) + 1);
+            jQueryinput.change();
+        } else {
+            if (max < parseInt(jQueryinput.val())) {
+                jQueryinput.val(parseInt(jQueryinput.val()) + 1);
+                jQueryinput.change();
+            } else {
+                iziToast.show({
+                    theme: 'light',
+                    message: FastShopData.lang.limit_product,
+                    position: 'topCenter',
+
+                });
+            }
+
+        }
         return false;
     });
 

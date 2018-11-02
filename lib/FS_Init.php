@@ -124,6 +124,9 @@ class FS_Init {
 			'fs_slider_max'     => intval( $price_max ),
 			'fs_nonce'          => wp_create_nonce( 'fast-shop' ),
 			'fs_currency'       => fs_currency(),
+			'lang'              => array(
+				'limit_product' => __( 'You have added the maximum amount of goods in stock', 'fast-shop' )
+			),
 			'fs_slider_val_min' => ! empty( $_REQUEST['price_start'] ) ? (int) $_REQUEST['price_start'] : 0,
 			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : intval( $price_max )
 		);

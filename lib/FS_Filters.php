@@ -39,7 +39,7 @@ class FS_Filters {
 				// Search by sku
 				$search_query = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s'", $fs_config->meta['sku'], get_search_query() );
 				$sku_products = $wpdb->get_col( $search_query );
-				if ( $sku_products ) {
+				if ( ! empty( $sku_products ) ) {
 					$query->set( 's', '' );
 					$query->set( 'post__in', $sku_products );
 				}

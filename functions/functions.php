@@ -1009,9 +1009,9 @@ function fs_aviable_product( $post_id = 0 ) {
  * @return mixed
  */
 function fs_quantity_product( $product_id = 0, $args = array() ) {
-	global $post;
-	$product_id = ! empty( $product_id ) ? $product_id : $post->ID;
-	$args       = wp_parse_args( $args, array(
+	global $fs_config;
+	$product_id  = fs_get_product_id( $product_id );
+	$args        = wp_parse_args( $args, array(
 		'position'      => '%pluss% %input% %minus%',
 		'wrapper'       => 'div',
 		'wrapper_class' => 'fs-qty-wrap',
@@ -1022,10 +1022,16 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		'input_class'   => 'fs-quantity',
 		'echo'          => true
 	) );
-	$pluss      = sprintf( '<button type="button" class="%s" data-fs-count="pluss">%s</button> ', $args['pluss_class'], $args['pluss_content'] );
-	$minus      = sprintf( '<button type="button" class="%s" data-fs-count="minus">%s</button>', $args['minus_class'], $args['minus_content'] );
-	$input      = sprintf( '<input type="text" class="%s" name="count" value="1" data-fs-action="change_count" data-fs-product-id="%s">', $args['input_class'], $product_id, $product_id );
-	$quantity   = str_replace(
+	$total_count = get_post_meta( $product_id, $fs_config->meta['remaining_amount'], true );
+	if ( $total_count == '' ) {
+		$max = '';
+	} else {
+		$max = 'max="' . intval( $total_count ) . '"';
+	}
+	$pluss    = sprintf( '<button type="button" class="%s" data-fs-count="pluss">%s</button> ', $args['pluss_class'], $args['pluss_content'] );
+	$minus    = sprintf( '<button type="button" class="%s" data-fs-count="minus">%s</button>', $args['minus_class'], $args['minus_content'] );
+	$input    = sprintf( '<input type="text" class="%s" name="count" value="1"  data-fs-action="change_count" data-fs-product-id="%s" ' . $max . '>', $args['input_class'], $product_id, $product_id );
+	$quantity = str_replace(
 		array(
 			'%pluss%',
 			'%input%',
@@ -1036,7 +1042,7 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 			$input,
 			$minus
 		), $args['position'] );
-	$quantity   = sprintf( '<%s class="%s" data-fs-element="fs-quantity"> %s </%s>', $args['wrapper'], $args['wrapper_class'], $quantity, $args['wrapper'] );
+	$quantity = sprintf( '<%s class="%s" data-fs-element="fs-quantity"> %s </%s>', $args['wrapper'], $args['wrapper_class'], $quantity, $args['wrapper'] );
 	if ( $args['echo'] ) {
 		echo $quantity;
 	} else {
