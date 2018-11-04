@@ -773,10 +773,9 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 		'type'      => 'button',
 		'echo'      => true,
 		'data'      => array(
-			'data-success-message' => sprintf( __( 'Success! Item &laquo;%s&raquo; successfully added to cart. <a href="%s">Go to shopping cart</a>', 'fast-shop' ), get_the_title( $product_id ), fs_cart_url( false ) ),
 			'data-action'          => 'add-to-cart',
 			'data-product-id'      => $product_id,
-			'data-product-name'    => get_the_title( $product_id ),
+			'data-name'    => get_the_title( $product_id ),
 			'data-price'           => fs_get_price( $product_id ),
 			'data-currency'        => fs_currency(),
 			'data-sku'             => fs_get_product_code( $product_id ),
@@ -1324,7 +1323,6 @@ function fs_add_to_wishlist( $product_id = 0, $label = 'В список жела
 	// определим параметры по умолчанию
 	$defaults  = array(
 		'attr'           => '',
-		'success_mesage' => sprintf( __( 'Success! Item &laquo;%s&raquo; successfully added to wishlist. <a href="%s">Go to wishlist</a>', 'fast-shop' ), get_the_title( $product_id ), fs_wishlist_url() ),
 		'type'           => 'button',
 		'preloader'      => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
 		'class'          => 'fs-whishlist-btn',
@@ -1334,7 +1332,6 @@ function fs_add_to_wishlist( $product_id = 0, $label = 'В список жела
 	$args      = wp_parse_args( $args, $defaults );
 	$html_atts = fs_parse_attr( array(), array(
 		'data-fs-action'       => "wishlist",
-		'data-success-message' => $args['success_mesage'],
 		'class'                => $args['class'],
 		'id'                   => $args['id'],
 		'data-name'            => get_the_title( $product_id ),

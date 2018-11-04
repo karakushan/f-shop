@@ -1,5 +1,36 @@
+// строковая фнкция, которая позволяет производить поиск и замену сразу по нескольким значениям переданным в виде объекта
+String.prototype.allReplace = function (obj) {
+    var retStr = this;
+    for (var x in obj) {
+        retStr = retStr.replace(new RegExp(x, 'g'), obj[x]);
+    }
+    return retStr;
+};
+
+var fShop = {
+    getLang: function (string) {
+        return FastShopData.lang[string];
+    },
+    strReplace: function (string, obj) {
+        for (var x in obj) {
+            string = string.replace(new RegExp(x, 'g'), obj[x]);
+        }
+        return string;
+    },
+    getSettings: function (settingName) {
+        return FastShopData[settingName];
+    },
+
+    init: function () {
+    }
+}
+
+fShop.init();
+
+
 var fs_message;
 var event;
+
 // переводы сообщений
 var FastShopLang = {
     uk: {
@@ -266,7 +297,11 @@ document.addEventListener("fs_add_to_cart", function (event) {
     iziToast.show({
         image: event.detail.image,
         theme: 'light',
-        message: button.data("success-message"),
+        title: fShop.getLang('success'),
+        message: fShop.strReplace(fShop.getLang('addToCart'), {
+            '%product%': button.data('name'),
+            '%cart_url%': fShop.getSettings('cartUrl')
+        }),
         position: 'topCenter',
 
     });
@@ -1089,10 +1124,15 @@ document.addEventListener("fs_add_to_wishlist", function (event) {
     // действие которое инициирует событие, здесь может быть любой ваш код
     var button = event.detail.button;
     button.find('.fs-wh-preloader').fadeOut();
+    var afterText = fShop.getLang('addToWishlist');
     iziToast.show({
         image: event.detail.image,
         theme: 'light',
-        message: button.data("success-message"),
+        title: fShop.getLang('success'),
+        message: fShop.strReplace(fShop.getLang('addToWishlist'), {
+            '%product%': button.data('name'),
+            '%wishlist_url%': fShop.getSettings('wishlistUrl')
+        }),
         position: 'topCenter',
 
     });
