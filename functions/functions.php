@@ -596,9 +596,9 @@ function fs_delete_position( $cart_item = 0, $product_id = 0, $args = array() ) 
 	$args = wp_parse_args( $args, array(
 		'content' => '&#10006;',
 		'type'    => 'link',
+		'class'=>'fs-delete-position',
 		'atts'    => array(
 			'data-confirm'   => sprintf( __( 'Are you sure you want to delete the item &laquo;%s&raquo; from the basket?', 'fast-shop' ), $name ),
-			'class'          => 'fs-delete-position',
 			'title'          => sprintf( __( 'Remove items %s', 'fast-shop' ), $name ),
 			'data-cart-item' => $cart_item,
 			'data-fs-type'   => "product-delete"
@@ -609,10 +609,10 @@ function fs_delete_position( $cart_item = 0, $product_id = 0, $args = array() ) 
 
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="" ' . $atts . '>' . $args['content'] . '</a>';
+			echo '<a href="" ' . $atts . ' class="'.esc_attr($args['class']).'">' . $args['content'] . '</a>';
 			break;
 		case 'button':
-			echo '<button type="button" ' . $atts . '>' . $args['content'] . '</button>';
+			echo '<button type="button" ' . $atts . ' class="'.esc_attr($args['class']).'">' . $args['content'] . '</button>';
 			break;
 
 	}
