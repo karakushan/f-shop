@@ -314,28 +314,30 @@ function fs_price_filter_callback( $post_id, $price ) {
 		return $price;
 	}
 	global $fs_config, $wpdb;
-	$default_currency     = fs_option( 'default_currency' );
-	$locale               = get_locale();
-	$locale_currency_id   = $wpdb->get_var( "SELECT term_id FROM $wpdb->termmeta WHERE meta_key='_fs_currency_locale' AND meta_value='$locale'" );
-	$locale_currency_cost = get_term_meta( $locale_currency_id, '_fs_currency_cost', true );
-	$product_currency_id  = get_post_meta( $post_id, $fs_config->meta['currency'], 1 );
+	$default_currency_id   = fs_option( 'default_currency' ); // id валюты установленной в настройках
+	$product_currency_id   = get_post_meta( $post_id, $fs_config->meta['currency'], true );// id валюты товара
+	// default_currency_cost = get_term_meta( $default_currency_id, '_fs_currency_cost', true ); // стоимость валюты установленной в настройках
+	$locale                = get_locale();
 
-	if ( ! $locale_currency_id && $default_currency ) {
-		$locale_currency_id = $default_currency;
-	}
+	// Если установлена галочка "конвертация стоимости в зависимости от языка"
+	if ( fs_option( 'price_conversion' ) ) {
+		// получаем валюту текущей локали
+		$locale_currency_id   = $wpdb->get_var( "SELECT term_id FROM $wpdb->termmeta WHERE meta_key='_fs_currency_locale' AND meta_value='$locale'" );
+		$locale_currency_cost = get_term_meta( $locale_currency_id, '_fs_currency_cost', true );
 
-	if(empty($product_currency_id)){
-		$product_currency_id=$default_currency;
-    }
+		if ( $product_currency_id != $locale_currency_id ) {
+			$price = $price * $locale_currency_cost;
+		}
 
-	// если валюта не указана, то выходим
-	if ( empty( $product_currency_id ) || empty( $locale_currency_id ) || $product_currency_id == $locale_currency_id ) {
 		return $price;
 	}
-	// это сработает если валюта товара отличается от валюты по умолчанию
-	if ( $product_currency_id != $locale_currency_id && $locale_currency_cost > 0 ) {
-		$price = $price / $locale_currency_cost;
-		$price = floatval( $price );
+
+    //  Если установлена валюта у товара отличная от валюты сайта, то конвертируем её
+	if ( $product_currency_id && $product_currency_id != $default_currency_id ) {
+		$product_currency_cost = get_term_meta( $product_currency_id, '_fs_currency_cost', true );
+		if ( $product_currency_cost ) {
+			$price = $price * $product_currency_cost;
+		}
 	}
 
 	return $price;

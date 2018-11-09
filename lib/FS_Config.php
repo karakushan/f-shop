@@ -656,8 +656,8 @@ class FS_Config {
 				),
 				'_fs_currency_cost'    => array(
 					'name' => __( 'Cost in base currency', 'fast-shop' ),
-					'type' => 'number',
-					'args' => array( 'step' => 0.01 )
+					'type' => 'text',
+					'args' => array()
 				),
 				'_fs_currency_display' => array(
 					'name' => __( 'Display on the site', 'fast-shop' ),
