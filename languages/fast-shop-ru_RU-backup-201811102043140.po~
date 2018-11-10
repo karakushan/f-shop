@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-11-10 20:32+0000\n"
-"PO-Revision-Date: 2018-11-10 20:43+0000\n"
+"PO-Revision-Date: 2018-11-10 20:41+0000\n"
 "Last-Translator: everet-admin <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -952,7 +952,6 @@ msgstr "Варианты покупки"
 #: templates/back-end/metabox/variants.php:2
 msgid "This tab is relevant if you have several varieties of a single product."
 msgstr ""
-"Эта вкладка необходима если вы имеете несколько разновидностей одного товара."
 
 #: templates/back-end/metabox/variants.php:8
 msgid "add variant"

@@ -9,99 +9,124 @@
 namespace FS;
 
 
-class FS_Product_Class {
+class FS_Product_Class
+{
 
-	/**
-	 * FS_Product_Class constructor.
-	 */
-	public function __construct() {
+    /**
+     * FS_Product_Class constructor.
+     */
+    public function __construct()
+    {
 
-		/** set the global variable $fs_product */
-		$GLOBALS['fs_product'] = $this;
-	}
+        /** set the global variable $fs_product */
+        $GLOBALS['fs_product'] = $this;
+    }
 
-	/**
-	 * Calculates the overall rating of the product
-	 *
-	 * @param int $product_id
-	 *
-	 * @return float|int
-	 */
-	public function get_vote_counting( $product_id = 0 ) {
-		$product_id = fs_get_product_id( $product_id );
-		$rate       = 0;
-		$total_vote = get_post_meta( $product_id, 'fs_product_rating', 0 );
-		if ( $total_vote ) {
-			$sum_votes   = array_sum( $total_vote );
-			$count_votes = count( $total_vote );
-			$rate        = round( $sum_votes / $count_votes, 2 );
-		}
+    /**
+     * Добавляет вариацию товара
+     * @param int $product_id - ID поста (товара)
+     * @param array $data - массив данных вариативного товара
+     */
+    public function add_product_variation($product_id = 0, $data = array())
+    {
+        $data = wp_parse_args(
+            $data,
+            array(
+                'name' => '',
+                'atts' => array(),
+                'atts_terms' => array(),
+                'prices' => [],
+                'gallery' => []
+            )
+        );
+        add_post_meta($product_id, '_fs_product_variations', $data);
+    }
 
-		return $rate;
-	}
+    /**
+     * Calculates the overall rating of the product
+     *
+     * @param int $product_id
+     *
+     * @return float|int
+     */
+    public function get_vote_counting($product_id = 0)
+    {
+        $product_id = fs_get_product_id($product_id);
+        $rate = 0;
+        $total_vote = get_post_meta($product_id, 'fs_product_rating', 0);
+        if ($total_vote) {
+            $sum_votes = array_sum($total_vote);
+            $count_votes = count($total_vote);
+            $rate = round($sum_votes / $count_votes, 2);
+        }
 
-	/**
-	 * Displays the item rating block in the form of icons
-	 *
-	 * @param int $product_id
-	 * @param array $args
-	 */
-	public static function product_rating( $product_id = 0, $args = array() ) {
-		$product_id = fs_get_product_id( $product_id );
-		$args       = wp_parse_args( $args, array(
-			'wrapper_class' => 'fs-rating',
-			'stars'         => 5,
-			'default_value' => self::get_vote_counting( $product_id ),
-			'star_class'    => 'fa fa-star'
-		) );
-		?>
-      <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>">
-        <div class="star-rating" data-fs-element="rating">
-			<?php if ( $args['stars'] ) {
-				for ( $count = 1; $count <= $args['stars']; $count ++ ) {
-					if ( $count <= $args['default_value'] ) {
-						$star_class = $args['star_class'] . ' active';
-					} else {
-						$star_class = $args['star_class'];
-					}
-					echo '<span class="' . esc_attr( $star_class ) . '" data-fs-element="rating-item" data-rating="' . esc_attr( $count ) . '"></span>';
-				}
-			} ?>
-          <input type="hidden" name="fs-rating-value" data-product-id="<?php echo esc_attr( $product_id ) ?>"
-                 class="rating-value"
-                 value="<?php echo esc_attr( $args['default_value'] ) ?>">
+        return $rate;
+    }
+
+    /**
+     * Displays the item rating block in the form of icons
+     *
+     * @param int $product_id
+     * @param array $args
+     */
+    public static function product_rating($product_id = 0, $args = array())
+    {
+        $product_id = fs_get_product_id($product_id);
+        $args = wp_parse_args($args, array(
+            'wrapper_class' => 'fs-rating',
+            'stars' => 5,
+            'default_value' => self::get_vote_counting($product_id),
+            'star_class' => 'fa fa-star'
+        ));
+        ?>
+        <div class="<?php echo esc_attr($args['wrapper_class']) ?>">
+            <div class="star-rating" data-fs-element="rating">
+                <?php if ($args['stars']) {
+                    for ($count = 1; $count <= $args['stars']; $count++) {
+                        if ($count <= $args['default_value']) {
+                            $star_class = $args['star_class'] . ' active';
+                        } else {
+                            $star_class = $args['star_class'];
+                        }
+                        echo '<span class="' . esc_attr($star_class) . '" data-fs-element="rating-item" data-rating="' . esc_attr($count) . '"></span>';
+                    }
+                } ?>
+                <input type="hidden" name="fs-rating-value" data-product-id="<?php echo esc_attr($product_id) ?>"
+                       class="rating-value"
+                       value="<?php echo esc_attr($args['default_value']) ?>">
+            </div>
         </div>
-      </div>
-		<?php
-	}
+        <?php
+    }
 
-	/**
-	 * удаляет все товары
-	 *
-	 * @param bool $attachments - удалять вложения или нет (по умолчанию удаляет)
-	 */
-	public static function delete_products() {
-		global $fs_config;
-		$attachments = true;
-		$posts       = new \WP_Query( array(
-			'post_type'      => array( $fs_config->data['post_type'] ),
-			'posts_per_page' => - 1
-		) );
-		if ( $posts->have_posts() ) {
-			while ( $posts->have_posts() ) {
-				$posts->the_post();
-				global $post;
-				if ( $attachments ) {
-					$childrens = get_children( array( 'post_type' => 'attachment', 'post_parent' => $post->ID ) );
-					if ( $childrens ) {
-						foreach ( $childrens as $children ) {
-							wp_delete_post( $children->ID, true );
-						}
-					}
-				}
-				wp_delete_post( $post->ID, true );
-			}
-		}
-	}
+    /**
+     * удаляет все товары
+     *
+     * @param bool $attachments - удалять вложения или нет (по умолчанию удаляет)
+     */
+    public static function delete_products()
+    {
+        global $fs_config;
+        $attachments = true;
+        $posts = new \WP_Query(array(
+            'post_type' => array($fs_config->data['post_type']),
+            'posts_per_page' => -1
+        ));
+        if ($posts->have_posts()) {
+            while ($posts->have_posts()) {
+                $posts->the_post();
+                global $post;
+                if ($attachments) {
+                    $childrens = get_children(array('post_type' => 'attachment', 'post_parent' => $post->ID));
+                    if ($childrens) {
+                        foreach ($childrens as $children) {
+                            wp_delete_post($children->ID, true);
+                        }
+                    }
+                }
+                wp_delete_post($post->ID, true);
+            }
+        }
+    }
 
 }

@@ -147,13 +147,8 @@
         max-width: 100%; }
       .fs-metabox .fs-tabs > .fs-tab textarea {
         width: 100%; }
-      .fs-metabox .fs-tabs > .fs-tab select {
-        height: 28px;
-        padding: 0px 10px;
-        width: 224px;
-        max-width: 100%; }
-        .fs-metabox .fs-tabs > .fs-tab select[multiple="multiple"] {
-          height: 90px; }
+      .fs-metabox .fs-tabs > .fs-tab select[multiple="multiple"] {
+        height: 90px; }
       .fs-metabox .fs-tabs > .fs-tab #fs-variants-wrapper {
         margin-top: 15px;
         max-height: 542px;
@@ -172,12 +167,15 @@
             margin-bottom: 0;
             margin-left: 8px; }
         .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule {
-          background: #e7f1ff;
-          padding: 5px 20px; }
-          .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule .col {
-            /* float: left; */
+          background: #f7f7f7;
+          padding: 12px 12px;
+          border: 1px solid #eeeeee;
+          border-radius: 3px; }
+          .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule .taxonomy-add-new {
             display: inline-block;
-            margin-right: 12px; }
+            margin: 0 0 0 11px; }
+          .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule input {
+            width: 100%; }
           .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule .fs-remove-variant {
             position: absolute;
             right: 20px;
@@ -849,5 +847,24 @@ td.fs_menu_order.column-fs_menu_order {
 .fs-product-cat-wrap {
   max-height: 140px;
   overflow: auto; }
+
+.fs-flex {
+  display: flex;
+  flex-wrap: wrap; }
+  .fs-flex.form-row {
+    margin: 0 -10px 15px; }
+  .fs-flex .col {
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    max-width: 100%;
+    padding: 0 10px; }
+    .fs-flex .col.col-12 {
+      width: 100%; }
+
+.fs-prop-group {
+  margin-bottom: 15px; }
 
 /*# sourceMappingURL=fs-admin.css.map */

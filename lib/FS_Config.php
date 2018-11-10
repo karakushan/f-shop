@@ -356,7 +356,7 @@ class FS_Config {
 			),
 			'attributes' => array(
 				'title'    => __( 'Attributes', 'fast-shop' ),
-				'on'       => true,
+				'on'       => false,
 				'body'     => '',
 				'template' => 'attributes'
 			),

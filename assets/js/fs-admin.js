@@ -356,10 +356,11 @@ jQuery(document).ready(function ($) {
 
     $(document).on('click', '[data-fs-element="clone-att"]', function (event) {
         event.preventDefault();
-        var node = $(this).prev().clone();
+        var parent = $(this).parents('.fs-rule');
+        var node = parent.find('.fs_select_variant').first().clone();
         var index = $(this).parents('.fs-rule').data('index');
-        node.attr('name', 'fs_variant[' + index + '][]');
-        $(this).before(node);
+        node.attr('name', 'fs_variant[' + index + '][attr][]');
+        parent.find('.fs-prop-group').append(node);
     });
     $(document).on('click', '#fs-add-variant', function (event) {
         var count = $(".fs-rule").length;
@@ -374,22 +375,12 @@ jQuery(document).ready(function ($) {
                 action: "fs_add_variant",
                 index: count
             },
-
-            success: function (data) {
+            success: function (result) {
                 preloader.fadeOut();
-                if (!count) {
-                    $("#fs-variants-wrapper").html(data);
-                } else {
-                    $("#fs-variants-wrapper .fs-rule").last().after(data);
+                if (result.success) {
+                    $("#fs-variants-wrapper").append(result.data.template);
                 }
             },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
-            },
-            complete: function () {
-                //afer ajax call is completed
-            }
         });
 
     });
