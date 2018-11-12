@@ -101,6 +101,13 @@
       @media screen and (max-width: 768px) {
         .fs-metabox .fs-tabs > .fs-tab {
           margin: 0; } }
+      .fs-metabox .fs-tabs > .fs-tab .fs-deactive-variant {
+        display: inline-block;
+        width: auto;
+        margin-left: 10px;
+        font-size: 14px;
+        font-weight: 400;
+        text-transform: none; }
       .fs-metabox .fs-tabs > .fs-tab h3 {
         margin-top: 0;
         text-transform: uppercase;
@@ -174,7 +181,7 @@
           .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule .taxonomy-add-new {
             display: inline-block;
             margin: 0 0 0 11px; }
-          .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule input {
+          .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule input[type=text] {
             width: 100%; }
           .fs-metabox .fs-tabs > .fs-tab .fs-field-row.fs-rule .fs-remove-variant {
             position: absolute;

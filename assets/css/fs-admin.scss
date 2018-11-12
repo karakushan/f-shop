@@ -129,6 +129,14 @@
         margin: 0;
       }
 
+      .fs-deactive-variant{
+        display: inline-block;
+        width: auto;
+        margin-left: 10px;
+        font-size: 14px;
+        font-weight: 400;
+        text-transform: none;
+      }
       h3 {
         margin-top: 0;
         text-transform: uppercase;
@@ -240,7 +248,7 @@
             display: inline-block;
             margin: 0 0 0 11px;
           }
-          input {
+          input[type=text] {
             width: 100%;
           }
           .fs-remove-variant {

@@ -9,7 +9,11 @@ global $fs_config;
 ?>
 <div class="fs-rule fs-field-row" data-index="<?php echo $index ?>">
     <a href="#" class="fs-remove-variant"><?php _e('remove variant','fast-shop') ?></a>
-    <h3><?php _e('Variant','fast-shop') ?> <span class="index"><?php echo $index + 1 ?></span></h3>
+    <h3><?php _e('Variant','fast-shop') ?> <span class="index"><?php echo $index + 1 ?></span>
+        <label class="fs-deactive-variant">
+            <input type="checkbox" name="fs_variant[<?php echo esc_attr( $index ) ?>][deactive]" value="1" <?php checked(1,$variant['deactive']) ?>> <?php _e('Off','fast-shop') ?>
+        </label>
+    </h3>
     <div class="fs-flex form-row">
         <div class="col">
             <label for=""><?php _e( 'Variant name', 'fast-shop' ) ?></label>
