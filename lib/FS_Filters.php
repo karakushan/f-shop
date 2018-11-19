@@ -163,7 +163,7 @@ class FS_Filters {
 					case 'action_price' :
 						$meta_query['action_price'] = array(
 							'key'     => $fs_config->meta['action_price'],
-							'compare' => '> ',
+							'compare' => '>',
 							'value'   => 0
 						);
 						$orderby['action_price']    = 'DESC';

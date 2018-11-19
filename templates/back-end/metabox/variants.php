@@ -2,7 +2,8 @@
 <p><?php _e('This tab is relevant if you have several varieties of a single product.','fast-shop') ?></p>
 <?php
 global $fs_config;
-$variants             = get_post_meta( $post->ID, 'fs_variant', 0 );
+$product=new FS\FS_Product_Class();
+$variants             = $product->get_product_variations();
 $template_path        = FS_PLUGIN_PATH . 'templates/back-end/metabox/product-variations/add-variation.php';
 ?>
 <button type="button" class="button" id="fs-add-variant"><?php _e('add variant','fast-shop') ?> <img
@@ -11,8 +12,8 @@ $template_path        = FS_PLUGIN_PATH . 'templates/back-end/metabox/product-var
 <div id="fs-variants-wrapper">
 	<?php
 	// fs_debug_data( $variants[0], 'variant', 'print_r' );
-	if ( ! empty( $variants[0] ) ) {
-		foreach ( $variants[0] as $index => $variant ) {
+	if ( ! empty( $variants ) ) {
+		foreach ( $variants as $index => $variant ) {
 			include( $template_path );
 		}
 	} ?>

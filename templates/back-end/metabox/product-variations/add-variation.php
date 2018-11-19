@@ -8,10 +8,12 @@
 global $fs_config;
 ?>
 <div class="fs-rule fs-field-row" data-index="<?php echo $index ?>">
-    <a href="#" class="fs-remove-variant"><?php _e('remove variant','fast-shop') ?></a>
-    <h3><?php _e('Variant','fast-shop') ?> <span class="index"><?php echo $index + 1 ?></span>
+    <a href="#" class="fs-remove-variant"><?php _e( 'remove variant', 'fast-shop' ) ?></a>
+    <h3><?php _e( 'Variant', 'fast-shop' ) ?> <span class="index"><?php echo $index + 1 ?></span>
         <label class="fs-deactive-variant">
-            <input type="checkbox" name="fs_variant[<?php echo esc_attr( $index ) ?>][deactive]" value="1" <?php checked(1,$variant['deactive']) ?>> <?php _e('Off','fast-shop') ?>
+			<?php $deactive = ! empty( $variant['deactive'] ) ? 1 : 0; ?>
+            <input type="checkbox" name="fs_variant[<?php echo esc_attr( $index ) ?>][deactive]"
+                   value="1" <?php checked( 1,$deactive) ?>> <?php _e( 'Off', 'fast-shop' ) ?>
         </label>
     </h3>
     <div class="fs-flex form-row">
@@ -28,7 +30,9 @@ global $fs_config;
 				       echo esc_attr( $variant['sku'] ) ?>">
         </div>
     </div>
-<div class="fs-flex"><label class="col-12"><?php _e( 'Properties', 'fast-shop' ) ?></label>  <a class="hide-if-no-js taxonomy-add-new" data-fs-element="clone-att">+ <?php _e('add property','fast-shop') ?></a></div>
+    <div class="fs-flex"><label class="col-12"><?php _e( 'Properties', 'fast-shop' ) ?></label> <a
+                class="hide-if-no-js taxonomy-add-new"
+                data-fs-element="clone-att">+ <?php _e( 'add property', 'fast-shop' ) ?></a></div>
     <div class="fs-flex fs-prop-group">
 		<?php
 		$args = array(

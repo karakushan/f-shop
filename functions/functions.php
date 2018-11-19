@@ -32,29 +32,59 @@ function fs_get_taxonomy_hierarchy( $args ) {
 }
 
 
-function fs_dropdown_attr_group( $group_id = 0, $post_id = 0, $args = array() ) {
-
-	if ( empty( $post_id ) ) {
-		global $post;
-		$post_id = $post->ID;
+/**
+ * Выводит select для выбора свойст товара добавляемого в корзину
+ * используется на странице товара
+ *
+ * @param int $group_id - term_id родителя группы свойств
+ * @param int $product_id - id товара
+ * @param array $args - дополнительные атрибуты
+ */
+function fs_dropdown_attr_group( $group_id = 0, $product_id = 0, $args = array() ) {
+	global $fs_config;
+	$product    = new FS\FS_Product_Class();
+	$variations = $product->get_product_variations( $product_id );
+	$product_id = fs_get_product_id( $product_id );
+	if ( ! $group_id ) {
+		printf( __( 'Не указан параметр $group_id в функции %s', 'fast-shop' ), __FUNCTION__ );
 	}
-	$args  = wp_parse_args( $args, array(
-		'class' => '',
-		'first' => __( 'Select' )
+	$args = wp_parse_args( $args, array(
+		'class'    => 'fs-dropdown-attr fs-dropdown-attr-' . $group_id,
+		'first'    => __( 'Select' ),// название первой, пустой опции селекта
+		'variated' => false // если false свойства берутся из вкладки "свойства товара" иначе из добавленных вариаций
 	) );
-	$class = ! empty( $args['class'] ) ? 'class="' . $args['class'] . '"' : '';
-	$terms = get_the_terms( $post_id, 'product-attributes' );
 
-	if ( $terms ) {
-		echo '<select name="' . $group_id . '" ' . $class . ' data-fs-element="attr" data-product-id="' . $post_id . '">';
+	echo '<select name="' . esc_attr( $group_id ) . '" class="' . esc_attr( $args['class'] ) . '" data-fs-element="attr" data-product-id="' . esc_attr( $product_id ) . '">';
+	if ( $args['first'] ) {
 		echo '<option value="">' . esc_attr( $args['first'] ) . '</option>';
+	}
+
+	// Если установлен источник терминов из вариаций
+	if ( $args['variated'] && count( $variations ) ) {
+		$all_atts = [];
+		foreach ( $variations as $variation ) {
+			if ( ! empty( $variation['attr'] ) ) {
+				foreach ( $variation['attr'] as $attr ) {
+					$term = get_term( $attr, $fs_config->data['product_att_taxonomy'] );
+					if ( $term->parent == $group_id && ! in_array( $term->term_id, $all_atts ) ) {
+						$all_atts[] = $term->term_id;
+						echo '<option value="' . esc_attr( $term->term_id ) . '">' . esc_attr( $term->name ) . '</option>';
+					}
+				}
+			}
+		}
+
+	} else {
+		$terms = get_the_terms( $product_id, $fs_config->data['product_att_taxonomy'] );
 		foreach ( $terms as $term ) {
 			if ( $term->parent == $group_id ) {
 				echo '<option value="' . esc_attr( $term->term_id ) . '">' . esc_attr( $term->name ) . '</option>';
 			}
 		}
-		echo '<select>';
 	}
+
+	echo '<select>';
+
 }
 
 /**
@@ -596,7 +626,7 @@ function fs_delete_position( $cart_item = 0, $product_id = 0, $args = array() ) 
 	$args = wp_parse_args( $args, array(
 		'content' => '&#10006;',
 		'type'    => 'link',
-		'class'=>'fs-delete-position',
+		'class'   => 'fs-delete-position',
 		'atts'    => array(
 			'data-confirm'   => sprintf( __( 'Are you sure you want to delete the item &laquo;%s&raquo; from the basket?', 'fast-shop' ), $name ),
 			'title'          => sprintf( __( 'Remove items %s', 'fast-shop' ), $name ),
@@ -609,10 +639,10 @@ function fs_delete_position( $cart_item = 0, $product_id = 0, $args = array() ) 
 
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="" ' . $atts . ' class="'.esc_attr($args['class']).'">' . $args['content'] . '</a>';
+			echo '<a href="" ' . $atts . ' class="' . esc_attr( $args['class'] ) . '">' . $args['content'] . '</a>';
 			break;
 		case 'button':
-			echo '<button type="button" ' . $atts . ' class="'.esc_attr($args['class']).'">' . $args['content'] . '</button>';
+			echo '<button type="button" ' . $atts . ' class="' . esc_attr( $args['class'] ) . '">' . $args['content'] . '</button>';
 			break;
 
 	}
@@ -773,17 +803,17 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 		'type'      => 'button',
 		'echo'      => true,
 		'data'      => array(
-			'data-action'          => 'add-to-cart',
-			'data-product-id'      => $product_id,
-			'data-name'    => get_the_title( $product_id ),
-			'data-price'           => fs_get_price( $product_id ),
-			'data-currency'        => fs_currency(),
-			'data-sku'             => fs_get_product_code( $product_id ),
-			'id'                   => 'fs-atc-' . $product_id,
-			'data-count'           => 1,
-			'data-attr'            => json_encode( new stdClass() ),
-			'data-image'           => esc_url( get_the_post_thumbnail_url( $product_id ) ),
-			'data-variated'        => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
+			'data-action'     => 'add-to-cart',
+			'data-product-id' => $product_id,
+			'data-name'       => get_the_title( $product_id ),
+			'data-price'      => fs_get_price( $product_id ),
+			'data-currency'   => fs_currency(),
+			'data-sku'        => fs_get_product_code( $product_id ),
+			'id'              => 'fs-atc-' . $product_id,
+			'data-count'      => 1,
+			'data-attr'       => json_encode( new stdClass() ),
+			'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) ),
+			'data-variated'   => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
 		)
 	);
 	$args         = wp_parse_args( $args, $args_default );
@@ -1322,21 +1352,21 @@ function fs_add_to_wishlist( $product_id = 0, $label = 'В список жела
 	$product_id = fs_get_product_id( $product_id );
 	// определим параметры по умолчанию
 	$defaults  = array(
-		'attr'           => '',
-		'type'           => 'button',
-		'preloader'      => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
-		'class'          => 'fs-whishlist-btn',
-		'id'             => 'fs-whishlist-btn-' . $product_id,
-		'atts'           => ''
+		'attr'      => '',
+		'type'      => 'button',
+		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
+		'class'     => 'fs-whishlist-btn',
+		'id'        => 'fs-whishlist-btn-' . $product_id,
+		'atts'      => ''
 	);
 	$args      = wp_parse_args( $args, $defaults );
 	$html_atts = fs_parse_attr( array(), array(
-		'data-fs-action'       => "wishlist",
-		'class'                => $args['class'],
-		'id'                   => $args['id'],
-		'data-name'            => get_the_title( $product_id ),
-		'data-image'           => get_the_post_thumbnail_url( $product_id ),
-		'data-product-id'      => $product_id,
+		'data-fs-action'  => "wishlist",
+		'class'           => $args['class'],
+		'id'              => $args['id'],
+		'data-name'       => get_the_title( $product_id ),
+		'data-image'      => get_the_post_thumbnail_url( $product_id ),
+		'data-product-id' => $product_id,
 	) );
 
 	switch ( $args['type'] ) {
