@@ -393,6 +393,51 @@ jQuery('[data-fs-element="attr"]').on('change input', function (event) {
     var attrVal = el.val();
     productObject[attrName] = Number(attrVal);
     cartbutton.attr('data-attr', JSON.stringify(productObject));
+    var parseAtts = [];
+    jQuery("[data-fs-element=\"attr\"]").each(function (index, value) {
+        if (jQuery(this).data('product-id') == productId) {
+            var val = jQuery(this).val();
+            if (val) parseAtts.push(val);
+        }
+    });
+    jQuery.ajax({
+        type: 'POST',
+        url: FastShopData.ajaxurl,
+        data: {action: "fs_get_variated", product_id: productId, atts: parseAtts},
+        cache: false,
+        success: function (result) {
+            if (result.success) {
+                jQuery("[data-fs-element=\"price\"]").each(function (index, value) {
+                    if (jQuery(this).data("product-id") == productId) {
+                        jQuery(this).html(result.data.price);
+                    }
+                });
+                if (result.data.basePrice) {
+                    jQuery("[data-fs-element=\"base-price\"]").each(function (index, value) {
+                        if (jQuery(this).data("product-id") == productId) {
+                            jQuery(this).html(result.data.basePrice);
+                        }
+                    });
+                }
+                // создаём событие "fs_after_change_att"
+                var fs_after_change_att = new CustomEvent("fs_after_change_att", {
+                    detail: {
+                        el: el,
+                        productId: productId,
+                        data: result.data
+                    }
+                });
+                document.dispatchEvent(fs_after_change_att);
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log('error...', xhr);
+            //error logging
+        },
+        complete: function () {
+            //afer ajax call is completed
+        }
+    });
 });
 
 // получает корзину через шаблон "cartTemplate"  и выводит её внутри "cartWrap"

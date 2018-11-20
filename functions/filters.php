@@ -9,7 +9,6 @@ function fs_price_format( $price, $delimiter = '' ) {
 	return $price;
 }
 
-add_filter( 'fs_discount_filter', 'fs_discount_filter__callback', 10, 1 );
 
 /**
  * Вычитывает скидку из общей суммы заказа
@@ -53,6 +52,7 @@ function fs_discount_filter__callback( $price ) {
 	return $price;
 
 }
+add_filter( 'fs_discount_filter', 'fs_discount_filter__callback', 10, 1 );
 
 // создаем новую колонку
 add_filter( 'manage_edit-product_columns', 'add_views_column', 4 );
@@ -314,10 +314,10 @@ function fs_price_filter_callback( $post_id, $price ) {
 		return $price;
 	}
 	global $fs_config, $wpdb;
-	$default_currency_id   = fs_option( 'default_currency' ); // id валюты установленной в настройках
-	$product_currency_id   = get_post_meta( $post_id, $fs_config->meta['currency'], true );// id валюты товара
+	$default_currency_id = fs_option( 'default_currency' ); // id валюты установленной в настройках
+	$product_currency_id = get_post_meta( $post_id, $fs_config->meta['currency'], true );// id валюты товара
 	// default_currency_cost = get_term_meta( $default_currency_id, '_fs_currency_cost', true ); // стоимость валюты установленной в настройках
-	$locale                = get_locale();
+	$locale = get_locale();
 
 	// Если установлена галочка "конвертация стоимости в зависимости от языка"
 	if ( fs_option( 'price_conversion' ) ) {
@@ -332,7 +332,7 @@ function fs_price_filter_callback( $post_id, $price ) {
 		return $price;
 	}
 
-    //  Если установлена валюта у товара отличная от валюты сайта, то конвертируем её
+	//  Если установлена валюта у товара отличная от валюты сайта, то конвертируем её
 	if ( $product_currency_id && $product_currency_id != $default_currency_id ) {
 		$product_currency_cost = get_term_meta( $product_currency_id, '_fs_currency_cost', true );
 		if ( $product_currency_cost ) {

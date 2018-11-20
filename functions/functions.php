@@ -197,7 +197,7 @@ function fs_the_price( $product_id = 0, $wrap = "%s <span>%s</span>", $args = ar
 	$product_id = fs_get_product_id( $product_id );
 	$price      = fs_get_price( $product_id );
 	$price      = apply_filters( 'fs_price_format', $price );
-	printf( '<span data-fs-element="price" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
+	printf( '<span data-fs-element="price" data-product-id="' . esc_attr( $product_id ) . '" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
 }
 
 /**
@@ -755,17 +755,17 @@ function fs_get_base_price( $post_id = 0 ) {
 /**
  * Выводит текущую цену с символом валюты без учёта скидки
  *
- * @param int $post_id -id товара
+ * @param int $product_id -id товара
  * @param string $wrap -html обёртка для цены
  *
  * @return mixed выводит отформатированную цену или возвращает её для дальнейшей обработки
  */
-function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = array() ) {
-	$args  = wp_parse_args( $args, array(
+function fs_base_price( $product_id = 0, $wrap = '%s <span>%s</span>', $args = array() ) {
+	$args       = wp_parse_args( $args, array(
 		'class' => 'fs-base-price'
 	) );
-	$price = fs_get_base_price( $post_id );
-
+	$product_id = fs_get_product_id( $product_id );
+	$price      = fs_get_base_price( $product_id );
 
 	if ( ! $price ) {
 		return;
@@ -773,7 +773,7 @@ function fs_base_price( $post_id = 0, $wrap = '%s <span>%s</span>', $args = arra
 	$price    = apply_filters( 'fs_price_format', $price );
 	$cur_symb = fs_currency();
 
-	printf( '<span data-fs-element = "base-price" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
+	printf( '<span data-fs-element = "base-price" data-product-id="' . esc_attr( $product_id ) . '" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
 }
 
 /**
