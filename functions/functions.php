@@ -2617,3 +2617,57 @@ function fs_debug_data( $data, $before = '', $debug_type = 'var_dump' ) {
 	echo "=== END DEBUG $before ===<br>";
 	echo '</pre>';
 }
+
+function fs_list_variations( $product_id = 0, $args = array() ) {
+	global $fs_config;
+	$args       = wp_parse_args( $args, array(
+		'class'      => 'fs-select-variation',
+		'show_price' => true
+	) );
+	$product_id = fs_get_product_id( $product_id );
+	$product    = new FS\FS_Product_Class();
+	$variations = $product->get_product_variations( $product_id );
+	if ( ! empty( $variations ) ) {
+		echo '<ul class="' . esc_attr( $args['class'] ) . '">';
+		foreach ( $variations as $var_id => $variation ) {
+			echo '<li class="radiobtn">';
+			echo '<input type="radio" name="fs_variation" data-max="' . esc_attr( $variation['count'] ) . '" data-fs-element="select-variation" data-product-id="' . esc_attr( $product_id ) . '" value="' . esc_attr( $var_id ) . '" ' . checked( 0, $var_id, 0 ) . ' id="fs-var-' . esc_attr( $var_id ) . '">';
+			echo '<label for="fs-var-' . esc_attr( $var_id ) . '">';
+			if ( ! empty( $variation['attr'] ) ) {
+				foreach ( $variation['attr'] as $attr ) {
+					$term             = get_term( $attr, $fs_config->data['product_att_taxonomy'] );
+					$term_parent_name = get_term_field( 'name', $term->parent, $fs_config->data['product_att_taxonomy'] );
+					$att_type         = get_term_meta( $term->term_id, 'fs_att_type', 1 );
+					$att_show         = $term->name;
+					if ( $att_type == 'image' ) {
+						$image_id = get_term_meta( $term->term_id, 'fs_att_image_value', 1 );
+						if ( $image_id ) {
+							$image_url = wp_get_attachment_image_url( $image_id );
+							$att_show  = '<span class="fs-attr-image" style="background-image:url(' . esc_url( $image_url ) . ');"></span>';
+						}
+					} elseif ( $att_type == 'color' ) {
+						$color = get_term_meta( $term->term_id, 'fs_att_color_value', 1 );
+						if ( $color ) {
+							$att_show = '<span class="fs-attr-color" style="background-color:' . esc_url( $color ) . ';"></span>';
+						}
+					}
+					echo '<span class="fs-inline-flex align-items-center fs-var-container">' . $term_parent_name . ': ' . $att_show . '</span> ';
+				}
+			}
+			// Если включено показывать цену
+			if ( $args['show_price'] ) {
+				if (! empty( $variation['action_price'] ) && $variation['price'] > $variation['action_price'] ) {
+					$price        = apply_filters( 'fs_price_format', $variation['price'] );
+					$action_price = apply_filters( 'fs_price_format', $variation['action_price'] );
+					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $action_price ), esc_attr( fs_currency() ) ) . '</span>';
+					echo '<del class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</del>';
+				} else {
+					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $variation['price'] ), esc_attr( fs_currency() ) ) . '</span>';
+				}
+			}
+			echo '</label></li>';
+		}
+		echo '</ul>';
+	}
+
+}

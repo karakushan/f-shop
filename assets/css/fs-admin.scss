@@ -1,4 +1,5 @@
-@import "mixins";
+@import "scss/base";
+@import "scss/mixins";
 
 .fs-preloader {
   display: none;
@@ -129,7 +130,7 @@
         margin: 0;
       }
 
-      .fs-deactive-variant{
+      .fs-deactive-variant {
         display: inline-block;
         width: auto;
         margin-left: 10px;
@@ -1164,27 +1165,6 @@ td.fs_menu_order.column-fs_menu_order {
   overflow: auto;
 }
 
-// Сетка
-.fs-flex {
-  display: flex;
-  flex-wrap: wrap;
-  &.form-row {
-    margin: 0 -10px 15px;
-  }
-  .col {
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-    padding: 0 10px;
-    &.col-12 {
-      width: 100%;
-    }
-  }
-}
-
-.fs-prop-group{
+.fs-prop-group {
   margin-bottom: 15px;
 }

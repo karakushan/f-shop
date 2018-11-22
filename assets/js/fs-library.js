@@ -145,3 +145,12 @@ var addUrlParam = function (search, key, val) {
     return params;
 };
 
+// строковая фнкция, которая позволяет производить поиск и замену сразу по нескольким значениям переданным в виде объекта
+String.prototype.allReplace = function (obj) {
+    var retStr = this;
+    for (var x in obj) {
+        retStr = retStr.replace(new RegExp(x, 'g'), obj[x]);
+    }
+    return retStr;
+};
+
