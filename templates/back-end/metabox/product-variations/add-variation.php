@@ -9,7 +9,7 @@ global $fs_config;
 ?>
 <div class="fs-rule fs-field-row" data-index="<?php echo $index ?>">
     <a href="#" class="fs-remove-variant"><?php _e( 'remove variant', 'fast-shop' ) ?></a>
-    <h3><?php _e( 'Variant', 'fast-shop' ) ?> <span class="index"><?php echo $index + 1 ?></span>
+    <h3><a href="javascript:void(0)" data-fs-element="toggle-accordeon"> <span class="dashicons dashicons-arrow-down-alt2"></span> <?php _e( 'Variant', 'fast-shop' ) ?> <span class="index"><?php echo $index + 1 ?></span></a>
         <label class="fs-deactive-variant">
 			<?php $deactive = ! empty( $variant['deactive'] ) ? 1 : 0; ?>
             <input type="checkbox" name="fs_variant[<?php echo esc_attr( $index ) ?>][deactive]"
@@ -35,37 +35,11 @@ global $fs_config;
                 data-fs-element="clone-att">+ <?php _e( 'add property', 'fast-shop' ) ?></a></div>
     <div class="fs-flex fs-prop-group">
 		<?php
-		$args = array(
-			'show_option_all'  => 'Свойство товара',
-			'show_option_none' => '',
-			'orderby'          => 'ID',
-			'order'            => 'ASC',
-			'show_last_update' => 0,
-			'show_count'       => 0,
-			'hide_empty'       => 0,
-			'child_of'         => 0,
-			'exclude'          => '',
-			'echo'             => 1,
-			'selected'         => 0,
-			'hierarchical'     => 1,
-			'name'             => 'fs_variant[' . esc_attr( $index ) . '][attr][]',
-			'id'               => '',
-			'class'            => 'fs_select_variant',
-			'depth'            => 0,
-			'tab_index'        => 0,
-			'taxonomy'         => $fs_config->data['product_att_taxonomy'],
-			'hide_if_empty'    => false,
-
-		);
 		if ( ! empty( $variant['attr'] ) ) {
 			foreach ( $variant['attr'] as $att ) {
-				$args['selected'] = $att;
-				wp_dropdown_categories( $args );
+				require( FS_PLUGIN_PATH . 'templates/back-end/metabox/product-variations/single-attr.php' );
 			}
-		} else {
-			wp_dropdown_categories( $args );
-		} ?>
-
+		}  ?>
     </div>
     <div class="fs-flex form-row">
         <div class="col">

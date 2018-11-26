@@ -154,3 +154,26 @@ String.prototype.allReplace = function (obj) {
     return retStr;
 };
 
+// получает корзину через шаблон "cartTemplate"  и выводит её внутри "cartWrap"
+function fs_get_cart(cartTemplate, cartWrap) {
+    let parameters = {
+        action: 'fs_get_cart',
+        template: cartTemplate
+    };
+    jQuery.ajax({
+        type: 'POST',
+        url: FastShopData.ajaxurl,
+        data: parameters,
+        dataType: 'html',
+        success: function (data) {
+            if (data) jQuery(cartWrap).html(data);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log('error...', xhr);
+            //error logging
+        }
+    });
+}
+
+
+

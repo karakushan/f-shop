@@ -4,20 +4,6 @@
 * в соответствии с этим видением
 *
 */
-(function ($) {
-    $.fn.fShop = function (options) {
-        // Создаём настройки по-умолчанию, расширяя их с помощью параметров, которые были переданы
-        var settings = $.extend({}, options);
-
-        var methods = {}
-
-        return this.each(function () {
-        });
-    };
-})(jQuery);
-
-jQuery(window).fShop();
-
 
 jQuery(function ($) {
     // изменяет позиции товаров при перетаскивании
@@ -353,15 +339,33 @@ jQuery(document).ready(function ($) {
                 });
         }
     });
-
+    // клонирует свойство вариативного товара
     $(document).on('click', '[data-fs-element="clone-att"]', function (event) {
         event.preventDefault();
-        var parent = $(this).parents('.fs-rule');
-        var node = parent.find('.fs_select_variant').first().clone();
-        var index = $(this).parents('.fs-rule').data('index');
-        node.attr('name', 'fs_variant[' + index + '][attr][]');
-        parent.find('.fs-prop-group').append(node);
+        let parent = $(this).parents('.fs-rule');
+        let index = $(this).parents('.fs-rule').data('index');
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            data: {action: "fs_get_template_part", index: index},
+            success: function (res) {
+                if (res.success) {
+                    parent.find('.fs-prop-group').append(res.data.template);
+                }
+
+            }
+        });
+
     });
+    // удаляет свойство у вариативного товара
+    $(document).on('click', '[data-fs-element=\'remove-var-prop\']', function (event) {
+        $(this).parent().remove();
+    });
+
+    $(document).on('click', '[data-fs-element="toggle-accordeon"]', function (event) {
+        $(this).parents('.fs-rule').toggleClass("active");
+    });
+
     $(document).on('click', '#fs-add-variant', function (event) {
         var count = $(".fs-rule").length;
         var preloader = $(this).find('.fs-preloader');

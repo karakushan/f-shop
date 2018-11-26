@@ -57,6 +57,19 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_show_shipping', array( $this, 'fs_show_shipping_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_show_shipping', array( $this, 'fs_show_shipping_callback' ) );
 
+		// возвращает шаблон, работает на основе get_template_part()
+		add_action( 'wp_ajax_fs_get_template_part', array( $this, 'fs_get_template_part' ) );
+		add_action( 'wp_ajax_nopriv_fs_get_template_part', array( $this, 'fs_get_template_part' ) );
+
+	}
+
+	// возвращает шаблон, работает на основе get_template_part()
+	function fs_get_template_part() {
+		ob_start();
+		$index = intval( $_POST['index'] );
+		require_once( FS_PLUGIN_PATH . 'templates/back-end/metabox/product-variations/single-attr.php' );
+		$template = ob_get_clean();
+		wp_send_json_success( array( 'template' => $template ) );
 	}
 
 	/**
@@ -143,12 +156,12 @@ class FS_Ajax_Class {
 					$action_price = floatval( $variant['action_price'] );
 					if ( $action_price < $price ) {
 						wp_send_json_success( array(
-							'price'      => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $action_price ), fs_currency() ),
+							'price'     => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $action_price ), fs_currency() ),
 							'basePrice' => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() )
 						) );
 					}
 					wp_send_json_success( array(
-						'price'      => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $variant['price'] ), fs_currency() ),
+						'price'     => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $variant['price'] ), fs_currency() ),
 						'basePrice' => false
 					) );
 				}

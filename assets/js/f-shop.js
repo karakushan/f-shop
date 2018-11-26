@@ -1,5 +1,5 @@
 (function ($) {
-    var fShop = {
+    window.fShop = {
         langs: FastShopData.lang,
         getLang: function (string) {
             return FastShopData.lang[string];
@@ -50,7 +50,7 @@
                 }
             });
         }
-    }
+    };
 
     // Выбор вариации товара
     $(document).on('change', "[data-fs-element=\"select-variation\"]", fShop.selectVariation);
@@ -128,38 +128,6 @@
 
     });
 
-// Событие срабатывает перед добавлением товара в корзину
-    document.addEventListener("fs_before_add_product", function (event) {
-        // действие которое инициирует событие, здесь может быть любой ваш код
-        var button = event.detail.button;
-        button.find('.fs-atc-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader" width="16">');
-        event.preventDefault();
-    }, false);
-
-// Событие срабатывает когда товар добавлен в корзину
-    document.addEventListener("fs_add_to_cart", function (event) {
-
-        // действие которое инициирует событие
-        fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]');
-        var button = event.detail.button;
-        iziToast.show({
-            image: event.detail.image,
-            theme: 'light',
-            title: fShop.getLang('success'),
-            message: fShop.strReplace(fShop.getLang('addToCart'), {
-                '%product%': button.data('name'),
-                '%cart_url%': fShop.getSettings('cartUrl')
-            }),
-            position: 'topCenter',
-
-        });
-        button.find('.fs-atc-preloader').fadeOut();
-        setTimeout(function () {
-            button.find('.fs-atc-info').fadeOut();
-        }, 4000);
-
-        event.preventDefault();
-    }, false);
 
 // изменяем атрибуты товара по изменению input radio
     jQuery('[data-action="change-attr"]').on('change', function () {
@@ -288,26 +256,7 @@
         });
     });
 
-// получает корзину через шаблон "cartTemplate"  и выводит её внутри "cartWrap"
-    function fs_get_cart(cartTemplate, cartWrap) {
-        var parameters = {
-            action: 'fs_get_cart',
-            template: cartTemplate
-        };
-        jQuery.ajax({
-            type: 'POST',
-            url: FastShopData.ajaxurl,
-            data: parameters,
-            dataType: 'html',
-            success: function (data) {
-                if (data) jQuery(cartWrap).html(data);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
-            }
-        });
-    }
+
 
 //очищаем корзину
     jQuery('[data-fs-type="delete-cart"]').on('click', function (event) {
@@ -971,39 +920,6 @@
     });
 
 
-// Событие срабатывает перед добавлением товара в список желаний
-    document.addEventListener("fs_before_to_wishlist", function (event) {
-        // действие которое инициирует событие, здесь может быть любой ваш код
-        var button = event.detail.button;
-        button.find('.fs-wh-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
-        event.preventDefault();
-    }, false);
 
-// Событие срабатывает перед добавлением товара в список желаний
-    document.addEventListener("fs_cart_change_count", function (event) {
-        // здесь может быть любой ваш код
-        document.location.reload();
-        event.preventDefault();
-    }, false);
-
-// Событие срабатывает после добавления товара в список желаний
-    document.addEventListener("fs_add_to_wishlist", function (event) {
-        // действие которое инициирует событие, здесь может быть любой ваш код
-        var button = event.detail.button;
-        button.find('.fs-wh-preloader').fadeOut();
-        var afterText = fShop.getLang('addToWishlist');
-        iziToast.show({
-            image: event.detail.image,
-            theme: 'light',
-            title: fShop.getLang('success'),
-            message: fShop.strReplace(fShop.getLang('addToWishlist'), {
-                '%product%': button.data('name'),
-                '%wishlist_url%': fShop.getSettings('wishlistUrl')
-            }),
-            position: 'topCenter',
-
-        });
-        event.preventDefault();
-    }, false);
 })(jQuery)
 

@@ -2629,9 +2629,10 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 	$variations = $product->get_product_variations( $product_id );
 	if ( ! empty( $variations ) ) {
 		echo '<ul class="' . esc_attr( $args['class'] ) . '">';
+		$count = 0;
 		foreach ( $variations as $var_id => $variation ) {
 			echo '<li class="radiobtn">';
-			echo '<input type="radio" name="fs_variation" data-max="' . esc_attr( $variation['count'] ) . '" data-fs-element="select-variation" data-product-id="' . esc_attr( $product_id ) . '" value="' . esc_attr( $var_id ) . '" ' . checked( 0, $var_id, 0 ) . ' id="fs-var-' . esc_attr( $var_id ) . '">';
+			echo '<input type="radio" name="fs_variation" data-max="' . esc_attr( $variation['count'] ) . '" data-fs-element="select-variation" data-product-id="' . esc_attr( $product_id ) . '" value="' . esc_attr( $var_id ) . '" ' . checked( 0, $count, 0 ) . ' id="fs-var-' . esc_attr( $var_id ) . '">';
 			echo '<label for="fs-var-' . esc_attr( $var_id ) . '">';
 			if ( ! empty( $variation['attr'] ) ) {
 				foreach ( $variation['attr'] as $attr ) {
@@ -2652,17 +2653,22 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 						}
 					}
 					echo '<span class="fs-inline-flex align-items-center fs-var-container">' . $term_parent_name . ': ' . $att_show . '</span> ';
+					$count ++;
 				}
 			}
 			// Если включено показывать цену
 			if ( $args['show_price'] ) {
-				if (! empty( $variation['action_price'] ) && $variation['price'] > $variation['action_price'] ) {
+				if ( ! empty( $variation['action_price'] ) && $variation['price'] > $variation['action_price'] ) {
 					$price        = apply_filters( 'fs_price_format', $variation['price'] );
+					$price        = apply_filters( 'fs_price_filter', $product_id, $price );
 					$action_price = apply_filters( 'fs_price_format', $variation['action_price'] );
+					$action_price = apply_filters( 'fs_price_filter', $product_id, $action_price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $action_price ), esc_attr( fs_currency() ) ) . '</span>';
 					echo '<del class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</del>';
 				} else {
-					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $variation['price'] ), esc_attr( fs_currency() ) ) . '</span>';
+					$price        = apply_filters( 'fs_price_format', $variation['price'] );
+					$price        = apply_filters( 'fs_price_filter', $product_id, $price );
+					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</span>';
 				}
 			}
 			echo '</label></li>';

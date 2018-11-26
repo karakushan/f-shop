@@ -23,23 +23,31 @@ class FS_Product_Class {
 	/**
 	 * Возвращает массив вариаций товара
 	 *
-	 * @param int $product_id
+	 * @param int $product_id идентификатор товара
+	 *
+	 * @param bool $hide_disabled не возвращать выключенные
 	 *
 	 * @return array
 	 */
-	function get_product_variations( $product_id = 0 ) {
-		global $post;
-		if ( ! $product_id ) {
-			$product_id = $post->ID;
-		}
+	function get_product_variations( $product_id = 0, $hide_disabled = true ) {
+		$product_id = fs_get_product_id( $product_id );
 		$variations = get_post_meta( $product_id, 'fs_variant', 0 );
+
 		if ( ! empty( $variations[0] ) ) {
+			if ( $hide_disabled ) {
+				foreach ( $variations[0] as $key => $variation ) {
+					if ( $variation['deactive'] == 1 || $variation['count'] == 0 ) {
+						unset( $variations[0][ $key ] );
+					}
+				}
+			}
+
 			return $variations[0];
+
 		} else {
 			return array();
 		}
 	}
-
 
 
 	/**
