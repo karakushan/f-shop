@@ -256,16 +256,28 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
  * @return float|int
  */
 function fs_get_cart_cost() {
-	$products  = \FS\FS_Cart_Class::get_cart();
-	$all_price = array();
+	$products      = \FS\FS_Cart_Class::get_cart();
+	$all_price     = array();
+	$product_class = new FS\FS_Product_Class();
 	foreach ( $products as $key => $product ) {
-		$product_id = intval( $product['ID'] );
-		if ( fs_is_variated( $product_id ) ) {
-			$all_price[ $key ] = $product['count'] * fs_get_variated_price( $product_id, $product['attr'] );
-		} else {
-			$all_price[ $key ] = $product['count'] * fs_get_price( $product_id );
-		}
+		$product_id        = intval( $product['ID'] );
+		$all_price[ $key ] = $product['count'] * fs_get_price( $product_id );
+		//  если текущий товар вариативный
+		if ( ! empty( $product['variation'] ) ) {
+			$variation = $product_class->get_product_variations( $product_id );
+			if ( empty( $variation[ $product['variation'] ]['price'] ) ) {
+				continue;
+			}
+			$variation_price        = $variation[ $product['variation'] ]['price'];
+			$variation_action_price = $variation[ $product['variation'] ]['action_price'];
+			if ( $variation_action_price < $variation_price ) {
+				$price = $variation_action_price;
+			} else {
+				$price = $variation_price;
+			}
+			$all_price[ $key ] = apply_filters( 'fs_price_filter', $product_id, $price );
 
+		}
 	}
 	$price = array_sum( $all_price );
 
@@ -521,11 +533,12 @@ function fs_total_wholesale_amount( $products = array(), $echo = true, $wrap = '
  *         'all_price'-общая цена
  */
 function fs_get_cart( $args = array() ) {
-
 	if ( ! isset( $_SESSION['cart'] ) ) {
 		return false;
 	}
 	global $fs_config;
+
+	$product  = new FS\FS_Product_Class();
 	$args     = wp_parse_args( $args, array(
 		'price_format'   => '%s <span>%s</span>',
 		'thumbnail_size' => 'thumbnail'
@@ -540,37 +553,26 @@ function fs_get_cart( $args = array() ) {
 			}
 
 			$price = fs_get_price( $product_id );
-			if ( fs_is_variated( $product_id ) ) {
-				$product_terms = get_the_terms( $product_id, $fs_config->data['product_att_taxonomy'] );
-				$price         = fs_get_variated_price( $product_id, $item['attr'] );
-				foreach ( $product_terms as $product_term ) {
-					$range_start = get_term_meta( $product_term->term_id, 'fs_att_range_start_value', 1 );
-					$range_end   = get_term_meta( $product_term->term_id, 'fs_att_range_end_value', 1 );
-					if ( ! empty( $range_start ) && empty( $range_end ) ) {
-						$range_end = INF;
-					}
-					// ищем наиболее подходящий вариант если в настройках термина (атрибута) указана данная опция
-					if ( get_term_meta( $product_term->term_id, 'fs_att_compare', 1 ) && ( $range_start <= $item['count'] && $range_end >= $item['count'] ) ) {
-						// сначала перебыраем атрибуты с которыми пользователь добавил товар в корзину
-						foreach ( $item['attr'] as $k => $at ) {
-							// получаем всю информацию о термине, но нам понадобится только id родителя
-							$at_term_parent = get_term( $at, $fs_config->data['product_att_taxonomy'] );
-							// если id родителя термина с которым куплен товар совпадает с id родителя который мы вычислили методом сравнения то
-							if ( $at_term_parent->parent == $product_term->parent ) {
-								// удаляем термин с которым куплен товар из сессии корзины
-								unset( $item['attr'][ $k ] );
-								$item['attr'][] = $product_term->term_id;
-								// добавляем в сессию термин который подошел в сравнении
-								$_SESSION['cart'][ $product_id ]['attr'] = $item['attr'];
-							}
-						}
-						// возвращаем уже новую цену с учётом нового набора атрибутов
-						$price = fs_get_variated_price( $product_id, $item['attr'] );
-					}
 
+			//  если текущий товар вариативный
+			if ( ! empty( $item['variation'] ) ) {
+
+				$variation = $product->get_product_variations( $product_id );
+				if ( empty( $variation[ $item['variation'] ]['price'] ) ) {
+					continue;
 				}
+				$variation_price        = $variation[ $item['variation'] ]['price'];
+				$variation_action_price = $variation[ $item['variation'] ]['action_price'];
+				if ( $variation_action_price < $variation_price ) {
+					$price = $variation_action_price;
+				} else {
+					$price = $variation_price;
+				}
+				$price = apply_filters( 'fs_price_filter', $product_id, $price );
 
 			}
+
+
 			$c          = intval( $item['count'] );
 			$all_price  = $price * $c;
 			$price_show = apply_filters( 'fs_price_format', $price );
@@ -2666,8 +2668,8 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $action_price ), esc_attr( fs_currency() ) ) . '</span>';
 					echo '<del class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</del>';
 				} else {
-					$price        = apply_filters( 'fs_price_format', $variation['price'] );
-					$price        = apply_filters( 'fs_price_filter', $product_id, $price );
+					$price = apply_filters( 'fs_price_format', $variation['price'] );
+					$price = apply_filters( 'fs_price_filter', $product_id, $price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</span>';
 				}
 			}

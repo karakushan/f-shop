@@ -36,7 +36,10 @@ class FS_Product_Class {
 		if ( ! empty( $variations[0] ) ) {
 			if ( $hide_disabled ) {
 				foreach ( $variations[0] as $key => $variation ) {
-					if ( $variation['deactive'] == 1 || $variation['count'] == 0 ) {
+					if (
+						( ! empty( $variation['deactive'] ) && $variation['deactive'] == 1 )
+						||
+						( ! empty( $variation['count'] ) && $variation['count'] == 0 ) ) {
 						unset( $variations[0][ $key ] );
 					}
 				}

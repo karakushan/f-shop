@@ -67,6 +67,7 @@
 
         var curent = jQuery(this);
         var product_id = curent.data('product-id');
+        var variation = curent.data('variation');
         var count = curent.attr('data-count');
 
         // подтягиваем атрибуты товаров
@@ -84,6 +85,7 @@
             id: product_id,
             name: curent.data('product-name'),
             price: curent.data('price'),
+            variation: variation,
             currency: curent.data('currency'),
             sku: curent.data('sku'),
             category: curent.data('category'),
@@ -102,6 +104,7 @@
             "action": 'add_to_cart',
             "attr": attr,
             "count": count,
+            "variation": variation,
             'post_id': product_id
         }
 
@@ -255,7 +258,6 @@
             }
         });
     });
-
 
 
 //очищаем корзину
@@ -918,7 +920,6 @@
 
         }
     });
-
 
 
 })(jQuery)

@@ -13,6 +13,7 @@ class FS_Cart_Class {
 	public $cart = null;
 
 	function __construct() {
+		// добавление товара в корзину
 		add_action( 'wp_ajax_add_to_cart', array( $this, 'add_to_cart_ajax' ) );
 		add_action( 'wp_ajax_nopriv_add_to_cart', array( $this, 'add_to_cart_ajax' ) );
 
@@ -56,9 +57,10 @@ class FS_Cart_Class {
 		$attr = ! empty( $_POST['attr'] ) ? $_POST['attr'] : array();
 
 		$_SESSION['cart'][] = array(
-			'ID'    => intval( $_POST['post_id'] ),
-			'count' => intval( $_POST['count'] ),
-			'attr'  => $attr
+			'ID'        => intval( $_POST['post_id'] ),
+			'count'     => intval( $_POST['count'] ),
+			'attr'      => $attr,
+			'variation' => intval( $_POST['variation'] )
 		);
 
 		fs_cart_widget( array( 'class' => 'cart' ) );
