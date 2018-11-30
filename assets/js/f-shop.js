@@ -764,26 +764,29 @@
             })
                 .done(function (response) {
                     orderSendBtn.find('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
-                    if (!IsJsonString(response)) return false;
-                    var jsonData = JSON.parse(response);
                     /* если статус заказ успешный */
-                    if (jsonData.success) {
+                    if (response.success) {
                         // создаём событие
-                        var send_order = new CustomEvent("fs_send_order", {
+                        let send_order = new CustomEvent("fs_send_order", {
                             detail: {
-                                order_id: jsonData.order_id,
-                                sum: jsonData.sum
+                                order_id: response.data.order_id,
+                                sum: response.data.sum
                             }
                         });
                         document.dispatchEvent(send_order);
 
-                        orderSendBtn.html(orderSendBtn.data("after-send"));
-                        if (jsonData.redirect != false) document.location.href = jsonData.redirect;
-                    } else {
-                        if (jsonData.error_code != 'undefined') {
-                            console.log(jsonData.error_code);
+                        if (response.data.redirect != false) {
+                            document.location.href = response.data.redirect;
+                        } else {
+                            iziToast.show({
+                                theme: 'light',
+                                title: fShop.getLang('success'),
+                                message: fShop.getLang('order_send_success'),
+                                position: 'topCenter'
+                            });
                         }
-                        order_send.find('.fs-form-info').addClass('error').html(jsonData.text).fadeIn();
+                    } else {
+                        order_send.find('.fs-form-info').addClass('error').html(response.data.text).fadeIn();
                         orderSendBtn.html(orderSendBtn.data("content"));
                     }
                 });

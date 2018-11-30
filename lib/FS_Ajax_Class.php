@@ -239,6 +239,7 @@ class FS_Ajax_Class {
 		if ( ! $fs_config::verify_nonce() ) {
 			die ( 'не пройдена верификация формы nonce' );
 		}
+		$product_class      = new FS_Product_Class();
 		$fs_products        = FS_Cart_Class::get_cart();
 		$fs_custom_products = ! empty( $_POST['fs_custom_product'] ) ? serialize( $_POST['fs_custom_product'] ) : '';
 		$user_id            = 0;
@@ -318,7 +319,7 @@ class FS_Ajax_Class {
 		}
 
 
-// Вставляем заказ в базу данных
+		// Вставляем заказ в базу данных
 		$pay_method     = get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] );
 		$new_order_data = array(
 			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
@@ -357,12 +358,18 @@ class FS_Ajax_Class {
 
 		/* Если есть ошибки выводим их*/
 		if ( is_wp_error( $order_id ) ) {
-
 			$result = array(
-				'success' => false,
-				'text'    => $order_id->get_error_messages()
+				'text' => $order_id->get_error_messages()
 			);
+			wp_send_json_error( $result );
 		} else {
+			// устанавливаем новый запас товаров на складе
+			if ( fs_option( 'fs_in_stock_manage' ) ) {
+				foreach ( $fs_products as $fs_product ) {
+					$variation = isset( $fs_product['variation'] ) && is_numeric( $fs_product['variation'] ) ? $fs_product['variation'] : null;
+					$product_class->fs_change_stock_count( $fs_product['ID'], $fs_product['count'], $variation );
+				}
+			}
 			// Здесь уже можно навешивать сторонние обработчики
 			do_action( 'fs_create_order', $order_id );
 
@@ -414,10 +421,10 @@ class FS_Ajax_Class {
 					get_permalink( fs_option( 'fs_checkout_redirect', fs_option( 'page_success', 0 ) ) ) )
 			);
 			unset( $_SESSION['cart'] );
+			wp_send_json_success( $result );
 		}
 
-		echo json_encode( $result );
-		exit();
+
 	}
 
 	/**

@@ -137,10 +137,11 @@ class FS_Init {
 			'cartUrl'           => fs_cart_url( false ),
 			'wishlistUrl'       => fs_wishlist_url(),
 			'lang'              => array(
-				'success'       => __( 'Success!', 'fast-shop' ),
-				'limit_product' => __( 'You have selected all available items from stock.', 'fast-shop' ),
-				'addToCart'     => __( 'Item &laquo;%product%&raquo; successfully added to cart. <a href="%cart_url%">Go to shopping cart</a>', 'fast-shop' ),
-				'addToWishlist' => __( 'Item &laquo;%product%&raquo; successfully added to wishlist. <a href="%wishlist_url%">Go to wishlist</a>', 'fast-shop' ),
+				'success'            => __( 'Success!', 'fast-shop' ),
+				'order_send_success' => __( 'Your order has been successfully created. We will contact you shortly.', 'fast-shop' ),
+				'limit_product'      => __( 'You have selected all available items from stock.', 'fast-shop' ),
+				'addToCart'          => __( 'Item &laquo;%product%&raquo; successfully added to cart. <a href="%cart_url%">Go to shopping cart</a>', 'fast-shop' ),
+				'addToWishlist'      => __( 'Item &laquo;%product%&raquo; successfully added to wishlist. <a href="%wishlist_url%">Go to wishlist</a>', 'fast-shop' ),
 			),
 			'fs_slider_val_min' => ! empty( $_REQUEST['price_start'] ) ? (int) $_REQUEST['price_start'] : 0,
 			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : intval( $price_max )

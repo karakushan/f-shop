@@ -52,6 +52,35 @@ class FS_Product_Class {
 		}
 	}
 
+	/**
+	 * Изменяет запас товаров на складе
+	 *  - если $variant == null, то отминусовка идет от общего поля иначе отнимается у поля запаса для указанного варианта
+	 *
+	 * @param int $product_id
+	 * @param  int $count - сколько единиц товара будет отминусовано
+	 * @param null $variant - если товар вариативный, то здесь нужно указывать номер варианта покупки
+	 */
+	function fs_change_stock_count( $product_id = 0, $count = 0, $variant = null ) {
+		global $fs_config;
+		$variants = $this->get_product_variations( $product_id, false );
+
+		//если указан вариант покупки
+		if ( count( $variants ) && ! is_null( $variant ) && is_numeric( $variant ) ) {
+			$variants                      = $this->get_product_variations( $product_id, false );
+			$variants[ $variant ]['count'] = max( 0, $variants[ $variant ]['count'] - $count );
+			update_post_meta( $product_id, $fs_config->meta['variants'], $variants );
+		} else {
+			// по всей видимости товар не вариативный
+			$max_count = get_post_meta( $product_id, $fs_config->meta['remaining_amount'], 1 );
+			if ( is_numeric( $count ) && $count != 0 ) {
+				$max_count = max( 0, $max_count - $count );
+				update_post_meta( $product_id, $fs_config->meta['remaining_amount'], $max_count );
+			}
+
+		}
+
+	}
+
 
 	/**
 	 * Calculates the overall rating of the product

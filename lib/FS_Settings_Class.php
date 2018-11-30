@@ -67,6 +67,13 @@ class FS_Settings_Class {
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
+						'name'  => 'fs_in_stock_manage',
+						'label' => __( 'Включить управление запасами', 'fast-shop' ),
+						'help'  => __( 'Если опция включена, то запас товаров будет уменьшаться автоматически при каждой покупке', 'fast-shop' ),
+						'value' => fs_option( 'fs_in_stock_manage' )
+					),
+					array(
+						'type'  => 'checkbox',
 						'name'  => 'fs_product_sort_on',
 						'label' => 'Включить сортировку товаров перетаскиванием',
 						'help'  => 'Позволяет быстро изменять позиции товаров на сайте, перетаскиванием их в админпанели',

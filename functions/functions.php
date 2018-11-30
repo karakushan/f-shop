@@ -779,6 +779,32 @@ function fs_base_price( $product_id = 0, $wrap = '%s <span>%s</span>', $args = a
 }
 
 /**
+ * Возвращает первый вариант покупки
+ *
+ * @param $product_id - ID товара
+ * @param string $return - что возвращать: 'all' - весь массив, 'key' - только ключ
+ *
+ * @return int|string|null
+ */
+function fs_get_first_variation( $product_id, $return = 'all' ) {
+	$product_class   = new FS\FS_Product_Class();
+	$variations      = $product_class->get_product_variations( $product_id );
+	$first_variation = null;
+	if ( count( $variations ) ) {
+		foreach ( $variations as $key => $variation ) {
+			if ( $return == 'all' ) {
+				$first_variation = $variation;
+			} elseif ( $return == 'key' ) {
+				$first_variation = $key;
+			}
+			break;
+		}
+	}
+
+	return $first_variation;
+}
+
+/**
  * [Отображает кнопку "в корзину" со всеми необходимыми атрибутамии]
  *
  * @param  int $product_id [id поста (оставьте пустым в цикле wordpress)]
@@ -788,15 +814,6 @@ function fs_base_price( $product_id = 0, $wrap = '%s <span>%s</span>', $args = a
 function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 	global $fs_config;
 	$product_id = fs_get_product_id( $product_id );
-	$set_atts   = [];
-	if ( fs_is_variated( $product_id ) ) {
-		$variants = get_post_meta( $product_id, 'fs_variant', 0 );
-		if ( ! empty( $variants[0][0] ) ) {
-			foreach ( $variants[0][0] as $variant ) {
-				$set_atts[] = $variant;
-			}
-		}
-	}
 
 	// Параметры по умолчанию
 	$args_default = array(
@@ -814,14 +831,17 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 			'id'              => 'fs-atc-' . $product_id,
 			'data-count'      => 1,
 			'data-attr'       => json_encode( new stdClass() ),
-			'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) ),
-			'data-variated'   => intval( get_post_meta( $product_id, $fs_config->meta['variated_on'], 1 ) )
+			'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) )
 		)
 	);
-	$args         = wp_parse_args( $args, $args_default );
 
+	$first_variation = fs_get_first_variation( $product_id, 'key' );
+	if ( ! is_null( $first_variation ) ) {
+		$args_default['data']['data-variation'] = esc_attr( $first_variation );
+	}
+
+	$args                  = wp_parse_args( $args, $args_default );
 	$args['data']['class'] = $args['class'] . ' fs-atc-' . $product_id;
-
 
 	// помещаем название категории в дата атрибут category
 	$category = get_the_terms( $product_id, $fs_config->data['product_taxonomy'] );
@@ -834,7 +854,6 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 	// дополнительные скрытые инфо-блоки внутри кнопки (прелоадер, сообщение успешного добавления в корзину)
 	$atc_after = '<span class="fs-atc-info" style="display:none"></span>';
 	$atc_after .= '<span class="fs-atc-preloader" style="display:none"></span>';
-
 
 	/* позволяем устанавливать разные html элементы в качестве кнопки */
 	switch ( $args['type'] ) {
@@ -1034,15 +1053,15 @@ function fs_aviable_product( $post_id = 0 ) {
 /**
  * Отображает или возвращает поле для изменения количества добавляемых товаров в корзину
  *
- * @param int $product_id -ID товара
- * @param array $args -массив аргументов
+ * @param int $product_id - ID товара
+ * @param array $args - массив аргументов
  *
  * @return mixed
  */
 function fs_quantity_product( $product_id = 0, $args = array() ) {
 	global $fs_config;
-	$product_id  = fs_get_product_id( $product_id );
-	$args        = wp_parse_args( $args, array(
+	$product_id = fs_get_product_id( $product_id );
+	$args       = wp_parse_args( $args, array(
 		'position'      => '%pluss% %input% %minus%',
 		'wrapper'       => 'div',
 		'wrapper_class' => 'fs-qty-wrap',
@@ -1053,12 +1072,20 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		'input_class'   => 'fs-quantity',
 		'echo'          => true
 	) );
-	$total_count = get_post_meta( $product_id, $fs_config->meta['remaining_amount'], true );
+
+	$first_variation = fs_get_first_variation( $product_id );
+	if ( ! is_null( $first_variation ) ) {
+		$total_count = $first_variation['count'];
+	} else {
+		$total_count = get_post_meta( $product_id, $fs_config->meta['remaining_amount'], true );
+	}
+
 	if ( $total_count == '' ) {
 		$max = '';
 	} else {
 		$max = 'max="' . intval( $total_count ) . '"';
 	}
+
 	$pluss    = sprintf( '<button type="button" class="%s" data-fs-count="pluss">%s</button> ', $args['pluss_class'], $args['pluss_content'] );
 	$minus    = sprintf( '<button type="button" class="%s" data-fs-count="minus">%s</button>', $args['minus_class'], $args['minus_content'] );
 	$input    = sprintf( '<input type="text" class="%s" name="count" value="1"  data-fs-action="change_count" data-fs-product-id="%s" ' . $max . '>', $args['input_class'], $product_id, $product_id );
