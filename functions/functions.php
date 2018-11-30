@@ -1030,20 +1030,24 @@ function fs_checkout_url( $show = true ) {
 /**
  * Функция поверяет наличие товара на складе
  *
- * @param int $post_id id записи
+ * @param int $product_id id записи
  *
  * @return bool  true-товар есть на складе, false-нет
  */
-function fs_aviable_product( $post_id = 0 ) {
-	global $post;
-	$config       = new FS\FS_Config;
-	$product_id   = empty( $post_id ) ? $post->ID : (int) $post_id;
-	$availability = get_post_meta( $product_id, $config->meta['remaining_amount'], true );
+function fs_aviable_product( $product_id = 0 ) {
+	global $fs_config;
+	$product_id    = fs_get_product_id( $product_id );
+	$product_class = new FS\FS_Product_Class();
+	$variations    = $product_class->get_product_variations( $product_id );
+	$aviable       = false;
 
-	if ( $availability == '' || $availability > 0 ) {
+	if ( count( $variations ) ) {
 		$aviable = true;
 	} else {
-		$aviable = false;
+		$availability = get_post_meta( $product_id, $fs_config->meta['remaining_amount'], true );
+		if ( $availability == '' || $availability > 0 ) {
+			$aviable = true;
+		}
 	}
 
 	return $aviable;
