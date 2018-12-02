@@ -1146,6 +1146,9 @@ td.fs_photo.column-fs_photo img {
       border: 1px solid #f3f3f3;
       margin-bottom: 5px;
       cursor: pointer; }
+      .fs-select-variation .radiobtn label .fs-variant-name {
+        font-weight: 700;
+        margin-right: 12px; }
       .fs-select-variation .radiobtn label:after, .fs-select-variation .radiobtn label:before {
         content: "";
         position: absolute;

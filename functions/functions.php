@@ -2655,7 +2655,9 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 	global $fs_config;
 	$args       = wp_parse_args( $args, array(
 		'class'      => 'fs-select-variation',
-		'show_price' => true
+		'show_price' => true,
+		'show_name'  => true,
+		'show_sku'   => false
 	) );
 	$product_id = fs_get_product_id( $product_id );
 	$product    = new FS\FS_Product_Class();
@@ -2667,6 +2669,14 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 			echo '<li class="radiobtn">';
 			echo '<input type="radio" name="fs_variation" data-max="' . esc_attr( $variation['count'] ) . '" data-fs-element="select-variation" data-product-id="' . esc_attr( $product_id ) . '" value="' . esc_attr( $var_id ) . '" ' . checked( 0, $count, 0 ) . ' id="fs-var-' . esc_attr( $var_id ) . '">';
 			echo '<label for="fs-var-' . esc_attr( $var_id ) . '">';
+			// Показываем название в зависимости от настроек
+			if ( $args['show_name'] && ! empty( $variation['name'] ) ) {
+				echo '<span class="fs-variant-name">' . $variation['name'] . '</span>';
+			}
+			// Показываем артикул в зависимости от настроек
+			if ( $args['show_sku'] && ! empty( $variation['sku'] ) ) {
+				echo '<span class="fs-variant-sku  fs-var-container">(' . $variation['sku'] . ')</span>';
+			}
 			if ( ! empty( $variation['attr'] ) ) {
 				foreach ( $variation['attr'] as $attr ) {
 					$term             = get_term( $attr, $fs_config->data['product_att_taxonomy'] );
@@ -2686,7 +2696,7 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 						}
 					}
 					echo '<span class="fs-inline-flex align-items-center fs-var-container">' . $term_parent_name . ': ' . $att_show . '</span> ';
-					$count ++;
+
 				}
 			}
 			// Если включено показывать цену
@@ -2705,6 +2715,7 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 				}
 			}
 			echo '</label></li>';
+			$count ++;
 		}
 		echo '</ul>';
 	}

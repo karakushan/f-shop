@@ -1,5 +1,6 @@
 (function ($) {
     window.fShop = {
+        axaxurl: FastShopData.ajaxurl,
         langs: FastShopData.lang,
         getLang: function (string) {
             return FastShopData.lang[string];
@@ -31,16 +32,36 @@
                 jQueryinput.change();
             }
         },
+        setProductGallery: function (productId, variationId = null) {
+            $.ajax({
+                type: 'POST',
+                url: fShop.axaxurl,
+                data: {
+                    "action": "fs_get_product_gallery_ids",
+                    "product_id": productId,
+                    "variation_id": variationId
+                },
+                success: function (res) {
+                    if (res.success) {
+                        if (res.data.gallery) {
+                            $(lightSlider[0]).html(res.data.gallery);
+                            lightSlider.refresh();
+                        }
+                    }
+                }
+            });
+        },
         selectVariation: function () {
             var variation = $(this).val();
             var productId = $(this).data("product-id");
             var maxCount = $(this).data("max");
-
+            // Изменяем данные в кнопке "добавить в корзину"
             $("[data-action=\"add-to-cart\"]").each(function (index, value) {
                 if ($(this).data("product-id") == productId) {
                     $(this).attr("data-variation", variation);
                 }
             });
+            // Изменяем данные в квантификаторе товара
             $("[data-fs-action=\"change_count\"]").each(function (index, value) {
                 if ($(this).data("fs-product-id") == productId) {
                     $(this).attr("max", maxCount);
@@ -49,6 +70,18 @@
                     }
                 }
             });
+            // Подгружаем изображения в галерею аяксом
+            fShop.setProductGallery(productId, variation);
+            // создаём событие
+            var fs_select_variant = new CustomEvent("fs_select_variant", {
+                detail: {
+                    "variationId": variation,
+                    "productId": productId
+                }
+            });
+            document.dispatchEvent(fs_select_variant);
+
+
         }
     };
 
@@ -465,10 +498,11 @@
         var modalParentlId = jQuery(this).parents('.fs-modal');
         jQuery(modalParentlId).fadeOut();
     });
-    jQuery("#product_slider").lightGallery();
+
 // слайдер товара
+    jQuery("#product_slider").lightGallery();
     if (typeof fs_lightslider_options != "undefined") {
-        jQuery('#product_slider').lightSlider(fs_lightslider_options);
+        window.lightSlider = jQuery('#product_slider').lightSlider(fs_lightslider_options);
     }
 
 // Квантификатор товара

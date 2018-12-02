@@ -28,8 +28,6 @@ class FS_Images_Class {
 	 * @return bool|string
 	 */
 	public function fs_galery_list( $post_id = 0 ) {
-		$images_n      = '';
-		$gallery_image = '';
 		global $post;
 		$post_id           = empty( $post_id ) ? $post->ID : $post_id;
 		$width             = fs_option( 'gallery_img_width', 300 );

@@ -61,6 +61,43 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_get_template_part', array( $this, 'fs_get_template_part' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_template_part', array( $this, 'fs_get_template_part' ) );
 
+		// Возвращает id изображений галереи товара или его вариации
+		add_action( 'wp_ajax_fs_get_product_gallery_ids', array( $this, 'fs_get_product_gallery_ids' ) );
+		add_action( 'wp_ajax_nopriv_fs_get_product_gallery_ids', array( $this, 'fs_get_product_gallery_ids' ) );
+
+
+	}
+
+	// Возвращает HTML код галереи товара или конкретной вариации
+	function fs_get_product_gallery_ids() {
+		$product_id   = intval( $_POST['product_id'] );
+		$variation_id = isset( $_POST['variation_id'] ) ? intval( $_POST['variation_id'] ) : null;
+
+		$gallery = '';
+		// Получаем галерею вариативного товара
+		if ( $product_id && $variation_id ) {
+			$product_class = new FS_Product_Class();
+			$variations    = $product_class->get_product_variations( $product_id );
+			if ( ! empty( $variations[ $variation_id ]['gallery'] ) ) {
+				foreach ( $variations[ $variation_id ]['gallery'] as $image ) {
+					$image   = wp_get_attachment_image_url( $image, 'full' );
+					$title   = get_the_title( $product_id );
+					$gallery .= '<li data-thumb="' . esc_url( $image ) . '"  data-src="' . esc_url( $image ) . '"><a href="' . esc_url( $image ) . '" data-lightbox="roadtrip" data-title="' . esc_attr( $title ) . '"><img src="' . esc_url( $image ) . '" alt="' . esc_attr( $title ) . '" itemprop="' . esc_url( $image ) . '" data-zoom-image="' . esc_url( $image ) . '"></a></li>';
+				}
+			}
+		} else {
+			// иначе возвращаем основную галерею товара
+			$images_class = new FS_Images_Class();
+			$gallery      .= $images_class->fs_galery_list( $product_id );
+		}
+
+		if ( ! empty( $gallery ) ) {
+			wp_send_json_success( array(
+				'gallery' => $gallery
+			) );
+		}
+
+		wp_send_json_error();
 	}
 
 	// возвращает шаблон, работает на основе get_template_part()

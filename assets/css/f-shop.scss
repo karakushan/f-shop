@@ -1296,6 +1296,10 @@ $darkcolor: #444;
       border: 1px solid #f3f3f3;
       margin-bottom: 5px;
       cursor: pointer;
+      .fs-variant-name{
+        font-weight: 700;
+        margin-right: 12px;
+      }
       &:after,
       &:before {
         content: "";
