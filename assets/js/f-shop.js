@@ -36,11 +36,14 @@
             $.ajax({
                 type: 'POST',
                 url: fShop.axaxurl,
+                beforeSend: function () {
+                },
                 data: {
                     "action": "fs_get_product_gallery_ids",
                     "product_id": productId,
                     "variation_id": variationId
-                },
+                }
+                ,
                 success: function (res) {
                     if (res.success) {
                         if (res.data.gallery) {
@@ -49,7 +52,8 @@
                         }
                     }
                 }
-            });
+            })
+            ;
         },
         selectVariation: function () {
             var variation = $(this).val();
@@ -500,7 +504,7 @@
     });
 
 // слайдер товара
-    jQuery("#product_slider").lightGallery();
+    var lightGallery = jQuery("#product_slider").lightGallery();
     if (typeof fs_lightslider_options != "undefined") {
         window.lightSlider = jQuery('#product_slider').lightSlider(fs_lightslider_options);
     }

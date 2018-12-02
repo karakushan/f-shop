@@ -29,6 +29,9 @@ class FS_Images_Class {
 	 */
 	public function fs_galery_list( $post_id = 0 ) {
 		global $post;
+		$product_class = new FS_Product_Class();
+		$variation     = $product_class->get_product_variations( $post_id );
+
 		$post_id           = empty( $post_id ) ? $post->ID : $post_id;
 		$width             = fs_option( 'gallery_img_width', 300 );
 		$height            = fs_option( 'gallery_img_height', 400 );
@@ -36,6 +39,11 @@ class FS_Images_Class {
 		$galerys           = $this->fs_galery_images( $post_id );
 		$images_n          = '';
 		$alt               = get_the_title( $post_id );
+
+		if ( ! empty( $variation[0]['gallery'] ) ) {
+			$galerys = $variation[0]['gallery'];
+		}
+
 		if ( $galerys ) {
 			foreach ( $galerys as $atach_id ) {
 				$image = wp_get_attachment_image_src( $atach_id, 'full' );
