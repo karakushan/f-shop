@@ -69,11 +69,12 @@
             $("[data-fs-action=\"change_count\"]").each(function (index, value) {
                 if ($(this).data("fs-product-id") == productId) {
                     $(this).attr("max", maxCount);
-                    if ($(this).val() > maxCount) {
+                    if (maxCount != "" && $(this).val() > maxCount) {
                         $(this).val(maxCount);
                     }
                 }
             });
+
             // Подгружаем изображения в галерею аяксом
             fShop.setProductGallery(productId, variation);
             // создаём событие
