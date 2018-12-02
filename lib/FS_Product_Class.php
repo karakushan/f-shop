@@ -166,4 +166,29 @@ class FS_Product_Class {
 		}
 	}
 
+	/**
+	 * Возвращает вариативную цену
+	 * в случае если поле вариативной цены не заполнено, то будет возвращена обычная цена
+	 *
+	 * @param int $product_id
+	 * @param int $variation_id
+	 *
+	 * @return float
+	 */
+	public function get_variation_price( int $product_id = 0, int $variation_id ) {
+		$product_variations = $this->get_product_variations( $product_id, false );
+		if ( ! empty( $product_variations[ $variation_id ] ) ) {
+			$base_price   = ! empty( $product_variations[ $variation_id ]['price'] ) ? floatval( $product_variations[ $variation_id ]['price'] ) : 0;
+			$action_price = ! empty( $product_variations[ $variation_id ]['action_price'] ) ? floatval( $product_variations[ $variation_id ]['action_price'] ) : 0;
+			if ( $action_price > 0 && $action_price < $base_price ) {
+				$base_price = $action_price;
+			}
+			$base_price = apply_filters( 'fs_price_filter', $product_id, $base_price );
+
+			return $base_price;
+		} else {
+			return fs_get_price( $product_id );
+		}
+	}
+
 }

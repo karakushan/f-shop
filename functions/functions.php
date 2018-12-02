@@ -260,23 +260,16 @@ function fs_get_cart_cost() {
 	$all_price     = array();
 	$product_class = new FS\FS_Product_Class();
 	foreach ( $products as $key => $product ) {
-		$product_id        = intval( $product['ID'] );
-		$all_price[ $key ] = $product['count'] * fs_get_price( $product_id );
+		$product_id = intval( $product['ID'] );
+		$count      = intval( $product['count'] );
+		if ( $count < 2 ) {
+			$count = 1;
+		}
+		$all_price[ $key ] = $count * fs_get_price( $product_id );
 		//  если текущий товар вариативный
 		if ( ! empty( $product['variation'] ) ) {
-			$variation = $product_class->get_product_variations( $product_id );
-			if ( empty( $variation[ $product['variation'] ]['price'] ) ) {
-				continue;
-			}
-			$variation_price        = $variation[ $product['variation'] ]['price'];
-			$variation_action_price = $variation[ $product['variation'] ]['action_price'];
-			if ( $variation_action_price < $variation_price ) {
-				$price = $variation_action_price;
-			} else {
-				$price = $variation_price;
-			}
-			$all_price[ $key ] = apply_filters( 'fs_price_filter', $product_id, $price );
-
+			$variation_price   = $product_class->get_variation_price( $product_id, $product['variation'] );
+			$all_price[ $key ] = $count * $variation_price;
 		}
 	}
 	$price = array_sum( $all_price );
@@ -520,6 +513,7 @@ function fs_total_wholesale_amount( $products = array(), $echo = true, $wrap = '
 	}
 }
 
+
 /**
  * Получаем содержимое корзины в виде массива
  *
@@ -533,45 +527,31 @@ function fs_total_wholesale_amount( $products = array(), $echo = true, $wrap = '
  *         'all_price'-общая цена
  */
 function fs_get_cart( $args = array() ) {
-	if ( ! isset( $_SESSION['cart'] ) ) {
-		return false;
-	}
-	global $fs_config;
+	$cart_items = FS\FS_Cart_Class::get_cart();
 
-	$product  = new FS\FS_Product_Class();
 	$args     = wp_parse_args( $args, array(
 		'price_format'   => '%s <span>%s</span>',
 		'thumbnail_size' => 'thumbnail'
 	) );
 	$products = array();
-	if ( ! empty( $_SESSION['cart'] ) ) {
-		foreach ( $_SESSION['cart'] as $key => $item ) {
-
+	if ( is_array( $cart_items ) && count( $cart_items ) ) {
+		foreach ( $cart_items as $key => $item ) {
 			$product_id = intval( $item['ID'] );
+
 			if ( ! $product_id ) {
 				continue;
 			}
 
 			$price = fs_get_price( $product_id );
+			$name  = get_the_title( $product_id );
 
-			//  если текущий товар вариативный
-			if ( ! empty( $item['variation'] ) ) {
-
-				$variation = $product->get_product_variations( $product_id );
-				if ( empty( $variation[ $item['variation'] ]['price'] ) ) {
-					continue;
-				}
-				$variation_price        = $variation[ $item['variation'] ]['price'];
-				$variation_action_price = $variation[ $item['variation'] ]['action_price'];
-				if ( $variation_action_price < $variation_price ) {
-					$price = $variation_action_price;
-				} else {
-					$price = $variation_price;
-				}
-				$price = apply_filters( 'fs_price_filter', $product_id, $price );
-
+			// цена если текущий товар вариативный
+			if ( ! empty( $item['variation'] ) && is_numeric( $item['variation'] ) ) {
+				$product            = new FS\FS_Product_Class();
+				$product_variations = $product->get_product_variations( $product_id, false );
+				$price              = $product->get_variation_price( $product_id, $item['variation'] );
+				$name               = ! empty( $product_variations[ $item['variation'] ]['name'] ) ? $product_variations[ $item['variation'] ]['name'] : $name;
 			}
-
 
 			$c          = intval( $item['count'] );
 			$all_price  = $price * $c;
@@ -592,7 +572,7 @@ function fs_get_cart( $args = array() ) {
 			$base_price       = fs_get_base_price( $product_id ) ? sprintf( $args['price_format'], fs_get_base_price( $product_id ), fs_currency() ) : '';
 			$products[ $key ] = array(
 				'id'         => $product_id,
-				'name'       => get_the_title( $product_id ),
+				'name'       => $name,
 				'count'      => $c,
 				'thumb'      => get_the_post_thumbnail_url( $product_id, $args['thumbnail_size'] ),
 				'thumbnail'  => get_the_post_thumbnail( $product_id, $args['thumbnail_size'] ),
@@ -2274,34 +2254,15 @@ function fs_is_variated( $post_id = 0 ) {
 /**
  * Получает вариативную цену
  *
- * @param int $post_id
- * @param array $atts
+ * @param int $product_id
+ * @param int $variation_id
  *
  * @return float
  */
-function fs_get_variated_price( $post_id = 0, $atts = array() ) {
-	$post_id        = fs_get_product_id( $post_id );
-	$atts           = array_map( 'intval', $atts );
-	$variants       = get_post_meta( $post_id, 'fs_variant', 0 );
-	$variants_price = get_post_meta( $post_id, 'fs_variant_price', 0 );
-	$variated_price = fs_get_price( $post_id );
+function fs_get_variated_price( $product_id = 0, $variation_id ) {
+	$product_class = new FS\FS_Product_Class();
 
-	// если не включен чекбок "вариативный товар" , то возвращаем цену
-	if ( ! fs_is_variated( $post_id ) ) {
-		return $variated_price;
-	}
-
-	if ( ! empty( $variants[0] ) ) {
-		foreach ( $variants[0] as $k => $variant ) {
-			// ищем совпадения варианов в присланными значениями
-			if ( count( $variant ) == count( $atts ) && fs_in_array_multi( $atts, $variant ) ) {
-				$variated_price = apply_filters( 'fs_price_filter', $post_id, (float) $variants_price[0][ $k ] );
-			}
-		}
-
-	}
-
-	return (float) $variated_price;
+	return $product_class->get_variation_price( $product_id, $variation_id );
 }
 
 /**
