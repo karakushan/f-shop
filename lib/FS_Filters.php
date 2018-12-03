@@ -235,17 +235,6 @@ class FS_Filters {
 				}
 
 			}
-			if ( ! empty( $_REQUEST['filter_by'] ) ) {
-				switch ( $_REQUEST['filter_by'] ) {
-					case 'action_price';
-						$meta_query['action_price'] = array(
-							'key'     => $fs_config->meta['action_price'],
-							'compare' => '> ',
-							'value'   => 0
-						);
-						break;
-				}
-			}
 
 			//Фильтруем по свойствам (атрибутам)
 			if ( ! empty( $_REQUEST['attributes'] ) ) {

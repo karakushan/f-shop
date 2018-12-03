@@ -175,7 +175,7 @@ class FS_Product_Class {
 	 *
 	 * @return float
 	 */
-	public function get_variation_price( int $product_id = 0, int $variation_id ) {
+	public function get_variation_price( $product_id = 0, $variation_id ) {
 		$product_variations = $this->get_product_variations( $product_id, false );
 		if ( ! empty( $product_variations[ $variation_id ] ) ) {
 			$base_price   = ! empty( $product_variations[ $variation_id ]['price'] ) ? floatval( $product_variations[ $variation_id ]['price'] ) : 0;

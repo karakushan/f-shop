@@ -1,6 +1,6 @@
 (function ($) {
     window.fShop = {
-        axaxurl: FastShopData.ajaxurl,
+        ajaxurl: FastShopData.ajaxurl,
         langs: FastShopData.lang,
         getLang: function (string) {
             return FastShopData.lang[string];
@@ -13,6 +13,15 @@
         },
         getSettings: function (settingName) {
             return FastShopData[settingName];
+        },
+        updateCarts: function () {
+            jQuery("[data-fs-element=\"cart-widget\"]").each(function () {
+                let templatePath = "cart-widget/widget";
+                if (jQuery(this).data("template") != "") {
+                    templatePath = jQuery(this).data("template");
+                }
+                fs_get_cart(templatePath, this);
+            });
         },
         productQuantityPluss: function (el) {
             let parent = el.parents('[data-fs-element="fs-quantity"]');
@@ -55,6 +64,43 @@
             })
             ;
         },
+        changeCartItemCount: function (el) {
+            var cartItem = el.data('item-id');
+            var productCount = el.val();
+
+            //если покупатель вбил неправильное к-во товаров
+            if (!isNumeric(productCount) || productCount <= 0) {
+                el.val(1);
+                productCount = 1;
+                el.parent().css({'position': 'relative'});
+                el.prev('.count-error').text(fs_message.count_error).fadeIn(400);
+            } else {
+                el.prev('.count-error').text('').fadeOut(800);
+            }
+
+            $.ajax({
+                url: fShop.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'fs_change_cart_item_count',
+                    item_id: cartItem,
+                    count: productCount
+                },
+                success: function (res) {
+                    if (res.success) {
+                        fShop.updateCarts();
+                        // создаём событие
+                        let cart_change_count = new CustomEvent("fs_cart_change_count", {
+                            detail: {itemId: cartItem, count: productCount}
+                        });
+                        document.dispatchEvent(cart_change_count);
+                    }
+
+                }
+            });
+
+
+        },
         selectVariation: function () {
             var variation = $(this).val();
             var productId = $(this).data("product-id");
@@ -95,6 +141,10 @@
     // увеличение к-ва товара на единицу
     $(document).on('click', "[data-fs-count=\"pluss\"]", function (event) {
         fShop.productQuantityPluss($(this));
+    });
+    // Изменение количества товаров в корзине
+    $(document).on('change input', '[data-fs-type="cart-quantity"]', function () {
+        fShop.changeCartItemCount($(this))
     });
 
 
@@ -160,8 +210,9 @@
             }
         })
             .done(function (result) {
+                fShop.updateCarts();
                 // создаём событие
-                var add_to_cart = new CustomEvent("fs_add_to_cart", {
+                let add_to_cart = new CustomEvent("fs_add_to_cart", {
                     detail: detail
                 });
                 document.dispatchEvent(add_to_cart);
@@ -371,15 +422,13 @@
                 data: sendData
             }).success(function (result) {
                 if (result.success) {
+                    fShop.updateCarts();
                     iziToast.show({
                         theme: 'light',
                         message: result.data.message,
                         position: 'topCenter',
 
                     });
-                    setTimeout(function () {
-                        location.reload();
-                    }, 5000);
                 } else {
                     iziToast.show({
                         theme: 'light',
@@ -543,52 +592,6 @@
                 detail: {count: count, productId: productId}
             });
             document.dispatchEvent(change_count);
-        });
-    });
-
-
-//Изменение количества продуктов в корзине
-    jQuery(document).ready(function (jQuery) {
-        jQuery(document).on('change input', '[data-fs-type="cart-quantity"]', function (event) {
-            event.preventDefault();
-            var productId = jQuery(this).data('product-id');
-            var productCount = jQuery(this).val();
-
-            //если покупатель вбил неправильное к-во товаров
-            if (!isNumeric(productCount) || productCount <= 0) {
-                jQuery(this).val(1);
-                productCount = 1;
-                jQuery(this).parent().css({'position': 'relative'});
-                jQuery(this).prev('.count-error').text(fs_message.count_error).fadeIn(400);
-            } else {
-                jQuery(this).prev('.count-error').text('').fadeOut(800);
-            }
-
-            jQuery.ajax({
-                url: FastShopData.ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'update_cart',
-                    product: productId,
-                    count: productCount
-                }
-            })
-                .done(function (result) {
-                    try {
-                        var json = JSON.parse(result);
-                        if (json.status) {
-                            // создаём событие
-                            var cart_change_count = new CustomEvent("fs_cart_change_count", {
-                                detail: {count: productCount, total: json.total}
-                            });
-                            document.dispatchEvent(cart_change_count);
-                        }
-                    } catch (e) {
-                        console.log('Ошибка ' + e.name + ":" + e.message + "\n" + e.stack);
-                    }
-                });
-
-
         });
     });
 
@@ -898,7 +901,7 @@
 
 
 //добавление товара в список желаний
-    jQuery('[data-fs-action="wishlist"]').on('click', function (event) {
+    jQuery(document).on('click', '[data-fs-action="wishlist"]', function (event) {
         event.preventDefault();
         var product_id = jQuery(this).data('product-id');
         var product_name = jQuery(this).data('name');

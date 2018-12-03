@@ -10,7 +10,7 @@ document.addEventListener("fs_before_add_product", function (event) {
 document.addEventListener("fs_add_to_cart", function (event) {
 
     // действие которое инициирует событие
-    fs_get_cart('cart-widget/widget', '[data-fs-element="cart-widget"]');
+
     var button = event.detail.button;
     iziToast.show({
         image: event.detail.image,
@@ -39,12 +39,6 @@ document.addEventListener("fs_before_to_wishlist", function (event) {
     event.preventDefault();
 }, false);
 
-// Событие срабатывает перед добавлением товара в список желаний
-document.addEventListener("fs_cart_change_count", function (event) {
-    // здесь может быть любой ваш код
-    document.location.reload();
-    event.preventDefault();
-}, false);
 
 // Событие срабатывает после добавления товара в список желаний
 document.addEventListener("fs_add_to_wishlist", function (event) {

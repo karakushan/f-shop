@@ -1095,14 +1095,13 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 /**
  * Выводит поле для изменения к-ва товаров в корзине
  *
- * @param $product_id
+ * @param $item_id
  * @param $value
  * @param array $args
  */
-function fs_cart_quantity( $product_id, $value, $args = array() ) {
-	$value      = intval( $value );
-	$product_id = intval( $product_id );
-	$args       = wp_parse_args( $args, array(
+function fs_cart_quantity( $item_id, $value, $args = array() ) {
+	$value = intval( $value );
+	$args  = wp_parse_args( $args, array(
 		'wrapper'       => 'div',
 		'wrapper_class' => 'fs-qty-wrapper',
 		'position'      => '%minus% %input% %pluss%  ',
@@ -1111,9 +1110,9 @@ function fs_cart_quantity( $product_id, $value, $args = array() ) {
 		'input'         => array( 'class' => 'fs-cart-quantity' )
 	) );
 
-	$pluss    = '<button type="button" class="' . $args['pluss']['class'] . '" data-fs-count="pluss" data-target="#product-quantify-' . $product_id . '">' . $args['pluss']['content'] . '</button> ';
-	$minus    = '<button type="button" class="' . $args['minus']['class'] . '" data-fs-count="minus" data-target="#product-quantify-' . $product_id . '">' . $args['minus']['content'] . '</button>';
-	$input    = '<input type="text" name="" value="' . $value . '" class="' . $args['input']['class'] . '" data-fs-type="cart-quantity" id="product-quantify-' . $product_id . '" data-product-id="' . $product_id . '">';
+	$pluss    = '<button type="button" class="' . $args['pluss']['class'] . '" data-fs-count="pluss" data-target="#product-quantify-' . $item_id . '">' . $args['pluss']['content'] . '</button> ';
+	$minus    = '<button type="button" class="' . $args['minus']['class'] . '" data-fs-count="minus" data-target="#product-quantify-' . $item_id . '">' . $args['minus']['content'] . '</button>';
+	$input    = '<input type="text" name="fs-cart-quantity" value="' . $value . '" class="' . $args['input']['class'] . '" data-fs-type="cart-quantity" id="product-quantify-' . $item_id . '" data-item-id="' . $item_id . '">';
 	$quantity = str_replace( array( '%pluss%', '%minus%', '%input%' ), array(
 		$pluss,
 		$minus,

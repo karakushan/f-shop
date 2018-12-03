@@ -17,10 +17,6 @@ class FS_Cart_Class {
 		add_action( 'wp_ajax_add_to_cart', array( $this, 'add_to_cart_ajax' ) );
 		add_action( 'wp_ajax_nopriv_add_to_cart', array( $this, 'add_to_cart_ajax' ) );
 
-		//Обновление корзины ajax
-		add_action( 'wp_ajax_update_cart', array( $this, 'update_cart_ajax' ) );
-		add_action( 'wp_ajax_nopriv_update_cart', array( $this, 'update_cart_ajax' ) );//
-
 		//Удаление товара из корзины ajax
 		add_action( 'wp_ajax_fs_delete_product', array( $this, 'delete_product_ajax' ) );
 		add_action( 'wp_ajax_nopriv_fs_delete_product', array( $this, 'delete_product_ajax' ) );
@@ -117,19 +113,7 @@ class FS_Cart_Class {
 		}
 	}
 
-	//обновление товара в корзине аяксом
-	public function update_cart_ajax() {
-		$product_id    = (int) $_REQUEST['product'];
-		$product_count = (int) $_REQUEST['count'];
-		if ( $_SESSION['cart'] ) {
-			$_SESSION['cart'][ $product_id ]['count'] = $product_count;
-		}
-		echo json_encode( array(
-			'status' => 1,
-			'total'  => fs_get_total_amount()
-		) );
-		exit;
-	}
+
 
 	//удаление товара в корзине аяксом
 	public function delete_product_ajax() {
