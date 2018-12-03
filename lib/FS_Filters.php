@@ -121,8 +121,22 @@ class FS_Filters {
 			}
 			$query->set( 'post_type', 'product' );
 		} elseif ( $query->is_tax || $query->is_archive ) {
-
-			$meta_query = array();
+			// отфильтровываем выключенные для показа товары в админке
+			$meta_query = array(
+				'relation' => 'AND',
+				'exclude'  => array(
+					'relation' => 'OR',
+					array(
+						'key'     => $fs_config->meta['exclude_archive'],
+						'compare' => 'NOT EXISTS'
+					),
+					array(
+						'key'     => $fs_config->meta['exclude_archive'],
+						'compare' => '!=',
+						'value'   => "1"
+					)
+				)
+			);
 			$orderby    = array();
 			$order      = '';
 			$tax_query  = array();
