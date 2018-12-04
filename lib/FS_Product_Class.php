@@ -10,6 +10,22 @@ namespace FS;
 
 
 class FS_Product_Class {
+	public $variation = null;
+	public $id = 0;
+	public $title;
+	public $price;
+	public $price_format = '%d <span>%s</span>';
+	public $price_display;
+	public $currency;
+	public $sku;
+	public $permalink;
+	public $thumbnail;
+	public $thumbnail_url;
+	public $cost;
+	public $cost_display;
+	public $count = 1;
+	public $attributes = [];
+
 
 	/**
 	 * FS_Product_Class constructor.
@@ -176,6 +192,8 @@ class FS_Product_Class {
 	 * @return float
 	 */
 	public function get_variation_price( $product_id = 0, $variation_id ) {
+		$product_id         = $product_id ? $product_id : $this->id;
+		$variation_id       = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
 		$product_variations = $this->get_product_variations( $product_id, false );
 		if ( ! empty( $product_variations[ $variation_id ] ) ) {
 			$base_price   = ! empty( $product_variations[ $variation_id ]['price'] ) ? floatval( $product_variations[ $variation_id ]['price'] ) : 0;
@@ -191,4 +209,151 @@ class FS_Product_Class {
 		}
 	}
 
+	/**
+	 * Возвращает название товара или его вариации, если указан параметр $variation_id
+	 *
+	 * @param int $product_id
+	 * @param null $variation_id
+	 *
+	 * @return string
+	 */
+	function get_title( $product_id = 0, $variation_id = null ) {
+		$product_id   = $product_id ? $product_id : $this->id;
+		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
+		$title        = get_the_title( $product_id );
+		if ( ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
+			$variations = $this->get_product_variations( $product_id, false );
+			if ( ! empty( $variations[ $variation_id ]['name'] ) ) {
+				$title = $variations[ $variation_id ]['name'];
+			}
+		}
+
+		return $title;
+	}
+
+	/**
+	 * Возвращает артикул (код производителя)  товара или его вариации, если указан параметр $variation_id
+	 *
+	 * @param int $product_id
+	 * @param null $variation_id
+	 *
+	 * @return string
+	 */
+	function get_sku( $product_id = 0, $variation_id = null ) {
+		$product_id   = $product_id ? $product_id : $this->id;
+		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
+		$sku          = fs_get_product_code( $product_id );
+		if ( ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
+			$variations = $this->get_product_variations( $product_id, false );
+			if ( ! empty( $variations[ $variation_id ]['sku'] ) ) {
+				$sku = $variations[ $variation_id ]['sku'];
+			}
+		}
+
+		return $sku;
+	}
+
+	/**
+	 * Возвращает цену  товара или его вариации, если указан параметр $variation_id
+	 *
+	 * @param int $product_id
+	 * @param null $variation_id
+	 *
+	 * @return string
+	 */
+	function get_price( $product_id = 0, $variation_id = null ) {
+		$product_id   = $product_id ? $product_id : $this->id;
+		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
+		$price        = fs_get_price( $product_id );
+
+		if ( ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
+			$price = $this->get_variation_price( $product_id, $variation_id );
+		}
+
+		return $price;
+	}
+
+
+	/**
+	 * Возвращает данные товара в виде объекта текущего класа
+	 *
+	 * @param array $product
+	 *
+	 * @return $this
+	 */
+	public function set_product( $product = [] ) {
+		global $fs_config;
+		$this->setId( intval( $product['ID'] ) );
+
+		if ( isset( $product['variation'] ) && is_numeric( $product['variation'] ) ) {
+			$this->setVariation( $product['variation'] );
+		}
+
+		$this->title         = $this->get_title();
+		$this->sku           = $this->get_sku();
+		$this->price         = $this->get_price();
+		$this->price_display = apply_filters( 'fs_price_format', $this->price );
+		$this->permalink     = $this->get_permalink();
+		$this->count         = intval( $product['count'] );
+		$this->cost          = floatval( $this->count * $this->price );
+		$this->cost_display  = apply_filters( 'fs_price_format', $this->cost );
+		$this->currency      = fs_currency();
+
+		// Если указаны свойства товара
+		if ( ! empty( $product['atts'] ) ) {
+			foreach ( $product['atts'] as $att ) {
+				$attribute              = get_term( intval( $att ), $fs_config->data['product_att_taxonomy'] );
+				$attribute->parent_name = '';
+				if ( $attribute->parent ) {
+					$attribute->parent_name = get_term_field( 'name', $attribute->parent, $fs_config->data['product_att_taxonomy'] );
+				}
+				$this->attributes[] = $attribute;
+			}
+		}
+
+
+		return $this;
+
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getId() {
+		return $this->id;
+	}
+
+	/**
+	 * @param mixed $id
+	 */
+	public function setId( $id ) {
+		$this->id = $id;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getVariation() {
+		return $this->variation;
+	}
+
+	/**
+	 * @param mixed $variation
+	 */
+	public function setVariation( $variation ) {
+		$this->variation = $variation;
+	}
+
+	/**
+	 * Возвращает ссылку на товар
+	 *
+	 * @param int $product_id
+	 *
+	 * @return mixed
+	 */
+	public function get_permalink( $product_id = 0 ) {
+		$product_id = $product_id ? $product_id : $this->id;
+
+		return get_the_permalink( $product_id );
+	}
 }

@@ -1,44 +1,40 @@
 <table class="wp-list-table widefat fixed striped order-list">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Название</th>
-        <th>Артикул</th>
-        <th>Цена</th>
-        <th>Количество</th>
-        <th>Атрибуты</th>
-        <th>Стоимость</th>
+        <th><?php _e( 'ID', 'fast-shop' ) ?></th>
+        <th><?php _e( 'Name', 'fast-shop' ) ?></th>
+        <th><?php _e( 'SKU', 'fast-shop' ) ?></th>
+        <th><?php _e( 'Price', 'fast-shop' ) ?></th>
+        <th><?php _e( 'Quantity', 'fast-shop' ) ?></th>
+        <th><?php _e( 'Attributes', 'fast-shop' ) ?></th>
+        <th><?php _e( 'Cost', 'fast-shop' ) ?></th>
     </tr>
     </thead>
     <tbody>
-	<?php foreach ( $products as $id => $product ): ?>
-		<?php $id = intval( $product['ID'] ) ?>
+	<?php foreach ( $products as $variation_id => $product ): ?>
+		<?php
+		$offer = fs_set_product( $product );
+		?>
         <tr>
-            <td><?php echo $id ?></td>
-            <td><a href="<?php echo get_the_permalink( $id ) ?>" target="_blank"
-                   title="перейти к товару"><?php echo get_the_title( $id ) ?></a></td>
-            <td><?php do_action( 'fs_product_code', $id, '%s', true ) ?></td>
-            <td><?php fs_the_price( $id ) ?></td>
-            <td><?php echo $product['count'] ?></td>
+            <td><?php echo esc_attr( $offer->id ) ?></td>
+            <td><a href="<?php echo esc_url( $offer->permalink ) ?>" target="_blank"
+                   title="перейти к товару"><?php echo esc_attr( $offer->title ) ?></a></td>
+            <td><?php echo esc_attr( $offer->sku ) ?></td>
+            <td><?php echo esc_attr( $offer->price_display ) ?>&nbsp;<?php echo esc_attr( $offer->currency ) ?></td>
+            <td><?php echo esc_attr( $offer->count ) ?></td>
             <td>
 				<?php
 				global $fs_config;
-				if ( ! empty( $product['attr'] ) ) {
+				if ( count( $offer->attributes ) ) {
 					echo '<ul class="product-att">';
-					foreach ( $product['attr'] as $att ) {
-						$term = get_term( intval( $att ), $fs_config->data['product_att_taxonomy'] );
-						if ( ! $term ) {
-							continue;
-						}
-						$term_parent_name = apply_filters( 'the_title', get_term_field( 'name', $term->parent, $fs_config->data['product_att_taxonomy'] ) );
-						$term_name        = apply_filters( 'the_title', $term->name );
-						echo '<li><b>' . esc_attr( $term_parent_name ) . '</b>: ' . esc_attr( $term_name ) . '</li>';
+					foreach ( $offer->attributes as $att ) {
+						echo '<li><b>' . esc_attr( $att->parent_name ) . '</b>: ' . esc_attr( $att->name ) . '</li>';
 					}
 					echo '</ul>';
 				}
 				?>
             </td>
-            <td><?php echo fs_row_price( $id, $product['count'] ) ?></td>
+            <td><?php echo esc_attr( $offer->cost_display ) ?>&nbsp;<?php echo esc_attr( $offer->currency ) ?></td>
         </tr>
 	<?php endforeach; ?>
     </tbody>

@@ -117,19 +117,17 @@ function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
 
 //Получает текущую цену с учётом скидки
 /**
- * @param int $post_id -id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
+ * @param int $product_id -id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
  *
  * @return float $price-значение цены
  */
-function fs_get_price( $post_id = 0 ) {
+function fs_get_price( $product_id = 0 ) {
 	global $fs_config;
-	// устанавливаем id поста
-	global $post;
-	$post_id = empty( $post_id ) && isset( $post ) ? $post->ID : (int) $post_id;
+	$product_id = fs_get_product_id( $product_id );
 
 	// получаем возможные типы цен
-	$base_price   = get_post_meta( $post_id, $fs_config->meta['price'], true );//базовая и главная цена
-	$action_price = get_post_meta( $post_id, $fs_config->meta['action_price'], true );//акионная цена
+	$base_price   = get_post_meta( $product_id, $fs_config->meta['price'], true );//базовая и главная цена
+	$action_price = get_post_meta( $product_id, $fs_config->meta['action_price'], true );//акионная цена
 	$price        = empty( $base_price ) ? 0 : (float) $base_price;
 	$action_price = empty( $action_price ) ? 0 : (float) $action_price;
 
@@ -137,7 +135,7 @@ function fs_get_price( $post_id = 0 ) {
 	if ( $action_price > 0 ) {
 		$price = $action_price;
 	}
-	$price = apply_filters( 'fs_price_filter', $post_id, $price );
+	$price = apply_filters( 'fs_price_filter', $product_id, $price );
 
 	return $price;
 }
@@ -2680,4 +2678,22 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 		echo '</ul>';
 	}
 
+}
+
+/**
+ * Устанавливает данные товара переданного в параметре $product
+ *  массив должен состоять как миннимум из двух значений:
+ *      $product['ID'] -  ID товара
+ *      $product['variation'] -  ID вариации товара
+ *  остальные тоже передаются по возможности
+ *
+ * @param $product
+ *
+ * @return \FS\FS_Product_Class
+ */
+function fs_set_product( $product ) {
+	$product_class = new FS\FS_Product_Class();
+	$product_class->set_product( $product );
+
+	return $product_class;
 }
