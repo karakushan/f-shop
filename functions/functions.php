@@ -2614,7 +2614,7 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 					if ( $att_type == 'image' ) {
 						$image_id = get_term_meta( $term->term_id, 'fs_att_image_value', 1 );
 						if ( $image_id ) {
-							$image_url = wp_get_attachment_image_url( $image_id );
+							$image_url = wp_get_attachment_image_url( $image_id, 'full' );
 							$att_show  = '<span class="fs-attr-image" style="background-image:url(' . esc_url( $image_url ) . ');"></span>';
 						}
 					} elseif ( $att_type == 'color' ) {
