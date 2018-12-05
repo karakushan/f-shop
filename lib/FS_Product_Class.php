@@ -306,6 +306,9 @@ class FS_Product_Class {
 		$attributes = [];
 		if ( ! empty( $this->attributes ) ) {
 			foreach ( $this->attributes as $key => $att ) {
+				if ( empty( $att ) ) {
+					continue;
+				}
 				$attribute              = get_term( intval( $att ), $fs_config->data['product_att_taxonomy'] );
 				$attribute->parent_name = '';
 				if ( $attribute->parent ) {
