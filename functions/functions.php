@@ -526,61 +526,31 @@ function fs_total_wholesale_amount( $products = array(), $echo = true, $wrap = '
  */
 function fs_get_cart( $args = array() ) {
 	$cart_items = FS\FS_Cart_Class::get_cart();
-
-	$args     = wp_parse_args( $args, array(
+	$args       = wp_parse_args( $args, array(
 		'price_format'   => '%s <span>%s</span>',
 		'thumbnail_size' => 'thumbnail'
 	) );
-	$products = array();
+	$products   = array();
 	if ( is_array( $cart_items ) && count( $cart_items ) ) {
 		foreach ( $cart_items as $key => $item ) {
-			$product_id = intval( $item['ID'] );
-
-			if ( ! $product_id ) {
+			$offer = fs_set_product( $item );
+			if ( ! $offer->id ) {
 				continue;
 			}
 
-			$price = fs_get_price( $product_id );
-			$name  = get_the_title( $product_id );
-
-			// цена если текущий товар вариативный
-			if ( ! empty( $item['variation'] ) && is_numeric( $item['variation'] ) ) {
-				$product            = new FS\FS_Product_Class();
-				$product_variations = $product->get_product_variations( $product_id, false );
-				$price              = $product->get_variation_price( $product_id, $item['variation'] );
-				$name               = ! empty( $product_variations[ $item['variation'] ]['name'] ) ? $product_variations[ $item['variation'] ]['name'] : $name;
-			}
-
-			$c          = intval( $item['count'] );
-			$all_price  = $price * $c;
-			$price_show = apply_filters( 'fs_price_format', $price );
-			$all_price  = apply_filters( 'fs_price_format', $all_price );
-			$attr       = array();
-			if ( ! empty( $item['attr'] ) ) {
-				foreach ( $item['attr'] as $term ) {
-					$t = get_term_by( 'term_taxonomy_id', $term );
-					if ( $t ) {
-						$attr[ $term ] = array(
-							'name'       => $t->name,
-							'group_name' => get_term_field( 'name', $t->parent )
-						);
-					}
-				}
-			}
-			$base_price       = fs_get_base_price( $product_id ) ? sprintf( $args['price_format'], fs_get_base_price( $product_id ), fs_currency() ) : '';
 			$products[ $key ] = array(
-				'id'         => $product_id,
-				'name'       => $name,
-				'count'      => $c,
-				'thumb'      => get_the_post_thumbnail_url( $product_id, $args['thumbnail_size'] ),
-				'thumbnail'  => get_the_post_thumbnail( $product_id, $args['thumbnail_size'] ),
-				'attr'       => $attr,
-				'link'       => get_permalink( $product_id ),
-				'price'      => sprintf( $args['price_format'], $price_show, fs_currency() ),
-				'base_price' => $base_price,
-				'all_price'  => sprintf( $args['price_format'], $all_price, fs_currency() ),
-				'sku'        => fs_get_product_code( $product_id ),
-				'currency'   => fs_currency()
+				'id'         => $offer->id,
+				'name'       => $offer->title,
+				'count'      => $offer->count,
+				'thumb'      => get_the_post_thumbnail_url( $offer->id, $args['thumbnail_size'] ),
+				'thumbnail'  => get_the_post_thumbnail( $offer->id, $args['thumbnail_size'] ),
+				'attr'       => $offer->attributes,
+				'link'       => $offer->permalink,
+				'price'      => $offer->price_display,
+				'base_price' => '',
+				'all_price'  => $offer->cost_display,
+				'sku'        => $offer->sku,
+				'currency'   => $offer->currency
 			);
 		}
 	}

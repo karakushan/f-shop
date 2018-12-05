@@ -285,8 +285,11 @@ class FS_Product_Class {
 		global $fs_config;
 		$this->setId( intval( $product['ID'] ) );
 
+		$this->attributes = $product['atts'];
 		if ( isset( $product['variation'] ) && is_numeric( $product['variation'] ) ) {
 			$this->setVariation( $product['variation'] );
+			$variation        = $this->get_variation();
+			$this->attributes = ! empty( $variation['attr'] ) ? $variation['attr'] : [];
 		}
 
 		$this->title         = $this->get_title();
@@ -300,16 +303,18 @@ class FS_Product_Class {
 		$this->currency      = fs_currency();
 
 		// Если указаны свойства товара
-		if ( ! empty( $product['atts'] ) ) {
-			foreach ( $product['atts'] as $att ) {
+		$attributes = [];
+		if ( ! empty( $this->attributes ) ) {
+			foreach ( $this->attributes as $key => $att ) {
 				$attribute              = get_term( intval( $att ), $fs_config->data['product_att_taxonomy'] );
 				$attribute->parent_name = '';
 				if ( $attribute->parent ) {
 					$attribute->parent_name = get_term_field( 'name', $attribute->parent, $fs_config->data['product_att_taxonomy'] );
 				}
-				$this->attributes[] = $attribute;
+				$attributes[] = $attribute;
 			}
 		}
+		$this->attributes = $attributes;
 
 
 		return $this;
@@ -331,10 +336,25 @@ class FS_Product_Class {
 	}
 
 	/**
-	 * @return mixed
+	 * Возваращает данные вариации товара в виде массива
+	 *
+	 * @param int $product_id
+	 * @param null $variation_id
+	 *
+	 * @return null
 	 */
-	public function getVariation() {
-		return $this->variation;
+	public function get_variation( $product_id = 0, $variation_id = null ) {
+		$product_id   = $product_id ? $product_id : $this->id;
+		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
+		$variation    = [];
+		if ( ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
+			$variations = $this->get_product_variations( $product_id, false );
+			if ( ! empty( $variations[ $variation_id ] ) ) {
+				$variation = $variations[ $variation_id ];
+			}
+		}
+
+		return $variation;
 	}
 
 	/**
