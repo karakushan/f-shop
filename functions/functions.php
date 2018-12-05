@@ -2568,8 +2568,12 @@ function fs_taxes_list( $args = [], $total = 0.0 ) {
  * по умолчанию var_dump
  */
 function fs_debug_data( $data, $before = '', $debug_type = 'var_dump' ) {
+	$backtrace = debug_backtrace();
 	echo '<pre>';
-	echo "=== DEBUG $before ===<br>";
+	printf( "=== DEBUG: %s ===<br>", $before );
+	if ( ! empty( $backtrace[0]['file'] ) && ! empty( $backtrace[0]['line'] ) ) {
+		printf( "=== FILE: \"%s:%d\" ===<br>", $backtrace[0]['file'], $backtrace[0]['line'] );
+	}
 	if ( $debug_type == 'var_dump' ) {
 		var_dump( $data );
 	} elseif ( $debug_type == 'print_r' ) {
@@ -2607,6 +2611,9 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 			}
 			if ( ! empty( $variation['attr'] ) ) {
 				foreach ( $variation['attr'] as $attr ) {
+					if ( empty( $attr ) ) {
+						continue;
+					}
 					$term             = get_term( $attr, $fs_config->data['product_att_taxonomy'] );
 					$term_parent_name = get_term_field( 'name', $term->parent, $fs_config->data['product_att_taxonomy'] );
 					$att_type         = get_term_meta( $term->term_id, 'fs_att_type', 1 );

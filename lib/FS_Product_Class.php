@@ -52,10 +52,7 @@ class FS_Product_Class {
 		if ( ! empty( $variations[0] ) ) {
 			if ( $hide_disabled ) {
 				foreach ( $variations[0] as $key => $variation ) {
-					if (
-						( ! empty( $variation['deactive'] ) && $variation['deactive'] == 1 )
-						||
-						( ! empty( $variation['count'] ) && $variation['count'] == 0 ) ) {
+					if ( ! empty( $variation['deactive'] && $variation['deactive'] == 1 ) || ( ! empty( $variation['count'] ) && $variation['count'] == 0 ) ) {
 						unset( $variations[0][ $key ] );
 					}
 				}
@@ -305,6 +302,7 @@ class FS_Product_Class {
 		// Если указаны свойства товара
 		$attributes = [];
 		if ( ! empty( $this->attributes ) ) {
+
 			foreach ( $this->attributes as $key => $att ) {
 				if ( empty( $att ) ) {
 					continue;
@@ -318,7 +316,6 @@ class FS_Product_Class {
 			}
 		}
 		$this->attributes = $attributes;
-
 
 		return $this;
 
