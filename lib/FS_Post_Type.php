@@ -20,6 +20,7 @@ class FS_Post_Type {
 		add_action( 'init', array( $this, 'init' ), 12 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'save_post', array( $this, 'save_fs_fields' ) );
+		add_action( 'fs_before_product_meta', array( $this, 'before_product_meta' ) );
 		$this->product_id = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
 		$this->config     = new FS_Config();
 	} // END public function __construct()
@@ -34,6 +35,11 @@ class FS_Post_Type {
 
 
 	} // END public function init()
+
+	// Выводит скрытый прелоадер перед полями метабокса
+	function before_product_meta() {
+		echo '<div class="fs-mb-preloader"></div>';
+	}
 
 
 	/**
@@ -268,6 +274,7 @@ class FS_Post_Type {
 		$this->product_id = $post->ID;
 		$cookie           = isset( $_COOKIE['fs_active_tab'] ) ? $_COOKIE['fs_active_tab'] : 'prices';
 		echo '<div class="fs-metabox" id="fs-metabox">';
+		do_action( 'fs_before_product_meta' );
 		if ( count( $product_tabs ) ) {
 			echo '<ul class="tab-header">';
 			foreach ( $product_tabs as $key => $tab ) {

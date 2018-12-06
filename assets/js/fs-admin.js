@@ -5,7 +5,30 @@
 *
 */
 
+
 jQuery(function ($) {
+    window.fShop = {
+        // запускает прогресс бар в самом верху сайта
+        showMetaboxPreloader: function () {
+            $(".fs-mb-preloader").css("display", "block");
+        },
+        // скрывает прогрес бар
+        hideMetaboxPreloader: function () {
+            $(".fs-mb-preloader").fadeOut();
+        },
+        // скрывает раскрывает аккордеоны
+        toggleCollapse: function (el, toggleClass) {
+            if (typeof toggleClass == "undefined") toggleClass = "active";
+            $(el).each(function () {
+                $(this).toggleClass(toggleClass);
+            });
+
+        }
+    }
+    $(document).on('click', '.fs-collapse-all', function (event) {
+        event.preventDefault();
+        fShop.toggleCollapse("#fs-variants-wrapper .fs-rule")
+    });
     // изменяет позиции товаров при перетаскивании
     $('body.post-type-product .wp-list-table tbody').sortable({
             placeholder: 'ui-state-highlight ui-sort-position',
@@ -348,7 +371,9 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             url: ajaxurl,
             data: {action: "fs_get_template_part", index: index},
+            beforeSend: fShop.showMetaboxPreloader(),
             success: function (res) {
+                fShop.hideMetaboxPreloader();
                 if (res.success) {
                     parent.find('.fs-prop-group').append(res.data.template);
                 }
@@ -373,14 +398,14 @@ jQuery(document).ready(function ($) {
             url: ajaxurl,
             type: 'POST',
             beforeSend: function () {
-                preloader.fadeIn();
+                fShop.showMetaboxPreloader();
             },
             data: {
                 action: "fs_add_variant",
                 index: count
             },
             success: function (result) {
-                preloader.fadeOut();
+                fShop.hideMetaboxPreloader();
                 if (result.success) {
                     $("#fs-variants-wrapper").append(result.data.template);
                 }

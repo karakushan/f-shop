@@ -9,6 +9,7 @@ $template_path = FS_PLUGIN_PATH . 'templates/back-end/metabox/product-variations
 <button type="button" class="button" id="fs-add-variant"><?php _e( 'add variant', 'fast-shop' ) ?> <img
             src="<?php echo FS_PLUGIN_URL . 'assets/img/ajax-loader.gif' ?>" alt="preloader" class="fs-preloader">
 </button>
+<a href="javascript:void(0)" class="fs-collapse-all"><?php _e( 'Expand / hide all', 'fast-shop' ) ?></a>
 <div id="fs-variants-wrapper">
 	<?php
 	// fs_debug_data( $variants[0], 'variant', 'print_r' );

@@ -141,7 +141,7 @@ class FS_Product_Class {
 	 *
 	 * @return float|int
 	 */
-	public function get_vote_counting( $product_id = 0 ) {
+	public static function get_vote_counting( $product_id = 0 ) {
 		$product_id = fs_get_product_id( $product_id );
 		$rate       = 0;
 		$total_vote = get_post_meta( $product_id, 'fs_product_rating', 0 );
@@ -192,7 +192,6 @@ class FS_Product_Class {
 	/**
 	 * удаляет все товары
 	 *
-	 * @param bool $attachments - удалять вложения или нет (по умолчанию удаляет)
 	 */
 	public static function delete_products() {
 		global $fs_config;
@@ -227,7 +226,7 @@ class FS_Product_Class {
 	 *
 	 * @return float
 	 */
-	public function get_variation_price( $product_id = 0, $variation_id ) {
+	public function get_variation_price( $product_id = 0, $variation_id = null ) {
 		$product_id         = $product_id ? $product_id : $this->id;
 		$variation_id       = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
 		$product_variations = $this->get_product_variations( $product_id, false );
