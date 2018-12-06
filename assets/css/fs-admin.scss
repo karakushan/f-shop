@@ -125,16 +125,20 @@
       }
     }
   }
+
   .fs-prop-row {
     display: flex;
     align-items: center;
-    span{
-      &:hover{
+    max-width: 100%;
+
+    span {
+      &:hover {
         cursor: pointer;
         color: red;
       }
     }
   }
+
   .fs-tabs {
     margin: 0;
     padding: 15px;
@@ -293,8 +297,9 @@
           -ms-transition: all .5s ease-in-out;
           -o-transition: all .5s ease-in-out;
           transition: all .5s ease-in-out;
-          h3{
-            a,a:focus{
+
+          h3 {
+            a, a:focus {
               text-decoration: none;
               outline: none;
               -webkit-box-shadow: none;
@@ -302,12 +307,15 @@
               box-shadow: none;
             }
           }
-          &.active{
+
+          &.active {
             height: auto;
-            h3{
-              a,a:focus{
+
+            h3 {
+              a, a:focus {
                 outline: none;
-                .dashicons{
+
+                .dashicons {
                   -webkit-transform: rotate(180deg);
                   -moz-transform: rotate(180deg);
                   -ms-transform: rotate(180deg);
@@ -1275,4 +1283,5 @@ td.fs_menu_order.column-fs_menu_order {
 
 .fs-prop-group {
   margin-bottom: 15px;
+  padding-right: 20px;
 }

@@ -66,6 +66,45 @@ class FS_Product_Class {
 	}
 
 	/**
+	 * Возвращает массив всех атрибутов товара, которые добавляются в вариациях товара
+	 *
+	 * @param int $product_id
+	 *
+	 * @param bool $parents если true, то будут возвращены только родидители
+	 *
+	 * @return array|int
+	 */
+	function get_all_variation_attributes( $product_id = 0, $parents = false ) {
+		$product_id   = fs_get_product_id( $product_id );
+		$variations   = $this->get_product_variations( $product_id );
+		$attributes   = [];
+		$parents_atts = [];
+		if ( ! count( $variations ) ) {
+			return $attributes;
+		}
+		foreach ( $variations as $variation ) {
+			if ( ! empty( $variation['attr'] ) && is_array( $variation['attr'] ) ) {
+				foreach ( $variation['attr'] as $att ) {
+					$att = intval( $att );
+					if ( $parents ) {
+						$parents_atts[] = get_term_field( 'parent', $att );
+					} else {
+						$attributes [] = $att;
+					}
+
+				}
+
+			}
+		}
+
+		if ( $parents ) {
+			return array_unique( $parents_atts );
+		} else {
+			return array_unique( $attributes );
+		}
+	}
+
+	/**
 	 * Изменяет запас товаров на складе
 	 *  - если $variant == null, то отминусовка идет от общего поля иначе отнимается у поля запаса для указанного варианта
 	 *

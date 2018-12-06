@@ -119,7 +119,8 @@
           box-shadow: none; }
   .fs-metabox .fs-prop-row {
     display: flex;
-    align-items: center; }
+    align-items: center;
+    max-width: 100%; }
     .fs-metabox .fs-prop-row span:hover {
       cursor: pointer;
       color: red; }
@@ -918,6 +919,7 @@ td.fs_menu_order.column-fs_menu_order {
   overflow: auto; }
 
 .fs-prop-group {
-  margin-bottom: 15px; }
+  margin-bottom: 15px;
+  padding-right: 20px; }
 
 /*# sourceMappingURL=fs-admin.css.map */
