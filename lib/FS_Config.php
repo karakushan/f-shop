@@ -613,18 +613,24 @@ class FS_Config {
 				)
 			),
 			'fs-payment-methods'                  => array(
-				'_thumbnail_id'    => array(
+				'_thumbnail_id'         => array(
 					'name' => __( 'Миниатюра', 'fast-shop' ),
 					'type' => 'image',
 					'args' => array()
 				),
-				'_fs_pay_message'  => array(
-					'name' => __( 'Messages to the buyer for payment in this way', 'fast-shop' ),
+				'_fs_pay_message'       => array(
+					'name' => __( 'E-mail message to the buyer if the order is confirmed by the manager', 'fast-shop' ),
 					'help' => __( 'This message is sent to the buyer at the time the manager confirms the order. You can use meta data of type: <code>%order_id%</code> - order number, <code>%pay_name%</code> - name of the payment method, <code>%pay_url%</code> - payment reference .', 'fast-shop' ),
 					'type' => 'textarea',
 					'args' => array()
 				),
-				'_fs_pay_inactive' => array(
+				'_fs_after_pay_message' => array(
+					'name'    => __( 'Message to the buyer after payment on the site', 'fast-shop' ),
+					'help'    => __( 'This message will be shown if the buyer has successfully paid the order. You can use these variables: <code>%order_id%</code> - order number, <code>%pay_name%</code> - name of the payment method', 'fast-shop' ),
+					'type'    => 'textarea',
+					'args'    => array()
+				),
+				'_fs_pay_inactive'      => array(
 					'name' => __( 'Unavailable for payment', 'fast-shop' ),
 					'help' => __( 'If you turn off, then the payment method will not be visible to users, only in the admin panel.', 'fast-shop' ),
 					'type' => 'checkbox',

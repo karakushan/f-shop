@@ -73,11 +73,20 @@ class FS_Payment_Class {
 			}
 		}
 		$html .= '</div><!--END .row-->';
-		if ( in_array( get_post_status( $order_id ), array( 'paid' ) ) ) {
-			return sprintf( '<h2>' . __( 'Order #%d paid successfully', 'fast-shop' ) . '</h2>', $order_id );
+		if ( $order_id && in_array( get_post_status( $order_id ), array( 'paid' ) ) ) {
+			// Если указан номер заказа то выводим сообщение об успешной оплате
+			$after_pay_message = sprintf( '<h2>' . __( 'Order #%d paid successfully', 'fast-shop' ) . '</h2>', $order_id );
+			// TODO здесь еще нужно будет сделать проверку по сессиям, если это не тот пользователь то выдаём сообщение "вы не имеете права просматривать эту страницу"
+			if ( isset( $order->payment_id ) ) {
+				$message           = get_term_meta( $order->payment_id, '_fs_after_pay_message', 1 );
+				$after_pay_message = ! empty( $message ) ? $message : $after_pay_message;
+
+			}
+
+			return $after_pay_message;
 		} else {
-			$term     = get_term_by( 'slug', $_GET['pay_method'], $fs_config->data['product_pay_taxonomy'] );
-			if ( ! empty( $_GET['pay_method'] ) && ! empty( $payment_methods[ $_GET['pay_method'] ] ) && $term) {
+			$term = get_term_by( 'slug', $_GET['pay_method'], $fs_config->data['product_pay_taxonomy'] );
+			if ( ! empty( $_GET['pay_method'] ) && ! empty( $payment_methods[ $_GET['pay_method'] ] ) && $term ) {
 
 				$html .= sprintf( '<h2>' . __( 'Payment  <span>%s <span>%s</span></span> with  <span>%s</span>', 'fast-shop' ) . '</h2>', apply_filters( 'fs_price_format', $order->sum ), fs_currency(), $term->name );
 				if ( ! empty( $payment_methods[ $_GET['pay_method'] ]['description'] ) ) {
