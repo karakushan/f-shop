@@ -207,7 +207,7 @@ class FS_Ajax_Class {
 				if ( count( $variant['attr'] ) == count( $atts ) && fs_in_array_multi( $atts, $variant['attr'] ) ) {
 					$price        = floatval( $variant['price'] );
 					$action_price = floatval( $variant['action_price'] );
-					if ( $action_price < $price ) {
+					if ( ! empty( $action_price ) && $action_price < $price ) {
 						wp_send_json_success( array(
 							'price'     => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $action_price ), fs_currency() ),
 							'basePrice' => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() )
