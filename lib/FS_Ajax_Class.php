@@ -208,13 +208,24 @@ class FS_Ajax_Class {
 					$price        = floatval( $variant['price'] );
 					$action_price = floatval( $variant['action_price'] );
 					if ( ! empty( $action_price ) && $action_price < $price ) {
+
+						$price = apply_filters( 'fs_price_filter', $product_id, $action_price );
+						$price = apply_filters( 'fs_price_format', $price );
+
+						$price_base = apply_filters( 'fs_price_filter', $product_id, $price );
+						$price_base = apply_filters( 'fs_price_format', $price_base );
+
 						wp_send_json_success( array(
-							'price'     => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $action_price ), fs_currency() ),
-							'basePrice' => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() )
+							'price'     => sprintf( '%s <span>%s</span>', $price, fs_currency() ),
+							'basePrice' => sprintf( '%s <span>%s</span>', $price_base, fs_currency() )
 						) );
 					}
+
+					$price = apply_filters( 'fs_price_filter', $product_id, $price );
+					$price = apply_filters( 'fs_price_format', $price );
+
 					wp_send_json_success( array(
-						'price'     => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $variant['price'] ), fs_currency() ),
+						'price'     => sprintf( '%s <span>%s</span>', $price, fs_currency() ),
 						'basePrice' => false
 					) );
 				}
