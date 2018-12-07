@@ -66,8 +66,8 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_nopriv_fs_get_product_gallery_ids', array( $this, 'fs_get_product_gallery_ids' ) );
 
 		// обновление к-ва товара в корзине
-		add_action( 'wp_ajax_fs_change_cart_item_count', array( $this, 'change_cart_item_count' ) );
-		add_action( 'wp_ajax_fs_change_cart_item_count', array( $this, 'change_cart_item_count' ) );//
+		add_action( 'wp_ajax_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
+		add_action( 'wp_ajax_nopriv_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );//
 
 
 	}

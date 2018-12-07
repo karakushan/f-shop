@@ -82,11 +82,12 @@
                 url: fShop.ajaxurl,
                 type: 'POST',
                 data: {
-                    action: 'fs_change_cart_item_count',
+                    action: 'fs_change_cart_count',
                     item_id: cartItem,
                     count: productCount
                 },
                 success: function (res) {
+                    console.log(res);
                     if (res.success) {
                         fShop.updateCarts();
 
