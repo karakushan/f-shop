@@ -89,11 +89,14 @@
                 success: function (res) {
                     if (res.success) {
                         fShop.updateCarts();
+
                         // создаём событие
                         let cart_change_count = new CustomEvent("fs_cart_change_count", {
                             detail: {itemId: cartItem, count: productCount}
                         });
                         document.dispatchEvent(cart_change_count);
+
+                        if (el.data('refresh')) location.reload();
                     }
 
                 }
@@ -558,7 +561,6 @@
     if (typeof fs_lightslider_options != "undefined") {
         window.lightSlider = jQuery('#product_slider').lightSlider(fs_lightslider_options);
     }
-
 // Квантификатор товара
     jQuery(document).ready(function (jQuery) {
         // уменьшение к-ва товара на единицу

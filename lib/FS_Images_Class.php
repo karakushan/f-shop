@@ -51,12 +51,12 @@ class FS_Images_Class {
 					continue;
 				}
 				$image    = $image[0];
-				$images_n .= "<li data-thumb=\"$image\"  data-src=\"$image\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\" itemprop=\"image\" data-zoom-image=\"$image\"></a></li>";
+				$images_n .= "<li data-thumb=\"$image\"  data-src=\"$image\" style=\"background_image( $image )\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $post_id ) . "\"><img src=\"$image\" alt=\"$alt\" itemprop=\"image\" data-zoom-image=\"$image\"></a></li>";
 			}
 		}
 
 		if ( empty( $images_n ) ) {
-			$images_n .= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\"><img src=\"$image_placeholder\" itemprop=\"image\" width=\"100%\" data-zoom-image=\"$image\"></li>";
+			$images_n .= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\" style=\"background_image($image_placeholder)\"><img src=\"$image_placeholder\" itemprop=\"image\" width=\"100%\" data-zoom-image=\"$image\"></li>";
 		}
 
 		return apply_filters( 'fs_galery_list', $images_n, $post_id );

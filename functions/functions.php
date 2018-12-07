@@ -1071,6 +1071,7 @@ function fs_cart_quantity( $item_id, $value, $args = array() ) {
 	$value = intval( $value );
 	$args  = wp_parse_args( $args, array(
 		'wrapper'       => 'div',
+		'refresh'       => false,
 		'wrapper_class' => 'fs-qty-wrapper',
 		'position'      => '%minus% %input% %pluss%  ',
 		'pluss'         => array( 'class' => sanitize_html_class( 'fs-pluss' ), 'content' => '+' ),
@@ -1078,9 +1079,21 @@ function fs_cart_quantity( $item_id, $value, $args = array() ) {
 		'input'         => array( 'class' => 'fs-cart-quantity' )
 	) );
 
+	$input_atts = fs_parse_attr( array(),
+		array(
+			'type'         => "text",
+			'name'         => "fs-cart-quantity",
+			'data-refresh' => $args['refresh'],
+			'value'        => $value,
+			'class'        => $args['input']['class'],
+			'data-fs-type' => "cart-quantity",
+			'data-item-id' => $item_id
+		)
+	);
+
 	$pluss    = '<button type="button" class="' . $args['pluss']['class'] . '" data-fs-count="pluss" data-target="#product-quantify-' . $item_id . '">' . $args['pluss']['content'] . '</button> ';
 	$minus    = '<button type="button" class="' . $args['minus']['class'] . '" data-fs-count="minus" data-target="#product-quantify-' . $item_id . '">' . $args['minus']['content'] . '</button>';
-	$input    = '<input type="text" name="fs-cart-quantity" value="' . $value . '" class="' . $args['input']['class'] . '" data-fs-type="cart-quantity" id="product-quantify-' . $item_id . '" data-item-id="' . $item_id . '">';
+	$input    = '<input   ' . $input_atts . '     >';
 	$quantity = str_replace( array( '%pluss%', '%minus%', '%input%' ), array(
 		$pluss,
 		$minus,
@@ -1803,8 +1816,7 @@ function fs_parse_attr( $attr = array(), $default = array() ) {
 	$attr      = wp_parse_args( $attr, $default );
 	$atributes = array();
 	foreach ( $attr as $key => $att ) {
-		$atributes[] = $key . '="' . esc_attr( $att ) . '"';
-
+		$atributes[] = esc_attr( $key ) . '="' . esc_attr( $att ) . '"';
 	}
 
 	if ( count( $atributes ) ) {
