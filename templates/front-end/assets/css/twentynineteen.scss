@@ -1,0 +1,99 @@
+html[lang="ru-RU"] .site {
+  i.fa,
+  i.far,
+  i.fas {
+    font-family: "Font Awesome 5 Free" !important;
+  }
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+// товар на странице архива
+article {
+  &.product {
+    .fs-atc-row>* {
+      margin-bottom: 10px;
+    }
+    .fs-price-row {
+      margin-bottom: 1rem;
+
+      .fs-price {
+        font-weight: 700;
+        font-size: 1.4rem;
+        margin-right: 10px;
+
+        > span {
+          font-weight: 400;
+          font-size: 1.2rem;
+          letter-spacing: 0.05em;
+        }
+      }
+
+      .fs-base-price {
+        @extend .fs-price;
+        color: #999;
+        position: relative;
+
+        &:after {
+          content: '';
+          height: 1px;
+          width: 100%;
+          position: absolute;
+          left: 0;
+          top: 50%;
+          background: #999999;
+        }
+      }
+    }
+
+    .fs-thumbnail-meta {
+      margin: 0 auto;
+
+      .fs-meta {
+        width: calc(100% - 330px);
+        float: right;
+        @media (max-width: 768px) {
+          width: 100%;
+          padding: calc(2 * 1rem) 1rem;
+        }
+
+        .fs-qty-wrap {
+
+          .fs-pluss,
+          .fs-minus {
+            padding: 0;
+            background: #0073aa;
+            border-radius: 0;
+
+          }
+
+          input {
+            height: auto;
+          }
+        }
+
+        h3 {
+          margin-top: 0;
+          line-height: 1;
+        }
+      }
+
+      figure {
+        width: 300px;
+        max-width: 100%;
+        float: left;
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+      }
+
+      @media only screen and (min-width: 768px) {
+        margin: 1rem calc(10% + 60px);
+      }
+    }
+  }
+}

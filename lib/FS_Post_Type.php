@@ -51,18 +51,18 @@ class FS_Post_Type {
 		register_post_type( $fs_config->data['post_type'],
 			array(
 				'labels'             => array(
-					'name'               => __( 'Products', 'fast-shop' ),
-					'singular_name'      => __( 'Product', 'fast-shop' ),
-					'add_new'            => __( 'Add product', 'fast-shop' ),
+					'name'               => __( 'Products', 'f-shop'),
+					'singular_name'      => __( 'Product', 'f-shop'),
+					'add_new'            => __( 'Add product', 'f-shop'),
 					'add_new_item'       => '',
-					'edit_item'          => __( 'Edit product', 'fast-shop' ),
+					'edit_item'          => __( 'Edit product', 'f-shop'),
 					'new_item'           => '',
 					'view_item'          => '',
 					'search_items'       => '',
 					'not_found'          => '',
 					'not_found_in_trash' => '',
 					'parent_item_colon'  => '',
-					'menu_name'          => __( 'Products', 'fast-shop' ),
+					'menu_name'          => __( 'Products', 'f-shop'),
 				),
 				'public'             => true,
 				'show_in_menu'       => true,
@@ -96,18 +96,18 @@ class FS_Post_Type {
 		register_post_type( 'orders',
 			array(
 				'labels'             => array(
-					'name'               => __( 'Orders', 'fast-shop' ),
-					'singular_name'      => __( 'Order', 'fast-shop' ),
-					'add_new'            => __( 'Add Order', 'fast-shop' ),
+					'name'               => __( 'Orders', 'f-shop'),
+					'singular_name'      => __( 'Order', 'f-shop'),
+					'add_new'            => __( 'Add Order', 'f-shop'),
 					'add_new_item'       => '',
-					'edit_item'          => __( 'Edit order', 'fast-shop' ),
+					'edit_item'          => __( 'Edit order', 'f-shop'),
 					'new_item'           => '',
 					'view_item'          => '',
 					'search_items'       => '',
 					'not_found'          => '',
 					'not_found_in_trash' => '',
 					'parent_item_colon'  => '',
-					'menu_name'          => __( 'Orders', 'fast-shop' ),
+					'menu_name'          => __( 'Orders', 'f-shop'),
 				),
 				'public'             => true,
 				'show_in_menu'       => true,
@@ -208,7 +208,7 @@ class FS_Post_Type {
 		// Add this metabox to every selected post
 		add_meta_box(
 			sprintf( 'fast_shop_%s_metabox', $fs_config->data['post_type'] ),
-			__( 'Product settings', 'fast-shop' ),
+			__( 'Product settings', 'f-shop'),
 			array( &$this, 'add_inner_meta_boxes' ),
 			$fs_config->data['post_type'],
 			'normal',
@@ -218,7 +218,7 @@ class FS_Post_Type {
 		// добавляем метабокс списка товаров в заказе
 		add_meta_box(
 			sprintf( 'fast_shop_%s_metabox', 'orders' ),
-			__( 'List of products', 'fast-shop' ),
+			__( 'List of products', 'f-shop'),
 			array( &$this, 'add_order_products_meta_boxes' ),
 			'orders',
 			'normal',
@@ -228,7 +228,7 @@ class FS_Post_Type {
 		// добавляем метабокс списка товаров в заказе
 		add_meta_box(
 			sprintf( 'fast_shop_%s_user_metabox', 'orders' ),
-			__( 'Customer data', 'fast-shop' ),
+			__( 'Customer data', 'f-shop'),
 			array( &$this, 'add_order_user_meta_boxes' ),
 			'orders',
 			'normal',
@@ -294,7 +294,7 @@ class FS_Post_Type {
 						$class = '';
 					}
 				}
-				echo '<li ' . $class . '><a href="#tab-' . $key . '" data-tab="' . $key . '">' . __( $tab['title'], 'fast-shop' ) . '</a></li>';
+				echo '<li ' . $class . '><a href="#tab-' . $key . '" data-tab="' . $key . '">' . __( $tab['title'], 'f-shop') . '</a></li>';
 			}
 			echo '</ul>';
 			echo "<div class=\"fs-tabs\">";
@@ -341,7 +341,7 @@ class FS_Post_Type {
 					if ( file_exists( $template_file ) ) {
 						include( $template_file );
 					} else {
-						_e( 'Template file not found', 'fast-shop' );
+						_e( 'Template file not found', 'f-shop');
 					}
 				} elseif ( ! empty( $tab_body['body'] ) ) {
 					echo $tab_body['body'];

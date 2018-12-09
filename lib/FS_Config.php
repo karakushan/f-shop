@@ -26,8 +26,8 @@ class FS_Config {
 	public static $user_meta = array();
 	public static $prices;
 	public static $form_fields;
-	public static $nonce = 'fast-shop';
-	public static $text_domain = 'fast-shop';
+	public static $nonce = 'f-shop';
+	public static $text_domain = 'f-shop';
 	public static $pages = array();
 
 	protected static $nonce_field = 'fs-secret';
@@ -42,9 +42,9 @@ class FS_Config {
 			'plugin_url'             => FS_PLUGIN_URL,
 			'plugin_ver'             => '1.1',
 			'plugin_name'            => 'f-shop',
-			'plugin_user_template'   => get_template_directory() . '/fast-shop/',
+			'plugin_user_template'   => get_template_directory() . '/f-shop/',
 			'plugin_template'        => FS_PLUGIN_PATH . 'templates/front-end/',
-			'plugin_settings'        => 'fast-shop-settings',
+			'plugin_settings'        => 'f-shop-settings',
 			'post_type'              => 'product',
 			'post_type_orders'       => 'orders',
 			'product_taxonomy'       => 'catalog',
@@ -122,17 +122,17 @@ class FS_Config {
 		self::$prices = array(
 			'price'        => array(
 				'id'          => 'base-price',
-				'name'        => __( 'Базовая цена', 'fast-shop' ),
+				'name'        => __( 'Базовая цена', 'f-shop'),
 				'meta_key'    => $this->meta['price'],
 				'on'          => true,
-				'description' => __( 'Основной тип цены', 'fast-shop' )
+				'description' => __( 'Основной тип цены', 'f-shop')
 			),
 			'action_price' => array(
 				'id'          => 'action-price',
-				'name'        => __( 'Акционная цена', 'fast-shop' ),
+				'name'        => __( 'Акционная цена', 'f-shop'),
 				'meta_key'    => $this->meta['action_price'],
 				'on'          => true,
-				'description' => __( 'Этот тип изменяет базовую цену отображаемую по умолчанию', 'fast-shop' )
+				'description' => __( 'Этот тип изменяет базовую цену отображаемую по умолчанию', 'f-shop')
 			)
 		);
 
@@ -154,93 +154,93 @@ class FS_Config {
 			'fs_email'             => array(
 				'type'        => 'email',
 				'label'       => '',
-				'placeholder' => __( 'Your email', 'fast-shop' ),
-				'title'       => __( 'Keep the correct email', 'fast-shop' ),
+				'placeholder' => __( 'Your email', 'f-shop'),
+				'title'       => __( 'Keep the correct email', 'f-shop'),
 				'required'    => true
 			),
 			'fs_first_name'        => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __( 'Firts name', 'fast-shop' ),
-				'title'       => __( 'This field is required.', 'fast-shop' ),
+				'placeholder' => __( 'Firts name', 'f-shop'),
+				'title'       => __( 'This field is required.', 'f-shop'),
 				'required'    => true
 			),
 			'fs_last_name'         => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __( 'Last name', 'fast-shop' ),
-				'title'       => __( 'This field is required.', 'fast-shop' ),
+				'placeholder' => __( 'Last name', 'f-shop'),
+				'title'       => __( 'This field is required.', 'f-shop'),
 				'required'    => true
 			),
 			'fs_phone'             => array(
 				'type'        => 'tel',
 				'label'       => '',
-				'placeholder' => __( 'Phone number', 'fast-shop' ),
-				'title'       => __( 'Keep the correct phone number', 'fast-shop' ),
+				'placeholder' => __( 'Phone number', 'f-shop'),
+				'title'       => __( 'Keep the correct phone number', 'f-shop'),
 				'required'    => true,
 				'save_meta'   => 1
 			),
 			'fs_city'              => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __( 'City', 'fast-shop' ),
-				'title'       => __( 'This field is required.', 'fast-shop' ),
+				'placeholder' => __( 'City', 'f-shop'),
+				'title'       => __( 'This field is required.', 'f-shop'),
 				'required'    => true,
 				'save_meta'   => 1
 			),
 			'fs_zip_code'          => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __( 'Zip Code', 'fast-shop' ),
+				'placeholder' => __( 'Zip Code', 'f-shop'),
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_region'            => array(
 				'type'        => 'text',
 				'label'       => '',
-				'title'       => __( 'This field is required.', 'fast-shop' ),
-				'placeholder' => __( 'State / province', 'fast-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop'),
+				'placeholder' => __( 'State / province', 'f-shop'),
 				'required'    => true,
 				'save_meta'   => 1
 			),
 			'fs_adress'            => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __( 'Address', 'fast-shop' ),
+				'placeholder' => __( 'Address', 'f-shop'),
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_home_num'          => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __( 'House number', 'fast-shop' ),
+				'placeholder' => __( 'House number', 'f-shop'),
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_apartment_num'     => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __( 'Apartment number', 'fast-shop' ),
+				'placeholder' => __( 'Apartment number', 'f-shop'),
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_delivery_number'   => array(
 				'type'        => 'text',
 				'label'       => '',
-				'placeholder' => __( 'Branch number', 'fast-shop' ),
+				'placeholder' => __( 'Branch number', 'f-shop'),
 				'required'    => false,
 				'save_meta'   => 1
 			),
 			'fs_delivery_methods'  => array(
 				'type'         => 'dropdown_categories',
-				'first_option' => __( "Choose delivery method", 'fast-shop' ),
+				'first_option' => __( "Choose delivery method", 'f-shop'),
 				'taxonomy'     => $this->data['product_del_taxonomy'],
 				'required'     => true,
 				'save_meta'    => 1
 			),
 			'fs_payment_methods'   => array(
 				'type'         => 'dropdown_categories',
-				'first_option' => __( "Choose a payment method", 'fast-shop' ),
+				'first_option' => __( "Choose a payment method", 'f-shop'),
 				'taxonomy'     => $this->data['product_pay_taxonomy'],
 				'required'     => true,
 				'save_meta'    => 1
@@ -248,12 +248,12 @@ class FS_Config {
 			'fs_comment'           => array(
 				'type'        => 'textarea',
 				'label'       => '',
-				'placeholder' => __( 'Comment', 'fast-shop' ),
+				'placeholder' => __( 'Comment', 'f-shop'),
 				'required'    => false
 			),
 			'fs_customer_register' => array(
 				'type'           => 'checkbox',
-				'label'          => __( 'Register on the site', 'fast-shop' ),
+				'label'          => __( 'Register on the site', 'f-shop'),
 				'label_position' => 'after',
 				'value'          => 1,
 				'required'       => false
@@ -261,14 +261,14 @@ class FS_Config {
 		);
 
 		self::$currencies = array(
-			'USD' => __( 'US dollar', 'fast-shop' ),
-			'UAH' => __( 'Ukrainian hryvnia', 'fast-shop' ),
-			'RUB' => __( 'Russian ruble', 'fast-shop' ),
+			'USD' => __( 'US dollar', 'f-shop'),
+			'UAH' => __( 'Ukrainian hryvnia', 'f-shop'),
+			'RUB' => __( 'Russian ruble', 'f-shop'),
 		);
 
 		self::$users = array(
 			'new_user_role' => 'client',
-			'new_user_name' => __( 'Client', 'fast-shop' )
+			'new_user_name' => __( 'Client', 'f-shop')
 		);
 
 		self::$pages = array(
@@ -278,7 +278,7 @@ class FS_Config {
 				'option'  => 'page_cart'
 			),
 			'ckeckout'   => array(
-				'title'   => __( 'Checkout', 'fast-shop' ),
+				'title'   => __( 'Checkout', 'f-shop'),
 				'content' => '[fs_checkout]',
 				'option'  => 'page_checkout'
 			),
@@ -325,55 +325,55 @@ class FS_Config {
 	public function get_product_tabs() {
 		$tabs = array(
 			'prices'     => array(
-				'title'       => __( 'Цены', 'fast-shop' ),
+				'title'       => __( 'Цены', 'f-shop'),
 				'on'          => true,
-				'description' => __( 'В этой вкладке вы можете настроить цены товаров', 'fast-shop' ),
+				'description' => __( 'В этой вкладке вы можете настроить цены товаров', 'f-shop'),
 				'fields'      => array(
 					$this->meta['price']        => array(
-						'label' => __( 'Базовая цена', 'fast-shop' ),
+						'label' => __( 'Базовая цена', 'f-shop'),
 						'type'  => 'text',
-						'help'  => __( 'Это основная цена на сайте. Поле обязательное!', 'fast-shop' )
+						'help'  => __( 'Это основная цена на сайте. Поле обязательное!', 'f-shop')
 					),
 					$this->meta['action_price'] => array(
-						'label' => __( 'Акционная цена', 'fast-shop' ),
+						'label' => __( 'Акционная цена', 'f-shop'),
 						'type'  => 'text',
-						'help'  => __( 'Если это поле заполнено, то базовая цена теряет свою актуальность. Но вы можете отображать её на сайте.', 'fast-shop' )
+						'help'  => __( 'Если это поле заполнено, то базовая цена теряет свою актуальность. Но вы можете отображать её на сайте.', 'f-shop')
 					),
 					$this->meta['currency']     => array(
-						'label'    => __( 'Валюта товара', 'fast-shop' ),
+						'label'    => __( 'Валюта товара', 'f-shop'),
 						'on'       => fs_option( 'multi_currency_on' ) ? true : false,
 						'type'     => 'dropdown_categories',
-						'help'     => __( 'Поле активно если вы включили мультивалютность в настроках.', 'fast-shop' ),
+						'help'     => __( 'Поле активно если вы включили мультивалютность в настроках.', 'f-shop'),
 						'taxonomy' => $this->data['currencies_taxonomy']
 					)
 				)
 			),
 			'gallery'    => array(
-				'title'    => __( 'Gallery', 'fast-shop' ),
+				'title'    => __( 'Gallery', 'f-shop'),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'gallery'
 			),
 			'attributes' => array(
-				'title'    => __( 'Attributes', 'fast-shop' ),
+				'title'    => __( 'Attributes', 'f-shop'),
 				'on'       => false,
 				'body'     => '',
 				'template' => 'attributes'
 			),
 			'other'      => array(
-				'title'    => __( 'Other', 'fast-shop' ),
+				'title'    => __( 'Other', 'f-shop'),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'other'
 			),
 			'related'    => array(
-				'title'    => __( 'Associated', 'fast-shop' ),
+				'title'    => __( 'Associated', 'f-shop'),
 				'on'       => false, // Сейчас в разработке
 				'body'     => '',
 				'template' => 'related'
 			),
 			'variants'   => array(
-				'title'    => __( 'Variation', 'fast-shop' ),
+				'title'    => __( 'Variation', 'f-shop'),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'variants'
@@ -391,22 +391,22 @@ class FS_Config {
 	public function get_orderby_keys() {
 		$keys = array(
 			'date_desc'  => array(
-				'name' => __( 'recently added', 'fast-shop' )// недавно добавленные
+				'name' => __( 'recently added', 'f-shop')// недавно добавленные
 			),
 			'date_asc'   => array(
-				'name' => __( 'later added', 'fast-shop' ) // давно добавленные
+				'name' => __( 'later added', 'f-shop') // давно добавленные
 			),
 			'price_asc'  => array(
-				'name' => __( 'from cheap to expensive', 'fast-shop' ) // от дешевых к дорогим
+				'name' => __( 'from cheap to expensive', 'f-shop') // от дешевых к дорогим
 			),
 			'price_desc' => array(
-				'name' => __( 'from expensive to cheap', 'fast-shop' ) // от дорогих к дешевым
+				'name' => __( 'from expensive to cheap', 'f-shop') // от дорогих к дешевым
 			),
 			'name_asc'   => array(
-				'name' => __( 'by title A to Z', 'fast-shop' ) // по названию от А до Я
+				'name' => __( 'by title A to Z', 'f-shop') // по названию от А до Я
 			),
 			'name_desc'  => array(
-				'name' => __( 'by title Z to A', 'fast-shop' ) // по названию от Я до А
+				'name' => __( 'by title Z to A', 'f-shop') // по названию от Я до А
 			)
 		);
 
@@ -602,76 +602,76 @@ class FS_Config {
 		$fields = array(
 			'catalog'                             => array(
 				'_content'      => array(
-					'name' => __( 'Текст категории', 'fast-shop' ),
+					'name' => __( 'Текст категории', 'f-shop'),
 					'type' => 'editor',
 					'args' => array()
 				),
 				'_thumbnail_id' => array(
-					'name' => __( 'Миниатюра', 'fast-shop' ),
+					'name' => __( 'Миниатюра', 'f-shop'),
 					'type' => 'image',
 					'args' => array()
 				)
 			),
 			'fs-payment-methods'                  => array(
 				'_thumbnail_id'         => array(
-					'name' => __( 'Миниатюра', 'fast-shop' ),
+					'name' => __( 'Миниатюра', 'f-shop'),
 					'type' => 'image',
 					'args' => array()
 				),
 				'_fs_pay_message'       => array(
-					'name' => __( 'E-mail message to the buyer if the order is confirmed by the manager', 'fast-shop' ),
-					'help' => __( 'This message is sent to the buyer at the time the manager confirms the order. You can use meta data of type: <code>%order_id%</code> - order number, <code>%pay_name%</code> - name of the payment method, <code>%pay_url%</code> - payment reference .', 'fast-shop' ),
+					'name' => __( 'E-mail message to the buyer if the order is confirmed by the manager', 'f-shop'),
+					'help' => __( 'This message is sent to the buyer at the time the manager confirms the order. You can use meta data of type: <code>%order_id%</code> - order number, <code>%pay_name%</code> - name of the payment method, <code>%pay_url%</code> - payment reference .', 'f-shop'),
 					'type' => 'textarea',
 					'args' => array()
 				),
 				'_fs_after_pay_message' => array(
-					'name'    => __( 'Message to the buyer after payment on the site', 'fast-shop' ),
-					'help'    => __( 'This message will be shown if the buyer has successfully paid the order. You can use these variables: <code>%order_id%</code> - order number, <code>%pay_name%</code> - name of the payment method', 'fast-shop' ),
+					'name'    => __( 'Message to the buyer after payment on the site', 'f-shop'),
+					'help'    => __( 'This message will be shown if the buyer has successfully paid the order. You can use these variables: <code>%order_id%</code> - order number, <code>%pay_name%</code> - name of the payment method', 'f-shop'),
 					'type'    => 'textarea',
 					'args'    => array()
 				),
 				'_fs_pay_inactive'      => array(
-					'name' => __( 'Unavailable for payment', 'fast-shop' ),
-					'help' => __( 'If you turn off, then the payment method will not be visible to users, only in the admin panel.', 'fast-shop' ),
+					'name' => __( 'Unavailable for payment', 'f-shop'),
+					'help' => __( 'If you turn off, then the payment method will not be visible to users, only in the admin panel.', 'f-shop'),
 					'type' => 'checkbox',
 					'args' => array()
 				)
 			),
 			'fs-delivery-methods'                 => array(
 				'_thumbnail_id'        => array(
-					'name' => __( 'Миниатюра', 'fast-shop' ),
+					'name' => __( 'Миниатюра', 'f-shop'),
 					'type' => 'image',
 					'args' => array()
 				),
 				'_fs_delivery_cost'    => array(
-					'name' => __( 'Стоимость доставки в базовой валюте', 'fast-shop' ),
+					'name' => __( 'Стоимость доставки в базовой валюте', 'f-shop'),
 					'type' => 'text',
 					'args' => array( 'style' => 'width:72px;' )
 				),
 				'_fs_delivery_address' => array(
-					'name' => __( 'Подключать поля адреса при выборе данного метода', 'fast-shop' ),
+					'name' => __( 'Подключать поля адреса при выборе данного метода', 'f-shop'),
 					'type' => 'checkbox',
 					'args' => array()
 				)
 			),
 			'fs-currencies'                       => array(
 				'_fs_currency_code'    => array(
-					'name' => __( 'International currency code', 'fast-shop' ),
+					'name' => __( 'International currency code', 'f-shop'),
 					'type' => 'text',
 					'args' => array()
 				),
 				'_fs_currency_cost'    => array(
-					'name' => __( 'Cost in base currency', 'fast-shop' ),
+					'name' => __( 'Cost in base currency', 'f-shop'),
 					'type' => 'text',
 					'args' => array()
 				),
 				'_fs_currency_display' => array(
-					'name' => __( 'Display on the site', 'fast-shop' ),
+					'name' => __( 'Display on the site', 'f-shop'),
 					'type' => 'text',
 					'args' => array()
 				),
 				'_fs_currency_locale'  => array(
-					'name' => __( 'Currency Language (locale)', 'fast-shop' ),
+					'name' => __( 'Currency Language (locale)', 'f-shop'),
 					'type' => 'select',
 					'args' => array( 'values' => $this->get_locales(), )
 				)
@@ -679,7 +679,7 @@ class FS_Config {
 			// Дополнительные поля налога
 			$this->data['product_taxes_taxonomy'] => array(
 				'_fs_tax_value' => array(
-					'name' => __( 'The amount or value of tax as a percentage', 'fast-shop' ),
+					'name' => __( 'The amount or value of tax as a percentage', 'f-shop'),
 					'type' => 'text',
 					'args' => array()
 				)
@@ -687,35 +687,35 @@ class FS_Config {
 			// Дополнительные поля скидок
 			$this->data['discount_taxonomy']      => array(
 				'discount_where_is' => array(
-					'name' => __( 'Скидка активируется при условии', 'fast-shop' ),
+					'name' => __( 'Скидка активируется при условии', 'f-shop'),
 					'type' => 'select',
 
 					'args' => array(
 						'values' => array(
-							'sum'   => __( 'Общая сумма товаров в корзине', 'fast-shop' ),
-							'count' => __( 'Количество товаров в корзине', 'fast-shop' )
+							'sum'   => __( 'Общая сумма товаров в корзине', 'f-shop'),
+							'count' => __( 'Количество товаров в корзине', 'f-shop')
 						)
 					)
 				),
 				'discount_where'    => array(
-					'name' => __( 'Условие скидки', 'fast-shop' ),
+					'name' => __( 'Условие скидки', 'f-shop'),
 					'type' => 'select',
 					'args' => array(
 						'values' => array(
-							'>=' => __( 'Больше или равно', 'fast-shop' ),
-							'>'  => __( 'Больше', 'fast-shop' ),
-							'<'  => __( 'Меньше', 'fast-shop' ),
-							'<=' => __( 'Меньше или равно', 'fast-shop' )
+							'>=' => __( 'Больше или равно', 'f-shop'),
+							'>'  => __( 'Больше', 'f-shop'),
+							'<'  => __( 'Меньше', 'f-shop'),
+							'<=' => __( 'Меньше или равно', 'f-shop')
 						)
 					)
 				),
 				'discount_value'    => array(
-					'name' => __( 'Значение условия', 'fast-shop' ),
+					'name' => __( 'Значение условия', 'f-shop'),
 					'type' => 'text',
 					'args' => array()
 				),
 				'discount_amount'   => array(
-					'name' => __( 'Сумма скидки', 'fast-shop' ),
+					'name' => __( 'Сумма скидки', 'f-shop'),
 					'type' => 'text',
 					'args' => array()
 				)

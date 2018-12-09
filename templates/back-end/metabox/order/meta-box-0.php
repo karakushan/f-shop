@@ -1,13 +1,13 @@
 <table class="wp-list-table widefat fixed striped order-list">
     <thead>
     <tr>
-        <th><?php _e( 'ID', 'fast-shop' ) ?></th>
-        <th><?php _e( 'Name', 'fast-shop' ) ?></th>
-        <th><?php _e( 'SKU', 'fast-shop' ) ?></th>
-        <th><?php _e( 'Price', 'fast-shop' ) ?></th>
-        <th><?php _e( 'Quantity', 'fast-shop' ) ?></th>
-        <th><?php _e( 'Attributes', 'fast-shop' ) ?></th>
-        <th><?php _e( 'Cost', 'fast-shop' ) ?></th>
+        <th><?php _e( 'ID', 'f-shop' ) ?></th>
+        <th><?php _e( 'Name', 'f-shop' ) ?></th>
+        <th><?php _e( 'SKU', 'f-shop' ) ?></th>
+        <th><?php _e( 'Price', 'f-shop' ) ?></th>
+        <th><?php _e( 'Quantity', 'f-shop' ) ?></th>
+        <th><?php _e( 'Attributes', 'f-shop' ) ?></th>
+        <th><?php _e( 'Cost', 'f-shop' ) ?></th>
     </tr>
     </thead>
     <tbody>

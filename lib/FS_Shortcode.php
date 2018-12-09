@@ -51,7 +51,7 @@ class FS_Shortcode {
 			'wrapper_class' => 'fs-wislist-poducts',
 			'before_loops'  => '<div class="row">',
 			'after_loops'   => '</div>',
-			'empty_text'    => __( 'Wish list is empty', 'fast-shop' ),
+			'empty_text'    => __( 'Wish list is empty', 'f-shop'),
 			'template'      => 'wishlist/wishlist-product'
 		), $atts );
 		$query = fs_get_wishlist();
@@ -101,7 +101,7 @@ class FS_Shortcode {
 		} else {
 			if ( empty( $atts['empty_text'] ) ) {
 				$content = '<p class="' . esc_attr( $atts['empty_class'] ) . '">';
-				$content .= esc_html__( 'Your basket is empty', 'fast-shop' );
+				$content .= esc_html__( 'Your basket is empty', 'f-shop');
 				$content .= '</p>';
 			} else {
 				$content = $atts['empty_text'];
@@ -181,15 +181,15 @@ class FS_Shortcode {
 		$errors = new \WP_Error();
 
 		if ( ! is_user_logged_in() ) {
-			$errors->add( 'fs-no-user', __( 'Register to view this page', 'fast-shop' ) );
+			$errors->add( 'fs-no-user', __( 'Register to view this page', 'f-shop') );
 		}
 
 		if ( ! $atts['order']->exists || empty( $order_id ) ) {
-			$errors->add( 'fs-no-order', __( 'Order not found', 'fast-shop' ) );
+			$errors->add( 'fs-no-order', __( 'Order not found', 'f-shop') );
 		}
 
 		if ( $curent_user->user_login != $atts['order']->user_name ) {
-			$errors->add( 'fs-no-access-order', __( 'Details of this order are not available for you', 'fast-shop' ) );
+			$errors->add( 'fs-no-access-order', __( 'Details of this order are not available for you', 'f-shop') );
 		}
 
 		if ( $errors->get_error_code() ) {
@@ -254,7 +254,7 @@ class FS_Shortcode {
 		$template = '
 <form action="#" name="fs-order-send" class="' . $args['class'] . '" method="POST">
              < div class="products_wrapper" ></div >
-  <input type = "hidden" id = "_wpnonce" name = "_wpnonce" value = "' . wp_create_nonce( 'fast-shop' ) . '" >
+  <input type = "hidden" id = "_wpnonce" name = "_wpnonce" value = "' . wp_create_nonce('f-shop') . '" >
   <input type = "hidden" name = "action" value = "order_send" >
   <input type = "hidden" name = "order_type" value = "single" > ';
 		$template .= fs_frontend_template( 'order / single - order', $args );

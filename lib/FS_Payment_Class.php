@@ -51,8 +51,8 @@ class FS_Payment_Class {
 
 		do_action( 'fs_order_pay_before' );
 		$html = '<div class="fs-order-pay">';
-		$html .= '<h3>' . __( 'Available payment methods', 'fast-shop' ) . '</h3>';
-		$html .= '<p>' . __( 'If the previously chosen payment method does not suit you, you can pay by one of the ways below', 'fast-shop' ) . ':</p>';
+		$html .= '<h3>' . __( 'Available payment methods', 'f-shop') . '</h3>';
+		$html .= '<p>' . __( 'If the previously chosen payment method does not suit you, you can pay by one of the ways below', 'f-shop') . ':</p>';
 		$html .= '<div class="row">';
 
 		if ( $payment_methods ) {
@@ -75,7 +75,7 @@ class FS_Payment_Class {
 		$html .= '</div><!--END .row-->';
 		if ( $order_id && in_array( get_post_status( $order_id ), array( 'paid' ) ) ) {
 			// Если указан номер заказа то выводим сообщение об успешной оплате
-			$after_pay_message = sprintf( '<h2>' . __( 'Order #%d paid successfully', 'fast-shop' ) . '</h2>', $order_id );
+			$after_pay_message = sprintf( '<h2>' . __( 'Order #%d paid successfully', 'f-shop') . '</h2>', $order_id );
 			// TODO здесь еще нужно будет сделать проверку по сессиям, если это не тот пользователь то выдаём сообщение "вы не имеете права просматривать эту страницу"
 			if ( isset( $order->payment_id ) ) {
 				$message           = get_term_meta( $order->payment_id, '_fs_after_pay_message', 1 );
@@ -88,7 +88,7 @@ class FS_Payment_Class {
 			$term = get_term_by( 'slug', $_GET['pay_method'], $fs_config->data['product_pay_taxonomy'] );
 			if ( ! empty( $_GET['pay_method'] ) && ! empty( $payment_methods[ $_GET['pay_method'] ] ) && $term ) {
 
-				$html .= sprintf( '<h2>' . __( 'Payment  <span>%s <span>%s</span></span> with  <span>%s</span>', 'fast-shop' ) . '</h2>', apply_filters( 'fs_price_format', $order->sum ), fs_currency(), $term->name );
+				$html .= sprintf( '<h2>' . __( 'Payment  <span>%s <span>%s</span></span> with  <span>%s</span>', 'f-shop') . '</h2>', apply_filters( 'fs_price_format', $order->sum ), fs_currency(), $term->name );
 				if ( ! empty( $payment_methods[ $_GET['pay_method'] ]['description'] ) ) {
 					$html .= sprintf( '<p>%s</p>', $payment_methods[ $_GET['pay_method'] ]['description'] );
 				}

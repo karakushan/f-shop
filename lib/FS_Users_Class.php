@@ -108,7 +108,7 @@ class FS_Users_Class {
 	// создание профиля пользователя
 	public function fs_profile_create() {
 
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'fast-shop' ) ) {
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'f-shop') ) {
 			exit( 'неправильный проверочный код nonce' );
 		}
 
@@ -266,7 +266,7 @@ class FS_Users_Class {
 			'class'          => 'fs-login-form',
 			'name'           => 'fs-login',
 			'method'         => 'post',
-			'logged_in_text' => __( 'Вы уже вошли на сайт.', 'fast-shop' )
+			'logged_in_text' => __( 'Вы уже вошли на сайт.', 'f-shop')
 
 		) );
 

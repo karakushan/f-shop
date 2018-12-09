@@ -83,7 +83,7 @@ class FS_Filters {
 		}
 
 		wp_dropdown_categories( array(
-			'show_option_all' => __( 'Product category', 'fast-shop' ),
+			'show_option_all' => __( 'Product category', 'f-shop'),
 			'taxonomy'        => 'catalog',
 			'id'              => 'fs-category-filter',
 			'hide_empty'      => false,
@@ -304,7 +304,7 @@ class FS_Filters {
 				) ) . '"> ' . $option_default . '</option> ';
 			foreach ( $fs_atributes as $key => $att ) {
 				$redirect_url = add_query_arg( array(
-					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
+					'fs_filter'  => wp_create_nonce('f-shop'),
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
 				echo ' <option  value="' . esc_url( $redirect_url ) . '" ' . selected( $url['attributes'][ $att->slug ], $att->term_id, 0 ) . '> ' . $att->name . '</option> ';
@@ -315,7 +315,7 @@ class FS_Filters {
 			echo ' <ul>';
 			foreach ( $fs_atributes as $key => $att ) {
 				$redirect_url = add_query_arg( array(
-					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
+					'fs_filter'  => wp_create_nonce('f-shop'),
 					'attributes' => array( $att->slug => $att->term_id )
 				) );
 
@@ -339,7 +339,7 @@ class FS_Filters {
 				'interval' => array( 15, 30, 45, 90 ),
 				'class'    => 'fs-count-filter'
 			) );
-		$nonce = wp_create_nonce( 'fast-shop' );
+		$nonce = wp_create_nonce('f-shop');
 
 		echo ' <select name="post_count" class="' . esc_attr( $args['class'] ) . '" onchange="document.location=this.options[this.selectedIndex].value"> ';
 		foreach ( $args['interval'] as $key => $count ) {
@@ -365,22 +365,22 @@ class FS_Filters {
 			'class'   => 'fs-types-sort-filter',
 			'filters' => array(
 				'date_desc'  => array(
-					'name' => __( 'recently added', 'fast-shop' )// недавно добавленные
+					'name' => __( 'recently added', 'f-shop')// недавно добавленные
 				),
 				'date_asc'   => array(
-					'name' => __( 'later added', 'fast-shop' ) // давно добавленные
+					'name' => __( 'later added', 'f-shop') // давно добавленные
 				),
 				'price_asc'  => array(
-					'name' => __( 'from cheap to expensive', 'fast-shop' ) // от дешевых к дорогим
+					'name' => __( 'from cheap to expensive', 'f-shop') // от дешевых к дорогим
 				),
 				'price_desc' => array(
-					'name' => __( 'from expensive to cheap', 'fast-shop' ) // от дорогих к дешевым
+					'name' => __( 'from expensive to cheap', 'f-shop') // от дорогих к дешевым
 				),
 				'name_asc'   => array(
-					'name' => __( 'by title A to Z', 'fast-shop' ) // по названию от А до Я
+					'name' => __( 'by title A to Z', 'f-shop') // по названию от А до Я
 				),
 				'name_desc'  => array(
-					'name' => __( 'by title Z to A', 'fast-shop' ) // по названию от Я до А
+					'name' => __( 'by title Z to A', 'f-shop') // по названию от Я до А
 				)
 			)
 		) );
@@ -391,7 +391,7 @@ class FS_Filters {
 			echo ' <select name="order_type"  class="' . esc_attr( $attr['class'] ) . '" data-fs-action="filter"> ';
 			foreach ( $attr['filters'] as $key => $order_type ) {
 				$redirect_url = add_query_arg( array(
-					'fs_filter'  => wp_create_nonce( 'fast-shop' ),
+					'fs_filter'  => wp_create_nonce('f-shop'),
 					'order_type' => $key
 				) );
 				echo ' <option value="' . esc_url( $redirect_url ) . '" ' . selected( $key, $order_type_get, 0 ) . '> ' . esc_html( $order_type['name'] ) . ' </option> ';

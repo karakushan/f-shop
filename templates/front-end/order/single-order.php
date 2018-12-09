@@ -2,7 +2,7 @@
 	<input type="hidden" name="action" value="order_send">
 	<input type="hidden" name="fs_cart[product_id]" value="<?php echo $product_id ?>">
 	<input type="hidden" name="order_type" value="single">
-	<?php wp_nonce_field('fast-shop'); ?>
+	<?php wp_nonce_field('f-shop'); ?>
 	<div class="form-group">
 		<input type="text" name="fs_name" class="form-control" placeholder="Имя"  title="заполните поле" required>
 	</div>

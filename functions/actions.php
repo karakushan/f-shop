@@ -30,14 +30,14 @@ function fs_popular_db_widget() {
 			echo '<tr>';
 			echo '<td>' . $thumbmail . '</td>';
 			echo '<td><a href="' . $link . '" target="_blank">' . $title . '</a></br>
-			<span><i>' . __( 'Views', 'fast-shop' ) . ': </i>' . $views . '</span></td>';
+			<span><i>' . __( 'Views', 'f-shop' ) . ': </i>' . $views . '</span></td>';
 			echo '<td>';
 			fs_the_price( $post->ID );
 			echo '</td>';
 			echo '</tr>';
 		}
 	} else {
-		echo '<p>' . __( 'It looks like your site has not been visited yet.', 'fast-shop' ) . '</p>';
+		echo '<p>' . __( 'It looks like your site has not been visited yet.', 'f-shop' ) . '</p>';
 	}
 	wp_reset_query();
 	echo '</table>';
@@ -45,7 +45,7 @@ function fs_popular_db_widget() {
 
 // Используется в хуке
 function fs_dashboard_widgets() {
-	wp_add_dashboard_widget( 'dashboard_widget', __( 'Popular items', 'fast-shop' ), 'fs_popular_db_widget' );
+	wp_add_dashboard_widget( 'dashboard_widget', __( 'Popular items', 'f-shop' ), 'fs_popular_db_widget' );
 }
 
 // Добавляем кнопки в текстовый html-редактор
@@ -54,21 +54,21 @@ function fs_add_sheensay_quicktags() {
 	if ( ! isset( $_GET['page'] ) ) {
 		return;
 	}
-	if ( $_GET['page'] != 'fast-shop-settings' || ! wp_script_is( 'quicktags' ) ) {
+	if ( $_GET['page'] != 'f-shop-settings' || ! wp_script_is( 'quicktags' ) ) {
 		return;
 	} ?>
   <script type="text/javascript">
       if (QTags) {
           // QTags.addButton( id, display, arg1, arg2, access_key, title, priority, instance );
-          QTags.addButton('fs_b_fname', '<?php esc_attr_e( 'First name', 'fast-shop' ) ?>', '%fs_first_name%', '', '', '<?php esc_attr_e( 'First name', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_lname', '<?php esc_attr_e( 'Last name', 'fast-shop' ) ?>', '%fs_last_name%', '', '', '<?php esc_attr_e( 'Last name', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_besc_attr_email', '<?php esc_attr_e( 'Email', 'fast-shop' ) ?>', '%fsesc_attr_email%', '', '', '<?php esc_attr_e( 'E-mail', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_order_id', '<?php esc_attr_e( 'Order id', 'fast-shop' ) ?>', '%order_id%', '', '', '<?php esc_attr_e( 'Order id', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_total_amount', '<?php esc_attr_e( 'Amount', 'fast-shop' ) ?>', '%total_amount%', '', '', '<?php esc_attr_e( 'Amount', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_phone', '<?php esc_attr_e( 'Phone', 'fast-shop' ) ?>', '%fs_phone%', '', '', '<?php esc_attr_e( 'Phone', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_fs_city', '<?php esc_attr_e( 'City', 'fast-shop' ) ?>', '%fs_city%', '', '', '<?php esc_attr_e( 'City', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_fs_adress', '<?php esc_attr_e( 'Delivery address', 'fast-shop' ) ?>', '%fs_adress%', '', '', '<?php esc_attr_e( 'Delivery address', 'fast-shop' ) ?>', 1);
-          QTags.addButton('fs_b_site_name', '<?php esc_attr_e( 'Site name', 'fast-shop' ) ?>', '%site_name%', '', '', '<?php esc_attr_e( 'Site name', 'fast-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fname', '<?php esc_attr_e( 'First name', 'f-shop' ) ?>', '%fs_first_name%', '', '', '<?php esc_attr_e( 'First name', 'f-shop' ) ?>', 1);
+          QTags.addButton('fs_b_lname', '<?php esc_attr_e( 'Last name', 'f-shop' ) ?>', '%fs_last_name%', '', '', '<?php esc_attr_e( 'Last name', 'f-shop' ) ?>', 1);
+          QTags.addButton('fs_besc_attr_email', '<?php esc_attr_e( 'Email', 'f-shop' ) ?>', '%fsesc_attr_email%', '', '', '<?php esc_attr_e( 'E-mail', 'f-shop' ) ?>', 1);
+          QTags.addButton('fs_b_order_id', '<?php esc_attr_e( 'Order id', 'f-shop' ) ?>', '%order_id%', '', '', '<?php esc_attr_e( 'Order id', 'f-shop' ) ?>', 1);
+          QTags.addButton('fs_b_total_amount', '<?php esc_attr_e( 'Amount', 'f-shop' ) ?>', '%total_amount%', '', '', '<?php esc_attr_e( 'Amount', 'f-shop' ) ?>', 1);
+          QTags.addButton('fs_b_phone', '<?php esc_attr_e( 'Phone', 'f-shop' ) ?>', '%fs_phone%', '', '', '<?php esc_attr_e( 'Phone', 'f-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fs_city', '<?php esc_attr_e( 'City', 'f-shop' ) ?>', '%fs_city%', '', '', '<?php esc_attr_e( 'City', 'f-shop' ) ?>', 1);
+          QTags.addButton('fs_b_fs_adress', '<?php esc_attr_e( 'Delivery address', 'f-shop' ) ?>', '%fs_adress%', '', '', '<?php esc_attr_e( 'Delivery address', 'f-shop' ) ?>', 1);
+          QTags.addButton('fs_b_site_name', '<?php esc_attr_e( 'Site name', 'f-shop' ) ?>', '%site_name%', '', '', '<?php esc_attr_e( 'Site name', 'f-shop' ) ?>', 1);
       }
   </script>
 	<?php

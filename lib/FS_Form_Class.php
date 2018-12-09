@@ -115,7 +115,7 @@ class FS_Form_Class {
 				']'
 			), array( '_' ), $field_name ),
 			'required'       => ! empty( FS_Config::$form_fields[ $field_name ]['required'] ) ? FS_Config::$form_fields[ $field_name ]['required'] : false,
-			'title'          => ! empty( FS_Config::$form_fields[ $field_name ]['title'] ) ? FS_Config::$form_fields[ $field_name ]['title'] : __( 'this field is required', 'fast-shop' ),
+			'title'          => ! empty( FS_Config::$form_fields[ $field_name ]['title'] ) ? FS_Config::$form_fields[ $field_name ]['title'] : __( 'this field is required', 'f-shop'),
 			'placeholder'    => ! empty( FS_Config::$form_fields[ $field_name ]['placeholder'] ) ? FS_Config::$form_fields[ $field_name ]['placeholder'] : null,
 			'value'          => ! empty( FS_Config::$form_fields[ $field_name ]['value'] ) ? FS_Config::$form_fields[ $field_name ]['value'] : '',
 			'label'          => ! empty( FS_Config::$form_fields[ $field_name ]['label'] ) ? FS_Config::$form_fields[ $field_name ]['label'] : '',

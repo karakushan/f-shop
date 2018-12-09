@@ -124,7 +124,7 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
 				$selected = '';
 			}
 			$filter .= '<option value="' . add_query_arg( array(
-					'fs_filter'        => wp_create_nonce( 'fast-shop' ),
+					'fs_filter'        => wp_create_nonce('f-shop'),
 					'tax-' . $taxonomy => $manufacturer->term_id
 				) ) . '" ' . $selected . '>' . $manufacturer->name . '</option>';
 		}
@@ -139,8 +139,8 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
 function fs_aviable_select_filter( $first_option = 'сделайте выбор' ) {
 	$filter        = '';
 	$aviable_types = array(
-		'aviable'       => array( 'name' => __( 'in stock', 'fast-shop' ) ),
-		'not_available' => array( 'name' => __( 'not available', 'fast-shop' ) ),
+		'aviable'       => array( 'name' => __( 'in stock', 'f-shop' ) ),
+		'not_available' => array( 'name' => __( 'not available', 'f-shop' ) ),
 	);
 	if ( $aviable_types ) {
 		$filter .= '<select name="order_type" data-fs-action="filter">';
@@ -152,7 +152,7 @@ function fs_aviable_select_filter( $first_option = 'сделайте выбор'
 				$selected = '';
 			}
 			$filter .= '<option value="' . add_query_arg( array(
-					'fs_filter' => wp_create_nonce( 'fast-shop' ),
+					'fs_filter' => wp_create_nonce('f-shop'),
 					'aviable'   => $key
 				) ) . '" ' . $selected . '>' . $order_type['name'] . '</option>';
 		}
@@ -244,13 +244,13 @@ function fs_attr_filter( $group_id, $args = array() ) {
 			}
 
 			$value = add_query_arg( array(
-				'fs_filter'  => wp_create_nonce( 'fast-shop' ),
+				'fs_filter'  => wp_create_nonce('f-shop'),
 				'attributes' => $attributes
 			), $_SERVER['REQUEST_URI'] );
 
 			unset( $attributes[ $term->slug ] );
 			$remove_attr = add_query_arg( array(
-				'fs_filter'  => wp_create_nonce( 'fast-shop' ),
+				'fs_filter'  => wp_create_nonce('f-shop'),
 				'attributes' => $attributes
 			), $_SERVER['REQUEST_URI'] );;
 

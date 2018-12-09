@@ -14,22 +14,22 @@
         <thead class="thead-light">
         <tr>
           <td>
-			  <?php esc_html_e( 'Photo', 'fast-shop' ); ?>
+			  <?php esc_html_e( 'Photo', 'f-shop' ); ?>
           </td>
           <td>
-			  <?php esc_html_e( 'Product', 'fast-shop' ); ?>
+			  <?php esc_html_e( 'Product', 'f-shop' ); ?>
           </td>
           <td>
-			  <?php esc_html_e( 'Vendor code', 'fast-shop' ); ?>
+			  <?php esc_html_e( 'Vendor code', 'f-shop' ); ?>
           </td>
           <td>
-			  <?php esc_html_e( 'Price', 'fast-shop' ); ?>
+			  <?php esc_html_e( 'Price', 'f-shop' ); ?>
           </td>
           <td>
-			  <?php esc_html_e( 'Quantity', 'fast-shop' ); ?>
+			  <?php esc_html_e( 'Quantity', 'f-shop' ); ?>
           </td>
           <td>
-			  <?php esc_html_e( 'Cost', 'fast-shop' ); ?>
+			  <?php esc_html_e( 'Cost', 'f-shop' ); ?>
           </td>
           <td></td>
         </tr>
@@ -81,7 +81,7 @@
         <div class="row">
           <div class="col-lg-6">
             <a href="<?php echo esc_url( fs_get_catalog_link() ) ?>" class="btn btn-primary">
-				<?php esc_html_e( 'Continue shopping', 'fast-shop' ) ?> <span
+				<?php esc_html_e( 'Continue shopping', 'f-shop' ) ?> <span
                 class="glyphicon glyphicon-chevron-right"></span>
             </a>
           </div>
@@ -97,28 +97,28 @@
       <table class="table table-bordered" style="width: 300px;">
         <tbody>
         <tr>
-          <td><?php esc_html_e( 'Cost of goods', 'fast-shop' ) ?>:</td>
+          <td><?php esc_html_e( 'Cost of goods', 'f-shop' ) ?>:</td>
           <td><?php fs_total_amount() ?></td>
         </tr>
         <tr>
-          <td><?php esc_html_e( 'Discount', 'fast-shop' ) ?>:</td>
+          <td><?php esc_html_e( 'Discount', 'f-shop' ) ?>:</td>
           <td>0</td>
         </tr>
         <tr>
-          <th scope="row"><?php esc_html_e( 'Total', 'fast-shop' ) ?>:</th>
+          <th scope="row"><?php esc_html_e( 'Total', 'f-shop' ) ?>:</th>
           <td><?php fs_total_amount() ?></td>
         </tr>
         </tbody>
       </table>
       <p>
         <a href="<?php echo esc_url( fs_get_checkout_page_link() ) ?>"
-           class="btn btn-success btn-lg"><?php _e( 'Checkout', 'fast-shop' ); ?></a>
+           class="btn btn-success btn-lg"><?php _e( 'Checkout', 'f-shop' ); ?></a>
       </p>
 	<?php else: ?>
       <p class="fs-info-block"><span
-          class="icon glyphicon glyphicon-info-sign"></span> <?php esc_html_e( 'Your basket is empty', 'fast-shop' ) ?>.&nbsp;
+          class="icon glyphicon glyphicon-info-sign"></span> <?php esc_html_e( 'Your basket is empty', 'f-shop' ) ?>.&nbsp;
         <a
-          href="<?php echo esc_url( fs_get_catalog_link() ) ?>"><?php esc_html_e( 'To the catalog', 'fast-shop' ) ?></a>
+          href="<?php echo esc_url( fs_get_catalog_link() ) ?>"><?php esc_html_e( 'To the catalog', 'f-shop' ) ?></a>
       </p>
 	<?php endif; ?>
 </div>

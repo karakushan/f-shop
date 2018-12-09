@@ -37,19 +37,19 @@ class FS_Taxonomies_Class {
 		$taxonomies = array(
 			'catalog'                                  => array(
 				'object_type'        => 'product',
-				'label'              => __( 'Product categories', 'fast-shop' ),
+				'label'              => __( 'Product categories', 'f-shop'),
 				'labels'             => array(
-					'name'              => __( 'Product categories', 'fast-shop' ),
-					'singular_name'     => __( 'Product category', 'fast-shop' ),
-					'search_items'      => __( 'Product categories', 'fast-shop' ),
-					'all_items'         => __( 'Product categories', 'fast-shop' ),
-					'parent_item'       => __( 'Product categories', 'fast-shop' ),
-					'parent_item_colon' => __( 'Product categories', 'fast-shop' ),
-					'edit_item'         => __( 'Category editing', 'fast-shop' ),
-					'update_item'       => __( 'Product categories', 'fast-shop' ),
-					'add_new_item'      => __( 'Add category', 'fast-shop' ),
-					'new_item_name'     => __( 'Product categories', 'fast-shop' ),
-					'menu_name'         => __( 'Product categories', 'fast-shop' ),
+					'name'              => __( 'Product categories', 'f-shop'),
+					'singular_name'     => __( 'Product category', 'f-shop'),
+					'search_items'      => __( 'Product categories', 'f-shop'),
+					'all_items'         => __( 'Product categories', 'f-shop'),
+					'parent_item'       => __( 'Product categories', 'f-shop'),
+					'parent_item_colon' => __( 'Product categories', 'f-shop'),
+					'edit_item'         => __( 'Category editing', 'f-shop'),
+					'update_item'       => __( 'Product categories', 'f-shop'),
+					'add_new_item'      => __( 'Add category', 'f-shop'),
+					'new_item_name'     => __( 'Product categories', 'f-shop'),
+					'menu_name'         => __( 'Product categories', 'f-shop'),
 				),
 				'metabox'            => true,
 				'hierarchical'       => true,
@@ -60,11 +60,11 @@ class FS_Taxonomies_Class {
 			),
 			'fs-payment-methods'                       => array(
 				'object_type'        => 'product',
-				'label'              => __( 'Payment methods', 'fast-shop' ),
+				'label'              => __( 'Payment methods', 'f-shop'),
 				'labels'             => array(
-					'name'          => __( 'Payment methods', 'fast-shop' ),
-					'singular_name' => __( 'Payment method', 'fast-shop' ),
-					'add_new_item'  => __( 'Add a payment method', 'fast-shop' ),
+					'name'          => __( 'Payment methods', 'f-shop'),
+					'singular_name' => __( 'Payment method', 'f-shop'),
+					'add_new_item'  => __( 'Add a payment method', 'f-shop'),
 				),
 				//					исключаем категории из лицевой части
 				"public"             => false,
@@ -77,11 +77,11 @@ class FS_Taxonomies_Class {
 			),
 			'fs-delivery-methods'                      => array(
 				'object_type'        => 'product',
-				'label'              => __( 'Delivery methods', 'fast-shop' ),
+				'label'              => __( 'Delivery methods', 'f-shop'),
 				'labels'             => array(
-					'name'          => __( 'Delivery methods', 'fast-shop' ),
-					'singular_name' => __( 'Delivery method', 'fast-shop' ),
-					'add_new_item'  => __( 'Add a delivery method', 'fast-shop' ),
+					'name'          => __( 'Delivery methods', 'f-shop'),
+					'singular_name' => __( 'Delivery method', 'f-shop'),
+					'add_new_item'  => __( 'Add a delivery method', 'f-shop'),
 				),
 //					исключаем категории из лицевой части
 				"public"             => false,
@@ -94,11 +94,11 @@ class FS_Taxonomies_Class {
 			),
 			'product-attributes'                       => array(
 				'object_type'        => 'product',
-				'label'              => __( 'Product attributes', 'fast-shop' ),
+				'label'              => __( 'Product attributes', 'f-shop'),
 				'labels'             => array(
-					'name'          => __( 'Product attributes', 'fast-shop' ),
-					'singular_name' => __( 'Product attributes', 'fast-shop' ),
-					'add_new_item'  => __( 'Add property / group of properties', 'fast-shop' ),
+					'name'          => __( 'Product attributes', 'f-shop'),
+					'singular_name' => __( 'Product attributes', 'f-shop'),
+					'add_new_item'  => __( 'Add property / group of properties', 'f-shop'),
 				),
 				//					исключаем категории из лицевой части
 				"public"             => true,
@@ -112,11 +112,11 @@ class FS_Taxonomies_Class {
 			),
 			$fs_config->data['product_taxes_taxonomy'] => array(
 				'object_type'        => $fs_config->data['post_type'],
-				'label'              => __( 'Taxes', 'fast-shop' ),
+				'label'              => __( 'Taxes', 'f-shop'),
 				'labels'             => array(
-					'name'          => __( 'Taxes', 'fast-shop' ),
-					'singular_name' => __( 'Taxes', 'fast-shop' ),
-					'add_new_item'  => __( 'Add tax', 'fast-shop' ),
+					'name'          => __( 'Taxes', 'f-shop'),
+					'singular_name' => __( 'Taxes', 'f-shop'),
+					'add_new_item'  => __( 'Add tax', 'f-shop'),
 				),
 				//					исключаем категории из лицевой части
 				"public"             => true,
@@ -132,11 +132,11 @@ class FS_Taxonomies_Class {
 		if ( fs_option( 'discounts_on' ) == 1 ) {
 			$taxonomies['fs-discounts'] = array(
 				'object_type'        => 'product',
-				'label'              => __( 'Discounts', 'fast-shop' ),
+				'label'              => __( 'Discounts', 'f-shop'),
 				'labels'             => array(
-					'name'          => __( 'Discounts', 'fast-shop' ),
-					'singular_name' => __( 'Discount', 'fast-shop' ),
-					'add_new_item'  => __( 'Add Discount', 'fast-shop' ),
+					'name'          => __( 'Discounts', 'f-shop'),
+					'singular_name' => __( 'Discount', 'f-shop'),
+					'add_new_item'  => __( 'Add Discount', 'f-shop'),
 					'edit_item'     => 'Edit Discount',
 					'update_item'   => 'Update Discount',
 				),
@@ -154,11 +154,11 @@ class FS_Taxonomies_Class {
 		if ( fs_option( 'multi_currency_on' ) == 1 ) {
 			$taxonomies['fs-currencies'] = array(
 				'object_type'        => 'product',
-				'label'              => __( 'Currencies', 'fast-shop' ),
+				'label'              => __( 'Currencies', 'f-shop'),
 				'labels'             => array(
-					'name'          => __( 'Currencies', 'fast-shop' ),
-					'singular_name' => __( 'Currency', 'fast-shop' ),
-					'add_new_item'  => __( 'Add Currency', 'fast-shop' ),
+					'name'          => __( 'Currencies', 'f-shop'),
+					'singular_name' => __( 'Currency', 'f-shop'),
+					'add_new_item'  => __( 'Add Currency', 'f-shop'),
 				),
 				//					исключаем категории из лицевой части
 				"public"             => false,
@@ -307,7 +307,7 @@ class FS_Taxonomies_Class {
 		echo '<tr class="form-field term-parent-wrap">
         <th scope="row"><label for="fs_att_type">Тип атрибута</label></th>
         <td>
-            <select name="fast-shop[fs_att_type]" id="fs_att_type" class="postform">';
+            <select name="f-shop[fs_att_type]" id="fs_att_type" class="postform">';
 		if ( ! empty( $attr_types ) ) {
 			foreach ( $attr_types as $att_key => $attr_type ) {
 				echo '<option value = "' . $att_key . '" ' . selected( $att_key, $att_type, 0 ) . ' > ' . $attr_type['name'] . '</option >';
@@ -320,26 +320,26 @@ class FS_Taxonomies_Class {
 		echo '<tr class="form-field term-parent-wrap  fs-att-values fs-att-color" style="' . ( $att_type == 'color' ? "display:table-row" : "display:none" ) . '" class="fs-att-color">
                 <th scope="row"><label>Значение цвета</label></th>
                <td>
-               <input type="text"  name="fast-shop[fs_att_color_value]" value="' . get_term_meta( $term->term_id, 'fs_att_color_value', 1 ) . '" class="fs-color-select">
+               <input type="text"  name="f-shop[fs_att_color_value]" value="' . get_term_meta( $term->term_id, 'fs_att_color_value', 1 ) . '" class="fs-color-select">
                 </td>
 			 </tr>';
 
 		echo '<tr class="form-field term-parent-wrap fs-att-values fs-att-range" style="' . ( $att_type == 'range' ? "display:table-row" : "display:none" ) . '">
     <th scope="row"><label>Начало диапазона</label></th>
     <td>
-       <input type="number" step="0.01"  name="fast-shop[fs_att_range_start_value]" placeholder="0" value="' . get_term_meta( $term->term_id, 'fs_att_range_start_value', 1 ) . '">
+       <input type="number" step="0.01"  name="f-shop[fs_att_range_start_value]" placeholder="0" value="' . get_term_meta( $term->term_id, 'fs_att_range_start_value', 1 ) . '">
    </td>
 </tr>
 <tr class="form-field term-parent-wrap fs-att-values fs-att-range" style="' . ( $att_type == 'range' ? "display:table-row" : "display:none" ) . '">
     <th scope="row"><label>Конец диапазона</label></th>
     <td>
-       <input type="number" step="0.01"  name="fast-shop[fs_att_range_end_value]" placeholder="∞" value="' . get_term_meta( $term->term_id, 'fs_att_range_end_value', 1 ) . '">
+       <input type="number" step="0.01"  name="f-shop[fs_att_range_end_value]" placeholder="∞" value="' . get_term_meta( $term->term_id, 'fs_att_range_end_value', 1 ) . '">
    </td>
 </tr>
 <tr class="form-field term-parent-wrap fs-att-values fs-att-range" style="' . ( $att_type == 'range' ? "display:table-row" : "display:none" ) . '">
     <th scope="row"><label>Использовать к-во покупаемого товара для сравнения с этим атрибутом</label></th>
     <td>
-       <input type="checkbox"  name="fast-shop[fs_att_compare]" ' . checked( 1, get_term_meta( $term->term_id, 'fs_att_compare', 1 ), 0 ) . ' value="1">
+       <input type="checkbox"  name="f-shop[fs_att_compare]" ' . checked( 1, get_term_meta( $term->term_id, 'fs_att_compare', 1 ), 0 ) . ' value="1">
    </td>
 </tr>';
 		$atach_image_id = get_term_meta( $term->term_id, 'fs_att_image_value', 1 );
@@ -355,7 +355,7 @@ class FS_Taxonomies_Class {
 			  <th scope="row"><label>Изображение</label></th><td><div class="fs-fields-container">';
 		echo '<div class="fs-selected-image ' . $class . '" style=" background-image: url(' . $att_image . ');"></div>';
 		echo '<button type="button" class="select_file">' . $display_text . '</button>
-              <input type="hidden"  name="fast-shop[fs_att_image_value]" value="' . get_term_meta( $term->term_id, 'fs_att_image_value', 1 ) . '" class="fs-image-select">
+              <input type="hidden"  name="f-shop[fs_att_image_value]" value="' . get_term_meta( $term->term_id, 'fs_att_image_value', 1 ) . '" class="fs-image-select">
               <button type="button" class="delete_file" style="display:' . $display_button . '"> удалить изображение </button></div></td></tr> ';
 	}
 
@@ -366,7 +366,7 @@ class FS_Taxonomies_Class {
 		$display_image = 'style="display:none"';
 		echo '<div class="form-field term-parent-wrap">
     <label for="fs_att_type"> Тип атрибута </label>
-    <select name="fast-shop[fs_att_type]" id="fs_att_type" class="postform">
+    <select name="f-shop[fs_att_type]" id="fs_att_type" class="postform">
         <option value="text"> текст</option>
         <option value="color"> цвет</option>
         <option value="image"> изображение</option>
@@ -378,7 +378,7 @@ class FS_Taxonomies_Class {
 <label> Значение цвета </label>
 
 
-<input type="text"  name="fast-shop[fs_att_color_value]" value="" class="fs-color-select">
+<input type="text"  name="f-shop[fs_att_color_value]" value="" class="fs-color-select">
 
 </div> ';
 
@@ -390,7 +390,7 @@ class FS_Taxonomies_Class {
    <div class="fs-selected-image" style=" background-image: url();"></div>
 
    <button type="button" class="select_file"> ' . $display_text . '</button>
-   <input type="hidden"  name="fast-shop[fs_att_image_value]" value="" class="fs-image-select">
+   <input type="hidden"  name="f-shop[fs_att_image_value]" value="" class="fs-image-select">
    <button type="button" class="delete_file" style="display:' . $display_button . '"> удалить изображение </button>	
 </div>
 
@@ -405,13 +405,13 @@ class FS_Taxonomies_Class {
 	 * @param $term_id
 	 */
 	function save_custom_taxonomy_meta( $term_id ) {
-		if ( ! isset( $_POST['fast-shop'] ) ) {
+		if ( ! isset( $_POST['f-shop'] ) ) {
 			return;
 		}
-		if ( ! isset( $_POST['fast-shop']['fs_att_compare'] ) ) {
-			$_POST['fast-shop']['fs_att_compare'] = "-";
+		if ( ! isset( $_POST['f-shop']['fs_att_compare'] ) ) {
+			$_POST['f-shop']['fs_att_compare'] = "-";
 		}
-		$extra = array_map( 'trim', $_POST['fast-shop'] );
+		$extra = array_map( 'trim', $_POST['f-shop'] );
 		foreach ( $extra as $key => $value ) {
 			if ( empty( $value ) || $value == "-" ) {
 				delete_term_meta( $term_id, $key ); // удаляем поле если значение пустое
@@ -505,8 +505,8 @@ class FS_Taxonomies_Class {
 	 * @return mixed
 	 */
 	function add_fs_currencies_columns( $columns ) {
-		$columns['сurrency-code'] = __( 'Currency code', 'fast-shop' );
-		$columns['cost-basic']    = __( 'Cost', 'fast-shop' );
+		$columns['сurrency-code'] = __( 'Currency code', 'f-shop');
+		$columns['cost-basic']    = __( 'Cost', 'f-shop');
 		unset( $columns['description'], $columns['posts'] );
 
 		return $columns;

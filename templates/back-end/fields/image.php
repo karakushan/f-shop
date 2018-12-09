@@ -12,12 +12,12 @@
 } ?>>
   <div class="controls">
     <button type="button" class="button dashicons dashicons-camera"
-            title="<?php echo esc_attr_e( 'Добавить/Заменить', 'fast-shop' ) ?>" data-fs-action="select-image"></button>
+            title="<?php echo esc_attr_e( 'Добавить/Заменить', 'f-shop' ) ?>" data-fs-action="select-image"></button>
     <button type="button" <?php if ( empty( $args['value'] ) ) {
 		echo 'style="display: none;"';
 	} ?> class="button dashicons dashicons-trash"
-            title="<?php echo esc_attr_e( 'Удалить', 'fast-shop' ) ?>" data-fs-action="delete-image"
-            data-text="<?php echo esc_attr_e( 'Вы точно намерены удалить изображение?', 'fast-shop' ) ?>"
+            title="<?php echo esc_attr_e( 'Удалить', 'f-shop' ) ?>" data-fs-action="delete-image"
+            data-text="<?php echo esc_attr_e( 'Вы точно намерены удалить изображение?', 'f-shop' ) ?>"
             data-noimage="/wp-content/plugins/f-shop/assets/img/no-image.png"></button>
   </div>
 

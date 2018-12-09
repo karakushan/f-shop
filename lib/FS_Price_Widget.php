@@ -29,7 +29,7 @@ class FS_Price_Widget extends \WP_Widget {
 		?>
       <p>
         <label
-          for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'fast-shop' ) ?></label>
+          for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop') ?></label>
         <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
                name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
                value="<?php echo esc_attr( $title ); ?>"/>

@@ -18,7 +18,7 @@ $gallery       = $gallery_class->fs_galery_images( 0, false );
 		  <?php $image_attributes = wp_get_attachment_image_src( $img, 'medium' );
 		  $src                    = $image_attributes[0]; ?>
         <div class="fs-col-4" draggable="true" style="background-image: url(<?php echo $src ?>);">
-          <div class="fs-remove-img" title="<?php _e( 'Remove from gallery', 'fast-shop' ) ?>"></div>
+          <div class="fs-remove-img" title="<?php _e( 'Remove from gallery', 'f-shop' ) ?>"></div>
           <input type="hidden" name="fs_galery[]" value="<?php echo $img ?>">
         </div>
 	  <?php endforeach ?>

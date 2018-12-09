@@ -106,8 +106,8 @@ class FS_Orders_Class {
 	 */
 	function order_status_box() {
 		global $post;
-		echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __( 'Date of purchase', 'fast-shop' ) . ': <b> ' . get_the_date( "j.m.Y H:i" ) . '</b></p>';
-		echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __( 'Last modified', 'fast-shop' ) . ':  <b>' . get_the_modified_date( "j.m.Y H:i" ) . '</b></p>';
+		echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __( 'Date of purchase', 'f-shop') . ': <b> ' . get_the_date( "j.m.Y H:i" ) . '</b></p>';
+		echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __( 'Last modified', 'f-shop') . ':  <b>' . get_the_modified_date( "j.m.Y H:i" ) . '</b></p>';
 		if ( $this->order_statuses ) {
 			echo '<p><label for="fs-post_status"><span class="dashicons dashicons-post-status"></span> ' . __( 'Status' ) . '</label>';
 			echo '<p><select id="fs-post_status" name="post_status">';
@@ -125,7 +125,7 @@ class FS_Orders_Class {
 	function order_detail_shortcode() {
 		$order_id = intval( $_GET['order_detail'] );
 		if ( empty( $order_id ) ) {
-			return '<p class="fs-order-detail">' . __( 'Order number is not specified', 'fast-shop' ) . '</p>';
+			return '<p class="fs-order-detail">' . __( 'Order number is not specified', 'f-shop') . '</p>';
 		}
 		$order   = FS_Orders_Class::get_order( $order_id );
 		$payment = new FS_Payment_Class();
@@ -197,7 +197,7 @@ class FS_Orders_Class {
 			$pay_term          = get_term( $pay_method_id, $fs_config->data['product_pay_taxonomy'] );
 			if ( empty( $message_no_filter ) ) {
 				$message_no_filter = __( 'Your order #%order_id% has been successfully approved. The next stage is payment of the order. You can pay for the purchase by <a href="%pay_url%">link</a>. You have chosen the payment method: %pay_name%.
-Good luck!', 'fast-shop' );
+Good luck!', 'f-shop');
 			}
 			// Создаём ссылку для оплаты покупки
 			$pay_link = add_query_arg( array(
@@ -220,7 +220,7 @@ Good luck!', 'fast-shop' );
 			$user_data      = get_post_meta( $post->ID, '_user', 1 );
 
 			if ( is_email( $user_data['email'] ) && ! empty( $message ) ) {
-				wp_mail( $user_data['email'], __( 'Your order is approved', 'fast-shop' ), $message_decode, $fs_config->email_headers() );
+				wp_mail( $user_data['email'], __( 'Your order is approved', 'f-shop'), $message_decode, $fs_config->email_headers() );
 			}
 		}
 	}
@@ -327,7 +327,7 @@ Good luck!', 'fast-shop' );
 		if ( ! empty( $this->order_statuses[ $post_status_id ]['name'] ) ) {
 			$status = $this->order_statuses[ $post_status_id ]['name'];
 		} else {
-			$status = __( 'The order status is not defined', 'fast-shop' );
+			$status = __( 'The order status is not defined', 'f-shop');
 		}
 
 		return $status;

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class FS_Settings_Class {
 
-	private $settings_page = 'fast-shop-settings';
+	private $settings_page = 'f-shop-settings';
 
 	public function __construct() {
 		add_action( 'admin_menu', array( &$this, 'add_menu' ) );
@@ -40,7 +40,7 @@ class FS_Settings_Class {
 
 		$settings = array(
 			'general'    => array(
-				'name'   => __( 'Главное', 'fast-shop' ),
+				'name'   => __( 'Главное', 'f-shop'),
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
@@ -63,13 +63,13 @@ class FS_Settings_Class {
 
 			),
 			'products'   => array(
-				'name'   => __( 'Products', 'fast-shop' ),
+				'name'   => __( 'Products', 'f-shop'),
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
 						'name'  => 'fs_in_stock_manage',
-						'label' => __( 'Включить управление запасами', 'fast-shop' ),
-						'help'  => __( 'Если опция включена, то запас товаров будет уменьшаться автоматически при каждой покупке', 'fast-shop' ),
+						'label' => __( 'Включить управление запасами', 'f-shop'),
+						'help'  => __( 'Если опция включена, то запас товаров будет уменьшаться автоматически при каждой покупке', 'f-shop'),
 						'value' => fs_option( 'fs_in_stock_manage' )
 					),
 					array(
@@ -96,7 +96,7 @@ class FS_Settings_Class {
 
 			),
 			'shoppers'   => array(
-				'name'   => __( 'Покупатели', 'fast-shop' ),
+				'name'   => __( 'Покупатели', 'f-shop'),
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
@@ -110,7 +110,7 @@ class FS_Settings_Class {
 
 			),
 			'currencies' => array(
-				'name'   => __( 'Currencies', 'fast-shop' ),
+				'name'   => __( 'Currencies', 'f-shop'),
 				'fields' => array(
 					array(
 						'type'  => 'text',
@@ -141,7 +141,7 @@ class FS_Settings_Class {
 				)
 			),
 			'letters'    => array(
-				'name'   => __( 'Letters', 'fast-shop' ),
+				'name'   => __( 'Letters', 'f-shop'),
 				'fields' => array(
 					array(
 						'type'  => 'text',
@@ -199,7 +199,7 @@ class FS_Settings_Class {
 
 			),
 			'pages'      => array(
-				'name'   => __( 'Page', 'fast-shop' ),
+				'name'   => __( 'Page', 'f-shop'),
 				'fields' => array(
 					array(
 						'type'  => 'pages',
@@ -254,7 +254,7 @@ class FS_Settings_Class {
 
 			),
 			'Orders'     => array(
-				'name'   => __( 'Orders', 'fast-shop' ),
+				'name'   => __( 'Orders', 'f-shop'),
 				'fields' => array(
 					array(
 						'type'  => 'pages',
@@ -268,7 +268,7 @@ class FS_Settings_Class {
 
 			),
 			'debug'      => array(
-				'name'        => __( 'Отладка', 'fast-shop' ),
+				'name'        => __( 'Отладка', 'f-shop'),
 				'description' => 'Здесь отображаются данные отладки в виде  текста',
 				'fields'      => array(
 					array(
@@ -317,8 +317,8 @@ class FS_Settings_Class {
 		// Регистрация страницы настроек
 		add_submenu_page(
 			'edit.php?post_type=product',
-			__( 'Store settings', 'fast-shop' ),
-			__( 'Store settings', 'fast-shop' ),
+			__( 'Store settings', 'f-shop'),
+			__( 'Store settings', 'f-shop'),
 			'manage_options',
 			$this->settings_page,
 			array( &$this, 'settings_page' )
@@ -329,8 +329,8 @@ class FS_Settings_Class {
 	 * Выводит поля, табы настройки плагина в подменю товары
 	 */
 	public function settings_page() {
-		echo '<div class="wrap fast-shop-settings">';
-		echo ' <h2>' . esc_html__( 'Store settings', 'fast-shop' ) . '</h2>';
+		echo '<div class="wrap f-shop-settings">';
+		echo ' <h2>' . esc_html__( 'Store settings', 'f-shop') . '</h2>';
 		settings_errors();
 		$settings      = $this->register_settings();
 		$settings_keys = array_keys( $settings );

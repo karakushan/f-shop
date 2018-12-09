@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title><?php esc_html_e( 'Order on the site', 'fast-shop' ) ?> &laquo;<?php bloginfo( 'name' ) ?>&raquo;</title>
+    <title><?php esc_html_e( 'Order on the site', 'f-shop' ) ?> &laquo;<?php bloginfo( 'name' ) ?>&raquo;</title>
 
     <style type="text/css">
         /* Take care of image borders and formatting, client hacks */
@@ -373,12 +373,12 @@
                                              strokecolor="#ffffff" fillcolor="#ff6f6f">
                                     <w:anchorlock/>
                                     <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">
-                                        <?php esc_html_e('My Account','fast-shop')  ?>
+                                        <?php esc_html_e('My Account','f-shop')  ?>
                                     </center>
                                 </v:roundrect>
                                 <![endif]--><!--<a
                                         href="<?php /*echo esc_url( get_permalink( fs_option( 'page_cabinet' ) ) ) */ ?>"
-                                        style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;"><?php /*esc_html_e( 'My Account', 'fast-shop' ) */ ?> </a>-->
+                                        style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;"><?php /*esc_html_e( 'My Account', 'f-shop' ) */ ?> </a>-->
                             </div>
                         </td>
                     </tr>
@@ -395,19 +395,19 @@
                                                         <tr>
                                                             <td class="mini-block">
                                 <span
-                                        class="header-sm"><?php esc_html_e( 'Information about order', 'fast-shop' ); ?></span><br/>
-                                                                <b><?php esc_html_e( 'Order number', 'fast-shop' ); ?>
+                                        class="header-sm"><?php esc_html_e( 'Information about order', 'f-shop' ); ?></span><br/>
+                                                                <b><?php esc_html_e( 'Order number', 'f-shop' ); ?>
                                                                     :</b>%order_id%
                                                                 <br>
-                                                                <b><?php esc_html_e( 'Name', 'fast-shop' ); ?>:</b>
+                                                                <b><?php esc_html_e( 'Name', 'f-shop' ); ?>:</b>
                                                                 %fs_first_name% %fs_last_name%<br/>
-                                                                <b><?php esc_html_e( 'Phone number', 'fast-shop' ); ?>
+                                                                <b><?php esc_html_e( 'Phone number', 'f-shop' ); ?>
                                                                     :</b>
                                                                 %fs_phone%<br/>
-                                                                <b><?php esc_html_e( 'City', 'fast-shop' ); ?>:</b>
+                                                                <b><?php esc_html_e( 'City', 'f-shop' ); ?>:</b>
                                                                 %fs_city%
                                                                 <br/>
-                                                                <b><?php esc_html_e( 'Address', 'fast-shop' ); ?>:</b>
+                                                                <b><?php esc_html_e( 'Address', 'f-shop' ); ?>:</b>
                                                                 %fs_adress% <br/>
 
                                                             </td>
@@ -426,14 +426,14 @@
                                                            style="border-collapse:separate !important;">
                                                         <tr>
                                                             <td class="mini-block">
-                                                                <span class="header-sm"><?php esc_html_e( 'Shipping and payment', 'fast-shop' ); ?></span><br/>
-                                                                <b><?php esc_html_e( 'Delivery method', 'fast-shop' ); ?>
+                                                                <span class="header-sm"><?php esc_html_e( 'Shipping and payment', 'f-shop' ); ?></span><br/>
+                                                                <b><?php esc_html_e( 'Delivery method', 'f-shop' ); ?>
                                                                     :</b>
                                                                 %fs_delivery_methods% %fs_delivery_number%<br/>
-                                                                <b><?php esc_html_e( 'Payment method', 'fast-shop' ); ?>
+                                                                <b><?php esc_html_e( 'Payment method', 'f-shop' ); ?>
                                                                     :</b>
                                                                 %fs_payment_methods% <br><br>
-                                                                <span class="header-sm"><?php esc_html_e( 'Comment', 'fast-shop' ); ?></span><br/>
+                                                                <span class="header-sm"><?php esc_html_e( 'Comment', 'f-shop' ); ?></span><br/>
                                                                 <span>%fs_comment%</span>
                                                             </td>
                                                         </tr>
@@ -460,16 +460,16 @@
                             <table cellspacing="0" cellpadding="0" width="100%">
                                 <tr>
                                     <td class="title-dark" width="300">
-										<?php esc_html_e( 'Item', 'fast-shop' ) ?>
+										<?php esc_html_e( 'Item', 'f-shop' ) ?>
                                     </td>
                                     <td class="title-dark" width="163">
-										<?php esc_html_e( 'Qty', 'fast-shop' ) ?>
+										<?php esc_html_e( 'Qty', 'f-shop' ) ?>
                                     </td>
                                     <td class="title-dark" width="172">
-										<?php esc_html_e( 'Price', 'fast-shop' ) ?>
+										<?php esc_html_e( 'Price', 'f-shop' ) ?>
                                     </td>
                                     <td class="title-dark" width="97">
-										<?php esc_html_e( 'Total', 'fast-shop' ) ?>
+										<?php esc_html_e( 'Total', 'f-shop' ) ?>
                                     </td>
                                 </tr>
 								<?php $cart = fs_get_cart(); ?>
@@ -524,7 +524,7 @@
                                     <td class="item-col price" colspan="4"
                                         style="text-align: right; border-top: 1px solid #cccccc;">
                   <span class="total-space"
-                        style="font-weight: bold; color: #4d4d4d"><?php esc_html_e( 'Total', 'fast-shop' ) ?></span>
+                        style="font-weight: bold; color: #4d4d4d"><?php esc_html_e( 'Total', 'f-shop' ) ?></span>
                                         <span
                                                 class="total-space"
                                                 style="font-weight:bold; color: #4d4d4d"><?php fs_total_amount() ?></span>

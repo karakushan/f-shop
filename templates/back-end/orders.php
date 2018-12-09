@@ -1,5 +1,5 @@
 <div class="wrap">
-	<h1><?php _e('Orders','fast-shop') ?></h1>
+	<h1><?php _e('Orders','f-shop') ?></h1>
 	<?php if ($orders->get_orders()): ?>
 
 		<div id="fs-table" class="fs-content-wrapper">
@@ -33,12 +33,12 @@
 					</tr>
 				<?php endforeach ?>
 				</tbody>
-				<tfoot><tr><th scope="row"><?php _e( 'Total', 'fast-shop' ); ?></th><td colspan="7"><?php
-						echo sprintf( _n( '1 order', '%s orders', $orders_count, 'fast-shop'), $orders_count ); ?></td></tr></tfoot>
+				<tfoot><tr><th scope="row"><?php _e( 'Total', 'f-shop' ); ?></th><td colspan="7"><?php
+						echo sprintf( _n( '1 order', '%s orders', $orders_count, 'f-shop'), $orders_count ); ?></td></tr></tfoot>
 			</table>
 		</div>
 		<?php $orders->order_pagination('order-paggination') ?>
 	<?php else: ?>
-		<p><?php _e('At the current time you have no order.','fast-shop' ); ?></p>
+		<p><?php _e('At the current time you have no order.','f-shop' ); ?></p>
 	<?php endif ?>
 </div>

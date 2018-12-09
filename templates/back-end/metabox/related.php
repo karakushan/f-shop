@@ -1,9 +1,9 @@
 <p class="add-related-sect">
-	<label for="fs_product_article"><?php _e( 'Related products', 'fast-shop' ) ?></label>
+	<label for="fs_product_article"><?php _e( 'Related products', 'f-shop' ) ?></label>
 	<br>
 	<button type="button" class="add-rell" data-fs-action="enabled-select">добавить</button>
 	<select name="fs_related_category[]" data-post="<?php echo $post->ID ?>" style="display: none" data-fs-action="get_taxonomy_posts">
-		<option value=""><?php _e('Select a category','fast-shop'); ?></option>
+		<option value=""><?php _e('Select a category','f-shop'); ?></option>
 		<?php $categories=get_terms(array('taxonomy'=>'catalog','hide_empty'=>false));  if ($categories): ?>
 		<?php foreach ($categories as $key => $category): ?>
 			<option value="<?php echo $category->term_id ?>"><?php echo $category->name ?></option>

@@ -75,7 +75,7 @@ class FS_Cart_Class {
 	 */
 	public function fs_remove_product( $cart_item = 0 ) {
 		if ( empty( $_SESSION['cart'] ) || ! is_array( $_SESSION['cart'] ) ) {
-			return new \WP_Error( __METHOD__, __( 'Cart is empty', 'fast-shop' ) );
+			return new \WP_Error( __METHOD__, __( 'Cart is empty', 'f-shop') );
 		}
 
 		unset( $_SESSION['cart'][ $cart_item ] );
@@ -107,9 +107,9 @@ class FS_Cart_Class {
 	function remove_cart_ajax() {
 		$remove = $this->remove_cart();
 		if ( $remove ) {
-			wp_send_json_success( array( 'message' => __( 'All items have been successfully removed from the cart.', 'fast-shop' ) ) );
+			wp_send_json_success( array( 'message' => __( 'All items have been successfully removed from the cart.', 'f-shop') ) );
 		} else {
-			wp_send_json_error( array( 'message' => __( 'An error occurred while removing items from the cart or the cart is empty.', 'fast-shop' ) ) );
+			wp_send_json_error( array( 'message' => __( 'An error occurred while removing items from the cart or the cart is empty.', 'f-shop') ) );
 		}
 	}
 
@@ -119,12 +119,12 @@ class FS_Cart_Class {
 	public function delete_product_ajax() {
 		$remove = $this->fs_remove_product( $_POST['item'] );
 		if ( $remove ) {
-			wp_send_json_success( array( 'message' => sprintf( __( 'Position successful removed from the basket', 'fast-shop' ), $_POST['item'] ) ) );
+			wp_send_json_success( array( 'message' => sprintf( __( 'Position successful removed from the basket', 'f-shop'), $_POST['item'] ) ) );
 		}
 		if ( is_wp_error( $remove ) ) {
 			wp_send_json_error( array( 'message' => sprintf( $remove->get_error_message(), $_POST['item'] ) ) );
 		} else {
-			wp_send_json_error( array( 'message' => sprintf( __( 'An error occurred while removing position from the cart', 'fast-shop' ), $_POST['item'] ) ) );
+			wp_send_json_error( array( 'message' => sprintf( __( 'An error occurred while removing position from the cart', 'f-shop'), $_POST['item'] ) ) );
 		}
 	}
 

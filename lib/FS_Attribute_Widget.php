@@ -56,26 +56,26 @@ class FS_Attribute_Widget extends \WP_Widget {
 		?>
       <p>
         <label
-          for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'fast-shop' ) ?></label>
+          for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop') ?></label>
         <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
                name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
                value="<?php echo esc_attr( $title ); ?>"/>
       </p>
       <p>
         <label
-          for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>"><?php esc_html_e( 'Feature Group', 'fast-shop' ) ?></label><br>
+          for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>"><?php esc_html_e( 'Feature Group', 'f-shop') ?></label><br>
 		  <?php wp_dropdown_categories( $args ); ?>
       </p>
       <p>
         <label
-          for="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>"><?php esc_html_e( 'Type', 'fast-shop' ) ?></label><br>
+          for="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>"><?php esc_html_e( 'Type', 'f-shop') ?></label><br>
         <select name="<?php echo esc_attr( $this->get_field_name( 'fs_att_types' ) ); ?>"
                 id="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>">
-          <option value="normal"><?php esc_html_e( 'Normal', 'fast-shop' ) ?></option>
+          <option value="normal"><?php esc_html_e( 'Normal', 'f-shop') ?></option>
           <option
-            value="color" <?php selected( 'color', $fs_att_types ) ?>><?php esc_html_e( 'Color', 'fast-shop' ) ?></option>
+            value="color" <?php selected( 'color', $fs_att_types ) ?>><?php esc_html_e( 'Color', 'f-shop') ?></option>
           <option
-            value="image" <?php selected( 'image', $fs_att_types ) ?>><?php esc_html_e( 'Image', 'fast-shop' ) ?></option>
+            value="image" <?php selected( 'image', $fs_att_types ) ?>><?php esc_html_e( 'Image', 'f-shop') ?></option>
         </select>
       </p>
 		<?php

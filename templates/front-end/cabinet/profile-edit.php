@@ -15,7 +15,7 @@
     <input type="email" name="fs[<?php echo $field['user_email']['name'] ?>]"
            value="<?php echo $user->user_email ?>" id="user_email"
            placeholder="<?php echo $field['user_email']['label'] ?>*" required
-           title="<?php _e( 'required field', 'fast-shop' ) ?>"/>
+           title="<?php _e( 'required field', 'f-shop' ) ?>"/>
   </div>
 </div>
 <div class="fs-row">
@@ -40,8 +40,8 @@
   </div>
   <div class="fs-col-6">
     <select class="selectStyle" name="fs[<?php echo $field['gender']['name'] ?>]">
-      <option <?php selected( $user->gender, 'male' ); ?> value="male"><?php _e( 'male', 'fast-shop' ) ?></option>
-      <option <?php selected( $user->gender, 'female' ); ?> value="female"><?php _e( 'female', 'fast-shop' ) ?></option>
+      <option <?php selected( $user->gender, 'male' ); ?> value="male"><?php _e( 'male', 'f-shop' ) ?></option>
+      <option <?php selected( $user->gender, 'female' ); ?> value="female"><?php _e( 'female', 'f-shop' ) ?></option>
     </select>
   </div>
 </div>
