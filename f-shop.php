@@ -32,6 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /* Основные константы для упрощения режим разработки, сокращения написания путей и пр. */
+define( 'FS_DEBUG', true );
 define( 'FS_PLUGIN_VER', '1.2' ); // версия плагина
 define( 'FS_PLUGIN_PREFIX', 'fs_' ); // префикс файлов
 define( 'FS_PLUGIN_NAME', 'fast-shop' ); // название плагина
@@ -39,6 +40,12 @@ define( 'FS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) ); // абсолютный
 define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // абсолютный путь с http(s)
 define( 'FS_BASENAME', plugin_basename( __FILE__ ) ); // относительный путь типа my-plugin/my-plugin.php
 define( 'FS_LANG_PATH', dirname( plugin_basename( __FILE__ ) ) . '/languages' ); // путь к папке с переводами
+
+// Иногда необходима полная отладка, только не забываем отключать ее в боевом режиме
+if ( defined( 'FS_DEBUG' ) && FS_DEBUG == true ) {
+	ini_set( "display_errors", 1 );
+	error_reporting( E_ALL );
+}
 
 require_once 'vendor/autoload.php';
 
@@ -53,7 +60,7 @@ if ( ! class_exists( '\FS\FS_Init', false ) ) {
 }
 
 // Добавляем команды WP CLI
-if ( class_exists( 'WP_CLI' )){
+if ( class_exists( 'WP_CLI' ) ) {
 	$migrate = function ( $args = array(), $assoc_args = array() ) {
 		\FS\FS_Migrate_Class::migrate_orders();
 		WP_CLI::success( 'Base migration ended with success.' );

@@ -15,25 +15,28 @@ class FS_Ajax_Class {
 		//  обработка формы заказа
 		add_action( 'wp_ajax_order_send', array( $this, 'order_send_ajax' ) );
 		add_action( 'wp_ajax_nopriv_order_send', array( $this, 'order_send_ajax' ) );
+
 		//  добавление в список желаний
 		add_action( 'wp_ajax_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
 		add_action( 'wp_ajax_nopriv_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
-// удаление из списка желаний
+
+		// удаление из списка желаний
 		add_action( 'wp_ajax_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
 		add_action( 'wp_ajax_nopriv_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
 
-//  получение связанных постов категории
+		//  получение связанных постов категории
 		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( $this, 'get_taxonomy_posts' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( $this, 'get_taxonomy_posts' ) );
 
-// добавление товара к сравнению
+		// добавление товара к сравнению
 		add_action( 'wp_ajax_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
 
-// удаляет один термин (свойство) товара
+		// удаляет один термин (свойство) товара
 		add_action( 'wp_ajax_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
-// добавляет вариант покупки товара
+
+		// добавляет вариант покупки товара
 		add_action( 'wp_ajax_fs_add_variant', array( $this, 'fs_add_variant_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_add_variant', array( $this, 'fs_add_variant_callback' ) );
 
@@ -67,9 +70,7 @@ class FS_Ajax_Class {
 
 		// обновление к-ва товара в корзине
 		add_action( 'wp_ajax_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
-		add_action( 'wp_ajax_nopriv_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );//
-
-
+		add_action( 'wp_ajax_nopriv_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 	}
 
 	//обновление к-ва товара в корзине аяксом
@@ -299,9 +300,10 @@ class FS_Ajax_Class {
 	 *Отправка заказа в базу, на почту админа и заказчика
 	 */
 	function order_send_ajax() {
+		ob_start();
 		global $fs_config;
 		if ( ! $fs_config::verify_nonce() ) {
-			die ( 'не пройдена верификация формы nonce' );
+			wp_send_json_error( array( 'msg' => 'Failed verification of nonce form' ) );
 		}
 		$product_class      = new FS_Product_Class();
 		$fs_products        = FS_Cart_Class::get_cart();
@@ -357,12 +359,7 @@ class FS_Ajax_Class {
 					} else {
 						$error_text = $new_user->get_error_message();
 					}
-					echo json_encode( array(
-						'success'    => false,
-						'text'       => $error_text,
-						'error_code' => $new_user->get_error_code()
-					) );
-					exit();
+					wp_send_json_error( [ 'msg' => $error_text ] );
 				}
 			}
 
@@ -422,10 +419,7 @@ class FS_Ajax_Class {
 
 		/* Если есть ошибки выводим их*/
 		if ( is_wp_error( $order_id ) ) {
-			$result = array(
-				'text' => $order_id->get_error_messages()
-			);
-			wp_send_json_error( $result );
+			wp_send_json_error( [ 'msg' => $order_id->get_error_message() ] );
 		} else {
 			// устанавливаем новый запас товаров на складе
 			if ( fs_option( 'fs_in_stock_manage' ) ) {
@@ -472,8 +466,7 @@ class FS_Ajax_Class {
 			);
 
 			$result = array(
-				'success'  => true,
-				'text'     => 'Заказ №' . $order_id . ' успешно добавлен',
+				'msg'      => 'Заказ №' . $order_id . ' успешно добавлен',
 				'products' => $fs_products,
 				'order_id' => $order_id,
 				'sum'      => $sum,
@@ -488,7 +481,7 @@ class FS_Ajax_Class {
 			wp_send_json_success( $result );
 		}
 
-
+		wp_send_json_error( [ 'msg' => ob_get_clean() ] );
 	}
 
 	/**

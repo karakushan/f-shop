@@ -52,6 +52,7 @@ function fs_discount_filter__callback( $price ) {
 	return $price;
 
 }
+
 add_filter( 'fs_discount_filter', 'fs_discount_filter__callback', 10, 1 );
 
 // создаем новую колонку
@@ -268,8 +269,10 @@ function fs_email_template( $vars ) {
 
 	$search  = fs_mail_keys( $vars );
 	$replace = array_values( $vars );
-	$html    = fs_frontend_template( 'mail/themes/' . $template, array( 'vars' => $vars ) );
-	$html    = str_replace( $search, $replace, $html );
+	$replace = array_map( 'esc_attr', $replace );
+
+	$html = fs_frontend_template( 'mail/themes/' . $template, array( 'vars' => $vars ) );
+	$html = str_replace( $search, $replace, $html );
 
 	return $html;
 }

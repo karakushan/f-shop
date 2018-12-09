@@ -14,6 +14,9 @@
         getSettings: function (settingName) {
             return FastShopData[settingName];
         },
+        sendOrder: function () {
+
+        },
         updateCarts: function () {
             jQuery("[data-fs-element=\"cart-widget\"]").each(function () {
                 let templatePath = "cart-widget/widget";
@@ -800,7 +803,7 @@
         ignore: [],
         submitHandler: function (form) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: order_send.serialize(),
                 beforeSend: function () {
@@ -808,6 +811,7 @@
                 }
             })
                 .done(function (response) {
+                    console.log(response);
                     orderSendBtn.find('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
                     /* если статус заказ успешный */
                     if (response.success) {
@@ -826,12 +830,17 @@
                             iziToast.show({
                                 theme: 'light',
                                 title: fShop.getLang('success'),
-                                message: fShop.getLang('order_send_success'),
+                                message: response.data.msg,
                                 position: 'topCenter'
                             });
                         }
                     } else {
-                        order_send.find('.fs-form-info').addClass('error').html(response.data.text).fadeIn();
+                        iziToast.show({
+                            theme: 'light',
+                            title: fShop.getLang('error'),
+                            message: response.data.msg,
+                            position: 'topCenter'
+                        });
                         orderSendBtn.html(orderSendBtn.data("content"));
                     }
                 });

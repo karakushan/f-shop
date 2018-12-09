@@ -245,7 +245,7 @@ function fs_get_wholesale_price( $post_id = 0 ) {
 function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
 	$total = fs_get_total_amount();
 	$total = apply_filters( 'fs_price_format', $total );
-	printf( '<span data-fs-element="total-amount">' . $wrap . '</span>', $total, fs_currency() );
+	printf( '<span data-fs-element="total-amount">' . $wrap . '</span>', esc_attr( $total ), esc_attr( fs_currency() ) );
 }
 
 /**

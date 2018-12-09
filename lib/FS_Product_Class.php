@@ -52,7 +52,7 @@ class FS_Product_Class {
 		if ( ! empty( $variations[0] ) ) {
 			if ( $hide_disabled ) {
 				foreach ( $variations[0] as $key => $variation ) {
-					if ( ! empty( $variation['deactive'] && $variation['deactive'] == 1 ) || ( ! empty( $variation['count'] ) && $variation['count'] == 0 ) ) {
+					if ( (isset( $variation['deactive']) && $variation['deactive'] == 1 ) || ( isset( $variation['count'] ) && $variation['count'] == 0 ) ) {
 						unset( $variations[0][ $key ] );
 					}
 				}
@@ -319,8 +319,8 @@ class FS_Product_Class {
 	public function set_product( $product = [] ) {
 		global $fs_config;
 		$this->setId( intval( $product['ID'] ) );
+		$this->attributes = ! empty( $product['atts'] ) ? $product['atts'] : [];
 
-		$this->attributes = $product['atts'];
 		if ( isset( $product['variation'] ) && is_numeric( $product['variation'] ) ) {
 			$this->setVariation( $product['variation'] );
 			$variation        = $this->get_variation();
