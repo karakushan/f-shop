@@ -29,39 +29,36 @@ class FS_Filters {
 	 *
 	 * @param $query
 	 */
-	function filter_products_admin( $query ) {
-		if ( ! is_admin() ) {
-			return;
-		}
-		global $pagenow, $fs_config, $wpdb;
-		if ( $query->get( 'post_type' ) == $fs_config->data['post_type'] && $pagenow == 'edit.php' ) {
-			if ( ! empty( $_GET['s'] ) ) {
-				// Search by sku
-				$search_query = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s'", $fs_config->meta['sku'], get_search_query() );
-				$sku_products = $wpdb->get_col( $search_query );
-				if ( ! empty( $sku_products ) ) {
-					$query->set( 's', '' );
-					$query->set( 'post__in', $sku_products );
-				}
-				$query->set( 'post_type', 'product' );
-			}
-			if ( ! empty( $_GET['orderby'] ) ) {
-				switch ( $_GET['orderby'] ) {
-					//	сортируем по цене
-					case "fs_price":
-						$query->set( 'orderby', 'meta_value_num' );
-						$query->set( 'meta_key', $fs_config->meta['price'] );
-						$query->set( 'order', (string) $_GET['order'] );
-						break;
-				}
-			} else {
-				$query->set( 'orderby', array( 'menu_order' => 'ASC' ) );
-			}
-		} elseif ( $query->get( 'post_type' ) == $fs_config->data['post_type_orders'] && $pagenow == 'edit.php' ) {
-			$query->set( 'orderby', array( 'date' => 'DESC' ) );
-		}
+    function filter_products_admin( $query ) {
+        if ( ! is_admin() ) {
+            return;
+        }
+        global $pagenow, $fs_config, $wpdb;
 
-	}
+        $post_type_product = $query->get( 'post_type' ) == $fs_config->data['post_type'] ? true : false;
+
+        if ( ! empty( $_GET['s'] ) && $post_type_product && $pagenow == 'edit.php' ) {
+            // Search by sku
+            $search_query = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s'", $fs_config->meta['sku'], get_search_query() );
+            $sku_products = $wpdb->get_col( $search_query );
+            if ( ! empty( $sku_products ) ) {
+                $query->set( 's', '' );
+                $query->set( 'post__in', $sku_products );
+            }
+            $query->set( 'post_type', 'product' );
+        }
+        if ( ! empty( $_GET['orderby'] && $post_type_product && $pagenow == 'edit.php' ) ) {
+            switch ( $_GET['orderby'] ) {
+                //	сортируем по цене
+                case "fs_price":
+                    $query->set( 'orderby', 'meta_value_num' );
+                    $query->set( 'meta_key', $fs_config->meta['price'] );
+                    $query->set( 'order', (string) $_GET['order'] );
+                    break;
+            }
+        }
+
+    }
 
 
 	public function redirect_per_page() {
