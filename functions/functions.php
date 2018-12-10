@@ -2802,3 +2802,35 @@ function fs_load_template($template_path)
         esc_html_e('File "%s" not found', 'f-shop');
     }
 }
+
+/**
+ * Возвращает true если у товара стоит метка указанная в параметре $label
+ *
+ * вы можете указать следующие значения
+ * 'pop' - если  в админке установлен чекбокс на "Включить метку "Хит продаж""
+ * 'new' - если  в админке установлен чекбокс на "Включить метку "Включить метку "Новинка""
+ * 'promo' - если  в админке установлен чекбокс на "Включить метку "Акция""
+ *
+ * @param $label
+ *
+ * @return bool
+ */
+function fs_is_label( $label ) {
+    global $post;
+    $product_id = intval( $post->ID );
+    $label_show = false;
+    switch ( $label ) {
+        case 'pop':
+            $label_show = get_post_meta( $product_id, 'fs_on_bestseller', true ) ? true : false;
+            break;
+        case 'new':
+            $label_show = get_post_meta( $product_id, 'fs_on_novelty', true ) ? true : false;
+            break;
+        case 'promo':
+            $label_show = get_post_meta( $product_id, 'fs_on_promotion', true ) ? true : false;
+            break;
+    }
+
+    return $label_show;
+
+}
