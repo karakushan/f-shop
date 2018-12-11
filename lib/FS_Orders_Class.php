@@ -76,7 +76,7 @@ class FS_Orders_Class
     function remove_submit_order_metabox()
     {
         remove_meta_box('submitdiv', $this->post_type, 'side');
-        add_meta_box('fs_order_status_box', 'Статус заказа', array(
+        add_meta_box('fs_order_status_box', __('Order status', 'f-shop'), array(
             $this,
             'order_status_box'
         ), $this->post_type, 'side', 'high');
@@ -98,8 +98,8 @@ class FS_Orders_Class
             return;
         }
         foreach ($menu as $key => $value) {
-            if ($menu[$key][2] == 'edit.php?post_type=' . $fs_config->data['post_type_orders']) {
-                $menu[$key][0] .= ' <span class="update-plugins count-' . $custom_post_pending_count . '"><span class="plugin-count" aria-hidden="true"> ' . $custom_post_pending_count . '</span><span class="screen-reader-text"> ' . $custom_post_pending_count . '</span></span>';
+            if ($menu[$key][2] == 'edit.php?post_type=' . esc_attr($fs_config->data['post_type_orders'])) {
+                $menu[$key][0] .= ' <span class="update-plugins count-' . esc_attr($custom_post_pending_count) . '"><span class="plugin-count" aria-hidden="true"> ' . esc_html($custom_post_pending_count) . '</span><span class="screen-reader-text"> ' . esc_html($custom_post_pending_count) . '</span></span>';
 
                 return;
             }
@@ -113,19 +113,19 @@ class FS_Orders_Class
     function order_status_box()
     {
         global $post;
-        echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __('Date of purchase', 'f-shop') . ': <b> ' . get_the_date("j.m.Y H:i") . '</b></p>';
-        echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . __('Last modified', 'f-shop') . ':  <b>' . get_the_modified_date("j.m.Y H:i") . '</b></p>';
+        echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . esc_html__('Date of purchase', 'f-shop') . ': <b> ' . esc_html(get_the_date("j.m.Y H:i")) . '</b></p>';
+        echo '<p><span class="dashicons dashicons-calendar-alt"></span> ' . esc_html__('Last modified', 'f-shop') . ':  <b>' . esc_html(get_the_modified_date("j.m.Y H:i")) . '</b></p>';
         if ($this->order_statuses) {
-            echo '<p><label for="fs-post_status"><span class="dashicons dashicons-post-status"></span> ' . __('Status') . '</label>';
+            echo '<p><label for="fs-post_status"><span class="dashicons dashicons-post-status"></span> ' . esc_html__('Status') . '</label>';
             echo '<p><select id="fs-post_status" name="post_status">';
             foreach ($this->order_statuses as $key => $order_status) {
                 echo '<option value="' . esc_attr($key) . '" ' . selected(get_post_status($post->ID), $key, 0) . '>' . esc_attr($order_status['name']) . '</option>';
             }
             echo '</select></p>';
         }
-        echo '<p><input type="submit" name="save" id="save-post" value="' . __('Save') . '" class="button button-primary button-large"></p>';
+        echo '<p><input type="submit" name="save" id="save-post" value="' . esc_attr__('Save') . '" class="button button-primary button-large"></p>';
         echo '<div class="clear"></div>';
-        echo '<p><a class="submitdelete deletion" href="' . get_delete_post_link($post->ID) . '">' . __('Delete') . '</a></p>';
+        echo '<p><a class="submitdelete deletion" href="' . esc_url(get_delete_post_link($post->ID)) . '">' . esc_html__('Delete') . '</a></p>';
         echo '<div class="clear"></div>';
     }
 
@@ -133,23 +133,23 @@ class FS_Orders_Class
     {
         $order_id = intval($_GET['order_detail']);
         if (empty($order_id)) {
-            return '<p class="fs-order-detail">' . __('Order number is not specified', 'f-shop') . '</p>';
+            return '<p class="fs-order-detail">' . esc_html__('Order number is not specified', 'f-shop') . '</p>';
         }
         $order = FS_Orders_Class::get_order($order_id);
         $payment = new FS_Payment_Class();
         ob_start();
         ?>
         <div class="fs-order-detail order-detail">
-            <div class="order-detail-title">Детали заказа #<?php echo $order_id ?></div>
+            <div class="order-detail-title"><?php echo esc_html(sprintf(__('Order details #%d', 'f-shop'), $order_id)); ?></div>
             <table class="table">
                 <thead>
                 <tr>
-                    <td>#ID</td>
-                    <td>Фото</td>
-                    <td>Название</td>
-                    <td>Цена</td>
-                    <td>К-во</td>
-                    <td>Стоимость</td>
+                    <td><?php esc_html_e('#ID', 'f-shop'); ?></td>
+                    <td><?php esc_html_e('Photo', 'f-shop'); ?></td>
+                    <td><?php esc_html_e('Title', 'f-shop'); ?></td>
+                    <td><?php esc_html_e('Price', 'f-shop'); ?></td>
+                    <td><?php esc_html_e('Qty', 'f-shop'); ?></td>
+                    <td><?php esc_html_e('Cost', 'f-shop'); ?></td>
                 </tr>
                 </thead>
                 <tbody>
@@ -160,21 +160,21 @@ class FS_Orders_Class
                             <td class="thumb"><?php if (has_post_thumbnail($id))
                                     echo get_the_post_thumbnail($id) ?></td>
                             <td><a href="<?php the_permalink($id) ?>"
-                                   target="_blank"><?php echo get_the_title($id) ?></a></td>
+                                   target="_blank"><?php echo esc_html(get_the_title($id)) ?></a></td>
                             <td><?php do_action('fs_the_price', $id) ?></td>
-                            <td><?php echo $item['count'] ?></td>
-                            <td><?php echo fs_row_price($id, $item['count']) ?></td>
+                            <td><?php echo esc_html($item['count']) ?></td>
+                            <td><?php fs_row_price($id, $item['count']) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td colspan="5">Общая стоимость</td>
-                    <td><?php echo $order->sum ?><?php echo fs_currency() ?></td>
+                    <td colspan="5"><?php esc_html_e('Total cost', 'f-shop'); ?></td>
+                    <td><?php echo esc_html($order->sum) ?><?php echo esc_html(fs_currency()) ?></td>
                 </tr>
                 <tr>
-                    <td colspan="6">Оплатить онлайн
+                    <td colspan="6"><?php esc_html_e('Pay online', 'f-shop'); ?>
                         <?php $payment->show_payment_methods($order_id); ?>
                     </td>
                 </tr>
@@ -492,15 +492,4 @@ Good luck!', 'f-shop');
         return $query;
 
     }
-
-    /**
-     * Save the metaboxes for this custom post type
-     *
-     * @param $post_id
-     */
-    public function save_order_meta($post_id, $post, $update)
-    {
-
-
-    } // END public function save_post($post_id)
 }

@@ -160,7 +160,7 @@ function fs_row_price($post_id = 0, $count = 0, $wrap = '%s <span>%s</span>')
     $price = fs_get_price($post_id);
     $price = $price * $count;
     $price = apply_filters('fs_price_format', $price);
-    printf($wrap, $price, fs_currency());
+    printf($wrap, esc_html($price), esc_html(fs_currency()));
 }
 
 /**
