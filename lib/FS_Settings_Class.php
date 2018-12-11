@@ -145,12 +145,11 @@ class FS_Settings_Class {
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
-						'name'  => 'fs_custom_archive_template',
+						'name'  => 'fs_overdrive_templates',
 						'label' => __( 'Do not override standard templates.', 'f-shop' ),
 						'help'  => 'This checkbox is needed if you will not store templates in the "f-shop" directory of your theme.',
-						'value' => fs_option( 'fs_custom_archive_template', '0' )
+						'value' => fs_option( 'fs_overdrive_templates', '0' )
 					)
-
 				)
 			),
 			'letters'    => array(
