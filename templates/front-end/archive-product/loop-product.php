@@ -17,7 +17,7 @@
         <figure>
             <a href="<?php the_permalink() ?>"
                title="<?php echo esc_attr(sprintf(__('Go to &laquo;%s&raquo;', 'f-shop'), get_the_title())) ?>">
-                <?php fs_product_thumbnail('full') ?>
+                <?php fs_product_thumbnail(0, 'full') ?>
             </a>
         </figure>
         <div class="fs-meta">

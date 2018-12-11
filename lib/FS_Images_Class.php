@@ -1,9 +1,6 @@
 <?php
 
 namespace FS;
-if (!defined('ABSPATH')) {
-    exit;
-} // Exit if accessed directly
 
 /**
  * Класс работы с изображениями магазина
@@ -59,7 +56,7 @@ class FS_Images_Class
         }
 
         if (empty($images_n)) {
-            $images_n .= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\" style=\"background_image($image_placeholder)\"><img src=\"$image_placeholder\" itemprop=\"image\" width=\"100%\" data-zoom-image=\"$image\"></li>";
+            $images_n .= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\" style=\"background_image($image_placeholder)\"><img src=\"$image_placeholder\" alt=\"" . get_the_title($post_id) . "\" itemprop=\"image\" width=\"100%\" data-zoom-image=\"$image_placeholder\"></li>";
         }
 
         return apply_filters('fs_galery_list', $images_n, $post_id);

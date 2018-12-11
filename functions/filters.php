@@ -336,7 +336,7 @@ function fs_price_filter_callback($post_id, $price)
     // Если установлена галочка "конвертация стоимости в зависимости от языка"
     if (fs_option('price_conversion')) {
         // получаем валюту текущей локали
-        $locale_currency_id = $wpdb->get_var("SELECT term_id FROM $wpdb->termmeta WHERE meta_key='_fs_currency_locale' AND meta_value='$locale'");
+        $locale_currency_id = $wpdb->get_var($wpdb->prepare("SELECT term_id FROM %s WHERE meta_key='_fs_currency_locale' AND meta_value='%s'", $wpdb->termmeta, $locale));
         $locale_currency_cost = get_term_meta($locale_currency_id, '_fs_currency_cost', true);
 
         if ($product_currency_id != $locale_currency_id) {
