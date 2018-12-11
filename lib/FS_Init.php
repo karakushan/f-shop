@@ -203,7 +203,7 @@ class FS_Init {
 	 */
 	public function custom_plugin_templates( $template ) {
 		// Если стоит галочка не переопределять шаблоны
-		if ( fs_option( 'fs_custom_archive_template' ) ) {
+		if ( fs_option( 'fs_overdrive_templates', false ) ) {
 			return $template;
 		}
 		// Переопределение шаблона на странице архива типа "product"
