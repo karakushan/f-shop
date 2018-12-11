@@ -14,6 +14,8 @@ class FS_Product_Class {
 	public $id = 0;
 	public $title;
 	public $price;
+	public $base_price;
+	public $base_price_display;
 	public $price_format = '%d <span>%s</span>';
 	public $price_display;
 	public $currency;
@@ -330,15 +332,17 @@ class FS_Product_Class {
 			$this->attributes = ! empty( $variation['attr'] ) ? $variation['attr'] : [];
 		}
 
-		$this->title         = $this->get_title();
-		$this->sku           = $this->get_sku();
-		$this->price         = $this->get_price();
-		$this->price_display = apply_filters( 'fs_price_format', $this->price );
-		$this->permalink     = $this->get_permalink();
-		$this->count         = intval( $product['count'] );
-		$this->cost          = floatval( $this->count * $this->price );
-		$this->cost_display  = apply_filters( 'fs_price_format', $this->cost );
-		$this->currency      = fs_currency();
+		$this->title              = $this->get_title();
+		$this->sku                = $this->get_sku();
+		$this->price              = $this->get_price();
+		$this->base_price         = $this->get_base_price();
+		$this->base_price_display = apply_filters( 'fs_price_format', $this->base_price );
+		$this->price_display      = apply_filters( 'fs_price_format', $this->price );
+		$this->permalink          = $this->get_permalink();
+		$this->count              = intval( $product['count'] );
+		$this->cost               = floatval( $this->count * $this->price );
+		$this->cost_display       = apply_filters( 'fs_price_format', $this->cost );
+		$this->currency           = fs_currency();
 
 		// Если указаны свойства товара
 		$attributes = [];
@@ -416,5 +420,19 @@ class FS_Product_Class {
 		$product_id = $product_id ? $product_id : $this->id;
 
 		return get_the_permalink( $product_id );
+	}
+
+	/**
+	 * Возвращает базовую цену товара
+	 *
+	 * @param int $product_id
+	 *
+	 * @return mixed
+	 */
+	public function get_base_price( $product_id = 0 ) {
+		$product_id = $product_id ? $product_id : $this->id;
+		$base_price = fs_get_base_price( $product_id );
+
+		return floatval( $base_price );
 	}
 }

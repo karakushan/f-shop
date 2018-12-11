@@ -272,7 +272,7 @@ function fs_get_cart_cost() {
 	}
 	$price = array_sum( $all_price );
 
-	return $price;
+	return floatval( $price );
 }
 
 /**
@@ -306,13 +306,16 @@ function fs_cart_cost( $args = [] ) {
  *
  * @internal param int $shipping_cost
  */
-function fs_get_total_amount( $delivery_cost = 0 ) {
+function fs_get_total_amount( $delivery_cost = 0.0 ) {
 	/*
 	 *  Сумма покупки расчитывается следующим образом:
 	 *  (Стоимость всех товаров в корзине + Стоимость доставки)-Скидка + Налоги
 	 */
 
 	$amount = fs_get_cart_cost(); // Стоимость товаров в корзине
+	$amount = floatval( $amount );
+
+	// fs_debug_data($amount,'$amount','var_dump');
 
 	$amount = $amount + $delivery_cost;// Стоимость товара вместе с доставкой без учета налогов
 
@@ -422,15 +425,14 @@ function fs_get_first_discount() {
 /**
  * Вводит размер скидки
  *
- * @param array $products
  *
  * @param string $wrap
  *
  * @return float|int
  */
-function fs_total_discount( $products = array(), $wrap = '%s %s' ) {
+function fs_total_discount( $wrap = '%s %s' ) {
 
-	$discount = fs_get_total_amount( $products, false ) - fs_get_total_amount( $products, true );
+	$discount = fs_get_cart_cost() - fs_get_total_amount();
 	$discount = apply_filters( 'fs_price_format', $discount );
 	printf( $wrap, '<span data-fs-element="total-discount">' . esc_attr( $discount ) . '</span>', fs_currency() );
 }
@@ -547,7 +549,7 @@ function fs_get_cart( $args = array() ) {
 				'attr'       => $offer->attributes,
 				'link'       => $offer->permalink,
 				'price'      => $offer->price_display,
-				'base_price' => '',
+				'base_price' => $offer->base_price_display,
 				'all_price'  => $offer->cost_display,
 				'sku'        => $offer->sku,
 				'currency'   => $offer->currency
