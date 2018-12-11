@@ -40,7 +40,7 @@ class FS_Settings_Class {
 
 		$settings = array(
 			'general'    => array(
-				'name'   => __( 'Главное', 'f-shop'),
+				'name'   => __( 'Главное', 'f-shop' ),
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
@@ -63,13 +63,13 @@ class FS_Settings_Class {
 
 			),
 			'products'   => array(
-				'name'   => __( 'Products', 'f-shop'),
+				'name'   => __( 'Products', 'f-shop' ),
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
 						'name'  => 'fs_in_stock_manage',
-						'label' => __( 'Включить управление запасами', 'f-shop'),
-						'help'  => __( 'Если опция включена, то запас товаров будет уменьшаться автоматически при каждой покупке', 'f-shop'),
+						'label' => __( 'Включить управление запасами', 'f-shop' ),
+						'help'  => __( 'Если опция включена, то запас товаров будет уменьшаться автоматически при каждой покупке', 'f-shop' ),
 						'value' => fs_option( 'fs_in_stock_manage' )
 					),
 					array(
@@ -96,7 +96,7 @@ class FS_Settings_Class {
 
 			),
 			'shoppers'   => array(
-				'name'   => __( 'Покупатели', 'f-shop'),
+				'name'   => __( 'Покупатели', 'f-shop' ),
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
@@ -110,7 +110,7 @@ class FS_Settings_Class {
 
 			),
 			'currencies' => array(
-				'name'   => __( 'Currencies', 'f-shop'),
+				'name'   => __( 'Currencies', 'f-shop' ),
 				'fields' => array(
 					array(
 						'type'  => 'text',
@@ -140,8 +140,21 @@ class FS_Settings_Class {
 
 				)
 			),
+			'templates'  => array(
+				'name'   => __( 'Templates', 'f-shop' ),
+				'fields' => array(
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'fs_custom_archive_template',
+						'label' => __( 'Do not override standard templates.', 'f-shop' ),
+						'help'  => 'This checkbox is needed if you will not store templates in the "f-shop" directory of your theme.',
+						'value' => fs_option( 'fs_custom_archive_template', '0' )
+					)
+
+				)
+			),
 			'letters'    => array(
-				'name'   => __( 'Letters', 'f-shop'),
+				'name'   => __( 'Letters', 'f-shop' ),
 				'fields' => array(
 					array(
 						'type'  => 'text',
@@ -199,7 +212,7 @@ class FS_Settings_Class {
 
 			),
 			'pages'      => array(
-				'name'   => __( 'Page', 'f-shop'),
+				'name'   => __( 'Page', 'f-shop' ),
 				'fields' => array(
 					array(
 						'type'  => 'pages',
@@ -254,7 +267,7 @@ class FS_Settings_Class {
 
 			),
 			'Orders'     => array(
-				'name'   => __( 'Orders', 'f-shop'),
+				'name'   => __( 'Orders', 'f-shop' ),
 				'fields' => array(
 					array(
 						'type'  => 'pages',
@@ -268,7 +281,7 @@ class FS_Settings_Class {
 
 			),
 			'debug'      => array(
-				'name'        => __( 'Отладка', 'f-shop'),
+				'name'        => __( 'Отладка', 'f-shop' ),
 				'description' => 'Здесь отображаются данные отладки в виде  текста',
 				'fields'      => array(
 					array(
@@ -317,8 +330,8 @@ class FS_Settings_Class {
 		// Регистрация страницы настроек
 		add_submenu_page(
 			'edit.php?post_type=product',
-			__( 'Store settings', 'f-shop'),
-			__( 'Store settings', 'f-shop'),
+			__( 'Store settings', 'f-shop' ),
+			__( 'Store settings', 'f-shop' ),
 			'manage_options',
 			$this->settings_page,
 			array( &$this, 'settings_page' )
@@ -330,7 +343,7 @@ class FS_Settings_Class {
 	 */
 	public function settings_page() {
 		echo '<div class="wrap f-shop-settings">';
-		echo ' <h2>' . esc_html__( 'Store settings', 'f-shop') . '</h2>';
+		echo ' <h2>' . esc_html__( 'Store settings', 'f-shop' ) . '</h2>';
 		settings_errors();
 		$settings      = $this->register_settings();
 		$settings_keys = array_keys( $settings );

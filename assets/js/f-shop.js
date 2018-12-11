@@ -158,12 +158,20 @@
 //добавление товара в корзину (сессию)
     jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
         event.preventDefault();
+        let el = jQuery(this);
+        let product_id = el.data('product-id');
+        let variation = el.data('variation');
+        let count = el.attr('data-count');
 
-
-        var curent = jQuery(this);
-        var product_id = curent.data('product-id');
-        var variation = curent.data('variation');
-        var count = curent.attr('data-count');
+        // если кнопка выключена, выводим сообщение почему товар не доступен
+        if (el.attr("data-disabled") == "true") {
+            iziToast.show({
+                theme: 'light',
+                message: el.data("disabled-message"),
+                position: 'topCenter',
+            });
+            return;
+        }
 
         // подтягиваем атрибуты товаров
         var attr = {};
@@ -176,21 +184,21 @@
 
         // объект передаваемый в события
         var detail = {
-            button: curent,
+            button: el,
             id: product_id,
-            name: curent.data('product-name'),
-            price: curent.data('price'),
+            name: el.data('product-name'),
+            price: el.data('price'),
             variation: variation,
-            currency: curent.data('currency'),
-            sku: curent.data('sku'),
-            category: curent.data('category'),
+            currency: el.data('currency'),
+            sku: el.data('sku'),
+            category: el.data('category'),
             count: count,
             attr: attr,
-            image: curent.data('image'),
+            image: el.data('image'),
             success: true,
             text: {
-                success: curent.data('success'),
-                error: curent.data('error')
+                success: el.data('success'),
+                error: el.data('error')
             }
         };
 
@@ -322,6 +330,9 @@
             cache: false,
             success: function (result) {
                 if (result.success) {
+                    cartbutton.attr("data-disabled", false);
+                    cartbutton.removeAttr("data-disabled-message");
+
                     jQuery("[data-fs-element=\"price\"]").each(function (index, value) {
                         if (jQuery(this).data("product-id") == productId) {
                             jQuery(this).html(result.data.price);
@@ -343,14 +354,10 @@
                         }
                     });
                     document.dispatchEvent(fs_after_change_att);
+                } else {
+                    cartbutton.attr("data-disabled", true);
+                    cartbutton.attr("data-disabled-message", result.data.msg);
                 }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
-            },
-            complete: function () {
-                //afer ajax call is completed
             }
         });
     });

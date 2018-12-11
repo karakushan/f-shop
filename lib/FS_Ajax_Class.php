@@ -233,9 +233,7 @@ class FS_Ajax_Class {
 			}
 
 		}
-		wp_send_json_success( array(
-			'price' => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', fs_get_price( $product_id ) ), fs_currency() )
-		) );
+		wp_send_json_error( [ 'msg' => __( 'Goods with such a set of characteristics are not in stock. Try changing parameters.', 'f-shop' ) ] );
 	}
 
 
