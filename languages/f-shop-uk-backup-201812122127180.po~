@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-12 21:00+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2018-12-12 21:27+0000\n"
+"PO-Revision-Date: 2018-12-12 21:24+0000\n"
 "Last-Translator: sharf-admin <karakushan@gmail.com>\n"
 "Language-Team: Українська\n"
 "Language: uk\n"
@@ -1172,27 +1172,27 @@ msgstr "Властивості"
 
 #: templates/back-end/metabox/product-variations/add-variation.php:39
 msgid "add property"
-msgstr "додати властивість"
+msgstr "д"
 
 #: templates/back-end/metabox/product-variations/add-variation.php:56
 msgid "Promotional price"
-msgstr "Акційна ціна"
+msgstr ""
 
 #: templates/back-end/metabox/product-variations/add-variation.php:62
 msgid "Stock"
-msgstr "Наявність"
+msgstr ""
 
 #: templates/back-end/metabox/order/meta-box-1.php:32
 msgid "Delivery service address"
-msgstr "Адрес служби доставки"
+msgstr ""
 
 #: templates/back-end/metabox/order/meta-box-1.php:44
 msgid "Comment to the order"
-msgstr "Коментар до замовлення"
+msgstr ""
 
 #: templates/front-end/mail/themes/oxygen.php:7
 msgid "Order on the site"
-msgstr "Замовлення на сайті"
+msgstr ""
 
 #: templates/front-end/mail/themes/oxygen.php:376
 msgid "My Account"
@@ -1200,19 +1200,19 @@ msgstr "Мій аккаунт"
 
 #: templates/front-end/mail/themes/oxygen.php:398
 msgid "Information about order"
-msgstr "Інформація про замовлення"
+msgstr ""
 
 #: templates/front-end/mail/themes/oxygen.php:399
 msgid "Order number"
-msgstr "Номер замовлення"
+msgstr ""
 
 #: templates/front-end/mail/themes/oxygen.php:429
 msgid "Shipping and payment"
-msgstr "Доставка та оплата"
+msgstr ""
 
 #: templates/front-end/mail/themes/oxygen.php:463
 msgid "Item"
-msgstr "Позиція"
+msgstr ""
 
 #. Name of the plugin
 msgid "F-Shop"
