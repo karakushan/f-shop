@@ -165,7 +165,7 @@ class FS_Product_Class {
 	 * @param int $product_id
 	 * @param array $args
 	 */
-	public static function product_rating( $product_id = 0, $args = array() ) {
+	public  function product_rating( $product_id = 0, $args = array() ) {
 		$product_id = fs_get_product_id( $product_id );
 		$args       = wp_parse_args( $args, array(
 			'wrapper_class' => 'fs-rating',

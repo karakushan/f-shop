@@ -774,7 +774,7 @@ function fs_add_to_cart( $product_id = 0, $label = '', $args = array() ) {
 		'type'      => 'button',
 		'echo'      => true,
 		'data'      => array(
-			'title'           => $label,
+			'title'           => __( 'Add to cart', 'f-shop' ),
 			'data-action'     => 'add-to-cart',
 			'data-product-id' => $product_id,
 			'data-name'       => get_the_title( $product_id ),
@@ -2749,4 +2749,15 @@ function fs_delivery_cost( $format = '%s <span>%s</span>' ) {
 		$cost    = floatval( get_term_meta( $term_id, '_fs_delivery_cost', 1 ) );
 	}
 	printf( '<span data-fs-element="delivery-cost">' . $format . '</span>', esc_attr( $cost ), esc_html( fs_currency() ) );
+}
+
+/**
+ * Displays the item rating block in the form of icons
+ *
+ * @param int $product_id
+ * @param array $args
+ */
+function fs_product_rating( $product_id = 0, $args = array() ) {
+	$product = new FS\FS_Product_Class();
+	$product->product_rating( $product_id, $args );
 }
