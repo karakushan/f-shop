@@ -324,10 +324,8 @@ function fs_attr_change($required_atts = array())
 
             }
             echo '</div>';
-            echo '<input type="hidden" name="fs-attr" value="" id=group-' . $required_att . '>';
-
+            echo '<input type="hidden" name="fs-attr" value="" id=group-' . esc_attr($required_att) . '>';
         }
-
     }
 
     echo '<div class="fs-group-info"></div>';
@@ -375,10 +373,10 @@ function fs_list_post_atts($post_id = 0)
                 if ($attr_type == 'image') {
                     $image_id = get_term_meta($child->term_id, 'fs_att_image_value', 1);
                     $img_url = wp_get_attachment_image_url($image_id, 'full');
-                    echo "<li><label><img src=\"$img_url\" width=\"90\" height=\"90\">";
-                    echo "<input type=\"radio\"  name=\"$group_slug\" value=\"$child->term_id\" data-fs-element=\"attr\" data-product-id=\"$post_id\" " . checked(0, $count, false) . "></label></li>";
+                    echo '<li><label><img src="' . esc_url($img_url) . '" width="90" height="90">';
+                    echo '<input type="radio"  name="' . esc_attr($group_slug) . '" value="' . esc_attr($child->term_id) . '" data-fs-element="attr" data-product-id="' . esc_attr($post_id) . '" ' . checked(0, $count, false) . "></label></li>";
                 } else {
-                    echo "<li><label>" . $child->name . "</label><input type=\"radio\" name=\"$group_slug\" value=\"$child->term_id\"></li>";
+                    echo '<li><label>' . $child->name . '</label><input type="radio" name="' . esc_attr($group_slug) . '" value="' . esc_attr($child->term_id) . '"></li>';
                 }
                 $count++;
             }
@@ -461,7 +459,7 @@ function fs_product_att_select($product_id = 0, $parent = 0, $args = array())
                 echo '<input type="radio" ' . $tag_att . ' ' . checked(0, $i, 0) . '    value="' . esc_attr($term->term_id) . '" id="fs-att-' . esc_attr($term->term_id) . '">
                   <label for="fs-att-' . esc_attr($term->term_id) . '">';
                 if (get_term_meta($term->term_id, 'fs_att_type', 1) == 'color') {
-                    echo '<span class="color" style="background-color:' . get_term_meta($term->term_id, 'fs_att_color_value', 1) . '"></span>';
+                    echo '<span class="color" style="background-color:' . esc_attr(get_term_meta($term->term_id, 'fs_att_color_value', 1)) . '"></span>';
                 } else {
                     echo esc_html($term->name);
                 }
@@ -475,12 +473,12 @@ function fs_product_att_select($product_id = 0, $parent = 0, $args = array())
             }
 
             break;
-            echo '<' . $args['wpapper'] . '>';
+            echo '<' . esc_attr($args['wpapper']) . '>';
         case'select':
             echo '<select ' . $tag_att . '>';
             $i = 0;
             foreach ($terms[$parent] as $k => $term) {
-                echo '<option value="' . $term->term_id . '"  ' . selected(0, $i, 0) . '  data-count="">' . $term->name . '</option>';
+                echo '<option value="' . esc_attr($term->term_id) . '"  ' . selected(0, $i, 0) . '  data-count="">' . esc_html($term->name) . '</option>';
                 $i++;
             }
             echo '</select>';

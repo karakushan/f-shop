@@ -24,7 +24,7 @@
                         </td>
                         <td><?php fs_the_price($id) ?></td>
                         <td><?php echo esc_html($item['count']) ?></td>
-                        <td><?php echo fs_row_price($id, $item['count']) ?></td>
+                        <td><?php echo esc_html(fs_row_price($id, $item['count'])) ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>

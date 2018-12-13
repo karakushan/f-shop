@@ -87,7 +87,6 @@ add_filter('manage_product_posts_custom_column', 'fill_views_column', 5, 2);
 function fill_views_column($colname, $post_id)
 {
     $config = new \FS\FS_Config();
-    $post = get_post($post_id);
     switch ($colname) {
         case "fs-product-cat":
             echo '<div class="fs-product-cat-wrap">';
@@ -95,14 +94,15 @@ function fill_views_column($colname, $post_id)
             echo '</div>';
             break;
         case "fs_menu_order":
-            echo '<img src="' . FS_PLUGIN_URL . 'assets/img/sort.svg" width="40" title="Потяните вверх или вниз, чтобы изменить позицию">';
+            echo '<img src="' . esc_url(FS_PLUGIN_URL . 'assets/img/sort. svg') . '" width="40" title="Потяните вверх или вниз, чтобы изменить позицию">';
             break;
         case "fs_id":
             echo $post_id;
             break;
         case "fs_price":
-            $price = apply_filters('fs_price_format', (float)get_post_meta($post_id, $config->meta['price'], 1));
-            echo '<span class="fs-price-blank">' . $price . '</span> ' . fs_currency();
+            echo '<span class="fs-price-blank">';
+            fs_the_price($post_id);
+            echo '</span>';
 
             break;
         case "fs_vendor_code":
@@ -116,14 +116,15 @@ function fill_views_column($colname, $post_id)
             } else {
                 $stock = __('not available', 'f-shop');
             }
-            echo $stock . '<span class="fs_stock_real" style="display:none">' . $stock_real . '</span>';
+            echo $stock;
+            echo '<span class="fs_stock_real" style="display:none">' . esc_html($stock_real) . '</span>';
             break;
         case "fs_photo":
             $sizes = fs_get_image_sizes();
             if (has_post_thumbnail()) {
                 the_post_thumbnail('thumbnail');
             } else {
-                echo '<div class="fs_admin_col_photo " style="width:' . $sizes['thumbnail']['width'] . 'px;height:' . $sizes['thumbnail']['height'] . 'px;">' . __('no photo', 'f-shop') . '</div>';
+                echo '<div class="fs_admin_col_photo " style="width:' . esc_attr($sizes['thumbnail']['width']) . 'px;height:' . esc_attr($sizes['thumbnail']['height']) . 'px;">' . __('no photo', 'f-shop') . '</div>';
             }
             break;
     }
@@ -154,18 +155,18 @@ function fs_orders_posts_custom_column($colname, $post_id)
         case 'fs_order_amount':
             $amount = get_post_meta($post_id, '_amount', 1);
             $amount = apply_filters('fs_price_format', $amount);
-            echo $amount . ' ' . fs_currency();
+            echo esc_html($amount) . ' ' . esc_html(fs_currency());
             break;
         case 'fs_user':
             $user = get_post_meta($post_id, '_user', 0);
             $user = $user[0];
             echo '<ul>';
             echo '<li><b>';
-            echo $user['first_name'] . ' ' . $user['last_name'];
+            echo esc_html($user['first_name']) . ' ' . esc_html($user['last_name']);
             echo '</b></li>';
-            printf('<li><span>%s:</span> %s</li>', __('phone', 'f-shop'), $user['phone']);
-            printf('<li><span>%s:</span> %s</li>', __('email', 'f-shop'), $user['email']);
-            printf('<li><span>%s:</span> %s</li>', __('city', 'f-shop'), $user['city']);
+            printf('<li><span>%s:</span> %s</li>', esc_html__('phone', 'f-shop'), $user['phone']);
+            printf('<li><span>%s:</span> %s</li>', esc_html__('email', 'f-shop'), $user['email']);
+            printf('<li><span>%s:</span> %s</li>', esc_html__('city', 'f-shop'), $user['city']);
             echo '</ul>';
 
 

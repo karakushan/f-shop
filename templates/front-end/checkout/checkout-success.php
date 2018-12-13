@@ -7,6 +7,6 @@
  */
 ?>
 <p class="fs-info-block"><i class="fas fa-info-circle"></i>
-	<?php printf( __( 'Order #%s was successfully created. Check your mail for further instructions.', 'f-shop' ), \FS\FS_Orders_Class::get_last_order_id() ) ?>
+	<?php printf( __( 'Order #%s was successfully created. Check your mail for further instructions.', 'f-shop' ), esc_attr(\FS\FS_Orders_Class::get_last_order_id()) ) ?>
 </p>
 
