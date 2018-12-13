@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-12 21:00+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2018-12-13 14:58+0000\n"
+"PO-Revision-Date: 2018-12-12 21:27+0000\n"
 "Last-Translator: sharf-admin <karakushan@gmail.com>\n"
 "Language-Team: Українська\n"
 "Language: uk\n"
@@ -354,7 +354,7 @@ msgstr ""
 
 #: lib/FS_Config.php:622
 msgid "E-mail message to the buyer if the order is confirmed by the manager"
-msgstr "Повідомлення на e-mail якщо замовлення прийнято менеджером магазину"
+msgstr ""
 
 #: lib/FS_Config.php:623
 msgid ""
@@ -363,14 +363,10 @@ msgid ""
 "<code>%pay_name%</code> - name of the payment method, <code>%pay_url%</code> "
 "- payment reference ."
 msgstr ""
-"Це повідомлення буде відправлено після того як менеджер магазину підтвердить "
-"замовлення. Ви також можете використовувати ці мета дані: <code>"
-"%order_id%</code> - номер замовлення, <code>%pay_name%</code> - назва методу "
-"оплати, <code>%pay_url%</code> - поислання для оплати ."
 
 #: lib/FS_Config.php:628
 msgid "Message to the buyer after payment on the site"
-msgstr "Повідомлення після того як покупець оплатив товар"
+msgstr ""
 
 #: lib/FS_Config.php:629
 msgid ""
@@ -378,9 +374,6 @@ msgid ""
 "can use these variables: <code>%order_id%</code> - order number, <code>"
 "%pay_name%</code> - name of the payment method"
 msgstr ""
-"Цей текст буде показано на сайті якщо покупець успішно оплатив замовлення. "
-"Ви також можете використовувати ці метадані: <code>%order_id%</code> - номер "
-"замовлення, <code>%pay_name%</code> - назва методу оплати"
 
 #: lib/FS_Config.php:634
 msgid "Unavailable for payment"
@@ -391,8 +384,6 @@ msgid ""
 "If you turn off, then the payment method will not be visible to users, only "
 "in the admin panel."
 msgstr ""
-"Якщо відмітити, даний метод оплати буде сховано на сайті, тільки в адмін "
-"панелі."
 
 #: lib/FS_Config.php:647
 msgid "Стоимость доставки в базовой валюте"
@@ -488,8 +479,6 @@ msgid ""
 "Goods with such a set of characteristics are not in stock. Try changing "
 "parameters."
 msgstr ""
-"Товару з вибраними характеристиками немає на складі. Спробуйте змінити "
-"параметри."
 
 #: lib/FS_Taxonomies_Class.php:40 lib/FS_Taxonomies_Class.php:42
 #: lib/FS_Taxonomies_Class.php:44 lib/FS_Taxonomies_Class.php:45
@@ -591,7 +580,7 @@ msgstr "Вартість"
 
 #: lib/FS_Orders_Class.php:79
 msgid "Order status"
-msgstr "Статус замовлення"
+msgstr ""
 
 #: lib/FS_Orders_Class.php:116
 msgid "Date of purchase"
@@ -608,7 +597,7 @@ msgstr "Номер замовлення не знайдено"
 #: lib/FS_Orders_Class.php:143
 #, php-format
 msgid "Order details #%d"
-msgstr "Деталі замовлення #%d"
+msgstr ""
 
 #: lib/FS_Orders_Class.php:147
 msgid "#ID"
@@ -618,7 +607,7 @@ msgstr ""
 #: templates/front-end/cart/list-products.php:17
 #: templates/front-end/shortcode/fs-order-info.php:9
 msgid "Photo"
-msgstr "Фото"
+msgstr ""
 
 #: lib/FS_Orders_Class.php:150 functions/filters.php:69
 #: functions/filters.php:189 templates/front-end/cart/list-products.php:26
@@ -627,20 +616,20 @@ msgstr "Фото"
 #: templates/back-end/metabox/order/meta-box-0.php:7
 #: templates/front-end/mail/themes/oxygen.php:469
 msgid "Price"
-msgstr "Ціна"
+msgstr ""
 
 #: lib/FS_Orders_Class.php:151 templates/front-end/mail/themes/oxygen.php:466
 msgid "Qty"
-msgstr "К-сть"
+msgstr ""
 
 #: lib/FS_Orders_Class.php:173 functions/filters.php:139
 #: templates/back-end/metabox/order/meta-box-0.php:43
 msgid "Total cost"
-msgstr "Загальна сума"
+msgstr ""
 
 #: lib/FS_Orders_Class.php:177
 msgid "Pay online"
-msgstr "Оплатити онлайн"
+msgstr ""
 
 #: lib/FS_Orders_Class.php:210
 msgid ""
@@ -731,7 +720,7 @@ msgstr "Доступні способи оплати"
 msgid ""
 "If the previously chosen payment method does not suit you, you can pay by "
 "one of the ways below"
-msgstr "Помилка!"
+msgstr ""
 
 #: lib/FS_Payment_Class.php:78
 #, php-format

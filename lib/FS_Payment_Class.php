@@ -41,7 +41,8 @@ class FS_Payment_Class {
 
 		$atts = shortcode_atts( array(
 			'item-wrapper-class' => 'col-lg-2 col-sm-6',
-			'item-class'         => 'fs-pay-item'
+			'item-class'         => 'fs-pay-item',
+			'aviable_methods'    => false
 		), $atts );
 
 		$order_class     = new FS_Orders_Class();
@@ -51,44 +52,47 @@ class FS_Payment_Class {
 
 		do_action( 'fs_order_pay_before' );
 		$html = '<div class="fs-order-pay">';
-		$html .= '<h3>' . __( 'Available payment methods', 'f-shop') . '</h3>';
-		$html .= '<p>' . __( 'If the previously chosen payment method does not suit you, you can pay by one of the ways below', 'f-shop') . ':</p>';
-		$html .= '<div class="row">';
-
-		if ( $payment_methods ) {
-			foreach ( $payment_methods as $id => $payment_method ) {
-				$term     = get_term_by( 'slug', $id, $fs_config->data['product_pay_taxonomy'] );
+		if ( $payment_methods && $atts['aviable_methods'] ) {
+			$html .= '<h3>' . __( 'Available payment methods', 'f-shop' ) . '</h3>';
+			$html .= '<p>' . __( 'If the previously chosen payment method does not suit you, you can pay by one of the ways below', 'f-shop' ) . ':</p>';
+			$html .= '<div class="row">';
+			foreach ( $payment_methods as $slug => $payment_method ) {
+				$term     = get_term_by( 'slug', $slug, $fs_config->data['product_pay_taxonomy'] );
 				$pay_name = $term ? $term->name : $payment_method['name'];
+				$logo     = fs_get_category_image( $term->term_id );
 
 				$html .= '<div class="' . esc_attr( $atts['item-wrapper-class'] ) . '">';
 				$html .= '<a href="' . esc_url( add_query_arg( array(
-						'pay_method' => $id,
+						'pay_method' => $slug,
 						'order_id'   => $order_id
-					), get_the_permalink() ) ) . '" class="' . esc_attr( $atts['item-class'] ) . '" id="' . esc_attr( $id ) . '">';
-				$html .= '<figure><img src="' . esc_url( $payment_method['logo'] ) . '" alt="' . esc_attr( $pay_name ) . '"></figure>';
+					), get_the_permalink() ) ) . '" class="' . esc_attr( $atts['item-class'] ) . '" id="' . esc_attr( $slug ) . '">';
+
+				if ( $logo ) {
+					$html .= '<figure>' . $logo . '</figure>';
+				}
 				$html .= '<h4>' . esc_html( $pay_name ) . '</h4>';
 				$html .= '</a>';
 				$html .= '</div>';
 
 			}
+			$html .= '</div><!--END .row-->';
 		}
-		$html .= '</div><!--END .row-->';
+
 		if ( $order_id && in_array( get_post_status( $order_id ), array( 'paid' ) ) ) {
 			// Если указан номер заказа то выводим сообщение об успешной оплате
-			$after_pay_message = sprintf( '<h2>' . __( 'Order #%d paid successfully', 'f-shop') . '</h2>', $order_id );
+			$after_pay_message = sprintf( '<h2>' . __( 'Order #%d paid successfully', 'f-shop' ) . '</h2>', $order_id );
 			// TODO здесь еще нужно будет сделать проверку по сессиям, если это не тот пользователь то выдаём сообщение "вы не имеете права просматривать эту страницу"
 			if ( isset( $order->payment_id ) ) {
-				$message           = get_term_meta( $order->payment_id, '_fs_after_pay_message', 1 );
-				$after_pay_message = ! empty( $message ) ? $message : $after_pay_message;
+				$message = get_term_meta( $order->payment_id, '_fs_after_pay_message', 1 );
+				$html    .= ! empty( $message ) ? $message : $after_pay_message;
 
 			}
 
-			return $after_pay_message;
 		} else {
 			$term = get_term_by( 'slug', $_GET['pay_method'], $fs_config->data['product_pay_taxonomy'] );
 			if ( ! empty( $_GET['pay_method'] ) && ! empty( $payment_methods[ $_GET['pay_method'] ] ) && $term ) {
 
-				$html .= sprintf( '<h2>' . __( 'Payment  <span>%s <span>%s</span></span> with  <span>%s</span>', 'f-shop') . '</h2>', apply_filters( 'fs_price_format', $order->sum ), fs_currency(), $term->name );
+				$html .= sprintf( '<h2>' . __( 'Payment  <span>%s <span>%s</span></span> with  <span>%s</span>', 'f-shop' ) . '</h2>', apply_filters( 'fs_price_format', $order->sum ), fs_currency(), $term->name );
 				if ( ! empty( $payment_methods[ $_GET['pay_method'] ]['description'] ) ) {
 					$html .= sprintf( '<p>%s</p>', $payment_methods[ $_GET['pay_method'] ]['description'] );
 				}
