@@ -443,6 +443,9 @@
                         position: 'topCenter',
 
                     });
+                    if (el.data('refresh')) {
+                        location.reload();
+                    }
                 } else {
                     iziToast.show({
                         theme: 'light',
