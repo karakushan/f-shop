@@ -333,11 +333,14 @@
                     cartbutton.attr("data-disabled", false);
                     cartbutton.removeAttr("data-disabled-message");
 
-                    jQuery("[data-fs-element=\"price\"]").each(function (index, value) {
-                        if (jQuery(this).data("product-id") == productId) {
-                            jQuery(this).html(result.data.price);
-                        }
-                    });
+                    if (result.data.price) {
+                        jQuery("[data-fs-element=\"price\"]").each(function (index, value) {
+                            if (jQuery(this).data("product-id") == productId) {
+                                jQuery(this).html(result.data.price);
+                            }
+                        });
+                    }
+
                     if (result.data.basePrice) {
                         jQuery("[data-fs-element=\"base-price\"]").each(function (index, value) {
                             if (jQuery(this).data("product-id") == productId) {

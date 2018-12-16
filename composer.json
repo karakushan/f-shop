@@ -11,5 +11,8 @@
       "functions/attributes.php",
       "functions/filters.php"
     ]
+  },
+  "require-dev": {
+    "phpunit/phpunit": "7"
   }
 }

@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-15 13:56+0000\n"
+"POT-Creation-Date: 2018-12-16 18:04+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2018-12-15 14:06+0000\n"
+"PO-Revision-Date: 2018-12-16 18:06+0000\n"
 "Last-Translator: fight-wear <karakushan@gmail.com>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -85,13 +85,18 @@ msgstr "Адреса доставки"
 msgid "Site name"
 msgstr "Назва сайту"
 
-#: functions/attributes.php:147 functions/filters.php:115
+#: functions/attributes.php:142 functions/filters.php:115
 msgid "in stock"
 msgstr "в наявності"
 
-#: functions/attributes.php:148 functions/filters.php:117
+#: functions/attributes.php:143 functions/filters.php:117
 msgid "not available"
 msgstr "немає в наявності"
+
+#: functions/attributes.php:425
+#, php-format
+msgid "Select %s"
+msgstr "Виберіть %s"
 
 #: functions/filters.php:66
 msgid "Sort"
@@ -176,74 +181,74 @@ msgstr "одиниці"
 msgid "Не указан параметр $group_id в функции %s"
 msgstr ""
 
-#: functions/functions.php:477
+#: functions/functions.php:476
 #, php-format
 msgid ""
 "Are you sure you want to delete the item &laquo;%s&raquo; from the basket?"
 msgstr "Ви точно хочете видалити позицію &laquo;%s&raquo; із кошика?"
 
-#: functions/functions.php:478
+#: functions/functions.php:477
 #, php-format
 msgid "Remove item &laquo;%s&raquo;"
 msgstr "Видалити позицію &laquo;%s&raquo;"
 
-#: functions/functions.php:522
+#: functions/functions.php:521
 msgid "Remove from wishlist"
 msgstr "Видалити із списку бажань"
 
-#: functions/functions.php:665 functions/functions.php:673
+#: functions/functions.php:664 functions/functions.php:672
 msgid "Add to cart"
 msgstr "У кошик"
 
-#: functions/functions.php:734
+#: functions/functions.php:733
 #, php-format
 msgid "Item «%s» added to comparison"
 msgstr "Позиція «%s» успішно додана до кошика"
 
-#: functions/functions.php:735
+#: functions/functions.php:734
 msgid "Error adding product to comparison"
 msgstr "Помилка додавання товару до списку порівняння"
 
-#: functions/functions.php:775
+#: functions/functions.php:774
 msgid "Sent"
 msgstr "Відправлено"
 
-#: functions/functions.php:1116
+#: functions/functions.php:1115
 msgid "Remove all items"
 msgstr "Видалити всі товари"
 
-#: functions/functions.php:1123
+#: functions/functions.php:1122
 msgid "Are you sure you want to empty the trash?"
 msgstr "Ви точно хочете спорожнити ваш кошик?"
 
-#: functions/functions.php:1232
+#: functions/functions.php:1231
 msgid "Add to wishlist"
 msgstr "До списку бажань"
 
-#: functions/functions.php:1340
+#: functions/functions.php:1339
 #, php-format
 msgid "Template file %s not found in function %s"
 msgstr "Файл  шаблону %s не знайдено у функції %s"
 
-#: functions/functions.php:1379 templates/front-end/auth/register.php:33
+#: functions/functions.php:1378 templates/front-end/auth/register.php:33
 msgid "Login"
 msgstr "Логін"
 
-#: functions/functions.php:1954
+#: functions/functions.php:1953
 msgid "No image"
 msgstr "Немає фото"
 
-#: functions/functions.php:2239
+#: functions/functions.php:2238
 #, php-format
 msgid "Showing %1$d products from %2$d"
 msgstr "Показано %1$d товарів із %2$d"
 
-#: functions/functions.php:2536
+#: functions/functions.php:2535
 #, php-format
 msgid "File \"%s\" not found"
 msgstr "Файл \"%s\" не знайдено"
 
-#: lib/FS_Ajax_Class.php:245
+#: lib/FS_Ajax_Class.php:238
 msgid ""
 "Goods with such a set of characteristics are not in stock. Try changing "
 "parameters."

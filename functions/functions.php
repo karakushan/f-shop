@@ -376,11 +376,10 @@ function fs_get_first_discount() {
  * @param string $wrap
  *
  */
-function fs_total_discount( $wrap = '%s %s' ) {
-
+function fs_total_discount( $wrap = '%s <span>%s</span>' ) {
 	$discount = fs_get_cart_cost() - fs_get_total_amount();
 	$discount = apply_filters( 'fs_price_format', $discount );
-	printf( $wrap, '<span data-fs-element="total-discount">' . esc_attr( $discount ) . '</span>', fs_currency() );
+	printf( '<span data-fs-element="total-discount">' . $wrap . '</span>', esc_attr( $discount ), esc_html( fs_currency() ) );
 }
 
 
@@ -2613,4 +2612,19 @@ function fs_get_category_text( $category_id = 0 ) {
 
 	return get_term_meta( $category_id, '_content', 1 );
 
+}
+
+/**
+ * Displays a link to reset the filters.
+ *
+ * @param string $base_url url to return when pressed
+ */
+function fs_reset_filter_link( $base_url = '' ) {
+	global $fs_config;
+	if ( empty( $base_url ) && is_tax() ) {
+		$base_url = get_term_link( get_queried_object_id() );
+	} else {
+		$base_url = get_post_type_archive_link( $fs_config->data['post_type'] );
+	}
+	echo esc_url( $base_url );
 }
