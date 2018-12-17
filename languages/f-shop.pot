@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-16 18:04+0000\n"
+"POT-Creation-Date: 2018-12-17 12:15+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -102,7 +102,7 @@ msgid "Sort"
 msgstr ""
 
 #: functions/filters.php:67 lib/FS_Attribute_Widget.php:59
-#: lib/FS_Orders_Class.php:149 lib/FS_Price_Widget.php:35
+#: lib/FS_Orders_Class.php:140 lib/FS_Price_Widget.php:35
 #: templates/front-end/shortcode/fs-order-info.php:10
 msgid "Title"
 msgstr ""
@@ -114,7 +114,7 @@ msgid "ID"
 msgstr ""
 
 #: functions/filters.php:69 functions/filters.php:190
-#: lib/FS_Orders_Class.php:150 templates/front-end/cart/list-products.php:26
+#: lib/FS_Orders_Class.php:141 templates/front-end/cart/list-products.php:26
 #: templates/front-end/shortcode/fs-order-info.php:11
 #: templates/back-end/metabox/order/meta-box-0.php:7
 #: templates/back-end/metabox/product-variations/add-variation.php:50
@@ -132,7 +132,7 @@ msgstr ""
 msgid "Stock in stock"
 msgstr ""
 
-#: functions/filters.php:72 lib/FS_Orders_Class.php:148
+#: functions/filters.php:72 lib/FS_Orders_Class.php:139
 #: templates/front-end/cart/list-products.php:17
 #: templates/front-end/shortcode/fs-order-info.php:9
 msgid "Photo"
@@ -150,7 +150,7 @@ msgstr ""
 msgid "no photo"
 msgstr ""
 
-#: functions/filters.php:140 lib/FS_Orders_Class.php:173
+#: functions/filters.php:140 lib/FS_Orders_Class.php:164
 #: templates/back-end/metabox/order/meta-box-0.php:43
 msgid "Total cost"
 msgstr ""
@@ -621,47 +621,47 @@ msgid ""
 "href=\"%wishlist_url%\">Go to wishlist</a>"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:79
+#: lib/FS_Orders_Class.php:73
 msgid "Order status"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:116
+#: lib/FS_Orders_Class.php:108
 msgid "Date of purchase"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:117
+#: lib/FS_Orders_Class.php:109
 msgid "Last modified"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:136
+#: lib/FS_Orders_Class.php:127
 msgid "Order number is not specified"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:143
+#: lib/FS_Orders_Class.php:134
 #, php-format
 msgid "Order details #%d"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:147
+#: lib/FS_Orders_Class.php:138
 msgid "#ID"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:151 templates/front-end/mail/themes/oxygen.php:466
+#: lib/FS_Orders_Class.php:142 templates/front-end/mail/themes/oxygen.php:466
 msgid "Qty"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:152 lib/FS_Taxonomies_Class.php:521
+#: lib/FS_Orders_Class.php:143 lib/FS_Taxonomies_Class.php:521
 #: templates/front-end/cart/list-products.php:32
 #: templates/front-end/shortcode/fs-order-info.php:13
 #: templates/back-end/metabox/order/meta-box-0.php:10
 msgid "Cost"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:177
+#: lib/FS_Orders_Class.php:168
 msgid "Pay online"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:210
+#: lib/FS_Orders_Class.php:207
 msgid ""
 "Your order #%order_id% has been successfully approved. The next stage is "
 "payment of the order. You can pay for the purchase by <a href=\"%pay_url%\">"
@@ -669,11 +669,11 @@ msgid ""
 "Good luck!"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:234
+#: lib/FS_Orders_Class.php:231
 msgid "Your order is approved"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:346
+#: lib/FS_Orders_Class.php:345
 msgid "The order status is not defined"
 msgstr ""
 
@@ -794,23 +794,23 @@ msgstr ""
 msgid "Store settings"
 msgstr ""
 
-#: lib/FS_Shortcode.php:54
+#: lib/FS_Shortcode.php:56
 msgid "Wish list is empty"
 msgstr ""
 
-#: lib/FS_Shortcode.php:104 templates/front-end/cart/list-products.php:120
+#: lib/FS_Shortcode.php:106 templates/front-end/cart/list-products.php:120
 msgid "Your basket is empty"
 msgstr ""
 
-#: lib/FS_Shortcode.php:184
+#: lib/FS_Shortcode.php:186
 msgid "Register to view this page"
 msgstr ""
 
-#: lib/FS_Shortcode.php:188
+#: lib/FS_Shortcode.php:190
 msgid "Order not found"
 msgstr ""
 
-#: lib/FS_Shortcode.php:192
+#: lib/FS_Shortcode.php:194
 msgid "Details of this order are not available for you"
 msgstr ""
 
@@ -1079,6 +1079,7 @@ msgstr ""
 
 #: templates/front-end/cart/list-products.php:29
 #: templates/front-end/shortcode/fs-order-info.php:12
+#: templates/front-end/shortcode/list-orders.php:8
 #: templates/back-end/metabox/order/meta-box-0.php:8
 msgid "Quantity"
 msgstr ""
@@ -1130,6 +1131,7 @@ msgid "Purchased goods"
 msgstr ""
 
 #: templates/front-end/shortcode/fs-order-info.php:33
+#: templates/front-end/shortcode/list-orders.php:10
 msgid "Total Cost"
 msgstr ""
 
@@ -1151,6 +1153,31 @@ msgstr ""
 
 #: templates/front-end/shortcode/fs-order-info.php:69
 msgid "pay now"
+msgstr ""
+
+#: templates/front-end/shortcode/list-orders.php:1
+msgid "My orders"
+msgstr ""
+
+#: templates/front-end/shortcode/list-orders.php:6
+#: templates/front-end/mail/themes/oxygen.php:399
+msgid "Order number"
+msgstr ""
+
+#: templates/front-end/shortcode/list-orders.php:7
+msgid "Date"
+msgstr ""
+
+#: templates/front-end/shortcode/list-orders.php:9
+msgid "Status"
+msgstr ""
+
+#: templates/front-end/shortcode/list-orders.php:25
+msgid "read more"
+msgstr ""
+
+#: templates/front-end/shortcode/list-orders.php:33
+msgid "You currently have no orders"
 msgstr ""
 
 #: templates/back-end/metabox/order/meta-box-0.php:6
@@ -1208,10 +1235,6 @@ msgstr ""
 
 #: templates/front-end/mail/themes/oxygen.php:398
 msgid "Information about order"
-msgstr ""
-
-#: templates/front-end/mail/themes/oxygen.php:399
-msgid "Order number"
 msgstr ""
 
 #: templates/front-end/mail/themes/oxygen.php:429

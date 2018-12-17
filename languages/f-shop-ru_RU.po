@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-16 18:04+0000\n"
-"PO-Revision-Date: 2018-12-16 18:05+0000\n"
+"POT-Creation-Date: 2018-12-17 12:15+0000\n"
+"PO-Revision-Date: 2018-12-17 12:18+0000\n"
 "Last-Translator: fight-wear <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -105,7 +105,7 @@ msgid "Sort"
 msgstr "Сортировка"
 
 #: functions/filters.php:67 lib/FS_Attribute_Widget.php:59
-#: lib/FS_Orders_Class.php:149 lib/FS_Price_Widget.php:35
+#: lib/FS_Orders_Class.php:140 lib/FS_Price_Widget.php:35
 #: templates/front-end/shortcode/fs-order-info.php:10
 msgid "Title"
 msgstr "Название"
@@ -117,7 +117,7 @@ msgid "ID"
 msgstr ""
 
 #: functions/filters.php:69 functions/filters.php:190
-#: lib/FS_Orders_Class.php:150 templates/front-end/cart/list-products.php:26
+#: lib/FS_Orders_Class.php:141 templates/front-end/cart/list-products.php:26
 #: templates/front-end/shortcode/fs-order-info.php:11
 #: templates/back-end/metabox/order/meta-box-0.php:7
 #: templates/back-end/metabox/product-variations/add-variation.php:50
@@ -135,7 +135,7 @@ msgstr "Артикул"
 msgid "Stock in stock"
 msgstr "Наличие"
 
-#: functions/filters.php:72 lib/FS_Orders_Class.php:148
+#: functions/filters.php:72 lib/FS_Orders_Class.php:139
 #: templates/front-end/cart/list-products.php:17
 #: templates/front-end/shortcode/fs-order-info.php:9
 msgid "Photo"
@@ -153,7 +153,7 @@ msgstr "Категории товара"
 msgid "no photo"
 msgstr "нет фото"
 
-#: functions/filters.php:140 lib/FS_Orders_Class.php:173
+#: functions/filters.php:140 lib/FS_Orders_Class.php:164
 #: templates/back-end/metabox/order/meta-box-0.php:43
 msgid "Total cost"
 msgstr "Общая стоимость"
@@ -641,47 +641,47 @@ msgstr ""
 "Товар &laquo;%product%&raquo; успешно добавлен в список желаний. <a "
 "href=\"%wishlist_url%\">Перейти к списку желаний</a>"
 
-#: lib/FS_Orders_Class.php:79
+#: lib/FS_Orders_Class.php:73
 msgid "Order status"
 msgstr "Статус заказа"
 
-#: lib/FS_Orders_Class.php:116
+#: lib/FS_Orders_Class.php:108
 msgid "Date of purchase"
 msgstr "Дата покупки"
 
-#: lib/FS_Orders_Class.php:117
+#: lib/FS_Orders_Class.php:109
 msgid "Last modified"
 msgstr "Последнее изменение"
 
-#: lib/FS_Orders_Class.php:136
+#: lib/FS_Orders_Class.php:127
 msgid "Order number is not specified"
 msgstr "Номер заказа не указан"
 
-#: lib/FS_Orders_Class.php:143
+#: lib/FS_Orders_Class.php:134
 #, php-format
 msgid "Order details #%d"
 msgstr "Детали заказа #%d"
 
-#: lib/FS_Orders_Class.php:147
+#: lib/FS_Orders_Class.php:138
 msgid "#ID"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:151 templates/front-end/mail/themes/oxygen.php:466
+#: lib/FS_Orders_Class.php:142 templates/front-end/mail/themes/oxygen.php:466
 msgid "Qty"
 msgstr "К-во"
 
-#: lib/FS_Orders_Class.php:152 lib/FS_Taxonomies_Class.php:521
+#: lib/FS_Orders_Class.php:143 lib/FS_Taxonomies_Class.php:521
 #: templates/front-end/cart/list-products.php:32
 #: templates/front-end/shortcode/fs-order-info.php:13
 #: templates/back-end/metabox/order/meta-box-0.php:10
 msgid "Cost"
 msgstr "Стоимость"
 
-#: lib/FS_Orders_Class.php:177
+#: lib/FS_Orders_Class.php:168
 msgid "Pay online"
 msgstr "Оплата онлайн"
 
-#: lib/FS_Orders_Class.php:210
+#: lib/FS_Orders_Class.php:207
 msgid ""
 "Your order #%order_id% has been successfully approved. The next stage is "
 "payment of the order. You can pay for the purchase by <a href=\"%pay_url%\">"
@@ -693,11 +693,11 @@ msgstr ""
 "Ранее вы выбрали этот метод оплаты : %pay_name%.\n"
 "Удачи!"
 
-#: lib/FS_Orders_Class.php:234
+#: lib/FS_Orders_Class.php:231
 msgid "Your order is approved"
 msgstr "Ваш заказ принят"
 
-#: lib/FS_Orders_Class.php:346
+#: lib/FS_Orders_Class.php:345
 msgid "The order status is not defined"
 msgstr "Статус заказа не определен"
 
@@ -820,23 +820,23 @@ msgstr ""
 msgid "Store settings"
 msgstr "Настройки магазина"
 
-#: lib/FS_Shortcode.php:54
+#: lib/FS_Shortcode.php:56
 msgid "Wish list is empty"
 msgstr "Список желаний пустой"
 
-#: lib/FS_Shortcode.php:104 templates/front-end/cart/list-products.php:120
+#: lib/FS_Shortcode.php:106 templates/front-end/cart/list-products.php:120
 msgid "Your basket is empty"
 msgstr "Ваша корзина пуста"
 
-#: lib/FS_Shortcode.php:184
+#: lib/FS_Shortcode.php:186
 msgid "Register to view this page"
 msgstr "Зарегистрируйтесь, чтобы иметь доступ к этой странице"
 
-#: lib/FS_Shortcode.php:188
+#: lib/FS_Shortcode.php:190
 msgid "Order not found"
 msgstr "Заказ не найден"
 
-#: lib/FS_Shortcode.php:192
+#: lib/FS_Shortcode.php:194
 msgid "Details of this order are not available for you"
 msgstr "Детали этого заказа не доступны для Вас"
 
@@ -1111,6 +1111,7 @@ msgstr "Отправить"
 
 #: templates/front-end/cart/list-products.php:29
 #: templates/front-end/shortcode/fs-order-info.php:12
+#: templates/front-end/shortcode/list-orders.php:8
 #: templates/back-end/metabox/order/meta-box-0.php:8
 msgid "Quantity"
 msgstr "Количество"
@@ -1164,6 +1165,7 @@ msgid "Purchased goods"
 msgstr "Приобретенные товары"
 
 #: templates/front-end/shortcode/fs-order-info.php:33
+#: templates/front-end/shortcode/list-orders.php:10
 msgid "Total Cost"
 msgstr "Общая стоимость"
 
@@ -1186,6 +1188,31 @@ msgstr "Метод оплаты"
 #: templates/front-end/shortcode/fs-order-info.php:69
 msgid "pay now"
 msgstr "заплатить сейчас"
+
+#: templates/front-end/shortcode/list-orders.php:1
+msgid "My orders"
+msgstr "Мои заказы"
+
+#: templates/front-end/shortcode/list-orders.php:6
+#: templates/front-end/mail/themes/oxygen.php:399
+msgid "Order number"
+msgstr "Номер заказа"
+
+#: templates/front-end/shortcode/list-orders.php:7
+msgid "Date"
+msgstr "Дата"
+
+#: templates/front-end/shortcode/list-orders.php:9
+msgid "Status"
+msgstr "Статус"
+
+#: templates/front-end/shortcode/list-orders.php:25
+msgid "read more"
+msgstr "подробнее"
+
+#: templates/front-end/shortcode/list-orders.php:33
+msgid "You currently have no orders"
+msgstr "В текущее время у вас нет заказов"
 
 #: templates/back-end/metabox/order/meta-box-0.php:6
 #: templates/back-end/metabox/product-variations/add-variation.php:31
@@ -1243,10 +1270,6 @@ msgstr "Мой аккаунт"
 #: templates/front-end/mail/themes/oxygen.php:398
 msgid "Information about order"
 msgstr "Информация о заказе"
-
-#: templates/front-end/mail/themes/oxygen.php:399
-msgid "Order number"
-msgstr "Номер заказа"
 
 #: templates/front-end/mail/themes/oxygen.php:429
 msgid "Shipping and payment"
