@@ -371,13 +371,23 @@ function fs_get_first_discount() {
 }
 
 /**
- * Enter a discount amount
+ * Displays a discount amount
  *
  * @param string $wrap
  *
  */
 function fs_total_discount( $wrap = '%s <span>%s</span>' ) {
-	$discount = fs_get_cart_cost() - fs_get_total_amount();
+	$discount = 0;
+	$cart     = FS\FS_Cart_Class::get_cart();
+	if ( $cart ) {
+		foreach ( $cart as $product ) {
+			$item = fs_set_product( $product );
+			if ( $item->price > $item->base_price ) {
+				continue;
+			}
+			$discount += $item->base_price - $item->price;
+		}
+	}
 	$discount = apply_filters( 'fs_price_format', $discount );
 	printf( '<span data-fs-element="total-discount">' . $wrap . '</span>', esc_attr( $discount ), esc_html( fs_currency() ) );
 }
