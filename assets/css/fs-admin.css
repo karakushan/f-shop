@@ -482,6 +482,10 @@ td.fs_price.column-fs_price span span {
   font-weight: bold;
   color: #4caf50; }
 
+td.fs_price.column-fs_price span.fs-base-price {
+  color: #a0a5aa;
+  font-weight: normal; }
+
 .fs-selected-image {
   position: relative;
   width: 260px;

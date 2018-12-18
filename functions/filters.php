@@ -102,8 +102,7 @@ function fill_views_column($colname, $post_id)
         case "fs_price":
             echo '<span class="fs-price-blank">';
             fs_the_price($post_id);
-            echo '</span>';
-
+            fs_base_price($post_id, '<br><del>%s %s,</del>');
             break;
         case "fs_vendor_code":
             echo get_post_meta($post_id, $config->meta['sku'], 1);
@@ -120,14 +119,10 @@ function fill_views_column($colname, $post_id)
             echo '<span class="fs_stock_real" style="display:none">' . esc_html($stock_real) . '</span>';
             break;
         case "fs_photo":
-            $sizes = fs_get_image_sizes();
-            if (has_post_thumbnail()) {
-                the_post_thumbnail('thumbnail');
-            } else {
-                echo '<div class="fs_admin_col_photo " style="width:' . esc_attr($sizes['thumbnail']['width']) . 'px;height:' . esc_attr($sizes['thumbnail']['height']) . 'px;">' . __('no photo', 'f-shop') . '</div>';
-            }
+            fs_product_thumbnail();
             break;
     }
+
 }
 
 // создаем новую колонку

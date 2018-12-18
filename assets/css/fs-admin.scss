@@ -676,6 +676,11 @@ td.fs_price.column-fs_price span span {
   color: #4caf50;
 }
 
+td.fs_price.column-fs_price span.fs-base-price {
+  color: #a0a5aa;
+  font-weight: normal;
+}
+
 .fs-selected-image {
   position: relative;
   width: 260px;
@@ -1298,10 +1303,12 @@ td.fs_menu_order.column-fs_menu_order {
     width: 50%;
   }
 }
+
 .fs-collapse-all {
   float: right;
   margin-top: 8px;
 }
+
 // metabox progress bar
 .fs-mb-preloader {
   display: none;
