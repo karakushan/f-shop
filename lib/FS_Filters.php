@@ -187,19 +187,19 @@ class FS_Filters {
 
 				switch ( $url['order_type'] ) {
 					case 'price_asc': //сортируем по цене в возрастающем порядке
-						$meta_query['price']       = array( 'key' => $fs_config->meta['price'] );
-						$orderby['meta_value_num'] = 'ASC';
+						$meta_query['price'] = array( 'key' => $fs_config->meta['price'], 'type' => 'DECIMAL' );
+						$orderby['price']    = 'ASC';
 						break;
 					case 'price_desc': //сортируем по цене в спадающем порядке
-						$meta_query['price']       = array( 'key' => $fs_config->meta['price'] );
+						$meta_query['price']       = array( 'key' => $fs_config->meta['price'], 'type' => 'DECIMAL' );
 						$orderby['meta_value_num'] = 'DESC';
 						break;
 					case 'views_desc': //сортируем по просмотрам в спадающем порядке
-						$meta_query['views'] = array( 'key' => 'views' );
+						$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
 						$orderby['views']    = 'DESC';
 						break;
 					case 'views_asc': //сортируем по просмотрам в спадающем порядке
-						$meta_query['views'] = array( 'key' => 'views' );
+						$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
 						$orderby['views']    = 'ASC';
 						break;
 					case 'name_asc': //сортируем по названию по алфавиту
@@ -271,7 +271,6 @@ class FS_Filters {
 			if ( ! empty( $order ) ) {
 				$query->set( 'order', $order );
 			}
-
 		}
 
 
