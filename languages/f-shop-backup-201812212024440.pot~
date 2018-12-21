@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-17 12:07+0000\n"
+"POT-Creation-Date: 2018-12-17 12:15+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -1079,7 +1079,7 @@ msgstr ""
 
 #: templates/front-end/cart/list-products.php:29
 #: templates/front-end/shortcode/fs-order-info.php:12
-#: templates/front-end/shortcode/list-orders.php:7
+#: templates/front-end/shortcode/list-orders.php:8
 #: templates/back-end/metabox/order/meta-box-0.php:8
 msgid "Quantity"
 msgstr ""
@@ -1131,7 +1131,7 @@ msgid "Purchased goods"
 msgstr ""
 
 #: templates/front-end/shortcode/fs-order-info.php:33
-#: templates/front-end/shortcode/list-orders.php:9
+#: templates/front-end/shortcode/list-orders.php:10
 msgid "Total Cost"
 msgstr ""
 
@@ -1159,21 +1159,25 @@ msgstr ""
 msgid "My orders"
 msgstr ""
 
-#: templates/front-end/shortcode/list-orders.php:5
+#: templates/front-end/shortcode/list-orders.php:6
 #: templates/front-end/mail/themes/oxygen.php:399
 msgid "Order number"
 msgstr ""
 
-#: templates/front-end/shortcode/list-orders.php:6
+#: templates/front-end/shortcode/list-orders.php:7
 msgid "Date"
 msgstr ""
 
-#: templates/front-end/shortcode/list-orders.php:8
+#: templates/front-end/shortcode/list-orders.php:9
 msgid "Status"
 msgstr ""
 
-#: templates/front-end/shortcode/list-orders.php:24
+#: templates/front-end/shortcode/list-orders.php:25
 msgid "read more"
+msgstr ""
+
+#: templates/front-end/shortcode/list-orders.php:33
+msgid "You currently have no orders"
 msgstr ""
 
 #: templates/back-end/metabox/order/meta-box-0.php:6

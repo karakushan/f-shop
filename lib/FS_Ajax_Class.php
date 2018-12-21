@@ -86,6 +86,7 @@ class FS_Ajax_Class {
 	}
 
 	// Возвращает HTML код галереи товара или конкретной вариации
+    // TODO : добавить nonce проверку
 	function fs_get_product_gallery_ids() {
 		$product_id   = intval( $_POST['product_id'] );
 		$variation_id = isset( $_POST['variation_id'] ) ? intval( $_POST['variation_id'] ) : null;
