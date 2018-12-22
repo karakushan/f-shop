@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-21 20:24+0000\n"
-"PO-Revision-Date: 2018-12-21 20:45+0000\n"
+"PO-Revision-Date: 2018-12-21 20:51+0000\n"
 "Last-Translator: demo-shop <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -136,7 +136,7 @@ msgstr "Артикул"
 #: functions/filters.php:71 functions/filters.php:196
 #: templates/back-end/metabox/other.php:9
 msgid "Stock in stock"
-msgstr "Наличие"
+msgstr "Запас на складе"
 
 #: functions/filters.php:72 templates/front-end/cart/list-products.php:17
 #: templates/front-end/shortcode/fs-order-info.php:9
