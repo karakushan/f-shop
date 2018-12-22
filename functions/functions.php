@@ -692,10 +692,11 @@ function fs_get_first_variation($product_id, $return = 'all')
  *
  * @return mixed|void
  */
-function fs_add_to_cart($product_id = 0, $label = '', $args = array())
+function fs_add_to_cart($product_id = 0, $label = null, $args = array())
 {
     global $fs_config;
     $product_id = fs_get_product_id($product_id);
+    $label = is_null($label) ? __('Add to cart', 'f-shop') : $label;
     // Параметры по умолчанию
     $args_default = array(
         'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader" width="16">',
@@ -997,7 +998,7 @@ function fs_cart_quantity($item_id, $value, $args = array())
     $value = intval($value);
     $args = wp_parse_args($args, array(
         'wrapper' => 'div',
-        'refresh' => false,
+        'refresh' => true,
         'wrapper_class' => 'fs-qty-wrapper',
         'position' => '%minus% %input% %pluss%  ',
         'pluss' => array('class' => sanitize_html_class('fs-pluss'), 'content' => '+'),
@@ -2743,16 +2744,19 @@ function fs_reset_filter_link($base_url = '')
     echo esc_url($base_url);
 }
 
-function phpinfo2array() {
-    $entitiesToUtf8 = function($input) {
+function phpinfo2array()
+{
+    $entitiesToUtf8 = function ($input) {
         // http://php.net/manual/en/function.html-entity-decode.php#104617
-        return preg_replace_callback("/(&#[0-9]+;)/", function($m) { return mb_convert_encoding($m[1], "UTF-8", "HTML-ENTITIES"); }, $input);
+        return preg_replace_callback("/(&#[0-9]+;)/", function ($m) {
+            return mb_convert_encoding($m[1], "UTF-8", "HTML-ENTITIES");
+        }, $input);
     };
-    $plainText = function($input) use ($entitiesToUtf8) {
+    $plainText = function ($input) use ($entitiesToUtf8) {
         return trim(html_entity_decode($entitiesToUtf8(strip_tags($input))));
     };
-    $titlePlainText = function($input) use ($plainText) {
-        return '# '.$plainText($input);
+    $titlePlainText = function ($input) use ($plainText) {
+        return '# ' . $plainText($input);
     };
 
     ob_start();
@@ -2768,8 +2772,8 @@ function phpinfo2array() {
     $input = $matches[1];
     $matches = array();
 
-    if(preg_match_all(
-        '#(?:<h2.*?>(?:<a.*?>)?(.*?)(?:<\/a>)?<\/h2>)|'.
+    if (preg_match_all(
+        '#(?:<h2.*?>(?:<a.*?>)?(.*?)(?:<\/a>)?<\/h2>)|' .
         '(?:<tr.*?><t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
         $input,
         $matches,

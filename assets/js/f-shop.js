@@ -69,42 +69,37 @@
         },
         changeCartItemCount: function (el) {
             var cartItem = el.data('item-id');
-            var productCount = el.val();
+            var productCount = Number(el.val());
 
             //если покупатель вбил неправильное к-во товаров
-            if (!isNumeric(productCount) || productCount <= 0) {
+            if (productCount < 1) {
                 el.val(1);
-                productCount = 1;
-                el.parent().css({'position': 'relative'});
-                el.prev('.count-error').text(fs_message.count_error).fadeIn(400);
             } else {
-                el.prev('.count-error').text('').fadeOut(800);
-            }
+                $.ajax({
+                    url: fShop.ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'fs_change_cart_count',
+                        item_id: cartItem,
+                        count: productCount
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        if (res.success) {
+                            fShop.updateCarts();
 
-            $.ajax({
-                url: fShop.ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'fs_change_cart_count',
-                    item_id: cartItem,
-                    count: productCount
-                },
-                success: function (res) {
-                    console.log(res);
-                    if (res.success) {
-                        fShop.updateCarts();
+                            // создаём событие
+                            let cart_change_count = new CustomEvent("fs_cart_change_count", {
+                                detail: {itemId: cartItem, count: productCount}
+                            });
+                            document.dispatchEvent(cart_change_count);
 
-                        // создаём событие
-                        let cart_change_count = new CustomEvent("fs_cart_change_count", {
-                            detail: {itemId: cartItem, count: productCount}
-                        });
-                        document.dispatchEvent(cart_change_count);
+                            if (el.data('refresh')) location.reload();
+                        }
 
-                        if (el.data('refresh')) location.reload();
                     }
-
-                }
-            });
+                });
+            }
 
 
         },
