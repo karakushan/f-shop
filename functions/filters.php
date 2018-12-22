@@ -97,7 +97,7 @@ function fill_views_column($colname, $post_id)
             echo '<img src="' . esc_url(FS_PLUGIN_URL . 'assets/img/sort. svg') . '" width="40" title="Потяните вверх или вниз, чтобы изменить позицию">';
             break;
         case "fs_id":
-            echo $post_id;
+            echo esc_html($post_id);
             break;
         case "fs_price":
             echo '<span class="fs-price-blank">';
@@ -105,17 +105,16 @@ function fill_views_column($colname, $post_id)
             fs_base_price($post_id, '<br><del>%s %s,</del>');
             break;
         case "fs_vendor_code":
-            echo get_post_meta($post_id, $config->meta['sku'], 1);
+            fs_product_code($post_id);
             break;
         case "fs_stock":
-            $stock = get_post_meta($post_id, $config->meta['remaining_amount'], 1);
             $stock_real = get_post_meta($post_id, $config->meta['remaining_amount'], 1);
-            if ($stock == '' || $stock > 0) {
+            if (fs_aviable_product($post_id)) {
                 $stock = __('in stock', 'f-shop');
             } else {
                 $stock = __('not available', 'f-shop');
             }
-            echo $stock;
+            echo esc_html($stock);
             echo '<span class="fs_stock_real" style="display:none">' . esc_html($stock_real) . '</span>';
             break;
         case "fs_photo":
@@ -150,21 +149,19 @@ function fs_orders_posts_custom_column($colname, $post_id)
         case 'fs_order_amount':
             $amount = get_post_meta($post_id, '_amount', 1);
             $amount = apply_filters('fs_price_format', $amount);
-            echo esc_html($amount) . ' ' . esc_html(fs_currency());
+            echo esc_html($amount . ' ' . fs_currency());
             break;
         case 'fs_user':
             $user = get_post_meta($post_id, '_user', 0);
             $user = $user[0];
             echo '<ul>';
             echo '<li><b>';
-            echo esc_html($user['first_name']) . ' ' . esc_html($user['last_name']);
+            echo esc_html($user['first_name'] . ' ' . $user['last_name']);
             echo '</b></li>';
-            printf('<li><span>%s:</span> %s</li>', esc_html__('phone', 'f-shop'), $user['phone']);
-            printf('<li><span>%s:</span> %s</li>', esc_html__('email', 'f-shop'), $user['email']);
-            printf('<li><span>%s:</span> %s</li>', esc_html__('city', 'f-shop'), $user['city']);
+            printf('<li><span>%s:</span> %s</li>', esc_html__('phone', 'f-shop'), esc_html($user['phone']));
+            printf('<li><span>%s:</span> %s</li>', esc_html__('email', 'f-shop'), esc_html($user['email']));
+            printf('<li><span>%s:</span> %s</li>', esc_html__('city', 'f-shop'), esc_html($user['city']));
             echo '</ul>';
-
-
             break;
     }
 
@@ -174,30 +171,32 @@ function fs_orders_posts_custom_column($colname, $post_id)
 add_action('quick_edit_custom_box', 'shiba_add_quick_edit', 10, 2);
 function shiba_add_quick_edit($column_name, $post_type)
 {
+    global $fs_config;
     if ($column_name == 'fs_price' && $post_type == 'product') {
-        $config = new \FS\FS_Config();
         ?>
-
         <fieldset class="inline-edit-col-left inline-edit-fast-shop">
-            <legend class="inline-edit-legend">Настройки товара</legend>
+            <legend class="inline-edit-legend"><?php esc_html_e('Product Settings', 'f-shop') ?></legend>
             <div class="inline-edit-col">
                 <label>
-                    <span class="title"><?php _e('Price', 'f-shop') ?> (<?php echo fs_currency(); ?>)</span>
-                    <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['price'] ?>"
-                                                         class="fs_price"
-                                                         value="" required></span>
+                    <span class="title"><?php esc_html_e('Price', 'f-shop') ?> (<?php echo fs_currency(); ?>)</span>
+                    <span class="input-text-wrap">
+                        <input type="text" name="<?php echo esc_attr($fs_config->meta['price']) ?>" class="fs_price"
+                               value="" required>
+                    </span>
                 </label>
                 <label>
-                    <span class="title"><?php _e('Vendor code', 'f-shop') ?></span>
-                    <span class="input-text-wrap"><input type="text" name="<?php echo $config->meta['sku'] ?>"
-                                                         class="fs_vendor_code" value=""></span>
+                    <span class="title"><?php esc_html_e('Vendor code', 'f-shop') ?></span>
+                    <span class="input-text-wrap">
+                        <input type="text" name="<?php echo esc_attr($fs_config->meta['sku']) ?>" class="fs_vendor_code"
+                               value="">
+                    </span>
                 </label>
                 <label>
-            <span class="title"><?php _e('Stock in stock', 'f-shop') ?> (<?php _e('units', 'f-shop') ?>
+            <span class="title"><?php esc_html_e('Stock in stock', 'f-shop') ?> (<?php esc_html_e('units', 'f-shop') ?>
                 )</span>
-                    <span class="input-text-wrap"><input type="text"
-                                                         name="<?php echo $config->meta['remaining_amount'] ?>"
-                                                         class="fs_stock" value=""></span>
+                    <span class="input-text-wrap">
+                        <input type="text" name="<?php echo esc_attr($fs_config->meta['remaining_amount']) ?>"
+                               class="fs_stock" value=""></span>
                 </label>
             </div>
         </fieldset>

@@ -163,11 +163,11 @@ class FS_Export_Class
         if ($admin_notices) {
             if ($save_file) {
                 add_action('admin_notices', function () {
-                    echo '<div class="updated is-dismissible"><p>' . __('Update/create database was successful!', 'f-shop') . '</p></div>';
+                    echo '<div class="updated is-dismissible"><p>' . esc_html__('Update/create database was successful!', 'f-shop') . '</p></div>';
                 });
             } else {
                 add_action('admin_notices', function () {
-                    echo '<div class="notice notice-warning is-dismissible"><p>' . __('An error occurred during the process of database updates!', 'f-shop') . '</p></div>';
+                    echo '<div class="notice notice-warning is-dismissible"><p>' . esc_html__('An error occurred during the process of database updates!', 'f-shop') . '</p></div>';
                 });
             }
         }

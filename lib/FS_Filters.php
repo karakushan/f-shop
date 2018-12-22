@@ -289,7 +289,7 @@ class FS_Filters
      */
     public function attr_group_filter($group, $type = 'option', $option_default = 'Выберите значение')
     {
-//		получаем группу атрибутов
+        //		получаем группу атрибутов
         $fs_atributes = get_terms(array(
             'parent' => $group,
             'taxonomy' => 'product-attributes',
@@ -300,15 +300,13 @@ class FS_Filters
         parse_str($arr_url, $url);
 
         if ($type == 'option') {
-            echo ' <select name="attributes" data-fs-action="filter"><option value="' . remove_query_arg(array(
-                    'attributes'
-                )) . '"> ' . $option_default . '</option> ';
+            echo ' <select name="attributes" data-fs-action="filter"><option value="' . esc_attr(remove_query_arg(array('attributes'))) . '"> ' . esc_html($option_default) . '</option> ';
             foreach ($fs_atributes as $key => $att) {
                 $redirect_url = add_query_arg(array(
                     'fs_filter' => wp_create_nonce('f-shop'),
                     'attributes' => array($att->slug => $att->term_id)
                 ));
-                echo ' <option  value="' . esc_url($redirect_url) . '" ' . selected($url['attributes'][$att->slug], $att->term_id, 0) . '> ' . $att->name . '</option> ';
+                echo '<option  value="' . esc_url($redirect_url) . '" ' . selected($url['attributes'][$att->slug], $att->term_id, 0) . '> ' . esc_html($att->name) . '</option> ';
             }
             echo '</select> ';
         }
@@ -320,7 +318,7 @@ class FS_Filters
                     'attributes' => array($att->slug => $att->term_id)
                 ));
 
-                echo ' <li><a href="' . esc_url($redirect_url) . '" data-fs-action="filter"> ' . $att->name . '</a></li> ';
+                echo ' <li><a href="' . esc_url($redirect_url) . '" data-fs-action="filter"> ' . esc_html($att->name) . '</a></li> ';
             }
             echo '</ul> ';
         }

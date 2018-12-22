@@ -260,7 +260,7 @@ class FS_Taxonomies_Class
                 echo '<label for="' . esc_attr($id) . '">' . esc_attr($field['name']) . '</label>';
                 $form->render_field($name, $field['type'], $field['args']);
                 if (!empty($field['help'])) {
-                    printf('<p class="description">%s</p>', $field['help']);
+                    printf('<p class="description">%s</p>', esc_html($field['help']));
                 }
                 echo '</div>';
             }
@@ -450,7 +450,7 @@ class FS_Taxonomies_Class
         return $term_id;
     }
 
-//Получаем списком все категории продуктов
+    // List all product categories
     public function get_product_terms($terms = 'catalog')
     {
         $args = array(
@@ -479,21 +479,16 @@ class FS_Taxonomies_Class
         );
         $myterms = get_terms(array($terms), $args);
         if ($myterms) {
-            echo "
-<ul>";
+            echo "<ul>";
             foreach ($myterms as $term) {
                 $link = get_term_link($term->term_id);
-                $class = "";
+                $class = "no-active";
                 if (strripos($link, $_SERVER['REQUEST_URI'])) {
-                    $class = 'class="active"';
+                    $class = 'active';
                 }
-                echo "
-    <li $class><a href=\"$link\">$term->name</a></li>
-    ";
+                echo '<li class="' . esc_attr($class) . '"><a href="' . esc_url($link) . '">' . esc_html($term->name) . '</a></li> ';
             }
-            echo "
-</ul>";
-
+            echo "</ul>";
         }
 
     }
@@ -521,7 +516,7 @@ class FS_Taxonomies_Class
             foreach ($terms as $term) {
                 $delete = wp_delete_term(intval($term->term_id), $taxonomy);
                 if (is_wp_error($delete)) {
-                    echo $delete->get_error_message();
+                    echo esc_html($delete->get_error_message());
                     continue;
                 }
             }
