@@ -363,7 +363,6 @@ class FS_Product_Class
     function the_cost($format = '')
     {
         $format = !empty($format) ? $format : $this->price_format;
-
         printf($format, esc_html($this->cost_display), esc_html($this->currency));
     }
 

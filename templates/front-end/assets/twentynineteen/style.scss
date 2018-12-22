@@ -144,7 +144,34 @@ article {
       padding: 0.5em;
       border: 1px solid #eee;
       word-break: break-all;
+
+      img {
+        width: 150px;
+        max-width: 100%;
+        height: auto;
+      }
     }
+  }
+}
+
+.entry .entry-content >.fs-checkout-form {
+  max-width: 100%;
+  .form-group {
+    margin-bottom: 20px;
+  }
+  input {
+    width: 100%;
+    border: 1px solid #eeeeee;
+  }
+  textarea {
+    height: 150px;
+  }
+  select {
+    width: 100%;
+    border: 1px solid #eeeeee;
+    padding: 0.36rem 0.66rem;
+    font-weight: 400;
+    line-height: 1.8;
   }
 }
 

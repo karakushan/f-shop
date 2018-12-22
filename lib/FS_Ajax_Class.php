@@ -14,6 +14,8 @@ class FS_Ajax_Class
 
     function __construct()
     {
+
+
         //  обработка формы заказа
         add_action('wp_ajax_order_send', array($this, 'order_send_ajax'));
         add_action('wp_ajax_nopriv_order_send', array($this, 'order_send_ajax'));
@@ -316,7 +318,7 @@ class FS_Ajax_Class
     function order_send_ajax()
     {
         global $fs_config, $wpdb;
-        if (FS_Config::verify_nonce()) {
+        if (!FS_Config::verify_nonce()) {
             wp_send_json_error(array('msg' => __('Failed verification of nonce form', 'f-shop')));
         }
         $product_class = new FS_Product_Class();
@@ -496,14 +498,16 @@ class FS_Ajax_Class
      */
     public function fs_addto_wishlist()
     {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(array('msg' => __('Security check failed', 'f-shop')));
+        }
         $product_id = (int)$_REQUEST['product_id'];
         $_SESSION['fs_wishlist'][$product_id] = $product_id;
 
-        echo json_encode(array(
+        wp_send_json_success(array(
             'body' => fs_frontend_template('wishlist/wishlist'),
             'status' => true
         ));
-        exit();
     }
 
     public function fs_del_wishlist_pos()
@@ -581,19 +585,25 @@ class FS_Ajax_Class
      */
     function fs_show_shipping_callback()
     {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(array('msg' => __('Security check failed', 'f-shop')));
+        }
         $term_id = intval($_POST['delivery']);
         $delivery_cost_clean = floatval(get_term_meta($term_id, '_fs_delivery_cost', 1));
         $delivery_cost = sprintf('%s <span>%s</span>', apply_filters('fs_price_format', $delivery_cost_clean), fs_currency());
         $total_amount = sprintf('%s <span>%s</span>', apply_filters('fs_price_format', fs_get_total_amount($delivery_cost_clean)), fs_currency());
         $total = $delivery_cost_clean + fs_get_cart_cost();
 
-        echo json_encode(array(
-            'show' => get_term_meta($term_id, '_fs_delivery_address', 1),
-            'taxes' => fs_taxes_list(array('echo' => false, 'wrapper' => false), $total),
+        ob_start();
+        fs_taxes_list(array('wrapper' => false), $total);
+        $taxes_out = ob_get_clean();
+
+        wp_send_json_success(array(
+            'show' => get_term_meta($term_id, '_fs_delivery_address', 1) ? 1 : 0,
+            'taxes' => $taxes_out,
             'price' => $delivery_cost,
             'total' => $total_amount,
             'html' => fs_frontend_template('checkout/shipping-fields')
         ));
-        wp_die();
     }
 } 

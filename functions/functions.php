@@ -2616,12 +2616,13 @@ function fs_list_variations($product_id = 0, $args = array())
  *
  * @param array $product
  *
+ * @param int $item_id
  * @return \FS\FS_Product_Class
  */
-function fs_set_product($product)
+function fs_set_product($product, $item_id = 0)
 {
     $product_class = new FS\FS_Product_Class();
-    $product_class->set_product($product);
+    $product_class->set_product($product, $item_id);
 
     return $product_class;
 }

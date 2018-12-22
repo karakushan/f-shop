@@ -92,6 +92,26 @@ article.product .fs-thumbnail-meta {
       padding: 0.5em;
       border: 1px solid #eee;
       word-break: break-all; }
+      .fs-cart-listing table td img, .fs-cart-listing table th img {
+        width: 150px;
+        max-width: 100%;
+        height: auto; }
+
+.entry .entry-content > .fs-checkout-form {
+  max-width: 100%; }
+  .entry .entry-content > .fs-checkout-form .form-group {
+    margin-bottom: 20px; }
+  .entry .entry-content > .fs-checkout-form input {
+    width: 100%;
+    border: 1px solid #eeeeee; }
+  .entry .entry-content > .fs-checkout-form textarea {
+    height: 150px; }
+  .entry .entry-content > .fs-checkout-form select {
+    width: 100%;
+    border: 1px solid #eeeeee;
+    padding: 0.36rem 0.66rem;
+    font-weight: 400;
+    line-height: 1.8; }
 
 @media only screen and (min-width: 1168px) {
   .entry .entry-content > .fs-cart-listing {
