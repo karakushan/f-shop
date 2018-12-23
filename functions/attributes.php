@@ -71,43 +71,50 @@ function fs_get_attribute( $attr_id, $product_id = 0, $args = array() ) {
 /**
  * Получает термины постов выводимых на текущей странице, нужно указать айди родительского термина
  *
- * @param $parent_term_id
+ * @param int $group_id
+ *
+ * @param array $args
  *
  * @return array массив объектов поста
  */
-function fs_current_screen_attributes( $parent_term_id = 0 ) {
+function fs_current_screen_attributes( $group_id = 0, $args = array() ) {
 	global $fs_config;
-	if ( ! $parent_term_id ) {
-		$parent_term_id = get_queried_object_id();
-	}
-
-	$posts = get_posts( array(
-		'posts_per_page' => - 1,
-		'fields'         => 'ids',
-		'tax_query'      => array(
-			'taxonomy' => $fs_config->data['product_taxonomy'],
-			'field'    => 'term_id',
-			'terms'    => $parent_term_id
-		)
-
+	$atts = [];
+	$args = wp_parse_args( $args, array(
+		'taxonomy'   => $fs_config->data['product_att_taxonomy'],
+		'parent'     => $group_id,
+		'hide_empty' => false
 	) );
-	wp_reset_postdata();
-
-	$terms = [];
-	foreach ( $posts as $post_data ) {
-		$terms_post = get_the_terms( $post_data->ID, $fs_config->data['product_att_taxonomy'] );
-		if ( $terms_post ) {
-			foreach ( $terms_post as $term_post ) {
-				$terms[] = $term_post->parent;
+	if ( is_tax() ) {
+		global $wp_query;
+		$post_args                    = $wp_query->query;
+		$post_args ['posts_per_page'] = - 1;
+		$post_args ['post_type']      = 'product';
+		$posts                        = get_posts( $post_args );
+		if ( $posts ) {
+			foreach ( $posts as $post ) {
+				$post_terms = get_the_terms( $post, $fs_config->data['product_att_taxonomy'] );
+				if ( $post_terms ) {
+					foreach ( $post_terms as $post_term ) {
+						if ( $post_term->parent != $group_id ) {
+							continue;
+						}
+						$atts[] = $post_term->term_id;
+					}
+				}
+//				fs_debug_data( $post_terms, '$post_terms', 'print_r' );
+			}
+			if ( count( $atts ) ) {
+				$atts            = array_unique( $atts );
+				$args['include'] = $atts;
+				$atts            = get_terms( $args );
 			}
 		}
-
-
+	} else {
+		$atts = get_terms( $args );
 	}
 
-	$terms = array_unique( $terms );
-
-	return $terms;
+	return $atts;
 }
 
 // select фильтр сортировки по таксономии
@@ -185,7 +192,8 @@ function fs_attr_filter( $group_id, $args = array() ) {
 		'after_input'         => '',
 		'label_class'         => 'checkLabel',
 		'taxonomy'            => $fs_config->data['product_att_taxonomy'],
-		'type'                => 'normal'
+		'type'                => 'normal',
+		'current_screen'      => false
 		// тип отображения, по умолчанию normal - обычные чекбоксы (color - квадратики с цветом, image - изображения)
 	);
 	$args    = wp_parse_args( $args, $default );
@@ -200,11 +208,17 @@ function fs_attr_filter( $group_id, $args = array() ) {
 
 	$container_class = $args['container_class'] . ' fs-type-' . $args['type'];
 
-	if ( ! $args['childs'] ) {
-		$terms = get_terms( $terms_args );
+	// Если указано выводить свойства только для текущей категории
+	if ( $args['current_screen'] ) {
+		$terms = fs_current_screen_attributes( $group_id );
 	} else {
-		$terms = fs_get_taxonomy_hierarchy( $terms_args );
+		if ( ! $args['childs'] ) {
+			$terms = get_terms( $terms_args );
+		} else {
+			$terms = fs_get_taxonomy_hierarchy( $terms_args );
+		}
 	}
+
 
 	$arr_url = urldecode( $_SERVER['QUERY_STRING'] );
 	parse_str( $arr_url, $url );
