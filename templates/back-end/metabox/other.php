@@ -6,8 +6,7 @@
            value="<?php echo esc_attr(fs_product_code()); ?>" id="price">
 </div>
 <div class="fs-field-row clearfix">
-    <label for="fs_remaining_amount"><?php esc_html_e('Stock in stock', 'f-shop') ?>
-        <span><?php esc_html_e('unit', 'f-shop'); ?></span></label>
+    <label for="fs_remaining_amount"><?php esc_html_e('Stock in stock', 'f-shop') ?></label>
     <input type="text" id="fs_remaining_amount" name="fs_remaining_amount"
            value="<?php echo esc_attr(fs_remaining_amount()) ?>">
     <div class="fs-help"><?php esc_html_e('Enter "0" if stock is exhausted. An empty field means inventory control for the item.

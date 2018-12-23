@@ -22,7 +22,7 @@ class FS_Config
     public static $text_domain = 'f-shop';
     public static $pages = array();
 
-    protected static $nonce_field = 'fs-secret';
+    protected static $nonce_field = 'fs_secret';
 
     /**
      * FS_Config constructor.

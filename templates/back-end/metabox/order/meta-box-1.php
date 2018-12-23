@@ -30,11 +30,11 @@
     </tr>
     <tr>
         <th><?php esc_html_e('Delivery service address', 'f-shop') ?>:</th>
-        <td><?php echo $delivery['secession'] ?></td>
+        <td><?php echo esc_html($delivery['secession']) ?></td>
     </tr>
     <tr>
         <th><?php esc_html_e('Delivery address', 'f-shop') ?></th>
-        <td><?php echo $delivery['adress'] ?></td>
+        <td><?php echo esc_html($delivery['adress']) ?></td>
     </tr>
     <tr>
         <th><?php esc_html_e('Payment method', 'f-shop') ?></th>
@@ -42,7 +42,7 @@
     </tr>
     <tr>
         <th><?php esc_html_e('Comment to the order', 'f-shop') ?></th>
-        <td><?php echo get_post_meta($post->ID, '_comment', 1) ?></td>
+        <td><?php echo esc_html(get_post_meta($post->ID, '_comment', 1)) ?></td>
     </tr>
     </tbody>
 </table>

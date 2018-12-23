@@ -692,10 +692,11 @@ function fs_get_first_variation($product_id, $return = 'all')
  *
  * @return mixed|void
  */
-function fs_add_to_cart($product_id = 0, $label = '', $args = array())
+function fs_add_to_cart($product_id = 0, $label = null, $args = array())
 {
     global $fs_config;
     $product_id = fs_get_product_id($product_id);
+    $label = is_null($label) ? __('Add to cart', 'f-shop') : $label;
     // Параметры по умолчанию
     $args_default = array(
         'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader" width="16">',
@@ -997,7 +998,7 @@ function fs_cart_quantity($item_id, $value, $args = array())
     $value = intval($value);
     $args = wp_parse_args($args, array(
         'wrapper' => 'div',
-        'refresh' => false,
+        'refresh' => true,
         'wrapper_class' => 'fs-qty-wrapper',
         'position' => '%minus% %input% %pluss%  ',
         'pluss' => array('class' => sanitize_html_class('fs-pluss'), 'content' => '+'),
@@ -1246,8 +1247,7 @@ function fs_price_max($filter = true)
     global $wpdb;
     $config = new FS\FS_Config();
     $meta_field = $config->meta['price'];
-    $query = $wpdb->prepare("SELECT (meta_value + 0.01 ) AS meta_values FROM %s WHERE meta_key='%s' ORDER BY meta_values DESC ", $wpdb->postmeta, $meta_field);
-    $meta_value_max = $wpdb->get_var($query);
+    $meta_value_max = $wpdb->get_var($wpdb->prepare("SELECT (meta_value + 0.01 ) AS meta_values FROM %s WHERE meta_key='%s' ORDER BY meta_values DESC ", $wpdb->postmeta, $meta_field));
     $meta_value_max = !is_null($meta_value_max) ? (float)$meta_value_max : 20000;
     if ($filter) {
         $max = apply_filters('fs_price_format', $meta_value_max);
@@ -2616,12 +2616,13 @@ function fs_list_variations($product_id = 0, $args = array())
  *
  * @param array $product
  *
+ * @param int $item_id
  * @return \FS\FS_Product_Class
  */
-function fs_set_product($product)
+function fs_set_product($product, $item_id = 0)
 {
     $product_class = new FS\FS_Product_Class();
-    $product_class->set_product($product);
+    $product_class->set_product($product, $item_id);
 
     return $product_class;
 }
@@ -2742,4 +2743,57 @@ function fs_reset_filter_link($base_url = '')
         $base_url = get_post_type_archive_link($fs_config->data['post_type']);
     }
     echo esc_url($base_url);
+}
+
+function phpinfo2array()
+{
+    $entitiesToUtf8 = function ($input) {
+        // http://php.net/manual/en/function.html-entity-decode.php#104617
+        return preg_replace_callback("/(&#[0-9]+;)/", function ($m) {
+            return mb_convert_encoding($m[1], "UTF-8", "HTML-ENTITIES");
+        }, $input);
+    };
+    $plainText = function ($input) use ($entitiesToUtf8) {
+        return trim(html_entity_decode($entitiesToUtf8(strip_tags($input))));
+    };
+    $titlePlainText = function ($input) use ($plainText) {
+        return '# ' . $plainText($input);
+    };
+
+    ob_start();
+    phpinfo(-1);
+
+    $phpinfo = array('phpinfo' => array());
+
+    // Strip everything after the <h1>Configuration</h1> tag (other h1's)
+    if (!preg_match('#(.*<h1[^>]*>\s*Configuration.*)<h1#s', ob_get_clean(), $matches)) {
+        return array();
+    }
+
+    $input = $matches[1];
+    $matches = array();
+
+    if (preg_match_all(
+        '#(?:<h2.*?>(?:<a.*?>)?(.*?)(?:<\/a>)?<\/h2>)|' .
+        '(?:<tr.*?><t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
+        $input,
+        $matches,
+        PREG_SET_ORDER
+    )) {
+        foreach ($matches as $match) {
+            $fn = strpos($match[0], '<th') === false ? $plainText : $titlePlainText;
+            if (strlen($match[1])) {
+                $phpinfo[$match[1]] = array();
+            } elseif (isset($match[3])) {
+                $keys1 = array_keys($phpinfo);
+                $phpinfo[end($keys1)][$fn($match[2])] = isset($match[4]) ? array($fn($match[3]), $fn($match[4])) : $fn($match[3]);
+            } else {
+                $keys1 = array_keys($phpinfo);
+                $phpinfo[end($keys1)][] = $fn($match[2]);
+            }
+
+        }
+    }
+
+    return $phpinfo;
 }

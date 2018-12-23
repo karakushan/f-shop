@@ -41,7 +41,7 @@
     <tfoot>
     <tr>
         <td colspan="6"><?php esc_html_e('Total cost', 'f-shop'); ?></td>
-        <td colspan="1"><?php echo $amount ?></td>
+        <td colspan="1"><?php echo esc_html($amount) ?></td>
     </tr>
     </tfoot>
 </table>

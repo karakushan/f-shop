@@ -1,9 +1,15 @@
 (function ($) {
     window.fShop = {
         ajaxurl: FastShopData.ajaxurl,
+        nonce: FastShopData.fs_nonce,
         langs: FastShopData.lang,
         getLang: function (string) {
             return FastShopData.lang[string];
+        },
+        ajaxData: function (action, data) {
+            data.action = action;
+            data.fs_secret = this.nonce
+            return data;
         },
         strReplace: function (string, obj) {
             for (var x in obj) {
@@ -69,42 +75,37 @@
         },
         changeCartItemCount: function (el) {
             var cartItem = el.data('item-id');
-            var productCount = el.val();
+            var productCount = Number(el.val());
 
             //если покупатель вбил неправильное к-во товаров
-            if (!isNumeric(productCount) || productCount <= 0) {
+            if (productCount < 1) {
                 el.val(1);
-                productCount = 1;
-                el.parent().css({'position': 'relative'});
-                el.prev('.count-error').text(fs_message.count_error).fadeIn(400);
             } else {
-                el.prev('.count-error').text('').fadeOut(800);
-            }
+                $.ajax({
+                    url: fShop.ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'fs_change_cart_count',
+                        item_id: cartItem,
+                        count: productCount
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        if (res.success) {
+                            fShop.updateCarts();
 
-            $.ajax({
-                url: fShop.ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'fs_change_cart_count',
-                    item_id: cartItem,
-                    count: productCount
-                },
-                success: function (res) {
-                    console.log(res);
-                    if (res.success) {
-                        fShop.updateCarts();
+                            // создаём событие
+                            let cart_change_count = new CustomEvent("fs_cart_change_count", {
+                                detail: {itemId: cartItem, count: productCount}
+                            });
+                            document.dispatchEvent(cart_change_count);
 
-                        // создаём событие
-                        let cart_change_count = new CustomEvent("fs_cart_change_count", {
-                            detail: {itemId: cartItem, count: productCount}
-                        });
-                        document.dispatchEvent(cart_change_count);
+                            if (el.data('refresh')) location.reload();
+                        }
 
-                        if (el.data('refresh')) location.reload();
                     }
-
-                }
-            });
+                });
+            }
 
 
         },
@@ -204,7 +205,6 @@
 
 
         var productObject = {
-            "action": 'add_to_cart',
             "attr": attr,
             "count": count,
             "variation": variation,
@@ -212,8 +212,8 @@
         }
 
         jQuery.ajax({
-            url: FastShopData.ajaxurl,
-            data: productObject,
+            url: fShop.ajaxurl,
+            data: fShop.ajaxData('add_to_cart', productObject),
             type: "POST",
             beforeSend: function () {
                 // создаём событие
@@ -374,51 +374,44 @@
         }
     });
 
-// Показывает поля адреса при выборе доставки по адресу
+    // Shows address fields when choosing delivery to
     jQuery(document).on('change', '[name="fs_delivery_methods"]', function (event) {
-        var deliveryId = jQuery(this).val();
-        if (!deliveryId.length) deliveryId = 0;
-
-        var parameters = {
-            action: 'fs_show_shipping',
-            delivery: deliveryId
-        };
-        jQuery.ajax({
-            type: 'POST',
-            url: FastShopData.ajaxurl,
-            data: parameters,
-            success: function (result) {
-                try {
-                    var json = JSON.parse(result);
-                    if (json.price) {
-                        jQuery("[data-fs-element=\"delivery-cost\"]").html(json.price);
-                        jQuery("[data-fs-element=\"total-amount\"]").html(json.total);
-                        jQuery("[data-fs-element=\"taxes-list\"]").replaceWith(json.taxes);
-                    }
-                    if (json.show) {
-                        jQuery("#fs-shipping-fields")
-                            .html(json.html)
-                            .addClass('active')
-                            .fadeIn();
+        let deliveryId = jQuery(this).val();
+        if (deliveryId.length)
+            jQuery.ajax({
+                type: 'POST',
+                url: fShop.ajaxurl,
+                data: fShop.ajaxData('fs_show_shipping', {delivery: deliveryId}),
+                success: function (result) {
+                    if (result.success) {
+                        if (result.data.price) {
+                            jQuery("[data-fs-element=\"delivery-cost\"]").html(result.data.price);
+                            jQuery("[data-fs-element=\"total-amount\"]").html(result.data.total);
+                            jQuery("[data-fs-element=\"taxes-list\"]").replaceWith(result.data.taxes);
+                        }
+                        if (result.data.show) {
+                            jQuery("#fs-shipping-fields")
+                                .html(result.data.html)
+                                .addClass('active')
+                                .fadeIn();
+                        } else {
+                            jQuery("#fs-shipping-fields")
+                                .html('')
+                                .removeClass('active')
+                                .fadeOut();
+                        }
                     } else {
                         jQuery("#fs-shipping-fields")
                             .html('')
                             .removeClass('active')
                             .fadeOut();
+                        if (result.data.msg) {
+                            console.log(result.data.msg);
+                        }
                     }
-                } catch (e) {
-                    jQuery("#fs-shipping-fields")
-                        .html('')
-                        .removeClass('active')
-                        .fadeOut();
-                    console.log('Ошибка ' + e.name + ":" + e.message + "\n" + e.stack);
+
                 }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
-            }
-        });
+            });
 
 
     });
@@ -932,8 +925,9 @@
         var product_name = jQuery(this).data('name');
         var curentBlock = jQuery(this);
         jQuery.ajax({
-            url: FastShopData.ajaxurl,
-            data: {action: 'fs_addto_wishlist', product_id: product_id},
+            type: 'POST',
+            url: fShop.ajaxurl,
+            data: fShop.ajaxData('fs_addto_wishlist', {product_id: product_id}),
             beforeSend: function () {
                 curentBlock.find(".fs-atc-preloader").fadeIn();
                 // генерируем событие добавления в список желаний
@@ -949,20 +943,20 @@
             }
         })
             .done(function (result) {
-                var ajax_data = jQuery.parseJSON(result);
-                jQuery('[data-fs-element="whishlist-widget"]').html(ajax_data.body);
-                // генерируем событие добавления в список желаний
-                var add_to_wishlist = new CustomEvent("fs_add_to_wishlist", {
-                    detail: {
-                        id: product_id,
-                        name: product_name,
-                        button: curentBlock,
-                        image: curentBlock.data('image'),
-                        ajax_data: ajax_data
-                    }
-                });
-                document.dispatchEvent(add_to_wishlist);
-
+                if (result.success) {
+                    jQuery('[data-fs-element="whishlist-widget"]').html(result.data.body);
+                    // генерируем событие добавления в список желаний
+                    var add_to_wishlist = new CustomEvent("fs_add_to_wishlist", {
+                        detail: {
+                            id: product_id,
+                            name: product_name,
+                            button: curentBlock,
+                            image: curentBlock.data('image'),
+                            ajax_data: result.data
+                        }
+                    });
+                    document.dispatchEvent(add_to_wishlist);
+                }
                 curentBlock.find(".fs-atc-preloader").fadeOut();
 
             });
