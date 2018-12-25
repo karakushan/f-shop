@@ -96,7 +96,7 @@ class FS_Attribute_Widget extends \WP_Widget {
 		}
 		do_action( 'fs_attr_filter', $instance['fs_att_group'], array(
 			'type'           => $type,
-			'current_screen' => intval( $instance['fs_screen_atts'] )
+			'current_screen' => ! empty( $instance['fs_screen_atts'] ) ? true : false
 		) );
 		echo $args['after_widget'];
 	}

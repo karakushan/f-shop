@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class FS_Orders_Class {
 	public $post_type = 'orders';
-	public static $order_statuses = [];
+	public $order_statuses = [];
 	public $last_order_id = null;
 
 
@@ -317,8 +317,8 @@ Good luck!', 'f-shop' );
 	public function get_order_status( $order_id ) {
 		$post_status_id = get_post_status( $order_id );
 
-		if ( ! empty( self::$order_statuses[ $post_status_id ]['name'] ) ) {
-			$status = self::$order_statuses[ $post_status_id ]['name'];
+		if ( ! empty( $this->order_statuses[ $post_status_id ]['name'] ) ) {
+			$status = $this->order_statuses[ $post_status_id ]['name'];
 		} else {
 			$status = __( 'The order status is not defined', 'f-shop' );
 		}

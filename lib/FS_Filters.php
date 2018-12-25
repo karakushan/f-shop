@@ -49,7 +49,7 @@ class FS_Filters
             }
             $query->set('post_type', 'product');
         }
-        if (!empty($_GET['orderby'] && $post_type_product && $pagenow == 'edit.php')) {
+        if (!empty($_GET['orderby']) && $post_type_product && $pagenow == 'edit.php') {
             switch ($_GET['orderby']) {
                 //	сортируем по цене
                 case "fs_price":

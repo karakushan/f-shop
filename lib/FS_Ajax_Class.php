@@ -112,7 +112,7 @@ class FS_Ajax_Class
         } else {
             // иначе возвращаем основную галерею товара
             $images_class = new FS_Images_Class();
-            $gallery .= $images_class->fs_galery_list($product_id);
+            $gallery .= $images_class->list_gallery($product_id);
         }
 
         if (!empty($gallery)) {

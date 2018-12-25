@@ -144,7 +144,7 @@ class FS_Export_Class
                     }
                 }
                 /*yml_catalog->shop->offers->offer->picture*/
-                $gallery_images = $gallery->fs_galery_images($post->ID);
+                $gallery_images = $gallery->gallery_images_url($post->ID);
                 if (!empty($gallery_images)) {
                     foreach ($gallery_images as $key => $gallery_image) {
                         if (is_numeric($gallery_image)) {

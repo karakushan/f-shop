@@ -3,120 +3,128 @@
 namespace FS;
 
 /**
- * Класс работы с изображениями магазина
+ * Store Image Class
  */
-class FS_Images_Class
-{
-    protected $config;
-    public $image_big_width = 9999;// ширина большого изображения слайдера
-    public $image_big_height = 330;// высота большого изображения слайдера
-    public $image_small_width = 9999; // ширина маленького изображения слайдера
-    public $image_small_height = 108;// высота маленького изображения слайдера
-    public $image_big_name = 'fs_gallery_big';// название большого изображения слайдера
-    public $image_small_name = 'fs_gallery_small';// название маленького изображения слайдера
-    public $image_crop = false;// использовать мягкое кадрирование
+class FS_Images_Class {
+	function __construct() {
+	}
 
-    function __construct()
-    {
-        $this->config = new FS_Config();
-    }
+	/**
+	 * @param int $product_id
+	 *
+	 * @return bool|string
+	 */
+	public function list_gallery( $product_id = 0 ) {
+		$product_id = fs_get_product_id( $product_id );
+		$gallery    = $this->gallery_images_url( $product_id, true, 'full' );
+		$images_n   = '';
+		$alt        = get_the_title( $product_id );
 
-    /**
-     * @param int $post_id
-     *
-     * @return bool|string
-     */
-    public function fs_galery_list($post_id = 0)
-    {
-        global $post;
-        $product_class = new FS_Product_Class();
-        $variation = $product_class->get_product_variations($post_id);
 
-        $post_id = empty($post_id) ? $post->ID : $post_id;
-        $width = fs_option('gallery_img_width', 300);
-        $height = fs_option('gallery_img_height', 400);
-        $image_placeholder = fs_option('image_placeholder', 'holder.js/' . $width . 'x' . $height);
-        $galerys = $this->fs_galery_images($post_id);
-        $images_n = '';
-        $alt = get_the_title($post_id);
+		if ( $gallery ) {
+			foreach ( $gallery as $image ) {
+				$images_n .= "<li data-thumb=\"$image\"  data-src=\"$image\" style=\"background_image( $image )\">";
+				$images_n .= "<a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $product_id ) . "\">";
+				$images_n .= "<img src=\"$image\" alt=\"$alt\" itemprop=\"image\" data-zoom-image=\"$image\"></a></li>";
+			}
+		}
 
-        if (!empty($variation[0]['gallery'])) {
-            $galerys = $variation[0]['gallery'];
-        }
+		return apply_filters( 'fs_galery_list', $images_n, $product_id );
+	}
 
-        if ($galerys) {
-            foreach ($galerys as $atach_id) {
-                $image = wp_get_attachment_image_src($atach_id, 'full');
-                if (!$image) {
-                    continue;
-                }
-                $image = $image[0];
-                $images_n .= "<li data-thumb=\"$image\"  data-src=\"$image\" style=\"background_image( $image )\"><a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title($post_id) . "\"><img src=\"$image\" alt=\"$alt\" itemprop=\"image\" data-zoom-image=\"$image\"></a></li>";
-            }
-        }
+	/**
+	 * @param integer $post_id - id записи
+	 * @param array $args - массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
+	 */
+	public function lightslider( $post_id = 0, $args = array() ) {
+		$default = array(
+			"gallery"   => true,
+			"item"      => 1,
+			"vertical"  => false,
+			"thumbItem" => 3,
+			"prevHtml"  => '',
+			"nextHtml"  => ''
+		);
+		$args    = wp_parse_args( $args, $default );
+		echo "<script>";
+		echo "var fs_lightslider_options=" . json_encode( $args );
+		echo "</script>";
+		echo "<ul id=\"product_slider\">";
+		echo $this->list_gallery( $post_id );
+		echo "</ul>";
+	}
 
-        if (empty($images_n)) {
-            $images_n .= "<li data-thumb=\"$image_placeholder\" data-src=\"$image_placeholder\" style=\"background_image($image_placeholder)\"><img src=\"$image_placeholder\" alt=\"" . get_the_title($post_id) . "\" itemprop=\"image\" width=\"100%\" data-zoom-image=\"$image_placeholder\"></li>";
-        }
+	/**
+	 * Returns an array of product gallery images
+	 *
+	 * @param int $product_id
+	 *
+	 * @param bool $thumbnail
+	 *
+	 * @return mixed
+	 */
+	public function get_gallery( $product_id = 0, $thumbnail = true ) {
+		$fs_config  = new FS_Config();
+		$product_id = fs_get_product_id( $product_id );
+		$gallery    = get_post_meta( $product_id, $fs_config->get_meta( 'gallery' ), false );
+		$gallery    = array_shift( $gallery );
+		if ( ! $gallery ) {
+			$gallery = [];
+		}
+		if ( has_post_thumbnail( $product_id ) && $thumbnail ) {
+			array_unshift( $gallery, get_post_thumbnail_id( $product_id ) );
+		}
 
-        return apply_filters('fs_galery_list', $images_n, $post_id);
-    }
+		return array_unique( $gallery );
 
-    /**
-     * @param integer $post_id - id записи
-     * @param array $args - массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
-     */
-    public function lightslider($post_id = 0, $args = array())
-    {
-        $default = array(
-            "gallery" => true,
-            "item" => 1,
-            "vertical" => false,
-            "thumbItem" => 3,
-            "prevHtml" => '',
-            "nextHtml" => ''
-        );
-        $args = wp_parse_args($args, $default);
-        echo "<script>";
-        echo "var fs_lightslider_options=" . json_encode($args);
-        echo "</script>";
-        echo "<ul id=\"product_slider\">";
-        echo $this->fs_galery_list($post_id);
-        echo "</ul>";
-    }
+	}
 
-    /**
-     * получаем url изображений галереи в массиве
-     *
-     * @param  integer $post_id - id записи
-     * @param  bool $thumbnail - включать ли в галерею установленную миниатюру поста
-     *
-     * @return array          список id вложений в массиве
-     */
-    public function fs_galery_images($post_id = 0, $thumbnail = true)
-    {
+	/**
+	 * получаем url изображений галереи в массиве
+	 *
+	 * @param  integer $product_id - id записи
+	 * @param  bool $thumbnail - включать ли в галерею установленную миниатюру поста
+	 * @param string $size
+	 *
+	 * @return array          список id вложений в массиве
+	 */
+	public function gallery_images_url( $product_id = 0, $thumbnail = true, $size = 'full' ) {
+		$product_id     = fs_get_product_id( $product_id );
+		$gallery        = $this->get_gallery( $product_id, $thumbnail );
+		$gallery_images = [];
+		if ( $gallery ) {
+			foreach ( $gallery as $key => $image ) {
+				$gallery_images[ $image ] = wp_get_attachment_image_url( $image, $size );
+			}
+		}
 
-        $gallery_img = array();
-        $post_id = fs_get_product_id($post_id);
-        $gallery = get_post_meta($post_id, 'fs_galery', false);
-        $thumb_id = intval(get_post_thumbnail_id($post_id));
+		return apply_filters( 'fs_galery_images', $gallery_images, $product_id );
+	}
 
-        // добавляем в галерею изображение миниатюры поста, конечно если $thumbnail верно
-        if ($thumb_id && $thumbnail == true) {
-            $gallery_img[] = $thumb_id;
-        }
-        if ($gallery) {
-            $images = !empty($gallery[0]) ? $gallery[0] : array();
-            if ($images) {
-                foreach ($images as $key => $image) {
-                    $gallery_img[] = $image;
-                }
-            }
-        }
 
-        $gallery_img = array_unique($gallery_img);
+	/**
+	 * Updates the gallery by adding $ attach_id as a new image
+	 *
+	 * @param int $product_id
+	 * @param int $attach_id
+	 *
+	 * @return bool
+	 */
+	function update_gallery( $product_id = 0, $attach_id = 0 ) {
 
-        return apply_filters('fs_galery_images', $gallery_img, $post_id);
-    }
+		$product_id = fs_get_product_id( $product_id );
+		if ( empty( $attach_id ) ) {
+			return false;
+		} else {
+			$gallery = $this->get_gallery( $product_id, false );
+			if ( ! in_array( $attach_id, $gallery ) ) {
+				array_push( $gallery, $attach_id );
+				$config = new FS_Config();
+				update_post_meta( $product_id, $config->get_meta( 'gallery' ), $gallery );
+			}
+
+			return true;
+		}
+	}
 
 }
