@@ -1049,13 +1049,19 @@ function fs_is_action( $product_id = 0 ) {
 /**
  * Returns the object of the viewed goods or records
  *
+ * @param array $args
+ *
  * @return stdClass|WP_Query
  */
-function fs_user_viewed() {
+function fs_user_viewed( $args = [] ) {
 	$viewed = isset( $_SESSION['fs_user_settings']['viewed_product'] ) ? $_SESSION['fs_user_settings']['viewed_product'] : array();
 	$posts  = new stdClass();
 	if ( ! empty( $viewed ) ) {
-		$posts = new WP_Query( array( 'post_type' => 'product', 'post__in' => $viewed ) );
+		$args  = wp_parse_args( $args, array( 'post_type'      => 'product',
+		                                      'post__in'       => $viewed,
+		                                      'posts_per_page' => 4
+		) );
+		$posts = new WP_Query( $args );
 	}
 
 	return $posts;
