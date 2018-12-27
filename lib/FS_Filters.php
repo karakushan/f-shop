@@ -197,7 +197,7 @@ class FS_Filters
                         break;
                     case 'price_desc': //сортируем по цене в спадающем порядке
                         $meta_query['price'] = array('key' => $fs_config->meta['price'], 'type' => 'DECIMAL');
-                        $orderby['meta_value_num'] = 'DESC';
+                        $orderby['price'] = 'DESC';
                         break;
                     case 'views_desc': //сортируем по просмотрам в спадающем порядке
                         $meta_query['views'] = array('key' => 'views', 'type' => 'NUMERIC');

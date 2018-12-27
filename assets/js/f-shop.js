@@ -6,6 +6,17 @@
         getLang: function (string) {
             return FastShopData.lang[string];
         },
+        // Выполняет поиск значения value в массиве array
+        find:
+            function find(array, value) {
+                if (array.indexOf) { // если метод существует
+                    return array.indexOf(value);
+                }
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i] === value) return i;
+                }
+                return -1;
+            },
         ajaxData: function (action, data) {
             data.action = action;
             data.fs_secret = this.nonce
@@ -325,13 +336,30 @@
         });
         jQuery.ajax({
             type: 'POST',
-            url: FastShopData.ajaxurl,
-            data: {action: "fs_get_variated", product_id: productId, atts: parseAtts},
+            url: fShop.ajaxurl,
+            data: {action: "fs_get_variated", product_id: productId, atts: parseAtts, current: attrVal},
             cache: false,
             success: function (result) {
+                console.log(result);
                 if (result.success) {
                     cartbutton.attr("data-disabled", false);
                     cartbutton.removeAttr("data-disabled-message");
+                    if (result.data.active) {
+                        // устанавливаем опции в селектах в актив
+                        for (var key in result.data.active) {
+                            $("[data-fs-element=\"attr\"][name='" + key + "'] option").each(function (index, value) {
+                                if ($(this).attr("value") == result.data.active[key]) {
+                                    $(this).prop("selected", true);
+                                }
+                            });
+                        }
+                        $("[data-action=\"add-to-cart\"][data-product-id=\"" + productId + "\"]").attr("data-attr", JSON.stringify(result.data.active));
+
+                    }
+
+                    if (result.data.variation) {
+                        $("[data-action=\"add-to-cart\"][data-product-id=\"" + productId + "\"]").attr("data-variation", result.data.variation);
+                    }
 
                     if (result.data.price) {
                         jQuery("[data-fs-element=\"price\"]").each(function (index, value) {
