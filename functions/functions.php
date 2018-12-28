@@ -219,25 +219,16 @@ function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
  * @return float|int
  */
 function fs_get_cart_cost() {
-	$products      = \FS\FS_Cart_Class::get_cart();
-	$all_price     = array();
-	$product_class = new FS\FS_Product_Class();
-	foreach ( $products as $key => $product ) {
-		$product_id = intval( $product['ID'] );
-		$count      = intval( $product['count'] );
-		if ( $count < 2 ) {
-			$count = 1;
-		}
-		$all_price[ $key ] = $count * fs_get_price( $product_id );
-		//  если текущий товар вариативный
-		if ( ! empty( $product['variation'] ) ) {
-			$variation_price   = $product_class->get_variation_price( $product_id, $product['variation'] );
-			$all_price[ $key ] = $count * $variation_price;
+	$products = \FS\FS_Cart_Class::get_cart();
+	$cost     = 0;
+	if ( count( $products ) ) {
+		foreach ( $products as $key => $product ) {
+			$product = fs_set_product( $product, $key );
+			$cost    += $product->cost;
 		}
 	}
-	$price = array_sum( $all_price );
 
-	return floatval( $price );
+	return floatval( $cost );
 }
 
 /**
@@ -392,8 +383,8 @@ function fs_total_discount( $wrap = '%s <span>%s</span>' ) {
 	$discount = 0;
 	$cart     = FS\FS_Cart_Class::get_cart();
 	if ( $cart ) {
-		foreach ( $cart as $product ) {
-			$item = fs_set_product( $product );
+		foreach ( $cart as $key => $product ) {
+			$item = fs_set_product( $product, $key );
 			if ( $item->price > $item->base_price ) {
 				continue;
 			}
@@ -1057,9 +1048,10 @@ function fs_user_viewed( $args = [] ) {
 	$viewed = isset( $_SESSION['fs_user_settings']['viewed_product'] ) ? $_SESSION['fs_user_settings']['viewed_product'] : array();
 	$posts  = new stdClass();
 	if ( ! empty( $viewed ) ) {
-		$args  = wp_parse_args( $args, array( 'post_type'      => 'product',
-		                                      'post__in'       => $viewed,
-		                                      'posts_per_page' => 4
+		$args  = wp_parse_args( $args, array(
+			'post_type'      => 'product',
+			'post__in'       => $viewed,
+			'posts_per_page' => 4
 		) );
 		$posts = new WP_Query( $args );
 	}

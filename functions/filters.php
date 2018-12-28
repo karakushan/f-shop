@@ -262,7 +262,6 @@ function fs_form_bottom($form_bottom = '')
  *
  * @param $vars переменные письма
  *
- * @param $message
  *
  * @return mixed|string|void
  */

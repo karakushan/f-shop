@@ -233,21 +233,16 @@ class FS_Product_Class {
 	 * @return float
 	 */
 	public function get_variation_price( $product_id = 0, $variation_id = null ) {
-		$product_id         = $product_id ? $product_id : $this->id;
-		$variation_id       = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
-		$product_variations = $this->get_product_variations( $product_id, false );
-		if ( ! empty( $product_variations[ $variation_id ] ) ) {
-			$base_price   = ! empty( $product_variations[ $variation_id ]['price'] ) ? floatval( $product_variations[ $variation_id ]['price'] ) : 0;
-			$action_price = ! empty( $product_variations[ $variation_id ]['action_price'] ) ? floatval( $product_variations[ $variation_id ]['action_price'] ) : 0;
-			if ( $action_price > 0 && $action_price < $base_price ) {
-				$base_price = $action_price;
-			}
-			$base_price = apply_filters( 'fs_price_filter', $product_id, $base_price );
+		$product_id   = $product_id ? $product_id : $this->id;
+		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
+		$variation    = $this->get_variation( $product_id, $variation_id );
+		$price        = floatval( $variation['price'] );
 
-			return $base_price;
-		} else {
-			return fs_get_price( $product_id );
+		if ( ! empty( $variation['action_price'] ) && $price > floatval( $variation['action_price'] ) ) {
+			$price = floatval( $variation['action_price'] );
 		}
+
+		return apply_filters( 'fs_price_filter', $product_id, $price );
 	}
 
 	/**
@@ -297,12 +292,10 @@ class FS_Product_Class {
 	/**
 	 * Отображает артикул товара в корзине
 	 *
-	 * @param int $product_id
-	 * @param null $variation_id
 	 * @param string $format
 	 */
-	function the_sku( $product_id = 0, $variation_id = null, $format = '%s' ) {
-		if ( $this->get_sku( $product_id, $variation_id ) ) {
+	function the_sku( $format = '%s' ) {
+		if ( $this->get_sku( $this->id, $this->variation ) ) {
 			printf( $format, esc_html( $this->get_sku() ) );
 		}
 	}
@@ -320,8 +313,15 @@ class FS_Product_Class {
 		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
 		$price        = fs_get_price( $product_id );
 
+
 		if ( ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
-			$price = $this->get_variation_price( $product_id, $variation_id );
+			$variation    = $this->get_variation( $product_id, $variation_id );
+			$price        = floatval( $variation['price'] );
+			$action_price = floatval( $variation['action_price'] );
+			if ( ! empty( $variation['action_price'] ) && $action_price < $price ) {
+				$price = $action_price;
+			}
+			$price = apply_filters( 'fs_price_filter', $product_id, $price );
 		}
 
 		return $price;
@@ -334,10 +334,22 @@ class FS_Product_Class {
 	 * @param string $format
 	 * @param array $args
 	 */
-	function the_price( $format = '', $args = array() ) {
+	function the_price( $format = '' ) {
 		$format = ! empty( $format ) ? $format : $this->price_format;
 
 		printf( $format, apply_filters( 'fs_price_format', $this->get_price() ), $this->currency );
+	}
+
+	/**
+	 * Displays the old, base price (provided that the promotional price is established)
+	 *
+	 * @param string $format
+	 */
+	function the_base_price( $format = '<del>%s <span>%s</span></del>' ) {
+		$format = ! empty( $format ) ? $format : $this->price_format;
+		if ( $this->get_base_price() > $this->get_price() ) {
+			printf( $format, apply_filters( 'fs_price_format', $this->get_base_price() ), $this->currency );
+		}
 	}
 
 
@@ -486,11 +498,15 @@ class FS_Product_Class {
 	 *
 	 * @param int $product_id
 	 *
+	 * @param null $variation_id
+	 *
 	 * @return mixed
 	 */
-	public function get_base_price( $product_id = 0 ) {
-		$product_id = $product_id ? $product_id : $this->id;
-		$base_price = fs_get_base_price( $product_id );
+	public function get_base_price( $product_id = 0, $variation_id = null ) {
+		$product_id   = $product_id ? $product_id : $this->id;
+		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
+		$variation    = $this->get_variation( $product_id, $variation_id );
+		$base_price   = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
 
 		return floatval( $base_price );
 	}

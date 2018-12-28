@@ -357,8 +357,12 @@
 
                     }
 
-                    if (result.data.variation) {
-                        $("[data-action=\"add-to-cart\"][data-product-id=\"" + productId + "\"]").attr("data-variation", result.data.variation);
+                    if (typeof result.data.variation == 'number') {
+                        jQuery("[data-action=\"add-to-cart\"]").each(function (index, value) {
+                            if (jQuery(this).data("product-id") == productId) {
+                                jQuery(this).attr("data-variation", result.data.variation);
+                            }
+                        });
                     }
 
                     if (result.data.price) {
@@ -370,12 +374,11 @@
                     }
 
                     if (result.data.basePrice) {
-                        jQuery("[data-fs-element=\"base-price\"]").each(function (index, value) {
-                            if (jQuery(this).data("product-id") == productId) {
-                                jQuery(this).html(result.data.basePrice);
-                            }
-                        });
+                        jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html(result.data.basePrice);
+                    } else {
+                        jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html('');
                     }
+
                     // создаём событие "fs_after_change_att"
                     var fs_after_change_att = new CustomEvent("fs_after_change_att", {
                         detail: {

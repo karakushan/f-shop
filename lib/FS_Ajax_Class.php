@@ -225,6 +225,7 @@ class FS_Ajax_Class {
 						$price_base = $price;
 					}
 					wp_send_json_success( array(
+						'variation' => $k,
 						'atts'      => array_map( 'intval', $variant['attr'] ),
 						'price'     => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() ),
 						'basePrice' => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price_base ), fs_currency() )
@@ -247,16 +248,16 @@ class FS_Ajax_Class {
 
 					$price_base = false;
 					if ( ! empty( $action_price ) && $action_price < $price ) {
+						$price_base = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() );
 						$price      = $action_price;
-						$price_base = $price;
+
 					}
 					wp_send_json_success( array(
 						'active'    => $atts_with_parent,
 						'variation' => $k,
 						'price'     => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() ),
-						'basePrice' => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price_base ), fs_currency() )
+						'basePrice' => $price_base
 					) );
-
 				}
 			}
 			wp_send_json_error( [ 'msg' => __( 'Goods with such a set of characteristics are not in stock. Try changing parameters.', 'f-shop' ) ] );
