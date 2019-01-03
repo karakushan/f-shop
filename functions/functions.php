@@ -1209,7 +1209,7 @@ function fs_price_max( $filter = true ) {
 	global $wpdb;
 	$config         = new FS\FS_Config();
 	$meta_field     = $config->meta['price'];
-	$meta_value_max = $wpdb->get_var( $wpdb->prepare( "SELECT (meta_value + 0.01 ) AS meta_values FROM %s WHERE meta_key='%s' ORDER BY meta_values DESC ", $wpdb->postmeta, $meta_field ) );
+	$meta_value_max = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(meta_value) FROM $wpdb->postmeta WHERE meta_key='%s'", $meta_field ) );
 	$meta_value_max = ! is_null( $meta_value_max ) ? (float) $meta_value_max : 20000;
 	if ( $filter ) {
 		$max = apply_filters( 'fs_price_format', $meta_value_max );
