@@ -3,7 +3,7 @@
 Plugin Name: F-Shop
 Plugin URI: https://f-shop.top/
 Description:  Simple and functional online store plugin.
-Version: 1.2
+Version: 1.3
 Author: Vitaliy Karakushan
 Author URI: https://f-shop.top/
 License: GPL2
