@@ -249,22 +249,13 @@ class FS_Product_Class {
 	 * Возвращает название товара или его вариации, если указан параметр $variation_id
 	 *
 	 * @param int $product_id
-	 * @param null $variation_id
 	 *
 	 * @return string
 	 */
-	function get_title( $product_id = 0, $variation_id = null ) {
-		$product_id   = $product_id ? $product_id : $this->id;
-		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
-		$title        = get_the_title( $product_id );
-		if ( ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
-			$variations = $this->get_product_variations( $product_id, false );
-			if ( ! empty( $variations[ $variation_id ]['name'] ) ) {
-				$title = $variations[ $variation_id ]['name'];
-			}
-		}
+	function get_title( $product_id = 0 ) {
+		$product_id = $product_id ? $product_id : $this->id;
 
-		return $title;
+		return get_the_title( $product_id );
 	}
 
 	/**
@@ -318,6 +309,11 @@ class FS_Product_Class {
 			$variation    = $this->get_variation( $product_id, $variation_id );
 			$price        = floatval( $variation['price'] );
 			$action_price = floatval( $variation['action_price'] );
+
+			// если забыли установить главную цену
+			if ( $price == 0 && $action_price > 0 ) {
+				$price = $action_price;
+			}
 			if ( ! empty( $variation['action_price'] ) && $action_price < $price ) {
 				$price = $action_price;
 			}

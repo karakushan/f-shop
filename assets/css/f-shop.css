@@ -1118,9 +1118,6 @@ td.fs_photo.column-fs_photo img {
         border: 4px solid #eee;
         box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.05); }
 
-#fs-shipping-fields {
-  display: none; }
-
 .fs-select-variation {
   padding: 0;
   margin: 0;

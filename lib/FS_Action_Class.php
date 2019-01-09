@@ -122,6 +122,9 @@ class FS_Action_Class {
 		/* удаляет все товары */
 		add_action( 'fs_delete_products', array( 'FS\FS_Product_Class', 'delete_products' ) );
 
+		// === CHECKOUT ===
+		add_action( 'fs_shipping_fields', array( 'FS\FS_Cart_Class', 'show_shipping_fields' ) );
+
 	}
 
 

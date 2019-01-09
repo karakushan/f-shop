@@ -13,10 +13,7 @@
 <div class="form-group">
 	<?php fs_form_field( 'fs_delivery_methods' ) ?>
 </div>
-<div id="fs-shipping-fields"></div>
-
-
-
+<?php do_action( 'fs_shipping_fields' ) ?>
 <div class="row">
   <div class="col-lg-6">
     <div class="form-group">

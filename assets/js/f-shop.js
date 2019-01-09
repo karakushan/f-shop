@@ -412,6 +412,13 @@
             jQuery.ajax({
                 type: 'POST',
                 url: fShop.ajaxurl,
+                beforeSend: function () {
+                    // создаём событие
+                    var fs_change_delivery = new CustomEvent("fs_change_delivery", {
+                        detail: {deliveryId: deliveryId}
+                    });
+                    document.dispatchEvent(fs_change_delivery);
+                },
                 data: fShop.ajaxData('fs_show_shipping', {delivery: deliveryId}),
                 success: function (result) {
                     if (result.success) {

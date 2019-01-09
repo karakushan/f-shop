@@ -268,6 +268,9 @@ function fs_get_total_amount( $delivery_cost = 0.0 ) {
 	 *  (Стоимость всех товаров в корзине + Стоимость доставки)-Скидка + Налоги
 	 */
 
+	if ( ! $delivery_cost ) {
+		$delivery_cost = fs_get_delivery_cost();
+	}
 	$amount = fs_get_cart_cost(); // Стоимость товаров в корзине
 	$amount = floatval( $amount );
 
@@ -1360,6 +1363,7 @@ function fs_frontend_template( $template, $args = array() ) {
 	return apply_filters( 'fs_frontend_template', $template );
 }
 
+
 function fs_get_current_user() {
 	$user = wp_get_current_user();
 	if ( $user->exists() ) {
@@ -1966,7 +1970,9 @@ function fs_gallery_images_ids( $post_id = 0, $thumbnail = true ) {
 function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $args = array() ) {
 	$img_class = new FS\FS_Images_Class();
 	$gallery   = $img_class->get_gallery( $product_id );
-	if ( ! empty( $gallery ) ) {
+	if ( has_post_thumbnail( $product_id ) ) {
+		echo get_the_post_thumbnail( $product_id, $size, $args );
+	} elseif ( count( $gallery ) ) {
 		$attach_id = array_shift( $gallery );
 		echo wp_get_attachment_image( $attach_id, $size, false, $args );
 	} else {
@@ -2558,6 +2564,23 @@ function fs_load_template( $template_path ) {
 	}
 }
 
+
+/**
+ * Возвращает все методы доставки
+ * обертка функции get_terms()
+ *
+ * @return array|int|WP_Error
+ */
+function fs_get_shipping_methods() {
+	global $fs_config;
+	$shipping_methods = get_terms( array(
+		'taxonomy'   => $fs_config->data['product_del_taxonomy'],
+		'hide_empty' => false
+	) );
+
+	return $shipping_methods;
+}
+
 /**
  * Returns true if the item has a label specified in the $label parameter.
  *
@@ -2591,11 +2614,11 @@ function fs_is_label( $label ) {
 }
 
 /**
- * Выводит стоимость доставки в корзине
+ * Возвращает стоимость доставки в корзине
  *
- * @param string $format
+ * @return float $cost
  */
-function fs_delivery_cost( $format = '%s <span>%s</span>' ) {
+function fs_get_delivery_cost() {
 	global $fs_config;
 	$delivery_methods = get_terms( array(
 		'taxonomy'   => $fs_config->data['product_del_taxonomy'],
@@ -2604,8 +2627,19 @@ function fs_delivery_cost( $format = '%s <span>%s</span>' ) {
 	$cost             = 0.0;
 	if ( ! is_wp_error( $delivery_methods ) && count( $delivery_methods ) ) {
 		$term_id = intval( $delivery_methods[0]->term_id );
-		$cost    = floatval( get_term_meta( $term_id, '_fs_delivery_cost', 1 ) );
+		$cost    = get_term_meta( $term_id, '_fs_delivery_cost', 1 );
 	}
+
+	return floatval( $cost );
+}
+
+/**
+ * Выводит стоимость доставки в корзине
+ *
+ * @param string $format
+ */
+function fs_delivery_cost( $format = '%s <span>%s</span>' ) {
+	$cost = fs_get_delivery_cost();
 	printf( '<span data-fs-element="delivery-cost">' . $format . '</span>', esc_attr( $cost ), esc_html( fs_currency() ) );
 }
 
