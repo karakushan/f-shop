@@ -2555,8 +2555,9 @@ function fs_set_product( $product, $item_id = 0 ) {
  * @param string $template_path путь к шаблону (без расширения)
  */
 function fs_load_template( $template_path ) {
-	if ( $template = locate_template( FS_PLUGIN_NAME . DIRECTORY_SEPARATOR . $template_path . '.php', true ) ) {
-		get_template_part( $template );
+	$base_template = FS_PLUGIN_NAME . DIRECTORY_SEPARATOR . $template_path;
+	if ( file_exists( get_template_directory() . DIRECTORY_SEPARATOR . $base_template . '.php' ) ) {
+		get_template_part( $base_template );
 	} elseif ( file_exists( FS_PLUGIN_PATH . 'templates/front-end/' . $template_path . '.php' ) ) {
 		load_template( FS_PLUGIN_PATH . 'templates/front-end/' . $template_path . '.php', false );
 	} else {
