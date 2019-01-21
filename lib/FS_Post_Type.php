@@ -88,7 +88,8 @@ class FS_Post_Type {
 					'excerpt',
 					'thumbnail',
 					'comments',
-					'page-attributes'
+					'page-attributes',
+					'revisions'
 				)
 			)
 		);
