@@ -22,6 +22,18 @@ class FS_Filters {
 		add_action( 'restrict_manage_posts', array( $this, 'category_filter_admin' ) );
 		// настройка к-ва товаров на странице архива товаров
 		add_action( 'template_redirect', array( $this, 'redirect_per_page' ) );
+		// редиректы для админки
+		add_action( 'admin_init', array( $this, 'redirects_admin_pages' ) );
+	}
+
+	// редиректы для админки
+	function redirects_admin_pages() {
+		global $pagenow;
+		// этот хак
+		if ( $pagenow == 'edit.php' && ! empty( $_GET['s'] ) && isset( $_GET['action'] ) ) {
+			wp_redirect( remove_query_arg( [ 'action' ] ) );
+			exit;
+		}
 	}
 
 	/**
@@ -39,7 +51,7 @@ class FS_Filters {
 
 		if ( ! empty( $_GET['s'] ) && $post_type_product && $pagenow == 'edit.php' ) {
 			// Search by sku
-			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s'", $fs_config->meta['sku'], get_search_query() ) );
+			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s'", $fs_config->meta['sku'], esc_sql( $_GET['s'] ) ) );
 			if ( ! empty( $sku_products ) ) {
 				$query->set( 's', '' );
 				$query->set( 'post__in', $sku_products );
@@ -55,8 +67,11 @@ class FS_Filters {
 					$query->set( 'order', (string) $_GET['order'] );
 					break;
 			}
-		}
 
+		}
+		$query->query['action']      = '';
+		$query->query_vars['action'] = '';
+//		fs_debug_data($query,'$query','print_r');
 	}
 
 
