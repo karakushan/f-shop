@@ -392,8 +392,12 @@ jQuery(document).ready(function ($) {
     });
 
     $(document).on('click', '#fs-add-variant', function (event) {
+        console.log($("#tab-variants .fs-rule").length);
         var count = $(".fs-rule").length;
-        var preloader = $(this).find('.fs-preloader');
+        if ($("#tab-variants .fs-rule").length) {
+            count = $("#tab-variants .fs-rule").last().data('index');
+            count = Number(count) + 1;
+        }
         $.ajax({
             url: ajaxurl,
             type: 'POST',
