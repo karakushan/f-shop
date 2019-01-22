@@ -52,7 +52,8 @@ class FS_Taxonomies_Class {
 				"public"             => true,
 				"show_ui"            => true,
 				"publicly_queryable" => true,
-				'show_admin_column'  => false
+				'show_in_rest'      => TRUE,
+				'show_admin_column'  => true
 			),
 			'fs-payment-methods'                       => array(
 				'object_type'        => 'product',
@@ -100,11 +101,11 @@ class FS_Taxonomies_Class {
 				"public"             => true,
 				"show_ui"            => true,
 				"publicly_queryable" => true,
-
-				'metabox'            => null,
+				'show_in_rest'      => TRUE,
+				'metabox'            => true,
 				'show_admin_column'  => true,
 				'hierarchical'       => true,
-				'show_in_quick_edit' => false
+				'show_in_quick_edit' => true
 			),
 			$fs_config->data['product_taxes_taxonomy'] => array(
 				'object_type'        => $fs_config->data['post_type'],

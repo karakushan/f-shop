@@ -79,7 +79,7 @@ class FS_Post_Type {
 				'has_archive'        => true,
 				'rewrite'            => true,
 				'query_var'          => true,
-				'taxonomies'         => array( 'catalog', 'manufacturer', 'countries' ),
+				'taxonomies'         => array( 'catalog','product-attributes' ),
 				'description'        => __( "Здесь размещены товары вашего сайта." ),
 
 				'supports' => array(
@@ -89,7 +89,8 @@ class FS_Post_Type {
 					'thumbnail',
 					'comments',
 					'page-attributes',
-					'revisions'
+					'revisions',
+					'gutenburg'
 				)
 			)
 		);
@@ -198,7 +199,7 @@ class FS_Post_Type {
 	 */
 	public function admin_init() {
 		// Add metaboxes
-		add_action( 'add_meta_boxes', array( &$this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 	} // END public function admin_init()
 
 	/**
