@@ -157,6 +157,13 @@ class FS_Settings_Class
                         'label' => __('Do not override standard templates.', 'f-shop'),
                         'help' => __('This checkbox is needed if you will not store templates in the "f-shop" directory of your theme.', 'f-shop'),
                         'value' => fs_option('fs_overdrive_templates', '0')
+                    ),
+	                array(
+                        'type' => 'checkbox',
+                        'name' => 'fs_disable_messages',
+                        'label' => __('Disable js event handling by the plugin', 'f-shop'),
+                        'help' => __('Этот чекбокс нужно отметить если вы сами намерены обрабатывать события инициируемые плагином', 'f-shop'),
+                        'value' => fs_option('fs_disable_messages', 0)
                     )
                 )
             ),

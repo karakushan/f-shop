@@ -138,11 +138,15 @@ class FS_Init {
 			'jquery',
 			'f-shop-library'
 		), $this->fs_config->data['plugin_ver'], true );
-		wp_enqueue_script( 'fs-events', FS_PLUGIN_URL . 'assets/js/fs-events.js', array(
-			'jquery',
-			'f-shop-library',
-			'f-shop'
-		), $this->fs_config->data['plugin_ver'], true );
+
+		// Здесь подгружается обработчик событий плагина, вы можете отключить его в опциях
+		if ( ! fs_option( 'fs_disable_messages', 0 ) ) {
+			wp_enqueue_script( 'fs-events', FS_PLUGIN_URL . 'assets/js/fs-events.js', array(
+				'jquery',
+				'f-shop-library',
+				'f-shop'
+			), $this->fs_config->data['plugin_ver'], true );
+		}
 
 		$price_max = fs_price_max( false );
 		$l10n      = array(

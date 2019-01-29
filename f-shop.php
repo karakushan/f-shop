@@ -57,9 +57,9 @@ if ( ! class_exists( '\FS\FS_Init', false ) ) {
 	$GLOBALS['fs_config'] = new FS\FS_Config();
 }
 
+// Добавляем команды WP CLI
 add_action( 'init', 'fs_wp_cli_init' );
 function fs_wp_cli_init() {
-	// Добавляем команды WP CLI
 	if ( class_exists( 'WP_CLI' ) ) {
 		$migrate = function ( $args = array(), $assoc_args = array() ) {
 			\FS\FS_Migrate_Class::migrate_orders();
