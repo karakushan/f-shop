@@ -12,24 +12,41 @@ namespace FS;
 class FS_Api_Class {
 
 	function __construct() {
-		add_action( 'wp_loaded', array( $this, 'plugin_admin_api_actions' ) );
-		add_action( 'wp_loaded', array( $this, 'plugin_user_api_actions' ) );
+		// $_GET['fs-api']
+		add_action( 'admin_init', array( $this, 'http_action' ) );
+		add_action( 'fs_api', array( $this, 'plugin_admin_api_actions' ), 10, 2 );
 	}
+
+	function http_action() {
+		if ( ! isset( $_REQUEST['fs-api'] ) ) {
+			return;
+		}
+
+		if ( empty( $_GET['fs-api'] ) ) {
+			wp_die( 'Не указано значение запроса' );
+		}
+		if ( ! is_admin() && ! current_user_can( 'manage_options' ) ) {
+			wp_die( 'У вас нет прав выполнять это дейстиве' );
+		}
+
+		do_action( 'fs_api', $_GET['fs-api'] );
+		wp_die();
+	}
+
 
 	/**
 	 * Исполняет API запросы по http, работает только в том случае если пользователь авторизован как админ
 	 *
 	 * fs-api=migrate - запрос для получения свойст товара из метаполей, которые работали в первых версиях плагина
 	 * fs-api=drop_orders_table - удаляет таблицу с заказами
+	 *
+	 * @param $api_command
+	 * @param $assoc_args
 	 */
-	function plugin_admin_api_actions() {
-		if ( empty( $_GET['fs-api'] ) ) {
-			return;
+	function plugin_admin_api_actions( $api_command, $assoc_args ) {
+		if ( empty( $api_command ) ) {
+			wp_die( 'Не задана API команда' );
 		}
-		if ( ! is_admin() && ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-		$api_command = $_GET['fs-api'];
 		global $fs_config;
 		// импортирует свойства товаров из опций
 		if ( $api_command == 'migrate' ) {
@@ -59,29 +76,6 @@ class FS_Api_Class {
 		} else {
 			do_action( 'fs_admin_custom_api', $api_command );
 		}
-	}
-
-	/**
-	 * Исполняет API запросы по http, работает со всеми типами пользователей
-	 *
-	 */
-	function plugin_user_api_actions() {
-		if ( empty( $_REQUEST['fs-user-api'] ) ) {
-			return;
-		}
-		$session     = $_SESSION;
-		$api_command = $_REQUEST['fs-user-api'];
-		// импортирует свойства товаров из опций
-		if ( $api_command == 'delete_wishlist_position' ) {
-			if ( ! empty( $session['fs_wishlist'] ) && ! empty( $_REQUEST['product_id'] ) ) {
-				$product_id = intval( $_REQUEST['product_id'] );
-				unset( $_SESSION['fs_wishlist'][ $product_id ] );
-				wp_redirect( remove_query_arg( array( 'fs-user-api', 'product_id' ) ) );
-			}
-		} else {
-			do_action( 'fs_user_custom_api', $api_command );
-		}
-
 	}
 
 }

@@ -70,7 +70,7 @@ function add_views_column($columns)
         'fs_vendor_code' => __('Vendor code', 'f-shop'),
         'fs_stock' => __('Stock in stock', 'f-shop'),
         'fs_photo' => __('Photo', 'f-shop'),
-        'fs-product-cat' => __('Product categories', 'f-shop')
+//        'fs-product-cat' => __('Product categories', 'f-shop')
 
     );
 
