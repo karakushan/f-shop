@@ -204,7 +204,8 @@ class FS_Product_Class {
 		$attachments = true;
 		$posts       = new \WP_Query( array(
 			'post_type'      => array( $fs_config->data['post_type'] ),
-			'posts_per_page' => - 1
+			'posts_per_page' => - 1,
+			'post_status'    => 'any'
 		) );
 		if ( $posts->have_posts() ) {
 			while ( $posts->have_posts() ) {
