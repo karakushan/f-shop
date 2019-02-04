@@ -946,7 +946,7 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 
 	$pluss    = sprintf( '<button type="button" class="%s" data-fs-count="pluss">%s</button> ', $args['pluss_class'], $args['pluss_content'] );
 	$minus    = sprintf( '<button type="button" class="%s" data-fs-count="minus">%s</button>', $args['minus_class'], $args['minus_content'] );
-	$input    = sprintf( '<input type="text" class="%s" name="count" value="1"  data-fs-action="change_count" data-fs-product-id="%s" ' . $max . '>', $args['input_class'], $product_id, $product_id );
+	$input    = sprintf( '<input type="text" class="%s" name="count" value="1"  data-fs-action="change_count" data-fs-product-id="%s" ' . $max . ' data-limit="%d">', $args['input_class'], $product_id, fs_option( 'fs_in_stock_manage', 0 ) );
 	$quantity = str_replace( array( '%pluss%', '%input%', '%minus%' ), array(
 		$pluss,
 		$input,
@@ -1209,10 +1209,8 @@ function fs_range_slider() {
  * @return float|int|null|string
  */
 function fs_price_max( $filter = true ) {
-	global $wpdb;
-	$config         = new FS\FS_Config();
-	$meta_field     = $config->meta['price'];
-	$meta_value_max = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(meta_value) FROM $wpdb->postmeta WHERE meta_key='%s'", $meta_field ) );
+	global $wpdb, $fs_config;
+	$meta_value_max = $wpdb->get_var( $wpdb->prepare( "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'", $fs_config->meta['price'] ) );
 	$meta_value_max = ! is_null( $meta_value_max ) ? (float) $meta_value_max : 20000;
 	if ( $filter ) {
 		$max = apply_filters( 'fs_price_format', $meta_value_max );

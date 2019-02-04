@@ -50,7 +50,7 @@
             let max = parseInt(maxAttr);
             let curVal = Number(jQueryinput.val());
             let newVal = curVal + 1;
-            if (newVal > max) {
+            if (jQueryinput.data('limit') == 1 && newVal > max) {
                 iziToast.show({
                     theme: 'light',
                     message: this.getLang('limit_product'),
@@ -852,9 +852,8 @@
                 data: order_send.serialize(),
                 beforeSend: function () {
                     orderSendBtn.html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
-                }
-            })
-                .done(function (response) {
+                },
+                success: function (response) {
                     console.log(response);
                     orderSendBtn.find('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
                     /* если статус заказ успешный */
@@ -887,7 +886,14 @@
                         });
                         orderSendBtn.html(orderSendBtn.data("content"));
                     }
-                });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log('error...', xhr);
+                },
+                complete: function () {
+                    //afer ajax call is completed
+                }
+            });
 
 
         }
