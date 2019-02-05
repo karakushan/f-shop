@@ -391,7 +391,7 @@ function fs_total_discount( $wrap = '%s <span>%s</span>' ) {
 			if ( $item->price > $item->base_price ) {
 				continue;
 			}
-			$discount += $item->base_price - $item->price;
+			$discount += ( $item->base_price - $item->price ) * $item->count;
 		}
 	}
 	$discount = apply_filters( 'fs_price_format', $discount );

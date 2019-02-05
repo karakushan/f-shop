@@ -172,7 +172,7 @@
         event.preventDefault();
         let el = jQuery(this);
         let product_id = el.data('product-id');
-        let variation = el.data('variation');
+        let variation = el.attr('data-variation');
         let count = el.attr('data-count');
 
         // если кнопка выключена, выводим сообщение почему товар не доступен

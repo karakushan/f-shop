@@ -68,18 +68,44 @@ class FS_Cart_Class {
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
 		}
-		$product_class      = new FS_Product_Class();
-		$attr               = ! empty( $_POST['attr'] ) ? $_POST['attr'] : array();
-		$product_id         = intval( $_POST['post_id'] );
-		$variation          = intval( $_POST['variation'] );
-		$variations         = $product_class->get_product_variations( $product_id, false );
-		$_SESSION['cart'][] = array(
-			'ID'        => $product_id,
-			'count'     => intval( $_POST['count'] ),
-			'attr'      => $attr,
-			'variation' => ! empty( $variations[ $variation ] ) ? $variation : null
-		);
-		wp_send_json_success();
+		$product_class = new FS_Product_Class();
+		$attr          = ! empty( $_POST['attr'] ) ? $_POST['attr'] : array();
+		$product_id    = intval( $_POST['post_id'] );
+		$variation     = intval( $_POST['variation'] );
+		$count         = intval( $_POST['count'] );
+		$variations    = $product_class->get_product_variations( $product_id, false );
+		$is_variated   = count( $variations ) ? true : false;
+		$search_item   = 0;
+
+		// Выполняем поиск подобной позиции в корзине
+		if ( ! empty( $_SESSION['cart'] ) ) {
+			foreach ( $_SESSION['cart'] as $key => $item ) {
+				if ( $is_variated && $item['ID'] == $product_id && $item['variation'] == $variation ) {
+					$search_item = $key;
+				} elseif ( ! $is_variated && $item['ID'] == $product_id ) {
+					$search_item = $key;
+				}
+			}
+		}
+
+		if ( $search_item && ! empty( $_SESSION['cart'] ) ) {
+			$_SESSION['cart'][ $search_item ] = array(
+				'ID'        => $product_id,
+				'count'     => intval( $_SESSION['cart'][ $search_item ]['count'] + $count ),
+				'attr'      => $attr,
+				'variation' => $variation
+			);
+		} else {
+			$_SESSION['cart'][] = array(
+				'ID'        => $product_id,
+				'count'     => $count,
+				'attr'      => $attr,
+				'variation' => ! empty( $variations[ $variation ] ) ? $variation : null
+			);
+		}
+
+
+		wp_send_json_success( array( 'data' => $_POST ) );
 
 	}
 
