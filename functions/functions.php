@@ -1460,9 +1460,9 @@ function fs_get_product_code( $product_id = 0 ) {
  * @return string артикул товара
  */
 function fs_product_code( $product_id = 0, $wrap = '%s' ) {
-	$articul = fs_get_product_code( $product_id );
+	$articul    = fs_get_product_code( $product_id );
 	if ( $articul ) {
-		printf( $wrap, esc_html( $articul ) );
+		printf( '<span class="fs-sku" data-fs-element="sku">'.$wrap.'</span>', esc_html( $articul ) );
 	}
 }
 
