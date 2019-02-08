@@ -52,7 +52,7 @@ class FS_Taxonomies_Class {
 				"public"             => true,
 				"show_ui"            => true,
 				"publicly_queryable" => true,
-				'show_in_rest'      => TRUE,
+				'show_in_rest'       => true,
 				'show_admin_column'  => true
 			),
 			'fs-payment-methods'                       => array(
@@ -101,10 +101,28 @@ class FS_Taxonomies_Class {
 				"public"             => true,
 				"show_ui"            => true,
 				"publicly_queryable" => true,
-				'show_in_rest'      => TRUE,
+				'show_in_rest'       => true,
 				'metabox'            => true,
 				'show_admin_column'  => true,
 				'hierarchical'       => true,
+				'show_in_quick_edit' => true
+			),
+			'brands'                           => array(
+				'object_type'        => 'product',
+				'label'              => __( 'Manufacturers', 'f-shop' ),
+				'labels'             => array(
+					'name'          => __( 'Manufacturers', 'f-shop' ),
+					'singular_name' => __( 'Manufacturer', 'f-shop' ),
+					'add_new_item'  => __( 'Add Manufacturer', 'f-shop' ),
+				),
+				//					исключаем категории из лицевой части
+				"public"             => true,
+				"show_ui"            => true,
+				"publicly_queryable" => true,
+				'show_in_rest'       => true,
+				'metabox'            => true,
+				'show_admin_column'  => false,
+				'hierarchical'       => false,
 				'show_in_quick_edit' => true
 			),
 			$fs_config->data['product_taxes_taxonomy'] => array(
