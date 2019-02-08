@@ -124,7 +124,7 @@ class FS_Filters {
 		if ( $query->is_search ) {
 
 			// Search by sku
-			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s'", $fs_config->meta['sku'], get_search_query() ) );
+			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value LIKE %s", $fs_config->meta['sku'], '%' . get_search_query() . '%' ) );
 
 			if ( $sku_products ) {
 				$query->set( 's', '' );
