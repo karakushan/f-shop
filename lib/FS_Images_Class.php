@@ -103,7 +103,7 @@ class FS_Images_Class {
 
 
 	/**
-	 * Updates the gallery by adding $ attach_id as a new image
+	 * Updates the gallery by adding $attach_id as a new image
 	 *
 	 * @param int $product_id
 	 * @param int $attach_id
@@ -113,7 +113,7 @@ class FS_Images_Class {
 	function update_gallery( $product_id = 0, $attach_id = 0 ) {
 
 		$product_id = fs_get_product_id( $product_id );
-		if ( empty( $attach_id ) ) {
+		if ( empty( $attach_id ) || ! is_numeric( $attach_id ) ) {
 			return false;
 		} else {
 			$gallery = $this->get_gallery( $product_id, false );
