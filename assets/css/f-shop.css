@@ -959,7 +959,10 @@ td.fs_photo.column-fs_photo img {
   .fs-cart-listing .table > tbody > tr > td, .fs-cart-listing .table > tbody > tr > th, .fs-cart-listing .table > tfoot > tr > td, .fs-cart-listing .table > tfoot > tr > th, .fs-cart-listing .table > thead > tr > td, .fs-cart-listing .table > thead > tr > th {
     vertical-align: middle; }
   .fs-cart-listing .fs-products-after {
-    margin-bottom: 30px; }
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; }
   .fs-cart-listing .fs-remove-position {
     border: 1px solid #F8342D;
     height: 24px;

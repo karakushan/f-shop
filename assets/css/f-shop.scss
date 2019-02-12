@@ -1057,6 +1057,9 @@ td.fs_photo.column-fs_photo img {
   }
   .fs-products-after {
     margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
   .fs-remove-position {
     border: 1px solid $c-red;
