@@ -257,7 +257,8 @@ class FS_Config {
 				'option'  => 'page_checkout'
 			),
 			'pay'        => array(
-				'content' => '[fs_pay_methods]',
+				'title'   => __( 'Payment order', 'f-shop' ),
+				'content' => '[fs_order_pay]',
 				'option'  => 'page_payment'
 			),
 			'thanks'     => array(
