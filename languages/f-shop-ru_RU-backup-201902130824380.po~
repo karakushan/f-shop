@@ -203,7 +203,7 @@ msgstr ""
 
 #: lib/FS_Settings_Class.php:164
 msgid "Disable js event handling by the plugin"
-msgstr "Отключить обработку событий плагина"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:165
 msgid ""
@@ -994,7 +994,7 @@ msgstr "Производитель"
 
 #: lib/FS_Taxonomies_Class.php:116
 msgid "Add Manufacturer"
-msgstr "Добавить производителя"
+msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:130 lib/FS_Taxonomies_Class.php:132
 #: lib/FS_Taxonomies_Class.php:133
