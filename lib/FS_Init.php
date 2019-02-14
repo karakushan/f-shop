@@ -33,6 +33,7 @@ class FS_Init {
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'fs_frontend_scripts_and_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'fs_admin_scripts_and_styles' ) );
+		add_action( 'wp_head', array( $this, 'head_microdata' ) );
 
 		// Инициализация классов Fast Shop
 		$this->fs_option     = get_option( 'fs_option' );
@@ -208,6 +209,7 @@ class FS_Init {
 
 		);
 		wp_localize_script( FS_PLUGIN_PREFIX . 'admin', 'fShop', $l10n );
+
 	}
 
 	/**
@@ -231,6 +233,48 @@ class FS_Init {
 		}
 
 		return $template;
+	}
+
+	function head_microdata() {
+		global $fs_config;
+		if ( is_singular( $fs_config->data['post_type'] ) ) {
+			$categories   = get_the_terms( get_the_ID(), 'catalog' );
+			$manufacturer = get_the_terms( get_the_ID(), 'brands' );
+
+			$total_vote  = get_post_meta( get_the_ID(), 'fs_product_rating', 0 );
+			$sum_votes   = array_sum( $total_vote );
+			$count_votes = count( $total_vote );
+			$rate        = $count_votes ? round( $sum_votes / $count_votes, 2 ) : 0;
+			if ( $rate > 0 ) {
+				$aggregateRating = [
+					"@type"       => "AggregateRating",
+					"ratingCount" => $count_votes,
+					"ratingValue" => $rate
+				];
+			} else {
+				$aggregateRating = [];
+			}
+
+			$schema = array(
+				"@context"        => "https://schema.org",
+				"@type"           => "Product",
+				"url"             => get_the_permalink(),
+				"aggregateRating" => $aggregateRating,
+				"category"        => $categories ? $categories[0]->name : '',
+				"image"           => esc_url( fs_get_product_thumbnail_url( 0, 'full' ) ),
+				"brand"           => $manufacturer ? $manufacturer[0]->name : get_bloginfo( 'name' ),
+				"manufacturer"    => $manufacturer ? $manufacturer[0]->name : get_bloginfo( 'name' ),
+				"model"           => get_the_title(),
+				"sku"             => fs_get_product_code(),
+				"productID"       => get_the_ID(),
+				"description"     => get_the_excerpt(),
+				"name"            => get_the_title(),
+			);
+
+			echo ' <script type="application/ld+json">';
+			echo json_encode( $schema );
+			echo ' </script>';
+		}
 	}
 
 }

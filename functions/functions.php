@@ -1460,9 +1460,9 @@ function fs_get_product_code( $product_id = 0 ) {
  * @return string артикул товара
  */
 function fs_product_code( $product_id = 0, $wrap = '%s' ) {
-	$articul    = fs_get_product_code( $product_id );
+	$articul = fs_get_product_code( $product_id );
 	if ( $articul ) {
-		printf( '<span class="fs-sku" data-fs-element="sku">'.$wrap.'</span>', esc_html( $articul ) );
+		printf( '<span class="fs-sku" data-fs-element="sku">' . $wrap . '</span>', esc_html( $articul ) );
 	}
 }
 
@@ -1976,6 +1976,30 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $args = arr
 	} else {
 		echo '<img src="' . esc_url( FS_PLUGIN_URL . 'assets/img/image.svg' ) . '" alt="' . esc_attr__( 'No image', 'f-shop' ) . '">';
 	}
+}
+
+/**
+ * Возвращает ссылку на миниатюру товара
+ *
+ * @param int $product_id
+ * @param string $size
+ *
+ * @return false|string|null
+ */
+function fs_get_product_thumbnail_url( $product_id = 0, $size = 'thumbnail' ) {
+	$img_class = new FS\FS_Images_Class();
+	$gallery   = $img_class->get_gallery( $product_id );
+	$url       = null;
+	if ( has_post_thumbnail( $product_id ) ) {
+		$url = get_the_post_thumbnail_url( $product_id, $size );
+	} elseif ( count( $gallery ) ) {
+		$attach_id = array_shift( $gallery );
+		$url       = wp_get_attachment_image_url( $attach_id, $size, false );
+	} else {
+		$url = FS_PLUGIN_URL . 'assets/img/image.svg';
+	}
+
+	return $url;
 }
 
 /**
