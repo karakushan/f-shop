@@ -76,11 +76,20 @@
     <h3 class="checkout-title"><?php esc_html_e( 'Information about delivery', 'f-shop' ) ?></h3>
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
-				<?php fs_form_field( 'fs_first_name' ) ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+						<?php fs_form_field( 'fs_first_name' ) ?>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+						<?php fs_form_field( 'fs_last_name' ) ?>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-				<?php fs_form_field( 'fs_last_name' ) ?>
+				<?php fs_form_field( 'fs_city' ) ?>
             </div>
             <div class="form-group">
 				<?php fs_form_field( 'fs_email' ) ?>
@@ -106,11 +115,6 @@
             <div class="form-group"><?php fs_form_field( 'fs_comment' ) ?></div>
         </div>
     </div>
-	<?php if ( ! is_user_logged_in() ): ?>
-        <div class="form-group">
-			<?php fs_form_field( 'fs_customer_register' ) ?>
-        </div>
-	<?php endif ?>
     <p class="text-center">
 		<?php fs_order_send(); ?>
     </p>

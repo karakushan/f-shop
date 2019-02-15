@@ -1204,5 +1204,17 @@ td.fs_photo.column-fs_photo img {
     background-color: #fdd591; }
   100% {
     background-color: #fdcb77; } }
+.iziToast > .iziToast-body .iziToast-texts {
+  margin: 10px 0; }
+.iziToast > .iziToast-body .iziToast-buttons {
+  margin-top: 10px; }
+.iziToast > .iziToast-body .iziToast-title {
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em; }
+.iziToast > .iziToast-body .iziToast-message.error {
+  color: red; }
+.iziToast > .iziToast-body .iziToast-message.success {
+  color: green; }
 
 /*# sourceMappingURL=f-shop.css.map */

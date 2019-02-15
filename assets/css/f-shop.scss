@@ -1374,3 +1374,30 @@ $darkcolor: #444;
     background-color: lighten($accentcolor, 15%);
   }
 }
+
+.iziToast>.iziToast-body {
+  .iziToast-texts {
+    margin: 10px 0;
+
+  }
+  .iziToast-buttons {
+    margin-top: 10px;
+    button {}
+  }
+  .iziToast-title {
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .iziToast-message {
+
+    &.error {
+      color: red;
+
+    }
+    &.success {
+      color: green;
+
+    }
+  }
+}
