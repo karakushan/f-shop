@@ -41,6 +41,7 @@ class FS_Config {
 			'product_taxonomy'       => 'catalog',
 			'product_att_taxonomy'   => 'product-attributes',
 			'product_pay_taxonomy'   => 'fs-payment-methods',
+			'manufacturer_taxonomy'   => 'brands',
 			'product_del_taxonomy'   => 'fs-delivery-methods',
 			'product_taxes_taxonomy' => 'fs-taxes',
 			'discount_taxonomy'      => 'fs-discounts',
@@ -608,6 +609,14 @@ class FS_Config {
 					'type' => 'text',
 					'args' => array()
 				)
+			),
+			// Дополнительные поля налога
+			$this->data['manufacturer_taxonomy'] => array(
+				'_thumbnail_id'         => array(
+					'name' => __( 'Thumbnail', 'f-shop' ),
+					'type' => 'image',
+					'args' => array()
+				),
 			),
 			// Дополнительные поля скидок
 			$this->data['discount_taxonomy']      => array(
