@@ -39,6 +39,7 @@ class FS_Shortcode {
 		add_shortcode( 'fs_list_orders', array( 'FS\FS_Orders_Class', 'list_orders' ) );
 
 
+
 	}
 
 	/**

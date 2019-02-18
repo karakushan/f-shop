@@ -509,6 +509,7 @@ class FS_Ajax_Class {
 			$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
 			$sanitize_field['fs_payment_methods']  = $pay_method->name;
 			$_SESSION['fs_last_order_id']          = $order_id;
+			$_SESSION['fs_last_order_pay']         = $pay_method ? $pay_method->slug : 0;
 
 			// текст письма заказчику
 			$sanitize_field['message'] = fs_option( 'customer_mail' );
@@ -547,12 +548,14 @@ class FS_Ajax_Class {
 				)
 			);
 
-			$result = array(
+			$redirect_to   = $pay_method && get_term_meta( $pay_method->term_id, '_fs_checkout_redirect', 1 ) ? 'page_payment' : 'page_success';
+			$redirect_link = get_permalink( fs_option( $redirect_to ) );
+			$result        = array(
 				'msg'      => sprintf( __( 'Order #%d successfully added', 'f-shop' ), $order_id ),
 				'products' => $fs_products,
 				'order_id' => $order_id,
 				'sum'      => $sum,
-				'redirect' => get_permalink( fs_option( 'fs_checkout_redirect', fs_option( 'page_success', 0 ) ) )
+				'redirect' => $redirect_link
 			);
 			unset( $_SESSION['cart'] );
 			wp_send_json_success( $result );

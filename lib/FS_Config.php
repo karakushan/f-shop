@@ -41,7 +41,7 @@ class FS_Config {
 			'product_taxonomy'       => 'catalog',
 			'product_att_taxonomy'   => 'product-attributes',
 			'product_pay_taxonomy'   => 'fs-payment-methods',
-			'manufacturer_taxonomy'   => 'brands',
+			'manufacturer_taxonomy'  => 'brands',
 			'product_del_taxonomy'   => 'fs-delivery-methods',
 			'product_taxes_taxonomy' => 'fs-taxes',
 			'discount_taxonomy'      => 'fs-discounts',
@@ -561,6 +561,12 @@ class FS_Config {
 					'help' => __( 'If you turn off, then the payment method will not be visible to users, only in the admin panel.', 'f-shop' ),
 					'type' => 'checkbox',
 					'args' => array()
+				),
+				'_fs_checkout_redirect' => array(
+					'name' => __( 'When choosing this method, send the buyer immediately to the payment page', 'f-shop' ),
+					'help' => __( 'This is convenient in some cases, but it is better to leave this option off', 'f-shop' ),
+					'type' => 'checkbox',
+					'args' => array()
 				)
 			),
 			'fs-delivery-methods'                 => array(
@@ -611,8 +617,8 @@ class FS_Config {
 				)
 			),
 			// Дополнительные поля налога
-			$this->data['manufacturer_taxonomy'] => array(
-				'_thumbnail_id'         => array(
+			$this->data['manufacturer_taxonomy']  => array(
+				'_thumbnail_id' => array(
 					'name' => __( 'Thumbnail', 'f-shop' ),
 					'type' => 'image',
 					'args' => array()
