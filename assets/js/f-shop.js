@@ -165,6 +165,16 @@
     $(document).on('change input', '[data-fs-type="cart-quantity"]', function () {
         fShop.changeCartItemCount($(this))
     });
+    // Покупка в 1 клик
+    $(document).on('click', '[data-fs-element="buy-one-click"]', function (event) {
+        event.preventDefault();
+        let detail = $(this).data();
+        // создаём событие
+        let fsBuyOneClick = new CustomEvent("fsBuyOneClick", {
+            detail: detail
+        });
+        document.dispatchEvent(fsBuyOneClick);
+    });
 
 
 //добавление товара в корзину (сессию)
@@ -177,64 +187,11 @@
         let count = el.attr('data-count');
 
         if (productData.available == false) {
-            iziToast.show({
-                theme: 'light',
-                /*icon: 'fas fa-info-circle',*/
-                timeout: false,
-                maxWidth: 340,
-                overlay: true,
-                title: 'Сообщить о наличии',
-                message: 'Товара &laquo;' + productData.name + '&raquo; нет на складе.<br> Оставьте Ваш E-mail и мы сообщим когда товар будет в наличии. <br>',
-                position: 'topCenter',
-                id: 'report-availability',
-                buttons: [
-                    ['<input type="email" name="userEmail" placeholder="Ваш E-mail">', function (instance, toast) {
-                        console.log(instance) // using the name of input to get the value
-                    }, 'input'],
-                    ['<button>Отправить</button>', function (instance, toast) {
-                        let userEmail = $(toast).find('[name="userEmail"]').val();
-                        $.ajax({
-                            type: 'POST',
-                            url: fShop.ajaxurl,
-                            data: fShop.ajaxData('fs_report_availability', {
-                                "email": userEmail,
-                                "product_id": product_id,
-                                "product_name": productData.name,
-                                "product_url": productData.url,
-                                "variation": variation,
-                                "count": count
-                            }),
-                            success: function (result) {
-                                if (result.success) {
-                                    $(toast).find('.iziToast-message').addClass('success').html(result.data.msg);
-                                    $(toast).find('.iziToast-buttons').hide();
-                                } else {
-                                    $(toast).find('.iziToast-message').addClass('error').html(result.data.msg);
-                                }
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                console.log('error...', xhr);
-                                //error logging
-                            },
-                            complete: function () {
-                                //afer ajax call is completed
-                            }
-                        });
-
-                    }]
-                ]
-
+            // создаём событие
+            let fsBuyNoAvailable = new CustomEvent("fsBuyNoAvailable", {
+                detail: productData
             });
-            return;
-        }
-
-        // если кнопка выключена, выводим сообщение почему товар не доступен
-        if (el.attr("data-disabled") == "true") {
-            iziToast.show({
-                theme: 'light',
-                message: el.data("disabled-message"),
-                position: 'topCenter',
-            });
+            document.dispatchEvent(fsBuyNoAvailable);
             return;
         }
 

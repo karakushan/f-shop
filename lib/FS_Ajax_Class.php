@@ -70,6 +70,7 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 		add_action( 'wp_ajax_nopriv_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 
+
 		//Регистрируем обработку AJAX событий
 		if ( is_array( $this->ajax_actions() ) && count( $this->ajax_actions() ) ) {
 			foreach ( $this->ajax_actions() as $key => $action ) {
@@ -82,11 +83,12 @@ class FS_Ajax_Class {
 	function ajax_actions() {
 		$actions = array(
 			'fs_report_availability' => array( $this, 'report_availability' ),
-			'order_send'             => array( $this, 'order_send_ajax' )
+			'order_send'             => array( $this, 'order_send_ajax' ),
 		);
 
 		return apply_filters( 'fs_ajax_actions', $actions );
 	}
+
 
 	/**
 	 * Отправляет админу сообщение уведомить юзера о наличии товара
@@ -382,8 +384,9 @@ class FS_Ajax_Class {
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
 		}
-		$product_class      = new FS_Product_Class();
-		$fs_products        = FS_Cart_Class::get_cart();
+		$product_class = new FS_Product_Class();
+		$fs_products   = FS_Cart_Class::get_cart();
+
 		$fs_custom_products = ! empty( $_POST['fs_custom_product'] ) ? serialize( $_POST['fs_custom_product'] ) : '';
 		$user_id            = 0;
 		$delivery_cost      = floatval( get_term_meta( intval( $_POST['fs_delivery_methods'] ), '_fs_delivery_cost', 1 ) );

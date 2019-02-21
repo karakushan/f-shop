@@ -179,6 +179,10 @@ class FS_Cart_Class {
 	public static function get_cart() {
 		if ( ! empty( $_SESSION['cart'] ) ) {
 			return $_SESSION['cart'];
+		} elseif ( ! empty( $_POST['cart'] ) ) {
+			$_SESSION['cart'] = $_POST['cart'];
+
+			return $_POST['cart'];
 		} else {
 			return [];
 		}

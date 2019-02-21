@@ -2764,3 +2764,19 @@ function phpinfo2array() {
 
 	return $phpinfo;
 }
+
+function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик', $args = array() ) {
+	$product_id = fs_get_product_id( $product_id );
+	$atts       = fs_parse_attr( $args, array(
+		'type'            => 'button',
+		'class'           => 'fs-buy-one-click',
+		'data-fs-element' => 'buy-one-click',
+		'data-id'         => $product_id,
+		'data-name'       => get_the_title( $product_id ),
+		'data-url'        => get_the_permalink( $product_id ),
+		'data-price'      => apply_filters( 'fs_price_format', fs_get_price( $product_id ) ),
+		'data-currency'   => fs_currency( $product_id ),
+		'data-thumbnail'  => fs_get_product_thumbnail_url( $product_id, 'medium' ),
+	) );
+	echo '<button ' . $atts . '>' . esc_html( $text ) . '</button>';
+}

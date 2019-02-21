@@ -1401,3 +1401,45 @@ $darkcolor: #444;
     }
   }
 }
+
+#buyOneClickPopup {
+  .iziToast-title {
+    margin-bottom: 20px;
+  }
+  .fs-price {
+    margin: 15px 0;
+    font-size: 15px;
+    font-weight: 700;
+    border: 1px solid #fff;
+    padding: 6px;
+    text-align: center;
+    color: #000;
+    background: #efefef;
+    >span {
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+    }
+  }
+  .iziToast-message {
+    width: 100%;
+  }
+  form {
+    .form-group {
+      margin-bottom: 0.5rem;
+    }
+    input {
+      width: 100%;
+      border-radius: 0;
+      &[type=submit] {
+        padding: 12px;
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 18px;
+        letter-spacing: 0.05em;
+        border: 0;
+      }
+    }
+  }
+}
+
