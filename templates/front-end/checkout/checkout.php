@@ -73,6 +73,26 @@
             </tbody>
         </table>
     </div>
+    <div class="fs-checkout-sumary">
+        <table class="table">
+            <tr>
+                <td>Стоимость товаров:</td>
+                <td><?php fs_cart_cost() ?></td>
+            </tr>
+            <tr>
+                <td>Стоимость доставки:</td>
+                <td><?php fs_delivery_cost() ?></td>
+            </tr>
+            <tr>
+                <td>Скидка:</td>
+                <td><?php fs_total_discount() ?></td>
+            </tr>
+            <tr>
+                <td>Всего к оплате:</td>
+                <td><?php fs_total_amount() ?></td>
+            </tr>
+        </table>
+    </div>
     <h3 class="checkout-title"><?php esc_html_e( 'Information about delivery', 'f-shop' ) ?></h3>
     <div class="row">
         <div class="col-md-6">
@@ -115,6 +135,11 @@
             <div class="form-group"><?php fs_form_field( 'fs_comment' ) ?></div>
         </div>
     </div>
+	<?php if ( ! is_user_logged_in() ): ?>
+        <div class="form-group">
+			<?php fs_form_field( 'fs_customer_register' ) ?>
+        </div>
+	<?php endif ?>
     <p class="text-center">
 		<?php fs_order_send(); ?>
     </p>

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-18 13:53+0000\n"
-"PO-Revision-Date: 2019-02-18 13:55+0000\n"
+"POT-Creation-Date: 2019-02-22 09:33+0000\n"
+"PO-Revision-Date: 2019-02-22 09:35+0000\n"
 "Last-Translator: ubay-admin <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -24,7 +24,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Loco-Target-Locale: ru_RU\n"
-"X-Loco-Version: 2.2.0; wp-5.0.3"
+"X-Loco-Version: 2.2.0; wp-5.1"
 
 #: lib/FS_Post_Type.php:54 lib/FS_Post_Type.php:65 lib/FS_Settings_Class.php:71
 msgid "Products"
@@ -539,7 +539,8 @@ msgstr "Клиент"
 msgid "Basket"
 msgstr "Корзина"
 
-#: lib/FS_Config.php:256 templates/front-end/cart/list-products.php:85
+#: lib/FS_Config.php:256 lib/FS_Init.php:173
+#: templates/front-end/cart/list-products.php:85
 msgid "Checkout"
 msgstr "Оформить заказ"
 
@@ -890,7 +891,7 @@ msgstr "Значение скидки для условия"
 msgid "Discount amount"
 msgstr "Сумма скидки"
 
-#: lib/FS_Cart_Class.php:69 lib/FS_Ajax_Class.php:572 lib/FS_Ajax_Class.php:656
+#: lib/FS_Cart_Class.php:69 lib/FS_Ajax_Class.php:575 lib/FS_Ajax_Class.php:659
 msgid "Security check failed"
 msgstr "Ошибка при проверке безопасности"
 
@@ -915,34 +916,34 @@ msgstr "Позиция удачно была удалена из корзины"
 msgid "An error occurred while removing position from the cart"
 msgstr "Возникла ошибка при удалении позиции из корзины"
 
-#: lib/FS_Ajax_Class.php:96 lib/FS_Ajax_Class.php:383
+#: lib/FS_Ajax_Class.php:98 lib/FS_Ajax_Class.php:385
 msgid "Failed verification of nonce form"
 msgstr "Ошибка верификации формы"
 
-#: lib/FS_Ajax_Class.php:100
+#: lib/FS_Ajax_Class.php:102
 msgid "Пожалуйста введите валидный адрес э-почты"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:102
+#: lib/FS_Ajax_Class.php:104
 msgid "Просьба уведомить о наличии товара"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:103
+#: lib/FS_Ajax_Class.php:105
 #, php-format
 msgid ""
 "Пользователь %s просит уведомить его о наличии товара \"%s\". Ссылка на "
 "товар: %s"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:113
+#: lib/FS_Ajax_Class.php:115
 msgid "Ваш запрос успешно отправлен!"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:119
+#: lib/FS_Ajax_Class.php:121
 msgid "Возникла ошибка с отправкой письма администратору сайта!"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:313 lib/FS_Ajax_Class.php:315
+#: lib/FS_Ajax_Class.php:315 lib/FS_Ajax_Class.php:317
 msgid ""
 "Goods with such a set of characteristics are not in stock. Try changing "
 "parameters."
@@ -950,21 +951,21 @@ msgstr ""
 "Товара с такими характеристиками нет на складе. Попробуйте изменить "
 "параметры."
 
-#: lib/FS_Ajax_Class.php:429
+#: lib/FS_Ajax_Class.php:432
 msgid "\">Forgot your password?</a>"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:533 lib/FS_Ajax_Class.php:540
+#: lib/FS_Ajax_Class.php:536 lib/FS_Ajax_Class.php:543
 #, php-format
 msgid "Order goods on the site \"%s\""
 msgstr "Заказ товаров на сайте \"%s\""
 
-#: lib/FS_Ajax_Class.php:554
+#: lib/FS_Ajax_Class.php:557
 #, php-format
 msgid "Order #%d successfully added"
 msgstr "Заказ #%d успешно  создан"
 
-#: lib/FS_Ajax_Class.php:564
+#: lib/FS_Ajax_Class.php:567
 msgid "Errors occurred while creating an order"
 msgstr "Возникла ошибка при создании заказа"
 
@@ -1184,39 +1185,39 @@ msgstr "Обновление создание базы закончилось у
 msgid "An error occurred during the process of database updates!"
 msgstr "Произошла непредвиденная ошибка в процессе обновления/создания базы!"
 
-#: lib/FS_Init.php:161
+#: lib/FS_Init.php:163
 msgid "Success!"
 msgstr "Успех!"
 
-#: lib/FS_Init.php:162
+#: lib/FS_Init.php:164
 msgid "Error!"
 msgstr "Ошибка!"
 
-#: lib/FS_Init.php:163
+#: lib/FS_Init.php:165
 msgid "Your order has been successfully created. We will contact you shortly."
 msgstr ""
 "Ваш заказ успешно создан! Мы свяжемся с вами в ближайшее время для "
 "обсуждения деталей."
 
-#: lib/FS_Init.php:164
+#: lib/FS_Init.php:166
 msgid "You have selected all available items from stock."
 msgstr "Вы выбрали все доступные товары со склада."
 
-#: lib/FS_Init.php:165
-msgid ""
-"Item &laquo;%product%&raquo; successfully added to cart. <a "
-"href=\"%cart_url%\">Go to shopping cart</a>"
-msgstr ""
-"Товар &laquo;%product%&raquo; успешно добавлен в корзину. <a "
-"href=\"%cart_url%\">Перейти в корзину</a>"
+#: lib/FS_Init.php:167 lib/FS_Init.php:169
+msgid "Item &laquo;%product%&raquo; successfully added to cart."
+msgstr "Товар &laquo;%product%&raquo; успешно добавлен в корзину."
 
-#: lib/FS_Init.php:166
+#: lib/FS_Init.php:172
+msgid "To catalog"
+msgstr "В каталог"
+
+#: lib/FS_Init.php:174
 msgid ""
 "Item &laquo;%product%&raquo; successfully added to wishlist. <a "
-"href=\"%wishlist_url%\">Go to wishlist</a>"
+"href=\"%checkout_url%\">Go to wishlist</a>"
 msgstr ""
 "Товар &laquo;%product%&raquo; успешно добавлен в список желаний. <a "
-"href=\"%wishlist_url%\">Перейти к списку желаний</a>"
+"href=\"%checkout_url%\">К списку желаний</a>"
 
 #: lib/FS_Attribute_Widget.php:67
 msgid "Feature Group"
@@ -1314,37 +1315,37 @@ msgstr "Возникла ошибка при добавлении товара �
 msgid "Sent"
 msgstr "Отправлено"
 
-#: functions/functions.php:1138
+#: functions/functions.php:1145
 msgid "Remove all items"
 msgstr "Удалить все товары"
 
-#: functions/functions.php:1145
+#: functions/functions.php:1152
 msgid "Are you sure you want to empty the trash?"
 msgstr "Вы точно намерены опустошить вашу корзину?"
 
-#: functions/functions.php:1251
+#: functions/functions.php:1258
 msgid "Add to wishlist"
 msgstr "Добавить в список желаний"
 
-#: functions/functions.php:1359
+#: functions/functions.php:1366
 #, php-format
 msgid "Template file %s not found in function %s"
 msgstr "Файл шаблона %s не найден в функции %s"
 
-#: functions/functions.php:1399 templates/front-end/auth/register.php:33
+#: functions/functions.php:1406 templates/front-end/auth/register.php:33
 msgid "Login"
 msgstr "Логин"
 
-#: functions/functions.php:1979
+#: functions/functions.php:1986
 msgid "No image"
 msgstr "Нет фото"
 
-#: functions/functions.php:2288
+#: functions/functions.php:2295
 #, php-format
 msgid "Showing %1$d products from %2$d"
 msgstr "Показано %1$d товаров из %2$d"
 
-#: functions/functions.php:2588
+#: functions/functions.php:2595
 #, php-format
 msgid "File \"%s\" not found"
 msgstr "Файл \"%s\" не найден"

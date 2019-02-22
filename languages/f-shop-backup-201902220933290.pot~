@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-22 09:33+0000\n"
+"POT-Creation-Date: 2019-02-18 13:53+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -512,8 +512,7 @@ msgstr ""
 msgid "Basket"
 msgstr ""
 
-#: lib/FS_Config.php:256 lib/FS_Init.php:173
-#: templates/front-end/cart/list-products.php:85
+#: lib/FS_Config.php:256 templates/front-end/cart/list-products.php:85
 msgid "Checkout"
 msgstr ""
 
@@ -835,7 +834,7 @@ msgstr ""
 msgid "Discount amount"
 msgstr ""
 
-#: lib/FS_Cart_Class.php:69 lib/FS_Ajax_Class.php:575 lib/FS_Ajax_Class.php:659
+#: lib/FS_Cart_Class.php:69 lib/FS_Ajax_Class.php:572 lib/FS_Ajax_Class.php:656
 msgid "Security check failed"
 msgstr ""
 
@@ -860,54 +859,54 @@ msgstr ""
 msgid "An error occurred while removing position from the cart"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:98 lib/FS_Ajax_Class.php:385
+#: lib/FS_Ajax_Class.php:96 lib/FS_Ajax_Class.php:383
 msgid "Failed verification of nonce form"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:102
+#: lib/FS_Ajax_Class.php:100
 msgid "Пожалуйста введите валидный адрес э-почты"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:104
+#: lib/FS_Ajax_Class.php:102
 msgid "Просьба уведомить о наличии товара"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:105
+#: lib/FS_Ajax_Class.php:103
 #, php-format
 msgid ""
 "Пользователь %s просит уведомить его о наличии товара \"%s\". Ссылка на "
 "товар: %s"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:115
+#: lib/FS_Ajax_Class.php:113
 msgid "Ваш запрос успешно отправлен!"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:121
+#: lib/FS_Ajax_Class.php:119
 msgid "Возникла ошибка с отправкой письма администратору сайта!"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:315 lib/FS_Ajax_Class.php:317
+#: lib/FS_Ajax_Class.php:313 lib/FS_Ajax_Class.php:315
 msgid ""
 "Goods with such a set of characteristics are not in stock. Try changing "
 "parameters."
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:432
+#: lib/FS_Ajax_Class.php:429
 msgid "\">Forgot your password?</a>"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:536 lib/FS_Ajax_Class.php:543
+#: lib/FS_Ajax_Class.php:533 lib/FS_Ajax_Class.php:540
 #, php-format
 msgid "Order goods on the site \"%s\""
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:557
+#: lib/FS_Ajax_Class.php:554
 #, php-format
 msgid "Order #%d successfully added"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:567
+#: lib/FS_Ajax_Class.php:564
 msgid "Errors occurred while creating an order"
 msgstr ""
 
@@ -1120,34 +1119,32 @@ msgstr ""
 msgid "An error occurred during the process of database updates!"
 msgstr ""
 
-#: lib/FS_Init.php:163
+#: lib/FS_Init.php:161
 msgid "Success!"
 msgstr ""
 
-#: lib/FS_Init.php:164
+#: lib/FS_Init.php:162
 msgid "Error!"
 msgstr ""
 
-#: lib/FS_Init.php:165
+#: lib/FS_Init.php:163
 msgid "Your order has been successfully created. We will contact you shortly."
 msgstr ""
 
-#: lib/FS_Init.php:166
+#: lib/FS_Init.php:164
 msgid "You have selected all available items from stock."
 msgstr ""
 
-#: lib/FS_Init.php:167 lib/FS_Init.php:169
-msgid "Item &laquo;%product%&raquo; successfully added to cart."
+#: lib/FS_Init.php:165
+msgid ""
+"Item &laquo;%product%&raquo; successfully added to cart. <a "
+"href=\"%cart_url%\">Go to shopping cart</a>"
 msgstr ""
 
-#: lib/FS_Init.php:172
-msgid "To catalog"
-msgstr ""
-
-#: lib/FS_Init.php:174
+#: lib/FS_Init.php:166
 msgid ""
 "Item &laquo;%product%&raquo; successfully added to wishlist. <a "
-"href=\"%checkout_url%\">Go to wishlist</a>"
+"href=\"%wishlist_url%\">Go to wishlist</a>"
 msgstr ""
 
 #: lib/FS_Attribute_Widget.php:67
@@ -1244,37 +1241,37 @@ msgstr ""
 msgid "Sent"
 msgstr ""
 
-#: functions/functions.php:1145
+#: functions/functions.php:1138
 msgid "Remove all items"
 msgstr ""
 
-#: functions/functions.php:1152
+#: functions/functions.php:1145
 msgid "Are you sure you want to empty the trash?"
 msgstr ""
 
-#: functions/functions.php:1258
+#: functions/functions.php:1251
 msgid "Add to wishlist"
 msgstr ""
 
-#: functions/functions.php:1366
+#: functions/functions.php:1359
 #, php-format
 msgid "Template file %s not found in function %s"
 msgstr ""
 
-#: functions/functions.php:1406 templates/front-end/auth/register.php:33
+#: functions/functions.php:1399 templates/front-end/auth/register.php:33
 msgid "Login"
 msgstr ""
 
-#: functions/functions.php:1986
+#: functions/functions.php:1979
 msgid "No image"
 msgstr ""
 
-#: functions/functions.php:2295
+#: functions/functions.php:2288
 #, php-format
 msgid "Showing %1$d products from %2$d"
 msgstr ""
 
-#: functions/functions.php:2595
+#: functions/functions.php:2588
 #, php-format
 msgid "File \"%s\" not found"
 msgstr ""

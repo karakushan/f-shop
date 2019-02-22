@@ -1247,4 +1247,44 @@ td.fs_photo.column-fs_photo img {
     letter-spacing: 0.05em;
     border: 0; }
 
+.iziToast-message .fs-atc-price {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000; }
+  .iziToast-message .fs-atc-price > span {
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: .05em; }
+.iziToast-message .fs-atc-message {
+  margin-bottom: 10px;
+  line-height: 1.5; }
+.iziToast-message .fs-atc-buttons {
+  display: flex;
+  justify-content: space-between; }
+
+.fs-checkout-sumary {
+  display: flex;
+  padding-top: 20px;
+  border-top: 1px solid #eee; }
+  .fs-checkout-sumary table {
+    max-width: 300px; }
+    .fs-checkout-sumary table td {
+      padding: 5px 0;
+      font-weight: 300;
+      border: 0;
+      font-size: 14px; }
+      .fs-checkout-sumary table td > span > span {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em; }
+      .fs-checkout-sumary table td:first-child {
+        font-weight: 500; }
+    .fs-checkout-sumary table tr:last-child td {
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 15px;
+      letter-spacing: 0.05em;
+      color: #777; }
+
 /*# sourceMappingURL=f-shop.css.map */

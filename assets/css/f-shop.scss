@@ -1443,3 +1443,71 @@ $darkcolor: #444;
   }
 }
 
+.iziToast-message{
+  .fs-atc-price {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #000;
+    >span{
+      font-weight: 300;
+      font-size: 14px;
+      letter-spacing: .05em;
+    }
+  }
+  .fs-atc-message{
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .fs-atc-buttons{
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.fs-checkout-sumary{
+  display: flex;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+
+
+  table{
+    max-width: 300px;
+    td{
+      padding: 5px 0;
+      font-weight: 300;
+      border:0;
+      font-size: 14px;
+
+
+      >span{
+
+        >span{
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+
+        }
+      }
+
+
+      &:first-child{
+        font-weight: 500;
+
+      }
+    }
+    tr{
+      &:last-child{
+        td{
+          font-weight: 700;
+          text-transform: uppercase;
+          font-size: 15px;
+          letter-spacing: 0.05em;
+          color: #777;
+        }
+
+      }
+    }
+  }
+}
+

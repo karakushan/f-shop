@@ -688,7 +688,7 @@ function fs_add_to_cart( $product_id = 0, $label = null, $args = array() ) {
 			'data-product-id' => $product_id,
 			'data-available'  => fs_aviable_product( $product_id ) ? 'true' : 'false',
 			'data-name'       => get_the_title( $product_id ),
-			'data-price'      => fs_get_price( $product_id ),
+			'data-price'      => apply_filters( 'fs_price_format', fs_get_price( $product_id ) ),
 			'data-currency'   => fs_currency(),
 			'data-url'        => get_the_permalink( $product_id ),
 			'data-sku'        => fs_get_product_code( $product_id ),
@@ -877,11 +877,18 @@ function fs_cart_url( $show = true ) {
 /**
  * Displays a link to the checkout or payment page.
  *
+ * @param bool $echo
+ *
+ * @return false|string
  */
-function fs_checkout_url() {
+function fs_checkout_url( $echo = true ) {
 	$checkout_page_id = fs_option( 'page_checkout', 0 );
+	if ( $echo ) {
+		echo esc_url( get_permalink( $checkout_page_id ) );
+	} else {
+		return get_permalink( $checkout_page_id );
+	}
 
-	echo esc_url( get_permalink( $checkout_page_id ) );
 
 }
 

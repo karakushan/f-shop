@@ -15,11 +15,16 @@ jQuery(document).ready(function ($) {
         var button = event.detail.button;
         iziToast.show({
             image: event.detail.image,
+            imageWidth: 150,
             theme: 'light',
+            timeout: false,
+            maxWidth: 540,
+            closeOnEscape: true,
             title: fShop.getLang('success'),
-            message: fShop.strReplace(fShop.getLang('addToCart'), {
+            message: fShop.strReplace(fShop.getLang('addToCartButtons'), {
                 '%product%': button.data('name'),
-                '%cart_url%': fShop.getSettings('cartUrl')
+                '%price%': button.data('price'),
+                '%currency%': button.data('currency')
             }),
             position: 'topCenter',
 
