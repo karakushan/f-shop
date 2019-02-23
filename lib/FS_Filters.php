@@ -135,7 +135,7 @@ class FS_Filters {
 			$query->set( 'post_type', 'product' );
 		} elseif ( $query->is_tax || $query->is_archive ) {
 			// отфильтровываем выключенные для показа товары в админке
-			$meta_query = array(
+			$meta_query []= array(
 				'relation' => 'AND',
 				'exclude'  => array(
 					'relation' => 'OR',
@@ -150,6 +150,15 @@ class FS_Filters {
 					)
 				)
 			);
+
+			// Скрывать товары которых нет в наличии
+			if(fs_option( 'fs_not_aviable_hidden' )){
+				$meta_query []=array(
+					'key'     => $fs_config->meta['remaining_amount'],
+					'compare' => '!=',
+					'value'   => "0"
+				);
+			}
 			$orderby    = array();
 			$order      = '';
 			$tax_query  = array();

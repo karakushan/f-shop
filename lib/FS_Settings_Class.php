@@ -72,6 +72,13 @@ class FS_Settings_Class {
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
+						'name'  => 'fs_not_aviable_hidden',
+						'label' => __( 'Hide items out of stock', 'f-shop' ),
+						'help'  => __( 'Goods that are not available Budus hidden in the archives and catalog. These products are available by direct link..', 'f-shop' ),
+						'value' => fs_option( 'fs_not_aviable_hidden' )
+					),
+					array(
+						'type'  => 'checkbox',
 						'name'  => 'fs_in_stock_manage',
 						'label' => __( 'Enable inventory management', 'f-shop' ),
 						'help'  => __( 'If this option is enabled, the stock of goods will decrease automatically with each purchase.', 'f-shop' ),
