@@ -68,7 +68,7 @@ class FS_Config {
 			'currency'          => 'fs_currency',
 			'sku'               => 'fs_articul',
 			'remaining_amount'  => 'fs_remaining_amount',
-			'gallery'           => 'fs_gallery',
+			'gallery'           => 'fs_galery',
 			'related_products'  => 'fs_related_products',
 			'vendor'            => 'fs_vendor',
 			'variants'          => 'fs_variant',
