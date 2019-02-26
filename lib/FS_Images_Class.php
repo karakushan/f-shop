@@ -68,6 +68,7 @@ class FS_Images_Class {
 		$product_id = fs_get_product_id( $product_id );
 		$gallery    = get_post_meta( $product_id, $fs_config->get_meta( 'gallery' ), false );
 		$gallery    = array_shift( $gallery );
+		$gallery    = apply_filters( 'fs_custom_gallery', $gallery, $product_id );
 		if ( ! $gallery ) {
 			$gallery = [];
 		}
