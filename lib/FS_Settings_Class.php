@@ -101,6 +101,17 @@ class FS_Settings_Class {
 						'label'  => __( 'Sort items in the catalog by', 'f-shop' ),
 						'help'   => __( 'This determines the order in which products are displayed on the site. By default, Wordpress sorts by ID.', 'f-shop' ),
 						'value'  => fs_option( 'fs_product_sort_by' )
+					),
+					array(
+						'type'   => 'radio',
+						'name'   => 'fs_product_filter_type',
+						'values' => array(
+							'IN'  => __( 'The product must have at least one of the selected characteristics in the filter', 'f-shop' ),
+							'AND' => __( 'The product must have all of the selected characteristics in the filter', 'f-shop' )
+						),
+						'label'  => __( 'Method of applying filters in the catalog', 'f-shop' ),
+						'help'   => null,
+						'value'  => fs_option( 'fs_product_filter_type', 'IN' )
 					)
 
 				)
@@ -129,6 +140,12 @@ class FS_Settings_Class {
 						'name'  => 'currency_symbol',
 						'label' => __( 'Currency sign ($ displayed by default)', 'f-shop' ),
 						'value' => fs_option( 'currency_symbol', '$' )
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'fs_currency_code',
+						'label' => __( 'Three-digit currency code', 'f-shop' ),
+						'value' => fs_option( 'fs_currency_code', 'UAH' )
 					),
 					array(
 						'type'  => 'text',

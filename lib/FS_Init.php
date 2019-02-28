@@ -275,8 +275,15 @@ class FS_Init {
 				"model"           => get_the_title(),
 				"sku"             => fs_get_product_code(),
 				"productID"       => get_the_ID(),
-				"description"     => get_the_excerpt(),
+				"description"     => strip_tags( get_the_excerpt() ),
 				"name"            => get_the_title(),
+				"offers"          => [
+					"@type"         => "Offer",
+					"availability"  => fs_aviable_product() ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+					"price"         => fs_get_price(),
+					"priceCurrency" => fs_option( 'fs_currency_code', 'UAH' ),
+					"url"             => get_the_permalink()
+				]
 			);
 
 			echo ' <script type="application/ld+json">';

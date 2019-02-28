@@ -135,7 +135,7 @@ class FS_Filters {
 			$query->set( 'post_type', 'product' );
 		} elseif ( $query->is_tax || $query->is_archive ) {
 			// отфильтровываем выключенные для показа товары в админке
-			$meta_query []= array(
+			$meta_query [] = array(
 				'relation' => 'AND',
 				'exclude'  => array(
 					'relation' => 'OR',
@@ -152,18 +152,18 @@ class FS_Filters {
 			);
 
 			// Скрывать товары которых нет в наличии
-			if(fs_option( 'fs_not_aviable_hidden' )){
-				$meta_query []=array(
+			if ( fs_option( 'fs_not_aviable_hidden' ) ) {
+				$meta_query [] = array(
 					'key'     => $fs_config->meta['remaining_amount'],
 					'compare' => '!=',
 					'value'   => "0"
 				);
 			}
-			$orderby    = array();
-			$order      = '';
-			$tax_query  = array();
-			$per_page   = get_option( "posts_per_page" );
-			$arr_url    = urldecode( $_SERVER['QUERY_STRING'] );
+			$orderby   = array();
+			$order     = '';
+			$tax_query = array();
+			$per_page  = get_option( "posts_per_page" );
+			$arr_url   = urldecode( $_SERVER['QUERY_STRING'] );
 			parse_str( $arr_url, $url );
 
 
@@ -275,10 +275,13 @@ class FS_Filters {
 			//Фильтруем по свойствам (атрибутам)
 			if ( ! empty( $_REQUEST['attributes'] ) ) {
 				$tax_query[] = array(
-					'taxonomy' => 'product-attributes',
-					'field'    => 'id',
-					'terms'    => array_values( $_REQUEST['attributes'] ),
-					'operator' => 'IN'
+					'relation' => 'AND',
+					array(
+						'taxonomy' => 'product-attributes',
+						'field'    => 'id',
+						'terms'    => array_values( $_REQUEST['attributes'] ),
+						'operator' => fs_option( 'fs_product_filter_type', 'IN' )
+					)
 				);
 			}
 

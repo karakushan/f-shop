@@ -39,7 +39,6 @@ class FS_Shortcode {
 		add_shortcode( 'fs_list_orders', array( 'FS\FS_Orders_Class', 'list_orders' ) );
 
 
-
 	}
 
 	/**
@@ -122,11 +121,22 @@ class FS_Shortcode {
 	 *
 	 * @return mixed
 	 */
-	function last_order_info() {
+	function last_order_info( $atts ) {
 		$orders_cl = new FS_Orders_Class;
 		$order     = $orders_cl->get_order( $orders_cl->last_order_id );
 
-		return fs_frontend_template( 'order/last-order-info', array( 'order' => $order ) );
+
+		return fs_frontend_template( 'order/last-order-info', array(
+			'vars' => [
+				'order' => $order,
+				'args'  => shortcode_atts(
+					array(
+						'class' => 'fs-order-info'
+					),
+					$atts, 'fs_last_order_info'
+				)
+			]
+		) );
 	}
 
 	/**
