@@ -31,7 +31,7 @@ class FS_Config {
 		$data       = array(
 			'plugin_path'            => FS_PLUGIN_PATH,
 			'plugin_url'             => FS_PLUGIN_URL,
-			'plugin_ver'             => '1.1',
+			'plugin_ver'             => '1.3',
 			'plugin_name'            => 'f-shop',
 			'plugin_user_template'   => get_template_directory() . '/f-shop/',
 			'plugin_template'        => FS_PLUGIN_PATH . 'templates/front-end/',
@@ -41,6 +41,7 @@ class FS_Config {
 			'product_taxonomy'       => 'catalog',
 			'product_att_taxonomy'   => 'product-attributes',
 			'product_pay_taxonomy'   => 'fs-payment-methods',
+			'manufacturer_taxonomy'  => 'brands',
 			'product_del_taxonomy'   => 'fs-delivery-methods',
 			'product_taxes_taxonomy' => 'fs-taxes',
 			'discount_taxonomy'      => 'fs-discounts',
@@ -257,7 +258,8 @@ class FS_Config {
 				'option'  => 'page_checkout'
 			),
 			'pay'        => array(
-				'content' => '[fs_pay_methods]',
+				'title'   => __( 'Payment order', 'f-shop' ),
+				'content' => '[fs_order_pay]',
 				'option'  => 'page_payment'
 			),
 			'thanks'     => array(
@@ -559,6 +561,12 @@ class FS_Config {
 					'help' => __( 'If you turn off, then the payment method will not be visible to users, only in the admin panel.', 'f-shop' ),
 					'type' => 'checkbox',
 					'args' => array()
+				),
+				'_fs_checkout_redirect' => array(
+					'name' => __( 'When choosing this method, send the buyer immediately to the payment page', 'f-shop' ),
+					'help' => __( 'This is convenient in some cases, but it is better to leave this option off', 'f-shop' ),
+					'type' => 'checkbox',
+					'args' => array()
 				)
 			),
 			'fs-delivery-methods'                 => array(
@@ -607,6 +615,14 @@ class FS_Config {
 					'type' => 'text',
 					'args' => array()
 				)
+			),
+			// Дополнительные поля налога
+			$this->data['manufacturer_taxonomy']  => array(
+				'_thumbnail_id' => array(
+					'name' => __( 'Thumbnail', 'f-shop' ),
+					'type' => 'image',
+					'args' => array()
+				),
 			),
 			// Дополнительные поля скидок
 			$this->data['discount_taxonomy']      => array(

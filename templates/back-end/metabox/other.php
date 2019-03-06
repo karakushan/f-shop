@@ -3,7 +3,7 @@
 <div class="fs-field-row clearfix">
     <label for="fs_product_article"><?php esc_html_e('SKU', 'f-shop') ?></label>
     <input type="text" name="<?php echo esc_attr($this->config->meta['sku']) ?>" id="fs_product_article"
-           value="<?php echo esc_attr(fs_product_code()); ?>" id="price">
+           value="<?php echo esc_attr(fs_get_product_code()); ?>" id="price">
 </div>
 <div class="fs-field-row clearfix">
     <label for="fs_remaining_amount"><?php esc_html_e('Stock in stock', 'f-shop') ?></label>

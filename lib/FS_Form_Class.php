@@ -104,7 +104,7 @@ class FS_Form_Class {
 	function fs_form_field( $field_name, $args = array() ) {
 		$default = array(
 			'type'           => ! empty( FS_Config::$form_fields[ $field_name ]['type'] ) ? FS_Config::$form_fields[ $field_name ]['type'] : 'text',
-			'class'          => 'fs-input',
+			'class'          => 'fs-input form-control',
 			'wrapper'        => false,
 			'autofill'       => true,
 			'wrapper_class'  => 'fs-field-wrapper',

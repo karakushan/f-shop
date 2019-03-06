@@ -50,7 +50,7 @@
             let max = parseInt(maxAttr);
             let curVal = Number(jQueryinput.val());
             let newVal = curVal + 1;
-            if (newVal > max) {
+            if (jQueryinput.data('limit') == 1 && newVal > max) {
                 iziToast.show({
                     theme: 'light',
                     message: this.getLang('limit_product'),
@@ -165,23 +165,33 @@
     $(document).on('change input', '[data-fs-type="cart-quantity"]', function () {
         fShop.changeCartItemCount($(this))
     });
+    // Покупка в 1 клик
+    $(document).on('click', '[data-fs-element="buy-one-click"]', function (event) {
+        event.preventDefault();
+        let detail = $(this).data();
+        // создаём событие
+        let fsBuyOneClick = new CustomEvent("fsBuyOneClick", {
+            detail: detail
+        });
+        document.dispatchEvent(fsBuyOneClick);
+    });
 
 
 //добавление товара в корзину (сессию)
     jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
         event.preventDefault();
         let el = jQuery(this);
+        let productData = el.data();
         let product_id = el.data('product-id');
-        let variation = el.data('variation');
+        let variation = el.attr('data-variation');
         let count = el.attr('data-count');
 
-        // если кнопка выключена, выводим сообщение почему товар не доступен
-        if (el.attr("data-disabled") == "true") {
-            iziToast.show({
-                theme: 'light',
-                message: el.data("disabled-message"),
-                position: 'topCenter',
+        if (productData.available == false) {
+            // создаём событие
+            let fsBuyNoAvailable = new CustomEvent("fsBuyNoAvailable", {
+                detail: productData
             });
+            document.dispatchEvent(fsBuyNoAvailable);
             return;
         }
 
@@ -198,7 +208,7 @@
         var detail = {
             button: el,
             id: product_id,
-            name: el.data('product-name'),
+            name: el.data('name'),
             price: el.data('price'),
             variation: variation,
             currency: el.data('currency'),
@@ -852,9 +862,8 @@
                 data: order_send.serialize(),
                 beforeSend: function () {
                     orderSendBtn.html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
-                }
-            })
-                .done(function (response) {
+                },
+                success: function (response) {
                     console.log(response);
                     orderSendBtn.find('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
                     /* если статус заказ успешный */
@@ -887,7 +896,14 @@
                         });
                         orderSendBtn.html(orderSendBtn.data("content"));
                     }
-                });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log('error...', xhr);
+                },
+                complete: function () {
+                    //afer ajax call is completed
+                }
+            });
 
 
         }

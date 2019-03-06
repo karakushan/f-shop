@@ -77,9 +77,9 @@ class FS_Post_Type {
 				'menu_position'      => 5,
 				'can_export'         => true,
 				'has_archive'        => true,
-				'rewrite'            => true,
+				'rewrite'            => apply_filters( 'fs_product_slug', true ),
 				'query_var'          => true,
-				'taxonomies'         => array( 'catalog','product-attributes' ),
+				'taxonomies'         => array( 'catalog', 'product-attributes' ),
 				'description'        => __( "Здесь размещены товары вашего сайта." ),
 
 				'supports' => array(

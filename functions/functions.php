@@ -391,7 +391,7 @@ function fs_total_discount( $wrap = '%s <span>%s</span>' ) {
 			if ( $item->price > $item->base_price ) {
 				continue;
 			}
-			$discount += $item->base_price - $item->price;
+			$discount += ( $item->base_price - $item->price ) * $item->count;
 		}
 	}
 	$discount = apply_filters( 'fs_price_format', $discount );
@@ -686,9 +686,11 @@ function fs_add_to_cart( $product_id = 0, $label = null, $args = array() ) {
 			'title'           => __( 'Add to cart', 'f-shop' ),
 			'data-action'     => 'add-to-cart',
 			'data-product-id' => $product_id,
+			'data-available'  => fs_aviable_product( $product_id ) ? 'true' : 'false',
 			'data-name'       => get_the_title( $product_id ),
-			'data-price'      => fs_get_price( $product_id ),
+			'data-price'      => apply_filters( 'fs_price_format', fs_get_price( $product_id ) ),
 			'data-currency'   => fs_currency(),
+			'data-url'        => get_the_permalink( $product_id ),
 			'data-sku'        => fs_get_product_code( $product_id ),
 			'id'              => 'fs-atc-' . $product_id,
 			'data-count'      => 1,
@@ -875,11 +877,18 @@ function fs_cart_url( $show = true ) {
 /**
  * Displays a link to the checkout or payment page.
  *
+ * @param bool $echo
+ *
+ * @return false|string
  */
-function fs_checkout_url() {
+function fs_checkout_url( $echo = true ) {
 	$checkout_page_id = fs_option( 'page_checkout', 0 );
+	if ( $echo ) {
+		echo esc_url( get_permalink( $checkout_page_id ) );
+	} else {
+		return get_permalink( $checkout_page_id );
+	}
 
-	echo esc_url( get_permalink( $checkout_page_id ) );
 
 }
 
@@ -946,7 +955,7 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 
 	$pluss    = sprintf( '<button type="button" class="%s" data-fs-count="pluss">%s</button> ', $args['pluss_class'], $args['pluss_content'] );
 	$minus    = sprintf( '<button type="button" class="%s" data-fs-count="minus">%s</button>', $args['minus_class'], $args['minus_content'] );
-	$input    = sprintf( '<input type="text" class="%s" name="count" value="1"  data-fs-action="change_count" data-fs-product-id="%s" ' . $max . '>', $args['input_class'], $product_id, $product_id );
+	$input    = sprintf( '<input type="text" class="%s" name="count" value="1"  data-fs-action="change_count" data-fs-product-id="%s" ' . $max . ' data-limit="%d">', $args['input_class'], $product_id, fs_option( 'fs_in_stock_manage', 0 ) );
 	$quantity = str_replace( array( '%pluss%', '%input%', '%minus%' ), array(
 		$pluss,
 		$input,
@@ -1209,10 +1218,8 @@ function fs_range_slider() {
  * @return float|int|null|string
  */
 function fs_price_max( $filter = true ) {
-	global $wpdb;
-	$config         = new FS\FS_Config();
-	$meta_field     = $config->meta['price'];
-	$meta_value_max = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(meta_value) FROM $wpdb->postmeta WHERE meta_key='%s'", $meta_field ) );
+	global $wpdb, $fs_config;
+	$meta_value_max = $wpdb->get_var( $wpdb->prepare( "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'", $fs_config->meta['price'] ) );
 	$meta_value_max = ! is_null( $meta_value_max ) ? (float) $meta_value_max : 20000;
 	if ( $filter ) {
 		$max = apply_filters( 'fs_price_format', $meta_value_max );
@@ -1464,7 +1471,7 @@ function fs_get_product_code( $product_id = 0 ) {
 function fs_product_code( $product_id = 0, $wrap = '%s' ) {
 	$articul = fs_get_product_code( $product_id );
 	if ( $articul ) {
-		printf( $wrap, esc_html( $articul ) );
+		printf( '<span class="fs-sku" data-fs-element="sku">' . $wrap . '</span>', esc_html( $articul ) );
 	}
 }
 
@@ -1978,6 +1985,30 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $args = arr
 	} else {
 		echo '<img src="' . esc_url( FS_PLUGIN_URL . 'assets/img/image.svg' ) . '" alt="' . esc_attr__( 'No image', 'f-shop' ) . '">';
 	}
+}
+
+/**
+ * Возвращает ссылку на миниатюру товара
+ *
+ * @param int $product_id
+ * @param string $size
+ *
+ * @return false|string|null
+ */
+function fs_get_product_thumbnail_url( $product_id = 0, $size = 'thumbnail' ) {
+	$img_class = new FS\FS_Images_Class();
+	$gallery   = $img_class->get_gallery( $product_id );
+	$url       = null;
+	if ( has_post_thumbnail( $product_id ) ) {
+		$url = get_the_post_thumbnail_url( $product_id, $size );
+	} elseif ( count( $gallery ) ) {
+		$attach_id = array_shift( $gallery );
+		$url       = wp_get_attachment_image_url( $attach_id, $size, false );
+	} else {
+		$url = FS_PLUGIN_URL . 'assets/img/image.svg';
+	}
+
+	return $url;
 }
 
 /**
@@ -2741,6 +2772,7 @@ function phpinfo2array() {
 	return $phpinfo;
 }
 
+<<<<<<< HEAD
 /**
  * Возвращает список прикрепленных к посту изобажений
  *
@@ -2756,4 +2788,20 @@ function fs_get_attached_media( $post_id = 0 ) {
 	}
 
 	return array_unique( $attached_ids );
+=======
+function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик', $args = array() ) {
+	$product_id = fs_get_product_id( $product_id );
+	$atts       = fs_parse_attr( $args, array(
+		'type'            => 'button',
+		'class'           => 'fs-buy-one-click',
+		'data-fs-element' => 'buy-one-click',
+		'data-id'         => $product_id,
+		'data-name'       => get_the_title( $product_id ),
+		'data-url'        => get_the_permalink( $product_id ),
+		'data-price'      => apply_filters( 'fs_price_format', fs_get_price( $product_id ) ),
+		'data-currency'   => fs_currency( $product_id ),
+		'data-thumbnail'  => fs_get_product_thumbnail_url( $product_id, 'medium' ),
+	) );
+	echo '<button ' . $atts . '>' . esc_html( $text ) . '</button>';
+>>>>>>> b7e37d2448172de20c0dc735a1abd19ba231c12c
 }

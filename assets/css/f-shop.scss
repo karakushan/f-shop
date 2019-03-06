@@ -1057,6 +1057,9 @@ td.fs_photo.column-fs_photo img {
   }
   .fs-products-after {
     margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
   .fs-remove-position {
     border: 1px solid $c-red;
@@ -1371,3 +1374,140 @@ $darkcolor: #444;
     background-color: lighten($accentcolor, 15%);
   }
 }
+
+.iziToast>.iziToast-body {
+  .iziToast-texts {
+    margin: 10px 0;
+
+  }
+  .iziToast-buttons {
+    margin-top: 10px;
+    button {}
+  }
+  .iziToast-title {
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .iziToast-message {
+
+    &.error {
+      color: red;
+
+    }
+    &.success {
+      color: green;
+
+    }
+  }
+}
+
+#buyOneClickPopup {
+  .iziToast-title {
+    margin-bottom: 20px;
+  }
+  .fs-price {
+    margin: 15px 0;
+    font-size: 15px;
+    font-weight: 700;
+    border: 1px solid #fff;
+    padding: 6px;
+    text-align: center;
+    color: #000;
+    background: #efefef;
+    >span {
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+    }
+  }
+  .iziToast-message {
+    width: 100%;
+  }
+  form {
+    .form-group {
+      margin-bottom: 0.5rem;
+    }
+    input {
+      width: 100%;
+      border-radius: 0;
+      &[type=submit] {
+        padding: 12px;
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 18px;
+        letter-spacing: 0.05em;
+        border: 0;
+      }
+    }
+  }
+}
+
+.iziToast-message{
+  .fs-atc-price {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #000;
+    >span{
+      font-weight: 300;
+      font-size: 14px;
+      letter-spacing: .05em;
+    }
+  }
+  .fs-atc-message{
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .fs-atc-buttons{
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.fs-checkout-sumary{
+  display: flex;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+
+
+  table{
+    max-width: 300px;
+    td{
+      padding: 5px 0;
+      font-weight: 300;
+      border:0;
+      font-size: 14px;
+
+
+      >span{
+
+        >span{
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+
+        }
+      }
+
+
+      &:first-child{
+        font-weight: 500;
+
+      }
+    }
+    tr{
+      &:last-child{
+        td{
+          font-weight: 700;
+          text-transform: uppercase;
+          font-size: 15px;
+          letter-spacing: 0.05em;
+          color: #777;
+        }
+
+      }
+    }
+  }
+}
+

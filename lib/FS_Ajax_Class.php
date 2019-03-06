@@ -11,12 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class FS_Ajax_Class {
 
+
 	function __construct() {
-
-
-		//  обработка формы заказа
-		add_action( 'wp_ajax_order_send', array( $this, 'order_send_ajax' ) );
-		add_action( 'wp_ajax_nopriv_order_send', array( $this, 'order_send_ajax' ) );
 
 		//  добавление в список желаний
 		add_action( 'wp_ajax_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
@@ -73,6 +69,62 @@ class FS_Ajax_Class {
 		// обновление к-ва товара в корзине
 		add_action( 'wp_ajax_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 		add_action( 'wp_ajax_nopriv_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
+
+
+		//Регистрируем обработку AJAX событий
+		if ( is_array( $this->ajax_actions() ) && count( $this->ajax_actions() ) ) {
+			foreach ( $this->ajax_actions() as $key => $action ) {
+				add_action( 'wp_ajax_' . $key, $action );
+				add_action( 'wp_ajax_nopriv_' . $key, $action );
+			}
+		}
+	}
+
+	function ajax_actions() {
+		$actions = array(
+			'fs_report_availability' => array( $this, 'report_availability' ),
+			'order_send'             => array( $this, 'order_send_ajax' ),
+		);
+
+		return apply_filters( 'fs_ajax_actions', $actions );
+	}
+
+
+	/**
+	 * Отправляет админу сообщение уведомить юзера о наличии товара
+	 */
+	function report_availability() {
+		if ( ! FS_Config::verify_nonce() ) {
+			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
+		}
+		$email = sanitize_email( $_POST['email'] );
+		if ( empty( $email ) || ! is_email( $email ) ) {
+			wp_send_json_error( array( 'msg' => __( 'Пожалуйста введите валидный адрес э-почты', 'f-shop' ) ) );
+		}
+		$subject = __( 'Просьба уведомить о наличии товара', 'f-shop' );
+		$msg     = sprintf( __( 'Пользователь %s просит уведомить его о наличии товара "%s". Ссылка на товар: %s', 'f-shop' ), $email, $_POST['product_name'], $_POST['product_url'] );
+		$headers = array(
+			sprintf(
+				'From: %s <%s>',
+				fs_option( 'name_sender', get_bloginfo( 'name' ) ),
+				fs_option( 'email_sender', 'shop@' . $_SERVER['SERVER_NAME'] )
+			)
+		);
+		if ( wp_mail( fs_option( 'manager_email', get_option( 'admin_email' ) ), $subject, $msg, $headers ) ) {
+			wp_send_json_success( array(
+				'msg'     => __( 'Ваш запрос успешно отправлен!', 'f-shop' ),
+				'post'    => $_POST,
+				'headers' => $headers
+			) );
+		} else {
+			wp_send_json_error( array(
+				'msg'     => __( 'Возникла ошибка с отправкой письма администратору сайта!', 'f-shop' ),
+				'post'    => $_POST,
+				'headers' => $headers
+			) );
+		}
+
+
 	}
 
 	//обновление к-ва товара в корзине аяксом
@@ -332,8 +384,9 @@ class FS_Ajax_Class {
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
 		}
-		$product_class      = new FS_Product_Class();
-		$fs_products        = FS_Cart_Class::get_cart();
+		$product_class = new FS_Product_Class();
+		$fs_products   = FS_Cart_Class::get_cart();
+
 		$fs_custom_products = ! empty( $_POST['fs_custom_product'] ) ? serialize( $_POST['fs_custom_product'] ) : '';
 		$user_id            = 0;
 		$delivery_cost      = floatval( get_term_meta( intval( $_POST['fs_delivery_methods'] ), '_fs_delivery_cost', 1 ) );
@@ -356,9 +409,6 @@ class FS_Ajax_Class {
 				}
 			}
 		}
-
-		// устанавливаем заголовки
-		$headers[] = 'Content-type: text/html; charset=utf-8';
 
 		// проверяем существование пользователя
 		if ( is_user_logged_in() ) {
@@ -462,6 +512,7 @@ class FS_Ajax_Class {
 			$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
 			$sanitize_field['fs_payment_methods']  = $pay_method->name;
 			$_SESSION['fs_last_order_id']          = $order_id;
+			$_SESSION['fs_last_order_pay']         = $pay_method ? $pay_method->slug : 0;
 
 			// текст письма заказчику
 			$sanitize_field['message'] = fs_option( 'customer_mail' );
@@ -470,6 +521,16 @@ class FS_Ajax_Class {
 			// текст письма админу
 			$sanitize_field['message'] = fs_option( 'admin_mail' );
 			$admin_message             = apply_filters( 'fs_email_template', $sanitize_field );
+
+			// Заголовки E-mail
+			$headers = array(
+				sprintf(
+					'From: %s <%s>',
+					fs_option( 'name_sender', get_bloginfo( 'name' ) ),
+					fs_option( 'email_sender', 'shop@' . $_SERVER['SERVER_NAME'] )
+				),
+				'Content-type: text/html; charset=utf-8'
+			);
 
 			//Отсылаем письмо с данными заказа заказчику
 			$customer_mail_header = fs_option( 'customer_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
@@ -490,12 +551,14 @@ class FS_Ajax_Class {
 				)
 			);
 
-			$result = array(
+			$redirect_to   = $pay_method && get_term_meta( $pay_method->term_id, '_fs_checkout_redirect', 1 ) ? 'page_payment' : 'page_success';
+			$redirect_link = get_permalink( fs_option( $redirect_to ) );
+			$result        = array(
 				'msg'      => sprintf( __( 'Order #%d successfully added', 'f-shop' ), $order_id ),
 				'products' => $fs_products,
 				'order_id' => $order_id,
 				'sum'      => $sum,
-				'redirect' => get_permalink( fs_option( 'fs_checkout_redirect', fs_option( 'page_success', 0 ) ) )
+				'redirect' => $redirect_link
 			);
 			unset( $_SESSION['cart'] );
 			wp_send_json_success( $result );

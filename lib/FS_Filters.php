@@ -56,6 +56,8 @@ class FS_Filters {
 				$query->set( 's', '' );
 				$query->set( 'post__in', $sku_products );
 			}
+
+
 			$query->set( 'post_type', 'product' );
 		}
 		if ( ! empty( $_GET['orderby'] ) && $post_type_product && $pagenow == 'edit.php' ) {
@@ -71,7 +73,6 @@ class FS_Filters {
 		}
 		$query->query['action']      = '';
 		$query->query_vars['action'] = '';
-//		fs_debug_data($query,'$query','print_r');
 	}
 
 
@@ -122,17 +123,19 @@ class FS_Filters {
 
 		// If we are on the search page
 		if ( $query->is_search ) {
-
 			// Search by sku
-			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM %s WHERE meta_key='%s' AND meta_value='%s'", $wpdb->postmeta, $fs_config->meta['sku'], get_search_query() ) );
+			$search_query = str_replace( ' ', '%', get_search_query() );
+			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value LIKE '%s'", $fs_config->meta['sku'], '%' . $search_query . '%' ) );
+
 			if ( $sku_products ) {
 				$query->set( 's', '' );
 				$query->set( 'post__in', $sku_products );
 			}
+
 			$query->set( 'post_type', 'product' );
 		} elseif ( $query->is_tax || $query->is_archive ) {
 			// отфильтровываем выключенные для показа товары в админке
-			$meta_query = array(
+			$meta_query [] = array(
 				'relation' => 'AND',
 				'exclude'  => array(
 					'relation' => 'OR',
@@ -147,11 +150,20 @@ class FS_Filters {
 					)
 				)
 			);
-			$orderby    = array();
-			$order      = '';
-			$tax_query  = array();
-			$per_page   = get_option( "posts_per_page" );
-			$arr_url    = urldecode( $_SERVER['QUERY_STRING'] );
+
+			// Скрывать товары которых нет в наличии
+			if ( fs_option( 'fs_not_aviable_hidden' ) ) {
+				$meta_query [] = array(
+					'key'     => $fs_config->meta['remaining_amount'],
+					'compare' => '!=',
+					'value'   => "0"
+				);
+			}
+			$orderby   = array();
+			$order     = '';
+			$tax_query = array();
+			$per_page  = get_option( "posts_per_page" );
+			$arr_url   = urldecode( $_SERVER['QUERY_STRING'] );
 			parse_str( $arr_url, $url );
 
 
@@ -263,10 +275,13 @@ class FS_Filters {
 			//Фильтруем по свойствам (атрибутам)
 			if ( ! empty( $_REQUEST['attributes'] ) ) {
 				$tax_query[] = array(
-					'taxonomy' => 'product-attributes',
-					'field'    => 'id',
-					'terms'    => array_values( $_REQUEST['attributes'] ),
-					'operator' => 'IN'
+					'relation' => 'AND',
+					array(
+						'taxonomy' => 'product-attributes',
+						'field'    => 'id',
+						'terms'    => array_values( $_REQUEST['attributes'] ),
+						'operator' => fs_option( 'fs_product_filter_type', 'IN' )
+					)
 				);
 			}
 
@@ -286,7 +301,6 @@ class FS_Filters {
 				$query->set( 'order', $order );
 			}
 		}
-
 
 	}//end filter_curr_product()
 
