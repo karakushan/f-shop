@@ -2740,3 +2740,20 @@ function phpinfo2array() {
 
 	return $phpinfo;
 }
+
+/**
+ * Возвращает список прикрепленных к посту изобажений
+ *
+ * @param int $post_id
+ *
+ * @return array
+ */
+function fs_get_attached_media( $post_id = 0 ) {
+	$attached_media = get_attached_media( 'image', $post_id );
+	$attached_ids   = array();
+	if ( $attached_media ) {
+		$attached_ids = array_keys( $attached_media );
+	}
+
+	return array_unique( $attached_ids );
+}

@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title><?php esc_html_e('Order on the site', 'f-shop') ?> &laquo;<?php bloginfo('name') ?>&raquo;</title>
+    <title><?php esc_html_e( 'Order on the site', 'f-shop' ) ?> &laquo;<?php bloginfo( 'name' ) ?>&raquo;</title>
 
     <style type="text/css">
         /* Take care of image borders and formatting, client hacks */
@@ -325,22 +325,23 @@
                                     <tr>
                                         <td class="pull-left mobile-header-padding-left"
                                             style="vertical-align: middle;padding-bottom: 10px;">
-                                            <?php if (fs_option('site_logo')): ?>
-                                                <a href="<?php echo esc_url(get_bloginfo('url')) ?>"
+											<?php if ( fs_option( 'site_logo' ) ): ?>
+                                                <a href="<?php echo esc_url( get_bloginfo( 'url' ) ) ?>"
                                                    target="_blank">
-                                                    <img src="<?php echo esc_url(wp_get_attachment_image_url(fs_option('site_logo'), 'full')) ?>"
-                                                         alt="<?php esc_html(get_bloginfo('name')) ?>" height="54">
+													<?php echo wp_get_attachment_image( fs_option( 'site_logo' ), 'full', array(
+														'style' => 'height:auto;max-width:100%;'
+													) ) ?>
                                                 </a>
-                                            <?php else: ?>
-                                                <a href="<?php echo esc_url(get_bloginfo('url')) ?>">
+											<?php else: ?>
+                                                <a href="<?php echo esc_url( get_bloginfo( 'url' ) ) ?>">
                             <span
-                                    style="font-size: 20px; font-weight: bold;color: #4d4d4d;"><?php echo esc_html(fs_option('name_sender', get_bloginfo('name'))) ?></span>
+                                    style="font-size: 20px; font-weight: bold;color: #4d4d4d;"><?php echo esc_html( fs_option( 'name_sender', get_bloginfo( 'name' ) ) ) ?></span>
                                                 </a>
-                                            <?php endif; ?>
+											<?php endif; ?>
 
                                         </td>
                                         <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
-                                            <?php echo esc_html(fs_option('mail_social')) ?>
+											<?php echo esc_html( fs_option( 'mail_social' ) ) ?>
                                         </td>
                                     </tr>
                                 </table>
@@ -361,7 +362,7 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td class="free-text">
-                            <?php echo apply_filters('the_content', $message) ?>
+							<?php echo apply_filters( 'the_content', $message ) ?>
                         </td>
                     </tr>
                     <tr>
@@ -395,19 +396,19 @@
                                                         <tr>
                                                             <td class="mini-block">
                                 <span
-                                        class="header-sm"><?php esc_html_e('Information about order', 'f-shop'); ?></span><br/>
-                                                                <b><?php esc_html_e('Order number', 'f-shop'); ?>
+                                        class="header-sm"><?php esc_html_e( 'Information about order', 'f-shop' ); ?></span><br/>
+                                                                <b><?php esc_html_e( 'Order number', 'f-shop' ); ?>
                                                                     :</b>%order_id%
                                                                 <br>
-                                                                <b><?php esc_html_e('Name', 'f-shop'); ?>:</b>
+                                                                <b><?php esc_html_e( 'Name', 'f-shop' ); ?>:</b>
                                                                 %fs_first_name% %fs_last_name%<br/>
-                                                                <b><?php esc_html_e('Phone number', 'f-shop'); ?>
+                                                                <b><?php esc_html_e( 'Phone number', 'f-shop' ); ?>
                                                                     :</b>
                                                                 %fs_phone%<br/>
-                                                                <b><?php esc_html_e('City', 'f-shop'); ?>:</b>
+                                                                <b><?php esc_html_e( 'City', 'f-shop' ); ?>:</b>
                                                                 %fs_city%
                                                                 <br/>
-                                                                <b><?php esc_html_e('Address', 'f-shop'); ?>:</b>
+                                                                <b><?php esc_html_e( 'Address', 'f-shop' ); ?>:</b>
                                                                 %fs_adress% <br/>
 
                                                             </td>
@@ -426,14 +427,14 @@
                                                            style="border-collapse:separate !important;">
                                                         <tr>
                                                             <td class="mini-block">
-                                                                <span class="header-sm"><?php esc_html_e('Shipping and payment', 'f-shop'); ?></span><br/>
-                                                                <b><?php esc_html_e('Delivery method', 'f-shop'); ?>
+                                                                <span class="header-sm"><?php esc_html_e( 'Shipping and payment', 'f-shop' ); ?></span><br/>
+                                                                <b><?php esc_html_e( 'Delivery method', 'f-shop' ); ?>
                                                                     :</b>
                                                                 %fs_delivery_methods% %fs_delivery_number%<br/>
-                                                                <b><?php esc_html_e('Payment method', 'f-shop'); ?>
+                                                                <b><?php esc_html_e( 'Payment method', 'f-shop' ); ?>
                                                                     :</b>
                                                                 %fs_payment_methods% <br><br>
-                                                                <span class="header-sm"><?php esc_html_e('Comment', 'f-shop'); ?></span><br/>
+                                                                <span class="header-sm"><?php esc_html_e( 'Comment', 'f-shop' ); ?></span><br/>
                                                                 <span>%fs_comment%</span>
                                                             </td>
                                                         </tr>
@@ -460,60 +461,60 @@
                             <table cellspacing="0" cellpadding="0" width="100%">
                                 <tr>
                                     <td class="title-dark" width="300">
-                                        <?php esc_html_e('Item', 'f-shop') ?>
+										<?php esc_html_e( 'Item', 'f-shop' ) ?>
                                     </td>
                                     <td class="title-dark" width="163">
-                                        <?php esc_html_e('Qty', 'f-shop') ?>
+										<?php esc_html_e( 'Qty', 'f-shop' ) ?>
                                     </td>
                                     <td class="title-dark" width="172">
-                                        <?php esc_html_e('Price', 'f-shop') ?>
+										<?php esc_html_e( 'Price', 'f-shop' ) ?>
                                     </td>
                                     <td class="title-dark" width="97">
-                                        <?php esc_html_e('Total', 'f-shop') ?>
+										<?php esc_html_e( 'Total', 'f-shop' ) ?>
                                     </td>
                                 </tr>
-                                <?php $cart = fs_get_cart(); ?>
-                                <?php if ($cart): ?>
-                                    <?php foreach ($cart as $p): ?>
+								<?php $cart = fs_get_cart(); ?>
+								<?php if ( $cart ): ?>
+									<?php foreach ( $cart as $p ): ?>
                                         <tr>
                                             <td class="item-col item">
                                                 <table cellspacing="0" cellpadding="0" width="100%">
                                                     <tr>
                                                         <td class="mobile-hide-img">
-                                                            <a href="<?php echo esc_attr($p['link']) ?>">
+                                                            <a href="<?php echo esc_attr( $p['link'] ) ?>">
                                                                 <img width="110"
-                                                                     src="<?php echo esc_url($p['thumb']) ?>"
-                                                                     alt="<?php echo esc_attr($p['name']) ?>"></a>
+                                                                     src="<?php echo esc_url( $p['thumb'] ) ?>"
+                                                                     alt="<?php echo esc_attr( $p['name'] ) ?>"></a>
                                                         </td>
                                                         <td class="product">
                                 <span style="color: #4d4d4d; font-weight:bold;"><a
-                                            href="<?php echo esc_url($p['link']) ?>"
-                                            target="_blank"><?php echo esc_attr($p['name']) ?></a></span>
+                                            href="<?php echo esc_url( $p['link'] ) ?>"
+                                            target="_blank"><?php echo esc_attr( $p['name'] ) ?></a></span>
                                                             <br/>
-                                                            <?php if (!empty($p['attr'])): ?>
-                                                                <?php foreach ($p['attr'] as $att): ?>
-                                                                    <?php echo esc_attr($att->parent_name) ?>:<?php echo esc_attr($att->name) ?>
+															<?php if ( ! empty( $p['attr'] ) ): ?>
+																<?php foreach ( $p['attr'] as $att ): ?>
+																	<?php echo esc_attr( $att->parent_name ) ?>:<?php echo esc_attr( $att->name ) ?>
                                                                     <br>
-                                                                <?php endforeach; ?>
-                                                            <?php endif; ?>
+																<?php endforeach; ?>
+															<?php endif; ?>
                                                         </td>
                                                     </tr>
                                                 </table>
                                             </td>
                                             <td class="item-col quantity">
-                                                <?php echo esc_attr($p['count']) ?>
+												<?php echo esc_attr( $p['count'] ) ?>
                                             </td>
                                             <td class="item-col">
-                                                <?php echo esc_attr($p['price']) ?>
-                                                &nbsp;<?php echo esc_attr($p['currency']) ?>
+												<?php echo esc_attr( $p['price'] ) ?>
+                                                &nbsp;<?php echo esc_attr( $p['currency'] ) ?>
                                             </td>
                                             <td class="item-col">
-                                                <?php echo esc_attr($p['all_price']) ?>
-                                                &nbsp;<?php echo esc_attr($p['currency']) ?>
+												<?php echo esc_attr( $p['all_price'] ) ?>
+                                                &nbsp;<?php echo esc_attr( $p['currency'] ) ?>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
+									<?php endforeach; ?>
+								<?php endif; ?>
                                 <tr>
                                     <td class="item-col item mobile-row-padding"></td>
                                     <td class="item-col quantity"></td>
@@ -524,7 +525,7 @@
                                     <td class="item-col price" colspan="4"
                                         style="text-align: right; border-top: 1px solid #cccccc;">
                   <span class="total-space"
-                        style="font-weight: bold; color: #4d4d4d"><?php esc_html_e('Total', 'f-shop') ?></span>
+                        style="font-weight: bold; color: #4d4d4d"><?php esc_html_e( 'Total', 'f-shop' ) ?></span>
                                         <span
                                                 class="total-space"
                                                 style="font-weight:bold; color: #4d4d4d"><?php fs_total_amount() ?></span>
@@ -543,7 +544,7 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td style="padding: 25px 0 25px">
-                            <?php echo fs_option('fs_mail_footer_message', sprintf('<p style="text-align: center;">Online shop "% s" works on plugin <a href="https://f-shop.top/" target="_blank" rel="noopener">F-Shop.</a></p>', esc_attr(get_bloginfo('name')))) ?>
+							<?php echo fs_option( 'fs_mail_footer_message', sprintf( '<p style="text-align: center;">Online shop "% s" works on plugin <a href="https://f-shop.top/" target="_blank" rel="noopener">F-Shop.</a></p>', esc_attr( get_bloginfo( 'name' ) ) ) ) ?>
                         </td>
                     </tr>
                 </table>
