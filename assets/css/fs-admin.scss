@@ -1341,3 +1341,19 @@ td.fs_menu_order.column-fs_menu_order {
     width: 100%;
   }
 }
+
+.widget-content .fs-widget-wrapper {
+  label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: inline-block;
+    letter-spacing: 0.025em;
+
+  }
+
+  select {
+    max-width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
