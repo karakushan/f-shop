@@ -119,6 +119,13 @@ class FS_Settings_Class {
 						'label'  => __( 'Method of applying filters in the catalog', 'f-shop' ),
 						'help'   => null,
 						'value'  => fs_option( 'fs_product_filter_type', 'IN' )
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'fs_total_discount_percent',
+						'label' => __( 'Total discount on products as a percentage', 'f-shop' ),
+						'help'  => null,
+						'value' => fs_option( 'fs_total_discount_percent' )
 					)
 
 				)

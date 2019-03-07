@@ -527,14 +527,21 @@ class FS_Config {
 	function get_taxonomy_fields() {
 		$fields = array(
 			'catalog'                             => array(
-				'_content'      => array(
+				'_content'           => array(
 					'name' => __( 'Category text', 'f-shop' ),
 					'type' => 'editor',
 					'args' => array()
 				),
-				'_thumbnail_id' => array(
+				'_thumbnail_id'      => array(
 					'name' => __( 'Thumbnail', 'f-shop' ),
 					'type' => 'image',
+					'args' => array()
+				),
+				'_category_discount' => array(
+					'name' => __( 'Total discount for category products (in percent)', 'f-shop' ),
+					'type' => 'text',
+					'help' => __( 'Enter a number without a percent sign', 'f-shop' ),
+					'size' => 5,
 					'args' => array()
 				)
 			),

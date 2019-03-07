@@ -146,6 +146,24 @@ function fs_get_price( $product_id = 0 ) {
 		$price = $action_price;
 	}
 
+
+	// Проверяем установлена ли скидка на все товары
+	if ( fs_option( 'fs_total_discount_percent' ) && is_numeric( fs_option( 'fs_total_discount_percent' ) ) ) {
+		$total_discount = floatval( fs_option( 'fs_total_discount_percent' ) );
+		$price          = $price - ( $price * $total_discount / 100 );
+	} else {
+		// Проверяем установлена ли скидка на всю категорию товаров
+		$product_categories = get_the_terms( $product_id, $fs_config->data['product_taxonomy'] );
+		if ( $product_categories ) {
+			foreach ( $product_categories as $product_category ) {
+				$category_discount = get_term_meta( $product_category->term_id, '_category_discount', 1 );
+				if ( $category_discount && is_numeric( $category_discount ) ) {
+					$price = $price - ( $price * $category_discount / 100 );
+				}
+			}
+		}
+	}
+
 	$price = apply_filters( 'fs_price_filter', $product_id, $price );
 
 	return floatval( $price );
@@ -593,21 +611,34 @@ function fs_product_count( $products = array(), $echo = true ) {
 /**
  * получает базовую цену (перечёркнутую) без учёта скидки
  *
- * @param int $post_id -id товара
+ * @param int $product_id -id товара
  *
  * @return float $price
  */
-function fs_get_base_price( $post_id = 0 ) {
-	global $post;
-	$config       = new \FS\FS_Config();
-	$post_id      = empty( $post_id ) ? $post->ID : $post_id;
-	$price        = get_post_meta( $post_id, $config->meta['price'], 1 );
-	$action_price = get_post_meta( $post_id, $config->meta['action_price'], 1 );
-	if ( $price == fs_get_price( $post_id ) || empty( $action_price ) ) {
+function fs_get_base_price( $product_id = 0 ) {
+	global $post, $fs_config;
+
+	$product_id   = empty( $product_id ) ? $post->ID : $product_id;
+	$price        = get_post_meta( $product_id, $fs_config->meta['price'], 1 );
+	$action_price = get_post_meta( $product_id, $fs_config->meta['action_price'], 1 );
+	// Проверяем установлена ли скидка на всю категорию товаров
+	$product_categories    = get_the_terms( $product_id, $fs_config->data['product_taxonomy'] );
+	$category_discount_has = false;
+	if ( $product_categories ) {
+		foreach ( $product_categories as $product_category ) {
+			$category_discount = get_term_meta( $product_category->term_id, '_category_discount', 1 );
+			if ( $category_discount && is_numeric( $category_discount ) ) {
+				$category_discount_has = true;
+				break;
+			}
+		}
+	}
+	if ( $price == fs_get_price( $product_id ) || ( empty( $action_price ) && fs_option( 'fs_total_discount_percent' ) == '' && ! $category_discount_has ) ) {
 		return;
 	}
 	$price = empty( $price ) ? 0 : (float) $price;
-	$price = apply_filters( 'fs_price_filter', $post_id, $price );
+
+	$price = apply_filters( 'fs_price_filter', $product_id, $price );
 
 	return $price;
 }
