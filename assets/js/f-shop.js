@@ -186,7 +186,7 @@
         let variation = el.attr('data-variation');
         let count = el.attr('data-count');
 
-        if (productData.available == false) {
+        if (productData.available == false && fShop.getSettings('preorderWindow') == 1) {
             // создаём событие
             let fsBuyNoAvailable = new CustomEvent("fsBuyNoAvailable", {
                 detail: productData

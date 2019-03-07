@@ -159,6 +159,7 @@ class FS_Init {
 			'checkoutUrl'       => fs_checkout_url( false ),
 			'catalogUrl'        => fs_get_catalog_link(),
 			'wishlistUrl'       => fs_wishlist_url(),
+			'preorderWindow'    => fs_option( 'fs_preorder_services', 0 ),
 			'lang'              => array(
 				'success'            => __( 'Success!', 'f-shop' ),
 				'error'              => __( 'Error!', 'f-shop' ),
@@ -282,7 +283,7 @@ class FS_Init {
 					"availability"  => fs_aviable_product() ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
 					"price"         => fs_get_price(),
 					"priceCurrency" => fs_option( 'fs_currency_code', 'UAH' ),
-					"url"             => get_the_permalink()
+					"url"           => get_the_permalink()
 				]
 			);
 

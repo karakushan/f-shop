@@ -363,8 +363,7 @@ Good luck!', 'f-shop' );
 
 		$order = get_post( $order_id );
 		if ( $order ) {
-			$order->data  = self::set_order_data( $order_id );
-			$order->items = $this->get_order_items( $order_id );
+			$order->data = self::set_order_data( $order_id );
 		}
 
 		return $order;

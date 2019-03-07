@@ -68,20 +68,13 @@ class FS_Images_Class {
 		$product_id = fs_get_product_id( $product_id );
 		$gallery    = get_post_meta( $product_id, $fs_config->get_meta( 'gallery' ), false );
 		$gallery    = array_shift( $gallery );
-<<<<<<< HEAD
-		if ( ! count( $gallery ) ) {
-			$gallery = fs_get_attached_media( $product_id );
-		}
-=======
 		$gallery    = apply_filters( 'fs_custom_gallery', $gallery, $product_id );
->>>>>>> b7e37d2448172de20c0dc735a1abd19ba231c12c
 		if ( ! $gallery ) {
 			$gallery = [];
 		}
 		if ( has_post_thumbnail( $product_id ) && $thumbnail ) {
 			array_unshift( $gallery, get_post_thumbnail_id( $product_id ) );
 		}
-
 
 		return array_unique( $gallery );
 

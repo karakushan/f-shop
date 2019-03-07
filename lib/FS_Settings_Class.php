@@ -79,6 +79,13 @@ class FS_Settings_Class {
 					),
 					array(
 						'type'  => 'checkbox',
+						'name'  => 'fs_preorder_services',
+						'label' => __( 'Enable the service of notification of receipt of goods to the warehouse', 'f-shop' ),
+						'help'  => __( 'When adding a product to the cart which is not available, the buyer will be shown a window asking for contact information', 'f-shop' ),
+						'value' => fs_option( 'fs_preorder_services' )
+					),
+					array(
+						'type'  => 'checkbox',
 						'name'  => 'fs_in_stock_manage',
 						'label' => __( 'Enable inventory management', 'f-shop' ),
 						'help'  => __( 'If this option is enabled, the stock of goods will decrease automatically with each purchase.', 'f-shop' ),

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-07 10:11+0000\n"
-"PO-Revision-Date: 2019-03-07 10:16+0000\n"
+"POT-Creation-Date: 2019-03-07 09:19+0000\n"
+"PO-Revision-Date: 2019-03-07 09:27+0000\n"
 "Last-Translator: ubay-admin <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -120,16 +120,17 @@ msgstr ""
 "архивах и терминах). Они будут доступны только по прямой ссылке."
 
 #: lib/FS_Settings_Class.php:83
-msgid "Enable the service of notification of receipt of goods to the warehouse"
-msgstr "Включить службу уведомлений о поступлении товара на склад"
+msgid ""
+"Enable the service of notifications on receipt of goods to the warehouse"
+msgstr "Включить службу уведомлений о появлении товаров на складе"
 
 #: lib/FS_Settings_Class.php:84
 msgid ""
-"When adding a product to the cart which is not available, the buyer will be "
-"shown a window asking for contact information"
+"If enabled, buyers will see the contact information request window if they "
+"try to add items that are not in stock"
 msgstr ""
-"Если покупатель попытается добавить в корзину товар которого нет в наличии, "
-"то ему будет показано окно запроса контактных данных"
+"Если включено, то покупатель увидит окно запроса контактных данных если "
+"попытается добавить товар в корзину которого нет в наличии"
 
 #: lib/FS_Settings_Class.php:90
 msgid "Enable inventory management"
@@ -1620,11 +1621,6 @@ msgstr ""
 #, php-format
 msgid "Go to &laquo;%s&raquo;"
 msgstr "Перейти к &laquo;%s&raquo;"
-
-#: templates/front-end/checkout/checkout-no-items.php:9
-#, php-format
-msgid "Your basket is empty. <a href=\"%s\">To catalog</a>"
-msgstr ""
 
 #: templates/front-end/checkout/checkout.php:2
 msgid "Items in the cart"

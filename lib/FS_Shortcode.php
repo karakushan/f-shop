@@ -227,9 +227,13 @@ class FS_Shortcode {
 	 * @return string
 	 */
 	public function order_send( $atts = array() ) {
-		$atts     = shortcode_atts( array(
+		$atts = shortcode_atts( array(
 			'class' => 'fs-checkout-form'
 		), $atts );
+		$cart = FS_Cart_Class::get_cart();
+		if ( empty( $cart ) ) {
+			return fs_frontend_template( 'checkout/checkout-no-items' );
+		}
 		$template = fs_form_header( array( 'name' => 'fs-order-send', 'class' => $atts['class'] ), 'order_send' );
 		$template .= fs_frontend_template( 'checkout/checkout', array( 'vars' => array( 'cart' => FS_Cart_Class::get_cart() ) ) );
 		$template .= fs_form_bottom( '' );

@@ -2772,23 +2772,6 @@ function phpinfo2array() {
 	return $phpinfo;
 }
 
-<<<<<<< HEAD
-/**
- * Возвращает список прикрепленных к посту изобажений
- *
- * @param int $post_id
- *
- * @return array
- */
-function fs_get_attached_media( $post_id = 0 ) {
-	$attached_media = get_attached_media( 'image', $post_id );
-	$attached_ids   = array();
-	if ( $attached_media ) {
-		$attached_ids = array_keys( $attached_media );
-	}
-
-	return array_unique( $attached_ids );
-=======
 function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик', $args = array() ) {
 	$product_id = fs_get_product_id( $product_id );
 	$atts       = fs_parse_attr( $args, array(
@@ -2803,5 +2786,4 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
 		'data-thumbnail'  => fs_get_product_thumbnail_url( $product_id, 'medium' ),
 	) );
 	echo '<button ' . $atts . '>' . esc_html( $text ) . '</button>';
->>>>>>> b7e37d2448172de20c0dc735a1abd19ba231c12c
 }
