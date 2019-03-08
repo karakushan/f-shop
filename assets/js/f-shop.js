@@ -62,22 +62,22 @@
             }
         },
         setProductGallery: function (productId, variationId = null) {
+            let ajaxUrl = this.ajaxurl;
+
             $.ajax({
                 type: 'POST',
-                url: fShop.axaxurl,
+                url: ajaxUrl,
                 beforeSend: function () {
                 },
-                data: {
-                    "action": "fs_get_product_gallery_ids",
+                data: fShop.ajaxData('fs_get_product_gallery_ids', {
                     "product_id": productId,
                     "variation_id": variationId
-                }
-                ,
+                }),
                 success: function (res) {
                     if (res.success) {
                         if (res.data.gallery) {
-                            $(lightSlider[0]).html(res.data.gallery);
-                            lightSlider.refresh();
+                            $("#fs-product-slider-wrapper").html('<ul id="product_slider">' + res.data.gallery + '</ul>');
+                            $("#fs-product-slider-wrapper").find("#product_slider").lightSlider(fs_lightslider_options);
                         }
                     }
                 }

@@ -96,6 +96,7 @@ function fs_lightslider( $post_id = 0, $args = array() ) {
 	$galery->lightslider( $post_id, $args );
 }
 
+
 /**
  * Возвращает массив изображений галереи товара
  *

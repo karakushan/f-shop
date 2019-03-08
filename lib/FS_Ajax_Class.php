@@ -62,10 +62,6 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_get_template_part', array( $this, 'fs_get_template_part' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_template_part', array( $this, 'fs_get_template_part' ) );
 
-		// Возвращает id изображений галереи товара или его вариации
-		add_action( 'wp_ajax_fs_get_product_gallery_ids', array( $this, 'fs_get_product_gallery_ids' ) );
-		add_action( 'wp_ajax_nopriv_fs_get_product_gallery_ids', array( $this, 'fs_get_product_gallery_ids' ) );
-
 		// обновление к-ва товара в корзине
 		add_action( 'wp_ajax_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 		add_action( 'wp_ajax_nopriv_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
@@ -82,8 +78,9 @@ class FS_Ajax_Class {
 
 	function ajax_actions() {
 		$actions = array(
-			'fs_report_availability' => array( $this, 'report_availability' ),
-			'order_send'             => array( $this, 'order_send_ajax' ),
+			'fs_report_availability'     => array( $this, 'report_availability' ),
+			'order_send'                 => array( $this, 'order_send_ajax' ),
+			'fs_get_product_gallery_ids' => array( $this, 'fs_get_product_gallery_ids' ),
 		);
 
 		return apply_filters( 'fs_ajax_actions', $actions );
@@ -142,6 +139,7 @@ class FS_Ajax_Class {
 	// Возвращает HTML код галереи товара или конкретной вариации
 	// TODO : добавить nonce проверку
 	function fs_get_product_gallery_ids() {
+
 		$product_id   = intval( $_POST['product_id'] );
 		$variation_id = isset( $_POST['variation_id'] ) ? intval( $_POST['variation_id'] ) : null;
 
@@ -150,6 +148,7 @@ class FS_Ajax_Class {
 		if ( $product_id && $variation_id ) {
 			$product_class = new FS_Product_Class();
 			$variations    = $product_class->get_product_variations( $product_id );
+
 			if ( ! empty( $variations[ $variation_id ]['gallery'] ) ) {
 				foreach ( $variations[ $variation_id ]['gallery'] as $image ) {
 					$image   = wp_get_attachment_image_url( $image, 'full' );

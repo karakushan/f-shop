@@ -49,9 +49,11 @@ class FS_Images_Class {
 		echo "<script>";
 		echo "var fs_lightslider_options=" . json_encode( $args );
 		echo "</script>";
+		echo "<div id=\"fs-product-slider-wrapper\">";
 		echo "<ul id=\"product_slider\">";
 		echo $this->list_gallery( $post_id );
 		echo "</ul>";
+		echo "</div>";
 	}
 
 	/**
@@ -64,11 +66,28 @@ class FS_Images_Class {
 	 * @return mixed
 	 */
 	public function get_gallery( $product_id = 0, $thumbnail = true ) {
-		$fs_config  = new FS_Config();
+		$fs_config = new FS_Config();
+
+
 		$product_id = fs_get_product_id( $product_id );
-		$gallery    = get_post_meta( $product_id, $fs_config->get_meta( 'gallery' ), false );
-		$gallery    = array_shift( $gallery );
-		$gallery    = apply_filters( 'fs_custom_gallery', $gallery, $product_id );
+
+		// Получаем галерею из мета поля
+		$gallery = get_post_meta( $product_id, $fs_config->get_meta( 'gallery' ), false );
+		$gallery = ! empty( $gallery ) ? array_shift( $gallery ) : array();
+
+		// получаем изображения первой вариации товара
+		$product_class      = new FS_Product_Class();
+		$product_variations = $product_class->get_product_variations( $product_id );
+		$gallery            = array();
+		if ( ! empty( $product_variations ) && is_array( $product_variations ) ) {
+			$product_variations_first = array_shift( $product_variations );
+			$gallery                  = count( $product_variations_first['gallery'] ) ? $gallery + $product_variations_first['gallery'] : array();
+
+		}
+
+
+		$gallery = apply_filters( 'fs_custom_gallery', $gallery, $product_id );
+
 		if ( ! $gallery ) {
 			$gallery = [];
 		}
