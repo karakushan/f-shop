@@ -251,12 +251,17 @@ class FS_Product_Class {
 	 *
 	 * @param int $product_id
 	 *
+	 * @param null $variation_id
+	 *
 	 * @return string
 	 */
-	function get_title( $product_id = 0 ) {
-		$product_id = $product_id ? $product_id : $this->id;
+	function get_title( $product_id = 0, $variation_id = null ) {
+		$product_id   = $product_id ? $product_id : $this->id;
+		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
+		$variation    = $this->get_variation( $product_id, $variation_id );
+		$title        = ! empty( $variation['name'] ) ? $variation['name'] : get_the_title( $product_id );
 
-		return get_the_title( $product_id );
+		return $title;
 	}
 
 	/**
