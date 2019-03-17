@@ -1437,7 +1437,7 @@ msgid ""
 "Link to product feed in YML format: <a href=\"%s\" target=\"_blank\">%s</a> "
 "or <a href=\"%s\" target=\"_blank\">%s</a>"
 msgstr ""
-"Ссылка на фид товаров формате YML: <a href=\"%s\" target=\"_blank\">%s</a> "
+"Ссылка на фид товаровв формате YML: <a href=\"%s\" target=\"_blank\">%s</a> "
 "или <a href=\"%s\" target=\"_blank\">%s</a>"
 
 #: lib/FS_Settings_Class.php:334

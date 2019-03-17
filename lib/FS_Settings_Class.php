@@ -21,6 +21,8 @@ class FS_Settings_Class {
 	 */
 	function register_settings() {
 		global $fs_config;
+		$export_class = new FS_Export_Class();
+
 		// Дебаг сессий
 		ob_start();
 		echo '<code class="fs-code"><pre>';
@@ -41,6 +43,12 @@ class FS_Settings_Class {
 		print_r( phpinfo2array() );
 		echo '</pre></code>';
 		$phpinfo = ob_get_clean();
+
+		$feed_link = add_query_arg( array(
+			'feed' => $export_class->feed_name
+		), home_url( '/' ) );
+
+		$feed_link_permalink = sprintf( home_url( '/feed/%s/' ), $export_class->feed_name );
 
 
 		$settings = array(
@@ -312,6 +320,27 @@ Your phone number.</p>', 'f-shop' ) )
 						'label' => __( 'Order Information Page', 'f-shop' ),
 						'value' => fs_option( 'page_order_detail', 0 )
 					),
+				)
+
+
+			),
+			'export'     => array(
+				'name'        => __( 'Экспорт товаров', 'f-shop' ),
+				'description' => sprintf( __( 'Link to product feed in YML format: <a href="%s" target="_blank">%s</a> or <a href="%s" target="_blank">%s</a>', 'f-shop' ), $feed_link, $feed_link, $feed_link_permalink, $feed_link_permalink ),
+				'fields'      => array(
+					array(
+						'type'   => 'radio',
+						'name'   => '_fs_export_prom',
+						'label'  => __( 'Export to the site', 'f-shop' ),
+						'values' => array(
+							'rozetka' => __( 'Розетка', 'f-shop' ),
+							'prom'    => __( 'Prom.ua', 'f-shop' ),
+						),
+//						'help'   => __( 'Your export file will contain additional settings', 'f-shop' ),
+						'value'  => fs_option( '_fs_export_prom', 'rozetka' )
+					)
+
+
 				)
 
 

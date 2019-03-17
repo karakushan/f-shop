@@ -56,6 +56,7 @@ class FS_Init {
 		$this->fs_widget     = new FS_Widget_CLass();
 		$this->fs_product    = new FS_Product_Class();
 		$this->fs_migrate    = new FS_Migrate_Class();
+		$this->fs_export     = new FS_Export_Class();
 
 		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
