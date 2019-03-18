@@ -112,22 +112,27 @@ class FS_Export_Class {
 				/*yml_catalog->shop->offers->offer->url*/
 				$url = $xml->createElement( 'url', get_permalink( $post->ID ) );
 				$offer->appendChild( $url );
+
 				/*yml_catalog->shop->offers->offer->price*/
-				$price_action = fs_get_type_price( $post->ID, self::$action_price );
-				if ( empty( $price_action ) ) {
-					$price_action = fs_get_type_price( $post->ID, self::$base_price );
-				}
-				$price_action = apply_filters( 'fs_price_format', $price_action, '.' );
-				$price        = $xml->createElement( 'price', $price_action );
-				$offer->appendChild( $price );
-				/*yml_catalog->shop->offers->offer->oldprice*/
-				$price_action = fs_get_type_price( $post->ID, self::$action_price );
-				if ( ! empty( $price_action ) ) {
-					$old_price = fs_get_type_price( $post->ID, self::$base_price );
-					$old_price = apply_filters( 'fs_price_format', $old_price, '.' );
-					$oldprice  = $xml->createElement( 'oldprice', $old_price );
+
+				$price_site        = apply_filters( 'fs_export_price', fs_get_base_price( $post->ID ) );
+				$price_action_site = apply_filters( 'fs_export_price_promo', fs_get_price( $post->ID ) );
+
+
+				if ( get_post_meta( $post->ID, $fs_config->meta['action_price'], true ) && $price_action_site < $price_site ) {
+					/*yml_catalog->shop->offers->offer->price*/
+					$price = $xml->createElement( 'price', $price_action_site );
+					$offer->appendChild( $price );
+
+					/*yml_catalog->shop->offers->offer->oldprice*/
+					$oldprice = $xml->createElement( 'oldprice', $price_site );
 					$offer->appendChild( $oldprice );
+				} else {
+					/*yml_catalog->shop->offers->offer->price*/
+					$price = $xml->createElement( 'price', $price_site );
+					$offer->appendChild( $price );
 				}
+
 				/*yml_catalog->shop->offers->offer->currencyId*/
 				$currencyId = $xml->createElement( 'currencyId', 'UAH' );
 				$offer->appendChild( $currencyId );
@@ -177,7 +182,7 @@ class FS_Export_Class {
 						if ( is_numeric( $gallery_image ) ) {
 							$picture = $xml->createElement( 'picture', wp_get_attachment_url( $gallery_image ) );
 						} else {
-							$picture = $xml->createElement( 'picture', esc_url( get_bloginfo( 'url' ) . $gallery_image ) );
+							$picture = $xml->createElement( 'picture',  $gallery_image  );
 						}
 						$offer->appendChild( $picture );
 					}
