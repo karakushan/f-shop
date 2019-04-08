@@ -248,13 +248,16 @@ class FS_Init {
 	function head_microdata() {
 		global $fs_config;
 		if ( is_singular( $fs_config->data['post_type'] ) ) {
+			global $post;
 			$categories   = get_the_terms( get_the_ID(), 'catalog' );
 			$manufacturer = get_the_terms( get_the_ID(), 'brands' );
 
 			$total_vote  = get_post_meta( get_the_ID(), 'fs_product_rating', 0 );
-			$sum_votes   = array_sum( $total_vote );
-			$count_votes = count( $total_vote );
+			$sum_votes   = is_array( $total_vote[0] ) ? array_sum( $total_vote[0] ) : 0;
+			$count_votes = is_array( $total_vote[0] ) ? count( $total_vote[0] ) : 0;
 			$rate        = $count_votes ? round( $sum_votes / $count_votes, 2 ) : 0;
+
+			$product_id = get_the_ID();
 			if ( $rate > 0 ) {
 				$aggregateRating = [
 					"@type"       => "AggregateRating",
@@ -276,9 +279,9 @@ class FS_Init {
 				"manufacturer"    => $manufacturer ? $manufacturer[0]->name : get_bloginfo( 'name' ),
 				"model"           => get_the_title(),
 				"sku"             => fs_get_product_code(),
-				"productID"       => get_the_ID(),
-				"description"     => strip_tags( get_the_excerpt() ),
-				"name"            => get_the_title(),
+				"productID"       => $product_id,
+				"description"     => has_excerpt( $product_id ) ? get_the_excerpt( $product_id ) : '',
+				"name"            => get_the_title( $product_id ),
 				"offers"          => [
 					"@type"         => "Offer",
 					"availability"  => fs_aviable_product() ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",

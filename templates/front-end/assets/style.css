@@ -1,0 +1,155 @@
+html[lang=ru-RU] .site i.fa,
+html[lang=ru-RU] .site i.far,
+html[lang=ru-RU] .site i.fas {
+  font-family: "Font Awesome 5 Free" !important;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+article.product .fs-atc-row > * {
+  margin-bottom: 10px;
+}
+article.product .fs-price-row {
+  margin-bottom: 1rem;
+}
+article.product .fs-price-row .fs-price, article.product .fs-price-row .fs-base-price {
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-right: 10px;
+}
+article.product .fs-price-row .fs-price > span, article.product .fs-price-row .fs-base-price > span {
+  font-weight: 400;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+}
+article.product .fs-price-row .fs-base-price {
+  color: #999;
+  position: relative;
+}
+article.product .fs-price-row .fs-base-price:after {
+  content: "";
+  height: 1px;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  background: #999999;
+}
+article.product .fs-thumbnail-meta {
+  margin: 0 auto;
+}
+article.product .fs-thumbnail-meta .fs-meta {
+  width: calc(100% - 330px);
+  float: right;
+}
+@media (max-width: 768px) {
+  article.product .fs-thumbnail-meta .fs-meta {
+    width: 100%;
+    padding: calc(2 * 1rem) 1rem;
+  }
+}
+article.product .fs-thumbnail-meta .fs-meta .fs-qty-wrap .fs-pluss,
+article.product .fs-thumbnail-meta .fs-meta .fs-qty-wrap .fs-minus {
+  padding: 0;
+  background: #0073aa;
+  border-radius: 0;
+}
+article.product .fs-thumbnail-meta .fs-meta .fs-qty-wrap input {
+  height: auto;
+}
+article.product .fs-thumbnail-meta .fs-meta h3 {
+  margin-top: 0;
+  line-height: 1;
+}
+article.product .fs-thumbnail-meta figure {
+  width: 300px;
+  max-width: 100%;
+  float: left;
+}
+@media (max-width: 768px) {
+  article.product .fs-thumbnail-meta figure {
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 768px) {
+  article.product .fs-thumbnail-meta {
+    margin: 1rem calc(10% + 60px);
+  }
+}
+
+.fs-cart-listing {
+  max-width: 100%;
+  width: 100% !important;
+}
+.fs-cart-listing .fs-products-after .btn {
+  background: #0073aa;
+  transition: background 150ms ease-in-out;
+  border: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: 0.88889em;
+  font-weight: 700;
+  line-height: 1.2;
+  outline: none;
+  padding: 0.76rem 1rem;
+  text-decoration: none;
+  vertical-align: bottom;
+}
+.fs-cart-listing .fs-products-after .btn.btn-success {
+  background: #26aa00;
+}
+.fs-cart-listing .fs-products-after .row {
+  display: flex;
+  justify-content: space-between;
+}
+.fs-cart-listing .fs-products-after .row .col {
+  margin-bottom: 30px;
+}
+.fs-cart-listing table {
+  width: 100%;
+}
+.fs-cart-listing table td, .fs-cart-listing table th {
+  padding: 0.5em;
+  border: 1px solid #eee;
+  word-break: break-all;
+}
+.fs-cart-listing table td img, .fs-cart-listing table th img {
+  width: 150px;
+  max-width: 100%;
+  height: auto;
+}
+
+.entry .entry-content > .fs-checkout-form {
+  max-width: 100%;
+}
+.entry .entry-content > .fs-checkout-form .form-group {
+  margin-bottom: 20px;
+}
+.entry .entry-content > .fs-checkout-form input {
+  width: 100%;
+  border: 1px solid #eeeeee;
+}
+.entry .entry-content > .fs-checkout-form textarea {
+  height: 150px;
+}
+.entry .entry-content > .fs-checkout-form select {
+  width: 100%;
+  border: 1px solid #eeeeee;
+  padding: 0.36rem 0.66rem;
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+@media only screen and (min-width: 1168px) {
+  .entry .entry-content > .fs-cart-listing {
+    max-width: 100%;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */
