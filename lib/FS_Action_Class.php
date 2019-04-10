@@ -58,6 +58,8 @@ class FS_Action_Class {
 		add_action( 'fs_add_to_cart', 'fs_add_to_cart', 10, 3 );
 		/* рейтинг товара */
 		add_action( 'fs_product_rating', array( $fs_product, 'product_rating' ), 10, 2 );
+		/* Табы в товаре */
+		add_action( 'fs_product_tabs', array( $fs_product, 'product_tabs' ), 10, 2 );
 
 		//===== FILTERS =====
 		/* выводит select для сортировки по параметрам (обычно применяется в каталоге или на страницах категорий) */

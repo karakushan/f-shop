@@ -355,7 +355,7 @@ class FS_Config {
 			),
 		);
 
-		return apply_filters( 'fs_product_tabs', $tabs );
+		return apply_filters( 'fs_product_tabs_admin', $tabs );
 	}
 
 	/**

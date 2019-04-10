@@ -492,7 +492,7 @@ function fs_get_cart( $args = array() ) {
  * Displays the button for removing goods from the cart
  *
  * @param int $cart_item cart item id
- * @param  array $args array of arguments for the button or link
+ * @param array $args array of arguments for the button or link
  *        'text' - содержимое кнопки, по умолчанию '&#10005;',
  *        'type' - тип тега ссылка 'link' или 'button',
  *        'class'- класс для кнопки, ссылки (по умолчанию класс 'fs-delete-position')
@@ -586,8 +586,8 @@ function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args 
 /**
  * Выводит к-во всех товаров в корзине
  *
- * @param  array $products список товаров, по умолчанию $_SESSION['cart']
- * @param  boolean $echo выводить результат или возвращать, по умолчанию выводить
+ * @param array $products список товаров, по умолчанию $_SESSION['cart']
+ * @param boolean $echo выводить результат или возвращать, по умолчанию выводить
  *
  * @return int
  */
@@ -699,9 +699,9 @@ function fs_get_first_variation( $product_id, $return = 'all' ) {
 /**
  * [Отображает кнопку "в корзину" со всеми необходимыми атрибутамии]
  *
- * @param  int $product_id [id поста (оставьте пустым в цикле wordpress)]
- * @param  string $label [надпись на кнопке]
- * @param  array $args дополнительные атрибуты
+ * @param int $product_id [id поста (оставьте пустым в цикле wordpress)]
+ * @param string $label [надпись на кнопке]
+ * @param array $args дополнительные атрибуты
  *
  * @return mixed|void
  */
@@ -989,9 +989,10 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 	$minus    = sprintf( '<button type="button" class="%s" data-fs-count="minus">%s</button>', $args['minus_class'], $args['minus_content'] );
 	$input    = sprintf( '<input type="text" class="%s" name="count" value="1"  data-fs-action="change_count" data-fs-product-id="%s" ' . $max . ' data-limit="%d">', $args['input_class'], $product_id, fs_option( 'fs_in_stock_manage', 0 ) );
 	$quantity = str_replace( array( '%pluss%', '%input%', '%minus%' ), array(
-		$pluss,
+		$minus,
 		$input,
-		$minus
+		$pluss
+
 	), $args['position'] );
 
 	printf( '<%s class="%s" data-fs-element="fs-quantity"> %s </%s>', esc_attr( $args['wrapper'] ), esc_attr( $args['wrapper_class'] ), $quantity, esc_attr( $args['wrapper'] ) );
@@ -1047,7 +1048,7 @@ function fs_cart_quantity( $item_id, $value, $args = array() ) {
 /**
  * Парсит урл и возвращает всё что находится до знака ?
  *
- * @param  string $url строка url которую нужно спарсить
+ * @param string $url строка url которую нужно спарсить
  *
  * @return string      возвращает строку урл
  */
@@ -1200,7 +1201,7 @@ function fs_delete_cart( $args = array() ) {
  *
  * @param int|string $product_id -id товара(записи)
  * @param bool $echo
- * @param  string $wrap -html обёртка для скидки
+ * @param string $wrap -html обёртка для скидки
  *
  * @return float|int
  */
@@ -1265,9 +1266,9 @@ function fs_price_max( $filter = true ) {
 /**
  * функция отображает кнопку "добавить в список желаний"
  *
- * @param  integer $product_id -id записи
- * @param  string $label -текст кнопки
- * @param  array $args -дополнительные аргументы массивом
+ * @param integer $product_id -id записи
+ * @param string $label -текст кнопки
+ * @param array $args -дополнительные аргументы массивом
  *
  */
 function fs_add_to_wishlist( $product_id = 0, $label = 'В список желаний', $args = array() ) {
@@ -1481,7 +1482,7 @@ function fs_page_content() {
 /**
  * Gets the item number by the post id
  *
- * @param  int|integer $product_id
+ * @param int|integer $product_id
  *
  * @return string $articul артикул товара
  */
@@ -1495,8 +1496,8 @@ function fs_get_product_code( $product_id = 0 ) {
 /**
  * получает артикул товара по переданному id поста
  *
- * @param  int|integer $product_id -id поста
- * @param  string $wrap -html обёртка для артикула (по умолчанию нет)
+ * @param int|integer $product_id -id поста
+ * @param string $wrap -html обёртка для артикула (по умолчанию нет)
  *
  * @return string артикул товара
  */
@@ -1510,7 +1511,7 @@ function fs_product_code( $product_id = 0, $wrap = '%s' ) {
 /**
  * Returns the quantity or stock of goods in stock (if the value is empty 1 is displayed)
  *
- * @param  int|integer $product_id product id
+ * @param int|integer $product_id product id
  *
  * @return int|integer stock of goods in stock
  */
@@ -1555,7 +1556,7 @@ function fs_get_type_price( $product_id = 0, $price_type = 'price' ) {
 /**
  * Get the url of product gallery images
  *
- * @param  int $product_id
+ * @param int $product_id
  * @param string $size
  *
  * @return array
@@ -1579,7 +1580,7 @@ function fs_gallery_images_url( $product_id = 0, $size = 'full' ) {
 /**
  * We receive full images of the gallery of goods
  *
- * @param  int|integer $product_id
+ * @param int|integer $product_id
  * @param string $size thumbnail size
  *
  * @return array list of images in an array
@@ -1617,8 +1618,8 @@ function fs_is_bestseller( $product_id = 0 ) {
 /**
  * возвращает объект  с похожими или связанными товарами
  *
- * @param  int|integer $product_id идентификатор товара(поста)
- * @param  array $args передаваемые дополнительные аргументы
+ * @param int|integer $product_id идентификатор товара(поста)
+ * @param array $args передаваемые дополнительные аргументы
  *
  * @return object                  объект с товарами
  */
@@ -1709,8 +1710,8 @@ function fs_discount_percent( $product_id = 0, $format = '-%s%s', $args = array(
  * Преобразует массив аргументов в строку для использования в атрибутах тегов
  * принцип работы похож на wp_parse_args()
  *
- * @param  array $attr атрибуты которые доступны для изменения динамически
- * @param  array $default атрибуты функции по умолчанию
+ * @param array $attr атрибуты которые доступны для изменения динамически
+ * @param array $default атрибуты функции по умолчанию
  *
  * @return string $att          строка атрибутов
  */
@@ -1777,7 +1778,7 @@ function fs_wishlist_url() {
 /**
  * отображает список желаний
  *
- * @param  array $html_attr массив html атрибутов для дива обёртки
+ * @param array $html_attr массив html атрибутов для дива обёртки
  */
 function fs_wishlist_widget( $html_attr = array() ) {
 	$template = fs_frontend_template( 'wishlist/wishlist' );
@@ -1930,12 +1931,12 @@ function fs_the_atts_list( $post_id = 0, $args = array() ) {
 /**
  * Получает информацию обо всех зарегистрированных размерах картинок.
  *
+ * @param boolean [$unset_disabled=true] Удалить из списка размеры с 0 высотой и шириной?
+ *
+ * @return array Данные всех размеров.
  * @global $_wp_additional_image_sizes
  * @uses   get_intermediate_image_sizes()
  *
- * @param  boolean [$unset_disabled=true] Удалить из списка размеры с 0 высотой и шириной?
- *
- * @return array Данные всех размеров.
  */
 function fs_get_image_sizes( $unset_disabled = true ) {
 	$wais =& $GLOBALS['_wp_additional_image_sizes'];
@@ -2329,11 +2330,13 @@ function fs_items_on_page( $format = '' ) {
 }
 
 /**
- * Копирует папки и файлы и @var $from в @var $to учитывая структуру
+ * Копирует папки и файлы и @param string $from из какой папки копировать файлы
  *
- * @param string $from из какой папки копировать файлы
  * @param string $to куда копировать
  * @param bool $rewrite
+ *
+ * @var $from в @var $to учитывая структуру
+ *
  */
 function fs_copy_all( $from, $to, $rewrite = true ) {
 	if ( is_dir( $from ) && file_exists( $from ) ) {

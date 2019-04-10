@@ -115,7 +115,7 @@ class FS_Product_Class {
 	 *  - если $variant == null, то отминусовка идет от общего поля иначе отнимается у поля запаса для указанного варианта
 	 *
 	 * @param int $product_id
-	 * @param  int $count - сколько единиц товара будет отминусовано
+	 * @param int $count - сколько единиц товара будет отминусовано
 	 * @param null $variant - если товар вариативный, то здесь нужно указывать номер варианта покупки
 	 */
 	function fs_change_stock_count( $product_id = 0, $count = 0, $variant = null ) {
@@ -518,5 +518,85 @@ class FS_Product_Class {
 	 */
 	public function set_item_id( $item_id = 0 ) {
 		$this->item_id = $item_id;
+	}
+
+	/**
+	 * Выводит вкладки товаров в лицевой части сайта
+	 *
+	 * @param int $product_id
+	 * @param array $args
+	 */
+	function product_tabs( $product_id = 0, $args = array() ) {
+		$product_id = fs_get_product_id( $product_id );
+
+		$args = wp_parse_args( $args, array(
+			'wrapper_class' => 'fs-product-tabs'
+		) );
+
+		// Get the comment template
+		ob_start();
+		comments_template();
+		$comments_template = ob_get_clean();
+
+		// Вкладки по умолчанию
+		$default_tabs = array(
+			'attributes'  => array(
+				'title'   => __( 'Characteristic', 'f-shop' ),
+				'content' => ''
+			),
+			'description' => array(
+				'title'   => __( 'Description', 'f-shop' ),
+				'content' => get_the_content()
+			),
+			'delivery'    => array(
+				'title'   => __( 'Shipping and payment', 'f-shop' ),
+				'content' => ''
+			),
+			'reviews'     => array(
+				'title'   => __( 'Reviews', 'f-shop' ),
+				'content' => $comments_template
+			)
+
+		);
+
+		$default_tabs = apply_filters( 'fs_product_tabs_items', $default_tabs );
+
+		if ( is_array( $default_tabs ) && ! empty( $default_tabs ) ) {
+
+			$html = '<div class="' . esc_attr( $args['wrapper_class'] ) . '">';
+			$html .= '<ul class="nav nav-tabs" id="fs-product-tabs-nav" role="tablist">';
+
+			// Display tab switches
+			$counter = 0;
+			foreach ( $default_tabs as $id => $tab ) {
+				$class = ! $counter ? 'active' : '';
+				$html  .= '<li class="nav-item">';
+				$html  .= '<a class="nav-link ' . esc_attr( $class ) . '" id="fs-product-tab-nav-' . esc_attr( $id ) . '" data-toggle="tab" href="#fs-product-tab-' . esc_attr( $id ) . '" role="tab" aria-controls="' . esc_attr( $id ) . '" aria-selected="true">' . esc_html( $tab['title'] ) . '</a>';
+				$html  .= '</li>';
+				$counter ++;
+			}
+
+			$html .= '</ul><!-- END #fs-product-tabs-nav -->';
+
+			$html .= '<div class="tab-content" id="fs-product-tabs-content">';
+
+			// Display the contents of the tabs
+			$counter = 0;
+			foreach ( $default_tabs as $id => $tab ) {
+				$class = ! $counter ? 'show active' : '';
+				$html  .= '<div class="tab-pane fade ' . esc_attr( $class ) . '" id="fs-product-tab-' . esc_attr( $id ) . '" role="tabpanel" aria-labelledby="' . esc_attr( $id ) . '-tab">';
+				$html  .= $tab['content'];
+				$html  .= '</div>';
+				$counter ++;
+			}
+
+			$html .= '</div><!-- END #fs-product-tabs-content -->';
+
+			$html .= ' </div><!-- END .product-meta__row -->';
+
+			echo apply_filters( 'fs_product_tabs_html', $html );
+		}
+
+
 	}
 }
