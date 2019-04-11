@@ -530,7 +530,9 @@ class FS_Product_Class {
 		$product_id = fs_get_product_id( $product_id );
 
 		$args = wp_parse_args( $args, array(
-			'wrapper_class' => 'fs-product-tabs'
+			'wrapper_class'   => 'fs-product-tabs',
+			'attributes_args' => array()
+
 		) );
 
 		// Get the comment template
@@ -538,11 +540,16 @@ class FS_Product_Class {
 		comments_template();
 		$comments_template = ob_get_clean();
 
+		// Get the product attributes
+		ob_start();
+		fs_the_atts_list( $product_id, $args['attributes_args'] );
+		$attributes = ob_get_clean();
+
 		// Вкладки по умолчанию
 		$default_tabs = array(
 			'attributes'  => array(
 				'title'   => __( 'Characteristic', 'f-shop' ),
-				'content' => ''
+				'content' => $attributes
 			),
 			'description' => array(
 				'title'   => __( 'Description', 'f-shop' ),

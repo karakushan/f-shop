@@ -78,7 +78,6 @@ class FS_Images_Class {
 		// получаем изображения первой вариации товара
 		$product_class      = new FS_Product_Class();
 		$product_variations = $product_class->get_product_variations( $product_id );
-		$gallery            = array();
 		if ( ! empty( $product_variations ) && is_array( $product_variations ) ) {
 			$product_variations_first = array_shift( $product_variations );
 			$gallery                  = count( $product_variations_first['gallery'] ) ? $gallery + $product_variations_first['gallery'] : array();
@@ -102,8 +101,8 @@ class FS_Images_Class {
 	/**
 	 * получаем url изображений галереи в массиве
 	 *
-	 * @param  integer $product_id - id записи
-	 * @param  bool $thumbnail - включать ли в галерею установленную миниатюру поста
+	 * @param integer $product_id - id записи
+	 * @param bool $thumbnail - включать ли в галерею установленную миниатюру поста
 	 * @param string $size
 	 *
 	 * @return array          список id вложений в массиве
