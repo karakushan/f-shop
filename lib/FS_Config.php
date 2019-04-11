@@ -353,6 +353,19 @@ class FS_Config {
 				'body'     => '',
 				'template' => 'variants'
 			),
+			'delivery'   => array(
+				'title'  => __( 'Shipping and payment', 'f-shop' ),
+				'on'     => true,
+				'body'   => '',
+				'fields' => array(
+					'_fs_delivery_description' => array(
+						'label' => __( 'Shipping and Payment Details', 'f-shop' ),
+						'type'  => 'editor',
+						'help'  => ''
+					),
+
+				)
+			),
 		);
 
 		return apply_filters( 'fs_product_tabs_admin', $tabs );

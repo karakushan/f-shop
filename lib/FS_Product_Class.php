@@ -557,7 +557,7 @@ class FS_Product_Class {
 			),
 			'delivery'    => array(
 				'title'   => __( 'Shipping and payment', 'f-shop' ),
-				'content' => ''
+				'content' => apply_filters( 'the_content', get_post_meta( $product_id, '_fs_delivery_description', 1 ) )
 			),
 			'reviews'     => array(
 				'title'   => __( 'Reviews', 'f-shop' ),
