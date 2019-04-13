@@ -109,7 +109,7 @@ class FS_Attribute_Widget extends \WP_Widget {
 					'class'             => 'postform',
 					'depth'             => 0,
 					'tab_index'         => 0,
-					'taxonomy'          => $fs_config->data['product_taxonomy'],
+					'taxonomy'          => FS_Config::get_data( 'product_taxonomy' ),
 					'hide_if_empty'     => false,
 					'value_field'       => 'term_id', // значение value e option
 					'required'          => false,

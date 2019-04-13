@@ -268,15 +268,17 @@ class FS_Init {
 				$aggregateRating = [];
 			}
 
+			$brand = ! is_wp_error( $manufacturer ) && ! empty( $manufacturer[0]->name ) ? $manufacturer[0]->name : get_bloginfo( 'name' );
+
 			$schema = array(
 				"@context"        => "https://schema.org",
 				"@type"           => "Product",
 				"url"             => get_the_permalink(),
 				"aggregateRating" => $aggregateRating,
-				"category"        => $categories ? $categories[0]->name : '',
+				"category"        => ! is_wp_error( $categories ) && ! empty( $categories[0]->name ) ? esc_attr( $categories[0]->name ) : '',
 				"image"           => esc_url( fs_get_product_thumbnail_url( 0, 'full' ) ),
-				"brand"           => $manufacturer ? $manufacturer[0]->name : get_bloginfo( 'name' ),
-				"manufacturer"    => $manufacturer ? $manufacturer[0]->name : get_bloginfo( 'name' ),
+				"brand"           => $brand,
+				"manufacturer"    => $brand,
 				"model"           => get_the_title(),
 				"sku"             => fs_get_product_code(),
 				"productID"       => $product_id,

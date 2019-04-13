@@ -1,26 +1,27 @@
 <?php
+/**
+ * Class FS_Taxonomies_Class
+ *
+ * This class is responsible for registering its own taxonomies.
+ * category of goods
+ * payment methods
+ * delivery methods,
+ * characteristics of the product,
+ * brands,
+ * taxes
+ * discounts
+ * currencies
+ *
+ * @package FS
+ */
 
 namespace FS;
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-} // Exit if accessed directly
-
 class FS_Taxonomies_Class {
-
-	public $config;
-	public $product_taxonomy;
-
 	function __construct() {
-
-		$this->config = new FS_Config();
-
 		add_action( 'init', array( $this, 'create_taxonomy' ) );
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
-		// добавляем колонку при просмотре списка терминов таксономии валют
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_edit-fs-currencies_columns', array( $this, 'add_fs_currencies_columns' ) );
-
-
 	}
 
 	/**
@@ -29,9 +30,9 @@ class FS_Taxonomies_Class {
 	 * @return array
 	 */
 	function shop_taxonomies() {
-		global $fs_config;
+		$config     = FS_Config::get_data();
 		$taxonomies = array(
-			'catalog'                                  => array(
+			$config['product_taxonomy']       => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Product categories', 'f-shop' ),
 				'labels'             => array(
@@ -55,7 +56,7 @@ class FS_Taxonomies_Class {
 				'show_in_rest'       => true,
 				'show_admin_column'  => true
 			),
-			'fs-payment-methods'                       => array(
+			$config['product_pay_taxonomy']   => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Payment methods', 'f-shop' ),
 				'labels'             => array(
@@ -72,7 +73,7 @@ class FS_Taxonomies_Class {
 				'show_admin_column'  => false,
 
 			),
-			'fs-delivery-methods'                      => array(
+			$config['product_del_taxonomy']   => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Delivery methods', 'f-shop' ),
 				'labels'             => array(
@@ -89,7 +90,7 @@ class FS_Taxonomies_Class {
 				'show_admin_column'  => false,
 				'show_in_quick_edit' => false
 			),
-			'product-attributes'                       => array(
+			$config['product_att_taxonomy']   => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Product attributes', 'f-shop' ),
 				'labels'             => array(
@@ -107,7 +108,7 @@ class FS_Taxonomies_Class {
 				'hierarchical'       => true,
 				'show_in_quick_edit' => true
 			),
-			'brands'                           => array(
+			$config['product_brand_taxonomy'] => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Manufacturers', 'f-shop' ),
 				'labels'             => array(
@@ -125,8 +126,8 @@ class FS_Taxonomies_Class {
 				'hierarchical'       => false,
 				'show_in_quick_edit' => true
 			),
-			$fs_config->data['product_taxes_taxonomy'] => array(
-				'object_type'        => $fs_config->data['post_type'],
+			$config['product_taxes_taxonomy'] => array(
+				'object_type'        => $config['post_type'],
 				'label'              => __( 'Taxes', 'f-shop' ),
 				'labels'             => array(
 					'name'          => __( 'Taxes', 'f-shop' ),
@@ -192,7 +193,7 @@ class FS_Taxonomies_Class {
 	}
 
 	/**
-	 * Creates taconomy
+	 * Creates taxonomy
 	 */
 	public function create_taxonomy() {
 		// сам процесс регистрации таксономий

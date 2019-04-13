@@ -27,29 +27,7 @@ class FS_Config {
 	 * FS_Config constructor.
 	 */
 	function __construct() {
-		// An array of common plugin settings. When changing settings, all settings are changed globally.
-		$data       = array(
-			'plugin_path'            => FS_PLUGIN_PATH,
-			'plugin_url'             => FS_PLUGIN_URL,
-			'plugin_ver'             => '1.3',
-			'plugin_name'            => 'f-shop',
-			'plugin_user_template'   => get_template_directory() . '/f-shop/',
-			'plugin_template'        => FS_PLUGIN_PATH . 'templates/front-end/',
-			'plugin_settings'        => 'f-shop-settings',
-			'post_type'              => 'product',
-			'post_type_orders'       => 'orders',
-			'product_taxonomy'       => 'catalog',
-			'product_att_taxonomy'   => 'product-attributes',
-			'product_pay_taxonomy'   => 'fs-payment-methods',
-			'manufacturer_taxonomy'  => 'brands',
-			'product_del_taxonomy'   => 'fs-delivery-methods',
-			'product_taxes_taxonomy' => 'fs-taxes',
-			'discount_taxonomy'      => 'fs-discounts',
-			'currencies_taxonomy'    => 'fs-currencies',
-			'preloader'              => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif',
-			'default_order_status'   => 'new'
-		);
-		$this->data = apply_filters( 'fs_data', $data );
+		$this->data = self::get_data();
 
 		// Gets an array of service texts
 		$this->texts = self::get_texts();
@@ -62,27 +40,7 @@ class FS_Config {
 
 
 		// An array of product meta (product) settings. When changing settings, all settings are changed globally.
-		$meta = array(
-			'price'             => 'fs_price',
-			'action_price'      => 'fs_action_price',
-			'currency'          => 'fs_currency',
-			'sku'               => 'fs_articul',
-			'remaining_amount'  => 'fs_remaining_amount',
-			'gallery'           => 'fs_galery',
-			'related_products'  => 'fs_related_products',
-			'vendor'            => 'fs_vendor',
-			'variants'          => 'fs_variant',
-			'variants_price'    => 'fs_variant_price',
-			'variant_count'     => 'fs_variant_count',
-			'variant_count_max' => 'fs_variant_count_max',
-			'variated_on'       => 'fs_variated_on',
-			'exclude_archive'   => 'fs_exclude_archive',
-			'label_bestseller'  => 'fs_on_bestseller',
-			'label_promotion'   => 'fs_on_promotion',
-			'label_novelty'     => 'fs_on_novelty'
-		);
-
-		$this->meta = apply_filters( 'fs_meta', $meta );
+		$this->meta = self::get_meta();
 
 		$this->term_meta = array(
 			'att_type'      => 'fs_att_type',
@@ -968,12 +926,79 @@ class FS_Config {
 	 *
 	 * @return string|array
 	 */
-	public function get_meta( $meta_key = '' ) {
+	public static function get_meta( $meta_key = '' ) {
+		$meta = array(
+			'price'             => 'fs_price',
+			'action_price'      => 'fs_action_price',
+			'currency'          => 'fs_currency',
+			'sku'               => 'fs_articul',
+			'remaining_amount'  => 'fs_remaining_amount',
+			'gallery'           => 'fs_galery',
+			'related_products'  => 'fs_related_products',
+			'vendor'            => 'fs_vendor',
+			'variants'          => 'fs_variant',
+			'variants_price'    => 'fs_variant_price',
+			'variant_count'     => 'fs_variant_count',
+			'variant_count_max' => 'fs_variant_count_max',
+			'variated_on'       => 'fs_variated_on',
+			'exclude_archive'   => 'fs_exclude_archive',
+			'label_bestseller'  => 'fs_on_bestseller',
+			'label_promotion'   => 'fs_on_promotion',
+			'label_novelty'     => 'fs_on_novelty'
+		);
+
+		$meta = apply_filters( 'fs_meta', $meta );
 		if ( empty( $meta_key ) ) {
-			return $this->meta;
+			return $meta;
 		} else {
-			return $this->meta[ $meta_key ];
+			return $meta[ $meta_key ];
 		}
 	}
+
+
+	/**
+	 * Returns a setting or array of basic plugin settings
+	 *
+	 * @param string $key key of the array of settings
+	 *
+	 * @return array|mixed|void
+	 *
+	 * TODO: В будущем перенести все типы настроек в эту. Создать подмасив 'taxonomies' и поместить все таксономии, 'meta' с метаполями и т.д.
+	 */
+	public static function get_data( $key = '' ) {
+		$data = array(
+			'plugin_path'            => FS_PLUGIN_PATH,
+			'plugin_url'             => FS_PLUGIN_URL,
+			'plugin_ver'             => '1.3',
+			'plugin_name'            => 'f-shop',
+			'plugin_user_template'   => get_template_directory() . '/f-shop/',
+			'plugin_template'        => FS_PLUGIN_PATH . 'templates/front-end/',
+			'plugin_settings'        => 'f-shop-settings',
+			'post_type'              => 'product',
+			'post_type_orders'       => 'orders',
+			'product_taxonomy'       => 'catalog',
+			'product_att_taxonomy'   => 'product-attributes',
+			'product_pay_taxonomy'   => 'fs-payment-methods',
+			'product_brand_taxonomy' => 'fs-brands',
+			'manufacturer_taxonomy'  => 'brands',
+			'product_del_taxonomy'   => 'fs-delivery-methods',
+			'product_taxes_taxonomy' => 'fs-taxes',
+			'discount_taxonomy'      => 'fs-discounts',
+			'currencies_taxonomy'    => 'fs-currencies',
+			'preloader'              => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif',
+			'default_order_status'   => 'new'
+
+		);
+		$data = apply_filters( 'fs_data', $data );
+
+		if ( ! empty( $key ) ) {
+			return $data[ $key ];
+		} else {
+			return $data;
+
+		}
+
+	}
+
 
 }

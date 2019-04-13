@@ -90,7 +90,7 @@ function fill_views_column($colname, $post_id)
     switch ($colname) {
         case "fs-product-cat":
             echo '<div class="fs-product-cat-wrap">';
-            echo get_the_term_list($post_id, $config->data['product_taxonomy'], '', ', ', '');
+            echo get_the_term_list($post_id, FS_Config::get_data( 'product_taxonomy' ), '', ', ', '');
             echo '</div>';
             break;
         case "fs_menu_order":

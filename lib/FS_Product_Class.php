@@ -311,7 +311,7 @@ class FS_Product_Class {
 		$price        = fs_get_price( $product_id );
 
 
-		if ( ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
+		if ( fs_is_variated( $product_id ) && ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
 			$variation    = $this->get_variation( $product_id, $variation_id );
 			$price        = floatval( $variation['price'] );
 			$action_price = floatval( $variation['action_price'] );
@@ -505,12 +505,14 @@ class FS_Product_Class {
 	 * @return mixed
 	 */
 	public function get_base_price( $product_id = 0, $variation_id = null ) {
-		$product_id   = $product_id ? $product_id : $this->id;
-		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
-		$variation    = $this->get_variation( $product_id, $variation_id );
-		$base_price   = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
 
-		return floatval( $base_price );
+
+		if(fs_is_variated()){
+			$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
+			$variation    = $this->get_variation( $product_id, $variation_id );
+			$base_price   = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
+			return floatval( $base_price );
+        }
 	}
 
 	/**

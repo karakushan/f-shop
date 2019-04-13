@@ -3,6 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
+use \FS\FS_Config;
+
 /**
  * Recursively get taxonomy and its children
  *
@@ -100,16 +102,31 @@ function fs_lightslider( $post_id = 0, $args = array() ) {
 /**
  * Возвращает массив изображений галереи товара
  *
- * @param int $post_id -id поста
- * @param bool $thumbnail -включать ли миниатюру поста в список
+ * @param int $post_id id поста
+ * @param bool $thumbnail включать ли миниатюру поста в список
  *
  * @return array
  */
 function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
-	global $post;
-	$post_id = empty( $post_id ) ? $post->ID : (int) $post_id;
-	$galery  = new FS\FS_Images_Class();
-	$images  = $galery->gallery_images_url( $post_id, $thumbnail );
+	$post_id = fs_get_product_id( $post_id );
+	$gallery = new FS\FS_Images_Class();
+	$images  = $gallery->gallery_images_url( $post_id, $thumbnail );
+
+	return $images;
+}
+
+/**
+ * Возвращает массив ID изображений галереи товара
+ *
+ * @param int $product_id
+ * @param bool $thumbnail
+ *
+ * @return mixed
+ */
+function fs_get_gallery( $product_id = 0, $thumbnail = true ) {
+	$product_id = fs_get_product_id( $product_id );
+	$gallery    = new FS\FS_Images_Class();
+	$images     = $gallery->get_gallery( $product_id, $thumbnail );
 
 	return $images;
 }
@@ -122,12 +139,11 @@ function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
  * @return float $price-значение цены
  */
 function fs_get_price( $product_id = 0 ) {
-	global $fs_config;
 	$product_id = fs_get_product_id( $product_id );
 
 	// получаем возможные типы цен
-	$base_price   = get_post_meta( $product_id, $fs_config->meta['price'], true );//базовая и главная цена
-	$action_price = get_post_meta( $product_id, $fs_config->meta['action_price'], true );//акионная цена
+	$base_price   = get_post_meta( $product_id, FS_Config::get_meta( 'price' ), true );//базовая и главная цена
+	$action_price = get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), true );//акионная цена
 	$price        = floatval( $base_price );
 	$action_price = floatval( $action_price );
 
@@ -154,7 +170,8 @@ function fs_get_price( $product_id = 0 ) {
 		$price          = $price - ( $price * $total_discount / 100 );
 	} else {
 		// Проверяем установлена ли скидка на всю категорию товаров
-		$product_categories = get_the_terms( $product_id, $fs_config->data['product_taxonomy'] );
+		$product_categories = get_the_terms( $product_id, FS_Config::get_data( 'product_taxonomy' ) );
+
 		if ( $product_categories ) {
 			foreach ( $product_categories as $product_category ) {
 				$category_discount = get_term_meta( $product_category->term_id, '_category_discount', 1 );
@@ -623,7 +640,7 @@ function fs_get_base_price( $product_id = 0 ) {
 	$price        = get_post_meta( $product_id, $fs_config->meta['price'], 1 );
 	$action_price = get_post_meta( $product_id, $fs_config->meta['action_price'], 1 );
 	// Проверяем установлена ли скидка на всю категорию товаров
-	$product_categories    = get_the_terms( $product_id, $fs_config->data['product_taxonomy'] );
+	$product_categories    = get_the_terms( $product_id, FS_Config::get_data( 'product_taxonomy' ) );
 	$category_discount_has = false;
 	if ( $product_categories ) {
 		foreach ( $product_categories as $product_category ) {
@@ -697,7 +714,7 @@ function fs_get_first_variation( $product_id, $return = 'all' ) {
 }
 
 /**
- * [Отображает кнопку "в корзину" со всеми необходимыми атрибутамии]
+ * Displays the button "to cart" with all the necessary attributes
  *
  * @param int $product_id [id поста (оставьте пустым в цикле wordpress)]
  * @param string $label [надпись на кнопке]
@@ -706,7 +723,6 @@ function fs_get_first_variation( $product_id, $return = 'all' ) {
  * @return mixed|void
  */
 function fs_add_to_cart( $product_id = 0, $label = null, $args = array() ) {
-	global $fs_config;
 	$product_id = fs_get_product_id( $product_id );
 	$label      = is_null( $label ) ? __( 'Add to cart', 'f-shop' ) : $label;
 	// Параметры по умолчанию
@@ -740,8 +756,8 @@ function fs_add_to_cart( $product_id = 0, $label = null, $args = array() ) {
 	$args['data']['class'] = $args['class'] . ' fs-atc-' . $product_id;
 
 	// помещаем название категории в дата атрибут category
-	$category = get_the_terms( $product_id, $fs_config->data['product_taxonomy'] );
-	if ( ! empty( $category ) ) {
+	$category = get_the_terms( $product_id, FS_Config::get_data( 'product_taxonomy' ) );
+	if ( ! empty( $category ) && ! is_wp_error( $category ) ) {
 		$args['data']['data-category'] = array_pop( $category )->name;
 	}
 	// Парсим атрибуты html тега
@@ -1641,7 +1657,7 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
 			'posts_per_page' => $args['limit']
 		);
 	} else {
-		$term_ids = wp_get_post_terms( $product_id, $fs_config->data['product_taxonomy'], array( 'fields' => 'ids' ) );
+		$term_ids = wp_get_post_terms( $product_id, FS_Config::get_data( 'product_taxonomy' ), array( 'fields' => 'ids' ) );
 		$args     = array(
 			'post_type'      => 'product',
 			'posts_per_page' => $args['limit'],

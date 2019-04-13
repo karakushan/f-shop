@@ -66,22 +66,21 @@ class FS_Images_Class {
 	 * @return mixed
 	 */
 	public function get_gallery( $product_id = 0, $thumbnail = true ) {
-		$fs_config = new FS_Config();
-
-
 		$product_id = fs_get_product_id( $product_id );
 
 		// Получаем галерею из мета поля
-		$gallery = get_post_meta( $product_id, $fs_config->get_meta( 'gallery' ), false );
-		$gallery = ! empty( $gallery ) ? array_shift( $gallery ) : array();
+		$gallery = get_post_meta( $product_id, FS_Config::get_meta( 'gallery' ), false );
+		$gallery = ! empty( $gallery ) && is_array( $gallery ) ? array_shift( $gallery ) : array();
 
 		// получаем изображения первой вариации товара
-		$product_class      = new FS_Product_Class();
-		$product_variations = $product_class->get_product_variations( $product_id );
-		if ( ! empty( $product_variations ) && is_array( $product_variations ) ) {
-			$product_variations_first = array_shift( $product_variations );
-			$gallery                  = count( $product_variations_first['gallery'] ) ? $gallery + $product_variations_first['gallery'] : array();
+		if ( fs_is_variated( $product_id ) ) {
+			$product_class      = new FS_Product_Class();
+			$product_variations = $product_class->get_product_variations( $product_id );
+			if ( ! empty( $product_variations ) && is_array( $product_variations ) ) {
+				$product_variations_first = array_shift( $product_variations );
+				$gallery                  = count( $product_variations_first['gallery'] ) ? $gallery + $product_variations_first['gallery'] : array();
 
+			}
 		}
 
 
