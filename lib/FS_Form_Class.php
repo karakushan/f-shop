@@ -53,7 +53,7 @@ class FS_Form_Class {
 	 * @param array $args
 	 */
 	function render_field( $name, $type = 'text', $args = [] ) {
-		$args = wp_parse_args( $args, array(
+		$args        = wp_parse_args( $args, array(
 			'value'          => '',
 			'required'       => false,
 			'title'          => '',
@@ -65,7 +65,7 @@ class FS_Form_Class {
 			'size'           => '',
 			'style'          => '',
 			'step'           => 1,
-			'first_option'   => __( 'Select'),
+			'first_option'   => __( 'Select' ),
 			'class'          => str_replace( '_', '-', sanitize_title( 'fs-' . $type . '-field' ) ),
 			'id'             => str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $type ) ),
 			'default'        => '',
@@ -75,9 +75,11 @@ class FS_Form_Class {
 				'textarea_name' => $name
 			)
 		) );
+		$label_after = $args['required'] ? ' <i>*</i>' : '';
+
 		if ( in_array( $type, $this->registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
 			if ( ( $args['label'] || $args['help'] ) && $args['label_position'] == 'before' ) {
-				echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] );
+				echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
 				if ( $args['help'] ) {
 					echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
 				}
@@ -86,7 +88,8 @@ class FS_Form_Class {
 			include FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
 
 			if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
-				echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] );
+
+				echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
 				if ( $args['help'] ) {
 					echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
 				}
@@ -115,17 +118,17 @@ class FS_Form_Class {
 				']'
 			), array( '_' ), $field_name ),
 			'required'       => ! empty( FS_Config::$form_fields[ $field_name ]['required'] ) ? FS_Config::$form_fields[ $field_name ]['required'] : false,
-			'title'          => ! empty( FS_Config::$form_fields[ $field_name ]['title'] ) ? FS_Config::$form_fields[ $field_name ]['title'] : __( 'this field is required', 'f-shop'),
+			'title'          => ! empty( FS_Config::$form_fields[ $field_name ]['title'] ) ? FS_Config::$form_fields[ $field_name ]['title'] : __( 'this field is required', 'f-shop' ),
 			'placeholder'    => ! empty( FS_Config::$form_fields[ $field_name ]['placeholder'] ) ? FS_Config::$form_fields[ $field_name ]['placeholder'] : null,
 			'value'          => ! empty( FS_Config::$form_fields[ $field_name ]['value'] ) ? FS_Config::$form_fields[ $field_name ]['value'] : '',
 			'label'          => ! empty( FS_Config::$form_fields[ $field_name ]['label'] ) ? FS_Config::$form_fields[ $field_name ]['label'] : '',
-			'label_position' => ! empty( FS_Config::$form_fields[ $field_name ]['label_position'] ) ? FS_Config::$form_fields[ $field_name ]['label_position'] : 'after',
+			'label_position' => ! empty( FS_Config::$form_fields[ $field_name ]['label_position'] ) ? FS_Config::$form_fields[ $field_name ]['label_position'] : 'before',
 			'html'           => '',
 			'selected'       => '',
 			'options'        => array(),
 			'format'         => '%input% %label%',
 			'el'             => 'radio',
-			'first_option'   => ! empty( FS_Config::$form_fields[ $field_name ]['first_option'] ) ? FS_Config::$form_fields[ $field_name ]['first_option'] : __('Select'),
+			'first_option'   => ! empty( FS_Config::$form_fields[ $field_name ]['first_option'] ) ? FS_Config::$form_fields[ $field_name ]['first_option'] : __( 'Select' ),
 			'before'         => '',
 			'after'          => '',
 			'editor_args'    => array(
