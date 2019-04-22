@@ -2445,6 +2445,47 @@ function fs_get_category_image( $term_id = 0, $size = 'thumbnail', $args = array
 }
 
 /**
+ * Возвращает иконку категории
+ *
+ * @param int $term_id идентификатор термина категории
+ * @param string $size размер изображения
+ * @param array $args дополнительные аргументы
+ *
+ * @return false|int|string
+ */
+function fs_get_category_icon( $term_id = 0, $size = 'thumbnail', $args = array() ) {
+	if ( ! $term_id ) {
+		$term_id = get_queried_object_id();
+	}
+	$args     = wp_parse_args( $args, array(
+		'return'  => 'image',
+		'attr'    => array(),
+		'default' => FS_PLUGIN_URL . 'assets/img/no-image.png'
+	) );
+	$image_id = get_term_meta( $term_id, '_icon_id', 1 );
+	$image_id = intval( $image_id );
+	if ( $args['return'] == 'image' ) {
+		if ( ! $image_id ) {
+			$image = '<img src="' . esc_attr( $args['default'] ) . '" alt="no image">';
+		} else {
+			$image = wp_get_attachment_image( $image_id, $size, false, $args['attr'] );
+		}
+
+	} elseif ( $args['return'] == 'url' ) {
+		if ( ! $image_id ) {
+			$image = $args['default'];
+		} else {
+			$image = wp_get_attachment_image_url( $image_id, $size, false );
+		}
+	} else {
+		$image = $image_id;
+	}
+
+	return $image;
+
+}
+
+/**
  * Отображает налоги в виде списка
  *
  * @param array $args список аргументов

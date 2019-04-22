@@ -508,6 +508,11 @@ class FS_Config {
 					'type' => 'image',
 					'args' => array()
 				),
+				'_icon_id'           => array(
+					'name' => __( 'Icon', 'f-shop' ),
+					'type' => 'image',
+					'args' => array()
+				),
 				'_category_discount' => array(
 					'name' => __( 'Total discount for category products (in percent)', 'f-shop' ),
 					'type' => 'text',
