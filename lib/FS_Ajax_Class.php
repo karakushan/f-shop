@@ -258,63 +258,47 @@ class FS_Ajax_Class {
 		$atts         = array_map( 'intval', $_POST['atts'] );
 		$variations   = $product->get_product_variations( $product_id );
 
+		$matched_options = []; // Совпавшие варианты
+
 		// сначала ищем совпадение по всем атрибутам, т.е. массив присланных атрибутов и и атрибутов вариации должны совпадать
-		if ( count( $atts ) && count( $variations ) ) {
-			foreach ( $variations as $k => $variant ) {
-				$variant_atts = array_map( 'intval', $variant['attr'] );
-				// ищем совпадения варианов в присланными значениями
-				if ( count( $variant_atts ) == count( $atts ) && fs_in_array_multi( $atts, $variant_atts ) ) {
-					$price = floatval( $variant['price'] );
-					$price = apply_filters( 'fs_price_filter', $product_id, $price );
-
-					$action_price = floatval( $variant['action_price'] );
-					$action_price = apply_filters( 'fs_price_filter', $product_id, $action_price );
-
-					$price_base = false;
-					if ( ! empty( $action_price ) && $action_price < $price ) {
-						$price      = $action_price;
-						$price_base = $price;
-					}
-					wp_send_json_success( array(
-						'variation' => $k,
-						'atts'      => array_map( 'intval', $variant['attr'] ),
-						'price'     => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() ),
-						'basePrice' => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price_base ), fs_currency() )
-					) );
-				}
-				// если нет совпадения по всем атрибутам ищем первый вариант в котором есть выбранный атрибут
-				if ( count( $variant_atts ) && in_array( $current_attr, $variant_atts ) ) {
-					$atts_with_parent = [];
-					foreach ( $variant_atts as $variant_att ) {
-						$parent = get_term_field( 'parent', $variant_att );
-						if ( ! is_wp_error( $parent ) ) {
-							$atts_with_parent[ $parent ] = $variant_att;
-						}
-					}
-					$price = floatval( $variant['price'] );
-					$price = apply_filters( 'fs_price_filter', $product_id, $price );
-
-					$action_price = floatval( $variant['action_price'] );
-					$action_price = apply_filters( 'fs_price_filter', $product_id, $action_price );
-
-					$price_base = false;
-					if ( ! empty( $action_price ) && $action_price < $price ) {
-						$price_base = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() );
-						$price      = $action_price;
-
-					}
-					wp_send_json_success( array(
-						'active'    => $atts_with_parent,
-						'variation' => $k,
-						'price'     => sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() ),
-						'basePrice' => $price_base
-					) );
-				}
-			}
-			wp_send_json_error( [ 'msg' => __( 'Goods with such a set of characteristics are not in stock. Try changing parameters.', 'f-shop' ) ] );
-		} else {
+		if ( ! count( $atts ) || ! count( $variations ) ) {
 			wp_send_json_error( [ 'msg' => __( 'Goods with such a set of characteristics are not in stock. Try changing parameters.', 'f-shop' ) ] );
 		}
+
+		foreach ( $variations as $k => $variant ) {
+			$variant_atts = array_map( 'intval', $variant['attr'] );
+			// ищем совпадения варианов в присланными значениями
+			if ( fs_in_array_multi( $atts, $variant_atts ) ) {
+				$matched_options[ $k ] = array(
+					'price'        => $variant['price'],
+					'action_price' => $variant['action_price']
+				);
+
+			}
+
+		}
+
+		// Если есть хоть один совпавший вариант
+		if ( count( $matched_options ) && is_array( $matched_options ) ) {
+			$matched_options = array_shift( $matched_options );
+			$price           = apply_filters( 'fs_price_filter', $product_id, $matched_options['price'] );
+			$action_price    = apply_filters( 'fs_price_filter', $product_id, $matched_options['action_price'] );
+			$base_price      = null;
+
+			if ( $action_price > 0 && $action_price < $price ) {
+				$base_price = $price;
+				$price      = $action_price;
+
+			}
+			wp_send_json_success( array(
+				'options'   => $matched_options,
+				'price'     => $price ? sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $price ), fs_currency() ) : 0,
+				'basePrice' => $base_price ? sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $base_price ), fs_currency() ) : ''
+			) );
+		}
+
+		wp_send_json_error( [ 'msg' => __( 'Goods with such a set of characteristics are not in stock. Try changing parameters.', 'f-shop' ) ] );
+
 	}
 
 

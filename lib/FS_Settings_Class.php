@@ -111,7 +111,14 @@ class FS_Settings_Class {
 						'name'   => 'fs_product_sort_by',
 						'values' => array(
 							'none'       => __( 'By default', 'f-shop' ),
-							'menu_order' => __( 'By sorting field', 'f-shop' )
+							'menu_order' => __( 'By sorting field', 'f-shop' ),
+							'price_asc'  => __( 'By price from lowest to highest', 'f-shop' ),
+							'price_desc' => __( 'By price from larger to smaller', 'f-shop' ),
+							'views_desc' => __( 'By popularity', 'f-shop' ),
+							'name_asc'   => __( 'By title from A to Z', 'f-shop' ),
+							'name_desc'  => __( 'By name from Z to A', 'f-shop' ),
+							'date_desc'  => __( 'recently added', 'f-shop' ),
+							'date_asc'   => __( 'later added', 'f-shop' ),
 						),
 						'label'  => __( 'Sort items in the catalog by', 'f-shop' ),
 						'help'   => __( 'This determines the order in which products are displayed on the site. By default, Wordpress sorts by ID.', 'f-shop' ),

@@ -208,8 +208,14 @@ class FS_Filters {
 
 			}
 
+
+			// Устнавливаем порядок сортировки в каталоге по умолчанию
+			if ( empty( $url['order_type'] ) && fs_option( 'fs_product_sort_by' ) ) {
+				$url['order_type'] = fs_option( 'fs_product_sort_by' );
+			}
+
 			// выполняем сортировку
-			if ( isset( $url['order_type'] ) ) {
+			if ( ! empty( $url['order_type'] ) ) {
 
 				switch ( $url['order_type'] ) {
 					case 'price_asc': //сортируем по цене в возрастающем порядке
@@ -243,7 +249,6 @@ class FS_Filters {
 					case 'action_price' :
 						$orderby['action_price'] = 'DESC';
 						break;
-
 
 				}
 			} else {
@@ -406,7 +411,7 @@ class FS_Filters {
 			)
 		) );
 
-		$order_type_get = ! empty( $_GET['order_type'] ) ? $_GET['order_type'] : '';
+		$order_type_get = ! empty( $_GET['order_type'] ) ? $_GET['order_type'] : fs_option( 'fs_product_sort_by' );
 		if ( count( $attr['filters'] ) ) {
 			echo ' <select name="order_type"  class="' . esc_attr( $attr['class'] ) . '" data-fs-action="filter"> ';
 			foreach ( $attr['filters'] as $key => $order_type ) {

@@ -327,7 +327,7 @@
     });
 
 //Записываем выбранные характеристики товара в data-attr
-    jQuery('[data-fs-element="attr"]').on('change input', function (event) {
+    jQuery('[data-fs-element="attr"]').on('change', function (event) {
         event.preventDefault();
         var el = jQuery(this);
         var productId = el.data('product-id');
@@ -348,7 +348,6 @@
             type: 'POST',
             url: fShop.ajaxurl,
             data: {action: "fs_get_variated", product_id: productId, atts: parseAtts, current: attrVal},
-            cache: false,
             success: function (result) {
                 console.log(result);
                 if (result.success) {
@@ -401,6 +400,10 @@
                 } else {
                     cartbutton.attr("data-disabled", true);
                     cartbutton.attr("data-disabled-message", result.data.msg);
+                    $("[data-fs-element=\"attr\"] option").each(function (index, value) {
+                        $(this).prop("selected", false);
+                    });
+                    alert(result.data.msg);
                 }
             }
         });
