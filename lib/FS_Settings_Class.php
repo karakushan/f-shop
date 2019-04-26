@@ -156,6 +156,13 @@ class FS_Settings_Class {
 						'label' => __( 'Fill in the data of the authorized user automatically', 'f-shop' ),
 						'help'  => __( 'Used when placing the order, if the user is authorized', 'f-shop' ),
 						'value' => fs_option( 'autofill' )
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'fs_free_delivery_cost',
+						'label' => __( 'The amount of goods in the basket at which free shipping is activated', 'f-shop' ),
+						'help'  => null,
+						'value' => fs_option( 'fs_free_delivery_cost' )
 					)
 				)
 

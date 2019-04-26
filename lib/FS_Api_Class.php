@@ -15,6 +15,25 @@ class FS_Api_Class {
 		// $_GET['fs-api']
 		add_action( 'admin_init', array( $this, 'http_action' ) );
 		add_action( 'fs_api', array( $this, 'plugin_admin_api_actions' ), 10, 2 );
+
+		// Возможность создавать и выполнять хуки для неавторизованого пользователя
+		add_action( 'template_redirect', array( $this, 'do_user_api' ) );
+	}
+
+	/**
+	 * Возможность создавать и выполнять хуки для неавторизованого пользователя
+	 *
+	 * Запрос должен содержать GET || POST переменную 'fs-api'
+	 */
+	function do_user_api() {
+		if ( ! isset( $_REQUEST['fs-api'] ) || is_admin() ) {
+			return;
+		}
+		$api_command = sanitize_key( $_REQUEST['fs-api'] );
+		if ( $api_command ) {
+			do_action( $api_command );
+		}
+
 	}
 
 	function http_action() {
@@ -74,7 +93,7 @@ class FS_Api_Class {
 			do_action( 'fs_delete_products' );
 			do_action( 'fs_delete_orders' );
 		} else {
-			do_action( 'fs_admin_custom_api', $api_command );
+			do_action( 'fs_' . $api_command, $api_command );
 		}
 	}
 

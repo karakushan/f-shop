@@ -3,6 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
+use FS\FS_Cart_Class;
 use \FS\FS_Config;
 
 /**
@@ -241,10 +242,12 @@ function fs_get_wholesale_price( $product_id = 0 ) {
 /**
  * Displays the total amount of all products in the cart
  *
- * @param string $wrap -формат отображения цены с валютой
+ * @param string $wrap формат отображения цены с валютой
+ * @param bool $delivery_cost если false стоимость доставки будет расчитана автоматически,
+ *                            если указать числовое значение, то стоимость доставки равна этому числу
  */
-function fs_total_amount( $wrap = '%s <span>%s</span>' ) {
-	$total = fs_get_total_amount();
+function fs_total_amount( $wrap = '%s <span>%s</span>', $delivery_cost = false ) {
+	$total = fs_get_total_amount( $delivery_cost );
 	$total = apply_filters( 'fs_price_format', $total );
 	printf( '<span data-fs-element="total-amount">' . $wrap . '</span>', esc_attr( $total ), esc_attr( fs_currency() ) );
 }
@@ -289,37 +292,60 @@ function fs_cart_cost( $args = [] ) {
 }
 
 /**
- * Возвращает общую сумму всех продуктов в корзине
+ * Returns the total amount of all products in the cart
  *
- * @param float $delivery_cost
+ * @param bool $delivery_cost
  *
  * @return float|int
  * @internal param int $delivery_term_id
  *
  * @internal param int $shipping_cost
  */
-function fs_get_total_amount( $delivery_cost = 0.0 ) {
-	/*
-	 *  Сумма покупки расчитывается следующим образом:
-	 *  (Стоимость всех товаров в корзине + Стоимость доставки)-Скидка + Налоги
-	 */
+function fs_get_total_amount( $delivery_cost = false ) {
+	// Получаем чистую стоимость товаров (c учетом акционной цены)
+	$amount = fs_get_cart_cost();
 
-	if ( ! $delivery_cost ) {
+	// Если сумма товаров в корзине превышает указанную в настройке "fs_free_delivery_cost" то стоимость доставки равна 0
+	if ( fs_option( 'fs_free_delivery_cost' ) && $amount > fs_option( 'fs_free_delivery_cost' ) ) {
+		$delivery_cost = 0;
+	}
+
+	// Отнимаем скидку на общую сумму товаров в корзине
+	$amount = $amount - fs_get_full_cart_discount();
+
+	// Добавляем стоимость доставки
+	if ( ! is_numeric( $delivery_cost ) ) {
 		$delivery_cost = fs_get_delivery_cost();
 	}
-	$amount = fs_get_cart_cost(); // Стоимость товаров в корзине
-	$amount = floatval( $amount );
+	$amount = $amount + $delivery_cost;
 
-	// fs_debug_data($amount,'$amount','var_dump');
-
-	$amount = $amount + $delivery_cost;// Стоимость товара вместе с доставкой без учета налогов
-
-	// $amount=apply_filters( 'fs_discount_filter', $amount );// Отнимаем скидку
-	$taxes_amount = fs_get_taxes_amount( $amount );// Вычисляем налоги
-
-	$amount = $amount + $taxes_amount; // Расчёт общей суммы
+	// Вычисляем налоги
+	$taxes_amount = fs_get_taxes_amount( $amount );
+	$amount       = $amount + $taxes_amount;
 
 	return floatval( $amount );
+}
+
+
+/**
+ * Displays the total value of goods in the cart excluding discounts.
+ *
+ * @param string $wrap формат вывода
+ */
+function fs_total_amount_without_discount( $wrap = '%s <span>%s</span>' ) {
+
+	$cart_items = FS\FS_Cart_Class::get_cart();
+
+	$total = 0;
+
+	foreach ( $cart_items as $item_id => $cart_item ) {
+		$item  = fs_set_product( $cart_item, $item_id );
+		$total += $item->base_price;
+
+	}
+
+	$total = apply_filters( 'fs_price_format', $total );
+	printf( '<span data-fs-element="total-amount">' . $wrap . '</span>', esc_attr( $total ), esc_attr( fs_currency() ) );
 }
 
 /**
@@ -360,12 +386,95 @@ function fs_get_taxes_amount( $amount ) {
 /**
  * Returns the total discount amount of all items in the cart.
  *
+ * Сумируется скидка на каждый товар
+ * потом к этой скидке добавлется скидка
+ * на общую сумму товаров в корзине
+ *
  * @return float|int
  */
 function fs_get_total_discount() {
 	$discount = 0;
+	$cart     = FS\FS_Cart_Class::get_cart();
 
-	return $discount;
+	if ( $cart ) {
+		foreach ( $cart as $key => $product ) {
+			$item = fs_set_product( $product, $key );
+			if ( $item->price > $item->base_price ) {
+				continue;
+			}
+			$discount += ( $item->base_price - $item->price ) * $item->count;
+		}
+	}
+
+	$discount += fs_get_full_cart_discount();
+
+	return floatval( $discount );
+}
+
+/**
+ * Скидка на общую сумму товаров в корзине
+ *
+ * @return float
+ */
+function fs_get_full_cart_discount() {
+	// Добавляем скидку на общую сумму товаров в корзине
+	$cart_cost      = fs_get_cart_cost();
+	$discount_terms = get_terms( array(
+		'taxonomy'   => 'fs-discounts',
+		'hide_empty' => false
+	) );
+
+	$discount = 0;
+
+	if ( $discount_terms ) {
+		foreach ( $discount_terms as $discount_term ) {
+
+			$where  = get_term_meta( $discount_term->term_id, 'discount_where', 1 );
+			$value  = get_term_meta( $discount_term->term_id, 'discount_value', 1 );
+			$amount = get_term_meta( $discount_term->term_id, 'discount_amount', 1 );
+
+			if ( empty( $where ) || empty( $value ) || empty( $amount ) || ! is_numeric( $value ) ) {
+				continue;
+			}
+
+			if ( $where == '>=' && $cart_cost >= $value ) {
+				if ( strpos( $amount, '%' ) ) {
+					$amount   = floatval( str_replace( '%', '', $amount ) );
+					$discount += $cart_cost * ( $amount / 100 );
+
+				} elseif ( is_numeric( $amount ) ) {
+					$discount += $cart_cost - $amount;
+				}
+			} elseif ( $where == '>' && $cart_cost > $value ) {
+				if ( strpos( $amount, '%' ) ) {
+					$amount   = floatval( str_replace( '%', '', $amount ) );
+					$discount += $cart_cost * ( $amount / 100 );
+
+				} elseif ( is_numeric( $amount ) ) {
+					$discount += $cart_cost - $amount;
+				}
+			} elseif ( $where == '<' && $cart_cost < $value ) {
+				if ( strpos( $amount, '%' ) ) {
+					$amount   = floatval( str_replace( '%', '', $amount ) );
+					$discount += $cart_cost * ( $amount / 100 );
+
+				} elseif ( is_numeric( $amount ) ) {
+					$discount += $cart_cost - $amount;
+				}
+			} elseif ( $where == '<=' && $cart_cost <= $value ) {
+				if ( strpos( $amount, '%' ) ) {
+					$amount   = floatval( str_replace( '%', '', $amount ) );
+					$discount += $cart_cost * ( $amount / 100 );
+
+				} elseif ( is_numeric( $amount ) ) {
+					$discount += $cart_cost - $amount;
+				}
+			}
+
+		}
+	}
+
+	return floatval( $discount );
 }
 
 /**
@@ -419,17 +528,7 @@ function fs_get_first_discount() {
  *
  */
 function fs_total_discount( $wrap = '%s <span>%s</span>' ) {
-	$discount = 0;
-	$cart     = FS\FS_Cart_Class::get_cart();
-	if ( $cart ) {
-		foreach ( $cart as $key => $product ) {
-			$item = fs_set_product( $product, $key );
-			if ( $item->price > $item->base_price ) {
-				continue;
-			}
-			$discount += ( $item->base_price - $item->price ) * $item->count;
-		}
-	}
+	$discount = fs_get_total_discount();
 	$discount = apply_filters( 'fs_price_format', $discount );
 	printf( '<span data-fs-element="total-discount">' . $wrap . '</span>', esc_attr( $discount ), esc_html( fs_currency() ) );
 }
@@ -567,36 +666,21 @@ function fs_get_catalog_link() {
 function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args = array() ) {
 	$product_id = fs_get_product_id( $product_id );
 	$args       = wp_parse_args( $args, array(
-		'type'  => 'link',
 		'class' => 'fs-delete-wishlist-position',
-		'data'  => array(),
 		'title' => sprintf( __( 'Remove from wishlist', 'f-shop' ), get_the_title( $product_id ) )
 	) );
-	$html_atts  = fs_parse_attr( $args['data'], array(
-		'class'          => $args['class'],
-		'title'          => sprintf( $args['title'], get_the_title( $product_id ) ),
-		'data-fs-action' => 'delete_wishlist_position',
-		'data-fs-id'     => $product_id
-	) );
 
-	switch ( $args['type'] ) {
-		case 'link':
-			echo '<a  href="' . esc_attr( add_query_arg( array(
-					'fs-user-api' => 'delete_wishlist_position',
-					'product_id'  => $product_id
-				) ) ) . '" ' . $html_atts . '>' . $content . '</a>';
-			break;
-		case 'button':
-			echo '<button type="button" ' . $html_atts . '>' . $content . '</button>';
-			break;
-		default:
-			echo '<a href="' . esc_attr( add_query_arg( array(
-					'fs-user-api' => 'delete_wishlist_position',
-					'product_id'  => $product_id
-				) ) ) . '" ' . $html_atts . '>' . $content . '</a>';
-			break;
-	}
+	$button = '<a';
+	$button .= ' href="' . esc_attr( add_query_arg( array(
+			'fs-api'     => 'fs_delete_wish_list_item',
+			'product_id' => $product_id
+		) ) ) . '"';
+	$button .= ' class="' . esc_attr( $args['class'] ) . '"';
+	$button .= ' title="' . esc_attr( $args['title'] ) . '">';
+	$button .= $content;
+	$button .= '</a>';
 
+	echo apply_filters( 'fs_delete_wish_list_position_button', $button );
 }
 
 
@@ -2752,6 +2836,14 @@ function fs_get_delivery_cost() {
 	if ( ! is_wp_error( $delivery_methods ) && count( $delivery_methods ) ) {
 		$term_id = intval( $delivery_methods[0]->term_id );
 		$cost    = get_term_meta( $term_id, '_fs_delivery_cost', 1 );
+	}
+
+	// Получаем чистую стоимость товаров (c учетом акционной цены)
+	$amount = fs_get_cart_cost();
+
+	// Если сумма товаров в корзине превышает указанную в настройке "fs_free_delivery_cost" то стоимость доставки равна 0
+	if ( fs_option( 'fs_free_delivery_cost' ) && $amount > fs_option( 'fs_free_delivery_cost' ) ) {
+		$cost = 0;
 	}
 
 	return floatval( $cost );

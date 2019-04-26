@@ -505,14 +505,22 @@ class FS_Product_Class {
 	 * @return mixed
 	 */
 	public function get_base_price( $product_id = 0, $variation_id = null ) {
+		global $fs_config;
+
+		$product_id = $product_id ? $product_id : $this->id;
 
 
-		if(fs_is_variated()){
+		if ( fs_is_variated() && $variation_id ) {
 			$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
 			$variation    = $this->get_variation( $product_id, $variation_id );
 			$base_price   = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
+
 			return floatval( $base_price );
-        }
+		} else {
+			$price = get_post_meta( $product_id, $fs_config->meta['price'], 1 );
+
+			return apply_filters( 'fs_price_filter', $product_id, $price );
+		}
 	}
 
 	/**

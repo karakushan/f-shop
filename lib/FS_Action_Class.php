@@ -88,6 +88,8 @@ class FS_Action_Class {
 		add_action( 'fs_wishlist_button', 'fs_add_to_wishlist', 10, 3 );
 		/* отображает виджет (блок) со списком желаний */
 		add_action( 'fs_wishlist_widget', 'fs_wishlist_widget', 10, 1 );
+		/* удаляет товар из списка желаний */
+		add_action( 'fs_delete_wish_list_item', array( $this, 'delete_wish_list_item' ), 10, 1 );
 
 		//===== CART =====
 		/* выводит корзину в определёном месте */
@@ -145,4 +147,32 @@ class FS_Action_Class {
 		// удаляем подпункт "добавить заказ"
 		remove_submenu_page( 'edit.php?post_type=orders', 'post-new.php?post_type=orders' );
 	}
+
+
+	/**
+	 * Удаляет одну позициию из списка желаний
+	 *
+	 * @param int $product_id
+	 *
+	 * @return bool
+	 */
+	function delete_wish_list_item( $product_id = 0 ) {
+		if ( ! empty( $_REQUEST['product_id'] ) ) {
+			$product_id = intval( $_REQUEST['product_id'] );
+
+			unset( $_SESSION['fs_wishlist'][ $product_id ] );
+			wp_safe_redirect( remove_query_arg( [ 'fs-api', 'product_id' ] ) );
+
+			exit;
+		} else {
+			if ( isset( $_SESSION['fs_wishlist'][ $product_id ] ) ) {
+				unset( $_SESSION['fs_wishlist'][ $product_id ] );
+			}
+
+			return true;
+		}
+
+	}
+
+
 }
