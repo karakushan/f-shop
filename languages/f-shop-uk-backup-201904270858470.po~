@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-27 08:37+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2019-04-27 08:58+0000\n"
+"PO-Revision-Date: 2019-04-27 08:52+0000\n"
 "Last-Translator: sharf-admin <karakushan@gmail.com>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -1147,7 +1147,7 @@ msgstr "Використовується при оформленні покуп�
 
 #: lib/FS_Settings_Class.php:163
 msgid "The amount of goods in the basket at which free shipping is activated"
-msgstr "Вартість товарів у кошику коли активується безкоштовна доставка"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:172 lib/FS_Taxonomies_Class.php:172
 #: lib/FS_Taxonomies_Class.php:174
@@ -1160,7 +1160,7 @@ msgstr "Символ або знак валюти ($ за замовчуванн
 
 #: lib/FS_Settings_Class.php:183
 msgid "Three-digit currency code"
-msgstr "Трох-значний код валюти"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:189
 msgid "Price separator (default \".\")"
@@ -1202,15 +1202,13 @@ msgstr ""
 
 #: lib/FS_Settings_Class.php:221
 msgid "Disable js event handling by the plugin"
-msgstr "Вимкнути обробку javascript подій плагіну"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:222
 msgid ""
 "Этот чекбокс нужно отметить если вы сами намерены обрабатывать события "
 "инициируемые плагином"
 msgstr ""
-"Цей чекбокс потрібно відмітити якщо ви плануєте самі обробляти події які "
-"ініційовані плагіном"
 
 #: lib/FS_Settings_Class.php:228
 msgid "Letters"
@@ -1330,7 +1328,7 @@ msgstr "Сторінка інформації про замовлення"
 
 #: lib/FS_Settings_Class.php:342
 msgid "Экспорт товаров"
-msgstr "Експорт товарів"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:343
 #, php-format
@@ -1338,12 +1336,10 @@ msgid ""
 "Link to product feed in YML format: <a href=\"%s\" target=\"_blank\">%s</a> "
 "or <a href=\"%s\" target=\"_blank\">%s</a>"
 msgstr ""
-"Посилання на фід товарів в YML форматі: <a href=\"%s\" target=\"_blank\">"
-"%s</a> or <a href=\"%s\" target=\"_blank\">%s</a>"
 
 #: lib/FS_Settings_Class.php:348
 msgid "Export to the site"
-msgstr "Експорт на сайт"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:350
 msgid "Розетка"
@@ -1355,11 +1351,11 @@ msgstr ""
 
 #: lib/FS_Settings_Class.php:363
 msgid "Debugging"
-msgstr "Налагодження"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:364
 msgid "The debug data is displayed here as text."
-msgstr "Дані налагодження відображаються тут в вигляді тексту"
+msgstr ""
 
 #: lib/FS_Settings_Class.php:369
 msgid "Sessions"
@@ -1454,15 +1450,15 @@ msgstr "Додати характеристику/групу характери�
 
 #: lib/FS_Taxonomies_Class.php:113 lib/FS_Taxonomies_Class.php:115
 msgid "Manufacturers"
-msgstr "Виробники"
+msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:116
 msgid "Manufacturer"
-msgstr "Виробник"
+msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:117
 msgid "Add Manufacturer"
-msgstr "Додати виробника"
+msgstr ""
 
 #: lib/FS_Taxonomies_Class.php:131 lib/FS_Taxonomies_Class.php:133
 #: lib/FS_Taxonomies_Class.php:134
@@ -1578,7 +1574,7 @@ msgstr "Видалити"
 
 #: templates/back-end/fields/image.php:20
 msgid "Вы точно намерены удалить изображение?"
-msgstr "Ви насправді хочете видалити зображення?"
+msgstr ""
 
 #: templates/back-end/metabox/attributes.php:32
 msgid "do I delete a property?"
@@ -1723,15 +1719,15 @@ msgstr ""
 #: templates/front-end/checkout/checkout-no-items.php:9
 #, php-format
 msgid "Your basket is empty. <a href=\"%s\">To catalog</a>"
-msgstr "Ваш кошик порожній. <a href=\"%s\">В каталог</a>"
+msgstr ""
 
 #: templates/front-end/checkout/checkout.php:2
 msgid "Items in the cart"
-msgstr "Товари у кошику"
+msgstr ""
 
 #: templates/front-end/checkout/checkout.php:96
 msgid "Information about delivery"
-msgstr "Інформація по доставку"
+msgstr ""
 
 #: templates/front-end/auth/login.php:3 templates/front-end/auth/login.php:5
 msgid "Email or login"
