@@ -97,45 +97,55 @@ class FS_Config {
 		);
 
 		self::$pages = array(
-			'cart'       => array(
+			'cart'         => array(
 				'title'   => __( 'Basket', 'f-shop' ),
 				'content' => '[fs_cart]',
 				'option'  => 'page_cart'
 			),
-			'ckeckout'   => array(
+			'ckeckout'     => array(
 				'title'   => __( 'Checkout', 'f-shop' ),
 				'content' => '[fs_checkout]',
 				'option'  => 'page_checkout'
 			),
-			'pay'        => array(
+			'pay'          => array(
 				'title'   => __( 'Payment order', 'f-shop' ),
 				'content' => '[fs_order_pay]',
 				'option'  => 'page_payment'
 			),
-			'thanks'     => array(
+			'thanks'       => array(
 				'title'   => __( 'Thank you for your purchase.', 'f-shop' ),
 				'content' => '[fs_checkout_success]',
 				'option'  => 'page_success'
 			),
-			'wishlist'   => array(
+			'wishlist'     => array(
 				'title'   => __( 'Wishlist', 'f-shop' ),
 				'content' => '[fs_wishlist]',
 				'option'  => 'page_whishlist'
 			),
-			'account'    => array(
+			'account'      => array(
 				'title'   => __( 'Personal Area', 'f-shop' ),
 				'content' => '[fs_user_cabinet]',
 				'option'  => 'page_cabinet'
 			),
-			'log-in'     => array(
+			'log-in'       => array(
 				'title'   => __( 'Sign in', 'f-shop' ),
 				'content' => '[fs_login]',
 				'option'  => 'page_auth'
 			),
-			'order-info' => array(
+			'register'     => array(
+				'title'   => __( 'Register', 'f-shop' ),
+				'content' => '[fs_register]',
+				'option'  => 'page_register'
+			),
+			'order-info'   => array(
 				'title'   => __( 'Information about order', 'f-shop' ),
 				'content' => '[fs_order_info]',
 				'option'  => 'page_order_detail'
+			),
+			'lostpassword' => array(
+				'title'   => __( 'Information about order', 'f-shop' ),
+				'content' => '[fs_lostpassword]',
+				'option'  => 'page_lostpassword'
 			),
 
 		);

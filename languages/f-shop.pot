@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-30 09:13+0000\n"
+"POT-Creation-Date: 2019-05-05 18:54+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -40,19 +40,20 @@ msgstr ""
 msgid "First name"
 msgstr ""
 
-#: functions/actions.php:64 lib/FS_Config.php:170
-#: templates/front-end/dashboard/personal_info.php:26
+#: functions/actions.php:64 lib/FS_Config.php:183
+#: templates/front-end/dashboard/personal_info.php:27
 #: templates/front-end/shortcode/fs-order-info.php:47
 #: templates/back-end/metabox/order/meta-box-1.php:12
 msgid "Last name"
 msgstr ""
 
-#: functions/actions.php:65 templates/front-end/auth/register.php:25
+#: functions/actions.php:65 templates/front-end/auth/register.php:8
 #: templates/front-end/order/last-order-info.php:19
 msgid "Email"
 msgstr ""
 
 #: functions/actions.php:65 lib/FS_Config.php:74
+#: templates/front-end/auth/lostpassword.php:2
 #: templates/front-end/shortcode/fs-order-info.php:51
 #: templates/back-end/metabox/order/meta-box-1.php:20
 msgid "E-mail"
@@ -66,13 +67,12 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: functions/actions.php:68 templates/front-end/auth/register.php:18
+#: functions/actions.php:68
 msgid "Phone"
 msgstr ""
 
-#: functions/actions.php:69 lib/FS_Config.php:80 lib/FS_Config.php:202
-#: templates/front-end/auth/register.php:65
-#: templates/front-end/dashboard/personal_info.php:57
+#: functions/actions.php:69 lib/FS_Config.php:80 lib/FS_Config.php:215
+#: templates/front-end/dashboard/personal_info.php:63
 #: templates/front-end/order/last-order-info.php:27
 #: templates/front-end/shortcode/fs-order-info.php:59
 #: templates/back-end/metabox/order/meta-box-1.php:24
@@ -142,7 +142,7 @@ msgstr ""
 
 #: functions/filters.php:72 templates/front-end/cart/list-products.php:12
 #: templates/front-end/checkout/checkout.php:8
-#: templates/front-end/dashboard/personal_info.php:32
+#: templates/front-end/dashboard/personal_info.php:33
 #: templates/front-end/shortcode/fs-order-info.php:9
 #: templates/front-end/shortcode/order-detail.php:15
 msgid "Photo"
@@ -182,74 +182,71 @@ msgstr ""
 msgid "Не указан параметр $group_id в функции %s"
 msgstr ""
 
-#: functions/functions.php:627
+#: functions/functions.php:630
 #, php-format
 msgid ""
 "Are you sure you want to delete the item &laquo;%s&raquo; from the basket?"
 msgstr ""
 
-#: functions/functions.php:628
+#: functions/functions.php:631
 #, php-format
 msgid "Remove item &laquo;%s&raquo;"
 msgstr ""
 
-#: functions/functions.php:670
+#: functions/functions.php:673
 msgid "Remove from wishlist"
 msgstr ""
 
-#: functions/functions.php:811 functions/functions.php:818
+#: functions/functions.php:814 functions/functions.php:821
 msgid "Add to cart"
 msgstr ""
 
-#: functions/functions.php:881
+#: functions/functions.php:884
 #, php-format
 msgid "Item «%s» added to comparison"
 msgstr ""
 
-#: functions/functions.php:882
+#: functions/functions.php:885
 msgid "Error adding product to comparison"
 msgstr ""
 
-#: functions/functions.php:922
+#: functions/functions.php:925
 msgid "Sent"
 msgstr ""
 
-#: functions/functions.php:1278
+#: functions/functions.php:1281
 msgid "Remove all items"
 msgstr ""
 
-#: functions/functions.php:1285
+#: functions/functions.php:1288
 msgid "Are you sure you want to empty the trash?"
 msgstr ""
 
-#: functions/functions.php:1391
+#: functions/functions.php:1394
 msgid "Add to wishlist"
 msgstr ""
 
-#: functions/functions.php:1499
+#: functions/functions.php:1502
 #, php-format
 msgid "Template file %s not found in function %s"
 msgstr ""
 
-#: functions/functions.php:1539 templates/front-end/auth/register.php:33
-msgid "Login"
-msgstr ""
-
-#: functions/functions.php:2110
+#: functions/functions.php:2077
 msgid "No image"
 msgstr ""
 
-#: functions/functions.php:2419
+#: functions/functions.php:2386
 #, php-format
 msgid "Showing %1$d products from %2$d"
 msgstr ""
 
-#: functions/functions.php:2762
+#: functions/functions.php:2729
 #, php-format
 msgid "File \"%s\" not found"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:95 lib/FS_Ajax_Class.php:368 lib/FS_Users_Class.php:38
+#: lib/FS_Ajax_Class.php:95 lib/FS_Ajax_Class.php:368 lib/FS_Users_Class.php:45
+#: lib/FS_Users_Class.php:79 lib/FS_Users_Class.php:218
 msgid "Failed verification of nonce form"
 msgstr ""
 
@@ -350,7 +347,7 @@ msgstr ""
 msgid "An error occurred while removing position from the cart"
 msgstr ""
 
-#: lib/FS_Config.php:58 lib/FS_Config.php:295
+#: lib/FS_Config.php:58 lib/FS_Config.php:327
 msgid "Base price"
 msgstr ""
 
@@ -358,7 +355,7 @@ msgstr ""
 msgid "Basic price type"
 msgstr ""
 
-#: lib/FS_Config.php:65 lib/FS_Config.php:300
+#: lib/FS_Config.php:65 lib/FS_Config.php:332
 #: templates/back-end/metabox/product-variations/add-variation.php:58
 msgid "Promotional price"
 msgstr ""
@@ -371,8 +368,8 @@ msgstr ""
 msgid "Display Name"
 msgstr ""
 
-#: lib/FS_Config.php:75 lib/FS_Config.php:195
-#: templates/front-end/dashboard/personal_info.php:69
+#: lib/FS_Config.php:75 lib/FS_Config.php:208
+#: templates/front-end/dashboard/personal_info.php:76
 #: templates/front-end/order/last-order-info.php:23
 #: templates/front-end/shortcode/fs-order-info.php:55
 #: templates/back-end/metabox/order/meta-box-1.php:16
@@ -384,8 +381,8 @@ msgstr ""
 msgid "Date of Birth"
 msgstr ""
 
-#: lib/FS_Config.php:77 lib/FS_Config.php:181 lib/FS_Config.php:188
-#: templates/front-end/dashboard/personal_info.php:41
+#: lib/FS_Config.php:77 lib/FS_Config.php:194 lib/FS_Config.php:201
+#: templates/front-end/dashboard/personal_info.php:46
 msgid "Gender"
 msgstr ""
 
@@ -393,13 +390,13 @@ msgstr ""
 msgid "State / Province"
 msgstr ""
 
-#: lib/FS_Config.php:79 lib/FS_Config.php:209
-#: templates/front-end/dashboard/personal_info.php:49
+#: lib/FS_Config.php:79 lib/FS_Config.php:222
+#: templates/front-end/dashboard/personal_info.php:54
 msgid "Country"
 msgstr ""
 
-#: lib/FS_Config.php:81 lib/FS_Config.php:229
-#: templates/front-end/dashboard/personal_info.php:65
+#: lib/FS_Config.php:81 lib/FS_Config.php:242
+#: templates/front-end/dashboard/personal_info.php:72
 #: templates/front-end/mail/themes/oxygen.php:410
 msgid "Address"
 msgstr ""
@@ -432,7 +429,7 @@ msgstr ""
 msgid "Basket"
 msgstr ""
 
-#: lib/FS_Config.php:106 lib/FS_Init.php:175
+#: lib/FS_Config.php:106 lib/FS_Init.php:174
 #: templates/front-end/cart/list-products.php:85
 msgid "Checkout"
 msgstr ""
@@ -457,159 +454,172 @@ msgstr ""
 msgid "Sign in"
 msgstr ""
 
-#: lib/FS_Config.php:136 templates/front-end/mail/themes/oxygen.php:398
+#: lib/FS_Config.php:136
+msgid "Register"
+msgstr ""
+
+#: lib/FS_Config.php:141 lib/FS_Config.php:146
+#: templates/front-end/mail/themes/oxygen.php:398
 msgid "Information about order"
 msgstr ""
 
-#: lib/FS_Config.php:156
+#: lib/FS_Config.php:169
 msgid "Your email"
 msgstr ""
 
-#: lib/FS_Config.php:157
+#: lib/FS_Config.php:170
 msgid "Keep the correct email"
 msgstr ""
 
-#: lib/FS_Config.php:163
+#: lib/FS_Config.php:176
 msgid "Firts name"
 msgstr ""
 
-#: lib/FS_Config.php:164 lib/FS_Config.php:171 lib/FS_Config.php:203
-#: lib/FS_Config.php:222
+#: lib/FS_Config.php:177 lib/FS_Config.php:184 lib/FS_Config.php:216
+#: lib/FS_Config.php:235
 msgid "This field is required."
 msgstr ""
 
-#: lib/FS_Config.php:178
+#: lib/FS_Config.php:191
 msgid "Male"
 msgstr ""
 
-#: lib/FS_Config.php:179
+#: lib/FS_Config.php:192
 msgid "Female"
 msgstr ""
 
-#: lib/FS_Config.php:196
+#: lib/FS_Config.php:209
 msgid "Keep the correct phone number"
 msgstr ""
 
-#: lib/FS_Config.php:216
+#: lib/FS_Config.php:229
 msgid "Zip Code"
 msgstr ""
 
-#: lib/FS_Config.php:223
+#: lib/FS_Config.php:236
 msgid "State / province"
 msgstr ""
 
-#: lib/FS_Config.php:235
+#: lib/FS_Config.php:248
 msgid "House number"
 msgstr ""
 
-#: lib/FS_Config.php:241
+#: lib/FS_Config.php:254
 msgid "Apartment number"
 msgstr ""
 
-#: lib/FS_Config.php:247
+#: lib/FS_Config.php:260
 msgid "Branch number"
 msgstr ""
 
-#: lib/FS_Config.php:252
+#: lib/FS_Config.php:265
 msgid "Choose delivery method"
 msgstr ""
 
-#: lib/FS_Config.php:259
+#: lib/FS_Config.php:272
 msgid "Choose a payment method"
 msgstr ""
 
-#: lib/FS_Config.php:267 templates/front-end/mail/themes/oxygen.php:436
+#: lib/FS_Config.php:280 templates/front-end/mail/themes/oxygen.php:436
 msgid "Comment"
 msgstr ""
 
-#: lib/FS_Config.php:272
+#: lib/FS_Config.php:285
 msgid "Register on the site"
 msgstr ""
 
-#: lib/FS_Config.php:290
+#: lib/FS_Config.php:292
+msgid "Receive site news"
+msgstr ""
+
+#: lib/FS_Config.php:298
+msgid "Receive a message about goods left in the basket"
+msgstr ""
+
+#: lib/FS_Config.php:322
 msgid "Prices"
 msgstr ""
 
-#: lib/FS_Config.php:292
+#: lib/FS_Config.php:324
 msgid "In this tab you can adjust the prices of goods."
 msgstr ""
 
-#: lib/FS_Config.php:297
+#: lib/FS_Config.php:329
 msgid "This is the main price on the site. Required field!"
 msgstr ""
 
-#: lib/FS_Config.php:302
+#: lib/FS_Config.php:334
 msgid ""
 "If this field is filled, the base price loses its relevance. But you can "
 "display it on the site."
 msgstr ""
 
-#: lib/FS_Config.php:305
+#: lib/FS_Config.php:337
 msgid "Item Currency"
 msgstr ""
 
-#: lib/FS_Config.php:308
+#: lib/FS_Config.php:340
 msgid "The field is active if you have enabled multicurrency in settings."
 msgstr ""
 
-#: lib/FS_Config.php:314
+#: lib/FS_Config.php:346
 msgid "Gallery"
 msgstr ""
 
-#: lib/FS_Config.php:320 templates/back-end/metabox/order/meta-box-0.php:9
+#: lib/FS_Config.php:352 templates/back-end/metabox/order/meta-box-0.php:9
 msgid "Attributes"
 msgstr ""
 
-#: lib/FS_Config.php:326
+#: lib/FS_Config.php:358
 msgid "Other"
 msgstr ""
 
-#: lib/FS_Config.php:332
+#: lib/FS_Config.php:364
 msgid "Associated"
 msgstr ""
 
-#: lib/FS_Config.php:338
+#: lib/FS_Config.php:370
 msgid "Variation"
 msgstr ""
 
-#: lib/FS_Config.php:344 lib/FS_Product_Class.php:569
+#: lib/FS_Config.php:376 lib/FS_Product_Class.php:569
 #: templates/front-end/mail/themes/oxygen.php:429
 msgid "Shipping and payment"
 msgstr ""
 
-#: lib/FS_Config.php:349
+#: lib/FS_Config.php:381
 msgid "Shipping and Payment Details"
 msgstr ""
 
-#: lib/FS_Config.php:369 lib/FS_Filters.php:394 lib/FS_Settings_Class.php:120
+#: lib/FS_Config.php:401 lib/FS_Filters.php:394 lib/FS_Settings_Class.php:120
 msgid "recently added"
 msgstr ""
 
-#: lib/FS_Config.php:372 lib/FS_Filters.php:397 lib/FS_Settings_Class.php:121
+#: lib/FS_Config.php:404 lib/FS_Filters.php:397 lib/FS_Settings_Class.php:121
 msgid "later added"
 msgstr ""
 
-#: lib/FS_Config.php:375 lib/FS_Filters.php:400
+#: lib/FS_Config.php:407 lib/FS_Filters.php:400
 msgid "from cheap to expensive"
 msgstr ""
 
-#: lib/FS_Config.php:378 lib/FS_Filters.php:403
+#: lib/FS_Config.php:410 lib/FS_Filters.php:403
 msgid "from expensive to cheap"
 msgstr ""
 
-#: lib/FS_Config.php:381 lib/FS_Filters.php:406
+#: lib/FS_Config.php:413 lib/FS_Filters.php:406
 msgid "by title A to Z"
 msgstr ""
 
-#: lib/FS_Config.php:384 lib/FS_Filters.php:409
+#: lib/FS_Config.php:416 lib/FS_Filters.php:409
 msgid "by title Z to A"
 msgstr ""
 
-#: lib/FS_Config.php:399
+#: lib/FS_Config.php:431
 msgid "New"
 msgstr ""
 
-#: lib/FS_Config.php:400
+#: lib/FS_Config.php:432
 msgid ""
 "About all orders with the status of “New” administrator receives "
 "notification by mail, which allows him to immediately contact the buyer. For "
@@ -618,123 +628,123 @@ msgid ""
 "sorted by the date added."
 msgstr ""
 
-#: lib/FS_Config.php:403
+#: lib/FS_Config.php:435
 msgid "Processed"
 msgstr ""
 
-#: lib/FS_Config.php:404
+#: lib/FS_Config.php:436
 msgid ""
 "The order is accepted and can be paid. The status is introduced mainly for "
 "the convenience of internal order management, not “New”, but not yet paid or "
 "not sent for delivery;"
 msgstr ""
 
-#: lib/FS_Config.php:407
+#: lib/FS_Config.php:439
 msgid "In the process of payment"
 msgstr ""
 
-#: lib/FS_Config.php:408
+#: lib/FS_Config.php:440
 msgid ""
 "The status can be assigned by the administrator after sending an invoice to "
 "the client for payment."
 msgstr ""
 
-#: lib/FS_Config.php:411
+#: lib/FS_Config.php:443
 msgid "Paid"
 msgstr ""
 
-#: lib/FS_Config.php:412
+#: lib/FS_Config.php:444
 msgid ""
 "The status is assigned to the order automatically if the settlement is made "
 "through the Money Online payment system. If the goods were delivered by "
 "courier and paid in cash, the status can be used as a reporting;"
 msgstr ""
 
-#: lib/FS_Config.php:415
+#: lib/FS_Config.php:447
 msgid "In delivery"
 msgstr ""
 
-#: lib/FS_Config.php:416
+#: lib/FS_Config.php:448
 msgid ""
 "The administrator assigns this status to orders when drawing up the delivery "
 "list. The sheet is transferred to the courier along with the goods."
 msgstr ""
 
-#: lib/FS_Config.php:419
+#: lib/FS_Config.php:451
 msgid "Delivered"
 msgstr ""
 
-#: lib/FS_Config.php:420
+#: lib/FS_Config.php:452
 msgid ""
 "The status is assigned to orders transferred to the courier. An order can "
 "maintain this status for a long time, depending on how far the customer is "
 "located;"
 msgstr ""
 
-#: lib/FS_Config.php:423
+#: lib/FS_Config.php:455
 msgid "Denied"
 msgstr ""
 
-#: lib/FS_Config.php:424
+#: lib/FS_Config.php:456
 msgid ""
 "The status is assigned to orders that cannot be satisfied (for example, the "
 "product is not in stock). Later, at any time you can change the status of "
 "the order (for example, if the product is in stock);"
 msgstr ""
 
-#: lib/FS_Config.php:427
+#: lib/FS_Config.php:459
 msgid "Canceled"
 msgstr ""
 
-#: lib/FS_Config.php:428
+#: lib/FS_Config.php:460
 msgid ""
 "The administrator assigns the status to the order if the client for some "
 "reason refused the order;"
 msgstr ""
 
-#: lib/FS_Config.php:431
+#: lib/FS_Config.php:463
 msgid "Return"
 msgstr ""
 
-#: lib/FS_Config.php:432
+#: lib/FS_Config.php:464
 msgid ""
 "The administrator assigns the status to the order if the client for some "
 "reason returned the goods."
 msgstr ""
 
-#: lib/FS_Config.php:448
+#: lib/FS_Config.php:480
 msgid ""
 "<p>This online store is powered by <a href=\"https://f-shop.top/\">F-Shop</a>"
 ".  <a href=\"https://f-shop.top/dokumentacija/\">Documentation</a>. <a "
 "href=\"https://f-shop.top/novosti/\">News</a>.</p>"
 msgstr ""
 
-#: lib/FS_Config.php:531
+#: lib/FS_Config.php:563
 msgid "Category text"
 msgstr ""
 
-#: lib/FS_Config.php:536 lib/FS_Config.php:555 lib/FS_Config.php:586
-#: lib/FS_Config.php:634
+#: lib/FS_Config.php:568 lib/FS_Config.php:587 lib/FS_Config.php:618
+#: lib/FS_Config.php:666
 msgid "Thumbnail"
 msgstr ""
 
-#: lib/FS_Config.php:541
+#: lib/FS_Config.php:573
 msgid "Icon"
 msgstr ""
 
-#: lib/FS_Config.php:546
+#: lib/FS_Config.php:578
 msgid "Total discount for category products (in percent)"
 msgstr ""
 
-#: lib/FS_Config.php:548
+#: lib/FS_Config.php:580
 msgid "Enter a number without a percent sign"
 msgstr ""
 
-#: lib/FS_Config.php:560
+#: lib/FS_Config.php:592
 msgid "E-mail message to the buyer if the order is confirmed by the manager"
 msgstr ""
 
-#: lib/FS_Config.php:561
+#: lib/FS_Config.php:593
 msgid ""
 "This message is sent to the buyer at the time the manager confirms the order."
 " You can use meta data of type: <code>%order_id%</code> - order number, "
@@ -742,102 +752,102 @@ msgid ""
 "- payment reference ."
 msgstr ""
 
-#: lib/FS_Config.php:566
+#: lib/FS_Config.php:598
 msgid "Message to the buyer after payment on the site"
 msgstr ""
 
-#: lib/FS_Config.php:567
+#: lib/FS_Config.php:599
 msgid ""
 "This message will be shown if the buyer has successfully paid the order. You "
 "can use these variables: <code>%order_id%</code> - order number, <code>"
 "%pay_name%</code> - name of the payment method"
 msgstr ""
 
-#: lib/FS_Config.php:572
+#: lib/FS_Config.php:604
 msgid "Unavailable for payment"
 msgstr ""
 
-#: lib/FS_Config.php:573
+#: lib/FS_Config.php:605
 msgid ""
 "If you turn off, then the payment method will not be visible to users, only "
 "in the admin panel."
 msgstr ""
 
-#: lib/FS_Config.php:578
+#: lib/FS_Config.php:610
 msgid ""
 "When choosing this method, send the buyer immediately to the payment page"
 msgstr ""
 
-#: lib/FS_Config.php:579
+#: lib/FS_Config.php:611
 msgid ""
 "This is convenient in some cases, but it is better to leave this option off"
 msgstr ""
 
-#: lib/FS_Config.php:591
+#: lib/FS_Config.php:623
 msgid "Shipping Cost in Base Currency"
 msgstr ""
 
-#: lib/FS_Config.php:596
+#: lib/FS_Config.php:628
 msgid "Include address fields when choosing this method"
 msgstr ""
 
-#: lib/FS_Config.php:603
+#: lib/FS_Config.php:635
 msgid "International currency code"
 msgstr ""
 
-#: lib/FS_Config.php:608
+#: lib/FS_Config.php:640
 msgid "Cost in base currency"
 msgstr ""
 
-#: lib/FS_Config.php:613
+#: lib/FS_Config.php:645
 msgid "Display on the site"
 msgstr ""
 
-#: lib/FS_Config.php:618
+#: lib/FS_Config.php:650
 msgid "Currency Language (locale)"
 msgstr ""
 
-#: lib/FS_Config.php:626
+#: lib/FS_Config.php:658
 msgid "The amount or value of tax as a percentage"
 msgstr ""
 
-#: lib/FS_Config.php:642
+#: lib/FS_Config.php:674
 msgid "The discount is activated provided"
 msgstr ""
 
-#: lib/FS_Config.php:647
+#: lib/FS_Config.php:679
 msgid "The total amount of goods in the cart"
 msgstr ""
 
-#: lib/FS_Config.php:648
+#: lib/FS_Config.php:680
 msgid "Number of items in the cart"
 msgstr ""
 
-#: lib/FS_Config.php:653
+#: lib/FS_Config.php:685
 msgid "Discount condition"
 msgstr ""
 
-#: lib/FS_Config.php:657
+#: lib/FS_Config.php:689
 msgid "More or equal"
 msgstr ""
 
-#: lib/FS_Config.php:658
+#: lib/FS_Config.php:690
 msgid "More"
 msgstr ""
 
-#: lib/FS_Config.php:659
+#: lib/FS_Config.php:691
 msgid "Less"
 msgstr ""
 
-#: lib/FS_Config.php:660
+#: lib/FS_Config.php:692
 msgid "Less or equal"
 msgstr ""
 
-#: lib/FS_Config.php:665
+#: lib/FS_Config.php:697
 msgid "Condition value"
 msgstr ""
 
-#: lib/FS_Config.php:670
+#: lib/FS_Config.php:702
 msgid "Discount amount"
 msgstr ""
 
@@ -845,35 +855,35 @@ msgstr ""
 msgid "Product category"
 msgstr ""
 
-#: lib/FS_Form_Class.php:127
+#: lib/FS_Form_Class.php:135
 msgid "this field is required"
 msgstr ""
 
-#: lib/FS_Init.php:165
+#: lib/FS_Init.php:164
 msgid "Success!"
 msgstr ""
 
-#: lib/FS_Init.php:166
+#: lib/FS_Init.php:165
 msgid "Error!"
 msgstr ""
 
-#: lib/FS_Init.php:167
+#: lib/FS_Init.php:166
 msgid "Your order has been successfully created. We will contact you shortly."
 msgstr ""
 
-#: lib/FS_Init.php:168
+#: lib/FS_Init.php:167
 msgid "You have selected all available items from stock."
 msgstr ""
 
-#: lib/FS_Init.php:169 lib/FS_Init.php:171
+#: lib/FS_Init.php:168 lib/FS_Init.php:170
 msgid "Item &laquo;%product%&raquo; successfully added to cart."
 msgstr ""
 
-#: lib/FS_Init.php:174
+#: lib/FS_Init.php:173
 msgid "To catalog"
 msgstr ""
 
-#: lib/FS_Init.php:176
+#: lib/FS_Init.php:175
 msgid ""
 "Item &laquo;%product%&raquo; successfully added to wishlist. <a "
 "href=\"%wishlist_url%\">Go to wishlist</a>"
@@ -952,7 +962,7 @@ msgstr ""
 msgid "Edit product"
 msgstr ""
 
-#: lib/FS_Post_Type.php:102 lib/FS_Post_Type.php:113 lib/FS_Users_Class.php:402
+#: lib/FS_Post_Type.php:102 lib/FS_Post_Type.php:113 lib/FS_Users_Class.php:517
 msgid "Orders"
 msgstr ""
 
@@ -992,7 +1002,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: lib/FS_Product_Class.php:573 lib/FS_Users_Class.php:416
+#: lib/FS_Product_Class.php:573 lib/FS_Users_Class.php:531
 msgid "Reviews"
 msgstr ""
 
@@ -1284,74 +1294,82 @@ msgid "Login page"
 msgstr ""
 
 #: lib/FS_Settings_Class.php:334
+msgid "Register page"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:340 templates/front-end/auth/login.php:20
+msgid "Forgot your password?"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:346
 msgid "Order Information Page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:342
+#: lib/FS_Settings_Class.php:354
 msgid "Экспорт товаров"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:343
+#: lib/FS_Settings_Class.php:355
 #, php-format
 msgid ""
 "Link to product feed in YML format: <a href=\"%s\" target=\"_blank\">%s</a> "
 "or <a href=\"%s\" target=\"_blank\">%s</a>"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:348
+#: lib/FS_Settings_Class.php:360
 msgid "Export to the site"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:350
+#: lib/FS_Settings_Class.php:362
 msgid "Розетка"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:351
+#: lib/FS_Settings_Class.php:363
 msgid "Prom.ua"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:363
+#: lib/FS_Settings_Class.php:375
 msgid "Debugging"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:364
+#: lib/FS_Settings_Class.php:376
 msgid "The debug data is displayed here as text."
 msgstr ""
 
-#: lib/FS_Settings_Class.php:369
+#: lib/FS_Settings_Class.php:381
 msgid "Sessions"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:395
+#: lib/FS_Settings_Class.php:407
 msgid "Default currency"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:407
+#: lib/FS_Settings_Class.php:419
 msgid "Determine your store settings."
 msgstr ""
 
-#: lib/FS_Settings_Class.php:418 lib/FS_Settings_Class.php:419
-#: lib/FS_Settings_Class.php:431
+#: lib/FS_Settings_Class.php:430 lib/FS_Settings_Class.php:431
+#: lib/FS_Settings_Class.php:443
 msgid "Store settings"
 msgstr ""
 
-#: lib/FS_Shortcode.php:56
+#: lib/FS_Shortcode.php:71
 msgid "Wish list is empty"
 msgstr ""
 
-#: lib/FS_Shortcode.php:106 templates/front-end/cart/list-products.php:91
+#: lib/FS_Shortcode.php:121 templates/front-end/cart/list-products.php:91
 msgid "Your basket is empty"
 msgstr ""
 
-#: lib/FS_Shortcode.php:197
+#: lib/FS_Shortcode.php:214
 msgid "Register to view this page"
 msgstr ""
 
-#: lib/FS_Shortcode.php:201
+#: lib/FS_Shortcode.php:218
 msgid "Order not found"
 msgstr ""
 
-#: lib/FS_Shortcode.php:205
+#: lib/FS_Shortcode.php:222
 msgid "Details of this order are not available for you"
 msgstr ""
 
@@ -1375,7 +1393,7 @@ msgstr ""
 msgid "Payment methods"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:64 templates/front-end/auth/register.php:75
+#: lib/FS_Taxonomies_Class.php:64
 #: templates/back-end/metabox/order/meta-box-1.php:40
 #: templates/front-end/mail/themes/oxygen.php:433
 msgid "Payment method"
@@ -1516,27 +1534,59 @@ msgstr ""
 msgid "Cost"
 msgstr ""
 
-#: lib/FS_Users_Class.php:45
+#: lib/FS_Users_Class.php:51
+msgid "This user does not exist on the site"
+msgstr ""
+
+#: lib/FS_Users_Class.php:55
+msgid "You are already logged in"
+msgstr ""
+
+#: lib/FS_Users_Class.php:64
+#, php-format
+msgid "You or someone else initiated a password reset on the site %s"
+msgstr ""
+
+#: lib/FS_Users_Class.php:65
+#, php-format
+msgid "New password: %s"
+msgstr ""
+
+#: lib/FS_Users_Class.php:66
+#, php-format
+msgid "If it was not you tell the site administrator на e-mail: %s"
+msgstr ""
+
+#: lib/FS_Users_Class.php:68
+msgid "Password reset on the site"
+msgstr ""
+
+#: lib/FS_Users_Class.php:92
 msgid "No fields found to save user data"
 msgstr ""
 
-#: lib/FS_Users_Class.php:50
+#: lib/FS_Users_Class.php:97
 msgid "User is not found"
 msgstr ""
 
-#: lib/FS_Users_Class.php:58
+#: lib/FS_Users_Class.php:131
 msgid "Your data has been successfully updated."
 msgstr ""
 
-#: lib/FS_Users_Class.php:302
+#: lib/FS_Users_Class.php:257
+msgid "\">Log in</a>"
+msgstr ""
+
+#: lib/FS_Users_Class.php:355 lib/FS_Users_Class.php:385
+#: lib/FS_Users_Class.php:415
 msgid "Вы уже вошли на сайт."
 msgstr ""
 
-#: lib/FS_Users_Class.php:395
+#: lib/FS_Users_Class.php:510
 msgid "Personal information"
 msgstr ""
 
-#: lib/FS_Users_Class.php:409
+#: lib/FS_Users_Class.php:524
 msgid "WishList"
 msgstr ""
 
@@ -1654,76 +1704,63 @@ msgstr ""
 msgid "Go to &laquo;%s&raquo;"
 msgstr ""
 
-#: templates/front-end/auth/login.php:3 templates/front-end/auth/login.php:5
+#: templates/front-end/auth/login.php:2
 msgid "Email or login"
 msgstr ""
 
-#: templates/front-end/auth/login.php:6 templates/front-end/auth/login.php:12
+#: templates/front-end/auth/login.php:4 templates/front-end/auth/login.php:10
 msgid "required"
 msgstr ""
 
-#: templates/front-end/auth/login.php:9 templates/front-end/auth/login.php:11
-#: templates/front-end/auth/register.php:40
+#: templates/front-end/auth/login.php:8
+#: templates/front-end/auth/register.php:14
+#: templates/front-end/dashboard/personal_info.php:107
 msgid "Password"
 msgstr ""
 
-#: templates/front-end/auth/login.php:15
-msgid "Log"
+#: templates/front-end/auth/login.php:14
+msgid "Login"
 msgstr ""
 
-#: templates/front-end/auth/register.php:1
-msgid "New User Registration"
+#: templates/front-end/auth/login.php:18
+msgid "Registration"
+msgstr ""
+
+#: templates/front-end/auth/lostpassword.php:4
+msgid "This field is required"
+msgstr ""
+
+#: templates/front-end/auth/lostpassword.php:9
+msgid "Получить новый пароль"
 msgstr ""
 
 #: templates/front-end/auth/register.php:2
-msgid "Already registered?"
+msgid "Your name"
 msgstr ""
 
 #: templates/front-end/auth/register.php:4
-msgid "Log in"
-msgstr ""
-
-#: templates/front-end/auth/register.php:9
-msgid "Required fields"
-msgstr ""
-
-#: templates/front-end/auth/register.php:11
-msgid "Full Name"
-msgstr ""
-
-#: templates/front-end/auth/register.php:14
-#: templates/front-end/auth/register.php:21
-#: templates/front-end/auth/register.php:36
-#: templates/front-end/auth/register.php:42
+#: templates/front-end/auth/register.php:16
 msgid "required field"
 msgstr ""
 
-#: templates/front-end/auth/register.php:28
+#: templates/front-end/auth/register.php:10
 msgid "enter a valid email"
 msgstr ""
 
-#: templates/front-end/auth/register.php:46
+#: templates/front-end/auth/register.php:20
 msgid "Repeat password"
 msgstr ""
 
-#: templates/front-end/auth/register.php:48
+#: templates/front-end/auth/register.php:22
 msgid "password and repeat password must match"
 msgstr ""
 
-#: templates/front-end/auth/register.php:51
-msgid "Additional Information"
-msgstr ""
-
-#: templates/front-end/auth/register.php:53
-msgid "Shipping method"
-msgstr ""
-
-#: templates/front-end/auth/register.php:70
-msgid "Shipping address"
-msgstr ""
-
-#: templates/front-end/auth/register.php:85
+#: templates/front-end/auth/register.php:26
 msgid "Send"
+msgstr ""
+
+#: templates/front-end/auth/register.php:30
+msgid "Have an account?"
 msgstr ""
 
 #: templates/front-end/cart/list-products.php:24
@@ -1763,10 +1800,12 @@ msgid "Edit profile"
 msgstr ""
 
 #: templates/front-end/dashboard/personal_info.php:7
+#: templates/front-end/dashboard/personal_info.php:85
 msgid "Message Setup"
 msgstr ""
 
 #: templates/front-end/dashboard/personal_info.php:9
+#: templates/front-end/dashboard/personal_info.php:99
 msgid "Login and password"
 msgstr ""
 
@@ -1778,21 +1817,33 @@ msgstr ""
 msgid "Personal Information"
 msgstr ""
 
-#: templates/front-end/dashboard/personal_info.php:36
+#: templates/front-end/dashboard/personal_info.php:40
 msgid "Choose a photo"
 msgstr ""
 
-#: templates/front-end/dashboard/personal_info.php:47
+#: templates/front-end/dashboard/personal_info.php:52
 #: templates/front-end/shortcode/fs-order-info.php:40
 msgid "Contact details"
 msgstr ""
 
-#: templates/front-end/dashboard/personal_info.php:53
+#: templates/front-end/dashboard/personal_info.php:58
 msgid "Region"
 msgstr ""
 
-#: templates/front-end/dashboard/personal_info.php:61
+#: templates/front-end/dashboard/personal_info.php:68
 msgid "Zip code"
+msgstr ""
+
+#: templates/front-end/dashboard/personal_info.php:87
+msgid "Message types"
+msgstr ""
+
+#: templates/front-end/dashboard/personal_info.php:101
+msgid "Login Settings"
+msgstr ""
+
+#: templates/front-end/dashboard/personal_info.php:103
+msgid "Username"
 msgstr ""
 
 #: templates/front-end/order/last-order-info.php:11

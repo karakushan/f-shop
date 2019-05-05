@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-30 09:06+0000\n"
+"POT-Creation-Date: 2019-04-30 09:13+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -35,11 +35,13 @@ msgstr ""
 msgid "Popular items"
 msgstr ""
 
-#: functions/actions.php:63 templates/back-end/metabox/order/meta-box-1.php:8
+#: functions/actions.php:63 templates/front-end/dashboard/personal_info.php:21
+#: templates/back-end/metabox/order/meta-box-1.php:8
 msgid "First name"
 msgstr ""
 
 #: functions/actions.php:64 lib/FS_Config.php:170
+#: templates/front-end/dashboard/personal_info.php:26
 #: templates/front-end/shortcode/fs-order-info.php:47
 #: templates/back-end/metabox/order/meta-box-1.php:12
 msgid "Last name"
@@ -70,7 +72,7 @@ msgstr ""
 
 #: functions/actions.php:69 lib/FS_Config.php:80 lib/FS_Config.php:202
 #: templates/front-end/auth/register.php:65
-#: templates/front-end/dashboard/personal_info.php:58
+#: templates/front-end/dashboard/personal_info.php:57
 #: templates/front-end/order/last-order-info.php:27
 #: templates/front-end/shortcode/fs-order-info.php:59
 #: templates/back-end/metabox/order/meta-box-1.php:24
@@ -140,6 +142,7 @@ msgstr ""
 
 #: functions/filters.php:72 templates/front-end/cart/list-products.php:12
 #: templates/front-end/checkout/checkout.php:8
+#: templates/front-end/dashboard/personal_info.php:32
 #: templates/front-end/shortcode/fs-order-info.php:9
 #: templates/front-end/shortcode/order-detail.php:15
 msgid "Photo"
@@ -369,7 +372,7 @@ msgid "Display Name"
 msgstr ""
 
 #: lib/FS_Config.php:75 lib/FS_Config.php:195
-#: templates/front-end/dashboard/personal_info.php:70
+#: templates/front-end/dashboard/personal_info.php:69
 #: templates/front-end/order/last-order-info.php:23
 #: templates/front-end/shortcode/fs-order-info.php:55
 #: templates/back-end/metabox/order/meta-box-1.php:16
@@ -382,6 +385,7 @@ msgid "Date of Birth"
 msgstr ""
 
 #: lib/FS_Config.php:77 lib/FS_Config.php:181 lib/FS_Config.php:188
+#: templates/front-end/dashboard/personal_info.php:41
 msgid "Gender"
 msgstr ""
 
@@ -390,12 +394,12 @@ msgid "State / Province"
 msgstr ""
 
 #: lib/FS_Config.php:79 lib/FS_Config.php:209
-#: templates/front-end/dashboard/personal_info.php:50
+#: templates/front-end/dashboard/personal_info.php:49
 msgid "Country"
 msgstr ""
 
 #: lib/FS_Config.php:81 lib/FS_Config.php:229
-#: templates/front-end/dashboard/personal_info.php:66
+#: templates/front-end/dashboard/personal_info.php:65
 #: templates/front-end/mail/themes/oxygen.php:410
 msgid "Address"
 msgstr ""
@@ -1774,36 +1778,20 @@ msgstr ""
 msgid "Personal Information"
 msgstr ""
 
-#: templates/front-end/dashboard/personal_info.php:21
-msgid "Ваше имя"
-msgstr ""
-
-#: templates/front-end/dashboard/personal_info.php:26
-msgid "Фамилия"
-msgstr ""
-
-#: templates/front-end/dashboard/personal_info.php:33
-msgid "Фотография"
-msgstr ""
-
-#: templates/front-end/dashboard/personal_info.php:37
+#: templates/front-end/dashboard/personal_info.php:36
 msgid "Choose a photo"
 msgstr ""
 
-#: templates/front-end/dashboard/personal_info.php:42
-msgid "Пол"
-msgstr ""
-
-#: templates/front-end/dashboard/personal_info.php:48
+#: templates/front-end/dashboard/personal_info.php:47
 #: templates/front-end/shortcode/fs-order-info.php:40
 msgid "Contact details"
 msgstr ""
 
-#: templates/front-end/dashboard/personal_info.php:54
+#: templates/front-end/dashboard/personal_info.php:53
 msgid "Region"
 msgstr ""
 
-#: templates/front-end/dashboard/personal_info.php:62
+#: templates/front-end/dashboard/personal_info.php:61
 msgid "Zip code"
 msgstr ""
 
