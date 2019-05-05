@@ -176,6 +176,68 @@
         document.dispatchEvent(fsBuyOneClick);
     });
 
+    // Предпросмотр фото при загрузке в личном кабинете
+    jQuery("#fs_user_avatar").change(function () {
+        let bgImg = $(this).parent()
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var dataURL = reader.result;
+                bgImg.css("background-image", "url(" + dataURL + ")");
+            };
+            reader.readAsDataURL(this.files[0]);
+
+        }
+    });
+
+    // Сохраняет данные пользователя методом AJAX
+    $(document).on('submit', '[name=fs-save-user-data]', function (event) {
+        event.preventDefault();
+        let formData = new FormData();
+        $(this).find('input,select').each(function (index, value) {
+            if ($(this).attr('type') == 'file') {
+                formData.append($(this).attr('name'), $(this).prop('files')[0])
+            } else if ($(this).attr('type') == 'checkbox') {
+                if ($(this).prop('checked')) {
+                    formData.append($(this).attr('name'), 1);
+                } else {
+                    formData.append($(this).attr('name'), 0);
+                }
+            } else {
+                formData.append($(this).attr('name'), $(this).val())
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url: fShop.ajaxurl,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                console.log(data);
+                if (data.success) {
+                    iziToast.show({
+                        theme: 'light',
+                        color: 'green',
+                        message: data.data.msg,
+                        position: 'topCenter',
+                    });
+                } else {
+                    iziToast.show({
+                        theme: 'light',
+                        color: 'red',
+                        message: data.data.msg,
+                        position: 'topCenter',
+                    });
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+            }
+        });
+        return false;
+    });
+
 
 //добавление товара в корзину (сессию)
     jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
@@ -768,7 +830,7 @@
     });
 
 // регистрация пользователя
-    var userProfileCreate = jQuery('form[name="fs-profile-create"]');
+    var userProfileCreate = jQuery('form[name="fs-register"]');
     userProfileCreate.validate({
         rules: {
             "fs-password": {
@@ -788,19 +850,18 @@
         },
         submitHandler: function (form) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: userProfileCreate.serialize(),
                 beforeSend: function () {
                     userProfileCreate.find('.form-info').html('').fadeOut();
                     userProfileCreate.find('.fs-preloader').fadeIn();
-                }
-            })
-                .done(function (result) {
+                },
+                success: function (result) {
                     userProfileCreate.find('.fs-preloader').fadeOut();
-                    var data = JSON.parse(result);
-                    if (data.status == 1) {
-                        userProfileCreate.find('.form-info').removeClass('bg-danger').addClass('bg-success').fadeIn().html(data.message);
+
+                    if (result.success) {
+                        userProfileCreate.find('.fs-form-info').removeClass('bg-danger').addClass('bg-success').fadeIn().html(result.data.msg);
                         // если операция прошла успешно - очищаем поля
                         userProfileCreate.find('input').each(function () {
                             if (jQuery(this).attr('type') != 'hidden') {
@@ -808,11 +869,12 @@
                             }
                         });
                     } else {
-                        userProfileCreate.find('.form-info').removeClass('bg-success').addClass('bg-danger').fadeIn().html(data.message);
+                        userProfileCreate.find('.fs-form-info').removeClass('bg-success').addClass('bg-danger').fadeIn().html(result.data.msg);
                     }
 
+                }
+            })
 
-                });
         }
     });
 
@@ -844,6 +906,41 @@
                     }
                 });
         }
+    });
+
+
+    /*  Обработка формы сброса пароля */
+    $(document).on('submit', '[name=fs-lostpassword]', function (event) {
+        event.preventDefault();
+        let form = $(this);
+        let formData = form.serialize();
+        $.ajax({
+            type: 'POST',
+            url: fShop.ajaxurl,
+            data: formData,
+            success: function (result) {
+                if (result.success) {
+                    form.find('.fs-form-info').removeClass('bg-danger').addClass('bg-success').fadeIn().html(result.data.msg);
+                    // если операция прошла успешно - очищаем поля
+                    form.find('input').each(function () {
+                        if (jQuery(this).attr('type') != 'hidden') {
+                            jQuery(this).val('');
+                        }
+                    });
+                } else {
+                    form.find('.fs-form-info').removeClass('bg-success').addClass('bg-danger').fadeIn().html(result.data.msg);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+            },
+            complete: function () {
+                //afer ajax call is completed
+            }
+        });
+
+
+        return false;
     });
 
 

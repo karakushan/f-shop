@@ -281,19 +281,7 @@ function fs_email_template($vars)
 
 add_filter('fs_email_template', 'fs_email_template', 10, 2);
 
-//  выводит html код плагина в футере
-function fs_footer_html()
-{
-    // выводим форму входа
-    if (!is_user_logged_in()) {
-        echo '<div class="fs-fade fs-modal" id="fs-modal-login">';
-        fs_login_form(1, array('title' => 'Вход на сайт'));
-        echo '</div>';
-    }
 
-}
-
-add_action('wp_footer', 'fs_footer_html');
 
 add_filter('wp_dropdown_cats', 'fs_dropdown_cats_multiple', 10, 2);
 function fs_dropdown_cats_multiple($output, $r)

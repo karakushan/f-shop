@@ -140,7 +140,7 @@ class FS_Export_Class {
 				$name = $xml->createElement( 'name', get_the_title( $post->ID ) );
 				$offer->appendChild( $name );
 				/*yml_catalog->shop->offers->offer->vendorCode*/
-				$vendorCode = $xml->createElement( 'vendorCode', fs_product_code( $post->ID ) );
+				$vendorCode = $xml->createElement( 'vendorCode', fs_get_product_code( $post->ID  ));
 				$offer->appendChild( $vendorCode );
 				/*yml_catalog->shop->offers->offer->description*/
 				$description = $xml->createElement( 'description', sanitize_text_field( $post->post_content ) );

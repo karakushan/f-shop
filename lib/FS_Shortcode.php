@@ -11,24 +11,39 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class FS_Shortcode {
 
-	protected $config;
 
 	function __construct() {
-		$this->config = new FS_Config();
 
+
+		// Шорткод формы входа
+		add_shortcode( 'fs_login', array( 'FS\FS_Users_Class', 'login_form' ) );
+
+		// Шорткод формы регистрации
+		add_shortcode( 'fs_register', array( 'FS\FS_Users_Class', 'register_form' ) );
+
+		// Шорткод формы сброса пароля
+		add_shortcode( 'fs_lostpassword', array( 'FS\FS_Users_Class', 'lostpassword_form' ) );
+
+		// Шорткод личного кабинета
+		add_shortcode( 'fs_user_cabinet', array( 'FS\FS_Users_Class', 'user_cabinet' ) );
+
+		// Шорткод страницы корзины
 		add_shortcode( 'fs_cart', array( $this, 'cart_shortcode' ) );
-		add_shortcode( 'fs_login_form', array( 'FS\FS_Users_Class', 'login_form' ) );
+
+		// Шорткод виджета корзины
 		add_shortcode( 'fs_cart_widget', array( $this, 'cart_widget' ) );
+
 		add_shortcode( 'fs_order_info', array( $this, 'single_order_info' ) );
 		add_shortcode( 'fs_last_order_info', array( $this, 'last_order_info' ) );
 		add_shortcode( 'fs_last_order_id', array( 'FS\FS_Orders_Class', 'get_last_order_id' ) );
 		add_shortcode( 'fs_last_order_amount', array( 'FS\FS_Orders_Class', 'get_last_order_amount' ) );
 		add_shortcode( 'fs_have_cart_items', array( $this, 'have_cart_items' ) );
+
 		add_shortcode( 'fs_checkout_success', array( $this, 'fs_checkout_success' ) );
 		add_shortcode( 'fs_checkout', array( $this, 'order_send' ) );
-		add_shortcode( 'fs_user_cabinet', array( $this, 'user_cabinet' ) );
+
 		add_shortcode( 'fs_single_order', array( $this, 'single_order' ) );
-		add_shortcode( 'fs_register_form', 'fs_register_form' );
+
 		add_shortcode( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info' ) );
 		add_shortcode( 'fs_user_orders', array( $this, 'user_orders' ) );
 		add_shortcode( 'fs_profile_edit', array( $this, 'profile_edit' ) );
@@ -118,6 +133,8 @@ class FS_Shortcode {
 	 * Метод-колбек шорткода [fs_last_order_info]
 	 * этот шорткод выводит инфу о последнем заказе текущего посетителя
 	 *
+	 *
+	 * @param $atts
 	 *
 	 * @return mixed
 	 */
@@ -241,27 +258,6 @@ class FS_Shortcode {
 		return $template;
 	}
 
-	function user_cabinet() {
-		$user = wp_get_current_user();
-		if ( is_user_logged_in() ) {
-			$temp = fs_user_cabinet();
-		} else {
-
-			if ( isset( $_GET['fs-page'] ) && $_GET['fs-page'] == 'register' ) {
-				if ( is_user_logged_in() ) {
-					$temp = fs_login_form();
-				} else {
-					$temp = fs_register_form();
-				}
-			} else {
-				$temp = fs_login_form();
-			}
-
-
-		}
-
-		return $temp;
-	}
 
 	public function single_order( $args ) {
 		$args     = shortcode_atts( array(

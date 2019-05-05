@@ -31,8 +31,8 @@ class FS_Init {
 	 * FS_Init constructor.
 	 */
 	public function __construct() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'fs_frontend_scripts_and_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'fs_admin_scripts_and_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts_and_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts_and_styles' ) );
 		add_action( 'wp_head', array( $this, 'head_microdata' ) );
 
 		// Инициализация классов Fast Shop
@@ -102,14 +102,13 @@ class FS_Init {
 	/**
 	 * Подключаем скрипты и стили во фронтэнде
 	 */
-	function fs_frontend_scripts_and_styles() {
+	public static function frontend_scripts_and_styles() {
 		$theme_info = wp_get_theme();
 		$textdomain = $theme_info->display( 'TextDomain' );
 
-		wp_enqueue_style( FS_PLUGIN_PREFIX . 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/css/lightslider.min.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
-//		wp_enqueue_style( FS_PLUGIN_PREFIX . 'font_awesome', 'https://use.fontawesome.com/releases/v5.1.0/css/all.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
-		wp_enqueue_style( FS_PLUGIN_PREFIX . 'style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), $this->fs_config->data['plugin_ver'], 'all' );
+		wp_enqueue_style( FS_PLUGIN_PREFIX . 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/css/lightslider.min.css', array(), FS_Config::get_data( 'plugin_ver' ), 'all' );
+		wp_enqueue_style( FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', array(), FS_Config::get_data( 'plugin_ver' ), 'all' );
+		wp_enqueue_style( FS_PLUGIN_PREFIX . 'style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), FS_Config::get_data( 'plugin_ver' ), 'all' );
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'lightgallery', FS_PLUGIN_URL . 'assets/plugins/lightGallery/dist/css/lightgallery.min.css' );
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'jquery-ui', FS_PLUGIN_URL . 'assets/css/jquery-ui.min.css' );
 
@@ -135,19 +134,19 @@ class FS_Init {
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true );
 
-		wp_enqueue_script( 'f-shop-library', FS_PLUGIN_URL . 'assets/js/fs-library.js', array( 'jquery' ), $this->fs_config->data['plugin_ver'], true );
-		wp_enqueue_script( 'f-shop', FS_PLUGIN_URL . 'assets/js/f-shop.js', array(
+		wp_enqueue_script( FS_PLUGIN_PREFIX . 'library', FS_PLUGIN_URL . 'assets/js/fs-library.js', array( 'jquery' ), FS_Config::get_data( 'plugin_ver' ), true );
+		wp_enqueue_script( FS_PLUGIN_PREFIX .'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', array(
 			'jquery',
-			'f-shop-library'
-		), $this->fs_config->data['plugin_ver'], true );
+			FS_PLUGIN_PREFIX . 'library'
+		), FS_Config::get_data( 'plugin_ver' ), true );
 
 		// Здесь подгружается обработчик событий плагина, вы можете отключить его в опциях
 		if ( ! fs_option( 'fs_disable_messages', 0 ) ) {
-			wp_enqueue_script( 'fs-events', FS_PLUGIN_URL . 'assets/js/fs-events.js', array(
+			wp_enqueue_script( FS_PLUGIN_PREFIX . 'events', FS_PLUGIN_URL . 'assets/js/fs-events.js', array(
 				'jquery',
-				'f-shop-library',
-				'f-shop'
-			), $this->fs_config->data['plugin_ver'], true );
+				FS_PLUGIN_PREFIX . 'library',
+				FS_PLUGIN_PREFIX .'main'
+			), FS_Config::get_data( 'plugin_ver' ), true );
 		}
 
 		$price_max = fs_price_max( false );
@@ -178,14 +177,14 @@ class FS_Init {
 			'fs_slider_val_min' => ! empty( $_REQUEST['price_start'] ) ? (int) $_REQUEST['price_start'] : 0,
 			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : intval( $price_max )
 		);
-		wp_localize_script( 'f-shop', 'FastShopData', $l10n );
+		wp_localize_script( FS_PLUGIN_PREFIX .'main', 'FastShopData', $l10n );
 	}
 
 
 	/**
 	 *  Подключаем скрипты и стили во бэкэнде
 	 */
-	public function fs_admin_scripts_and_styles() {
+	public function admin_scripts_and_styles() {
 		// необходимо для работы загрузчика изображений
 		if ( ! did_action( 'wp_enqueue_media' ) ) {
 			wp_enqueue_media();
@@ -294,8 +293,6 @@ class FS_Init {
 			);
 		} elseif ( is_tax() ) {
 			global $wp_query, $wpdb;
-			/*fs_debug_data( $wp_query, '$wp_query', 'print_r' );
-			wp_die();*/
 			// Get the current product category term object
 			$term = get_queried_object();
 
@@ -326,7 +323,7 @@ class FS_Init {
 				"url"      => get_term_link( get_queried_object_id() )
 			);
 		}
-		if ( $schema ) {
+		if ( !empty($schema) ) {
 			echo ' <script type="application/ld+json">';
 			echo json_encode( $schema );
 			echo ' </script>';

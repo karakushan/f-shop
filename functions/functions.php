@@ -417,6 +417,10 @@ function fs_get_total_discount() {
  * @return float
  */
 function fs_get_full_cart_discount() {
+	$discount = 0;
+	if ( ! taxonomy_exists( 'fs-discounts' ) ) {
+		return $discount;
+	}
 	// Добавляем скидку на общую сумму товаров в корзине
 	$cart_cost      = fs_get_cart_cost();
 	$discount_terms = get_terms( array(
@@ -424,7 +428,6 @@ function fs_get_full_cart_discount() {
 		'hide_empty' => false
 	) );
 
-	$discount = 0;
 
 	if ( $discount_terms ) {
 		foreach ( $discount_terms as $discount_term ) {
@@ -1523,51 +1526,6 @@ function fs_get_current_user() {
 	return $user;
 }
 
-/**
- * Получает шаблон формы входа
- *
- * @param bool $echo -выводить(по умолчанию) или возвращать
- *
- * @param array $args
- *
- * @return mixed|void
- */
-function fs_login_form( $echo = true, $args = array() ) {
-	$args     = wp_parse_args( $args, array(
-		'name'  => "fs-login",
-		'id'    => "fs-login",
-		'title' => __( 'Login', 'f-shop' )
-	) );
-	$template = fs_form_header( $args, 'fs_login' );
-	$template .= fs_frontend_template( 'auth/login' );
-	$template .= fs_form_bottom();
-	if ( $echo ) {
-		echo $template;
-	} else {
-		return $template;
-	}
-
-}
-
-/**
- * Получает шаблон формы регистрации
- * @return mixed|void
- */
-function fs_register_form() {
-	$template = fs_frontend_template( 'auth/register' );
-
-	return $template;
-}
-
-/**
- * Получает шаблон формы входа
- * @return mixed|void
- */
-function fs_user_cabinet() {
-	$template = fs_frontend_template( 'auth/cabinet' );;
-
-	return apply_filters( 'fs_user_cabinet', $template );
-}
 
 function fs_page_content() {
 	$page  = filter_input( INPUT_GET, 'fs-page', FILTER_SANITIZE_URL );

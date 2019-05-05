@@ -38,6 +38,7 @@ class FS_Form_Class {
 			'dropdown_categories',
 			'radio_categories',
 			'pages',
+			'file',
 			'html'
 		);
 
@@ -55,6 +56,7 @@ class FS_Form_Class {
 	function render_field( $name, $type = 'text', $args = [] ) {
 		$args        = wp_parse_args( $args, array(
 			'value'          => '',
+			'values'         => array(),
 			'required'       => false,
 			'title'          => '',
 			'label'          => '',
@@ -105,32 +107,46 @@ class FS_Form_Class {
 	 * @return string html код поля
 	 */
 	function fs_form_field( $field_name, $args = array() ) {
+
+		$user_id = get_current_user_id();
+
+		$fields = FS_Config::get_user_fields();
+		$field  = ! empty( $fields[ $field_name ] ) && is_array( $fields[ $field_name ] )
+			? $fields[ $field_name ]
+			: array();
+
+		$value = $field['value']
+			? $field['value']
+			: get_user_meta( $user_id, $field_name, 1 );
+
 		$default = array(
-			'type'           => ! empty( FS_Config::$form_fields[ $field_name ]['type'] ) ? FS_Config::$form_fields[ $field_name ]['type'] : 'text',
+			'type'           => ! empty( $field['type'] ) ? $field['type'] : 'text',
 			'class'          => 'fs-input form-control',
 			'wrapper'        => false,
 			'autofill'       => true,
 			'wrapper_class'  => 'fs-field-wrapper',
 			'label_class'    => 'fs-form-label',
-			'taxonomy'       => ! empty( FS_Config::$form_fields[ $field_name ]['taxonomy'] ) ? FS_Config::$form_fields[ $field_name ]['taxonomy'] : 'category',
+			'taxonomy'       => ! empty( $field['taxonomy'] ) ? $field['taxonomy'] : 'category',
 			'id'             => str_replace( array(
 				'[',
 				']'
 			), array( '_' ), $field_name ),
-			'required'       => ! empty( FS_Config::$form_fields[ $field_name ]['required'] ) ? FS_Config::$form_fields[ $field_name ]['required'] : false,
-			'title'          => ! empty( FS_Config::$form_fields[ $field_name ]['title'] ) ? FS_Config::$form_fields[ $field_name ]['title'] : __( 'this field is required', 'f-shop' ),
-			'placeholder'    => ! empty( FS_Config::$form_fields[ $field_name ]['placeholder'] ) ? FS_Config::$form_fields[ $field_name ]['placeholder'] : null,
-			'value'          => ! empty( FS_Config::$form_fields[ $field_name ]['value'] ) ? FS_Config::$form_fields[ $field_name ]['value'] : '',
-			'label'          => ! empty( FS_Config::$form_fields[ $field_name ]['label'] ) ? FS_Config::$form_fields[ $field_name ]['label'] : '',
-			'label_position' => ! empty( FS_Config::$form_fields[ $field_name ]['label_position'] ) ? FS_Config::$form_fields[ $field_name ]['label_position'] : 'before',
+			'required'       => ! empty( $field['required'] ) ? $field['required'] : false,
+			'title'          => ! empty( $field['title'] ) ? $field['title'] : __( 'this field is required', 'f-shop' ),
+			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
+			'value'          => is_user_logged_in() && $value ? $value : null,
+			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
+			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',
 			'html'           => '',
 			'selected'       => '',
 			'options'        => array(),
+			'values'         => ! empty( $field['values'] ) ? $field['values'] : array(),
 			'format'         => '%input% %label%',
 			'el'             => 'radio',
-			'first_option'   => ! empty( FS_Config::$form_fields[ $field_name ]['first_option'] ) ? FS_Config::$form_fields[ $field_name ]['first_option'] : __( 'Select' ),
+			'first_option'   => ! empty( $field['first_option'] ) ? $field['first_option'] : __( 'Select' ),
 			'before'         => '',
 			'after'          => '',
+			'disabled'       => ! empty( $field['disabled'] ) ? 'disabled' : false,
 			'editor_args'    => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $field_name,
@@ -139,40 +155,7 @@ class FS_Form_Class {
 			)
 
 		);
-		if ( $default['autofill'] ) {
-			$curent_user = wp_get_current_user();
-			//подставляем начальное значение в атрибут value интпута формы
-			if ( $curent_user->exists() ) {
-				switch ( $field_name ) {
-					case 'fs_email':
-						$default['value'] = $curent_user->user_email;
-						break;
-					case 'fs_first_name':
-						$default['value'] = $curent_user->first_name;
-						break;
-					case 'fs_last_name':
-						$default['value'] = $curent_user->last_name;
-						break;
-					case 'fs_phone':
-						$default['value'] = get_user_meta( $curent_user->ID, 'fs_phone', 1 );
-						break;
-					case 'fs_city':
-						$default['value'] = get_user_meta( $curent_user->ID, 'fs_city', 1 );
-						break;
-					case 'fs_adress':
-						$default['value'] = get_user_meta( $curent_user->ID, 'fs_adress', 1 );
-						break;
-					case 'fs_delivery_methods':
-						$default['selected'] = get_user_meta( $curent_user->ID, 'fs_delivery_methods', 1 );
-						break;
-					case 'fs_payment_methods':
-						$default['selected'] = get_user_meta( $curent_user->ID, 'fs_payment_methods', 1 );
-						break;
 
-				}
-			}
-
-		}
 		$args = wp_parse_args( $args, $default );
 
 		echo $args['before'];
@@ -188,6 +171,50 @@ class FS_Form_Class {
 		if ( $args['wrapper'] ) {
 			echo '</div>';
 		}
+	}
+
+	/**
+	 * Возвращает открывающий тег формы со скрытыми полями безопасности
+	 *
+	 * @param $args array дополнительные аргументы формы
+	 *
+	 * @return string
+	 */
+	public static function form_open( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'method'       => 'POST',
+			'autocomplete' => 'off',
+			'class'        => 'fs-form',
+			'id'           => 'fs-form',
+			'name'         => 'fs-ajax',
+			'enctype'      => 'multipart/form-data',
+			'action'       => '',
+			'ajax_action'  => 'fs_save_data',
+			'validate'     => true
+		) );
+
+		$out = '<form';
+		$out .= ' action="' . esc_attr( $args['action'] ) . '"';
+		$out .= ' name="' . esc_attr( $args['name'] ) . '"';
+		$out .= ' method="' . esc_attr( $args['method'] ) . '"';
+		$out .= ' autocomplete="' . esc_attr( $args['autocomplete'] ) . '"';
+		$out .= ' data-validation="' . esc_attr( $args['validate'] ) . '"';
+		$out .= ' enctype="' . esc_attr( $args['enctype'] ) . '"';
+		$out .= ' class="' . esc_attr( $args['class'] ) . '"';
+		$out .= ' id="' . esc_attr( $args['id'] ) . '">';
+		$out .= FS_Config::nonce_field();
+		$out .= '<input type="hidden" name="action" value="' . esc_attr( $args['ajax_action'] ) . '">';
+
+		return $out;
+	}
+
+	/**
+	 * Возвращает закрывающий тег формы
+	 *
+	 * @return string
+	 */
+	public static function form_close() {
+		return '</form>';
 	}
 
 }

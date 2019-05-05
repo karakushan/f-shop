@@ -1,21 +1,24 @@
-<?php global $fs_config; ?>
 <div class="form-group">
-    <label for="inputEmail3" class="control-label"><?php esc_html_e('Email or login', 'f-shop') ?></label>
-    <input type="text" name="username" class="form-control" id="inputEmail3"
-           placeholder="<?php esc_html_e('Email or login', 'f-shop') ?>" required
-           title="<?php esc_html_e('required', 'f-shop') ?>" autocomplete="off">
+    <label for="fs-login-field" class="control-label"><?php esc_html_e( 'Email or login', 'f-shop' ) ?></label>
+    <input type="text" name="username" class="form-control" id="fs-login-field" required
+           title="<?php esc_html_e( 'required', 'f-shop' ) ?>" autocomplete="off">
 </div>
+
 <div class="form-group">
-    <label for="inputPassword3" class="control-label"><?php esc_html_e('Password', 'f-shop') ?></label>
-    <input type="password" name="password" class="form-control" id="inputPassword3"
-           placeholder="<?php esc_html_e('Password', 'f-shop') ?>" required
-           title="<?php esc_html_e('required', 'f-shop') ?>" autocomplete="off">
+    <label for="fs-password-field" class="control-label"><?php esc_html_e( 'Password', 'f-shop' ) ?></label>
+    <input type="password" name="password" class="form-control" id="fs-password-field" required
+           title="<?php esc_html_e( 'required', 'f-shop' ) ?>" autocomplete="off">
 </div>
+
 <div class="form-group">
-    <button type="submit" class="fs-submit fs-order-send btn btn-success btn-lg"><?php esc_html_e('Log', 'f-shop') ?>
-        <img
-                src="<?php echo esc_url($fs_config->data['preloader']) ?>" alt="preloader" class="fs-preloader">
-    </button>
+    <button type="submit" class="btn btn-success btn-lg"><?php esc_html_e( 'Login', 'f-shop' ) ?></button>
 </div>
+
+<div class="fs-login-bottom">
+    <a href="<?php the_permalink( fs_option( 'page_register' ) ) ?>"><?php esc_html_e( 'Registration', 'f-shop' ) ?></a>
+    |
+    <a href="<?php the_permalink( fs_option( 'page_lostpassword' ) ) ?>"><?php esc_html_e( 'Forgot your password?', 'f-shop' ) ?></a>
+</div>
+
 <div class="clearfix"></div>
 

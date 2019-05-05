@@ -290,49 +290,61 @@ Your phone number.</p>', 'f-shop' ) )
 						'type'  => 'pages',
 						'name'  => 'page_cart',
 						'label' => __( 'Cart page', 'f-shop' ),
-						'value' => fs_option( 'page_cart', 0 )
+						'value' => fs_option( 'page_cart' )
 					),
 					array(
 						'type'  => 'pages',
 						'name'  => 'page_checkout',
 						'label' => __( 'Checkout Page', 'f-shop' ),
-						'value' => fs_option( 'page_checkout', 0 )
+						'value' => fs_option( 'page_checkout' )
 					),
 					array(
 						'type'  => 'pages',
 						'name'  => 'page_payment',
 						'label' => __( 'Payment page', 'f-shop' ),
-						'value' => fs_option( 'page_payment', 0 )
+						'value' => fs_option( 'page_payment' )
 					),
 					array(
 						'type'  => 'pages',
 						'name'  => 'page_success',
 						'label' => __( 'Successful ordering page', 'f-shop' ),
-						'value' => fs_option( 'page_success', 0 )
+						'value' => fs_option( 'page_success' )
 					),
 					array(
 						'type'  => 'pages',
 						'name'  => 'page_whishlist',
 						'label' => __( 'Wish List Page', 'f-shop' ),
-						'value' => fs_option( 'page_whishlist', 0 )
+						'value' => fs_option( 'page_whishlist' )
 					),
 					array(
 						'type'  => 'pages',
 						'name'  => 'page_cabinet',
 						'label' => __( 'Personal account page', 'f-shop' ),
-						'value' => fs_option( 'page_cabinet', 0 )
+						'value' => fs_option( 'page_cabinet' )
 					),
 					array(
 						'type'  => 'pages',
 						'name'  => 'page_auth',
 						'label' => __( 'Login page', 'f-shop' ),
-						'value' => fs_option( 'page_auth', 0 )
+						'value' => fs_option( 'page_auth' )
+					),
+					array(
+						'type'  => 'pages',
+						'name'  => 'page_register',
+						'label' => __( 'Register page', 'f-shop' ),
+						'value' => fs_option( 'page_register' )
+					),
+					array(
+						'type'  => 'pages',
+						'name'  => 'page_lostpassword',
+						'label' => __( 'Forgot your password?', 'f-shop' ),
+						'value' => fs_option( 'page_lostpassword' )
 					),
 					array(
 						'type'  => 'pages',
 						'name'  => 'page_order_detail',
 						'label' => __( 'Order Information Page', 'f-shop' ),
-						'value' => fs_option( 'page_order_detail', 0 )
+						'value' => fs_option( 'page_order_detail' )
 					),
 				)
 
