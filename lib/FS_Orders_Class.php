@@ -279,17 +279,18 @@ Good luck!', 'f-shop' );
 	/**
 	 * Displays the object with the orders of an individual user, by default the current user
 	 *
-	 * @param null|int $user_id - User ID
+	 * @param int $user_id - User ID
 	 * @param string $status - Order status id (same as post status)
 	 * @param array $args - array of arguments similar to WP_Query ()
 	 *
 	 * @return array|null|object object with orders
 	 */
-	public function get_user_orders( $user_id = null, $status = 'any', $args = array() ) {
-		global $fs_config;
-		$user_id = ! is_null( $user_id ) && is_numeric( $user_id ) ? $user_id : get_current_user_id();
+	public static function get_user_orders( $user_id = 0, $status = 'any', $args = array() ) {
+
+		$user_id = $user_id ? $user_id : get_current_user_id();
+
 		$args    = wp_parse_args( $args, array(
-			'post_type'   => $fs_config->data['post_type_orders'],
+			'post_type'   => FS_Config::get_data( 'post_type_orders' ),
 			'post_status' => $status,
 			'meta_key'    => '_user_id',
 			'meta_value'  => $user_id,

@@ -62,7 +62,7 @@ class FS_Users_Class {
 		wp_set_password( $new_password, $user->ID );
 
 		$message = sprintf( __( 'You or someone else initiated a password reset on the site %s', 'f-shop' ), get_bloginfo( 'url' ) ) . PHP_EOL;
-		$message .= sprintf( __( 'New password: %s', 'f-shop' ), $new_password ) . PHP_EOL. PHP_EOL;
+		$message .= sprintf( __( 'New password: %s', 'f-shop' ), $new_password ) . PHP_EOL . PHP_EOL;
 		$message .= sprintf( __( 'If it was not you tell the site administrator на e-mail: %s', 'f-shop' ), get_bloginfo( 'admin_email' ) );
 
 		wp_mail( $user_email, __( 'Password reset on the site', 'f-shop' ), $message );
@@ -515,7 +515,11 @@ class FS_Users_Class {
 			),
 			'orders'        => array(
 				'title'     => __( 'Orders', 'f-shop' ),
-				'content'   => fs_frontend_template( 'dashboard/orders' ),
+				'content'   => fs_frontend_template( 'dashboard/orders', [
+					'vars' => array(
+						'orders' => FS_Orders_Class::get_user_orders()
+					)
+				] ),
 				'link'      => false,
 				'nav_class' => false,
 				'tab_class' => 'fade'

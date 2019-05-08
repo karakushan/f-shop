@@ -1609,4 +1609,46 @@ td.fs_photo.column-fs_photo img {
   border-radius: 0;
 }
 
+.fs-dashboard-order {
+  margin-bottom: 15px;
+}
+.fs-dashboard-order .table tbody td {
+  vertical-align: middle;
+}
+.fs-dashboard-order__hide {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  padding: 20px;
+  margin-top: 15px;
+}
+.fs-dashboard-order__hide .label {
+  font-weight: 700;
+}
+.fs-dashboard-order__hide .row {
+  width: 100%;
+  margin-bottom: 15px;
+}
+.fs-dashboard-order__header {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  align-items: center;
+  border-radius: 4px;
+}
+.fs-dashboard-order__header span {
+  font-weight: 300;
+  letter-spacing: 0.025em;
+}
+.fs-dashboard-order__header span.badge i {
+  color: #fff;
+}
+.fs-dashboard-order__header span i {
+  color: #000000;
+  font-weight: 500;
+  font-style: normal;
+}
+.fs-dashboard-order__header span.datetime {
+  font-weight: 700;
+}
+
 /*# sourceMappingURL=f-shop.css.map */

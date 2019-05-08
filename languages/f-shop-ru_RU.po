@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-05 18:54+0000\n"
-"PO-Revision-Date: 2019-05-05 19:00+0000\n"
+"POT-Creation-Date: 2019-05-08 06:43+0000\n"
+"PO-Revision-Date: 2019-05-08 06:44+0000\n"
 "Last-Translator: med-admin <karakushan@gmail.com>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -109,7 +109,7 @@ msgid "Sort"
 msgstr "Сортировка"
 
 #: functions/filters.php:67 lib/FS_Attribute_Widget.php:62
-#: lib/FS_Price_Widget.php:35
+#: lib/FS_Price_Widget.php:35 templates/front-end/dashboard/orders.php:27
 #: templates/front-end/shortcode/fs-order-info.php:10
 #: templates/front-end/shortcode/order-detail.php:16
 msgid "Title"
@@ -124,6 +124,7 @@ msgstr ""
 #: functions/filters.php:69 functions/filters.php:181
 #: templates/front-end/cart/list-products.php:21
 #: templates/front-end/checkout/checkout.php:17
+#: templates/front-end/dashboard/orders.php:29
 #: templates/front-end/shortcode/fs-order-info.php:11
 #: templates/front-end/shortcode/order-detail.php:17
 #: templates/back-end/metabox/order/meta-box-0.php:7
@@ -145,13 +146,15 @@ msgstr "Запас на складе"
 
 #: functions/filters.php:72 templates/front-end/cart/list-products.php:12
 #: templates/front-end/checkout/checkout.php:8
+#: templates/front-end/dashboard/orders.php:28
 #: templates/front-end/dashboard/personal_info.php:33
 #: templates/front-end/shortcode/fs-order-info.php:9
 #: templates/front-end/shortcode/order-detail.php:15
 msgid "Photo"
 msgstr "Фото"
 
-#: functions/filters.php:134 templates/front-end/shortcode/order-detail.php:47
+#: functions/filters.php:134 templates/front-end/dashboard/orders.php:13
+#: templates/front-end/shortcode/order-detail.php:47
 #: templates/back-end/metabox/order/meta-box-0.php:43
 msgid "Total cost"
 msgstr "Общая стоимость"
@@ -959,7 +962,7 @@ msgstr ""
 msgid "Your order is approved"
 msgstr "Ваш заказ принят"
 
-#: lib/FS_Orders_Class.php:323
+#: lib/FS_Orders_Class.php:324
 msgid "The order status is not defined"
 msgstr "Статус заказа не определен"
 
@@ -990,6 +993,7 @@ msgid "Payment  <span>%s <span>%s</span></span> with  <span>%s</span>"
 msgstr "Оплата  <span>%s <span>%s</span></span> с помощью  <span>%s</span>"
 
 #: lib/FS_Post_Type.php:54 lib/FS_Post_Type.php:65 lib/FS_Settings_Class.php:79
+#: templates/front-end/dashboard/orders.php:21
 msgid "Products"
 msgstr "Товары"
 
@@ -1046,7 +1050,7 @@ msgstr "Характеристики"
 msgid "Description"
 msgstr "Описание"
 
-#: lib/FS_Product_Class.php:573 lib/FS_Users_Class.php:531
+#: lib/FS_Product_Class.php:573 lib/FS_Users_Class.php:535
 msgid "Reviews"
 msgstr "Отзывы"
 
@@ -1665,7 +1669,7 @@ msgstr ""
 msgid "Personal information"
 msgstr "Персональная информация"
 
-#: lib/FS_Users_Class.php:524
+#: lib/FS_Users_Class.php:528
 msgid "WishList"
 msgstr "Список желаний"
 
@@ -1880,6 +1884,26 @@ msgstr "Товары в корзине"
 #: templates/front-end/checkout/checkout.php:96
 msgid "Information about delivery"
 msgstr "Информация о доставке"
+
+#: templates/front-end/dashboard/orders.php:12
+msgid "Items"
+msgstr "Товаров"
+
+#: templates/front-end/dashboard/orders.php:16
+msgid "Order details"
+msgstr "Детали заказа"
+
+#: templates/front-end/dashboard/orders.php:52
+msgid "Delivery"
+msgstr "Доставка"
+
+#: templates/front-end/dashboard/orders.php:60
+msgid "Payment"
+msgstr "Оплата"
+
+#: templates/front-end/dashboard/orders.php:71
+msgid "You currently have no orders."
+msgstr "В текущее время у вас нет заказов"
 
 #: templates/front-end/dashboard/personal_info.php:5
 #: templates/front-end/dashboard/personal_info.php:17

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-05 18:54+0000\n"
+"POT-Creation-Date: 2019-05-08 06:45+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -106,7 +106,7 @@ msgid "Sort"
 msgstr ""
 
 #: functions/filters.php:67 lib/FS_Attribute_Widget.php:62
-#: lib/FS_Price_Widget.php:35
+#: lib/FS_Price_Widget.php:35 templates/front-end/dashboard/orders.php:27
 #: templates/front-end/shortcode/fs-order-info.php:10
 #: templates/front-end/shortcode/order-detail.php:16
 msgid "Title"
@@ -121,6 +121,7 @@ msgstr ""
 #: functions/filters.php:69 functions/filters.php:181
 #: templates/front-end/cart/list-products.php:21
 #: templates/front-end/checkout/checkout.php:17
+#: templates/front-end/dashboard/orders.php:29
 #: templates/front-end/shortcode/fs-order-info.php:11
 #: templates/front-end/shortcode/order-detail.php:17
 #: templates/back-end/metabox/order/meta-box-0.php:7
@@ -142,13 +143,15 @@ msgstr ""
 
 #: functions/filters.php:72 templates/front-end/cart/list-products.php:12
 #: templates/front-end/checkout/checkout.php:8
+#: templates/front-end/dashboard/orders.php:28
 #: templates/front-end/dashboard/personal_info.php:33
 #: templates/front-end/shortcode/fs-order-info.php:9
 #: templates/front-end/shortcode/order-detail.php:15
 msgid "Photo"
 msgstr ""
 
-#: functions/filters.php:134 templates/front-end/shortcode/order-detail.php:47
+#: functions/filters.php:134 templates/front-end/dashboard/orders.php:13
+#: templates/front-end/shortcode/order-detail.php:47
 #: templates/back-end/metabox/order/meta-box-0.php:43
 msgid "Total cost"
 msgstr ""
@@ -917,7 +920,7 @@ msgstr ""
 msgid "Your order is approved"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:323
+#: lib/FS_Orders_Class.php:324
 msgid "The order status is not defined"
 msgstr ""
 
@@ -946,6 +949,7 @@ msgid "Payment  <span>%s <span>%s</span></span> with  <span>%s</span>"
 msgstr ""
 
 #: lib/FS_Post_Type.php:54 lib/FS_Post_Type.php:65 lib/FS_Settings_Class.php:79
+#: templates/front-end/dashboard/orders.php:21
 msgid "Products"
 msgstr ""
 
@@ -1002,7 +1006,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: lib/FS_Product_Class.php:573 lib/FS_Users_Class.php:531
+#: lib/FS_Product_Class.php:573 lib/FS_Users_Class.php:535
 msgid "Reviews"
 msgstr ""
 
@@ -1528,6 +1532,7 @@ msgstr ""
 #: lib/FS_Taxonomies_Class.php:556
 #: templates/front-end/cart/list-products.php:27
 #: templates/front-end/checkout/checkout.php:23
+#: templates/front-end/dashboard/orders.php:31
 #: templates/front-end/shortcode/fs-order-info.php:13
 #: templates/front-end/shortcode/order-detail.php:19
 #: templates/back-end/metabox/order/meta-box-0.php:10
@@ -1586,7 +1591,7 @@ msgstr ""
 msgid "Personal information"
 msgstr ""
 
-#: lib/FS_Users_Class.php:524
+#: lib/FS_Users_Class.php:528
 msgid "WishList"
 msgstr ""
 
@@ -1794,6 +1799,32 @@ msgstr ""
 msgid "Information about delivery"
 msgstr ""
 
+#: templates/front-end/dashboard/orders.php:12
+msgid "Items"
+msgstr ""
+
+#: templates/front-end/dashboard/orders.php:16
+msgid "Order details"
+msgstr ""
+
+#: templates/front-end/dashboard/orders.php:30
+#: templates/front-end/shortcode/order-detail.php:18
+#: templates/front-end/mail/themes/oxygen.php:466
+msgid "Qty"
+msgstr ""
+
+#: templates/front-end/dashboard/orders.php:52
+msgid "Delivery"
+msgstr ""
+
+#: templates/front-end/dashboard/orders.php:60
+msgid "Payment"
+msgstr ""
+
+#: templates/front-end/dashboard/orders.php:71
+msgid "You currently have no orders."
+msgstr ""
+
 #: templates/front-end/dashboard/personal_info.php:5
 #: templates/front-end/dashboard/personal_info.php:17
 msgid "Edit profile"
@@ -1925,11 +1956,6 @@ msgstr ""
 
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
-msgstr ""
-
-#: templates/front-end/shortcode/order-detail.php:18
-#: templates/front-end/mail/themes/oxygen.php:466
-msgid "Qty"
 msgstr ""
 
 #: templates/back-end/metabox/order/meta-box-1.php:32

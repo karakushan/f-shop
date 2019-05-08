@@ -1692,3 +1692,49 @@ $darkcolor: #444;
   }
 }
 
+.fs-dashboard-order{
+  margin-bottom: 15px;
+  .table tbody td {
+    vertical-align: middle;
+  }
+  &__hide{
+    border: 1px solid rgba(0,0,0,.125);
+
+    padding:  20px;
+
+    margin-top: 15px;
+    .label{
+      font-weight: 700;
+    }
+    .row{
+      width: 100%;
+      margin-bottom: 15px;
+    }
+  }
+  &__header{
+    border: 1px solid rgba(0,0,0,.125);
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    align-items: center;
+    border-radius: 4px;
+    span{
+      font-weight: 300;
+      letter-spacing: 0.025em;
+      &.badge{
+        i{
+          color: #fff;
+        }
+      }
+      i{
+        color: #000000;
+        font-weight: 500;
+        font-style: normal;
+      }
+      &.datetime{
+        font-weight: 700;
+      }
+    }
+  }
+}
+
