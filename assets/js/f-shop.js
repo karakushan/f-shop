@@ -538,7 +538,9 @@
             action: 'fs_delete_product',
             item: item
         };
-        if (confirm(el.data("confirm"))) {
+
+
+        if (!el.data('confirm') || confirm(el.data("confirm"))) {
             jQuery.ajax({
                 url: FastShopData.ajaxurl,
                 type: 'POST',
@@ -1137,6 +1139,44 @@
 
 
         }
+    });
+
+    // Живой поиск товаров
+    $("[name=s]").on('input', function (e) {
+        let searchVal = $(this).val();
+        let form = $(this).parents('form');
+
+        $.ajax({
+            type: 'POST',
+            url: fShop.ajaxurl,
+            data: fShop.ajaxData('fs_livesearch', {
+                search: searchVal
+            }),
+            success: function (data) {
+                if (data.success) {
+                    if (form.find('.fs-livesearch-data').length) {
+                        form.find('.fs-livesearch-data').replaceWith(data.data.html);
+                    } else {
+                        form.append(data.data.html);
+                    }
+                }
+                console.log(data);
+                // do something with ajax data
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            },
+            complete: function () {
+                //afer ajax call is completed
+            }
+        });
+    })
+
+    $("[name=s]").focusout( function (e) {
+        $(".fs-livesearch-data").fadeOut(function () {
+        });
     });
 
 

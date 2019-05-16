@@ -66,6 +66,10 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 		add_action( 'wp_ajax_nopriv_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 
+		// живой поиск товара
+		add_action( 'wp_ajax_fs_livesearch', array( $this, 'livesearch_callback' ) );
+		add_action( 'wp_ajax_fs_livesearch', array( $this, 'livesearch_callback' ) );
+
 
 		//Регистрируем обработку AJAX событий
 		if ( is_array( $this->ajax_actions() ) && count( $this->ajax_actions() ) ) {
@@ -84,6 +88,28 @@ class FS_Ajax_Class {
 		);
 
 		return apply_filters( 'fs_ajax_actions', $actions );
+	}
+
+	/**
+	 * Живой поиск товара callback функция
+	 */
+	function livesearch_callback() {
+
+		$find_posts = get_posts( array(
+			's'              => sanitize_text_field( $_POST['search'] ),
+			'posts_per_page' => - 1,
+			'post_type'      => FS_Config::get_data( 'post_type' )
+		) );
+		$out        = '';
+		if ( $find_posts ) {
+			$out .= '<ul class="fs-livesearch-data">';
+			foreach ( $find_posts as $find_post ) {
+				$out .= '<li><a href="' . get_permalink( $find_post->ID ) . '">' . apply_filters( 'the_title', $find_post->post_title ) . ' <span>(' . fs_get_price( $find_post->ID ) . ' ' . fs_currency( $find_post->ID ) . ')</span></a>';
+			}
+			$out .= '</ul>';
+			wp_send_json_success( array( 'html' => $out ) );
+		}
+		wp_send_json_error();
 	}
 
 

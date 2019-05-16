@@ -623,11 +623,12 @@ function fs_delete_position( $cart_item = 0, $args = array() ) {
 		'content' => '&#10006;',
 		'type'    => 'link',
 		'class'   => 'fs-delete-position',
-		'refresh' => true
+		'refresh' => true,
+		'confirm' => sprintf( __( 'Are you sure you want to delete the item &laquo;%s&raquo; from the basket?', 'f-shop' ), $name )
 	) );
 
 	$html_atts = array(
-		'data-confirm'   => sprintf( __( 'Are you sure you want to delete the item &laquo;%s&raquo; from the basket?', 'f-shop' ), $name ),
+		'data-confirm'   => $args['confirm'],
 		'title'          => sprintf( __( 'Remove item &laquo;%s&raquo;', 'f-shop' ), $name ),
 		'data-cart-item' => $cart_item,
 		'data-fs-type'   => "product-delete",

@@ -1738,3 +1738,45 @@ $darkcolor: #444;
   }
 }
 
+
+.fs-livesearch-data {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid #eee;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  background: #eeeeee;
+
+  z-index: 9;
+  max-height: 200px;
+  overflow: auto;
+  box-shadow: 0 15px 12px 0 rgba(0, 0, 0, 0.03);
+  li {
+    line-height: 1;
+
+    border-bottom: 1px solid #d5d5d5;
+    &:last-child {
+      border-bottom: 0;
+    }
+    a {
+      color: #000000;
+      padding: 15px;
+      display: flex;
+      transition: all 0.3s;
+
+      span {
+        color: #666666;
+        margin-left: 5px;
+      }
+      &:hover {
+        background: #dddddd;
+      }
+
+    }
+
+  }
+}
+
+

@@ -109,7 +109,7 @@ class FS_Action_Class {
 
 		//===== USERS =====
 		/* Выводит форму авторизации на сайте */
-		add_action( 'fs_login_form', 'fs_login_form', 10, 1 );
+		add_action( 'fs_login_form', array( 'FS\FS_Users_Class', 'login_form' ), 10, 1 );
 		/* Выводит всю информацию о текущем пользователе в виде списка */
 		add_action( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info_show' ), 10 );
 		/* Выводит форму редактирования профиля */
