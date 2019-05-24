@@ -122,9 +122,9 @@ class FS_Form_Class {
 		$default = array(
 			'type'           => ! empty( $field['type'] ) ? $field['type'] : 'text',
 			'class'          => 'fs-input form-control',
-			'wrapper'        => false,
+			'wrapper'        => true,
 			'autofill'       => true,
-			'wrapper_class'  => 'fs-field-wrapper',
+			'wrapper_class'  => 'fs-field-wrap form-group ' . str_replace( '_', '-', $field_name ) . '-wrap',
 			'label_class'    => 'fs-form-label',
 			'taxonomy'       => ! empty( $field['taxonomy'] ) ? $field['taxonomy'] : 'category',
 			'id'             => str_replace( array(
@@ -136,6 +136,7 @@ class FS_Form_Class {
 			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
 			'value'          => is_user_logged_in() && $value ? $value : null,
 			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
+			'icon'           => ! empty( $field['icon'] ) ? $field['icon'] : '',
 			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',
 			'html'           => '',
 			'selected'       => '',
@@ -157,6 +158,7 @@ class FS_Form_Class {
 		);
 
 		$args = wp_parse_args( $args, $default );
+
 
 		echo $args['before'];
 		if ( $args['wrapper'] ) {

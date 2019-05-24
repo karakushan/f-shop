@@ -1612,6 +1612,9 @@ td.fs_photo.column-fs_photo img {
 .fs-dashboard-order {
   margin-bottom: 15px;
 }
+.fs-dashboard-order .table tbody td {
+  vertical-align: middle;
+}
 .fs-dashboard-order__hide {
   border: 1px solid rgba(0, 0, 0, 0.125);
   padding: 20px;
@@ -1646,6 +1649,41 @@ td.fs_photo.column-fs_photo img {
 }
 .fs-dashboard-order__header span.datetime {
   font-weight: 700;
+}
+
+.fs-livesearch-data {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid #eee;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  background: #eeeeee;
+  z-index: 9;
+  max-height: 200px;
+  overflow: auto;
+  box-shadow: 0 15px 12px 0 rgba(0, 0, 0, 0.03);
+}
+.fs-livesearch-data li {
+  line-height: 1;
+  border-bottom: 1px solid #d5d5d5;
+}
+.fs-livesearch-data li:last-child {
+  border-bottom: 0;
+}
+.fs-livesearch-data li a {
+  color: #000000;
+  padding: 15px;
+  display: flex;
+  transition: all 0.3s;
+}
+.fs-livesearch-data li a span {
+  color: #666666;
+  margin-left: 5px;
+}
+.fs-livesearch-data li a:hover {
+  background: #dddddd;
 }
 
 /*# sourceMappingURL=f-shop.css.map */

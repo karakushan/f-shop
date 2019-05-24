@@ -264,6 +264,13 @@ class FS_Config {
 				'type'         => 'dropdown_categories',
 				'first_option' => __( "Choose delivery method", 'f-shop' ),
 				'taxonomy'     => self::get_data( 'product_del_taxonomy' ),
+				'icon'         => true,
+				'values'       => get_terms( array(
+					'taxonomy'   => self::get_data( 'product_del_taxonomy' ),
+					'fields'     => 'id=>name',
+					'hide_empty' => 0,
+					'parent'     => 0
+				) ),
 				'required'     => true
 
 			),
@@ -271,6 +278,13 @@ class FS_Config {
 				'type'         => 'dropdown_categories',
 				'first_option' => __( "Choose a payment method", 'f-shop' ),
 				'taxonomy'     => self::get_data( 'product_pay_taxonomy' ),
+				'icon'         => true,
+				'values'       => get_terms( array(
+					'taxonomy'   => self::get_data( 'product_pay_taxonomy' ),
+					'fields'     => 'id=>name',
+					'hide_empty' => 0,
+					'parent'     => 0
+				) ),
 				'required'     => true
 
 			),
