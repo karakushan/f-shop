@@ -946,6 +946,51 @@
     });
 
 
+    /*
+    * Общий обрабочик форм
+    * TODO:в дальнейшем убрать все обработчики, использовать только этот
+     */
+    $("form[data-ajax=on]").on('submit', function (e) {
+        e.preventDefault();
+        let formData = $(this).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: fShop.ajaxurl,
+            data: formData,
+            success: function (response) {
+                console.log(response);
+                if (response.success) {
+                    iziToast.show({
+                        theme: 'light',
+                        title: fShop.getLang('success'),
+                        message: response.data.msg,
+                        position: 'topCenter'
+                    });
+                } else {
+                    iziToast.show({
+                        theme: 'light',
+                        title: fShop.getLang('error'),
+                        message: response.data.msg,
+                        position: 'topCenter'
+                    });
+                }
+
+                if (response.data.redirect) {
+                    window.location.href = response.data.redirect;
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            }
+        });
+
+        return false;
+    });
+
+
 // валидация и отправка формы заказа
     var order_send = jQuery('[name="fs-order-send"]');
     var orderSendBtn = order_send.find('[data-fs-action="order-send"]');
@@ -1174,7 +1219,7 @@
         });
     })
 
-    $("[name=s]").focusout( function (e) {
+    $("[name=s]").focusout(function (e) {
         $(".fs-livesearch-data").fadeOut(function () {
         });
     });

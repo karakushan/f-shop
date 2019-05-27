@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: karak
@@ -10,7 +11,9 @@ namespace FS;
 
 
 class FS_Users_Class {
-	function __construct() {
+
+	function __construct( $id = 0 ) {
+
 		// Аякс вход пользователя
 		add_action( 'wp_ajax_fs_login', array( $this, 'login_user' ) );
 		add_action( 'wp_ajax_nopriv_fs_login', array( $this, 'login_user' ) );
@@ -32,8 +35,247 @@ class FS_Users_Class {
 		add_action( 'wp_ajax_fs_lostpassword', array( &$this, 'ajax_lostpassword' ) );
 		add_action( 'wp_ajax_nopriv_fs_lostpassword', array( &$this, 'ajax_lostpassword' ) );
 
+		// Изменение логина и пароля
+		add_action( 'wp_ajax_fs_change_login', array( &$this, 'change_login' ) );
+		add_action( 'wp_ajax_nopriv_fs_change_login', array( &$this, 'change_login' ) );
+
 		/* Защита личного кабинета от неавторизованных пользователей */
 		add_action( 'template_redirect', array( &$this, 'cabinet_protect' ) );
+
+	}
+
+	function password_strength_check( $password, $min_len = 8, $max_len = 70, $req_digit = 1, $req_lower = 1, $req_upper = 1, $req_symbol = 1 ) {
+		// Build regex string depending on requirements for the password
+		$regex = '/^';
+		if ( $req_digit == 1 ) {
+			$regex .= '(?=.*\d)';
+		}              // Match at least 1 digit
+		if ( $req_lower == 1 ) {
+			$regex .= '(?=.*[a-z])';
+		}           // Match at least 1 lowercase letter
+		if ( $req_upper == 1 ) {
+			$regex .= '(?=.*[A-Z])';
+		}           // Match at least 1 uppercase letter
+		if ( $req_symbol == 1 ) {
+			$regex .= '(?=.*[^a-zA-Z\d])';
+		}    // Match at least 1 character that is none of the above
+		$regex .= '.{' . $min_len . ',' . $max_len . '}$/';
+
+		if ( preg_match( $regex, $password ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function change_login() {
+		if ( ! FS_Config::verify_nonce() ) {
+			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
+		}
+
+		$password = sanitize_text_field( $_POST['fs_password'] );
+		$login    = sanitize_text_field( $_POST['fs_login'] );
+
+		$current_user = wp_get_current_user();
+
+
+		if ( $login && $password ) {
+			$user_id = wp_update_user( array(
+				'ID'         => $current_user->ID,
+				'user_pass'  => $password,
+				'user_login' => $login,
+			) );
+			if ( ! is_wp_error( $user_id ) ) {
+				wp_send_json_success( array( 'msg' => __( 'Your data has been successfully changed', 'f-shop' ) ) );
+			} else {
+				wp_send_json_success( array( 'msg' => $user_id->get_error_message() ) );
+			}
+
+		}
+
+		wp_send_json_error( array( 'msg' => __( 'Your data has not been changed, or you did not specify it.', 'f-shop' ) ) );
+	}
+
+
+	/**
+	 * Возвращает все поля формы юзера
+	 *
+	 * @return mixed|void
+	 */
+	public static function get_user_fields( $user_id = 0 ) {
+
+
+		$user = ! $user_id ? wp_get_current_user() : get_user_by( 'ID', $user_id );
+
+		$fields = array(
+			'fs_email'             => array(
+				'type'        => 'email',
+				'label'       => '',
+				'value'       => ! empty( $user->user_email ) ? $user->user_email : '',
+				'placeholder' => __( 'Your email', 'f-shop' ),
+				'title'       => __( 'Keep the correct email', 'f-shop' ),
+				'required'    => true
+			),
+			'fs_first_name'        => array(
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => ! empty( $user->first_name ) ? $user->first_name : '',
+				'placeholder' => __( 'Firts name', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'required'    => true
+			),
+			'fs_last_name'         => array(
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => ! empty( $user->last_name ) ? $user->last_name : '',
+				'placeholder' => __( 'Last name', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'required'    => true
+			),
+			'fs_gender'            => array(
+				'type'        => 'select',
+				'label'       => '',
+				'values'      => array(
+					'Male'   => __( 'Male', 'f-shop' ),
+					'Female' => __( 'Female', 'f-shop' )
+				),
+				'placeholder' => __( 'Gender', 'f-shop' ),
+				'title'       => '',
+				'required'    => false
+			),
+			'fs_user_avatar'       => array(
+				'type'        => 'file',
+				'label'       => '',
+				'placeholder' => __( 'Gender', 'f-shop' ),
+				'title'       => '',
+				'required'    => false
+			),
+			'fs_phone'             => array(
+				'type'        => 'tel',
+				'label'       => '',
+				'placeholder' => __( 'Phone number', 'f-shop' ),
+				'title'       => __( 'Keep the correct phone number', 'f-shop' ),
+				'required'    => true
+			),
+			'fs_city'              => array(
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'City', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'required'    => true
+			),
+			'fs_country'           => array(
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'Country', 'f-shop' ),
+				'title'       => '',
+				'required'    => false
+			),
+			'fs_zip_code'          => array(
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'Zip Code', 'f-shop' ),
+				'required'    => false
+			),
+			'fs_region'            => array(
+				'type'        => 'text',
+				'label'       => '',
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'placeholder' => __( 'State / province', 'f-shop' ),
+				'required'    => true
+			),
+			'fs_adress'            => array(
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'Address', 'f-shop' ),
+				'required'    => false
+			),
+			'fs_home_num'          => array(
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'House number', 'f-shop' ),
+				'required'    => false
+			),
+			'fs_apartment_num'     => array(
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'Apartment number', 'f-shop' ),
+				'required'    => false
+			),
+			'fs_delivery_number'   => array(
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'Branch number', 'f-shop' ),
+				'required'    => false
+			),
+			'fs_delivery_methods'  => array(
+				'type'         => 'dropdown_categories',
+				'first_option' => __( "Choose delivery method", 'f-shop' ),
+				'taxonomy'     => FS_Config::get_data( 'product_del_taxonomy' ),
+				'icon'         => true,
+				'values'       => get_terms( array(
+					'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
+					'fields'     => 'id=>name',
+					'hide_empty' => 0,
+					'parent'     => 0
+				) ),
+				'required'     => true
+
+			),
+			'fs_payment_methods'   => array(
+				'type'         => 'dropdown_categories',
+				'first_option' => __( "Choose a payment method", 'f-shop' ),
+				'taxonomy'     => FS_Config::get_data( 'product_pay_taxonomy' ),
+				'icon'         => true,
+				'values'       => get_terms( array(
+					'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
+					'fields'     => 'id=>name',
+					'hide_empty' => 0,
+					'parent'     => 0
+				) ),
+				'required'     => true
+
+			),
+			'fs_comment'           => array(
+				'type'        => 'textarea',
+				'label'       => '',
+				'placeholder' => __( 'Comment', 'f-shop' ),
+				'required'    => false
+			),
+			'fs_customer_register' => array(
+				'type'           => 'checkbox',
+				'label'          => __( 'Register on the site', 'f-shop' ),
+				'label_position' => 'after',
+				'value'          => 1,
+				'required'       => false
+			),
+			'fs_subscribe_news'    => array(
+				'type'           => 'checkbox',
+				'label'          => __( 'Receive site news', 'f-shop' ),
+				'label_position' => 'after',
+				'required'       => false
+			),
+			'fs_subscribe_cart'    => array(
+				'type'           => 'checkbox',
+				'label'          => __( 'Receive a message about goods left in the basket', 'f-shop' ),
+				'label_position' => 'after',
+				'required'       => false
+			),
+			'fs_login'             => array(
+				'type'     => 'text',
+				'label'    => '',
+				'value'    => $user->user_login,
+				'required' => true
+			),
+			'fs_password'          => array(
+				'type'     => 'password',
+				'label'    => '',
+				'value'    => '',
+				'required' => true
+			),
+		);
+
+		return apply_filters( 'fs_user_fields', $fields );
 	}
 
 
@@ -79,7 +321,7 @@ class FS_Users_Class {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
 		}
 
-		$user_fields = FS_Config::get_user_fields();
+		$user_fields = self::get_user_fields();
 		$user_id     = get_current_user_id();
 
 		require_once( ABSPATH . "wp-admin" . '/includes/image.php' );
@@ -99,6 +341,7 @@ class FS_Users_Class {
 
 		// Сохраняем данные пользователя
 		foreach ( $user_fields as $meta_key => $user_field ) {
+
 
 			if ( ( $user_field['type'] == 'file' && empty( $_FILES[ $meta_key ] ) ) ) {
 				continue;
@@ -120,9 +363,20 @@ class FS_Users_Class {
 
 			// Сохраняем или удаляем поля
 			if ( ( $user_field['type'] != 'file' && ! empty( $_POST[ $meta_key ] ) ) ) {
-				update_user_meta( $user_id, $meta_key, $_POST[ $meta_key ] );
-			} else {
-				delete_user_meta( $user_id, $meta_key );
+
+				if ( $meta_key == 'fs_first_name' ) {
+					wp_update_user( array(
+						'ID'         => $user_id,
+						'first_name' => sanitize_text_field( $_POST[ $meta_key ] )
+					) );
+				} elseif ( $meta_key == 'fs_last_name' ) {
+					wp_update_user( array(
+						'ID'        => $user_id,
+						'last_name' => sanitize_text_field( $_POST[ $meta_key ] )
+					) );
+				} else {
+					update_user_meta( $user_id, $meta_key, $_POST[ $meta_key ] );
+				}
 			}
 
 		}
@@ -506,37 +760,60 @@ class FS_Users_Class {
 	static function user_cabinet_tabs() {
 
 		$tabs = array(
-			'personal_info' => array(
+			'personal_info'  => array(
 				'title'     => __( 'Personal information', 'f-shop' ),
-				'content'   => fs_frontend_template( 'dashboard/personal_info' ),
+				'content'   => fs_frontend_template( 'dashboard/personal_info', array(
+					'vars' => array(
+						'user' => fs_get_current_user()
+					)
+				) ),
 				'link'      => false,
-				'nav_class' => 'active',
-				'tab_class' => 'fade active show'
+				'nav_class' => 'nav-item nav-link active',
+				'tab_class' => 'tab-pane fade active show'
 			),
-			'orders'        => array(
-				'title'     => __( 'Orders', 'f-shop' ),
+			'orders'         => array(
+				'title'     => __( 'Current orders', 'f-shop' ),
 				'content'   => fs_frontend_template( 'dashboard/orders', [
 					'vars' => array(
 						'orders' => FS_Orders_Class::get_user_orders()
 					)
 				] ),
 				'link'      => false,
-				'nav_class' => false,
-				'tab_class' => 'fade'
+				'nav_class' => 'nav-item nav-link',
+				'tab_class' => 'tab-pane fade'
 			),
-			'wishlist'      => array(
+			'orders_history' => array(
+				'title'     => __( 'Purchase history', 'f-shop' ),
+				'content'   => fs_frontend_template( 'dashboard/orders', [
+					'vars' => array(
+						'orders' => FS_Orders_Class::get_user_orders()
+					)
+				] ),
+				'link'      => false,
+				'nav_class' => 'nav-item nav-link',
+				'tab_class' => 'tab-pane fade'
+			),
+			'wishlist'       => array(
 				'title'     => __( 'WishList', 'f-shop' ),
 				'content'   => fs_frontend_template( 'dashboard/wishlist' ),
 				'link'      => false,
-				'nav_class' => '',
-				'tab_class' => 'fade'
+				'nav_class' => 'nav-item nav-link',
+				'tab_class' => 'tab-pane fade'
 			),
-			'reviews'       => array(
+			'reviews'        => array(
 				'title'     => __( 'Reviews', 'f-shop' ),
 				'content'   => fs_frontend_template( 'dashboard/reviews' ),
 				'link'      => false,
-				'nav_class' => '',
+				'nav_class' => 'nav-item nav-link',
 				'tab_class' => 'fade'
+			),
+			'logout'         => array(
+				'title'     => __( 'Logout', 'f-shop' ),
+				'content'   => null,
+				'link'      => true,
+				'link_href' => wp_logout_url( $_SERVER['REQUEST_URI'] ),
+				'nav_class' => '',
+				'tab_class' => 'tab-pane fade'
 			)
 		);
 		$tabs = apply_filters( 'fs_user_cabinet_tabs', $tabs );
@@ -546,16 +823,18 @@ class FS_Users_Class {
 			return false;
 		}
 
-		$out = FS_Form_Class::form_open( array(
-			'class'       => 'fs-dashboard',
-			'id'          => 'fs-save-user-data',
-			'name'        => 'fs-save-user-data',
-			'ajax_action' => 'fs_save_user_data'
-		) );
+
+		$out = '<div class="fs-dashboard">';
 		$out .= '<div class="nav nav-tabs" id="fs-dashboard-nav" role="tablist">';
 
 		foreach ( $tabs as $tab_id => $tab ) {
-			$out .= '<a class="nav-item nav-link ' . esc_attr( $tab['nav_class'] ) . '" data-toggle="tab" href="#fs-dashboard-' . esc_attr( $tab_id ) . '" role="tab" aria-controls="' . esc_attr( $tab_id ) . '">' . $tab['title'] . '</a>';
+			$href   = '#fs-dashboard-' . $tab_id;
+			$toggle = 'tab';
+			if ( $tab['link'] ) {
+				$href   = $tab['link_href'];
+				$toggle = 'no-tab';
+			}
+			$out .= '<a class="' . esc_attr( $tab['nav_class'] ) . '" data-toggle="' . esc_attr( $toggle ) . '" href="' . esc_attr( $href ) . '" role="tab" aria-controls="' . esc_attr( $tab_id ) . '">' . $tab['title'] . '</a>';
 		}
 
 		$out .= '</div><!-- end #fs-dashboard-nav -->';
@@ -563,12 +842,14 @@ class FS_Users_Class {
 		$out .= '<div class="tab-content" id="fs-dashboard-content">';
 
 		foreach ( $tabs as $tab_id => $tab ) {
-			$out .= '<div class="tab-pane  ' . esc_attr( $tab['nav_class'] ) . '" id="fs-dashboard-' . esc_attr( $tab_id ) . '" role="tabpanel" aria-labelledby="fs-dashboard-' . esc_attr( $tab_id ) . '">' . $tab['content'] . '</div>';
+			if ( $tab['link'] ) {
+				continue;
+			}
+			$out .= '<div class="' . esc_attr( $tab['tab_class'] ) . '" id="fs-dashboard-' . esc_attr( $tab_id ) . '" role="tabpanel" aria-labelledby="fs-dashboard-' . esc_attr( $tab_id ) . '">' . $tab['content'] . '</div>';
 		}
 
 		$out .= '</div><!-- end #fs-dashboard-content -->';
-
-		$out .= FS_Form_Class::form_close();
+		$out .= '</div><!-- end #fs-dashboard -->';
 
 		return $out;
 

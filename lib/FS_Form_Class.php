@@ -24,6 +24,7 @@ class FS_Form_Class {
 		$types = array(
 			'text',
 			'hidden',
+			'password',
 			'email',
 			'tel',
 			'textarea',
@@ -110,14 +111,16 @@ class FS_Form_Class {
 
 		$user_id = get_current_user_id();
 
-		$fields = FS_Config::get_user_fields();
-		$field  = ! empty( $fields[ $field_name ] ) && is_array( $fields[ $field_name ] )
+		$fields = FS_Users_Class::get_user_fields();
+
+		$field = ! empty( $fields[ $field_name ] ) && is_array( $fields[ $field_name ] )
 			? $fields[ $field_name ]
 			: array();
 
 		$value = $field['value']
 			? $field['value']
 			: get_user_meta( $user_id, $field_name, 1 );
+
 
 		$default = array(
 			'type'           => ! empty( $field['type'] ) ? $field['type'] : 'text',
@@ -186,6 +189,7 @@ class FS_Form_Class {
 		$args = wp_parse_args( $args, array(
 			'method'       => 'POST',
 			'autocomplete' => 'off',
+			'ajax'         => 'off',
 			'class'        => 'fs-form',
 			'id'           => 'fs-form',
 			'name'         => 'fs-ajax',
@@ -197,6 +201,7 @@ class FS_Form_Class {
 
 		$out = '<form';
 		$out .= ' action="' . esc_attr( $args['action'] ) . '"';
+		$out .= ' data-ajax="' . esc_attr( $args['ajax'] ) . '"';
 		$out .= ' name="' . esc_attr( $args['name'] ) . '"';
 		$out .= ' method="' . esc_attr( $args['method'] ) . '"';
 		$out .= ' autocomplete="' . esc_attr( $args['autocomplete'] ) . '"';

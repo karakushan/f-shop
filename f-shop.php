@@ -52,28 +52,30 @@ require_once 'vendor/autoload.php';
 $GLOBALS['fs_error'] = new WP_Error();
 
 /* Инициализируем плагин */
-if ( ! class_exists( '\FS\FS_Init', false ) ) {
-	$GLOBALS['f_shop']    = new \FS\FS_Init;
-	$GLOBALS['fs_config'] = new FS\FS_Config();
+if ( class_exists( '\FS\FS_Init' ) ) {
+	$GLOBALS['f_shop'] = new \FS\FS_Init;
 }
 
 // Добавляем команды WP CLI
 add_action( 'init', 'fs_wp_cli_init' );
 function fs_wp_cli_init() {
-	if ( class_exists( 'WP_CLI' ) ) {
-		$migrate = function ( $args = array(), $assoc_args = array() ) {
-			\FS\FS_Migrate_Class::migrate_orders();
-			WP_CLI::success( 'Base migration ended with success.' );
-		};
-
-		$fs_api = function ( $args = array(), $assoc_args = array() ) {
-			do_action( 'fs_api', $args[0], $assoc_args );
-			WP_CLI::success( 'Команда fs_api->' . $args[0] . ' успешно выполнена!' );
-		};
-
-		WP_CLI::add_command( 'fs_migrate_orders', $migrate );
-		WP_CLI::add_command( 'fs_api', $fs_api );
+	if ( ! class_exists( 'WP_CLI' ) ) {
+		return;
 	}
+
+	$migrate = function ( $args = array(), $assoc_args = array() ) {
+		\FS\FS_Migrate_Class::migrate_orders();
+		WP_CLI::success( 'Base migration ended with success.' );
+	};
+
+	$fs_api = function ( $args = array(), $assoc_args = array() ) {
+		do_action( 'fs_api', $args[0], $assoc_args );
+		WP_CLI::success( 'Команда fs_api->' . $args[0] . ' успешно выполнена!' );
+	};
+
+	WP_CLI::add_command( 'fs_migrate_orders', $migrate );
+	WP_CLI::add_command( 'fs_api', $fs_api );
+
 }
 
 

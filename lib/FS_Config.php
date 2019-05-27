@@ -16,7 +16,6 @@ class FS_Config {
 	public static $default_currency = 'USD';
 	public static $user_meta = array();
 	public static $prices;
-	public static $form_fields;
 	public static $nonce = 'f-shop';
 	public static $text_domain = 'f-shop';
 	public static $pages = array();
@@ -83,7 +82,7 @@ class FS_Config {
 			'profile_update' => array( 'label' => __( 'Update Date', 'f-shop' ), 'name' => 'profile_update' )
 		);
 
-		self::$form_fields = self::get_user_fields();
+
 
 		self::$currencies = array(
 			'USD' => __( 'US dollar', 'f-shop' ),
@@ -153,177 +152,7 @@ class FS_Config {
 
 	}
 
-	/**
-	 * Возвращает все поля формы юзера
-	 *
-	 * @return mixed|void
-	 */
-	public static function get_user_fields() {
-		$current_user = new \WP_User();
 
-
-		$fields = array(
-			'fs_email'             => array(
-				'type'        => 'email',
-				'label'       => '',
-				'placeholder' => __( 'Your email', 'f-shop' ),
-				'title'       => __( 'Keep the correct email', 'f-shop' ),
-				'required'    => true
-			),
-			'fs_first_name'        => array(
-				'type'        => 'text',
-				'label'       => '',
-				'placeholder' => __( 'Firts name', 'f-shop' ),
-				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true
-			),
-			'fs_last_name'         => array(
-				'type'        => 'text',
-				'label'       => '',
-				'placeholder' => __( 'Last name', 'f-shop' ),
-				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true
-			),
-			'fs_gender'            => array(
-				'type'        => 'select',
-				'label'       => '',
-				'values'      => array(
-					'Male'   => __( 'Male', 'f-shop' ),
-					'Female' => __( 'Female', 'f-shop' )
-				),
-				'placeholder' => __( 'Gender', 'f-shop' ),
-				'title'       => '',
-				'required'    => false
-			),
-			'fs_user_avatar'       => array(
-				'type'        => 'file',
-				'label'       => '',
-				'placeholder' => __( 'Gender', 'f-shop' ),
-				'title'       => '',
-				'required'    => false
-			),
-			'fs_phone'             => array(
-				'type'        => 'tel',
-				'label'       => '',
-				'placeholder' => __( 'Phone number', 'f-shop' ),
-				'title'       => __( 'Keep the correct phone number', 'f-shop' ),
-				'required'    => true
-			),
-			'fs_city'              => array(
-				'type'        => 'text',
-				'label'       => '',
-				'placeholder' => __( 'City', 'f-shop' ),
-				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true
-			),
-			'fs_country'           => array(
-				'type'        => 'text',
-				'label'       => '',
-				'placeholder' => __( 'Country', 'f-shop' ),
-				'title'       => '',
-				'required'    => false
-			),
-			'fs_zip_code'          => array(
-				'type'        => 'text',
-				'label'       => '',
-				'placeholder' => __( 'Zip Code', 'f-shop' ),
-				'required'    => false
-			),
-			'fs_region'            => array(
-				'type'        => 'text',
-				'label'       => '',
-				'title'       => __( 'This field is required.', 'f-shop' ),
-				'placeholder' => __( 'State / province', 'f-shop' ),
-				'required'    => true
-			),
-			'fs_adress'            => array(
-				'type'        => 'text',
-				'label'       => '',
-				'placeholder' => __( 'Address', 'f-shop' ),
-				'required'    => false
-			),
-			'fs_home_num'          => array(
-				'type'        => 'text',
-				'label'       => '',
-				'placeholder' => __( 'House number', 'f-shop' ),
-				'required'    => false
-			),
-			'fs_apartment_num'     => array(
-				'type'        => 'text',
-				'label'       => '',
-				'placeholder' => __( 'Apartment number', 'f-shop' ),
-				'required'    => false
-			),
-			'fs_delivery_number'   => array(
-				'type'        => 'text',
-				'label'       => '',
-				'placeholder' => __( 'Branch number', 'f-shop' ),
-				'required'    => false
-			),
-			'fs_delivery_methods'  => array(
-				'type'         => 'dropdown_categories',
-				'first_option' => __( "Choose delivery method", 'f-shop' ),
-				'taxonomy'     => self::get_data( 'product_del_taxonomy' ),
-				'icon'         => true,
-				'values'       => get_terms( array(
-					'taxonomy'   => self::get_data( 'product_del_taxonomy' ),
-					'fields'     => 'id=>name',
-					'hide_empty' => 0,
-					'parent'     => 0
-				) ),
-				'required'     => true
-
-			),
-			'fs_payment_methods'   => array(
-				'type'         => 'dropdown_categories',
-				'first_option' => __( "Choose a payment method", 'f-shop' ),
-				'taxonomy'     => self::get_data( 'product_pay_taxonomy' ),
-				'icon'         => true,
-				'values'       => get_terms( array(
-					'taxonomy'   => self::get_data( 'product_pay_taxonomy' ),
-					'fields'     => 'id=>name',
-					'hide_empty' => 0,
-					'parent'     => 0
-				) ),
-				'required'     => true
-
-			),
-			'fs_comment'           => array(
-				'type'        => 'textarea',
-				'label'       => '',
-				'placeholder' => __( 'Comment', 'f-shop' ),
-				'required'    => false
-			),
-			'fs_customer_register' => array(
-				'type'           => 'checkbox',
-				'label'          => __( 'Register on the site', 'f-shop' ),
-				'label_position' => 'after',
-				'value'          => 1,
-				'required'       => false
-			),
-			'fs_subscribe_news'    => array(
-				'type'           => 'checkbox',
-				'label'          => __( 'Receive site news', 'f-shop' ),
-				'label_position' => 'after',
-				'required'       => false
-			),
-			'fs_subscribe_cart'    => array(
-				'type'           => 'checkbox',
-				'label'          => __( 'Receive a message about goods left in the basket', 'f-shop' ),
-				'label_position' => 'after',
-				'required'       => false
-			),
-			'fs_login'             => array(
-				'type'     => 'text',
-				'label'    => '',
-				'disabled' => true,
-				'value'    => $current_user->ID,
-				'required' => true
-			),
-		);
-
-		return apply_filters( 'fs_user_fields', $fields );
-	}
 
 	/**
 	 * Gets the array that contains the list of product settings tabs.

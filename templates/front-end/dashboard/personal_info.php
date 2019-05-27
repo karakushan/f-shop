@@ -2,7 +2,8 @@
     <div class="col-md-3">
         <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
             <a href="#fs-dashboard-sub-tab-1" class="nav-link active"
-               data-toggle="pill"><?php esc_html_e( 'Edit profile', 'f-shop' ); ?></a>
+               data-toggle="pill">
+				<?php esc_html_e( 'Edit profile', 'f-shop' ); ?></a>
             <a href="#fs-dashboard-sub-tab-2" class="nav-link"
                data-toggle="pill"><?php esc_html_e( 'Message Setup', 'f-shop' ); ?></a>
             <a href="#fs-dashboard-sub-tab-3" class="nav-link"
@@ -15,6 +16,12 @@
         <div class="tab-content">
             <div class="tab-pane fade active show" id="fs-dashboard-sub-tab-1" role="tabpanel">
                 <h4 class="tab-title"><?php esc_html_e( 'Edit profile', 'f-shop' ); ?></h4>
+				<?php echo FS\FS_Form_Class::form_open( array(
+					'class'       => 'fs-dashboard-personal',
+					'id'          => 'fs-save-user-data',
+					'name'        => 'fs-save-user-data',
+					'ajax_action' => 'fs_save_user_data'
+				) ); ?>
                 <fieldset>
                     <legend><?php esc_html_e( 'Personal Information', 'f-shop' ) ?></legend>
                     <div class="form-group row">
@@ -80,8 +87,15 @@
 
                 </fieldset>
                 <button type="submit" class="btn btn-lg btn-primary"><?php esc_html_e( 'Save' ) ?></button>
+				<?php echo FS\FS_Form_Class::form_close(); ?>
             </div>
             <div class="tab-pane fade" id="fs-dashboard-sub-tab-2" role="tabpanel">
+				<?php echo FS\FS_Form_Class::form_open( array(
+					'class'       => 'fs-dashboard-personal',
+					'id'          => 'fs-save-user-data',
+					'name'        => 'fs-save-user-data',
+					'ajax_action' => 'fs_save_user_data'
+				) ); ?>
                 <h4 class="tab-title"><?php esc_html_e( 'Message Setup', 'f-shop' ); ?></h4>
                 <fieldset>
                     <legend><?php esc_html_e( 'Message types', 'f-shop' ) ?></legend>
@@ -94,23 +108,61 @@
 
                 </fieldset>
                 <button type="submit" class="btn btn-lg btn-primary"><?php esc_html_e( 'Save' ) ?></button>
+				<?php echo FS\FS_Form_Class::form_close(); ?>
             </div>
             <div class="tab-pane fade" id="fs-dashboard-sub-tab-3" role="tabpanel">
                 <h4 class="tab-title"><?php esc_html_e( 'Login and password', 'f-shop' ); ?></h4>
+				<?php echo FS\FS_Form_Class::form_open( array(
+					'class'       => 'fs-dashboard-personal',
+					'id'          => 'fs_change_login',
+					'name'        => 'fs_change_login',
+					'ajax'        => 'on',
+					'ajax_action' => 'fs_change_login'
+				) ); ?>
                 <fieldset>
                     <legend><?php esc_html_e( 'Login Settings', 'f-shop' ); ?></legend>
                     <div class="form-group row">
                         <label for="fs_login" class="col-sm-2"><?php esc_html_e( 'Username', 'f-shop' ); ?></label>
-                        <div class="col"><?php fs_form_field( 'fs_login', [ 'class' => 'form-control' ] ) ?></div>
+                        <div class="col"><?php fs_form_field( 'fs_login', [
+								'class'    => 'form-control',
+								'required' => false
+							] ) ?></div>
                     </div>
                     <div class="form-group row">
                         <label for="fs_password" class="col-sm-2"><?php esc_html_e( 'Password', 'f-shop' ); ?></label>
-                        <div class="col"><?php fs_form_field( 'fs_password', [ 'class' => 'form-control' ] ) ?></div>
+                        <div class="col"><?php fs_form_field( 'fs_password', [
+								'class'    => 'form-control',
+								'required' => false,
+								'value'    => ''
+							] ) ?></div>
                     </div>
                 </fieldset>
                 <button type="submit" class="btn btn-lg btn-primary"><?php esc_html_e( 'Save' ) ?></button>
+				<?php echo FS\FS_Form_Class::form_close(); ?>
             </div>
-            <div class="tab-pane fade" id="fs-dashboard-sub-tab-4" role="tabpanel">5</div>
+            <div class="tab-pane fade" id="fs-dashboard-sub-tab-4" role="tabpanel">
+                <h4 class="tab-title"><?php esc_html_e( 'Account deleting', 'f-shop' ); ?></h4>
+				<?php echo FS\FS_Form_Class::form_open( array(
+					'class'       => 'fs-dashboard-personal',
+					'id'          => 'fs-save-user-data',
+					'name'        => 'fs_delete_account',
+					'ajax'        => 'on',
+					'ajax_action' => 'fs_delete_account'
+				) ); ?>
+                <fieldset>
+                    <legend><?php esc_html_e( 'Account deleting', 'f-shop' ); ?></legend>
+                    <div class="form-group row">
+                        <label for="fs_password"
+                               class="col-sm-2"><?php esc_html_e( 'Current password', 'f-shop' ); ?></label>
+                        <div class="col"><?php fs_form_field( 'fs_password', [
+								'class'    => 'form-control',
+								'required' => true
+							] ) ?></div>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-lg btn-primary"><?php esc_html_e( 'Save' ) ?></button>
+				<?php echo FS\FS_Form_Class::form_close(); ?>
+            </div>
         </div>
     </div>
 </div><!-- .row -->

@@ -36,8 +36,8 @@ class FS_Init {
 		add_action( 'wp_head', array( $this, 'head_microdata' ) );
 
 		// Инициализация классов Fast Shop
+		$this->fs_config     = $GLOBALS['fs_config'] = new FS_Config();
 		$this->fs_option     = get_option( 'fs_option' );
-		$this->fs_config     = new FS_Config();
 		$this->fs_settings   = new FS_Settings_Class;
 		$this->fs_ajax       = new FS_Ajax_Class;
 		$this->fs_shortcode  = new FS_Shortcode;
@@ -135,7 +135,7 @@ class FS_Init {
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true );
 
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'library', FS_PLUGIN_URL . 'assets/js/fs-library.js', array( 'jquery' ), FS_Config::get_data( 'plugin_ver' ), true );
-		wp_enqueue_script( FS_PLUGIN_PREFIX .'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', array(
+		wp_enqueue_script( FS_PLUGIN_PREFIX . 'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', array(
 			'jquery',
 			FS_PLUGIN_PREFIX . 'library'
 		), FS_Config::get_data( 'plugin_ver' ), true );
@@ -145,7 +145,7 @@ class FS_Init {
 			wp_enqueue_script( FS_PLUGIN_PREFIX . 'events', FS_PLUGIN_URL . 'assets/js/fs-events.js', array(
 				'jquery',
 				FS_PLUGIN_PREFIX . 'library',
-				FS_PLUGIN_PREFIX .'main'
+				FS_PLUGIN_PREFIX . 'main'
 			), FS_Config::get_data( 'plugin_ver' ), true );
 		}
 
@@ -177,7 +177,7 @@ class FS_Init {
 			'fs_slider_val_min' => ! empty( $_REQUEST['price_start'] ) ? (int) $_REQUEST['price_start'] : 0,
 			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : intval( $price_max )
 		);
-		wp_localize_script( FS_PLUGIN_PREFIX .'main', 'FastShopData', $l10n );
+		wp_localize_script( FS_PLUGIN_PREFIX . 'main', 'FastShopData', $l10n );
 	}
 
 
@@ -323,7 +323,7 @@ class FS_Init {
 				"url"      => get_term_link( get_queried_object_id() )
 			);
 		}
-		if ( !empty($schema) ) {
+		if ( ! empty( $schema ) ) {
 			echo ' <script type="application/ld+json">';
 			echo json_encode( $schema );
 			echo ' </script>';
