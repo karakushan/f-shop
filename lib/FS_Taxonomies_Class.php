@@ -28,7 +28,7 @@ class FS_Taxonomies_Class {
 
 	}
 
-	function wpseo_title_filter($title) {
+	function wpseo_title_filter( $title ) {
 		if ( ! is_tax( 'catalog' ) ) {
 			return $title;
 		}
@@ -41,7 +41,7 @@ class FS_Taxonomies_Class {
 
 	function document_title_parts_filter( $title ) {
 		if ( ! is_tax( 'catalog' ) ) {
-			return;
+			return $title;
 		}
 		$meta_key       = get_locale() == FS_Config::default_language() ? '_seo_title' : '_seo_title__' . get_locale();
 		$meta_title     = get_term_meta( get_queried_object_id(), $meta_key, 1 );
@@ -51,9 +51,15 @@ class FS_Taxonomies_Class {
 	}
 
 	function wp_head_action() {
+		if ( ! is_tax( 'catalog' ) ) {
+			return;
+		}
 		$meta_key         = get_locale() == FS_Config::default_language() ? '_seo_description' : '_seo_description__' . get_locale();
 		$meta_description = get_term_meta( get_queried_object_id(), $meta_key, 1 );
-		echo PHP_EOL . '<meta name="description" content="' . esc_html( $meta_description ) . '"/>' . PHP_EOL;
+
+		if ( $meta_description ) {
+			echo PHP_EOL . '<meta name="description" content="' . esc_html( $meta_description ) . '"/>' . PHP_EOL;
+		}
 	}
 
 
