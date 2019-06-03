@@ -28,9 +28,9 @@ class FS_Taxonomies_Class {
 
 	}
 
-	function wpseo_title_filter() {
+	function wpseo_title_filter($title) {
 		if ( ! is_tax( 'catalog' ) ) {
-			return;
+			return $title;
 		}
 		$meta_key   = get_locale() == FS_Config::default_language() ? '_seo_title' : '_seo_title__' . get_locale();
 		$meta_title = get_term_meta( get_queried_object_id(), $meta_key, 1 );
