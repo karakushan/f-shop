@@ -83,7 +83,6 @@ class FS_Config {
 		);
 
 
-
 		self::$currencies = array(
 			'USD' => __( 'US dollar', 'f-shop' ),
 			'UAH' => __( 'Ukrainian hryvnia', 'f-shop' ),
@@ -151,7 +150,6 @@ class FS_Config {
 
 
 	}
-
 
 
 	/**
@@ -405,6 +403,16 @@ class FS_Config {
 				'_content'           => array(
 					'name' => __( 'Category text', 'f-shop' ),
 					'type' => 'editor',
+					'args' => array()
+				),
+				'_seo_title'         => array(
+					'name' => __( 'SEO title', 'f-shop' ),
+					'type' => 'text',
+					'args' => array()
+				),
+				'_seo_description'   => array(
+					'name' => __( 'SEO description', 'f-shop' ),
+					'type' => 'textarea',
 					'args' => array()
 				),
 				'_thumbnail_id'      => array(
@@ -862,6 +870,40 @@ class FS_Config {
 		} else {
 			return $meta[ $meta_key ];
 		}
+	}
+
+	/**
+	 * Начальный список языков для мультиязычности полей
+	 *
+	 * @return mixed|void
+	 */
+	public static function get_languages() {
+		$languages = array(
+			'en' => array(
+				'name'   => __( 'Английский', 'f-shop' ),
+				'locale' => 'en_US'
+			),
+			'ru' => array(
+				'name'   => __( 'Русский', 'f-shop' ),
+				'locale' => 'ru_RU'
+			),
+			'ua' => array(
+				'name'   => __( 'Украинский', 'f-shop' ),
+				'locale' => 'uk'
+			)
+		);
+
+
+		return apply_filters( 'fs_languages', $languages );
+	}
+
+	/**
+	 * Язык (локаль) по умолчанию
+	 *
+	 * @return mixed|void
+	 */
+	public static function default_language() {
+		return apply_filters( 'fs_default_language', 'ru_RU' );
 	}
 
 

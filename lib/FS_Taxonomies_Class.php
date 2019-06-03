@@ -22,7 +22,29 @@ class FS_Taxonomies_Class {
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_edit-fs-currencies_columns', array( $this, 'add_fs_currencies_columns' ) );
+		add_filter( 'document_title_parts', array( $this, 'document_title_parts_filter' ), 10, 1 );
+		add_action( 'wp_head', array( $this, 'wp_head_action' ), 1 );
+
 	}
+
+
+	function document_title_parts_filter( $title ) {
+		if ( ! is_tax( 'catalog' ) ) {
+			return;
+		}
+		$meta_key       = get_locale() == FS_Config::default_language() ? '_seo_title' : '_seo_title__' . get_locale();
+		$meta_title     = get_term_meta( get_queried_object_id(), $meta_key, 1 );
+		$title['title'] = $meta_title ? $meta_title : $title['title'];
+
+		return $title;
+	}
+
+	function wp_head_action() {
+		$meta_key         = get_locale() == FS_Config::default_language() ? '_seo_description' : '_seo_description__' . get_locale();
+		$meta_description = get_term_meta( get_queried_object_id(), $meta_key, 1 );
+		echo PHP_EOL . '<meta name="description" content="' . esc_html( $meta_description ) . '"/>' . PHP_EOL;
+	}
+
 
 	/**
 	 * Register custom taxonomies
@@ -242,6 +264,7 @@ class FS_Taxonomies_Class {
 		$form      = new FS_Form_Class();
 		$fields    = $fs_config->get_taxonomy_fields();
 		if ( count( $fields[ $taxonomy ] ) ) {
+
 			foreach ( $fields[ $taxonomy ] as $name => $field ) {
 				$field['args']['value'] = get_term_meta( $term->term_id, $name, 1 );
 				echo '<tr class="form-field taxonomy-thumbnail-wrap">';
@@ -293,13 +316,41 @@ class FS_Taxonomies_Class {
 		$term      = get_term( $term_id );
 		$taxonomy  = $term->taxonomy;
 		$fields    = $fs_config->get_taxonomy_fields();
+
+		$multi_lang = false;
+		$screen     = get_current_screen();
+		if ( fs_option( 'fs_multi_language_support' )
+		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
+		     && ( ! in_array( $type, [ 'image' ] ) )
+		     && $screen->id == 'edit-catalog'
+		) {
+			$multi_lang = true;
+		}
+
 		if ( count( $fields[ $taxonomy ] ) ) {
 			foreach ( $fields[ $taxonomy ] as $name => $field ) {
-				if ( isset( $_POST[ $name ] ) && $_POST[ $name ] != '' ) {
-					update_term_meta( $term_id, $name, $_POST[ $name ] );
+
+				if ( $multi_lang ) {
+					foreach ( FS_Config::get_languages() as $language ) {
+						if ( $language['locale'] == FS_Config::default_language() ) {
+							$meta_key = $name;
+						} else {
+							$meta_key = $name . '__' . $language['locale'];
+						}
+						if ( isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != '' ) {
+							update_term_meta( $term_id, $meta_key, $_POST[ $meta_key ] );
+						} else {
+							delete_term_meta( $term_id, $meta_key );
+						}
+					}
 				} else {
-					delete_term_meta( $term_id, $name );
+					if ( isset( $_POST[ $name ] ) && $_POST[ $name ] != '' ) {
+						update_term_meta( $term_id, $name, $_POST[ $name ] );
+					} else {
+						delete_term_meta( $term_id, $name );
+					}
 				}
+
 			}
 		}
 	}

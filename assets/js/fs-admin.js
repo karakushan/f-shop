@@ -485,6 +485,19 @@ jQuery(document).ready(function ($) {
         event.preventDefault();
         $(this).parent('div').remove();
     });
+
+    // табы мета полей
+    $(document).on('click', '.fs-tabs .fs-tabs__title', function (event) {
+        event.preventDefault();
+
+        let wrapper=$(this).parents('.fs-tabs');
+
+        wrapper.find('.fs-tabs__title').removeClass('nav-tab-active');
+        wrapper.find('.fs-tabs__body').removeClass('fs-tab-active');
+
+        $(this).addClass('nav-tab-active');
+        $($(this).attr('href')).addClass('fs-tab-active');
+    });
 });
 
 jQuery(document).on('change', '.fs_select_variant', function (event) {

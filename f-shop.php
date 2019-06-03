@@ -56,6 +56,8 @@ if ( class_exists( '\FS\FS_Init' ) ) {
 	$GLOBALS['f_shop'] = new \FS\FS_Init;
 }
 
+
+
 // Добавляем команды WP CLI
 add_action( 'init', 'fs_wp_cli_init' );
 function fs_wp_cli_init() {

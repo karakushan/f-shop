@@ -69,6 +69,13 @@ class FS_Settings_Class {
 						'help'  => __( 'It is necessary for the cost of the goods to be converted automatically at the established rate.', 'f-shop' ),
 						'value' => fs_option( 'multi_currency_on' )
 					),
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'fs_multi_language_support',
+						'label' => __( 'Multi-language support', 'f-shop' ),
+						'help'  => '',
+						'value' => fs_option( 'fs_multi_language_support' )
+					),
 
 
 				)

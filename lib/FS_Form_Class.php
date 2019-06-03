@@ -80,24 +80,92 @@ class FS_Form_Class {
 		) );
 		$label_after = $args['required'] ? ' <i>*</i>' : '';
 
-		if ( in_array( $type, $this->registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
-			if ( ( $args['label'] || $args['help'] ) && $args['label_position'] == 'before' ) {
-				echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
-				if ( $args['help'] ) {
-					echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
-				}
-				echo '</label>';
-			}
-			include FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
+		$multi_lang = false;
+		$screen     = get_current_screen();
 
-			if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
+		if ( fs_option( 'fs_multi_language_support' )
+		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
+		     && ( ! in_array( $type, [ 'image' ] ) )
+		     && $screen->id == 'edit-catalog'
+		) {
+			$multi_lang = true;
+		}
 
-				echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
-				if ( $args['help'] ) {
-					echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
-				}
-				echo '</label>';
+
+		if ( $multi_lang ) {
+			echo '<div class="fs-tabs nav-tab-wrapper">';
+			echo '<div class="fs-tabs__header">';
+			$count = 0;
+			foreach ( FS_Config::get_languages() as $key => $language ) {
+				$tab_class = ! $count ? 'nav-tab-active' : '';
+				echo '<a href="#fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '" class="fs-tabs__title nav-tab ' . esc_attr( $tab_class ) . '">' . esc_html( $language['name'] ) . '</a>';
+				$count ++;
 			}
+			echo '</div><!! end .fs-tabs__header !!>';
+		}
+
+		if ( $multi_lang ) {
+			$count = 0;
+			foreach ( FS_Config::get_languages() as $key => $item ) {
+				$tab_class  = ! $count ? 'fs-tabs__body fs-tab-active' : 'fs-tabs__body';
+				$base_name  = $name;
+				$base_id    = $args['id'];
+				$args['id'] = $args['id'] . '-' . $key;
+
+				echo '<div class="' . esc_attr( $tab_class ) . '" id="fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '">';
+				$name                                 = $item['locale'] != FS_Config::default_language() ? $name . '__' . $item['locale'] : $name;
+				$args['value']                        = $screen->id == 'edit-catalog' ? get_term_meta( intval( $_GET['tag_ID'] ), $name, 1 ) : '';
+				$args['editor_args']['textarea_name'] = $name;
+
+				if ( in_array( $type, $this->registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
+					if ( ( $args['label'] || $args['help'] ) && $args['label_position'] == 'before' ) {
+						echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+						if ( $args['help'] ) {
+							echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
+						}
+						echo '</label>';
+					}
+					include FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
+
+					if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
+
+						echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+						if ( $args['help'] ) {
+							echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
+						}
+						echo '</label>';
+					}
+				}
+				echo '</div><!! end .fs-tabs__body !!>';
+				$count ++;
+				$name       = $base_name;
+				$args['id'] = $base_id;
+			}
+
+		} else {
+			if ( in_array( $type, $this->registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
+				if ( ( $args['label'] || $args['help'] ) && $args['label_position'] == 'before' ) {
+					echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+					if ( $args['help'] ) {
+						echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
+					}
+					echo '</label>';
+				}
+				include FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
+
+				if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
+
+					echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+					if ( $args['help'] ) {
+						echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
+					}
+					echo '</label>';
+				}
+			}
+		}
+
+		if ( $multi_lang ) {
+			echo '</div><!! end .fs-tabs !!>';
 		}
 	}
 

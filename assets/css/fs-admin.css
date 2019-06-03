@@ -1163,4 +1163,26 @@ td.fs_menu_order.column-fs_menu_order {
   overflow-y: auto;
 }
 
+.fs-tabs__header {
+  display: flex;
+  margin-bottom: 5px;
+}
+.fs-tabs__title {
+  outline: none;
+}
+.fs-tabs__title:focus {
+  outline: none;
+  box-shadow: none;
+}
+.fs-tabs__title.nav-tab-active {
+  background-color: #fff;
+  color: #444;
+}
+.fs-tabs__body {
+  display: none;
+}
+.fs-tabs__body.fs-tab-active {
+  display: block;
+}
+
 /*# sourceMappingURL=fs-admin.css.map */
