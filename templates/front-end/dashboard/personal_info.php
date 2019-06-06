@@ -86,7 +86,7 @@
                     </div>
 
                 </fieldset>
-                <button type="submit" class="btn btn-lg btn-primary"><?php esc_html_e( 'Save' ) ?></button>
+                <button type="submit" class="btn btn-lg btn-primary bts bts-lg"><?php esc_html_e( 'Save' ) ?></button>
 				<?php echo FS\FS_Form_Class::form_close(); ?>
             </div>
             <div class="tab-pane fade" id="fs-dashboard-sub-tab-2" role="tabpanel">
@@ -107,7 +107,7 @@
                     </div>
 
                 </fieldset>
-                <button type="submit" class="btn btn-lg btn-primary"><?php esc_html_e( 'Save' ) ?></button>
+                <button type="submit" class="btn btn-lg btn-primary bts bts-lg"><?php esc_html_e( 'Save' ) ?></button>
 				<?php echo FS\FS_Form_Class::form_close(); ?>
             </div>
             <div class="tab-pane fade" id="fs-dashboard-sub-tab-3" role="tabpanel">
@@ -137,7 +137,7 @@
 							] ) ?></div>
                     </div>
                 </fieldset>
-                <button type="submit" class="btn btn-lg btn-primary"><?php esc_html_e( 'Save' ) ?></button>
+                <button type="submit" class="btn btn-lg btn-primary bts bts-lg"><?php esc_html_e( 'Save' ) ?></button>
 				<?php echo FS\FS_Form_Class::form_close(); ?>
             </div>
             <div class="tab-pane fade" id="fs-dashboard-sub-tab-4" role="tabpanel">
@@ -160,7 +160,7 @@
 							] ) ?></div>
                     </div>
                 </fieldset>
-                <button type="submit" class="btn btn-lg btn-primary"><?php esc_html_e( 'Save' ) ?></button>
+                <button type="submit" class="btn btn-lg btn-primary bts bts-lg"><?php esc_html_e( 'Save' ) ?></button>
 				<?php echo FS\FS_Form_Class::form_close(); ?>
             </div>
         </div>

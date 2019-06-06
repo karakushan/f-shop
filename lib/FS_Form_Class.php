@@ -81,7 +81,7 @@ class FS_Form_Class {
 		$label_after = $args['required'] ? ' <i>*</i>' : '';
 
 		$multi_lang = false;
-		$screen     = get_current_screen();
+		$screen     = is_admin() && \get_current_screen() ? \get_current_screen() : null;
 
 		if ( fs_option( 'fs_multi_language_support' )
 		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
@@ -185,7 +185,7 @@ class FS_Form_Class {
 			? $fields[ $field_name ]
 			: array();
 
-		$value = $field['value']
+		$value = !empty($field['value'])
 			? $field['value']
 			: get_user_meta( $user_id, $field_name, 1 );
 

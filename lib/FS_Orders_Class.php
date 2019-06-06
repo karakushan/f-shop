@@ -265,7 +265,10 @@ Good luck!', 'f-shop' );
 		$meta       = new \stdClass();
 		if ( $order_meta ) {
 			foreach ( $order_meta as $key => $item ) {
-				if ( count( $item ) == 1 && unserialize( array_shift( $item ) ) === false ) {
+
+				$unserialize = @unserialize( array_shift( $item ) );
+
+				if ( count( $item ) == 1 && $unserialize === false ) {
 					$meta->{$key} = get_post_meta( $order_id, $key, 1 );
 				} else {
 					$meta->{$key} = get_post_meta( $order_id, $key, 0 )[0];
@@ -289,7 +292,7 @@ Good luck!', 'f-shop' );
 
 		$user_id = $user_id ? $user_id : get_current_user_id();
 
-		$args    = wp_parse_args( $args, array(
+		$args = wp_parse_args( $args, array(
 			'post_type'   => FS_Config::get_data( 'post_type_orders' ),
 			'post_status' => $status,
 			'meta_key'    => '_user_id',
