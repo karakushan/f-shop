@@ -71,7 +71,7 @@ class FS_Cart_Class {
 		$product_class = new FS_Product_Class();
 		$attr          = ! empty( $_POST['attr'] ) ? $_POST['attr'] : array();
 		$product_id    = intval( $_POST['post_id'] );
-		$variation     = intval( $_POST['variation'] );
+		$variation     = ! empty( $_POST['variation'] ) ? intval( $_POST['variation'] ) : null;
 		$count         = intval( $_POST['count'] );
 		$variations    = $product_class->get_product_variations( $product_id, false );
 		$is_variated   = count( $variations ) ? true : false;
