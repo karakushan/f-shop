@@ -59,7 +59,7 @@ class FS_Action_Class {
 		/* рейтинг товара */
 		add_action( 'fs_product_rating', array( $fs_product, 'product_rating' ), 10, 2 );
 		/* Табы в товаре */
-		add_action( 'fs_product_tabs', array( $fs_product, 'product_tabs' ), 10, 2 );
+		add_action( 'fs_product_tabs', array('FS\FS_Product_Class', 'product_tabs' ), 10, 2 );
 
 		//===== FILTERS =====
 		/* выводит select для сортировки по параметрам (обычно применяется в каталоге или на страницах категорий) */
