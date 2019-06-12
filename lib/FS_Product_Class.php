@@ -293,7 +293,7 @@ class FS_Product_Class {
 	 */
 	function the_sku( $format = '%s' ) {
 		if ( $this->get_sku( $this->id, $this->variation ) ) {
-			printf( $format, esc_html( $this->get_sku() ) );
+			printf( '<span data-fs-element="sku" class="fs-sku">' . $format . '</span>', esc_html( $this->get_sku() ) );
 		}
 	}
 

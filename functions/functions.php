@@ -1115,7 +1115,7 @@ function fs_cart_quantity( $item_id, $value, $args = array() ) {
 	$args  = wp_parse_args( $args, array(
 		'wrapper'       => 'div',
 		'refresh'       => true,
-		'wrapper_class' => 'fs-qty-wrapper',
+		'wrapper_class' => 'fs-qty-wrap',
 		'position'      => '%minus% %input% %pluss%  ',
 		'pluss'         => array( 'class' => sanitize_html_class( 'fs-pluss' ), 'content' => '+' ),
 		'minus'         => array( 'class' => sanitize_html_class( 'fs-minus' ), 'content' => '-' ),
