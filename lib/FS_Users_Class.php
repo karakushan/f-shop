@@ -812,7 +812,7 @@ class FS_Users_Class {
 				'content'   => null,
 				'link'      => true,
 				'link_href' => wp_logout_url( $_SERVER['REQUEST_URI'] ),
-				'nav_class' => '',
+				'nav_class' => 'nav-item nav-link',
 				'tab_class' => 'tab-pane fade'
 			)
 		);
