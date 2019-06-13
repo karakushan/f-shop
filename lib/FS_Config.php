@@ -141,7 +141,7 @@ class FS_Config {
 				'option'  => 'page_order_detail'
 			),
 			'lostpassword' => array(
-				'title'   => __( 'Information about order', 'f-shop' ),
+				'title'   => __( 'Password reset', 'f-shop' ),
 				'content' => '[fs_lostpassword]',
 				'option'  => 'page_lostpassword'
 			),
