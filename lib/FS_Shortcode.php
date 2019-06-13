@@ -65,7 +65,7 @@ class FS_Shortcode {
 	 */
 	function wishlist_shortcode( $atts ) {
 		$atts  = shortcode_atts( array(
-			'wrapper_class' => 'fs-wislist-poducts',
+			'wrapper_class' => 'fs-wislist-poducts row',
 			'empty_text'    => __( 'Wish list is empty', 'f-shop' ),
 			'template'      => 'wishlist/wishlist-product'
 		), $atts );
