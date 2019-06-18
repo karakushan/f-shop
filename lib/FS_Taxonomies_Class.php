@@ -34,7 +34,7 @@ class FS_Taxonomies_Class {
 		}
 		$meta_key   = get_locale() == FS_Config::default_language() ? '_seo_title' : '_seo_title__' . get_locale();
 		$meta_title = get_term_meta( get_queried_object_id(), $meta_key, 1 );
-		$title      = $meta_title ? $meta_title : $title['title'];
+		$title      = $meta_title ? $meta_title : $title;
 
 		return $title;
 	}

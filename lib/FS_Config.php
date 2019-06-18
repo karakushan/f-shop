@@ -386,13 +386,6 @@ class FS_Config {
 
 
 	/**
-	 * @return array
-	 */
-	public static function getFormFields() {
-		return self::$form_fields;
-	}
-
-	/**
 	 * Registration of additional taxonomy fields
 	 *
 	 * @return array
