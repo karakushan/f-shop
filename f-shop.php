@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /* Основные константы для упрощения режим разработки, сокращения написания путей и пр. */
-define( 'FS_DEBUG', true );
+define( 'FS_DEBUG', false );
 define( 'FS_PLUGIN_VER', '1.2' ); // версия плагина
 define( 'FS_PLUGIN_PREFIX', 'fs_' ); // префикс файлов
 define( 'FS_PLUGIN_NAME', 'f-shop' ); // название плагина
@@ -55,7 +55,6 @@ $GLOBALS['fs_error'] = new WP_Error();
 if ( class_exists( '\FS\FS_Init' ) ) {
 	$GLOBALS['f_shop'] = new \FS\FS_Init;
 }
-
 
 
 // Добавляем команды WP CLI
