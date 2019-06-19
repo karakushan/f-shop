@@ -1099,6 +1099,7 @@ td.fs_photo.column-fs_photo img {
   position: relative;
   border-radius: 3px;
   letter-spacing: 0.05em;
+  margin-top: 10px;
 }
 .fs-checkout-form label.error:before {
   content: "";

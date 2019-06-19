@@ -213,6 +213,7 @@ class FS_Users_Class {
 				'first_option' => __( "Choose delivery method", 'f-shop' ),
 				'taxonomy'     => FS_Config::get_data( 'product_del_taxonomy' ),
 				'icon'         => true,
+				'title'       => __( 'Choose shipping method', 'f-shop' ),
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -227,6 +228,7 @@ class FS_Users_Class {
 				'first_option' => __( "Choose a payment method", 'f-shop' ),
 				'taxonomy'     => FS_Config::get_data( 'product_pay_taxonomy' ),
 				'icon'         => true,
+				'title'       => __( 'Select a Payment Method', 'f-shop' ),
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
 					'fields'     => 'id=>name',
