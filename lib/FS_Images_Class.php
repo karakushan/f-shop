@@ -12,11 +12,13 @@ class FS_Images_Class {
 	/**
 	 * @param int $product_id
 	 *
+	 * @param array $args
+	 *
 	 * @return bool|string
 	 */
-	public function list_gallery( $product_id = 0 ) {
+	public function list_gallery( $product_id = 0, $args = array() ) {
 		$product_id = fs_get_product_id( $product_id );
-		$gallery    = $this->gallery_images_url( $product_id, true, 'full' );
+		$gallery    = $this->gallery_images_url( $product_id, $args );
 		$images_n   = '';
 		$alt        = get_the_title( $product_id );
 
@@ -38,12 +40,17 @@ class FS_Images_Class {
 	 */
 	public function lightslider( $post_id = 0, $args = array() ) {
 		$default = array(
-			"gallery"   => true,
-			"item"      => 1,
-			"vertical"  => false,
-			"thumbItem" => 3,
-			"prevHtml"  => '',
-			"nextHtml"  => ''
+			"gallery"      => true,
+			"item"         => 1,
+			"vertical"     => false,
+			"thumbItem"    => 3,
+			"prevHtml"     => '',
+			"nextHtml"     => '',
+			"gallery_args" => array(
+				"attachments" => false,
+				"thumbnail"   => true,
+
+			)
 		);
 		$args    = wp_parse_args( $args, $default );
 		echo "<script>";
@@ -51,7 +58,7 @@ class FS_Images_Class {
 		echo "</script>";
 		echo "<div id=\"fs-product-slider-wrapper\">";
 		echo "<ul id=\"product_slider\">";
-		echo $this->list_gallery( $post_id );
+		echo $this->list_gallery( $post_id, $args['gallery_args'] );
 		echo "</ul>";
 		echo "</div>";
 	}
@@ -63,16 +70,35 @@ class FS_Images_Class {
 	 *
 	 * @param bool $thumbnail
 	 *
-	 * @return mixed
+	 * @return array $gallery
 	 */
-	public function get_gallery( $product_id = 0, $thumbnail = true ) {
-		$product_id = fs_get_product_id( $product_id );
+	public function get_gallery( $product_id = 0, $thumbnail = true, $attachments = false ) {
+		$product_id   = fs_get_product_id( $product_id );
+		$thumbnail_id = get_post_thumbnail_id( $product_id );
 
 		// Получаем галерею из мета поля
 		$gallery = get_post_meta( $product_id, FS_Config::get_meta( 'gallery' ), false );
 		$gallery = ! empty( $gallery ) && is_array( $gallery ) ? array_shift( $gallery ) : array();
 
-		// получаем изображения первой вариации товара
+		// Добавляем миниатюру первым фото в галерее при условии что $thumbnail == TRUE и прикреплена сама миниатюра
+		if ( $thumbnail && $thumbnail_id ) {
+			array_push( $gallery, $thumbnail_id );
+		}
+
+		// Получаем изображения из вложений
+		$attachments_ids = get_posts( array(
+			'post_type'      => 'attachment',
+			'posts_per_page' => - 1,
+			'post_parent'    => $product_id,
+			'fields'         => 'ids'
+		) );
+
+
+		if ( $attachments && count( $attachments_ids ) ) {
+			$gallery = $gallery + $attachments_ids;
+		}
+
+		// Получаем изображения первой вариации товара
 		if ( fs_is_variated( $product_id ) ) {
 			$product_class      = new FS_Product_Class();
 			$product_variations = $product_class->get_product_variations( $product_id );
@@ -83,17 +109,12 @@ class FS_Images_Class {
 			}
 		}
 
-
-		$gallery = apply_filters( 'fs_custom_gallery', $gallery, $product_id );
-
-		if ( ! $gallery ) {
-			$gallery = [];
-		}
-		if ( has_post_thumbnail( $product_id ) && $thumbnail ) {
-			array_unshift( $gallery, get_post_thumbnail_id( $product_id ) );
+		// Извлекаем миниатюру поста если $thumbnail == FALSE
+		if ( has_post_thumbnail( $product_id ) && ! $thumbnail ) {
+			array_unshift( $gallery, $thumbnail_id );
 		}
 
-		return array_unique( $gallery );
+		return apply_filters( 'fs_custom_gallery', array_unique( $gallery ), $product_id );
 
 	}
 
@@ -106,17 +127,28 @@ class FS_Images_Class {
 	 *
 	 * @return array          список id вложений в массиве
 	 */
-	public function gallery_images_url( $product_id = 0, $thumbnail = true, $size = 'full' ) {
-		$product_id     = fs_get_product_id( $product_id );
-		$gallery        = $this->get_gallery( $product_id, $thumbnail );
+	public function gallery_images_url( $product_id = 0, $args = array() ) {
+		$product_id = fs_get_product_id( $product_id );
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'thumbnail'   => true,
+				'size'        => 'full',
+				'attachments' => false
+			)
+		);
+
+		$gallery = $this->get_gallery( $product_id, $args['thumbnail'], $args['attachments'] );
+
 		$gallery_images = [];
 		if ( $gallery ) {
 			foreach ( $gallery as $key => $image ) {
-				$gallery_images[ $image ] = wp_get_attachment_image_url( $image, $size );
+				$gallery_images[ $image ] = wp_get_attachment_image_url( $image, $args['size'] );
 			}
 		}
 
-		return apply_filters( 'fs_galery_images', $gallery_images, $product_id );
+		return apply_filters( 'fs_gallery_images_url', $gallery_images, $product_id );
 	}
 
 

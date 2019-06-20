@@ -108,10 +108,10 @@ function fs_lightslider( $post_id = 0, $args = array() ) {
  *
  * @return array
  */
-function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
+function fs_get_slider_images( $post_id = 0, $args = array() ) {
 	$post_id = fs_get_product_id( $post_id );
 	$gallery = new FS\FS_Images_Class();
-	$images  = $gallery->gallery_images_url( $post_id, $thumbnail );
+	$images  = $gallery->gallery_images_url( $post_id, $args );
 
 	return $images;
 }
@@ -122,12 +122,11 @@ function fs_get_slider_images( $post_id = 0, $thumbnail = true ) {
  * @param int $product_id
  * @param bool $thumbnail
  *
- * @return mixed
+ * @return array $images
  */
-function fs_get_gallery( $product_id = 0, $thumbnail = true ) {
-	$product_id = fs_get_product_id( $product_id );
-	$gallery    = new FS\FS_Images_Class();
-	$images     = $gallery->get_gallery( $product_id, $thumbnail );
+function fs_get_gallery( $product_id = 0, $thumbnail = true, $attachments = false ) {
+	$gallery = new FS\FS_Images_Class();
+	$images  = $gallery->get_gallery( $product_id, $thumbnail, $attachments );
 
 	return $images;
 }
@@ -1621,43 +1620,12 @@ function fs_get_type_price( $product_id = 0, $price_type = 'price' ) {
  *
  * @return array
  */
-function fs_gallery_images_url( $product_id = 0, $size = 'full' ) {
-	global $post;
-	$product_id     = empty( $product_id ) ? $post->ID : $product_id;
-	$gallery        = new \FS\FS_Images_Class;
-	$gallery_images = $gallery->gallery_images_url( $product_id );
-	$images         = array();
-	if ( is_array( $gallery_images ) ) {
-		foreach ( $gallery_images as $key => $gallery_image ) {
-			$images[] = wp_get_attachment_url( $gallery_image, $size );
-		}
-	}
+function fs_gallery_images_url( $product_id = 0, $args = array() ) {
 
-	return $images;
-}
+	$product_id = fs_get_product_id( $product_id );
+	$gallery    = new \FS\FS_Images_Class;
 
-
-/**
- * We receive full images of the gallery of goods
- *
- * @param int|integer $product_id
- * @param string $size thumbnail size
- *
- * @return array list of images in an array
- */
-function fs_gallery_images( $product_id = 0, $size = 'full' ) {
-	global $post;
-	$product_id     = empty( $product_id ) ? $post->ID : $product_id;
-	$gallery        = new \FS\FS_Images_Class;
-	$gallery_images = $gallery->gallery_images_url( $product_id );
-	$images         = array();
-	if ( is_array( $gallery_images ) ) {
-		foreach ( $gallery_images as $key => $gallery_image ) {
-			$images[] = wp_get_attachment_image( $gallery_image, $size );
-		}
-	}
-
-	return $images;
+	return $gallery->gallery_images_url( $product_id, $args );
 }
 
 /**
