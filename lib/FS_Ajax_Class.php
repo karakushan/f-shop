@@ -296,6 +296,7 @@ class FS_Ajax_Class {
 			// ищем совпадения варианов в присланными значениями
 			if ( fs_in_array_multi( $atts, $variant_atts ) ) {
 				$matched_options[ $k ] = array(
+					'variation'    => $k,
 					'price'        => $variant['price'],
 					'action_price' => $variant['action_price']
 				);

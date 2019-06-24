@@ -257,6 +257,15 @@
             return;
         }
 
+        if (el.attr("data-disabled") == 'true') {
+            iziToast.warning({
+                position: "topCenter",
+                title: fShop.getLang('error'),
+                message: el.attr("data-disabled-message"),
+            });
+            return;
+        }
+
         // подтягиваем атрибуты товаров
         var attr = {};
         jQuery('[data-fs-element="attr"]').each(function () {
@@ -413,8 +422,19 @@
             success: function (result) {
                 console.log(result);
                 if (result.success) {
+                    let price = Number(result.data.options.price);
+                    let pricePromo = Number(result.data.options.action_price);
+                    console.log(price, pricePromo);
+
+                    if (pricePromo && pricePromo < price) {
+                        price = pricePromo;
+                    }
+
                     cartbutton.attr("data-disabled", false);
+                    cartbutton.attr("data-variation", result.data.options.variation);
+                    cartbutton.attr("data-price", price);
                     cartbutton.removeAttr("data-disabled-message");
+
                     if (result.data.active) {
                         // устанавливаем опции в селектах в актив
                         for (var key in result.data.active) {
@@ -465,7 +485,10 @@
                     $("[data-fs-element=\"attr\"] option").each(function (index, value) {
                         $(this).prop("selected", false);
                     });
-                    alert(result.data.msg);
+                    iziToast.warning({
+                        title: fShop.getLang('error'),
+                        message: result.data.msg,
+                    });
                 }
             }
         });
