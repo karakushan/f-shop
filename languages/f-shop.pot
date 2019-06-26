@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-06 07:39+0000\n"
+"POT-Creation-Date: 2019-06-26 10:52+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -73,9 +73,9 @@ msgstr ""
 msgid "Template file not found"
 msgstr ""
 
-#: lib/FS_Users_Class.php:73 lib/FS_Users_Class.php:287
-#: lib/FS_Users_Class.php:321 lib/FS_Users_Class.php:472
-#: lib/FS_Ajax_Class.php:121 lib/FS_Ajax_Class.php:394
+#: lib/FS_Users_Class.php:73 lib/FS_Users_Class.php:289
+#: lib/FS_Users_Class.php:323 lib/FS_Users_Class.php:474
+#: lib/FS_Ajax_Class.php:121 lib/FS_Ajax_Class.php:395
 msgid "Failed verification of nonce form"
 msgstr ""
 
@@ -181,95 +181,103 @@ msgstr ""
 msgid "Choose delivery method"
 msgstr ""
 
-#: lib/FS_Users_Class.php:227
+#: lib/FS_Users_Class.php:216
+msgid "Choose shipping method"
+msgstr ""
+
+#: lib/FS_Users_Class.php:228
 msgid "Choose a payment method"
 msgstr ""
 
-#: lib/FS_Users_Class.php:242 templates/front-end/mail/themes/oxygen.php:436
+#: lib/FS_Users_Class.php:231
+msgid "Select a Payment Method"
+msgstr ""
+
+#: lib/FS_Users_Class.php:244 templates/front-end/mail/themes/oxygen.php:436
 msgid "Comment"
 msgstr ""
 
-#: lib/FS_Users_Class.php:247
+#: lib/FS_Users_Class.php:249
 msgid "Register on the site"
 msgstr ""
 
-#: lib/FS_Users_Class.php:254
+#: lib/FS_Users_Class.php:256
 msgid "Receive site news"
 msgstr ""
 
-#: lib/FS_Users_Class.php:260
+#: lib/FS_Users_Class.php:262
 msgid "Receive a message about goods left in the basket"
 msgstr ""
 
-#: lib/FS_Users_Class.php:293
+#: lib/FS_Users_Class.php:295
 msgid "This user does not exist on the site"
 msgstr ""
 
-#: lib/FS_Users_Class.php:297
+#: lib/FS_Users_Class.php:299
 msgid "You are already logged in"
-msgstr ""
-
-#: lib/FS_Users_Class.php:306
-#, php-format
-msgid "You or someone else initiated a password reset on the site %s"
-msgstr ""
-
-#: lib/FS_Users_Class.php:307
-#, php-format
-msgid "New password: %s"
 msgstr ""
 
 #: lib/FS_Users_Class.php:308
 #, php-format
-msgid "If it was not you tell the site administrator на e-mail: %s"
+msgid "You or someone else initiated a password reset on the site %s"
+msgstr ""
+
+#: lib/FS_Users_Class.php:309
+#, php-format
+msgid "New password: %s"
 msgstr ""
 
 #: lib/FS_Users_Class.php:310
+#, php-format
+msgid "If it was not you tell the site administrator на e-mail: %s"
+msgstr ""
+
+#: lib/FS_Users_Class.php:312
 msgid "Password reset on the site"
 msgstr ""
 
-#: lib/FS_Users_Class.php:334
+#: lib/FS_Users_Class.php:336
 msgid "No fields found to save user data"
 msgstr ""
 
-#: lib/FS_Users_Class.php:339
+#: lib/FS_Users_Class.php:341
 msgid "User is not found"
 msgstr ""
 
-#: lib/FS_Users_Class.php:385
+#: lib/FS_Users_Class.php:387
 msgid "Your data has been successfully updated."
 msgstr ""
 
-#: lib/FS_Users_Class.php:511
+#: lib/FS_Users_Class.php:513
 msgid "\">Log in</a>"
 msgstr ""
 
-#: lib/FS_Users_Class.php:609 lib/FS_Users_Class.php:639
-#: lib/FS_Users_Class.php:669
+#: lib/FS_Users_Class.php:611 lib/FS_Users_Class.php:641
+#: lib/FS_Users_Class.php:671
 msgid "Вы уже вошли на сайт."
 msgstr ""
 
-#: lib/FS_Users_Class.php:764
+#: lib/FS_Users_Class.php:766
 msgid "Personal information"
 msgstr ""
 
-#: lib/FS_Users_Class.php:775
+#: lib/FS_Users_Class.php:777
 msgid "Current orders"
 msgstr ""
 
-#: lib/FS_Users_Class.php:786
+#: lib/FS_Users_Class.php:788
 msgid "Purchase history"
 msgstr ""
 
-#: lib/FS_Users_Class.php:797
+#: lib/FS_Users_Class.php:799
 msgid "WishList"
 msgstr ""
 
-#: lib/FS_Users_Class.php:804 lib/FS_Product_Class.php:573
+#: lib/FS_Users_Class.php:806 lib/FS_Product_Class.php:576
 msgid "Reviews"
 msgstr ""
 
-#: lib/FS_Users_Class.php:811
+#: lib/FS_Users_Class.php:813
 msgid "Logout"
 msgstr ""
 
@@ -472,38 +480,54 @@ msgid ""
 msgstr ""
 
 #: lib/FS_Settings_Class.php:235
+msgid "What type of basket to show"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:237
+msgid "Modal window"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:238
+msgid "Appears from the side"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:239
+msgid "Turn off the appearance of the basket"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:246
 msgid "Letters"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:240
+#: lib/FS_Settings_Class.php:251
 msgid "Recipients of letters"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:241
+#: lib/FS_Settings_Class.php:252
 msgid "You can specify multiple recipients separated by commas."
 msgstr ""
 
-#: lib/FS_Settings_Class.php:247
+#: lib/FS_Settings_Class.php:258
 msgid "Letter Logo"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:253
+#: lib/FS_Settings_Class.php:264
 msgid "Email sender"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:259
+#: lib/FS_Settings_Class.php:270
 msgid "Name of the sender of letters"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:265
+#: lib/FS_Settings_Class.php:276
 msgid "The title of the letter to the customer"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:271
+#: lib/FS_Settings_Class.php:282
 msgid "The text of the letter to the customer after sending the order"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:272
+#: lib/FS_Settings_Class.php:283
 #, php-format
 msgid ""
 "<h3 style=\"text-align: center;\">Thank you for your purchase.</h3>\n"
@@ -513,20 +537,20 @@ msgid ""
 "Your phone number.</p>"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:279
+#: lib/FS_Settings_Class.php:290
 msgid "The text of the letter to the administrator after sending the order"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:280
+#: lib/FS_Settings_Class.php:291
 msgid ""
 "<h3 style=\"text-align: center;\">On the site a new order #%order_id%</h3>"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:285
+#: lib/FS_Settings_Class.php:296
 msgid "The text at the bottom of the letter"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:286
+#: lib/FS_Settings_Class.php:297
 #, php-format
 msgid ""
 "<p style=\"text-align: center;\">Online store \"%s\" is functioning thanks "
@@ -534,101 +558,101 @@ msgid ""
 "rel=\"noopener\">F-Shop.</a></p>"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:293
+#: lib/FS_Settings_Class.php:304
 msgid "Service pages"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:294
+#: lib/FS_Settings_Class.php:305
 msgid ""
 "Service pages are created and installed automatically when the plugin is "
 "activated. Can you also override them here"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:299
+#: lib/FS_Settings_Class.php:310
 msgid "Cart page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:305
+#: lib/FS_Settings_Class.php:316
 msgid "Checkout Page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:311
+#: lib/FS_Settings_Class.php:322
 msgid "Payment page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:317
+#: lib/FS_Settings_Class.php:328
 msgid "Successful ordering page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:323
+#: lib/FS_Settings_Class.php:334
 msgid "Wish List Page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:329
+#: lib/FS_Settings_Class.php:340
 msgid "Personal account page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:335
+#: lib/FS_Settings_Class.php:346
 msgid "Login page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:341
+#: lib/FS_Settings_Class.php:352
 msgid "Register page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:347 templates/front-end/auth/login.php:20
+#: lib/FS_Settings_Class.php:358 templates/front-end/auth/login.php:20
 msgid "Forgot your password?"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:353
+#: lib/FS_Settings_Class.php:364
 msgid "Order Information Page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:361
+#: lib/FS_Settings_Class.php:372
 msgid "Экспорт товаров"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:362
+#: lib/FS_Settings_Class.php:373
 #, php-format
 msgid ""
 "Link to product feed in YML format: <a href=\"%s\" target=\"_blank\">%s</a> "
 "or <a href=\"%s\" target=\"_blank\">%s</a>"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:367
+#: lib/FS_Settings_Class.php:378
 msgid "Export to the site"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:369
+#: lib/FS_Settings_Class.php:380
 msgid "Розетка"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:370
+#: lib/FS_Settings_Class.php:381
 msgid "Prom.ua"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:382
+#: lib/FS_Settings_Class.php:393
 msgid "Debugging"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:383
+#: lib/FS_Settings_Class.php:394
 msgid "The debug data is displayed here as text."
 msgstr ""
 
-#: lib/FS_Settings_Class.php:388
+#: lib/FS_Settings_Class.php:399
 msgid "Sessions"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:414
+#: lib/FS_Settings_Class.php:425
 msgid "Default currency"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:426
+#: lib/FS_Settings_Class.php:437
 msgid "Determine your store settings."
 msgstr ""
 
-#: lib/FS_Settings_Class.php:437 lib/FS_Settings_Class.php:438
-#: lib/FS_Settings_Class.php:450
+#: lib/FS_Settings_Class.php:448 lib/FS_Settings_Class.php:449
+#: lib/FS_Settings_Class.php:461
 msgid "Store settings"
 msgstr ""
 
@@ -723,12 +747,13 @@ msgstr ""
 msgid "Client"
 msgstr ""
 
-#: lib/FS_Config.php:99
+#: lib/FS_Config.php:99 templates/front-end/cart-widget/side-cart.php:2
 msgid "Basket"
 msgstr ""
 
-#: lib/FS_Config.php:104 lib/FS_Init.php:174
+#: lib/FS_Config.php:104 lib/FS_Init.php:176
 #: templates/front-end/cart/list-products.php:85
+#: templates/front-end/cart-widget/side-cart.php:36
 msgid "Checkout"
 msgstr ""
 
@@ -756,9 +781,12 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: lib/FS_Config.php:139 lib/FS_Config.php:144
-#: templates/front-end/mail/themes/oxygen.php:398
+#: lib/FS_Config.php:139 templates/front-end/mail/themes/oxygen.php:398
 msgid "Information about order"
+msgstr ""
+
+#: lib/FS_Config.php:144
+msgid "Password reset"
 msgstr ""
 
 #: lib/FS_Config.php:163
@@ -807,7 +835,7 @@ msgstr ""
 msgid "Variation"
 msgstr ""
 
-#: lib/FS_Config.php:217 lib/FS_Product_Class.php:569
+#: lib/FS_Config.php:217 lib/FS_Product_Class.php:572
 #: templates/front-end/mail/themes/oxygen.php:429
 msgid "Shipping and payment"
 msgstr ""
@@ -936,40 +964,40 @@ msgid ""
 "href=\"https://f-shop.top/novosti/\">News</a>.</p>"
 msgstr ""
 
-#: lib/FS_Config.php:404
+#: lib/FS_Config.php:397
 msgid "Category text"
 msgstr ""
 
-#: lib/FS_Config.php:409
+#: lib/FS_Config.php:402
 msgid "SEO title"
 msgstr ""
 
-#: lib/FS_Config.php:414
+#: lib/FS_Config.php:407
 msgid "SEO description"
 msgstr ""
 
-#: lib/FS_Config.php:419 lib/FS_Config.php:438 lib/FS_Config.php:469
-#: lib/FS_Config.php:517
+#: lib/FS_Config.php:412 lib/FS_Config.php:431 lib/FS_Config.php:462
+#: lib/FS_Config.php:510
 msgid "Thumbnail"
 msgstr ""
 
-#: lib/FS_Config.php:424
+#: lib/FS_Config.php:417
 msgid "Icon"
 msgstr ""
 
-#: lib/FS_Config.php:429
+#: lib/FS_Config.php:422
 msgid "Total discount for category products (in percent)"
 msgstr ""
 
-#: lib/FS_Config.php:431
+#: lib/FS_Config.php:424
 msgid "Enter a number without a percent sign"
 msgstr ""
 
-#: lib/FS_Config.php:443
+#: lib/FS_Config.php:436
 msgid "E-mail message to the buyer if the order is confirmed by the manager"
 msgstr ""
 
-#: lib/FS_Config.php:444
+#: lib/FS_Config.php:437
 msgid ""
 "This message is sent to the buyer at the time the manager confirms the order."
 " You can use meta data of type: <code>%order_id%</code> - order number, "
@@ -977,118 +1005,118 @@ msgid ""
 "- payment reference ."
 msgstr ""
 
-#: lib/FS_Config.php:449
+#: lib/FS_Config.php:442
 msgid "Message to the buyer after payment on the site"
 msgstr ""
 
-#: lib/FS_Config.php:450
+#: lib/FS_Config.php:443
 msgid ""
 "This message will be shown if the buyer has successfully paid the order. You "
 "can use these variables: <code>%order_id%</code> - order number, <code>"
 "%pay_name%</code> - name of the payment method"
 msgstr ""
 
-#: lib/FS_Config.php:455
+#: lib/FS_Config.php:448
 msgid "Unavailable for payment"
 msgstr ""
 
-#: lib/FS_Config.php:456
+#: lib/FS_Config.php:449
 msgid ""
 "If you turn off, then the payment method will not be visible to users, only "
 "in the admin panel."
 msgstr ""
 
-#: lib/FS_Config.php:461
+#: lib/FS_Config.php:454
 msgid ""
 "When choosing this method, send the buyer immediately to the payment page"
 msgstr ""
 
-#: lib/FS_Config.php:462
+#: lib/FS_Config.php:455
 msgid ""
 "This is convenient in some cases, but it is better to leave this option off"
 msgstr ""
 
-#: lib/FS_Config.php:474
+#: lib/FS_Config.php:467
 msgid "Shipping Cost in Base Currency"
 msgstr ""
 
-#: lib/FS_Config.php:479
+#: lib/FS_Config.php:472
 msgid "Include address fields when choosing this method"
 msgstr ""
 
-#: lib/FS_Config.php:486
+#: lib/FS_Config.php:479
 msgid "International currency code"
 msgstr ""
 
-#: lib/FS_Config.php:491
+#: lib/FS_Config.php:484
 msgid "Cost in base currency"
 msgstr ""
 
-#: lib/FS_Config.php:496
+#: lib/FS_Config.php:489
 msgid "Display on the site"
 msgstr ""
 
-#: lib/FS_Config.php:501
+#: lib/FS_Config.php:494
 msgid "Currency Language (locale)"
 msgstr ""
 
-#: lib/FS_Config.php:509
+#: lib/FS_Config.php:502
 msgid "The amount or value of tax as a percentage"
 msgstr ""
 
-#: lib/FS_Config.php:525
+#: lib/FS_Config.php:518
 msgid "The discount is activated provided"
 msgstr ""
 
-#: lib/FS_Config.php:530
+#: lib/FS_Config.php:523
 msgid "The total amount of goods in the cart"
 msgstr ""
 
-#: lib/FS_Config.php:531
+#: lib/FS_Config.php:524
 msgid "Number of items in the cart"
 msgstr ""
 
-#: lib/FS_Config.php:536
+#: lib/FS_Config.php:529
 msgid "Discount condition"
 msgstr ""
 
-#: lib/FS_Config.php:540
+#: lib/FS_Config.php:533
 msgid "More or equal"
 msgstr ""
 
-#: lib/FS_Config.php:541
+#: lib/FS_Config.php:534
 msgid "More"
 msgstr ""
 
-#: lib/FS_Config.php:542
+#: lib/FS_Config.php:535
 msgid "Less"
 msgstr ""
 
-#: lib/FS_Config.php:543
+#: lib/FS_Config.php:536
 msgid "Less or equal"
 msgstr ""
 
-#: lib/FS_Config.php:548
+#: lib/FS_Config.php:541
 msgid "Condition value"
 msgstr ""
 
-#: lib/FS_Config.php:553
+#: lib/FS_Config.php:546
 msgid "Discount amount"
 msgstr ""
 
-#: lib/FS_Config.php:883
+#: lib/FS_Config.php:876
 msgid "Английский"
 msgstr ""
 
-#: lib/FS_Config.php:887
+#: lib/FS_Config.php:880
 msgid "Русский"
 msgstr ""
 
-#: lib/FS_Config.php:891
+#: lib/FS_Config.php:884
 msgid "Украинский"
 msgstr ""
 
-#: lib/FS_Cart_Class.php:69 lib/FS_Ajax_Class.php:584 lib/FS_Ajax_Class.php:668
+#: lib/FS_Cart_Class.php:69 lib/FS_Ajax_Class.php:585 lib/FS_Ajax_Class.php:669
 msgid "Security check failed"
 msgstr ""
 
@@ -1136,27 +1164,27 @@ msgstr ""
 msgid "Возникла ошибка с отправкой письма администратору сайта!"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:291 lib/FS_Ajax_Class.php:326
+#: lib/FS_Ajax_Class.php:291 lib/FS_Ajax_Class.php:327
 msgid ""
 "Goods with such a set of characteristics are not in stock. Try changing "
 "parameters."
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:441
+#: lib/FS_Ajax_Class.php:442
 msgid "\">Forgot your password?</a>"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:545 lib/FS_Ajax_Class.php:552
+#: lib/FS_Ajax_Class.php:546 lib/FS_Ajax_Class.php:553
 #, php-format
 msgid "Order goods on the site \"%s\""
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:566
+#: lib/FS_Ajax_Class.php:567
 #, php-format
 msgid "Order #%d successfully added"
 msgstr ""
 
-#: lib/FS_Ajax_Class.php:576
+#: lib/FS_Ajax_Class.php:577
 msgid "Errors occurred while creating an order"
 msgstr ""
 
@@ -1362,31 +1390,31 @@ msgstr ""
 msgid "The order status is not defined"
 msgstr ""
 
-#: lib/FS_Init.php:164
+#: lib/FS_Init.php:166
 msgid "Success!"
 msgstr ""
 
-#: lib/FS_Init.php:165
+#: lib/FS_Init.php:167
 msgid "Error!"
 msgstr ""
 
-#: lib/FS_Init.php:166
+#: lib/FS_Init.php:168
 msgid "Your order has been successfully created. We will contact you shortly."
 msgstr ""
 
-#: lib/FS_Init.php:167
+#: lib/FS_Init.php:169
 msgid "You have selected all available items from stock."
 msgstr ""
 
-#: lib/FS_Init.php:168 lib/FS_Init.php:170
+#: lib/FS_Init.php:170 lib/FS_Init.php:172
 msgid "Item &laquo;%product%&raquo; successfully added to cart."
 msgstr ""
 
-#: lib/FS_Init.php:173
+#: lib/FS_Init.php:175 templates/front-end/cart-widget/side-cart.php:38
 msgid "To catalog"
 msgstr ""
 
-#: lib/FS_Init.php:175
+#: lib/FS_Init.php:177
 msgid ""
 "Item &laquo;%product%&raquo; successfully added to wishlist. <a "
 "href=\"%wishlist_url%\">Go to wishlist</a>"
@@ -1412,11 +1440,11 @@ msgstr ""
 msgid "Color"
 msgstr ""
 
-#: lib/FS_Product_Class.php:561
+#: lib/FS_Product_Class.php:564
 msgid "Characteristic"
 msgstr ""
 
-#: lib/FS_Product_Class.php:565
+#: lib/FS_Product_Class.php:568
 msgid "Description"
 msgstr ""
 
@@ -1462,65 +1490,65 @@ msgstr ""
 msgid "Не указан параметр $group_id в функции %s"
 msgstr ""
 
-#: functions/functions.php:627
+#: functions/functions.php:626
 #, php-format
 msgid ""
 "Are you sure you want to delete the item &laquo;%s&raquo; from the basket?"
 msgstr ""
 
-#: functions/functions.php:632
+#: functions/functions.php:631
 #, php-format
 msgid "Remove item &laquo;%s&raquo;"
 msgstr ""
 
-#: functions/functions.php:674
+#: functions/functions.php:673
 msgid "Remove from wishlist"
 msgstr ""
 
-#: functions/functions.php:815 functions/functions.php:822
+#: functions/functions.php:814 functions/functions.php:821
 msgid "Add to cart"
 msgstr ""
 
-#: functions/functions.php:886
+#: functions/functions.php:885
 #, php-format
 msgid "Item «%s» added to comparison"
 msgstr ""
 
-#: functions/functions.php:887
+#: functions/functions.php:886
 msgid "Error adding product to comparison"
 msgstr ""
 
-#: functions/functions.php:927
+#: functions/functions.php:926
 msgid "Sent"
 msgstr ""
 
-#: functions/functions.php:1283
+#: functions/functions.php:1282
 msgid "Remove all items"
 msgstr ""
 
-#: functions/functions.php:1290
+#: functions/functions.php:1289
 msgid "Are you sure you want to empty the trash?"
 msgstr ""
 
-#: functions/functions.php:1396
+#: functions/functions.php:1395
 msgid "Add to wishlist"
 msgstr ""
 
-#: functions/functions.php:1504
+#: functions/functions.php:1503
 #, php-format
 msgid "Template file %s not found in function %s"
 msgstr ""
 
-#: functions/functions.php:2079
+#: functions/functions.php:2047
 msgid "No image"
 msgstr ""
 
-#: functions/functions.php:2388
+#: functions/functions.php:2356
 #, php-format
 msgid "Showing %1$d products from %2$d"
 msgstr ""
 
-#: functions/functions.php:2731
+#: functions/functions.php:2704
 #, php-format
 msgid "File \"%s\" not found"
 msgstr ""
