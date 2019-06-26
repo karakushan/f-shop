@@ -65,6 +65,8 @@ class FS_Init {
 
 		// Подключает свои шаблоны вместо стандартных темы
 		add_filter( 'template_include', array( $this, 'custom_plugin_templates' ) );
+
+		add_action( 'wp_footer', array( $this, 'footer_plugin_code' ) );
 	} // END public function __construct
 
 
@@ -175,7 +177,8 @@ class FS_Init {
 				'addToWishlist'      => __( 'Item &laquo;%product%&raquo; successfully added to wishlist. <a href="%wishlist_url%">Go to wishlist</a>', 'f-shop' ),
 			),
 			'fs_slider_val_min' => ! empty( $_REQUEST['price_start'] ) ? (int) $_REQUEST['price_start'] : 0,
-			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : intval( $price_max )
+			'fs_slider_val_max' => ! empty( $_REQUEST['price_end'] ) ? (int) $_REQUEST['price_end'] : intval( $price_max ),
+			'fs_cart_type'      => fs_option( 'fs_cart_type', 'modal' )
 		);
 		wp_localize_script( FS_PLUGIN_PREFIX . 'main', 'FastShopData', $l10n );
 	}
@@ -328,6 +331,17 @@ class FS_Init {
 			echo json_encode( $schema );
 			echo ' </script>';
 		}
+	}
+
+	/**
+	 * Footer plugin code
+	 */
+	function footer_plugin_code() {
+		echo PHP_EOL . '<div class="fs-side-cart-wrap" data-fs-action="showCart">';
+		echo '<div data-fs-element="cart-widget" data-template="cart-widget/side-cart"></div>';
+		echo '</div>' . PHP_EOL;
+
+		return;
 	}
 
 }

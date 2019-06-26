@@ -228,182 +228,193 @@ class FS_Settings_Class {
 						'label' => __( 'Disable js event handling by the plugin', 'f-shop' ),
 						'help'  => __( 'Этот чекбокс нужно отметить если вы сами намерены обрабатывать события инициируемые плагином', 'f-shop' ),
 						'value' => fs_option( 'fs_disable_messages', 0 )
+					),
+					array(
+						'type'   => 'radio',
+						'name'   => 'fs_cart_type',
+						'label'  => __( 'What type of basket to show', 'f-shop' ),
+						'values' => array(
+							'modal' => __( 'Modal window', 'f-shop' ),
+							'side'  => __( 'Appears from the side', 'f-shop' ),
+							'disable'  => __( 'Turn off the appearance of the basket', 'f-shop' )
+						),
+						'value' => fs_option( 'fs_cart_type', 'modal' )
 					)
 				)
 			),
 			'letters'    => array(
-				'name'   => __( 'Letters', 'f-shop' ),
-				'fields' => array(
-					array(
-						'type'  => 'text',
-						'name'  => 'manager_email',
-						'label' => __( 'Recipients of letters', 'f-shop' ),
-						'help'  => __( 'You can specify multiple recipients separated by commas.', 'f-shop' ),
-						'value' => fs_option( 'manager_email', get_option( 'admin_email' ) )
-					),
-					array(
-						'type'  => 'image',
-						'name'  => 'site_logo',
-						'label' => __( 'Letter Logo', 'f-shop' ),
-						'value' => fs_option( 'site_logo' )
-					),
-					array(
-						'type'  => 'email',
-						'name'  => 'email_sender',
-						'label' => __( 'Email sender', 'f-shop' ),
-						'value' => fs_option( 'email_sender' )
-					),
-					array(
-						'type'  => 'text',
-						'name'  => 'name_sender',
-						'label' => __( 'Name of the sender of letters', 'f-shop' ),
-						'value' => fs_option( 'name_sender', get_bloginfo( 'name' ) )
-					),
-					array(
-						'type'  => 'text',
-						'name'  => 'customer_mail_header',
-						'label' => __( 'The title of the letter to the customer', 'f-shop' ),
-						'value' => fs_option( 'customer_mail_header', __( sprintf( 'Order goods on the site "%s"', get_bloginfo( 'name' ) ), 'f-shop' ) )
-					),
-					array(
-						'type'  => 'editor',
-						'name'  => 'customer_mail',
-						'label' => __( 'The text of the letter to the customer after sending the order', 'f-shop' ),
-						'value' => fs_option( 'customer_mail', __( '<h3 style="text-align: center;">Thank you for your purchase.</h3>
+			'name'   => __( 'Letters', 'f-shop' ),
+			'fields' => array(
+				array(
+					'type'  => 'text',
+					'name'  => 'manager_email',
+					'label' => __( 'Recipients of letters', 'f-shop' ),
+					'help'  => __( 'You can specify multiple recipients separated by commas.', 'f-shop' ),
+					'value' => fs_option( 'manager_email', get_option( 'admin_email' ) )
+				),
+				array(
+					'type'  => 'image',
+					'name'  => 'site_logo',
+					'label' => __( 'Letter Logo', 'f-shop' ),
+					'value' => fs_option( 'site_logo' )
+				),
+				array(
+					'type'  => 'email',
+					'name'  => 'email_sender',
+					'label' => __( 'Email sender', 'f-shop' ),
+					'value' => fs_option( 'email_sender' )
+				),
+				array(
+					'type'  => 'text',
+					'name'  => 'name_sender',
+					'label' => __( 'Name of the sender of letters', 'f-shop' ),
+					'value' => fs_option( 'name_sender', get_bloginfo( 'name' ) )
+				),
+				array(
+					'type'  => 'text',
+					'name'  => 'customer_mail_header',
+					'label' => __( 'The title of the letter to the customer', 'f-shop' ),
+					'value' => fs_option( 'customer_mail_header', __( sprintf( 'Order goods on the site "%s"', get_bloginfo( 'name' ) ), 'f-shop' ) )
+				),
+				array(
+					'type'  => 'editor',
+					'name'  => 'customer_mail',
+					'label' => __( 'The text of the letter to the customer after sending the order', 'f-shop' ),
+					'value' => fs_option( 'customer_mail', __( '<h3 style="text-align: center;">Thank you for your purchase.</h3>
 <p style="text-align: center;">Order #%order_id% created successfully. The order is considered confirmed after feedback from our operator on the specified
 Your phone number.</p>', 'f-shop' ) )
-					),
-					array(
-						'type'  => 'editor',
-						'name'  => 'admin_mail',
-						'label' => __( 'The text of the letter to the administrator after sending the order', 'f-shop' ),
-						'value' => fs_option( 'admin_mail', __( '<h3 style="text-align: center;">On the site a new order #%order_id%</h3>', 'f-shop' ) )
-					),
-					array(
-						'type'  => 'editor',
-						'name'  => 'fs_mail_footer_message',
-						'label' => __( 'The text at the bottom of the letter', 'f-shop' ),
-						'value' => fs_option( 'fs_mail_footer_message', sprintf( __( '<p style="text-align: center;">Online store "%s" is functioning thanks to the plugin <a href="https://f-shop.top/" target="_blank" rel="noopener">F-Shop.</a></p>', 'f-shop' ), get_bloginfo( 'name' ) ) )
-					)
+				),
+				array(
+					'type'  => 'editor',
+					'name'  => 'admin_mail',
+					'label' => __( 'The text of the letter to the administrator after sending the order', 'f-shop' ),
+					'value' => fs_option( 'admin_mail', __( '<h3 style="text-align: center;">On the site a new order #%order_id%</h3>', 'f-shop' ) )
+				),
+				array(
+					'type'  => 'editor',
+					'name'  => 'fs_mail_footer_message',
+					'label' => __( 'The text at the bottom of the letter', 'f-shop' ),
+					'value' => fs_option( 'fs_mail_footer_message', sprintf( __( '<p style="text-align: center;">Online store "%s" is functioning thanks to the plugin <a href="https://f-shop.top/" target="_blank" rel="noopener">F-Shop.</a></p>', 'f-shop' ), get_bloginfo( 'name' ) ) )
 				)
+			)
 
 
-			),
+		),
 			'pages'      => array(
-				'name'        => __( 'Service pages', 'f-shop' ),
-				'description' => __( 'Service pages are created and installed automatically when the plugin is activated. Can you also override them here', 'f-shop' ),
-				'fields'      => array(
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_cart',
-						'label' => __( 'Cart page', 'f-shop' ),
-						'value' => fs_option( 'page_cart' )
-					),
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_checkout',
-						'label' => __( 'Checkout Page', 'f-shop' ),
-						'value' => fs_option( 'page_checkout' )
-					),
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_payment',
-						'label' => __( 'Payment page', 'f-shop' ),
-						'value' => fs_option( 'page_payment' )
-					),
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_success',
-						'label' => __( 'Successful ordering page', 'f-shop' ),
-						'value' => fs_option( 'page_success' )
-					),
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_whishlist',
-						'label' => __( 'Wish List Page', 'f-shop' ),
-						'value' => fs_option( 'page_whishlist' )
-					),
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_cabinet',
-						'label' => __( 'Personal account page', 'f-shop' ),
-						'value' => fs_option( 'page_cabinet' )
-					),
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_auth',
-						'label' => __( 'Login page', 'f-shop' ),
-						'value' => fs_option( 'page_auth' )
-					),
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_register',
-						'label' => __( 'Register page', 'f-shop' ),
-						'value' => fs_option( 'page_register' )
-					),
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_lostpassword',
-						'label' => __( 'Forgot your password?', 'f-shop' ),
-						'value' => fs_option( 'page_lostpassword' )
-					),
-					array(
-						'type'  => 'pages',
-						'name'  => 'page_order_detail',
-						'label' => __( 'Order Information Page', 'f-shop' ),
-						'value' => fs_option( 'page_order_detail' )
-					),
-				)
+			'name'        => __( 'Service pages', 'f-shop' ),
+			'description' => __( 'Service pages are created and installed automatically when the plugin is activated. Can you also override them here', 'f-shop' ),
+			'fields'      => array(
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_cart',
+					'label' => __( 'Cart page', 'f-shop' ),
+					'value' => fs_option( 'page_cart' )
+				),
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_checkout',
+					'label' => __( 'Checkout Page', 'f-shop' ),
+					'value' => fs_option( 'page_checkout' )
+				),
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_payment',
+					'label' => __( 'Payment page', 'f-shop' ),
+					'value' => fs_option( 'page_payment' )
+				),
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_success',
+					'label' => __( 'Successful ordering page', 'f-shop' ),
+					'value' => fs_option( 'page_success' )
+				),
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_whishlist',
+					'label' => __( 'Wish List Page', 'f-shop' ),
+					'value' => fs_option( 'page_whishlist' )
+				),
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_cabinet',
+					'label' => __( 'Personal account page', 'f-shop' ),
+					'value' => fs_option( 'page_cabinet' )
+				),
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_auth',
+					'label' => __( 'Login page', 'f-shop' ),
+					'value' => fs_option( 'page_auth' )
+				),
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_register',
+					'label' => __( 'Register page', 'f-shop' ),
+					'value' => fs_option( 'page_register' )
+				),
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_lostpassword',
+					'label' => __( 'Forgot your password?', 'f-shop' ),
+					'value' => fs_option( 'page_lostpassword' )
+				),
+				array(
+					'type'  => 'pages',
+					'name'  => 'page_order_detail',
+					'label' => __( 'Order Information Page', 'f-shop' ),
+					'value' => fs_option( 'page_order_detail' )
+				),
+			)
 
 
-			),
+		),
 			'export'     => array(
-				'name'        => __( 'Экспорт товаров', 'f-shop' ),
-				'description' => sprintf( __( 'Link to product feed in YML format: <a href="%s" target="_blank">%s</a> or <a href="%s" target="_blank">%s</a>', 'f-shop' ), $feed_link, $feed_link, $feed_link_permalink, $feed_link_permalink ),
-				'fields'      => array(
-					array(
-						'type'   => 'radio',
-						'name'   => '_fs_export_prom',
-						'label'  => __( 'Export to the site', 'f-shop' ),
-						'values' => array(
-							'rozetka' => __( 'Розетка', 'f-shop' ),
-							'prom'    => __( 'Prom.ua', 'f-shop' ),
-						),
+			'name'        => __( 'Экспорт товаров', 'f-shop' ),
+			'description' => sprintf( __( 'Link to product feed in YML format: <a href="%s" target="_blank">%s</a> or <a href="%s" target="_blank">%s</a>', 'f-shop' ), $feed_link, $feed_link, $feed_link_permalink, $feed_link_permalink ),
+			'fields'      => array(
+				array(
+					'type'   => 'radio',
+					'name'   => '_fs_export_prom',
+					'label'  => __( 'Export to the site', 'f-shop' ),
+					'values' => array(
+						'rozetka' => __( 'Розетка', 'f-shop' ),
+						'prom'    => __( 'Prom.ua', 'f-shop' ),
+					),
 //						'help'   => __( 'Your export file will contain additional settings', 'f-shop' ),
-						'value'  => fs_option( '_fs_export_prom', 'rozetka' )
-					)
-
-
-				)
-
-
-			),
-			'debug'      => array(
-				'name'        => __( 'Debugging', 'f-shop' ),
-				'description' => __( 'The debug data is displayed here as text.', 'f-shop' ),
-				'fields'      => array(
-					array(
-						'type'  => 'html',
-						'name'  => FS_PLUGIN_PREFIX . 'debug_session',
-						'label' => __( 'Sessions', 'f-shop' ),
-						'value' => $session
-					),
-					array(
-						'type'  => 'html',
-						'name'  => FS_PLUGIN_PREFIX . 'debug_cookie',
-						'label' => 'Cookie',
-						'value' => $cookie
-					),
-					array(
-						'type'  => 'html',
-						'name'  => FS_PLUGIN_PREFIX . 'debug_php',
-						'label' => 'PHP',
-						'value' => $phpinfo
-					)
+					'value'  => fs_option( '_fs_export_prom', 'rozetka' )
 				)
 
 
 			)
+
+
+		),
+			'debug'      => array(
+			'name'        => __( 'Debugging', 'f-shop' ),
+			'description' => __( 'The debug data is displayed here as text.', 'f-shop' ),
+			'fields'      => array(
+				array(
+					'type'  => 'html',
+					'name'  => FS_PLUGIN_PREFIX . 'debug_session',
+					'label' => __( 'Sessions', 'f-shop' ),
+					'value' => $session
+				),
+				array(
+					'type'  => 'html',
+					'name'  => FS_PLUGIN_PREFIX . 'debug_cookie',
+					'label' => 'Cookie',
+					'value' => $cookie
+				),
+				array(
+					'type'  => 'html',
+					'name'  => FS_PLUGIN_PREFIX . 'debug_php',
+					'label' => 'PHP',
+					'value' => $phpinfo
+				)
+			)
+
+
+		)
 		);
 
 		if ( taxonomy_exists( $fs_config->data['currencies_taxonomy'] ) ) {

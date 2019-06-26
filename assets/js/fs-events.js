@@ -13,22 +13,43 @@ jQuery(document).ready(function ($) {
         // действие которое инициирует событие
 
         var button = event.detail.button;
-        iziToast.show({
-            image: event.detail.image,
-            imageWidth: 150,
-            theme: 'light',
-            timeout: false,
-            maxWidth: 540,
-            closeOnEscape: true,
-            title: fShop.getLang('success'),
-            message: fShop.strReplace(fShop.getLang('addToCartButtons'), {
-                '%product%': button.data('name'),
-                '%price%': button.data('price'),
-                '%currency%': button.data('currency')
-            }),
-            position: 'topCenter',
 
-        });
+        // Show the basket as a modal window
+        if (fShop.getSettings('fs_cart_type') == 'modal') {
+            iziToast.show({
+                image: event.detail.image,
+                imageWidth: 150,
+                theme: 'light',
+                timeout: false,
+                maxWidth: 540,
+                closeOnEscape: true,
+                title: fShop.getLang('success'),
+                message: fShop.strReplace(fShop.getLang('addToCartButtons'), {
+                    '%product%': button.data('name'),
+                    '%price%': button.data('price'),
+                    '%currency%': button.data('currency')
+                }),
+                position: 'topCenter',
+
+            });
+        } else
+        // Show the cart as a sidebar
+        if (fShop.getSettings('fs_cart_type') == 'side') {
+
+            let cartWrap = $("[data-fs-action=\"showCart\"]");
+
+            cartWrap.fadeIn(200, function () {
+            });
+
+            $("[data-fs-action=\"showCart\"]").on('click', '.close-cart', function (event) {
+                event.preventDefault();
+                $("[data-fs-action=\"showCart\"]").fadeOut(800, function () {
+                    cartWrap.find('[data-fs-element="cart-widget"]').html('');
+                });
+            });
+
+        }
+
         button.find('.fs-atc-preloader').fadeOut();
         setTimeout(function () {
             button.find('.fs-atc-info').fadeOut();
