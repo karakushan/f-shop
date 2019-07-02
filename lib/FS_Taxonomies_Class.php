@@ -58,6 +58,7 @@ class FS_Taxonomies_Class {
 		$meta_description = get_term_meta( get_queried_object_id(), $meta_key, 1 );
 
 		if ( $meta_description ) {
+			$meta_description = apply_filters( 'fs_meta_description', $meta_description );
 			echo PHP_EOL . '<meta name="description" content="' . esc_html( $meta_description ) . '"/>' . PHP_EOL;
 		}
 	}
