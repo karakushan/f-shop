@@ -111,7 +111,6 @@ class FS_Shortcode {
 		$cart = fs_get_cart();
 
 		if ( $cart ) {
-			fs_debug_data( $content );
 			$content = apply_filters( 'the_content', $content );
 		} else {
 			if ( empty( $atts['empty_text'] ) ) {

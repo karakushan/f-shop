@@ -588,6 +588,7 @@ function fs_get_cart( $args = array() ) {
 
 			$products[ $key ] = array(
 				'ID'         => $offer->id,
+				'id'         => $offer->id,
 				'name'       => $offer->title,
 				'count'      => $offer->count,
 				'thumb'      => get_the_post_thumbnail_url( $offer->id, $args['thumbnail_size'] ),
