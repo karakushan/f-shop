@@ -69,6 +69,22 @@ class FS_Product_Class {
 	}
 
 	/**
+	 * Проверяет является ли вариативным товар
+	 * логическая функции
+	 * проверка идет по поличию добавленных вариаций товара
+	 *
+	 * @param int $product_id
+	 *
+	 * @return bool
+	 */
+	public function is_variable_product( $product_id = 0 ) {
+		$product_id = fs_get_product_id( $product_id );
+		$variations = $this->get_product_variations( $product_id );
+
+		return count( $variations ) ? true : false;
+	}
+
+	/**
 	 * Возвращает массив всех атрибутов товара, которые добавляются в вариациях товара
 	 *
 	 * @param int $product_id
@@ -335,7 +351,6 @@ class FS_Product_Class {
 	 * Displays the current price of the product for the basket
 	 *
 	 * @param string $format
-	 * @param array $args
 	 */
 	function the_price( $format = '' ) {
 		$format = ! empty( $format ) ? $format : $this->price_format;
@@ -398,8 +413,7 @@ class FS_Product_Class {
 		global $fs_config;
 		$this->setId( intval( $product['ID'] ) );
 		$this->set_item_id( $item_id );
-		$this->attributes = ! empty( $product['atts'] ) ? $product['atts'] : [];
-
+		
 		if ( isset( $product['variation'] ) && is_numeric( $product['variation'] ) ) {
 			$this->setVariation( $product['variation'] );
 			$variation        = $this->get_variation();
@@ -417,12 +431,11 @@ class FS_Product_Class {
 		$this->cost               = floatval( $this->count * $this->price );
 		$this->cost_display       = apply_filters( 'fs_price_format', $this->cost );
 		$this->currency           = fs_currency( $this->id );
+		$this->attributes         = [];
 
 		// Если указаны свойства товара
-		$attributes = [];
-		if ( ! empty( $this->attributes ) ) {
-
-			foreach ( $this->attributes as $key => $att ) {
+		if ( ! empty( $product['attr'] ) ) {
+			foreach ( $product['attr'] as $key => $att ) {
 				if ( empty( $att ) ) {
 					continue;
 				}
@@ -431,10 +444,9 @@ class FS_Product_Class {
 				if ( $attribute->parent ) {
 					$attribute->parent_name = get_term_field( 'name', $attribute->parent, $fs_config->data['product_att_taxonomy'] );
 				}
-				$attributes[] = $attribute;
+				$this->attributes[] = $attribute;
 			}
 		}
-		$this->attributes = $attributes;
 
 		return $this;
 

@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use FS\FS_Cart_Class;
 use \FS\FS_Config;
+use \FS\FS_Product_Class;
 
 /**
  * Recursively get taxonomy and its children
@@ -831,7 +832,8 @@ function fs_add_to_cart( $product_id = 0, $label = null, $args = array() ) {
 			'id'              => 'fs-atc-' . $product_id,
 			'data-count'      => 1,
 			'data-attr'       => json_encode( new stdClass() ),
-			'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) )
+			'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) ),
+			'data-variated'   => fs_is_variated( $product_id ) ? 1 : 0
 		)
 	);
 
@@ -2166,14 +2168,14 @@ function fs_in_array_multi( $needles, $haystack ) {
 /**
  * Проверяет является ли товар вариативным
  *
- * @param int $post_id
+ * @param int $product_id
  *
  * @return int
  */
-function fs_is_variated( $post_id = 0 ) {
-	global $fs_config;
+function fs_is_variated( $product_id = 0 ) {
+	$product_class = new FS_Product_Class();
 
-	return intval( get_post_meta( $post_id, $fs_config->meta['variated_on'], 1 ) );
+	return $product_class->is_variable_product( $product_id );
 }
 
 /**
@@ -2185,7 +2187,7 @@ function fs_is_variated( $post_id = 0 ) {
  * @return float
  */
 function fs_get_variated_price( $product_id = 0, $variation_id ) {
-	$product_class = new FS\FS_Product_Class();
+	$product_class = new FS_Product_Class();
 
 	return $product_class->get_variation_price( $product_id, $variation_id );
 }

@@ -415,83 +415,84 @@
                 if (val) parseAtts.push(val);
             }
         });
-        jQuery.ajax({
-            type: 'POST',
-            url: fShop.ajaxurl,
-            data: {action: "fs_get_variated", product_id: productId, atts: parseAtts, current: attrVal},
-            success: function (result) {
-                console.log(result);
-                if (result.success) {
-                    let price = Number(result.data.options.price);
-                    let pricePromo = Number(result.data.options.action_price);
-                    console.log(price, pricePromo);
+        if (cartbutton.data('variated') == 1)
+            jQuery.ajax({
+                type: 'POST',
+                url: fShop.ajaxurl,
+                data: {action: "fs_get_variated", product_id: productId, atts: parseAtts, current: attrVal},
+                success: function (result) {
+                    console.log(result);
+                    if (result.success) {
+                        let price = Number(result.data.options.price);
+                        let pricePromo = Number(result.data.options.action_price);
+                        console.log(price, pricePromo);
 
-                    if (pricePromo && pricePromo < price) {
-                        price = pricePromo;
-                    }
+                        if (pricePromo && pricePromo < price) {
+                            price = pricePromo;
+                        }
 
-                    cartbutton.attr("data-disabled", false);
-                    cartbutton.attr("data-variation", result.data.options.variation);
-                    cartbutton.attr("data-price", price);
-                    cartbutton.removeAttr("data-disabled-message");
+                        cartbutton.attr("data-disabled", false);
+                        cartbutton.attr("data-variation", result.data.options.variation);
+                        cartbutton.attr("data-price", price);
+                        cartbutton.removeAttr("data-disabled-message");
 
-                    if (result.data.active) {
-                        // устанавливаем опции в селектах в актив
-                        for (var key in result.data.active) {
-                            $("[data-fs-element=\"attr\"][name='" + key + "'] option").each(function (index, value) {
-                                if ($(this).attr("value") == result.data.active[key]) {
-                                    $(this).prop("selected", true);
+                        if (result.data.active) {
+                            // устанавливаем опции в селектах в актив
+                            for (var key in result.data.active) {
+                                $("[data-fs-element=\"attr\"][name='" + key + "'] option").each(function (index, value) {
+                                    if ($(this).attr("value") == result.data.active[key]) {
+                                        $(this).prop("selected", true);
+                                    }
+                                });
+                            }
+                            $("[data-action=\"add-to-cart\"][data-product-id=\"" + productId + "\"]").attr("data-attr", JSON.stringify(result.data.active));
+
+                        }
+
+                        if (typeof result.data.variation == 'number') {
+                            jQuery("[data-action=\"add-to-cart\"]").each(function (index, value) {
+                                if (jQuery(this).data("product-id") == productId) {
+                                    jQuery(this).attr("data-variation", result.data.variation);
                                 }
                             });
                         }
-                        $("[data-action=\"add-to-cart\"][data-product-id=\"" + productId + "\"]").attr("data-attr", JSON.stringify(result.data.active));
 
-                    }
-
-                    if (typeof result.data.variation == 'number') {
-                        jQuery("[data-action=\"add-to-cart\"]").each(function (index, value) {
-                            if (jQuery(this).data("product-id") == productId) {
-                                jQuery(this).attr("data-variation", result.data.variation);
-                            }
-                        });
-                    }
-
-                    if (result.data.price) {
-                        jQuery("[data-fs-element=\"price\"]").each(function (index, value) {
-                            if (jQuery(this).data("product-id") == productId) {
-                                jQuery(this).html(result.data.price);
-                            }
-                        });
-                    }
-
-                    if (result.data.basePrice) {
-                        jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html(result.data.basePrice);
-                    } else {
-                        jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html('');
-                    }
-
-                    // создаём событие "fs_after_change_att"
-                    var fs_after_change_att = new CustomEvent("fs_after_change_att", {
-                        detail: {
-                            el: el,
-                            productId: productId,
-                            data: result.data
+                        if (result.data.price) {
+                            jQuery("[data-fs-element=\"price\"]").each(function (index, value) {
+                                if (jQuery(this).data("product-id") == productId) {
+                                    jQuery(this).html(result.data.price);
+                                }
+                            });
                         }
-                    });
-                    document.dispatchEvent(fs_after_change_att);
-                } else {
-                    cartbutton.attr("data-disabled", true);
-                    cartbutton.attr("data-disabled-message", result.data.msg);
-                    $("[data-fs-element=\"attr\"] option").each(function (index, value) {
-                        $(this).prop("selected", false);
-                    });
-                    iziToast.warning({
-                        title: fShop.getLang('error'),
-                        message: result.data.msg,
-                    });
+
+                        if (result.data.basePrice) {
+                            jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html(result.data.basePrice);
+                        } else {
+                            jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html('');
+                        }
+
+                        // создаём событие "fs_after_change_att"
+                        var fs_after_change_att = new CustomEvent("fs_after_change_att", {
+                            detail: {
+                                el: el,
+                                productId: productId,
+                                data: result.data
+                            }
+                        });
+                        document.dispatchEvent(fs_after_change_att);
+                    } else {
+                        cartbutton.attr("data-disabled", true);
+                        cartbutton.attr("data-disabled-message", result.data.msg);
+                        $("[data-fs-element=\"attr\"] option").each(function (index, value) {
+                            $(this).prop("selected", false);
+                        });
+                        iziToast.warning({
+                            title: fShop.getLang('error'),
+                            message: result.data.msg,
+                        });
+                    }
                 }
-            }
-        });
+            });
     });
 
 

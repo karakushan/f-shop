@@ -7,91 +7,86 @@ if ( ! defined( 'ABSPATH' ) ) {
 } // Exit if accessed directly
 
 /**
- * Клас для обработки ajax запросов
+ * PHP CLass to handle ajax requests
  */
 class FS_Ajax_Class {
 
 
 	function __construct() {
 
-		//  добавление в список желаний
+		//  Add to wishlist
 		add_action( 'wp_ajax_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
 		add_action( 'wp_ajax_nopriv_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
 
-		// удаление из списка желаний
+		// Remove from wish list
 		add_action( 'wp_ajax_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
 		add_action( 'wp_ajax_nopriv_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
 
-		//  получение связанных постов категории
+		//  Getting related category posts
 		add_action( 'wp_ajax_fs_get_taxonomy_posts', array( $this, 'get_taxonomy_posts' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( $this, 'get_taxonomy_posts' ) );
 
-		// добавление товара к сравнению
+		// Add product to compare
 		add_action( 'wp_ajax_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_add_to_comparison', array( $this, 'fs_add_to_comparison_callback' ) );
 
-		// удаляет один термин (свойство) товара
+		// Deletes one term (property) of a product
 		add_action( 'wp_ajax_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_remove_product_term', array( $this, 'fs_remove_product_term_callback' ) );
 
-		// добавляет вариант покупки товара
+		// Adds a purchase option
 		add_action( 'wp_ajax_fs_add_variant', array( $this, 'fs_add_variant_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_add_variant', array( $this, 'fs_add_variant_callback' ) );
 
-		// получение вариантов цены товара
+		// Getting options for the price of goods
 		add_action( 'wp_ajax_fs_get_variated', array( $this, 'fs_get_variated_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_variated', array( $this, 'fs_get_variated_callback' ) );
 
-		// привязка атрибута к товару
+		// Attribute attribute to product
 		add_action( 'wp_ajax_fs_add_att', array( $this, 'fs_add_att_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_add_att', array( $this, 'fs_add_att_callback' ) );
 
-		// setting a product rating
+		// Setting a product rating
 		add_action( 'wp_ajax_fs_set_rating', array( $this, 'fs_set_rating_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_set_rating', array( $this, 'fs_set_rating_callback' ) );
 
-		// Обновление позиции товаров
+		// Product Item Update
 		add_action( 'wp_ajax_fs_update_position', array( $this, 'fs_update_position_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_update_position', array( $this, 'fs_update_position_callback' ) );
 
-		// Возврщает HTML код шаблона расположеного по адресу /templates/front-end/checkout/shipping-fields.php
+		// Returns the HTML code of the template located at /templates/front-end/checkout/shipping-fields.php
 		add_action( 'wp_ajax_fs_show_shipping', array( $this, 'fs_show_shipping_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_show_shipping', array( $this, 'fs_show_shipping_callback' ) );
 
-		// возвращает шаблон, работает на основе get_template_part()
+		// Returns a template, works based on get_template_part ()
 		add_action( 'wp_ajax_fs_get_template_part', array( $this, 'fs_get_template_part' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_template_part', array( $this, 'fs_get_template_part' ) );
 
-		// обновление к-ва товара в корзине
+		// Update of cart items in cart
 		add_action( 'wp_ajax_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 		add_action( 'wp_ajax_nopriv_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 
-		// живой поиск товара
+		// Live product search
 		add_action( 'wp_ajax_fs_livesearch', array( $this, 'livesearch_callback' ) );
 		add_action( 'wp_ajax_fs_livesearch', array( $this, 'livesearch_callback' ) );
 
+		// Add new order and send e-mail
+		add_action( 'wp_ajax_order_send', array( $this, 'order_send_ajax' ) );
+		add_action( 'wp_ajax_noprivorder_send', array( $this, 'order_send_ajax' ) );
 
-		//Регистрируем обработку AJAX событий
-		if ( is_array( $this->ajax_actions() ) && count( $this->ajax_actions() ) ) {
-			foreach ( $this->ajax_actions() as $key => $action ) {
-				add_action( 'wp_ajax_' . $key, $action );
-				add_action( 'wp_ajax_nopriv_' . $key, $action );
-			}
-		}
+		// Notifies of the appearance of goods in stock
+		add_action( 'wp_ajax_fs_report_availability', array( $this, 'report_availability' ) );
+		add_action( 'wp_ajax_nopriv_fs_report_availability', array( $this, 'report_availability' ) );
+
+		// Returns the product gallery
+		add_action( 'wp_ajax_fs_get_product_gallery_ids', array( $this, 'fs_get_product_gallery_ids' ) );
+		add_action( 'wp_ajax_nopriv_fs_get_product_gallery_ids', array( $this, 'fs_get_product_gallery_ids' ) );
+
 	}
 
-	function ajax_actions() {
-		$actions = array(
-			'fs_report_availability'     => array( $this, 'report_availability' ),
-			'order_send'                 => array( $this, 'order_send_ajax' ),
-			'fs_get_product_gallery_ids' => array( $this, 'fs_get_product_gallery_ids' ),
-		);
-
-		return apply_filters( 'fs_ajax_actions', $actions );
-	}
 
 	/**
-	 * Живой поиск товара callback функция
+	 * Live product search callback function
 	 */
 	function livesearch_callback() {
 
@@ -114,7 +109,7 @@ class FS_Ajax_Class {
 
 
 	/**
-	 * Отправляет админу сообщение уведомить юзера о наличии товара
+	 * Sends a message to the admin to notify the user about the availability of goods
 	 */
 	function report_availability() {
 		if ( ! FS_Config::verify_nonce() ) {

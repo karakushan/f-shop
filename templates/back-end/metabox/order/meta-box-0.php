@@ -28,7 +28,7 @@
                 if (count($offer->attributes)) {
                     echo '<ul class="product-att">';
                     foreach ($offer->attributes as $att) {
-                        echo '<li><b>' . esc_attr($att->parent_name) . '</b>: ' . esc_attr($att->name) . '</li>';
+                        echo '<li><b>' . esc_attr(apply_filters('the_title',$att->parent_name)) . '</b>: ' . esc_attr(apply_filters('the_title',$att->name)) . '</li>';
                     }
                     echo '</ul>';
                 }
