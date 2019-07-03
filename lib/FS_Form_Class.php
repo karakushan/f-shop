@@ -55,7 +55,7 @@ class FS_Form_Class {
 	 * @param array $args
 	 */
 	function render_field( $name, $type = 'text', $args = [] ) {
-		$args        = wp_parse_args( $args, array(
+		$args = wp_parse_args( $args, array(
 			'value'          => '',
 			'values'         => array(),
 			'required'       => false,
@@ -78,10 +78,12 @@ class FS_Form_Class {
 				'textarea_name' => $name
 			)
 		) );
+
+
 		$label_after = $args['required'] ? ' <i>*</i>' : '';
 
 		$multi_lang = false;
-		$screen     = is_admin() && \get_current_screen() ? \get_current_screen() : null;
+		$screen     = is_admin() && get_current_screen() ? get_current_screen() : null;
 
 		if ( fs_option( 'fs_multi_language_support' )
 		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
@@ -90,7 +92,6 @@ class FS_Form_Class {
 		) {
 			$multi_lang = true;
 		}
-
 
 		if ( $multi_lang ) {
 			echo '<div class="fs-tabs nav-tab-wrapper">';
@@ -114,7 +115,7 @@ class FS_Form_Class {
 
 				echo '<div class="' . esc_attr( $tab_class ) . '" id="fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '">';
 				$name                                 = $item['locale'] != FS_Config::default_language() ? $name . '__' . $item['locale'] : $name;
-				$args['value']                        = $screen->id == 'edit-catalog' ? get_term_meta( intval( $_GET['tag_ID'] ), $name, 1 ) : '';
+				$args['value']                        = ! empty( $_GET['tag_ID'] ) ? FS_Taxonomies_Class::fs_get_term_meta( intval( $_GET['tag_ID'] ), $name ) : null;
 				$args['editor_args']['textarea_name'] = $name;
 
 				if ( in_array( $type, $this->registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
@@ -185,7 +186,7 @@ class FS_Form_Class {
 			? $fields[ $field_name ]
 			: array();
 
-		$value = !empty($field['value'])
+		$value = ! empty( $field['value'] )
 			? $field['value']
 			: get_user_meta( $user_id, $field_name, 1 );
 
@@ -244,6 +245,8 @@ class FS_Form_Class {
 		if ( $args['wrapper'] ) {
 			echo '</div>';
 		}
+
+		return;
 	}
 
 	/**

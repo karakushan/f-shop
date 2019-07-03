@@ -28,6 +28,183 @@ class FS_Taxonomies_Class {
 
 	}
 
+	/**
+	 * Registration of additional taxonomy fields
+	 *
+	 * @return array
+	 */
+	public static function get_taxonomy_fields() {
+
+		$fields = array(
+			FS_Config::get_data( 'product_taxonomy' )       =>
+				array(
+					'_content'           => array(
+						'name' => __( 'Category text', 'f-shop' ),
+						'type' => 'editor',
+						'args' => array()
+					),
+					'_seo_title'         => array(
+						'name' => __( 'SEO title', 'f-shop' ),
+						'type' => 'text',
+						'args' => array()
+					),
+					'_seo_description'   => array(
+						'name' => __( 'SEO description', 'f-shop' ),
+						'type' => 'textarea',
+						'args' => array()
+					),
+					'_thumbnail_id'      => array(
+						'name' => __( 'Thumbnail', 'f-shop' ),
+						'type' => 'image',
+						'args' => array()
+					),
+					'_icon_id'           => array(
+						'name' => __( 'Icon', 'f-shop' ),
+						'type' => 'image',
+						'args' => array()
+					),
+					'_category_discount' => array(
+						'name' => __( 'Total discount for category products (in percent)', 'f-shop' ),
+						'type' => 'text',
+						'help' => __( 'Enter a number without a percent sign', 'f-shop' ),
+						'size' => 5,
+						'args' => array()
+					)
+				),
+			'fs-payment-methods'                            =>
+				array(
+					'_thumbnail_id'         => array(
+						'name' => __( 'Thumbnail', 'f-shop' ),
+						'type' => 'image',
+						'args' => array()
+					),
+					'_fs_pay_message'       => array(
+						'name' => __( 'E-mail message to the buyer if the order is confirmed by the manager', 'f-shop' ),
+						'help' => __( 'This message is sent to the buyer at the time the manager confirms the order. You can use meta data of type: <code>%order_id%</code> - order number, <code>%pay_name%</code> - name of the payment method, <code>%pay_url%</code> - payment reference .', 'f-shop' ),
+						'type' => 'textarea',
+						'args' => array()
+					),
+					'_fs_after_pay_message' => array(
+						'name' => __( 'Message to the buyer after payment on the site', 'f-shop' ),
+						'help' => __( 'This message will be shown if the buyer has successfully paid the order. You can use these variables: <code>%order_id%</code> - order number, <code>%pay_name%</code> - name of the payment method', 'f-shop' ),
+						'type' => 'textarea',
+						'args' => array()
+					),
+					'_fs_pay_inactive'      => array(
+						'name' => __( 'Unavailable for payment', 'f-shop' ),
+						'help' => __( 'If you turn off, then the payment method will not be visible to users, only in the admin panel.', 'f-shop' ),
+						'type' => 'checkbox',
+						'args' => array()
+					),
+					'_fs_checkout_redirect' => array(
+						'name' => __( 'When choosing this method, send the buyer immediately to the payment page', 'f-shop' ),
+						'help' => __( 'This is convenient in some cases, but it is better to leave this option off', 'f-shop' ),
+						'type' => 'checkbox',
+						'args' => array()
+					)
+				),
+			'fs-delivery-methods'                           =>
+				array(
+					'_thumbnail_id'        => array(
+						'name' => __( 'Thumbnail', 'f-shop' ),
+						'type' => 'image',
+						'args' => array()
+					),
+					'_fs_delivery_cost'    => array(
+						'name' => __( 'Shipping Cost in Base Currency', 'f-shop' ),
+						'type' => 'text',
+						'args' => array( 'style' => 'width:72px;' )
+					),
+					'_fs_delivery_address' => array(
+						'name' => __( 'Include address fields when choosing this method', 'f-shop' ),
+						'type' => 'checkbox',
+						'args' => array()
+					)
+				),
+			'fs-currencies'                                 =>
+				array(
+					'_fs_currency_code'    => array(
+						'name' => __( 'International currency code', 'f-shop' ),
+						'type' => 'text',
+						'args' => array()
+					),
+					'_fs_currency_cost'    => array(
+						'name' => __( 'Cost in base currency', 'f-shop' ),
+						'type' => 'text',
+						'args' => array()
+					),
+					'_fs_currency_display' => array(
+						'name' => __( 'Display on the site', 'f-shop' ),
+						'type' => 'text',
+						'args' => array()
+					),
+					'_fs_currency_locale'  => array(
+						'name' => __( 'Currency Language (locale)', 'f-shop' ),
+						'type' => 'select',
+						'args' => array( 'values' => FS_Config::get_locales(), )
+					)
+				),
+			// Дополнительные поля налога
+			FS_Config::get_data( 'product_taxes_taxonomy' ) =>
+				array(
+					'_fs_tax_value' => array(
+						'name' => __( 'The amount or value of tax as a percentage', 'f-shop' ),
+						'type' => 'text',
+						'args' => array()
+					)
+				),
+			// Дополнительные поля налога
+			FS_Config::get_data( 'manufacturer_taxonomy' )  =>
+				array(
+					'_thumbnail_id' => array(
+						'name' => __( 'Thumbnail', 'f-shop' ),
+						'type' => 'image',
+						'args' => array()
+					),
+				),
+			// Дополнительные поля скидок
+			FS_Config::get_data( 'discount_taxonomy' )      =>
+				array(
+					'discount_where_is' => array(
+						'name' => __( 'The discount is activated provided', 'f-shop' ),
+						'type' => 'select',
+
+						'args' => array(
+							'values' => array(
+								'sum'   => __( 'The total amount of goods in the cart', 'f-shop' ),
+								'count' => __( 'Number of items in the cart', 'f-shop' )
+							)
+						)
+					),
+					'discount_where'    => array(
+						'name' => __( 'Discount condition', 'f-shop' ),
+						'type' => 'select',
+						'args' => array(
+							'values' => array(
+								'>=' => __( 'More or equal', 'f-shop' ),
+								'>'  => __( 'More', 'f-shop' ),
+								'<'  => __( 'Less', 'f-shop' ),
+								'<=' => __( 'Less or equal', 'f-shop' )
+							)
+						)
+					),
+					'discount_value'    => array(
+						'name' => __( 'Condition value', 'f-shop' ),
+						'type' => 'text',
+						'args' => array()
+					),
+					'discount_amount'   => array(
+						'name' => __( 'Discount amount', 'f-shop' ),
+						'type' => 'text',
+						'args' => array()
+					)
+				)
+
+		);
+
+		return apply_filters( 'fs_taxonomy_fields', $fields );
+	}
+
 	function wpseo_title_filter( $title ) {
 		if ( ! is_tax( 'catalog' ) ) {
 			return $title;
@@ -268,6 +445,31 @@ class FS_Taxonomies_Class {
 	}
 
 	/**
+	 * Возвращает значение мета поля для термина таксономии
+	 * обертка для функции get_term_meta()
+	 *
+	 * @param int $term_id
+	 * @param string $meta_key
+	 * @param int $single
+	 * @param null $default
+	 *
+	 * @return mixed|void
+	 */
+	public static function fs_get_term_meta( $term_id = 0, $meta_key = '', $single = 1, $default = null ) {
+		if ( ! $term_id || ! $meta_key ) {
+			return;
+		}
+
+		$meta_value = get_term_meta( $term_id, $meta_key, $single );
+
+		if ( $single == 1 && $meta_value == '' && $default != '' ) {
+			$meta_value = $default;
+		}
+
+		return apply_filters( 'fs_term_field_value', $meta_value, $term_id, $meta_key );
+	}
+
+	/**
 	 * Метод выводит мета поля таксономии
 	 * массив полей берётся из класа FS_Config
 	 * из метода get_taxonomy_fields()
@@ -278,13 +480,14 @@ class FS_Taxonomies_Class {
 	 * @param $taxonomy
 	 */
 	function edit_taxonomy_fields( $term, $taxonomy ) {
-		$fs_config = new FS_Config();
-		$form      = new FS_Form_Class();
-		$fields    = $fs_config->get_taxonomy_fields();
+		$form   = new FS_Form_Class();
+		$fields = self::get_taxonomy_fields();
+
 		if ( count( $fields[ $taxonomy ] ) ) {
 
 			foreach ( $fields[ $taxonomy ] as $name => $field ) {
-				$field['args']['value'] = get_term_meta( $term->term_id, $name, 1 );
+
+				$field['args']['value'] = self::fs_get_term_meta( $term->term_id, $name );
 				echo '<tr class="form-field taxonomy-thumbnail-wrap">';
 				echo '<th scope="row"><label for="taxonomy-thumbnail">' . esc_attr( $field['name'] ) . '</label></th>';
 
@@ -305,9 +508,8 @@ class FS_Taxonomies_Class {
 	 * @param $taxonomy
 	 */
 	function add_taxonomy_fields( $taxonomy ) {
-		$fs_config = new FS_Config();
-		$form      = new FS_Form_Class();
-		$fields    = $fs_config->get_taxonomy_fields();
+		$form   = new FS_Form_Class();
+		$fields = self::get_taxonomy_fields();
 		if ( count( $fields[ $taxonomy ] ) ) {
 			foreach ( $fields[ $taxonomy ] as $name => $field ) {
 				$id = str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $field['type'] ) );
@@ -330,16 +532,14 @@ class FS_Taxonomies_Class {
 	 * @param $term_id
 	 */
 	function save_taxonomy_fields( $term_id ) {
-		$fs_config = new FS_Config();
-		$term      = get_term( $term_id );
-		$taxonomy  = $term->taxonomy;
-		$fields    = $fs_config->get_taxonomy_fields();
+		$term     = get_term( $term_id );
+		$taxonomy = $term->taxonomy;
+		$fields   = self::get_taxonomy_fields();
 
 		$multi_lang = false;
 		$screen     = get_current_screen();
 		if ( fs_option( 'fs_multi_language_support' )
 		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
-		     && ( ! in_array( $type, [ 'image' ] ) )
 		     && $screen->id == 'edit-catalog'
 		) {
 			$multi_lang = true;
