@@ -803,6 +803,20 @@ function fs_get_first_variation( $product_id, $return = 'all' ) {
 }
 
 /**
+ * Returns the name of the first category of product
+ *
+ * @param int $product_id
+ *
+ * @return string
+ */
+function fs_get_product_category_name( $product_id = 0 ) {
+	$category = get_the_terms( $product_id, FS_Config::get_data( 'product_taxonomy' ) );
+	if ( ! empty( $category ) && ! is_wp_error( $category ) ) {
+		return array_pop( $category )->name;
+	}
+}
+
+/**
  * Displays the button "to cart" with all the necessary attributes
  *
  * @param int $product_id [id поста (оставьте пустым в цикле wordpress)]
@@ -814,50 +828,54 @@ function fs_get_first_variation( $product_id, $return = 'all' ) {
 function fs_add_to_cart( $product_id = 0, $label = null, $args = array() ) {
 	$product_id = fs_get_product_id( $product_id );
 	$label      = is_null( $label ) ? __( 'Add to cart', 'f-shop' ) : $label;
+
 	// Параметры по умолчанию
 	$args_default = array(
 		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader" width="16">',
 		'class'     => 'fs-add-to-cart',
 		'type'      => 'button',
-		'data'      => array(
-			'title'           => __( 'Add to cart', 'f-shop' ),
-			'data-action'     => 'add-to-cart',
-			'data-product-id' => $product_id,
-			'data-available'  => fs_aviable_product( $product_id ) ? 'true' : 'false',
-			'data-name'       => get_the_title( $product_id ),
-			'data-price'      => apply_filters( 'fs_price_format', fs_get_price( $product_id ) ),
-			'data-currency'   => fs_currency(),
-			'data-url'        => get_the_permalink( $product_id ),
-			'data-sku'        => fs_get_product_code( $product_id ),
-			'href'            => add_query_arg( array( 'fs-api' => 'add_to_cart', 'product_id' => $product_id ) ),
-			'id'              => 'fs-atc-' . $product_id,
-			'data-count'      => 1,
-			'data-attr'       => json_encode( new stdClass() ),
-			'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) ),
-			'data-variated'   => fs_is_variated( $product_id ) ? 1 : 0
-		)
+
 	);
 
-	$first_variation = fs_get_first_variation( $product_id, 'key' );
-	if ( ! is_null( $first_variation ) ) {
-		$args_default['data']['data-variation'] = esc_attr( $first_variation );
+
+	// Default HTML attributes
+	$default_data = array(
+		'title'           => __( 'Add to cart', 'f-shop' ),
+		'data-action'     => 'add-to-cart',
+		'data-product-id' => $product_id,
+		'data-available'  => fs_aviable_product( $product_id ) ? 'true' : 'false',
+		'data-name'       => get_the_title( $product_id ),
+		'data-price'      => apply_filters( 'fs_price_format', fs_get_price( $product_id ) ),
+		'data-currency'   => fs_currency(),
+		'data-url'        => get_the_permalink( $product_id ),
+		'data-sku'        => fs_get_product_code( $product_id ),
+		'href'            => add_query_arg( array( 'fs-api' => 'add_to_cart', 'product_id' => $product_id ) ),
+		'id'              => 'fs-atc-' . $product_id,
+		'data-count'      => 1,
+		'data-attr'       => json_encode( new stdClass() ),
+		'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) ),
+		'data-variated'   => fs_is_variated( $product_id ) ? 1 : 0,
+		'class'           => !empty($args['class']) ? $args['class'] : 'fs-atc-' . $product_id,
+		'data-category'   => fs_get_product_category_name( $product_id ),
+		'data-variation'  => fs_get_first_variation( $product_id, 'key' )
+	);
+
+	// Add Attributes Added by Developer
+	if ( ! empty( $args['data'] ) ) {
+		$args['data'] = array_merge( $default_data, $args['data'] );
+	} else {
+		$args['data'] = $default_data;
 	}
 
-	$args                  = wp_parse_args( $args, $args_default );
-	$args['data']['class'] = $args['class'] . ' fs-atc-' . $product_id;
+	$args = wp_parse_args( $args, $args_default );
 
-	// помещаем название категории в дата атрибут category
-	$category = get_the_terms( $product_id, FS_Config::get_data( 'product_taxonomy' ) );
-	if ( ! empty( $category ) && ! is_wp_error( $category ) ) {
-		$args['data']['data-category'] = array_pop( $category )->name;
-	}
-	// Парсим атрибуты html тега
+	// Parsing html tag attributes
 	$html_atts = fs_parse_attr( array(), $args['data'] );
 
-	// дополнительные скрытые инфо-блоки внутри кнопки (прелоадер, сообщение успешного добавления в корзину)
+	// additional hidden info-blocks inside the button (preloader, message successfully added to the basket)
 	$atc_after = '<span class="fs-atc-preloader" style="display:none"></span>';
 
-	/* позволяем устанавливать разные html элементы в качестве кнопки */
+	/* allow you to set different html elements as a button */
 	switch ( $args['type'] ) {
 		case 'link':
 			$atc_button = sprintf( '<a %s>%s %s</a>', $html_atts, $label, $atc_after );
