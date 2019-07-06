@@ -13,6 +13,32 @@ class FS_Settings_Class {
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
 		add_action( 'admin_init', array( $this, 'init_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
+		add_action( 'admin_bar_menu', array( $this, 'modify_admin_bar' ) );
+
+	}
+
+	/**
+	 * Adds the inscription "Store" in the upper toolbar
+	 *
+	 * @param $wp_admin_bar
+	 */
+	function modify_admin_bar( $wp_admin_bar ) {
+		$wp_admin_bar->add_menu( array(
+			'id'     => 'fs-top',
+			'parent' => null,
+			'group'  => null,
+			'title'  => __( 'Shop', 'f-shop' ),
+			'href'   => admin_url( 'edit.php?post_type=product' ),
+			'meta'   => array(
+				'target'  => '_self',
+				'title'   => __( 'Shop', 'f-shop' ),
+				'html'    => '',
+				'class'   => 'ab-item',
+				'rel'     => 'friend',
+				'onclick' => "",
+//				'tabindex' => 2,
+			),
+		) );
 	}
 
 	/**
