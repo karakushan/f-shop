@@ -36,7 +36,7 @@ class FS_Settings_Class {
 				'class'   => 'ab-item',
 				'rel'     => 'friend',
 				'onclick' => "",
-//				'tabindex' => 2,
+				'tabindex' => 20,
 			),
 		) );
 	}

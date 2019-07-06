@@ -1385,3 +1385,8 @@ td.fs_menu_order.column-fs_menu_order {
     }
   }
 }
+
+#wpadminbar #wp-admin-bar-fs-top>.ab-item:before {
+  content: "\f174";
+  top: 2px
+}

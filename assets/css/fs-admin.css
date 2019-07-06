@@ -1185,4 +1185,9 @@ td.fs_menu_order.column-fs_menu_order {
   display: block;
 }
 
+#wpadminbar #wp-admin-bar-fs-top > .ab-item:before {
+  content: "";
+  top: 2px;
+}
+
 /*# sourceMappingURL=fs-admin.css.map */
