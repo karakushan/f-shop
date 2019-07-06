@@ -82,6 +82,37 @@ class FS_Ajax_Class {
 		add_action( 'wp_ajax_fs_get_product_gallery_ids', array( $this, 'fs_get_product_gallery_ids' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_product_gallery_ids', array( $this, 'fs_get_product_gallery_ids' ) );
 
+		// Получаем API ключ для сайта
+		add_action( 'wp_ajax_fs_get_api_key', array( $this, 'fs_get_api_key' ) );
+		add_action( 'wp_ajax_fs_get_api_key', array( $this, 'fs_get_api_key' ) );
+
+	}
+
+
+	/**
+	 * Получаем API ключ для сайта
+	 */
+	public static function fs_get_api_key() {
+		$response = wp_remote_post( 'https://api.f-shop.top/site/create', array(
+			'body'      => array(
+				'domain'      => $_SERVER['HTTP_HOST'],
+				'admin_email' => get_option( 'admin_email' )
+			),
+			'sslverify' => true
+		) );
+
+		// проверка ошибки
+		if ( is_wp_error( $response ) ) {
+			$error_message = $response->get_error_message();
+			echo "Что-то пошло не так: $error_message";
+			wp_die();
+		} else {
+			$body = wp_remote_retrieve_body( $response );
+
+			echo $body;
+			wp_die();
+		}
+
 	}
 
 

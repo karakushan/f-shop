@@ -12,6 +12,32 @@ jQuery(function ($) {
         showMetaboxPreloader: function () {
             $(".fs-mb-preloader").css("display", "block");
         },
+        getApiKey: function (e) {
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'fs_get_api_key'
+                },
+
+                success: function (data) {
+                    let json = JSON.parse(data)
+                    if (json.success) {
+                        $('[name="fs_api[api_token]"]').val(json.api_key);
+                    } else {
+                        alert(json.msg());
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log('error...', xhr);
+                    //error logging
+                },
+                complete: function () {
+                    //afer ajax call is completed
+                }
+            });
+        },
         // скрывает прогрес бар
         hideMetaboxPreloader: function () {
             $(".fs-mb-preloader").fadeOut();
@@ -490,7 +516,7 @@ jQuery(document).ready(function ($) {
     $(document).on('click', '.fs-tabs .fs-tabs__title', function (event) {
         event.preventDefault();
 
-        let wrapper=$(this).parents('.fs-tabs');
+        let wrapper = $(this).parents('.fs-tabs');
 
         wrapper.find('.fs-tabs__title').removeClass('nav-tab-active');
         wrapper.find('.fs-tabs__body').removeClass('fs-tab-active');

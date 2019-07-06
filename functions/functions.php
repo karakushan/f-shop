@@ -855,7 +855,7 @@ function fs_add_to_cart( $product_id = 0, $label = null, $args = array() ) {
 		'data-attr'       => json_encode( new stdClass() ),
 		'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) ),
 		'data-variated'   => fs_is_variated( $product_id ) ? 1 : 0,
-		'class'           => !empty($args['class']) ? $args['class'] : 'fs-atc-' . $product_id,
+		'class'           => ! empty( $args['class'] ) ? $args['class'] : 'fs-atc-' . $product_id,
 		'data-category'   => fs_get_product_category_name( $product_id ),
 		'data-variation'  => fs_get_first_variation( $product_id, 'key' )
 	);
@@ -1192,10 +1192,9 @@ function fs_parse_url( $url = '' ) {
  * @return bool|mixed
  */
 function fs_is_action( $product_id = 0 ) {
-	global $post, $fs_config;
-	$product_id   = empty( $product_id ) ? $post->ID : (int) $product_id;
-	$base_price   = get_post_meta( $product_id, $fs_config->meta['price'], 1 );
-	$action_price = get_post_meta( $product_id, $fs_config->meta['action_price'], 1 );
+	$product_id   = fs_get_product_id( $product_id );
+	$base_price   = get_post_meta( $product_id, FS_Config::get_meta( 'price' ), 1 );
+	$action_price = get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), 1 );
 	if ( empty( $action_price ) ) {
 		return false;
 	}
@@ -1734,7 +1733,7 @@ function fs_change_price_percent( $product_id = 0 ) {
 }
 
 /**
- * Выводит скидку на товар в процентах
+ * Displays a product discount in percent
  *
  * @param int $product_id -ID товара(записи)
  * @param string $format -html теги, обёртка для скидки
