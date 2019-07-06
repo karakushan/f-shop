@@ -1936,4 +1936,9 @@ $darkcolor: #444;
   }
 }
 
+#wpadminbar #wp-admin-bar-fs-top>.ab-item:before {
+  content: "\f174";
+  top: 2px
+}
+
 

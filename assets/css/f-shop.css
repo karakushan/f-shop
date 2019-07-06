@@ -1882,4 +1882,9 @@ td.fs_photo.column-fs_photo img {
   max-width: 100%;
 }
 
+#wpadminbar #wp-admin-bar-fs-top > .ab-item:before {
+  content: "";
+  top: 2px;
+}
+
 /*# sourceMappingURL=f-shop.css.map */
