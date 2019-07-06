@@ -23,6 +23,35 @@ class FS_Settings_Class {
 	 * @param $wp_admin_bar
 	 */
 	function modify_admin_bar( $wp_admin_bar ) {
+
+		ob_start(); ?>
+        <div class="ab-sub-wrapper">
+            <ul id="wp-admin-bar-fs-top" class="ab-submenu">
+                <li>
+                    <a class="ab-item"
+                       href="<?php echo esc_url( admin_url( 'post-new.php?post_type=product' ) ) ?>"><?php esc_html_e( 'Add product', 'f-shop' ) ?></a>
+                </li>
+                <li>
+                    <a class="ab-item"
+                       href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=catalog&post_type=product' ) ) ?>"><?php esc_html_e( 'Product Categories', 'f-shop' ) ?></a>
+                </li>
+                <li>
+                    <a class="ab-item"
+                       href="<?php echo esc_url( admin_url( 'edit.php?post_type=orders' ) ) ?>"><?php esc_html_e( 'Orders', 'f-shop' ) ?></a>
+                </li>
+                <li>
+                    <a class="ab-item"
+                       href="<?php echo esc_url( admin_url( 'edit.php?post_type=product&page=f-shop-settings' ) ) ?>"><?php esc_html_e( 'Settings', 'f-shop' ) ?></a>
+                </li>
+                <li>
+                    <a class="ab-item"
+                       href="<?php echo esc_url( 'https://f-shop.top/' ) ?>"
+                       target="_blank"><?php esc_html_e( 'Documentation F-Shop', 'f-shop' ) ?></a>
+                </li>
+            </ul>
+        </div>
+		<?php $sub_menu = ob_get_clean();
+
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'fs-top',
 			'parent' => null,
@@ -30,16 +59,17 @@ class FS_Settings_Class {
 			'title'  => __( 'Shop', 'f-shop' ),
 			'href'   => admin_url( 'edit.php?post_type=product' ),
 			'meta'   => array(
-				'target'  => '_self',
-				'title'   => __( 'Shop', 'f-shop' ),
-				'html'    => '',
-				'class'   => 'ab-item',
-				'rel'     => 'friend',
-				'onclick' => "",
+				'target'   => '_self',
+				'title'    => __( 'Go to products', 'f-shop' ),
+				'html'     => $sub_menu,
+				'class'    => 'ab-item menupop',
+				'rel'      => 'friend',
+				'onclick'  => "",
 				'tabindex' => 20,
 			),
 		) );
 	}
+
 
 	/**
 	 * Updating API settings

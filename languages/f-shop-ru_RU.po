@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-06 18:54+0000\n"
-"PO-Revision-Date: 2019-07-06 18:55+0000\n"
+"POT-Creation-Date: 2019-07-06 19:22+0000\n"
+"PO-Revision-Date: 2019-07-06 19:23+0000\n"
 "Last-Translator: umbrella-admin <admin@umbrella.loc>\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -533,11 +533,11 @@ msgstr "Доставка и оплата"
 msgid "Shipping and Payment Details"
 msgstr "Детали доставки и оплаты"
 
-#: lib/FS_Config.php:242 lib/FS_Filters.php:394 lib/FS_Settings_Class.php:162
+#: lib/FS_Config.php:242 lib/FS_Filters.php:394 lib/FS_Settings_Class.php:197
 msgid "recently added"
 msgstr "недавно добавленные"
 
-#: lib/FS_Config.php:245 lib/FS_Filters.php:397 lib/FS_Settings_Class.php:163
+#: lib/FS_Config.php:245 lib/FS_Filters.php:397 lib/FS_Settings_Class.php:198
 msgid "later added"
 msgstr "давно добавленные"
 
@@ -794,7 +794,7 @@ msgid "Payment  <span>%s <span>%s</span></span> with  <span>%s</span>"
 msgstr "Оплата  <span>%s <span>%s</span></span> с помощью  <span>%s</span>"
 
 #: lib/FS_Post_Type.php:54 lib/FS_Post_Type.php:65
-#: lib/FS_Settings_Class.php:121 templates/front-end/dashboard/orders.php:21
+#: lib/FS_Settings_Class.php:156 templates/front-end/dashboard/orders.php:21
 msgid "Products"
 msgstr "Товары"
 
@@ -803,7 +803,7 @@ msgstr "Товары"
 msgid "Product"
 msgstr "Товар"
 
-#: lib/FS_Post_Type.php:56
+#: lib/FS_Post_Type.php:56 lib/FS_Settings_Class.php:32
 msgid "Add product"
 msgstr "Добавить товар"
 
@@ -812,6 +812,7 @@ msgid "Edit product"
 msgstr "Изменить товар"
 
 #: lib/FS_Post_Type.php:102 lib/FS_Post_Type.php:113
+#: lib/FS_Settings_Class.php:40
 msgid "Orders"
 msgstr "Заказы"
 
@@ -855,19 +856,35 @@ msgstr "Описание"
 msgid "Reviews"
 msgstr "Отзывы"
 
-#: lib/FS_Settings_Class.php:25 lib/FS_Settings_Class.php:29
+#: lib/FS_Settings_Class.php:36
+msgid "Product Categories"
+msgstr "Категории товаров"
+
+#: lib/FS_Settings_Class.php:44
+msgid "Settings"
+msgstr "Настройки"
+
+#: lib/FS_Settings_Class.php:49
+msgid "Documentation F-Shop"
+msgstr "Документация F-SHOP"
+
+#: lib/FS_Settings_Class.php:59
 msgid "Shop"
 msgstr "Магазин"
 
-#: lib/FS_Settings_Class.php:91
+#: lib/FS_Settings_Class.php:63
+msgid "Go to products"
+msgstr "Перейти к товарам"
+
+#: lib/FS_Settings_Class.php:126
 msgid "Basic settings"
 msgstr "Основные настройки"
 
-#: lib/FS_Settings_Class.php:96
+#: lib/FS_Settings_Class.php:131
 msgid "Activate discount system"
 msgstr "Активировать систему скидок"
 
-#: lib/FS_Settings_Class.php:97
+#: lib/FS_Settings_Class.php:132
 msgid ""
 "Allows you to create conditions under which the cost of goods in the basket "
 "will decrease"
@@ -875,11 +892,11 @@ msgstr ""
 "Если Вы хотите создавать условия при которых стоимость товаров в корзине "
 "будет уменьшаться"
 
-#: lib/FS_Settings_Class.php:103
+#: lib/FS_Settings_Class.php:138
 msgid "Activate multicurrency"
 msgstr "Активировать мультивалютность"
 
-#: lib/FS_Settings_Class.php:104
+#: lib/FS_Settings_Class.php:139
 msgid ""
 "It is necessary for the cost of the goods to be converted automatically at "
 "the established rate."
@@ -887,15 +904,15 @@ msgstr ""
 "Если установить валюту у товара, то цена будет автоматически "
 "конвертироваться по установленному курсу"
 
-#: lib/FS_Settings_Class.php:110
+#: lib/FS_Settings_Class.php:145
 msgid "Multi-language support"
 msgstr "Поддержка многоязычности"
 
-#: lib/FS_Settings_Class.php:126
+#: lib/FS_Settings_Class.php:161
 msgid "Hide items out of stock"
 msgstr "Скрыть товары товары которых нет на складе"
 
-#: lib/FS_Settings_Class.php:127
+#: lib/FS_Settings_Class.php:162
 msgid ""
 "Goods that are not available Budus hidden in the archives and catalog. These "
 "products are available by direct link.."
@@ -903,11 +920,11 @@ msgstr ""
 "Товары которых нет на складе не будут показываться в списке товаров (в "
 "архивах и терминах). Они будут доступны только по прямой ссылке."
 
-#: lib/FS_Settings_Class.php:133
+#: lib/FS_Settings_Class.php:168
 msgid "Enable the service of notification of receipt of goods to the warehouse"
 msgstr "Включить службу уведомлений о поступлении товара на склад"
 
-#: lib/FS_Settings_Class.php:134
+#: lib/FS_Settings_Class.php:169
 msgid ""
 "When adding a product to the cart which is not available, the buyer will be "
 "shown a window asking for contact information"
@@ -915,11 +932,11 @@ msgstr ""
 "Если покупатель попытается добавить в корзину товар которого нет в наличии, "
 "то ему будет показано окно запроса контактных данных"
 
-#: lib/FS_Settings_Class.php:140
+#: lib/FS_Settings_Class.php:175
 msgid "Enable inventory management"
 msgstr "Активировать упраление запасами"
 
-#: lib/FS_Settings_Class.php:141
+#: lib/FS_Settings_Class.php:176
 msgid ""
 "If this option is enabled, the stock of goods will decrease automatically "
 "with each purchase."
@@ -927,43 +944,43 @@ msgstr ""
 "Если эта опция включена, то количество доступных единиц товара для покупки "
 "будет автоматически уменьшаться"
 
-#: lib/FS_Settings_Class.php:147
+#: lib/FS_Settings_Class.php:182
 msgid "Enable item sorting by dragging"
 msgstr "Включить сортировку товаров перетасиванием"
 
-#: lib/FS_Settings_Class.php:155
+#: lib/FS_Settings_Class.php:190
 msgid "By default"
 msgstr "По умолчанию"
 
-#: lib/FS_Settings_Class.php:156
+#: lib/FS_Settings_Class.php:191
 msgid "By sorting field"
 msgstr "По полю сортировки"
 
-#: lib/FS_Settings_Class.php:157
+#: lib/FS_Settings_Class.php:192
 msgid "By price from lowest to highest"
 msgstr "По цене от меньшего к большему"
 
-#: lib/FS_Settings_Class.php:158
+#: lib/FS_Settings_Class.php:193
 msgid "By price from larger to smaller"
 msgstr "По цене от большего к меньшему"
 
-#: lib/FS_Settings_Class.php:159
+#: lib/FS_Settings_Class.php:194
 msgid "By popularity"
 msgstr "По популярности"
 
-#: lib/FS_Settings_Class.php:160
+#: lib/FS_Settings_Class.php:195
 msgid "By title from A to Z"
 msgstr "По названию от А до Я"
 
-#: lib/FS_Settings_Class.php:161
+#: lib/FS_Settings_Class.php:196
 msgid "By name from Z to A"
 msgstr "По названию от Я до А"
 
-#: lib/FS_Settings_Class.php:165
+#: lib/FS_Settings_Class.php:200
 msgid "Sort items in the catalog by"
 msgstr "Сортировать товары в каталоге по"
 
-#: lib/FS_Settings_Class.php:166
+#: lib/FS_Settings_Class.php:201
 msgid ""
 "This determines the order in which products are displayed on the site. By "
 "default, Wordpress sorts by ID."
@@ -971,68 +988,68 @@ msgstr ""
 "Это определяет порядок, в котором продукты отображаются на сайте. По "
 "умолчанию Wordpress сортирует по ID."
 
-#: lib/FS_Settings_Class.php:173
+#: lib/FS_Settings_Class.php:208
 msgid ""
 "The product must have at least one of the selected characteristics in the "
 "filter"
 msgstr "Товар должен обладать одним из выбранных свойств в фильтре"
 
-#: lib/FS_Settings_Class.php:174
+#: lib/FS_Settings_Class.php:209
 msgid "The product must have all of the selected characteristics in the filter"
 msgstr "Товар должен обладать всем свойствами выбранными в фильтре"
 
-#: lib/FS_Settings_Class.php:176
+#: lib/FS_Settings_Class.php:211
 msgid "Method of applying filters in the catalog"
 msgstr "Способ применения фильтра в каталоге"
 
-#: lib/FS_Settings_Class.php:183
+#: lib/FS_Settings_Class.php:218
 msgid "Total discount on products as a percentage"
 msgstr "Общая скидка на все товары в процентах"
 
-#: lib/FS_Settings_Class.php:193
+#: lib/FS_Settings_Class.php:228
 msgid "Buyers"
 msgstr "Покупатели"
 
-#: lib/FS_Settings_Class.php:198
+#: lib/FS_Settings_Class.php:233
 msgid "Fill in the data of the authorized user automatically"
 msgstr ""
 "Заполнять данные авторизованого пользователя в момент оформления покупки"
 
-#: lib/FS_Settings_Class.php:199
+#: lib/FS_Settings_Class.php:234
 msgid "Used when placing the order, if the user is authorized"
 msgstr "Используется при оформлении заказа, если пользователь авторизован"
 
-#: lib/FS_Settings_Class.php:205
+#: lib/FS_Settings_Class.php:240
 msgid "The amount of goods in the basket at which free shipping is activated"
 msgstr ""
 "Стоимость товаров в корзине при которой активировать бесплатную доставку"
 
-#: lib/FS_Settings_Class.php:214 lib/FS_Taxonomies_Class.php:389
+#: lib/FS_Settings_Class.php:249 lib/FS_Taxonomies_Class.php:389
 #: lib/FS_Taxonomies_Class.php:391
 msgid "Currencies"
 msgstr "Валюты"
 
-#: lib/FS_Settings_Class.php:219
+#: lib/FS_Settings_Class.php:254
 msgid "Currency sign ($ displayed by default)"
 msgstr "Символ или знак валюты (по умолчанию \"$\")"
 
-#: lib/FS_Settings_Class.php:225
+#: lib/FS_Settings_Class.php:260
 msgid "Three-digit currency code"
 msgstr "Код валюты, три символа (например: USD)"
 
-#: lib/FS_Settings_Class.php:231
+#: lib/FS_Settings_Class.php:266
 msgid "Price separator (default \".\")"
 msgstr "Разделитель копеек (по умолчанию \".\")"
 
-#: lib/FS_Settings_Class.php:237
+#: lib/FS_Settings_Class.php:272
 msgid "Use a penny?"
 msgstr "Использовать копейки?"
 
-#: lib/FS_Settings_Class.php:243
+#: lib/FS_Settings_Class.php:278
 msgid "Conversion of the cost of goods depending on the language"
 msgstr "Конвертровать цену товара в зависимости от языка"
 
-#: lib/FS_Settings_Class.php:244
+#: lib/FS_Settings_Class.php:279
 msgid ""
 "If selected, the price will be automatically converted into the required "
 "currency. Important! In order for this to work, you must specify the locale "
@@ -1041,15 +1058,15 @@ msgstr ""
 "Если выбрано, цена будет автоматически конвертирована в необходимую валюту. "
 "Важно! Чтобы это работало, Вы должны указать локаль в настройках валюты."
 
-#: lib/FS_Settings_Class.php:251
+#: lib/FS_Settings_Class.php:286
 msgid "Templates"
 msgstr "Шаблоны"
 
-#: lib/FS_Settings_Class.php:256
+#: lib/FS_Settings_Class.php:291
 msgid "Do not override standard templates."
 msgstr "Не переопределять стандартные шаблоны"
 
-#: lib/FS_Settings_Class.php:257
+#: lib/FS_Settings_Class.php:292
 msgid ""
 "This checkbox is needed if you will not store templates in the \"f-shop\" "
 "directory of your theme."
@@ -1057,65 +1074,65 @@ msgstr ""
 "Этот флажок необходим, если Вы не будете хранить шаблоны в каталоге «f-shop» "
 "вашей темы."
 
-#: lib/FS_Settings_Class.php:263
+#: lib/FS_Settings_Class.php:298
 msgid "Disable js event handling by the plugin"
 msgstr "Отключить обработку событий плагина"
 
-#: lib/FS_Settings_Class.php:264
+#: lib/FS_Settings_Class.php:299
 msgid ""
 "Этот чекбокс нужно отметить если вы сами намерены обрабатывать события "
 "инициируемые плагином"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:270
+#: lib/FS_Settings_Class.php:305
 msgid "What type of basket to show"
 msgstr "Какой тип корзины показывать"
 
-#: lib/FS_Settings_Class.php:272
+#: lib/FS_Settings_Class.php:307
 msgid "Modal window"
 msgstr "Модальное окно"
 
-#: lib/FS_Settings_Class.php:273
+#: lib/FS_Settings_Class.php:308
 msgid "Appears from the side"
 msgstr "Корзина сбоку"
 
-#: lib/FS_Settings_Class.php:274
+#: lib/FS_Settings_Class.php:309
 msgid "Turn off the appearance of the basket"
 msgstr "Выключить отображение корзины"
 
-#: lib/FS_Settings_Class.php:281
+#: lib/FS_Settings_Class.php:316
 msgid "Letters"
 msgstr "Письма"
 
-#: lib/FS_Settings_Class.php:286
+#: lib/FS_Settings_Class.php:321
 msgid "Recipients of letters"
 msgstr "Получатели писем"
 
-#: lib/FS_Settings_Class.php:287
+#: lib/FS_Settings_Class.php:322
 msgid "You can specify multiple recipients separated by commas."
 msgstr "Вы можете указать несколько получателей разделив их запятой."
 
-#: lib/FS_Settings_Class.php:293
+#: lib/FS_Settings_Class.php:328
 msgid "Letter Logo"
 msgstr "Лого в письме"
 
-#: lib/FS_Settings_Class.php:299
+#: lib/FS_Settings_Class.php:334
 msgid "Email sender"
 msgstr "E-mail отправителя писем"
 
-#: lib/FS_Settings_Class.php:305
+#: lib/FS_Settings_Class.php:340
 msgid "Name of the sender of letters"
 msgstr "Имя отправителя писем"
 
-#: lib/FS_Settings_Class.php:311
+#: lib/FS_Settings_Class.php:346
 msgid "The title of the letter to the customer"
 msgstr "Заголовок письма покупателю"
 
-#: lib/FS_Settings_Class.php:317
+#: lib/FS_Settings_Class.php:352
 msgid "The text of the letter to the customer after sending the order"
 msgstr "Текст письма покупателю после создания заказа"
 
-#: lib/FS_Settings_Class.php:318
+#: lib/FS_Settings_Class.php:353
 #, php-format
 msgid ""
 "<h3 style=\"text-align: center;\">Thank you for your purchase.</h3>\n"
@@ -1129,22 +1146,22 @@ msgstr ""
 "будет считатся принятым после того как мы свяжемся с Вами по одному из "
 "доступных каналов связи.</p>"
 
-#: lib/FS_Settings_Class.php:325
+#: lib/FS_Settings_Class.php:360
 msgid "The text of the letter to the administrator after sending the order"
 msgstr "Текст письма менеджеру или администратору после создания заказа"
 
-#: lib/FS_Settings_Class.php:326
+#: lib/FS_Settings_Class.php:361
 msgid ""
 "<h3 style=\"text-align: center;\">On the site a new order #%order_id%</h3>"
 msgstr ""
 "<h3 style=\"text-align: center;\">На сайте создан новый заказ "
 "#%order_id%</h3>"
 
-#: lib/FS_Settings_Class.php:331
+#: lib/FS_Settings_Class.php:366
 msgid "The text at the bottom of the letter"
 msgstr "Текст в футере письма"
 
-#: lib/FS_Settings_Class.php:332
+#: lib/FS_Settings_Class.php:367
 #, php-format
 msgid ""
 "<p style=\"text-align: center;\">Online store \"%s\" is functioning thanks "
@@ -1155,11 +1172,11 @@ msgstr ""
 "благодаря <a href=\"https://f-shop.top/\" target=\"_blank\" rel=\"noopener\">"
 "F-Shop.</a></p>"
 
-#: lib/FS_Settings_Class.php:339
+#: lib/FS_Settings_Class.php:374
 msgid "Service pages"
 msgstr "Служебные страницы"
 
-#: lib/FS_Settings_Class.php:340
+#: lib/FS_Settings_Class.php:375
 msgid ""
 "Service pages are created and installed automatically when the plugin is "
 "activated. Can you also override them here"
@@ -1167,51 +1184,51 @@ msgstr ""
 "Служебные страницы создаются и устанавливаются автоматически в момент "
 "активации плагина. Вы также можете переопределить их здесь"
 
-#: lib/FS_Settings_Class.php:345
+#: lib/FS_Settings_Class.php:380
 msgid "Cart page"
 msgstr "Страница корзины"
 
-#: lib/FS_Settings_Class.php:351
+#: lib/FS_Settings_Class.php:386
 msgid "Checkout Page"
 msgstr "Страница оформления заказа"
 
-#: lib/FS_Settings_Class.php:357
+#: lib/FS_Settings_Class.php:392
 msgid "Payment page"
 msgstr "Страница оплаты"
 
-#: lib/FS_Settings_Class.php:363
+#: lib/FS_Settings_Class.php:398
 msgid "Successful ordering page"
 msgstr "Страница благодарности за покупку"
 
-#: lib/FS_Settings_Class.php:369
+#: lib/FS_Settings_Class.php:404
 msgid "Wish List Page"
 msgstr "Страница списка желаний"
 
-#: lib/FS_Settings_Class.php:375
+#: lib/FS_Settings_Class.php:410
 msgid "Personal account page"
 msgstr "Страница личного кабинета"
 
-#: lib/FS_Settings_Class.php:381
+#: lib/FS_Settings_Class.php:416
 msgid "Login page"
 msgstr "Стрница авторизации (входа)"
 
-#: lib/FS_Settings_Class.php:387
+#: lib/FS_Settings_Class.php:422
 msgid "Register page"
 msgstr "Страница регистрации"
 
-#: lib/FS_Settings_Class.php:393 templates/front-end/auth/login.php:20
+#: lib/FS_Settings_Class.php:428 templates/front-end/auth/login.php:20
 msgid "Forgot your password?"
 msgstr "Забыли пароль?"
 
-#: lib/FS_Settings_Class.php:399
+#: lib/FS_Settings_Class.php:434
 msgid "Order Information Page"
 msgstr "Страница информации о заказе"
 
-#: lib/FS_Settings_Class.php:407
+#: lib/FS_Settings_Class.php:442
 msgid "Экспорт товаров"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:408
+#: lib/FS_Settings_Class.php:443
 #, php-format
 msgid ""
 "Link to product feed in YML format: <a href=\"%s\" target=\"_blank\">%s</a> "
@@ -1220,48 +1237,48 @@ msgstr ""
 "Ссылка на фид товаров формате YML: <a href=\"%s\" target=\"_blank\">%s</a> "
 "или <a href=\"%s\" target=\"_blank\">%s</a>"
 
-#: lib/FS_Settings_Class.php:413
+#: lib/FS_Settings_Class.php:448
 msgid "Export to the site"
 msgstr "Экспорт на сайт"
 
-#: lib/FS_Settings_Class.php:415
+#: lib/FS_Settings_Class.php:450
 msgid "Розетка"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:416
+#: lib/FS_Settings_Class.php:451
 msgid "Prom.ua"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:428
+#: lib/FS_Settings_Class.php:463
 msgid "Debugging"
 msgstr "Отладка"
 
-#: lib/FS_Settings_Class.php:429
+#: lib/FS_Settings_Class.php:464
 msgid "The debug data is displayed here as text."
 msgstr "Данные отладки отображаются в виде текста"
 
-#: lib/FS_Settings_Class.php:434
+#: lib/FS_Settings_Class.php:469
 msgid "Sessions"
 msgstr "Сессии"
 
-#: lib/FS_Settings_Class.php:460
+#: lib/FS_Settings_Class.php:495
 msgid "Default currency"
 msgstr "Валюта по умолчанию"
 
-#: lib/FS_Settings_Class.php:472
+#: lib/FS_Settings_Class.php:507
 msgid "Determine your store settings."
 msgstr "Определите настройки Вашего магазина."
 
-#: lib/FS_Settings_Class.php:483 lib/FS_Settings_Class.php:484
-#: lib/FS_Settings_Class.php:566
+#: lib/FS_Settings_Class.php:518 lib/FS_Settings_Class.php:519
+#: lib/FS_Settings_Class.php:601
 msgid "Store settings"
 msgstr "Настройки магазина"
 
-#: lib/FS_Settings_Class.php:492
+#: lib/FS_Settings_Class.php:527
 msgid "F-SHOP API"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:493
+#: lib/FS_Settings_Class.php:528
 msgid "API"
 msgstr ""
 
