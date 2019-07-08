@@ -1,4 +1,4 @@
-=== Fast Shop ===
+=== F-Shop ===
 Contributors: karakushan
 Donate link: http://profglobal.ru/fast-shop/
 Tags: store, online store, catalog, product catalog

@@ -25,6 +25,7 @@ class FS_Init {
 	public $fs_widget;
 	public $fs_product;
 	public $fs_migrate;
+	protected static $instance = null;
 
 
 	/**
@@ -58,7 +59,10 @@ class FS_Init {
 		$this->fs_migrate    = new FS_Migrate_Class();
 		$this->fs_export     = new FS_Export_Class();
 
-		add_filter( "plugin_action_links_" . FS_BASENAME, array( $this, 'plugin_settings_link' ) );
+		add_filter( "plugin_action_links_" . plugin_basename( FS_PLUGIN_FILE ), array(
+			$this,
+			'plugin_settings_link'
+		) );
 		add_action( 'plugins_loaded', array( $this, 'true_load_plugin_textdomain' ) );
 
 		add_action( 'init', array( $this, 'session_init' ) );
@@ -68,6 +72,21 @@ class FS_Init {
 
 		add_action( 'wp_footer', array( $this, 'footer_plugin_code' ) );
 	} // END public function __construct
+
+
+	/**
+	 * The single instance of the class.
+	 *
+	 * @return FS_Init|null
+	 * @since 1.2
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
 
 
 	/**
@@ -83,7 +102,7 @@ class FS_Init {
 	 * Устанавливаем путь к файлам локализации
 	 */
 	function true_load_plugin_textdomain() {
-		load_plugin_textdomain( 'f-shop', false, FS_LANG_PATH );
+		load_plugin_textdomain( 'f-shop', false, dirname( plugin_basename( FS_PLUGIN_FILE ) ) . '/languages' );
 	}
 
 
