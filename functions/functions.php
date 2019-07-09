@@ -996,7 +996,7 @@ function fs_cart_widget( $args = array() ) {
 		'empty' => false
 	) );
 
-	$template = '<div data-fs-element="cart-widget" class="' . esc_attr( $args['class'] ) . '">';
+	$template = '<a href="' . fs_cart_url( false ) . '" data-fs-element="cart-widget" class="' . esc_attr( $args['class'] ) . '">';
 
 	// если параметр  $args['empty']  == true это значит использовать отдельный шаблон для пустой корзины
 	if ( $args['empty'] ) {
@@ -1009,7 +1009,7 @@ function fs_cart_widget( $args = array() ) {
 		$template .= fs_frontend_template( 'cart-widget/widget' );
 	}
 
-	$template .= "</div>";
+	$template .= "</a>";
 
 	echo apply_filters( 'fs_cart_widget_template', $template );
 }
@@ -1824,6 +1824,15 @@ function fs_wishlist_url() {
 }
 
 /**
+ * Return a link to account page
+ *
+ * the page is set automatically during installation or can be set manually in the settings in the tab "Pages"
+ */
+function fs_account_url() {
+	return get_the_permalink( intval( fs_option( 'page_cabinet' ) ) );
+}
+
+/**
  * отображает список желаний
  *
  * @param array $html_attr массив html атрибутов для дива обёртки
@@ -1835,7 +1844,7 @@ function fs_wishlist_widget( $html_attr = array() ) {
 		'data-fs-element' => 'whishlist-widget'
 	);
 	$html_attr = fs_parse_attr( $html_attr, $attr_set );
-	printf( '<div %s>%s</div>', $html_attr, $template );
+	printf( '<a href="%s" %s>%s</a>', esc_url( fs_wishlist_url() ), $html_attr, $template );
 }
 
 /**
