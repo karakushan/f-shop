@@ -88,7 +88,7 @@ add_action( 'admin_head', function () {
  * The function is triggered when the plugin is activated.
  */
 function fs_activate() {
-	require_once 'lib/FS_Config.php';
+	require_once dirname(FS_PLUGIN_FILE).'/lib/FS_Config.php';
 	// Регистрируем роли пользователей
 	add_role(
 		\FS\FS_Config::$users['new_user_role'],
