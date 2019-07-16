@@ -104,7 +104,11 @@ class FS_Images_Class {
 			$product_variations = $product_class->get_product_variations( $product_id );
 			if ( ! empty( $product_variations ) && is_array( $product_variations ) ) {
 				$product_variations_first = array_shift( $product_variations );
-				$gallery                  = count( $product_variations_first['gallery'] ) ? $gallery + $product_variations_first['gallery'] : array();
+				$gallery                  = ! empty( $product_variations_first['gallery'] )
+				                            && is_array( $product_variations_first['gallery'] )
+				                            && count( $product_variations_first['gallery'] )
+					? $gallery + $product_variations_first['gallery']
+					: array();
 
 			}
 		}
