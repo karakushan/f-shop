@@ -2850,7 +2850,7 @@ function fs_get_category_text( $category_id = 0 ) {
 		$category_id = get_queried_object_id();
 	}
 
-	return get_term_meta( $category_id, '_content', 1 );
+	return apply_filters( 'the_content', fs_get_term_meta( $meta_key, $category_id, 1 ) );
 
 }
 
@@ -2953,7 +2953,8 @@ function fs_get_term_meta( $meta_key = '', $term_id = 0, $type = 1 ) {
 	if ( ! $term_id ) {
 		$term_id = get_queried_object_id();
 	}
-	$meta_key = get_locale() == FS_Config::default_language() ? $meta_key : $meta_key . get_locale();
+
+	$meta_key = apply_filters( 'fs_term_meta_name', '_content' );
 
 	return get_term_meta( $term_id, $meta_key, $type );
 }

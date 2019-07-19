@@ -1,13 +1,14 @@
 <?php
 //фильтр преобразует необработанную цену в формат денег
-add_filter('fs_price_format', 'fs_price_format', 10, 2);
-function fs_price_format($price, $delimiter = '')
-{
-    $cents = fs_option('price_cents') == 1 ? 2 : 0;
-    $delimiter = !empty($delimiter) ? $delimiter : fs_option('currency_delimiter', '.');
-    $price = number_format($price, $cents, $delimiter, ' ');
+use FS\FS_Config;
 
-    return $price;
+add_filter( 'fs_price_format', 'fs_price_format', 10, 2 );
+function fs_price_format( $price, $delimiter = '' ) {
+	$cents     = fs_option( 'price_cents' ) == 1 ? 2 : 0;
+	$delimiter = ! empty( $delimiter ) ? $delimiter : fs_option( 'currency_delimiter', '.' );
+	$price     = number_format( $price, $cents, $delimiter, ' ' );
+
+	return $price;
 }
 
 
@@ -18,201 +19,195 @@ function fs_price_format($price, $delimiter = '')
  *
  * @return mixed
  */
-function fs_discount_filter__callback($price)
-{
+function fs_discount_filter__callback( $price ) {
 
-    global $fs_config;
-    $discounts = get_terms(array('taxonomy' => $fs_config->data['discount_taxonomy'], 'hide_empty' => 0));
-    $discounts_cart = [];
-    if ($discounts) {
-        foreach ($discounts as $discount) {
-            $discount_type = get_term_meta($discount->term_id, 'discount_where_is', 1);
-            $discount_where = get_term_meta($discount->term_id, 'discount_where', 1);
-            $discount_value = get_term_meta($discount->term_id, 'discount_value', 1);
-            $discount_amount = get_term_meta($discount->term_id, 'discount_amount', 1);
-            // если скидка указана в процентах
-            if (strpos($discount_amount, '%') !== false) {
-                $discount_amount = floatval(str_replace('%', '', $discount_amount));
-                $discount_amount = $price * $discount_amount / 100;
-            }
+	global $fs_config;
+	$discounts      = get_terms( array( 'taxonomy' => $fs_config->data['discount_taxonomy'], 'hide_empty' => 0 ) );
+	$discounts_cart = [];
+	if ( $discounts ) {
+		foreach ( $discounts as $discount ) {
+			$discount_type   = get_term_meta( $discount->term_id, 'discount_where_is', 1 );
+			$discount_where  = get_term_meta( $discount->term_id, 'discount_where', 1 );
+			$discount_value  = get_term_meta( $discount->term_id, 'discount_value', 1 );
+			$discount_amount = get_term_meta( $discount->term_id, 'discount_amount', 1 );
+			// если скидка указана в процентах
+			if ( strpos( $discount_amount, '%' ) !== false ) {
+				$discount_amount = floatval( str_replace( '%', '', $discount_amount ) );
+				$discount_amount = $price * $discount_amount / 100;
+			}
 
-            if ($discount_type == 'sum' && $discount_where == '>=' && $price >= $discount_value) {
-                $discounts_cart[] = $discount_amount;
-            } elseif ($discount_type == 'sum' && $discount_where == '>' && $price > $discount_value) {
-                $discounts_cart[] = $discount_amount;
-            } elseif ($discount_type == 'sum' && $discount_where == '<=' && $price <= $discount_value) {
-                $discounts_cart[] = $discount_amount;
-            } elseif ($discount_type == 'sum' && $discount_where == '<' && $price < $discount_value) {
-                $discounts_cart[] = $discount_amount;
-            }
-        }
-    }
-    if (!empty($discounts_cart) && $price > max($discounts_cart)) {
-        $price = $price - max($discounts_cart);
-    }
+			if ( $discount_type == 'sum' && $discount_where == '>=' && $price >= $discount_value ) {
+				$discounts_cart[] = $discount_amount;
+			} elseif ( $discount_type == 'sum' && $discount_where == '>' && $price > $discount_value ) {
+				$discounts_cart[] = $discount_amount;
+			} elseif ( $discount_type == 'sum' && $discount_where == '<=' && $price <= $discount_value ) {
+				$discounts_cart[] = $discount_amount;
+			} elseif ( $discount_type == 'sum' && $discount_where == '<' && $price < $discount_value ) {
+				$discounts_cart[] = $discount_amount;
+			}
+		}
+	}
+	if ( ! empty( $discounts_cart ) && $price > max( $discounts_cart ) ) {
+		$price = $price - max( $discounts_cart );
+	}
 
-    return $price;
+	return $price;
 
 }
 
-add_filter('fs_discount_filter', 'fs_discount_filter__callback', 10, 1);
+add_filter( 'fs_discount_filter', 'fs_discount_filter__callback', 10, 1 );
 
 // создаем новую колонку
-add_filter('manage_edit-product_columns', 'add_views_column', 4);
-function add_views_column($columns)
-{
-    $num = 1; // после какой по счету колонки вставлять новые
-    $new_columns = array(
-        'fs_menu_order' => __('Sort', 'f-shop'),
-        'title' => __('Title', 'f-shop'),
-        'fs_id' => __('ID', 'f-shop'),
-        'fs_price' => __('Price', 'f-shop'),
-        'fs_vendor_code' => __('Vendor code', 'f-shop'),
-        'fs_stock' => __('Stock in stock', 'f-shop'),
-        'fs_photo' => __('Photo', 'f-shop'),
+add_filter( 'manage_edit-product_columns', 'add_views_column', 4 );
+function add_views_column( $columns ) {
+	$num         = 1; // после какой по счету колонки вставлять новые
+	$new_columns = array(
+		'fs_menu_order'  => __( 'Sort', 'f-shop' ),
+		'title'          => __( 'Title', 'f-shop' ),
+		'fs_id'          => __( 'ID', 'f-shop' ),
+		'fs_price'       => __( 'Price', 'f-shop' ),
+		'fs_vendor_code' => __( 'Vendor code', 'f-shop' ),
+		'fs_stock'       => __( 'Stock in stock', 'f-shop' ),
+		'fs_photo'       => __( 'Photo', 'f-shop' ),
 //        'fs-product-cat' => __('Product categories', 'f-shop')
 
-    );
+	);
 
-    if (!fs_option('fs_product_sort_on')) {
-        unset($new_columns['fs_menu_order']);
-    }
+	if ( ! fs_option( 'fs_product_sort_on' ) ) {
+		unset( $new_columns['fs_menu_order'] );
+	}
 
-    return array_slice($columns, 0, $num) + $new_columns + array_slice($columns, $num);
+	return array_slice( $columns, 0, $num ) + $new_columns + array_slice( $columns, $num );
 }
 
 
 // заполняем колонку данными
-add_filter('manage_product_posts_custom_column', 'fill_views_column', 5, 2);
-function fill_views_column($colname, $post_id)
-{
-    $config = new \FS\FS_Config();
-    switch ($colname) {
-        case "fs-product-cat":
-            echo '<div class="fs-product-cat-wrap">';
-            echo get_the_term_list($post_id, FS_Config::get_data( 'product_taxonomy' ), '', ', ', '');
-            echo '</div>';
-            break;
-        case "fs_menu_order":
-            echo '<img src="' . esc_url(FS_PLUGIN_URL . 'assets/img/sort. svg') . '" width="40" title="Потяните вверх или вниз, чтобы изменить позицию">';
-            break;
-        case "fs_id":
-            echo esc_html($post_id);
-            break;
-        case "fs_price":
-            echo '<span class="fs-price-blank">';
-            fs_the_price($post_id);
-            fs_base_price($post_id, '<br><del>%s %s,</del>');
-            break;
-        case "fs_vendor_code":
-            fs_product_code($post_id);
-            break;
-        case "fs_stock":
-            $stock_real = get_post_meta($post_id, $config->meta['remaining_amount'], 1);
-            if (fs_aviable_product($post_id)) {
-                $stock = __('in stock', 'f-shop');
-            } else {
-                $stock = __('not available', 'f-shop');
-            }
-            echo esc_html($stock);
-            echo '<span class="fs_stock_real" style="display:none">' . esc_html($stock_real) . '</span>';
-            break;
-        case "fs_photo":
-            fs_product_thumbnail();
-            break;
-    }
+add_filter( 'manage_product_posts_custom_column', 'fill_views_column', 5, 2 );
+function fill_views_column( $colname, $post_id ) {
+	$config = new \FS\FS_Config();
+	switch ( $colname ) {
+		case "fs-product-cat":
+			echo '<div class="fs-product-cat-wrap">';
+			echo get_the_term_list( $post_id, FS_Config::get_data( 'product_taxonomy' ), '', ', ', '' );
+			echo '</div>';
+			break;
+		case "fs_menu_order":
+			echo '<img src="' . esc_url( FS_PLUGIN_URL . 'assets/img/sort. svg' ) . '" width="40" title="Потяните вверх или вниз, чтобы изменить позицию">';
+			break;
+		case "fs_id":
+			echo esc_html( $post_id );
+			break;
+		case "fs_price":
+			echo '<span class="fs-price-blank">';
+			fs_the_price( $post_id );
+			fs_base_price( $post_id, '<br><del>%s %s,</del>' );
+			break;
+		case "fs_vendor_code":
+			fs_product_code( $post_id );
+			break;
+		case "fs_stock":
+			$stock_real = get_post_meta( $post_id, $config->meta['remaining_amount'], 1 );
+			if ( fs_aviable_product( $post_id ) ) {
+				$stock = __( 'in stock', 'f-shop' );
+			} else {
+				$stock = __( 'not available', 'f-shop' );
+			}
+			echo esc_html( $stock );
+			echo '<span class="fs_stock_real" style="display:none">' . esc_html( $stock_real ) . '</span>';
+			break;
+		case "fs_photo":
+			fs_product_thumbnail();
+			break;
+	}
 
 }
 
 // создаем новую колонку
-add_filter('manage_edit-orders_columns', 'fs_edit_orders_columns', 4);
-function fs_edit_orders_columns($columns)
-{
-    $num = 2; // после какой по счету колонки вставлять новые
-    $new_columns = array(
+add_filter( 'manage_edit-orders_columns', 'fs_edit_orders_columns', 4 );
+function fs_edit_orders_columns( $columns ) {
+	$num         = 2; // после какой по счету колонки вставлять новые
+	$new_columns = array(
 //		'fs_order_id'     => __( 'ID', 'f-shop'),
-        'fs_order_amount' => __('Total cost', 'f-shop'),
-        'fs_user' => __('Customer', 'f-shop')
+		'fs_order_amount' => __( 'Total cost', 'f-shop' ),
+		'fs_user'         => __( 'Customer', 'f-shop' )
 
-    );
+	);
 
-    return array_slice($columns, 0, $num) + $new_columns + array_slice($columns, $num);
+	return array_slice( $columns, 0, $num ) + $new_columns + array_slice( $columns, $num );
 }
 
-add_filter('manage_orders_posts_custom_column', 'fs_orders_posts_custom_column', 5, 2);
-function fs_orders_posts_custom_column($colname, $post_id)
-{
-    switch ($colname) {
-        /*	case 'fs_order_id':
-                echo $post_id;
-                break;*/
-        case 'fs_order_amount':
-            $amount = get_post_meta($post_id, '_amount', 1);
-            $amount = apply_filters('fs_price_format', $amount);
-            echo esc_html($amount . ' ' . fs_currency());
-            break;
-        case 'fs_user':
-            $user = get_post_meta($post_id, '_user', 0);
-            $user = $user[0];
-            echo '<ul>';
-            echo '<li><b>';
-            echo esc_html($user['first_name'] . ' ' . $user['last_name']);
-            echo '</b></li>';
-            printf('<li><span>%s:</span> %s</li>', esc_html__('phone', 'f-shop'), esc_html($user['phone']));
-            printf('<li><span>%s:</span> %s</li>', esc_html__('email', 'f-shop'), esc_html($user['email']));
-            printf('<li><span>%s:</span> %s</li>', esc_html__('city', 'f-shop'), esc_html($user['city']));
-            echo '</ul>';
-            break;
-    }
+add_filter( 'manage_orders_posts_custom_column', 'fs_orders_posts_custom_column', 5, 2 );
+function fs_orders_posts_custom_column( $colname, $post_id ) {
+	switch ( $colname ) {
+		/*	case 'fs_order_id':
+				echo $post_id;
+				break;*/
+		case 'fs_order_amount':
+			$amount = get_post_meta( $post_id, '_amount', 1 );
+			$amount = apply_filters( 'fs_price_format', $amount );
+			echo esc_html( $amount . ' ' . fs_currency() );
+			break;
+		case 'fs_user':
+			$user = get_post_meta( $post_id, '_user', 0 );
+			$user = $user[0];
+			echo '<ul>';
+			echo '<li><b>';
+			echo esc_html( $user['first_name'] . ' ' . $user['last_name'] );
+			echo '</b></li>';
+			printf( '<li><span>%s:</span> %s</li>', esc_html__( 'phone', 'f-shop' ), esc_html( $user['phone'] ) );
+			printf( '<li><span>%s:</span> %s</li>', esc_html__( 'email', 'f-shop' ), esc_html( $user['email'] ) );
+			printf( '<li><span>%s:</span> %s</li>', esc_html__( 'city', 'f-shop' ), esc_html( $user['city'] ) );
+			echo '</ul>';
+			break;
+	}
 
 }
 
 // Выводим поле в быстром редактировании записи
-add_action('quick_edit_custom_box', 'shiba_add_quick_edit', 10, 2);
-function shiba_add_quick_edit($column_name, $post_type)
-{
-    global $fs_config;
-    if ($column_name == 'fs_price' && $post_type == 'product') {
-        ?>
+add_action( 'quick_edit_custom_box', 'shiba_add_quick_edit', 10, 2 );
+function shiba_add_quick_edit( $column_name, $post_type ) {
+	global $fs_config;
+	if ( $column_name == 'fs_price' && $post_type == 'product' ) {
+		?>
         <fieldset class="inline-edit-col-left inline-edit-fast-shop">
-            <legend class="inline-edit-legend"><?php esc_html_e('Product Settings', 'f-shop') ?></legend>
+            <legend class="inline-edit-legend"><?php esc_html_e( 'Product Settings', 'f-shop' ) ?></legend>
             <div class="inline-edit-col">
                 <label>
-                    <span class="title"><?php esc_html_e('Price', 'f-shop') ?> (<?php echo fs_currency(); ?>)</span>
+                    <span class="title"><?php esc_html_e( 'Price', 'f-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
                     <span class="input-text-wrap">
-                        <input type="text" name="<?php echo esc_attr($fs_config->meta['price']) ?>" class="fs_price"
+                        <input type="text" name="<?php echo esc_attr( $fs_config->meta['price'] ) ?>" class="fs_price"
                                value="" required>
                     </span>
                 </label>
                 <label>
-                    <span class="title"><?php esc_html_e('Vendor code', 'f-shop') ?></span>
+                    <span class="title"><?php esc_html_e( 'Vendor code', 'f-shop' ) ?></span>
                     <span class="input-text-wrap">
-                        <input type="text" name="<?php echo esc_attr($fs_config->meta['sku']) ?>" class="fs_vendor_code"
+                        <input type="text" name="<?php echo esc_attr( $fs_config->meta['sku'] ) ?>"
+                               class="fs_vendor_code"
                                value="">
                     </span>
                 </label>
                 <label>
-            <span class="title"><?php esc_html_e('Stock in stock', 'f-shop') ?> (<?php esc_html_e('units', 'f-shop') ?>
+            <span class="title"><?php esc_html_e( 'Stock in stock', 'f-shop' ) ?> (<?php esc_html_e( 'units', 'f-shop' ) ?>
                 )</span>
                     <span class="input-text-wrap">
-                        <input type="text" name="<?php echo esc_attr($fs_config->meta['remaining_amount']) ?>"
+                        <input type="text" name="<?php echo esc_attr( $fs_config->meta['remaining_amount'] ) ?>"
                                class="fs_stock" value=""></span>
                 </label>
             </div>
         </fieldset>
-        <?php
-    }
+		<?php
+	}
 }
 
 
 // добавляем возможность сортировать колонку
-add_filter('manage_edit-product_sortable_columns', 'add_views_sortable_column');
-function add_views_sortable_column($sortable_columns)
-{
-    $sortable_columns['fs_price'] = 'fs_price';
-    $sortable_columns['fs_id'] = 'ID';
+add_filter( 'manage_edit-product_sortable_columns', 'add_views_sortable_column' );
+function add_views_sortable_column( $sortable_columns ) {
+	$sortable_columns['fs_price'] = 'fs_price';
+	$sortable_columns['fs_id']    = 'ID';
 
-    return $sortable_columns;
+	return $sortable_columns;
 }
 
 /**
@@ -226,34 +221,32 @@ function add_views_sortable_column($sortable_columns)
  *
  */
 
-function fs_form_header($args = array(), $ajax_action)
-{
-    $attr = fs_parse_attr($args, array(
-        'method' => 'POST',
-        'autocomplete' => 'off',
-        'class' => 'fs-form'
-    ));
-    $form_header = '<form ' . $attr . '>';
-    $form_header .= \FS\FS_Config::nonce_field();
-    $form_header .= '<input type="hidden" name="action" value="' . $ajax_action . '">';
-    if (!empty($args['title'])) {
-        $form_header .= '<div class="fs-form-title">' . $args['title'] . '</div>';
-    }
-    $form_header .= '<p class="fs-form-info"></p>';
+function fs_form_header( $args = array(), $ajax_action ) {
+	$attr        = fs_parse_attr( $args, array(
+		'method'       => 'POST',
+		'autocomplete' => 'off',
+		'class'        => 'fs-form'
+	) );
+	$form_header = '<form ' . $attr . '>';
+	$form_header .= \FS\FS_Config::nonce_field();
+	$form_header .= '<input type="hidden" name="action" value="' . $ajax_action . '">';
+	if ( ! empty( $args['title'] ) ) {
+		$form_header .= '<div class="fs-form-title">' . $args['title'] . '</div>';
+	}
+	$form_header .= '<p class="fs-form-info"></p>';
 
-    return $form_header;
+	return $form_header;
 }
 
 /**
  * фильтр возвращает низ формы
  * @return string
  */
-add_filter('fs_form_bottom', 'fs_form_bottom', 10, 1);
-function fs_form_bottom($form_bottom = '')
-{
-    $form_bottom = $form_bottom . '</form>';
+add_filter( 'fs_form_bottom', 'fs_form_bottom', 10, 1 );
+function fs_form_bottom( $form_bottom = '' ) {
+	$form_bottom = $form_bottom . '</form>';
 
-    return $form_bottom;
+	return $form_bottom;
 
 }
 
@@ -265,79 +258,85 @@ function fs_form_bottom($form_bottom = '')
  *
  * @return mixed|string|void
  */
-function fs_email_template($vars)
-{
-    $template = 'oxygen';
+function fs_email_template( $vars ) {
+	$template = 'oxygen';
 
-    $search = fs_mail_keys($vars);
-    $replace = array_values($vars);
-    $replace = array_map('esc_attr', $replace);
+	$search  = fs_mail_keys( $vars );
+	$replace = array_values( $vars );
+	$replace = array_map( 'esc_attr', $replace );
 
-    $html = fs_frontend_template('mail/themes/' . $template, array('vars' => $vars));
-    $html = str_replace($search, $replace, $html);
+	$html = fs_frontend_template( 'mail/themes/' . $template, array( 'vars' => $vars ) );
+	$html = str_replace( $search, $replace, $html );
 
-    return $html;
+	return $html;
 }
 
-add_filter('fs_email_template', 'fs_email_template', 10, 2);
+add_filter( 'fs_email_template', 'fs_email_template', 10, 2 );
 
 
+add_filter( 'wp_dropdown_cats', 'fs_dropdown_cats_multiple', 10, 2 );
+function fs_dropdown_cats_multiple( $output, $r ) {
 
-add_filter('wp_dropdown_cats', 'fs_dropdown_cats_multiple', 10, 2);
-function fs_dropdown_cats_multiple($output, $r)
-{
+	if ( isset( $r['multiple'] ) && $r['multiple'] ) {
 
-    if (isset($r['multiple']) && $r['multiple']) {
+		$output = preg_replace( '/^<select/i', '<select multiple size="30"', $output );
 
-        $output = preg_replace('/^<select/i', '<select multiple size="30"', $output);
+		$output = str_replace( "name='{$r['name']}'", "name='{$r['name']}[]'", $output );
 
-        $output = str_replace("name='{$r['name']}'", "name='{$r['name']}[]'", $output);
+		foreach ( array_map( 'trim', explode( ",", $r['selected'] ) ) as $value ) {
+			$output = str_replace( "value=\"{$value}\"", "value=\"{$value}\" selected", $output );
+		}
 
-        foreach (array_map('trim', explode(",", $r['selected'])) as $value) {
-            $output = str_replace("value=\"{$value}\"", "value=\"{$value}\" selected", $output);
-        }
+	}
 
-    }
-
-    return $output;
+	return $output;
 }
 
 // вносит коррективы в цену с учётом настроек валюты
-add_filter('fs_price_filter', 'fs_price_filter_callback', 10, 2);
-function fs_price_filter_callback($post_id, $price)
-{
-    if (fs_option('multi_currency_on') != 1) {
-        return $price;
-    }
-    global $fs_config, $wpdb;
-    $default_currency_id = fs_option('default_currency'); // id валюты установленной в настройках
-    $product_currency_id = get_post_meta($post_id, $fs_config->meta['currency'], true);// id валюты товара
-    // default_currency_cost = get_term_meta( $default_currency_id, '_fs_currency_cost', true ); // стоимость валюты установленной в настройках
-    $locale = get_locale();
+add_filter( 'fs_price_filter', 'fs_price_filter_callback', 10, 2 );
+function fs_price_filter_callback( $post_id, $price ) {
+	if ( fs_option( 'multi_currency_on' ) != 1 ) {
+		return $price;
+	}
+	global $fs_config, $wpdb;
+	$default_currency_id = fs_option( 'default_currency' ); // id валюты установленной в настройках
+	$product_currency_id = get_post_meta( $post_id, $fs_config->meta['currency'], true );// id валюты товара
+	// default_currency_cost = get_term_meta( $default_currency_id, '_fs_currency_cost', true ); // стоимость валюты установленной в настройках
+	$locale = get_locale();
 
-    // Если установлена галочка "конвертация стоимости в зависимости от языка"
-    if (fs_option('price_conversion')) {
-        // получаем валюту текущей локали
-        $locale_currency_id = $wpdb->get_var($wpdb->prepare("SELECT term_id FROM $wpdb->termmeta WHERE meta_key='_fs_currency_locale' AND meta_value='%s'", $locale));
-        if (!$locale_currency_id) {
-            $locale_currency_id = $default_currency_id;
-        }
-        $locale_currency_cost = get_term_meta($locale_currency_id, '_fs_currency_cost', true);
+	// Если установлена галочка "конвертация стоимости в зависимости от языка"
+	if ( fs_option( 'price_conversion' ) ) {
+		// получаем валюту текущей локали
+		$locale_currency_id = $wpdb->get_var( $wpdb->prepare( "SELECT term_id FROM $wpdb->termmeta WHERE meta_key='_fs_currency_locale' AND meta_value='%s'", $locale ) );
+		if ( ! $locale_currency_id ) {
+			$locale_currency_id = $default_currency_id;
+		}
+		$locale_currency_cost = get_term_meta( $locale_currency_id, '_fs_currency_cost', true );
 
-        if ($product_currency_id != $locale_currency_id) {
-            $price = $price * $locale_currency_cost;
-        }
+		if ( $product_currency_id != $locale_currency_id ) {
+			$price = $price * $locale_currency_cost;
+		}
 
-        return $price;
-    }
+		return $price;
+	}
 
-    //  Если установлена валюта у товара отличная от валюты сайта, то конвертируем её
-    if ($product_currency_id && $product_currency_id != $default_currency_id) {
-        $product_currency_cost = get_term_meta($product_currency_id, '_fs_currency_cost', true);
-        if ($product_currency_cost) {
-            $price = $price * $product_currency_cost;
-        }
-    }
+	//  Если установлена валюта у товара отличная от валюты сайта, то конвертируем её
+	if ( $product_currency_id && $product_currency_id != $default_currency_id ) {
+		$product_currency_cost = get_term_meta( $product_currency_id, '_fs_currency_cost', true );
+		if ( $product_currency_cost ) {
+			$price = $price * $product_currency_cost;
+		}
+	}
 
-    return $price;
+	return $price;
+}
+
+// Adds a suffix to the meta field of the taxonomy term
+add_filter( 'fs_term_meta_name', 'fs_term_meta_name_filter' );
+function fs_term_meta_name_filter( $meta_key ) {
+	if ( fs_option( 'fs_multi_language_support' ) ) {
+		$meta_key = get_locale() == FS_Config::default_language() ? $meta_key : $meta_key .'__'. get_locale();
+	}
+
+	return $meta_key;
 }

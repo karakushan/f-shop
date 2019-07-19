@@ -1248,6 +1248,23 @@
         });
     });
 
+    // === ДОБАВЛЯЕМ СПЕЦИАЛЬНЫЕ КЛАССЫ ДЛЯ ВРАППЕРА РАДИО КНОПОК ПРИ ОФОРМЛЕНИИ ПОКУПКИ
+
+    // Это сработает сразу после загрузки страницы
+    $(".fs-field-wrap .radio:first-child").addClass('active').find('input').prop('checked', true);
+
+    // Это сработает сразу после переключения input radio
+    $(".fs-field-wrap").on('change', '[type="radio"]', function () {
+        $(this)
+            .parents('.fs-field-wrap')
+            .find('.radio')
+            .removeClass('active')
+
+        $(this)
+            .parents('.radio')
+            .addClass('active')
+    })
+
 
 })(jQuery)
 
