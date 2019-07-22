@@ -320,7 +320,7 @@ class FS_Ajax_Class {
 		foreach ( $variations as $k => $variant ) {
 			$variant_atts = array_map( 'intval', $variant['attr'] );
 			// ищем совпадения варианов в присланными значениями
-			if ( fs_in_array_multi( $atts, $variant_atts ) ) {
+			if ( fs_in_array_multi( $variant_atts, $atts ) ) {
 				$matched_options[ $k ] = array(
 					'variation'    => $k,
 					'price'        => $variant['price'],
@@ -332,6 +332,7 @@ class FS_Ajax_Class {
 		}
 
 		// Если есть хоть один совпавший вариант
+		// TODO: В дальнейшем если есть несколько совпавших вариантов выводить доп. окно с уточнением
 		if ( count( $matched_options ) && is_array( $matched_options ) ) {
 			$matched_options = array_shift( $matched_options );
 			$price           = apply_filters( 'fs_price_filter', $product_id, $matched_options['price'] );

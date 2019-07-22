@@ -295,6 +295,7 @@ function fs_dropdown_cats_multiple( $output, $r ) {
 // вносит коррективы в цену с учётом настроек валюты
 add_filter( 'fs_price_filter', 'fs_price_filter_callback', 10, 2 );
 function fs_price_filter_callback( $post_id, $price ) {
+	$price = floatval( $price );
 	if ( fs_option( 'multi_currency_on' ) != 1 ) {
 		return $price;
 	}
@@ -322,7 +323,7 @@ function fs_price_filter_callback( $post_id, $price ) {
 
 	//  Если установлена валюта у товара отличная от валюты сайта, то конвертируем её
 	if ( $product_currency_id && $product_currency_id != $default_currency_id ) {
-		$product_currency_cost = get_term_meta( $product_currency_id, '_fs_currency_cost', true );
+		$product_currency_cost = floatval( get_term_meta( $product_currency_id, '_fs_currency_cost', true ) );
 		if ( $product_currency_cost ) {
 			$price = $price * $product_currency_cost;
 		}
@@ -335,7 +336,7 @@ function fs_price_filter_callback( $post_id, $price ) {
 add_filter( 'fs_term_meta_name', 'fs_term_meta_name_filter' );
 function fs_term_meta_name_filter( $meta_key ) {
 	if ( fs_option( 'fs_multi_language_support' ) ) {
-		$meta_key = get_locale() == FS_Config::default_language() ? $meta_key : $meta_key .'__'. get_locale();
+		$meta_key = get_locale() == FS_Config::default_language() ? $meta_key : $meta_key . '__' . get_locale();
 	}
 
 	return $meta_key;

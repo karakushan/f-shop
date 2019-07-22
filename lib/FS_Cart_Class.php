@@ -177,7 +177,7 @@ class FS_Cart_Class {
 	 * @return array
 	 */
 	public static function get_cart() {
-		return $_SESSION['cart'];
+		return isset( $_SESSION['cart'] ) ? $_SESSION['cart'] : null;
 	}
 
 

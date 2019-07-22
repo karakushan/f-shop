@@ -49,7 +49,9 @@ class FS_Action_Class {
 	function register_plugin_action() {
 		global $fs_product;
 
-		//===== PRODUCT =====
+		//===== SINGLE PRODUCT =====
+		/* Hooks in this section only work on the product page. */
+
 		/* отображение скидки в процентах */
 		add_action( 'fs_discount_percent', 'fs_discount_percent', 10, 3 );
 		/* отображение артикула товара */
@@ -59,9 +61,15 @@ class FS_Action_Class {
 		/* рейтинг товара */
 		add_action( 'fs_product_rating', array( $fs_product, 'product_rating' ), 10, 2 );
 		/* Табы в товаре */
-		add_action( 'fs_product_tabs', array('FS\FS_Product_Class', 'product_tabs' ), 10, 2 );
+		add_action( 'fs_product_tabs', array( 'FS\FS_Product_Class', 'product_tabs' ), 10, 2 );
+		/* Выводит список всех установленных атрибутов товара в виде списка ul. Данные выводятся в  в виде: группа : свойство (свойства) */
+		add_action( 'fs_the_atts_list', 'fs_the_atts_list', 10, 2 );
+		/* отображение фактической цены */
+		add_action( 'fs_the_price', 'fs_the_price', 10, 3 );
+		/* отображение базовой цены без учёта скидки */
+		add_action( 'fs_base_price', 'fs_base_price', 10, 3 );
 
-		//===== FILTERS =====
+		//===== PRODUCT CATEGORY  =====
 		/* выводит select для сортировки по параметрам (обычно применяется в каталоге или на страницах категорий) */
 		add_action( 'fs_types_sort_filter', array( 'FS\FS_Filters', 'fs_types_sort_filter' ), 10, 1 );
 		/* выводит select для указания к-ва выводимых постов на странице (обычно применяется в каталоге или на страницах категорий) */
@@ -70,18 +78,6 @@ class FS_Action_Class {
 		add_action( 'fs_attr_filter', 'fs_attr_filter', 10, 2 );
 		/*выводит фильтр для сортировки по диапазону цены (слайдер цены)*/
 		add_action( 'fs_range_slider', 'fs_range_slider', 10 );
-
-		//===== ATTRIBUTES =====
-		/* Выводит список всех установленных атрибутов товара. Данные выводятся в  в виде: группа : свойство (свойства) */
-		add_action( 'fs_the_atts_list', 'fs_the_atts_list', 10, 2 );
-
-		//===== PRICE =====
-		/* отображение фактической цены */
-		add_action( 'fs_the_price', 'fs_the_price', 10, 3 );
-		/* Выводит общую сумму всех товаров в корзине */
-		add_action( 'fs_total_amount', 'fs_total_amount', 10, 2 );
-		/* отображение базовой цены без учёта скидки */
-		add_action( 'fs_base_price', 'fs_base_price', 10, 3 );
 
 		//===== WISHLIST =====
 		/* отображает кнопку добавления в список желаний */
@@ -102,10 +98,14 @@ class FS_Action_Class {
 		add_action( 'fs_delete_cart', 'fs_delete_cart', 10, 1 );
 		/* Выводит кнопку для удаления определёного товара из корзины */
 		add_action( 'fs_delete_position', 'fs_delete_position', 10, 2 );
+		/* Выводит общую сумму всех товаров в корзине */
+		add_action( 'fs_total_amount', 'fs_total_amount', 10, 2 );
 
-		//===== ORDER =====
+		//===== CHECKOUT =====
 		/* Выводит форму заполнения личных данных при отправке заказа */
 		add_action( 'fs_order_form', 'fs_order_send_form', 10, 1 );
+		/* Показывает поля адреса. Срабатывает при условии что способ доставки требует поля адреса */
+		add_action( 'fs_shipping_fields', array( 'FS\FS_Cart_Class', 'show_shipping_fields' ) );
 
 		//===== USERS =====
 		/* Выводит форму авторизации на сайте */
@@ -125,10 +125,6 @@ class FS_Action_Class {
 		add_action( 'fs_delete_orders', array( 'FS\FS_Orders_Class', 'delete_orders' ) );
 		/* удаляет все товары */
 		add_action( 'fs_delete_products', array( 'FS\FS_Product_Class', 'delete_products' ) );
-
-		// === CHECKOUT ===
-		add_action( 'fs_shipping_fields', array( 'FS\FS_Cart_Class', 'show_shipping_fields' ) );
-
 	}
 
 

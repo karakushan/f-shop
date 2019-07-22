@@ -402,7 +402,7 @@
         event.preventDefault();
         var el = jQuery(this);
         var productId = el.data('product-id');
-        var cartbutton = jQuery('.fs-atc-' + productId);
+        var cartbutton = jQuery('[data-action="add-to-cart"][data-product-id="' + productId + '"]');
         var productObject = cartbutton.first().data('attr');
         var attrName = el.attr('name');
         var attrVal = el.val();
@@ -421,11 +421,9 @@
                 url: fShop.ajaxurl,
                 data: {action: "fs_get_variated", product_id: productId, atts: parseAtts, current: attrVal},
                 success: function (result) {
-                    console.log(result);
                     if (result.success) {
                         let price = Number(result.data.options.price);
                         let pricePromo = Number(result.data.options.action_price);
-                        console.log(price, pricePromo);
 
                         if (pricePromo && pricePromo < price) {
                             price = pricePromo;
@@ -483,9 +481,7 @@
                     } else {
                         cartbutton.attr("data-disabled", true);
                         cartbutton.attr("data-disabled-message", result.data.msg);
-                        $("[data-fs-element=\"attr\"] option").each(function (index, value) {
-                            $(this).prop("selected", false);
-                        });
+
                         iziToast.warning({
                             title: fShop.getLang('error'),
                             message: result.data.msg,

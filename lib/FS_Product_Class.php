@@ -48,7 +48,7 @@ class FS_Product_Class {
 	 *
 	 * @return array
 	 */
-	function get_product_variations( $product_id = 0, $hide_disabled = true ) {
+	public static function get_product_variations( $product_id = 0, $hide_disabled = true ) {
 		$product_id = fs_get_product_id( $product_id );
 		$variations = get_post_meta( $product_id, 'fs_variant', 0 );
 

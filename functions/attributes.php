@@ -1,4 +1,7 @@
 <?php
+
+use FS\FS_Product_Class;
+
 /**
  * Возвращает массив атрибутов конкретного товара
  *
@@ -495,6 +498,65 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 			break;
 	}
 
+
+}
+
+/**
+ * Выводит select для выбора свойст товара добавляемого в корзину
+ * используется на странице товара
+ *
+ * @param int $group_id - term_id родителя группы свойств
+ * @param int $product_id - id товара
+ * @param array $args - дополнительные атрибуты
+ */
+function fs_dropdown_attr_group( $group_id = 0, $product_id = 0, $args = array() ) {
+	global $fs_config;
+	$product    = new FS\FS_Product_Class();
+	$variations = $product->get_product_variations( $product_id );
+	$product_id = fs_get_product_id( $product_id );
+	if ( ! $group_id ) {
+		printf( __( 'Не указан параметр $group_id в функции %s', 'f-shop' ), __FUNCTION__ );
+	}
+	$args = wp_parse_args( $args, array(
+		'class'    => 'fs-dropdown-attr fs-dropdown-attr-' . $group_id,
+		'first'    => __( 'Select' ),// название первой, пустой опции селекта
+		'variated' => false // если false свойства берутся из вкладки "свойства товара" иначе из добавленных вариаций
+	) );
+
+	if ( ! term_exists( $group_id ) ) {
+		printf( __( 'Группы характеристик %d нет на сайте в функции %s', 'f-shop' ), $group_id, __FUNCTION__ );
+	}
+
+	echo '<select name="' . esc_attr( get_term_field( 'slug', $group_id ) ) . '" class="' . esc_attr( $args['class'] ) . '" data-fs-element="attr" data-product-id="' . esc_attr( $product_id ) . '">';
+	if ( $args['first'] ) {
+		echo '<option value="">' . esc_attr( $args['first'] ) . '</option>';
+	}
+
+	// Если установлен источник терминов из вариаций
+	if ( $args['variated'] && count( $variations ) ) {
+		$all_atts = [];
+		foreach ( $variations as $variation ) {
+			if ( ! empty( $variation['attr'] ) ) {
+				foreach ( $variation['attr'] as $attr ) {
+					$term = get_term( $attr, $fs_config->data['product_att_taxonomy'] );
+					if ( isset( $term->parent ) && $term->parent == $group_id && ! in_array( $term->term_id, $all_atts ) ) {
+						$all_atts[] = $term->term_id;
+						echo '<option value="' . esc_attr( $term->term_id ) . '">' . esc_attr( $term->name ) . '</option>';
+					}
+				}
+			}
+		}
+
+	} else {
+		$terms = get_the_terms( $product_id, $fs_config->data['product_att_taxonomy'] );
+		foreach ( $terms as $term ) {
+			if ( $term->parent == $group_id ) {
+				echo '<option value="' . esc_attr( $term->term_id ) . '">' . esc_attr( $term->name ) . '</option>';
+			}
+		}
+	}
+
+	echo '<select>';
 
 }
 
