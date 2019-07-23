@@ -41,8 +41,12 @@
            data-fs-element="clone-att">+ <?php esc_html_e( 'add property', 'f-shop' ) ?></a></div>
     <div class="fs-flex fs-prop-group">
 		<?php
-		if ( ! empty( $variant['attr'] ) ) {
+		if ( ! empty( $variant['attr'] ) && is_array( $variant['attr'] ) ) {
 			foreach ( $variant['attr'] as $att ) {
+				if ( ! $att ) {
+					continue;
+				}
+				$att = intval( $att );
 				require( FS_PLUGIN_PATH . 'templates/back-end/metabox/product-variations/single-attr.php' );
 			}
 		} ?>
