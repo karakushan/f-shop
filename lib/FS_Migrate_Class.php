@@ -7,9 +7,6 @@
  */
 
 namespace FS;
-
-set_time_limit( 0 );
-
 class FS_Migrate_Class {
 
 	function __construct() {
