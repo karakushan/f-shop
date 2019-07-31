@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 *  reduce the writing of paths, etc.
 */
 define( 'FS_PLUGIN_FILE', __FILE__ );
-define( 'FS_DEBUG', false ); // Debug mode
+define( 'FS_DEBUG', true ); // Debug mode
 define( 'FS_PLUGIN_VER', '1.2' ); // plugin version
 define( 'FS_PLUGIN_PREFIX', 'fs_' ); // file prefix
 define( 'FS_PLUGIN_NAME', 'f-shop' ); // plugin Name
@@ -44,8 +44,9 @@ define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // absolute path with htt
 
 // Sometimes you need complete debugging, just do not forget to turn it off in combat mode
 if ( defined( 'FS_DEBUG' ) && FS_DEBUG == true ) {
-	ini_set( "display_errors", 1 );
-	error_reporting( E_ALL );
+	ini_set('error_reporting', E_ALL);
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
 }
 
 require_once 'vendor/autoload.php';

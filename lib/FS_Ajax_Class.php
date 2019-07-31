@@ -72,7 +72,7 @@ class FS_Ajax_Class {
 
 		// Add new order and send e-mail
 		add_action( 'wp_ajax_order_send', array( $this, 'order_send_ajax' ) );
-		add_action( 'wp_ajax_noprivorder_send', array( $this, 'order_send_ajax' ) );
+		add_action( 'wp_ajax_nopriv_order_send', array( $this, 'order_send_ajax' ) );
 
 		// Notifies of the appearance of goods in stock
 		add_action( 'wp_ajax_fs_report_availability', array( $this, 'report_availability' ) );

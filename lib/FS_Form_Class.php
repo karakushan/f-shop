@@ -88,7 +88,7 @@ class FS_Form_Class {
 		if ( fs_option( 'fs_multi_language_support' )
 		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
 		     && ( ! in_array( $type, [ 'image' ] ) )
-		     && $screen->id == 'edit-catalog'
+		     && (isset($screen->id) && $screen->id == 'edit-catalog')
 		) {
 			$multi_lang = true;
 		}
