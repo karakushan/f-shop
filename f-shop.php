@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 *  reduce the writing of paths, etc.
 */
 define( 'FS_PLUGIN_FILE', __FILE__ );
-define( 'FS_DEBUG', true ); // Debug mode
+define( 'FS_DEBUG', false ); // Debug mode
 define( 'FS_PLUGIN_VER', '1.2' ); // plugin version
 define( 'FS_PLUGIN_PREFIX', 'fs_' ); // file prefix
 define( 'FS_PLUGIN_NAME', 'f-shop' ); // plugin Name
