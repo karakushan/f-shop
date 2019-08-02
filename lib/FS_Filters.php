@@ -209,21 +209,27 @@ class FS_Filters {
 			}
 
 
-			// Устнавливаем порядок сортировки в каталоге по умолчанию
+			// Set the sort order in the default directory.
 			if ( empty( $url['order_type'] ) && fs_option( 'fs_product_sort_by' ) ) {
 				$url['order_type'] = fs_option( 'fs_product_sort_by' );
 			}
 
-			// выполняем сортировку
+			// Specify sorting rules
 			if ( ! empty( $url['order_type'] ) ) {
 
 				switch ( $url['order_type'] ) {
-					case 'price_asc': //сортируем по цене в возрастающем порядке
-						$meta_query['price'] = array( 'key' => $fs_config->meta['price'], 'type' => 'DECIMAL' );
+					case 'price_asc': //sort by price in ascending order
+						$meta_query['price'] = array(
+							'key'  => FS_Config::get_meta( 'real_price' ),
+							'type' => 'DECIMAL'
+						);
 						$orderby['price']    = 'ASC';
 						break;
-					case 'price_desc': //сортируем по цене в спадающем порядке
-						$meta_query['price'] = array( 'key' => $fs_config->meta['price'], 'type' => 'DECIMAL' );
+					case 'price_desc': //sort by price in a falling order
+						$meta_query['price'] = array(
+							'key'  => FS_Config::get_meta( 'real_price' ),
+							'type' => 'DECIMAL'
+						);
 						$orderby['price']    = 'DESC';
 						break;
 					case 'views_desc': //сортируем по просмотрам в спадающем порядке

@@ -5,25 +5,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 class FS_Post_Type {
-	protected $config;
-	public $custom_tab_title;
-	public $custom_tab_body;
-	public $tabs;
-	public $product_id;
+
 
 	/**
 	 * The Constructor
 	 */
 	public function __construct() {
-		global $fs_config;
-		// register actions
 		add_action( 'init', array( $this, 'init' ), 12 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'save_post', array( $this, 'save_fs_fields' ) );
 		add_action( 'fs_before_product_meta', array( $this, 'before_product_meta' ) );
-		$this->product_id = isset( $_GET['post'] ) ? (int) $_GET['post'] : 0;
-		$this->config     = new FS_Config();
-	} // END public function __construct()
+
+		/* We set the real price with the discount and currency */
+		add_action( 'fs_after_save_meta_fields', array( $this, 'set_real_product_price' ), 10, 1 );
+	}
 
 
 	/**
@@ -146,6 +141,8 @@ class FS_Post_Type {
 		global $fs_config, $wpdb;
 		$save_meta = $this->meta_save_fields();
 
+		do_action( 'fs_before_save_meta_fields', $post_id );
+
 		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] == $fs_config->data['post_type'] && current_user_can( 'edit_post', $post_id ) ) {
 
 			// ставим позицию 99999, то есть в самом конце для постов с позицией 0 или меньше
@@ -192,6 +189,9 @@ class FS_Post_Type {
 				}
 			}
 		}
+
+		do_action( 'fs_after_save_meta_fields', $post_id );
+
 	} // END public function save_post($post_id)
 
 	/**
@@ -243,24 +243,25 @@ class FS_Post_Type {
 
 
 	/**
-	 *Registers new metafields dynamically from tabs
+	 *  Registers new metafields dynamically from tabs
 	 *
 	 * @return array
 	 */
 	function meta_save_fields() {
-		global $fs_config;
-		$product_tabs = $fs_config->get_product_tabs();
-		$meta_fields  = $fs_config->meta;
-		if ( ! empty( $product_tabs ) ) {
-			foreach ( $product_tabs as $product_tab ) {
-				if ( ! empty( $product_tab['fields'] ) ) {
-					foreach ( $product_tab['fields'] as $key => $field ) {
-						$meta_fields[ $key ] = $key;
-					}
-				}
-
+		$product_tabs = FS_Config::get_product_tabs();
+		$meta_fields  = FS_Config::get_meta();
+		if ( empty( $product_tabs ) ) {
+			return $meta_fields;
+		}
+		foreach ( $product_tabs as $product_tab ) {
+			if ( empty( $product_tab['fields'] ) ) {
+				continue;
+			}
+			foreach ( $product_tab['fields'] as $key => $field ) {
+				$meta_fields[ $key ] = $key;
 			}
 		}
+
 
 		return $meta_fields;
 	}
@@ -373,5 +374,9 @@ class FS_Post_Type {
 		$delivery = $delivery[0];
 
 		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-1.php';
+	}
+
+	public function set_real_product_price( $product_id = 0 ) {
+		update_post_meta( $product_id, '_fs_real_price', fs_get_price( $product_id ) );
 	}
 } // END class Post_Type_Template

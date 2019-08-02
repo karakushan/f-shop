@@ -157,29 +157,29 @@ class FS_Config {
 	 *
 	 * @return array
 	 */
-	public function get_product_tabs() {
+	public static function get_product_tabs() {
 		$tabs = array(
 			'prices'     => array(
 				'title'       => __( 'Prices', 'f-shop' ),
 				'on'          => true,
 				'description' => __( 'In this tab you can adjust the prices of goods.', 'f-shop' ),
 				'fields'      => array(
-					$this->meta['price']        => array(
+					self::get_meta( 'price' )        => array(
 						'label' => __( 'Base price', 'f-shop' ),
 						'type'  => 'text',
 						'help'  => __( 'This is the main price on the site. Required field!', 'f-shop' )
 					),
-					$this->meta['action_price'] => array(
+					self::get_meta( 'action_price' ) => array(
 						'label' => __( 'Promotional price', 'f-shop' ),
 						'type'  => 'text',
 						'help'  => __( 'If this field is filled, the base price loses its relevance. But you can display it on the site.', 'f-shop' )
 					),
-					$this->meta['currency']     => array(
+					self::get_meta( 'currency' )     => array(
 						'label'    => __( 'Item Currency', 'f-shop' ),
 						'on'       => fs_option( 'multi_currency_on' ) ? true : false,
 						'type'     => 'dropdown_categories',
 						'help'     => __( 'The field is active if you have enabled multicurrency in settings.', 'f-shop' ),
-						'taxonomy' => $this->data['currencies_taxonomy']
+						'taxonomy' => self::get_data( 'currencies_taxonomy' )
 					)
 				)
 			),
@@ -383,8 +383,6 @@ class FS_Config {
 	public static function getUsers( $user = '' ) {
 		return self::$users[ $user ];
 	}
-
-
 
 
 	/**
@@ -672,7 +670,11 @@ class FS_Config {
 	public static function get_meta( $meta_key = '' ) {
 		$meta = array(
 			'price'             => 'fs_price',
+			// Базовая цена
 			'action_price'      => 'fs_action_price',
+			// Акционная цена
+			'real_price'        => '_fs_real_price',
+			// Цена пересчитана по курсу, если указана валюта отличная от базовой
 			'currency'          => 'fs_currency',
 			'sku'               => 'fs_articul',
 			'remaining_amount'  => 'fs_remaining_amount',
