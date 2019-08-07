@@ -199,7 +199,7 @@ class FS_Config {
 				'title'    => __( 'Other', 'f-shop' ),
 				'on'       => true,
 				'body'     => '',
-				'template' => 'other'
+				'template' => 'other',
 			),
 			'related'    => array(
 				'title'    => __( 'Associated', 'f-shop' ),
@@ -670,11 +670,8 @@ class FS_Config {
 	public static function get_meta( $meta_key = '' ) {
 		$meta = array(
 			'price'             => 'fs_price',
-			// Базовая цена
 			'action_price'      => 'fs_action_price',
-			// Акционная цена
 			'real_price'        => '_fs_real_price',
-			// Цена пересчитана по курсу, если указана валюта отличная от базовой
 			'currency'          => 'fs_currency',
 			'sku'               => 'fs_articul',
 			'remaining_amount'  => 'fs_remaining_amount',

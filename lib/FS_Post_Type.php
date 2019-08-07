@@ -138,56 +138,63 @@ class FS_Post_Type {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
-		global $fs_config, $wpdb;
-		$save_meta = $this->meta_save_fields();
+		if ( ! isset( $_POST['post_type'] )
+		     ||
+		     ( isset( $_POST['post_type'] ) && $_POST['post_type'] != FS_Config::get_data( 'post_type' ) ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+		if ( ! is_array( FS_Config::get_meta() ) || ! count( FS_Config::get_meta() ) ) {
+			return;
+		}
 
 		do_action( 'fs_before_save_meta_fields', $post_id );
 
-		if ( isset( $_POST['post_type'] ) && $_POST['post_type'] == $fs_config->data['post_type'] && current_user_can( 'edit_post', $post_id ) ) {
+		// ставим позицию 99999, то есть в самом конце для постов с позицией 0 или меньше
+		/*$posts = $wpdb->get_results( "SELECT * FROM $wpdb->posts WHERE menu_order<=0 AND post_type='product'" );
+		if ( $posts ) {
+			foreach ( $posts as $post ) {
+				$wpdb->update( $wpdb->posts, array( 'menu_order' => 99999 ), array( 'ID' => $post->ID ) );
+			}
+		}*/
 
-			// ставим позицию 99999, то есть в самом конце для постов с позицией 0 или меньше
-			$posts = $wpdb->get_results( "SELECT * FROM $wpdb->posts WHERE menu_order<=0 AND post_type='product'" );
-			if ( $posts ) {
-				foreach ( $posts as $post ) {
-					$wpdb->update( $wpdb->posts, array( 'menu_order' => 99999 ), array( 'ID' => $post->ID ) );
-				}
+
+		foreach ( FS_Config::get_meta() as $key => $field_name ) {
+
+			if ( ! is_array( $_POST[ $field_name ] ) && ! isset( $_POST[ $field_name ] ) || (string) $_POST[ $field_name ] == '' ) {
+				delete_post_meta( $post_id, $field_name );
+				continue;
 			}
 
-			if ( is_array( $save_meta ) && count( $save_meta ) ) {
-				foreach ( $save_meta as $key => $field_name ) {
-					if ( ! is_array( $_POST[ $field_name ] ) && ! isset( $_POST[ $field_name ] ) || (string) $_POST[ $field_name ] == '' ) {
-						delete_post_meta( $post_id, $field_name );
-						continue;
-					}
-					if ( is_array( $_POST[ $field_name ] ) && empty( $_POST[ $field_name ] ) ) {
-						delete_post_meta( $post_id, $field_name );
-						continue;
-					}
-
-					switch ( $field_name ) {
-						case 'fs_price':
-							$price = (float) str_replace( array( ',' ), array( '.' ), sanitize_text_field( $_POST[ $field_name ] ) );
-							update_post_meta( $post_id, $field_name, $price );
-							break;
-						case 'fs_related_products':
-							if ( empty( $field_value ) ) {
-								delete_post_meta( $post_id, $field_name );
-							} else {
-								update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
-							}
-							break;
-						default:
-							if ( is_array( $_POST[ $field_name ] ) ) {
-								update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
-							} else {
-								update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
-							}
-							break;
-					}
-
-
-				}
+			if ( is_array( $_POST[ $field_name ] ) && empty( $_POST[ $field_name ] ) ) {
+				delete_post_meta( $post_id, $field_name );
+				continue;
 			}
+
+			switch ( $field_name ) {
+				case 'fs_price':
+					$price = (float) str_replace( array( ',' ), array( '.' ), sanitize_text_field( $_POST[ $field_name ] ) );
+					update_post_meta( $post_id, $field_name, $price );
+					break;
+				case 'fs_related_products':
+					if ( empty( $field_value ) ) {
+						delete_post_meta( $post_id, $field_name );
+					} else {
+						update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
+					}
+					break;
+				default:
+					if ( is_array( $_POST[ $field_name ] ) ) {
+						update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
+					} else {
+						update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
+					}
+					break;
+			}
+
+
 		}
 
 		do_action( 'fs_after_save_meta_fields', $post_id );
