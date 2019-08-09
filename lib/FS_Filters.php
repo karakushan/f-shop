@@ -113,12 +113,17 @@ class FS_Filters {
 	 * @param $query
 	 */
 	public function filter_curr_product( $query ) {
+//		fs_debug_data($query,'$query','print_r');
+		
+
 		global $fs_config, $wpdb;
 
 		// Если это админка или не главный запрос
 		if ( $query->is_admin || ! $query->is_main_query() ) {
 			return;
 		}
+
+
 
 
 		// If we are on the search page
@@ -133,7 +138,8 @@ class FS_Filters {
 			}
 
 			$query->set( 'post_type', 'product' );
-		} elseif ( $query->is_tax || $query->is_archive ) {
+		} elseif ( $query->is_tax(FS_Config::get_data( 'product_taxonomy' )) || $query->is_post_type_archive(FS_Config::get_data( 'post_type' )) ) {
+
 			// отфильтровываем выключенные для показа товары в админке
 			$meta_query [] = array(
 				'relation' => 'AND',

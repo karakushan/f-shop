@@ -35,8 +35,6 @@ function fs_get_taxonomy_hierarchy( $args ) {
 }
 
 
-
-
 /**
  * @param integer $post_id -id записи
  * @param array $args -массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
@@ -2545,6 +2543,9 @@ function fs_taxes_list( $args = [], $total = 0.0 ) {
  * по умолчанию var_dump
  */
 function fs_debug_data( $data, $before = '', $debug_type = 'var_dump' ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
 	$backtrace = debug_backtrace();
 	echo '<pre>';
 	printf( "=== DEBUG: %s ===<br>", $before );
