@@ -88,7 +88,7 @@ add_action( 'admin_head', function () {
  * The function is triggered when the plugin is activated.
  */
 function fs_activate() {
-	require_once dirname(FS_PLUGIN_FILE).'/lib/FS_Config.php';
+	require_once dirname( FS_PLUGIN_FILE ) . '/lib/FS_Config.php';
 	// Регистрируем роли пользователей
 	add_role(
 		\FS\FS_Config::$users['new_user_role'],
@@ -100,7 +100,7 @@ function fs_activate() {
 	if ( ! get_option( 'fs_has_activated', 0 ) ) {
 		// Добавляем страницы
 		if ( \FS\FS_Config::$pages ) {
-			foreach ( \FS\FS_Config::$pages as $key => $page ) {
+			foreach ( \FS\FS_Config::get_pages() as $key => $page ) {
 				$post_id = wp_insert_post( array(
 					'post_title'   => wp_strip_all_tags( $page['title'] ),
 					'post_content' => $page['content'],
@@ -131,6 +131,8 @@ function fs_activate() {
  */
 function fs_deactivate() {
 }
+
+
 
 
 

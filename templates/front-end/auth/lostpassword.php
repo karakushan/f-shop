@@ -6,4 +6,4 @@
 
 <input type="hidden" name="redirect_to" value="<?php echo $_SERVER['REQUEST_URI'] ?>">
 
-<button type="submit" class="btn btn-success btn-lg"><?php _e( 'Получить новый пароль', 'f-shop' ) ?></button>
+<button type="submit" class="btn btn-success btn-lg"><?php _e( 'Get a new password', 'f-shop' ) ?></button>

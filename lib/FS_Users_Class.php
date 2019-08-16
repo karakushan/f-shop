@@ -510,7 +510,7 @@ class FS_Users_Class {
 
 		// Отправляем сообщение успешной регистрации на экран
 		wp_send_json_success( array(
-			'msg' => sprintf( __( 'Congratulations! You have successfully registered! <a href="' . esc_url( get_permalink( fs_option( 'page_auth' ) ) ) . '">Log in</a>', 'f-shop' ) )
+			'msg' => sprintf( __( 'Congratulations! You have successfully registered! <a href="%s">Log in</a>', 'f-shop' ),esc_url( get_permalink( fs_option( 'page_auth' ) ) ) )
 		) );
 
 
@@ -522,7 +522,7 @@ class FS_Users_Class {
 		) {
 			echo json_encode( array(
 				'status'  => 0,
-				'message' => 'Форма не прошла проверку безопасности!'
+				'message' => __('The form did not pass the security check!','f-shop')
 			) );
 			exit;
 		}
@@ -591,7 +591,7 @@ class FS_Users_Class {
 
 		echo json_encode( array(
 			'status'  => 1,
-			'message' => 'Ваши данные успешно обновились!'
+			'message' => __('Your data has been updated successfully!','f-shop')
 		) );
 		exit;
 	}
@@ -608,7 +608,7 @@ class FS_Users_Class {
 			'class'          => 'fs-login-form',
 			'name'           => 'fs-login',
 			'method'         => 'post',
-			'logged_in_text' => __( 'Вы уже вошли на сайт.', 'f-shop' )
+			'logged_in_text' => __( 'You are already logged in.', 'f-shop' )
 
 		) );
 
@@ -638,14 +638,14 @@ class FS_Users_Class {
 			'class'          => 'fs-register',
 			'name'           => 'fs-register',
 			'method'         => 'post',
-			'logged_in_text' => __( 'Вы уже вошли на сайт.', 'f-shop' )
+			'logged_in_text' => __( 'You are already logged in.', 'f-shop' )
 
 		) );
 
 		$template = '';
 		if ( is_user_logged_in() ) {
 			$template .= '<p class="text-center">' . $args['logged_in_text'] . '</p>';
-			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">В личный кабинет</a></p>';
+			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">'.__('To personal account','f-shop').'</a></p>';
 		} else {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_profile_create' );
 			$template .= fs_frontend_template( 'auth/register', array( 'field' => array() ) );
@@ -668,14 +668,14 @@ class FS_Users_Class {
 			'name'           => 'fs-lostpassword',
 			'method'         => 'post',
 			'action'         => wp_lostpassword_url(),
-			'logged_in_text' => __( 'Вы уже вошли на сайт.', 'f-shop' )
+			'logged_in_text' => __( 'You are already logged in.', 'f-shop' )
 
 		) );
 
 		$template = '';
 		if ( is_user_logged_in() ) {
 			$template .= '<p class="text-center">' . $args['logged_in_text'] . '</p>';
-			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">В личный кабинет</a></p>';
+			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">'.__('To personal account','f-shop').'</a></p>';
 		} else {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_lostpassword' );
 			$template .= fs_frontend_template( 'auth/lostpassword', array( 'field' => array() ) );

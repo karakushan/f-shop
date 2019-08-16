@@ -296,7 +296,7 @@ class FS_Settings_Class {
 						'type'  => 'checkbox',
 						'name'  => 'fs_disable_messages',
 						'label' => __( 'Disable js event handling by the plugin', 'f-shop' ),
-						'help'  => __( 'Этот чекбокс нужно отметить если вы сами намерены обрабатывать события инициируемые плагином', 'f-shop' ),
+						'help'  => __( 'This checkbox should be noted if you intend to process events triggered by the plugin yourself', 'f-shop' ),
 						'value' => fs_option( 'fs_disable_messages', 0 )
 					),
 					array(
@@ -439,7 +439,7 @@ Your phone number.</p>', 'f-shop' ) )
 
 			),
 			'export'     => array(
-				'name'        => __( 'Экспорт товаров', 'f-shop' ),
+				'name'        => __( 'Export of goods', 'f-shop' ),
 				'description' => sprintf( __( 'Link to product feed in YML format: <a href="%s" target="_blank">%s</a> or <a href="%s" target="_blank">%s</a>', 'f-shop' ), $feed_link, $feed_link, $feed_link_permalink, $feed_link_permalink ),
 				'fields'      => array(
 					array(

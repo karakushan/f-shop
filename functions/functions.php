@@ -2906,3 +2906,44 @@ function fs_get_term_meta( $meta_key = '', $term_id = 0, $type = 1 ) {
 
 	return get_term_meta( $term_id, $meta_key, $type );
 }
+
+/**
+ * Выводит или возвращает системное сообщение
+ *
+ * @param $title заголовок сообщения
+ * @param $text текст сообщения
+ * @param string $status статус сообщения: info, success, error, warning
+ * @param array $args дополнительные аргументы
+ *
+ * @return string
+ */
+function fs_action_message( $title, $text, $status = 'info', $args = array() ) {
+
+	$args = wp_parse_args( $args, array(
+		'icon'   => '<img src="' . esc_url( FS_PLUGIN_URL . 'assets/img/icon/info-' . $status . '.svg' ) . '" alt="icon">',
+		'class'  => 'fs-action-message fs-action-' . $status,
+		'echo'   => true,
+		'button' => null
+	) );
+
+	$html = '<div class="' . esc_attr( $args['class'] ) . '">';
+	$html .= '<div class="fs-action-message__left">';
+	$html .= $args['icon'];
+	$html .= '</div>';
+	$html .= '<div class="fs-action-message__right">';
+	$html .= '<h4>' . esc_html( $title ) . '</h4>';
+	$html .= '<p>' . esc_html( $text ) . '</p>';
+
+	if ( $args['button'] ) {
+		$html .= $args['button'];
+	}
+
+	$html .= '</div>';
+	$html .= '</div>';
+
+	if ( ! $args['echo'] ) {
+		return apply_filters( 'fs_action_message', $html );
+	}
+
+	echo apply_filters( 'fs_action_message', $html );
+}

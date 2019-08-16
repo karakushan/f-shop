@@ -49,6 +49,8 @@ class FS_Action_Class {
 	function register_plugin_action() {
 		global $fs_product;
 
+        //===== GENERAL =====
+
 		//===== SINGLE PRODUCT =====
 		/* Hooks in this section only work on the product page. */
 

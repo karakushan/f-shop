@@ -45,25 +45,26 @@ class FS_Payment_Class {
 			'aviable_methods'    => false
 		), $atts );
 
-		if ( ! empty( $_SESSION['fs_last_order_id'] ) && ! empty( $_SESSION['fs_last_order_pay'] ) ) {
-			$order_id   = intval( $_SESSION['fs_last_order_id'] );
-			$pay_method = $_SESSION['fs_last_order_pay'];
-		} elseif ( ! empty( $_GET['pay_method'] ) && ! empty( $_GET['order_id'] ) ) {
-			$order_id   = intval( $_GET['order_id'] );
-			$pay_method = $_GET['pay_method'];
-		} else {
+		$order_id   = ! empty( $_GET['order_id'] ) && is_numeric( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
+		$pay_method = ! empty( $_GET['pay_method'] ) ? $_GET['pay_method'] : null;
+
+		// Если не указан номер заказа или метод оплаты
+		if ( ! $order_id && $pay_method ) {
 			return '<div class="fs-order-pay"><p>' . __( 'No order number or payment method specified.', 'f-shop' ) . '</p></div>';
 		}
 
-		$order_class = new FS_Orders_Class();
 
+		$order_class     = new FS_Orders_Class();
+		$html            = '';
 		$order           = $order_class->get_order( $order_id );
 		$order_amount    = floatval( $order->data->_amount );
 		$payment_methods = $this->payment_methods();
 
 		do_action( 'fs_order_pay_before' );
-		$html = '<div class="fs-order-pay">';
+
+
 		if ( $payment_methods && $atts['aviable_methods'] ) {
+			$html .= '<div class="fs-order-pay">';
 			$html .= '<h3>' . __( 'Available payment methods', 'f-shop' ) . '</h3>';
 			$html .= '<p>' . __( 'If the previously chosen payment method does not suit you, you can pay by one of the ways below', 'f-shop' ) . ':</p>';
 			$html .= '<div class="row">';
@@ -87,33 +88,39 @@ class FS_Payment_Class {
 
 			}
 			$html .= '</div><!--END .row-->';
+			$html .= '</div><!--END .fs-order-pay-->';
 		}
 
 		if ( $order_id && in_array( get_post_status( $order_id ), array( 'paid' ) ) ) {
+
 			// Если указан номер заказа то выводим сообщение об успешной оплате
-			$after_pay_message = sprintf( '<h2>' . __( 'Order #%d paid successfully', 'f-shop' ) . '</h2>', $order_id );
-			// TODO здесь еще нужно будет сделать проверку по сессиям, если это не тот пользователь то выдаём сообщение "вы не имеете права просматривать эту страницу"
-			if ( isset( $order->payment_id ) ) {
-				$message = get_term_meta( $order->payment_id, '_fs_after_pay_message', 1 );
-				$html    .= ! empty( $message ) ? $message : $after_pay_message;
+			if ( get_term_meta( $order->payment_id, '_fs_after_pay_message', 1 ) ) {
+				$html .= get_term_meta( $order->payment_id, '_fs_after_pay_message', 1 );
+			} else {
+				$html .= fs_action_message(
+					sprintf( __( 'Order #%d paid successfully', 'f-shop' ), $order_id ),
+					__( 'You or someone else paid for this order.', 'f-shop' ),
+					'success',
+					[ 'echo' => false ]
+				);
 
 			}
-
 		} else {
 			$term = get_term_by( 'slug', $pay_method, $fs_config->data['product_pay_taxonomy'] );
-			if ( ! empty( $pay_method ) && ! empty( $payment_methods[ $pay_method ] ) && $term ) {
+			if ( ! empty( $pay_method ) && ! empty( $payment_methods[ $pay_method ] ) && ! is_wp_error( $term ) ) {
 
-				$html .= sprintf( '<h2>' . __( 'Payment  <span>%s <span>%s</span></span> with  <span>%s</span>', 'f-shop' ) . '</h2>', apply_filters( 'fs_price_format', $order_amount ), fs_currency(), $term->name );
-				$html .= sprintf( '<p>Номер заказа #%s</p>', $order_id );
-				if ( ! empty( $payment_methods[ $pay_method ]['description'] ) ) {
-					$html .= sprintf( '<p>%s</p>', $payment_methods[ $pay_method ]['description'] );
-
-				}
-				$html .= $payment_methods[ $pay_method ]['html'];
+				$html .= fs_action_message(
+					sprintf( __( 'Оплата заказа #%d с помощью &laquo;%s&raquo;', 'f-shop' ), $order_id, $term->name ),
+					sprintf( __( 'В случае успешной оплаты с вас будет снято %s %s. ', 'f-shop' ), apply_filters( 'fs_price_format', $order_amount ), fs_currency() ),
+					'info',
+					[
+						'echo'   => false,
+						'icon'   => '<img src="' . esc_url( FS_PLUGIN_URL . 'assets/img/icon/pay.svg' ) . '" alt="icon">',
+						'button' => $payment_methods[ $pay_method ]['html']
+					]
+				);
 			}
 		}
-
-		$html .= '</div><!--END .fs-order-pay-->';
 
 		return $html;
 	}

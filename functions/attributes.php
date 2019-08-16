@@ -515,7 +515,7 @@ function fs_dropdown_attr_group( $group_id = 0, $product_id = 0, $args = array()
 	$variations = $product->get_product_variations( $product_id );
 	$product_id = fs_get_product_id( $product_id );
 	if ( ! $group_id ) {
-		printf( __( 'Не указан параметр $group_id в функции %s', 'f-shop' ), __FUNCTION__ );
+		printf( __( 'Parameter $ group_id not specified in function %s', 'f-shop' ), __FUNCTION__ );
 	}
 	$args = wp_parse_args( $args, array(
 		'class'    => 'fs-dropdown-attr fs-dropdown-attr-' . $group_id,
@@ -524,7 +524,7 @@ function fs_dropdown_attr_group( $group_id = 0, $product_id = 0, $args = array()
 	) );
 
 	if ( ! term_exists( $group_id ) ) {
-		printf( __( 'Группы характеристик %d нет на сайте в функции %s', 'f-shop' ), $group_id, __FUNCTION__ );
+		printf( __( 'Characteristic groups %d not on site in function %s', 'f-shop' ), $group_id, __FUNCTION__ );
 	}
 
 	echo '<select name="' . esc_attr( get_term_field( 'slug', $group_id ) ) . '" class="' . esc_attr( $args['class'] ) . '" data-fs-element="attr" data-product-id="' . esc_attr( $product_id ) . '">';

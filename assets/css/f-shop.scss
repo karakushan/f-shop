@@ -1,18 +1,35 @@
 @charset "UTF-8";
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&display=swap&subset=cyrillic');
 
 //----- Variables
+
+//==== Bootstrap4 colors ====
+$color_light: #f8f9fa;
+$color_primary: #007bff;
+$color_info: #17a2b8;
+$color_warning: #ffc107;
+$color_error: #dc3545;
+$color_success: #28a745;
+
 // colors
+$color__text: #333333;
 $c-red: #F8342D;
 $c-orange: #FF803A;
 $c-yellow: #FFF771;
 $c-green: #7EBB41;
 $c-green-light: #B2FF55;
+
+
+$accentcolor: #fcae2c;
+$lightcolor: #fff;
+$darkcolor: #444;
 // error
 $error-bg: #ffdedd;
 $error-color: #333;
 $error-bd-color: #ffc6c4;
 // fonts
 $font-primary: Arial, "Helvetica Neue", Helvetica, sans-serif;
+$font__headers: 'Roboto Condensed', sans-serif;
 
 //---- Import
 @import "scss/base";
@@ -1305,46 +1322,100 @@ td.fs_photo.column-fs_photo img {
   }
 }
 
-.fs-order-pay {
-  margin-bottom: 50px;
+// Кнопки
+.fs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 41px;
+  font-family: $font__headers;
+  text-transform: uppercase;
+  border: 0;
+  padding: 0 68px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 
-  .fs-pay-item {
-    text-align: center;
+  &.fs-btn-info {
+    background-color: $color_info;
+    color: #ffffff;
 
-    h4 {
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 700;
-      font-size: 16px;
-      max-width: 100%;
-    }
-
-    figure {
-      width: 165px;
-      height: 165px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #eee;
-      margin-bottom: 10px;
-      transition: all .2s;
-
-      img {
-        max-width: 100%;
-        max-height: 100%;
-      }
-
-      &:hover {
-        border: 4px solid #eee;
-        box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.05);
-      }
+    &:hover {
+      background-color: darken($color_info, 8%);
     }
   }
 }
 
-$accentcolor: #fcae2c;
-$lightcolor: #fff;
-$darkcolor: #444;
+// Типичное сообщение об успешном дейстии
+.fs-action-message {
+  display: flex;
+  align-items: center;
+  background: $color_light;
+  padding: 36px;
+  min-height: 127px;
+  margin-bottom: 30px;
+
+  @media (max-width:768px) {
+    flex-direction: column;
+  }
+
+  .fs-btn{
+    margin: 0;
+  }
+
+
+  &.fs-action-success {
+    border-left: 3px solid $color_success;
+  }
+
+  &.fs-action-info {
+    border-left: 3px solid $color_info;
+  }
+
+  &.fs-action-error {
+    border-left: 3px solid $color_error;
+  }
+
+  &.fs-action-warning {
+    border-left: 3px solid $color_warning;
+  }
+
+  &__left {
+    img {
+      margin-right: 35px;
+      min-width: 57px;
+    }
+  }
+
+  &__right {
+    h4, .h4 {
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-family: $font__headers;
+      line-height: 21px;
+      letter-spacing: 0.08em;
+      color: $color__text;
+      margin-bottom: 13px;
+
+    }
+
+    p {
+      font-family: $font-primary;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 18px;
+      color: #333333;
+      margin-bottom: 30px;
+
+    }
+  }
+}
+
 
 .fs-select-variation {
   padding: 0;
@@ -1656,7 +1727,7 @@ $darkcolor: #444;
 
 
 /* Login and register form */
-.fs-login-form, .fs-register,.fs-lostpassword {
+.fs-login-form, .fs-register, .fs-lostpassword {
   max-width: 360px;
   margin: 0 auto 50px;
   padding: 20px;
@@ -1677,8 +1748,8 @@ $darkcolor: #444;
 
   }
 
-  label{
-    sup{
+  label {
+    sup {
       color: red;
     }
   }
@@ -1693,46 +1764,55 @@ $darkcolor: #444;
   }
 }
 
-.fs-dashboard-order{
+.fs-dashboard-order {
   margin-bottom: 15px;
+
   .table tbody td {
     vertical-align: middle;
   }
-  &__hide{
-    border: 1px solid rgba(0,0,0,.125);
 
-    padding:  20px;
+  &__hide {
+    border: 1px solid rgba(0, 0, 0, .125);
+
+    padding: 20px;
 
     margin-top: 15px;
-    .label{
+
+    .label {
       font-weight: 700;
     }
-    .row{
+
+    .row {
       width: 100%;
       margin-bottom: 15px;
     }
   }
-  &__header{
-    border: 1px solid rgba(0,0,0,.125);
+
+  &__header {
+    border: 1px solid rgba(0, 0, 0, .125);
     display: flex;
     justify-content: space-between;
     padding: 10px 20px;
     align-items: center;
     border-radius: 4px;
-    span{
+
+    span {
       font-weight: 300;
       letter-spacing: 0.025em;
-      &.badge{
-        i{
+
+      &.badge {
+        i {
           color: #fff;
         }
       }
-      i{
+
+      i {
         color: #000000;
         font-weight: 500;
         font-style: normal;
       }
-      &.datetime{
+
+      &.datetime {
         font-weight: 700;
       }
     }
@@ -1754,13 +1834,16 @@ $darkcolor: #444;
   max-height: 200px;
   overflow: auto;
   box-shadow: 0 15px 12px 0 rgba(0, 0, 0, 0.03);
+
   li {
     line-height: 1;
 
     border-bottom: 1px solid #d5d5d5;
+
     &:last-child {
       border-bottom: 0;
     }
+
     a {
       color: #000000;
       padding: 15px;
@@ -1771,6 +1854,7 @@ $darkcolor: #444;
         color: #666666;
         margin-left: 5px;
       }
+
       &:hover {
         background: #dddddd;
       }
@@ -1780,7 +1864,7 @@ $darkcolor: #444;
   }
 }
 
-.fs-side-cart-wrap{
+.fs-side-cart-wrap {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -1826,9 +1910,10 @@ $darkcolor: #444;
         text-transform: uppercase;
       }
 
-      [data-fs-element="total-amount"]{
+      [data-fs-element="total-amount"] {
         font-size: 22px;
-        >span{
+
+        > span {
           font-size: 16px;
         }
       }
@@ -1876,7 +1961,8 @@ $darkcolor: #444;
         font-weight: 900;
         font-size: 16px;
         letter-spacing: 0.025em;
-        >span{
+
+        > span {
           font-size: 12px;
         }
       }
@@ -1936,7 +2022,7 @@ $darkcolor: #444;
   }
 }
 
-#wpadminbar #wp-admin-bar-fs-top>.ab-item:before {
+#wpadminbar #wp-admin-bar-fs-top > .ab-item:before {
   content: "\f174";
   top: 2px
 }

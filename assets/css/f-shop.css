@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&display=swap&subset=cyrillic");
 /* Сетка*/
 .fs-flex, .fs-inline-flex {
   display: -webkit-box;
@@ -1375,36 +1376,80 @@ td.fs_photo.column-fs_photo img {
   }
 }
 
-.fs-order-pay {
-  margin-bottom: 50px;
-}
-.fs-order-pay .fs-pay-item {
-  text-align: center;
-}
-.fs-order-pay .fs-pay-item h4 {
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 700;
-  font-size: 16px;
-  max-width: 100%;
-}
-.fs-order-pay .fs-pay-item figure {
-  width: 165px;
-  height: 165px;
-  display: flex;
+.fs-btn {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #eee;
-  margin-bottom: 10px;
-  transition: all 0.2s;
+  min-height: 41px;
+  font-family: "Roboto Condensed", sans-serif;
+  text-transform: uppercase;
+  border: 0;
+  padding: 0 68px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
-.fs-order-pay .fs-pay-item figure img {
-  max-width: 100%;
-  max-height: 100%;
+.fs-btn.fs-btn-info {
+  background-color: #17a2b8;
+  color: #ffffff;
 }
-.fs-order-pay .fs-pay-item figure:hover {
-  border: 4px solid #eee;
-  box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.05);
+.fs-btn.fs-btn-info:hover {
+  background-color: #128294;
+}
+
+.fs-action-message {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 36px;
+  min-height: 127px;
+  margin-bottom: 30px;
+}
+@media (max-width: 768px) {
+  .fs-action-message {
+    flex-direction: column;
+  }
+}
+.fs-action-message .fs-btn {
+  margin: 0;
+}
+.fs-action-message.fs-action-success {
+  border-left: 3px solid #28a745;
+}
+.fs-action-message.fs-action-info {
+  border-left: 3px solid #17a2b8;
+}
+.fs-action-message.fs-action-error {
+  border-left: 3px solid #dc3545;
+}
+.fs-action-message.fs-action-warning {
+  border-left: 3px solid #ffc107;
+}
+.fs-action-message__left img {
+  margin-right: 35px;
+  min-width: 57px;
+}
+.fs-action-message__right h4, .fs-action-message__right .h4 {
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: "Roboto Condensed", sans-serif;
+  line-height: 21px;
+  letter-spacing: 0.08em;
+  color: #333333;
+  margin-bottom: 13px;
+}
+.fs-action-message__right p {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 18px;
+  color: #333333;
+  margin-bottom: 30px;
 }
 
 .fs-select-variation {

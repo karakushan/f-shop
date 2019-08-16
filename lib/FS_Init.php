@@ -132,6 +132,7 @@ class FS_Init {
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), FS_Config::get_data( 'plugin_ver' ), 'all' );
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'lightgallery', FS_PLUGIN_URL . 'assets/plugins/lightGallery/dist/css/lightgallery.min.css' );
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'jquery-ui', FS_PLUGIN_URL . 'assets/css/jquery-ui.min.css' );
+		wp_enqueue_style( FS_PLUGIN_PREFIX . 'google-material-icons', 'https://fonts.googleapis.com/icon?family=Material+Icons' );
 
 		// Подключаем стили для основных тем Вордпресса
 		// TODO: если нет файла стилей для данной темы то необходимо создать уведомление в админке о том что можно купить или заказать адаптацию
