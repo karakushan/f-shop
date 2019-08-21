@@ -591,7 +591,7 @@ class FS_Product_Class {
 
 		);
 
-		$default_tabs = apply_filters( 'fs_product_tabs_items', $default_tabs );
+		$default_tabs = apply_filters( 'fs_product_tabs_items', $default_tabs , $product_id);
 
 		if ( is_array( $default_tabs ) && ! empty( $default_tabs ) ) {
 

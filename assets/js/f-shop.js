@@ -85,12 +85,14 @@
             ;
         },
         changeCartItemCount: function (el) {
-            var cartItem = el.data('item-id');
-            var productCount = Number(el.val());
+            let cartItem = el.data('item-id');
+            let productCount = Number(el.val());
+            let step = Number(el.attr('step'));
+            let min = Number(el.attr('min'));
 
             //если покупатель вбил неправильное к-во товаров
-            if (productCount < 1) {
-                el.val(1);
+            if (productCount < min) {
+                el.val(min);
             } else {
                 $.ajax({
                     url: fShop.ajaxurl,
@@ -101,7 +103,6 @@
                         count: productCount
                     },
                     success: function (res) {
-                        console.log(res);
                         if (res.success) {
                             fShop.updateCarts();
 
@@ -214,7 +215,6 @@
             contentType: false,
             processData: false,
             success: function (data) {
-                console.log(data);
                 if (data.success) {
                     iziToast.show({
                         theme: 'light',
@@ -230,9 +230,6 @@
                         position: 'topCenter',
                     });
                 }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
             }
         });
         return false;
@@ -669,11 +666,9 @@
         e.preventDefault();
         if (jQuery(this).attr('type') == 'checkbox') {
             if (jQuery(this).prop('checked')) {
-                console.log('checked');
                 window.location.href = jQuery(this).val();
             } else {
                 window.location.href = jQuery(this).data('fs-redirect');
-                console.log('not-checked');
             }
         } else {
             window.location.href = jQuery(this).val();
@@ -780,7 +775,6 @@
                 u.query.fs_filter = FastShopData.fs_nonce;
                 u.query.price_start = ui.values[0];
                 u.query.price_end = ui.values[1];
-                // console.log(u.toString());
                 window.location.href = u.toString();
 
 
@@ -917,7 +911,6 @@
             })
                 .done(function (result) {
                     var data = JSON.parse(result);
-                    console.log(data);
                     loginForm.find('.fs-preloader').fadeOut();
                     if (data.status == 0) {
                         loginForm.find('.fs-form-info').addClass('bg-danger').fadeIn().html(data.error);
@@ -954,12 +947,6 @@
                 } else {
                     form.find('.fs-form-info').removeClass('bg-success').addClass('bg-danger').fadeIn().html(result.data.msg);
                 }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-            },
-            complete: function () {
-                //afer ajax call is completed
             }
         });
 
@@ -981,7 +968,6 @@
             url: fShop.ajaxurl,
             data: formData,
             success: function (response) {
-                console.log(response);
                 if (response.success) {
                     iziToast.show({
                         theme: 'light',
@@ -1002,10 +988,6 @@
                     window.location.href = response.data.redirect;
                 }
 
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
             }
         });
 
@@ -1033,7 +1015,6 @@
                     orderSendBtn.html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
                 },
                 success: function (response) {
-                    console.log(response);
                     orderSendBtn.find('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
                     /* если статус заказ успешный */
                     if (response.success) {
@@ -1065,12 +1046,6 @@
                         });
                         orderSendBtn.html(orderSendBtn.data("content"));
                     }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    console.log('error...', xhr);
-                },
-                complete: function () {
-                    //afer ajax call is completed
                 }
             });
 
@@ -1109,16 +1084,10 @@
                     },
                     cache: false,
                     success: function (data) {
-                        localStorage.setItem("fs_user_voted_" + productId, 1)
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        console.log('error...', xhr);
-                        //error logging
-                    },
-                    complete: function () {
+                        localStorage.setItem("fs_user_voted_" + productId, 1);
                         iziToast.show({
                             theme: 'light',
-                            title: 'Позравляем!',
+                            title: 'Поздравляем!',
                             message: 'Ваш голос засчитан!',
                             position: 'topCenter',
 
@@ -1227,16 +1196,6 @@
                         form.append(data.data.html);
                     }
                 }
-                console.log(data);
-                // do something with ajax data
-
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
-            },
-            complete: function () {
-                //afer ajax call is completed
             }
         });
     })
