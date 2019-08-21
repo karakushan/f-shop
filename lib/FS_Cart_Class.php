@@ -29,10 +29,27 @@ class FS_Cart_Class {
 		add_action( 'wp_ajax_fs_get_cart', array( $this, 'fs_get_cart_callback' ) );
 		add_action( 'wp_ajax_nopriv_fs_get_cart', array( $this, 'fs_get_cart_callback' ) );
 
+		// Update of cart items in cart
+		add_action('wp_ajax_fs_change_cart_count', array($this, 'change_cart_item_count'));
+		add_action('wp_ajax_nopriv_fs_change_cart_count', array($this, 'change_cart_item_count'));
+
 		// присваиваем переменной $cart содержимое корзины
 		if ( ! empty( $_SESSION['cart'] ) ) {
 			$this->cart = $_SESSION['cart'];
 		}
+
+	}
+
+	//обновление к-ва товара в корзине аяксом
+	public function change_cart_item_count()
+	{
+		$item_id = intval($_POST['item_id']);
+		$product_count = floatval($_POST['count']);
+		if (!empty($_SESSION['cart'])) {
+			$_SESSION['cart'][$item_id]['count'] = $product_count;
+			wp_send_json_success();
+		}
+		wp_send_json_error();
 
 	}
 
@@ -72,7 +89,7 @@ class FS_Cart_Class {
 		$attr          = ! empty( $_POST['attr'] ) ? $_POST['attr'] : array();
 		$product_id    = intval( $_POST['post_id'] );
 		$variation     = ! empty( $_POST['variation'] ) ? intval( $_POST['variation'] ) : null;
-		$count         = intval( $_POST['count'] );
+		$count         = floatval( $_POST['count'] );
 		$variations    = $product_class->get_product_variations( $product_id, false );
 		$is_variated   = count( $variations ) ? true : false;
 		$search_item   = 0;
@@ -91,7 +108,7 @@ class FS_Cart_Class {
 		if ( $search_item && ! empty( $_SESSION['cart'] ) ) {
 			$_SESSION['cart'][ $search_item ] = array(
 				'ID'        => $product_id,
-				'count'     => intval( $_SESSION['cart'][ $search_item ]['count'] + $count ),
+				'count'     => floatval( $_SESSION['cart'][ $search_item ]['count'] + $count ),
 				'attr'      => $attr,
 				'variation' => $variation
 			);

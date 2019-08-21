@@ -410,7 +410,7 @@ class FS_Product_Class {
 	 * @return $this
 	 */
 	public function set_product( $product = [], $item_id = 0 ) {
-		global $fs_config;
+	    global $fs_config;
 		$this->setId( intval( $product['ID'] ) );
 		$this->set_item_id( $item_id );
 		
@@ -427,7 +427,7 @@ class FS_Product_Class {
 		$this->base_price_display = apply_filters( 'fs_price_format', $this->base_price );
 		$this->price_display      = apply_filters( 'fs_price_format', $this->price );
 		$this->permalink          = $this->get_permalink();
-		$this->count              = intval( $product['count'] );
+		$this->count              = floatval( $product['count'] );
 		$this->cost               = floatval( $this->count * $this->price );
 		$this->cost_display       = apply_filters( 'fs_price_format', $this->cost );
 		$this->currency           = fs_currency( $this->id );

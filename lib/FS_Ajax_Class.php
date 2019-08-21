@@ -64,10 +64,6 @@ class FS_Ajax_Class
         add_action('wp_ajax_fs_get_template_part', array($this, 'fs_get_template_part'));
         add_action('wp_ajax_nopriv_fs_get_template_part', array($this, 'fs_get_template_part'));
 
-        // Update of cart items in cart
-        add_action('wp_ajax_fs_change_cart_count', array($this, 'change_cart_item_count'));
-        add_action('wp_ajax_nopriv_fs_change_cart_count', array($this, 'change_cart_item_count'));
-
         // Live product search
         add_action('wp_ajax_fs_livesearch', array($this, 'livesearch_callback'));
         add_action('wp_ajax_fs_livesearch', array($this, 'livesearch_callback'));
@@ -181,18 +177,7 @@ class FS_Ajax_Class
 
     }
 
-    //обновление к-ва товара в корзине аяксом
-    public function change_cart_item_count()
-    {
-        $item_id = intval($_REQUEST['item_id']);
-        $product_count = intval($_REQUEST['count']);
-        if (!empty($_SESSION['cart'])) {
-            $_SESSION['cart'][$item_id]['count'] = $product_count;
-            wp_send_json_success();
-        }
-        wp_send_json_error();
 
-    }
 
     // Возвращает HTML код галереи товара или конкретной вариации
     // TODO : добавить nonce проверку

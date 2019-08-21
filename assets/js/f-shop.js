@@ -45,20 +45,20 @@
         },
         productQuantityPluss: function (el) {
             let parent = el.parents('[data-fs-element="fs-quantity"]');
-            let jQueryinput = parent.find('input');
-            let maxAttr = jQueryinput.attr("max");
-            let max = parseInt(maxAttr);
-            let curVal = Number(jQueryinput.val());
-            let newVal = curVal + 1;
-            if (jQueryinput.data('limit') == 1 && newVal > max) {
+            let input = parent.find('input');
+            let step = Number(input.attr('step'));
+            let max = input.attr("max");
+            let value = Number(input.val()) + step;
+
+            if (max != '' && value > Number(max)) {
                 iziToast.show({
                     theme: 'light',
                     message: this.getLang('limit_product'),
                     position: 'topCenter',
                 });
             } else {
-                jQueryinput.val(newVal);
-                jQueryinput.change();
+                input.val(value);
+                input.change();
             }
         },
         setProductGallery: function (productId, variationId = null) {
@@ -246,7 +246,7 @@
         let productData = el.data();
         let product_id = el.data('product-id');
         let variation = el.attr('data-variation');
-        let count = el.attr('data-count');
+        let count = Number(el.attr('data-count'));
 
         if (productData.available == false && fShop.getSettings('preorderWindow') == 1) {
             // создаём событие
@@ -710,12 +710,13 @@
     jQuery(document).ready(function (jQuery) {
         // уменьшение к-ва товара на единицу
         jQuery(document).on('click', '[data-fs-count="minus"]', function () {
-            var parent = jQuery(this).parents('[data-fs-element="fs-quantity"]');
-            var jQueryinput = parent.find('input');
-            var count = parseInt(jQueryinput.val()) - 1;
-            count = count < 1 ? 1 : count;
-            jQueryinput.val(count);
-            jQueryinput.change();
+            let parent = jQuery(this).parents('[data-fs-element="fs-quantity"]');
+            let input = parent.find('input');
+            let step = Number(input.attr('step'));
+            let count = Number(input.val()) - step;
+            count = count < step ? step : count;
+            input.val(count);
+            input.change();
 
             return false;
         });
@@ -725,12 +726,13 @@
         jQuery('[data-fs-action="change_count"]').on('change input', function (event) {
             event.preventDefault();
             /* Act on the event */
-
-            var productId = jQuery(this).data('fs-product-id');
-            var count = jQuery(this).val();
-            if (count < 1) {
-                jQuery(this).val(1);
-                count = 1;
+            let el = $(this);
+            var productId = el.data('fs-product-id');
+            var count = Number(el.val());
+            let step = Number(el.attr('step'));
+            if (count < step) {
+                el.val(step);
+                count = step;
             }
             var cartButton = jQuery('#fs-atc-' + productId);
             cartButton.attr('data-count', count);

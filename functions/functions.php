@@ -642,17 +642,12 @@ function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args 
  *
  * @return int
  */
-function fs_product_count( $products = array(), $echo = true ) {
-	$all_count = array();
-	if ( ! empty( $_SESSION['cart'] ) || ! is_array( $products ) ) {
-		$products = isset( $_SESSION['cart'] ) ? $_SESSION['cart'] : array();
-	}
-	if ( count( $products ) ) {
-		foreach ( $products as $key => $count ) {
-			$all_count[ $key ] = $count['count'];
-		}
-	}
-	$count = intval( array_sum( $all_count ) );
+function fs_product_count( $echo = true ) {
+
+	$count = FS_Cart_Class::get_cart() && is_array( FS_Cart_Class::get_cart() )
+		? count( FS_Cart_Class::get_cart() )
+		: 0;
+
 	if ( $echo ) {
 		echo esc_attr( $count );
 	} else {
@@ -778,8 +773,7 @@ function fs_add_to_cart( $product_id = 0, $label = null, $args = array() ) {
 	$args_default = array(
 		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader" width="16">',
 		'class'     => 'fs-add-to-cart',
-		'type'      => 'button',
-
+		'type'      => 'button'
 	);
 
 
@@ -1029,7 +1023,6 @@ function fs_aviable_product( $product_id = 0 ) {
  * @param array $args - массив аргументов
  */
 function fs_quantity_product( $product_id = 0, $args = array() ) {
-	global $fs_config;
 	$product_id = fs_get_product_id( $product_id );
 	$args       = wp_parse_args( $args, array(
 		'position'      => '%pluss% %input% %minus%',
@@ -1039,25 +1032,37 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		'pluss_content' => '+',
 		'minus_class'   => 'fs-minus',
 		'minus_content' => '-',
-		'input_class'   => 'fs-quantity'
+		'input_class'   => 'fs-quantity',
+		'step'          => 1
+
 	) );
 
 	$first_variation = fs_get_first_variation( $product_id );
 	if ( ! is_null( $first_variation ) ) {
 		$total_count = $first_variation['count'];
 	} else {
-		$total_count = get_post_meta( $product_id, $fs_config->meta['remaining_amount'], true );
+		$total_count = get_post_meta( $product_id, FS_Config::get_meta( 'remaining_amount' ), true );
 	}
 
-	if ( $total_count == '' ) {
-		$max = '';
-	} else {
-		$max = 'max="' . intval( $total_count ) . '"';
-	}
+	// Set attributes for a tag of type input text
+	$data_atts = fs_parse_attr( array(
+		'step'               => $args['step'],
+		'value'              => $args['step'],
+		'name'               => 'count',
+		'class'              => $args['input_class'],
+		'data-fs-action'     => 'change_count',
+		'type'               => 'text',
+		'data-fs-product-id' => $product_id,
+		'min'                => $args['step'],
+		'max'                => $total_count ? intval( $total_count ) : ''
 
-	$pluss    = sprintf( '<button type="button" class="%s" data-fs-count="pluss">%s</button> ', $args['pluss_class'], $args['pluss_content'] );
-	$minus    = sprintf( '<button type="button" class="%s" data-fs-count="minus">%s</button>', $args['minus_class'], $args['minus_content'] );
-	$input    = sprintf( '<input type="text" class="%s" name="count" value="1"  data-fs-action="change_count" data-fs-product-id="%s" ' . $max . ' data-limit="%d">', $args['input_class'], $product_id, fs_option( 'fs_in_stock_manage', 0 ) );
+	) );
+
+
+	$pluss = sprintf( '<button type="button" class="%s" data-fs-count="pluss">%s</button> ', $args['pluss_class'], $args['pluss_content'] );
+	$minus = sprintf( '<button type="button" class="%s" data-fs-count="minus">%s</button>', $args['minus_class'], $args['minus_content'] );
+	$input = '<input  ' . $data_atts . '>';
+
 	$quantity = str_replace( array( '%pluss%', '%input%', '%minus%' ), array(
 		$minus,
 		$input,
@@ -1069,14 +1074,13 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 }
 
 /**
- * Выводит поле для изменения к-ва товаров в корзине
+ * Displays a field for changing the number of products in the basket
  *
  * @param $item_id
  * @param $value
  * @param array $args
  */
-function fs_cart_quantity( $item_id, $value, $args = array() ) {
-	$value = intval( $value );
+function fs_cart_quantity(int $item_id, float $value, array $args = array() ) {
 	$args  = wp_parse_args( $args, array(
 		'wrapper'       => 'div',
 		'refresh'       => true,
@@ -1084,7 +1088,8 @@ function fs_cart_quantity( $item_id, $value, $args = array() ) {
 		'position'      => '%minus% %input% %pluss%  ',
 		'pluss'         => array( 'class' => sanitize_html_class( 'fs-pluss' ), 'content' => '+' ),
 		'minus'         => array( 'class' => sanitize_html_class( 'fs-minus' ), 'content' => '-' ),
-		'input'         => array( 'class' => 'fs-cart-quantity' )
+		'input'         => array( 'class' => 'fs-cart-quantity' ),
+		'step'          => 1
 	) );
 
 	$input_atts = fs_parse_attr( array(),
@@ -1095,7 +1100,9 @@ function fs_cart_quantity( $item_id, $value, $args = array() ) {
 			'value'        => $value,
 			'class'        => $args['input']['class'],
 			'data-fs-type' => "cart-quantity",
-			'data-item-id' => $item_id
+			'data-item-id' => $item_id,
+			'step'         => $args['step'],
+			'min'         => $args['step']
 		)
 	);
 
