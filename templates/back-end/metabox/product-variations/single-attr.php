@@ -29,12 +29,19 @@ $args = array(
 	'hide_if_empty'    => false,
 
 );
-$term = get_term( $att );
-if ( ! is_wp_error( $term ) && $term ) {
+
+
+echo '<div class="fs-prop-row">';
+
+if (!empty($att)  && is_numeric( $att ) ) {
+	$term        = get_term( intval( $att ) );
 	$parent_name = get_term_field( 'name', $term->parent );
-	echo "<div class=\"fs-prop-row\"><span class=\"fs-prop-group-name\">" . esc_attr( apply_filters('the_title',$parent_name) ) . "</span> ";
-	echo wp_dropdown_categories( $args );
-	echo "<span class=\"dashicons dashicons-trash\" data-fs-element='remove-var-prop' title='Remove property'></span></div>";
+	echo '<span class="fs-prop-group-name">' . esc_attr( apply_filters( 'the_title', $parent_name ) ) . '</span>';
 }
+
+echo wp_dropdown_categories( $args );
+echo '<span class="dashicons dashicons-trash" data-fs-element="remove-var-prop" title="Remove property"></span>';
+echo '</div>';
+
 
 

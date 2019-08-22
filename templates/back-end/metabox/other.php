@@ -41,6 +41,6 @@
         <input type="checkbox" id="<?php echo esc_attr(\FS\FS_Config::get_meta('label_novelty')) ?>"
                name="<?php echo esc_attr(\FS\FS_Config::get_meta('label_novelty')) ?>" <?php checked(get_post_meta($post->ID, \FS\FS_Config::get_meta('label_novelty'), 1), 1) ?>
                value="1">
-        <label for="<?php echo esc_attr($this->config->meta['label_novelty']) ?>"><?php esc_html_e('Include tag "New"', 'f-shop') ?> </label>
+        <label for="<?php echo esc_attr(\FS\FS_Config::get_meta('label_novelty'))  ?>"><?php esc_html_e('Include tag "New"', 'f-shop') ?> </label>
     </div>
 </div>
