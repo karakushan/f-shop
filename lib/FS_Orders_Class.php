@@ -429,7 +429,7 @@ Good luck!', 'f-shop');
      *
      * @return \stdClass
      */
-    public function get_order($order_id = 0)
+   static public function get_order($order_id = 0)
     {
 
         $order = get_post($order_id);

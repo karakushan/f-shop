@@ -932,10 +932,11 @@ function fs_post_views( $post_id = '' ) {
 function fs_cart_widget( $args = array() ) {
 	$args = wp_parse_args( $args, array(
 		'class' => 'fs-cart-widget',
-		'empty' => false
+		'empty' => false,
+		'tag'   => 'a'
 	) );
 
-	$template = '<a href="' . fs_cart_url( false ) . '" data-fs-element="cart-widget" class="' . esc_attr( $args['class'] ) . '">';
+	$template = '<'.$args['tag'].' href="' . fs_cart_url( false ) . '" data-fs-element="cart-widget" class="' . esc_attr( $args['class'] ) . '">';
 
 	// если параметр  $args['empty']  == true это значит использовать отдельный шаблон для пустой корзины
 	if ( $args['empty'] ) {
@@ -948,7 +949,7 @@ function fs_cart_widget( $args = array() ) {
 		$template .= fs_frontend_template( 'cart-widget/widget' );
 	}
 
-	$template .= "</a>";
+	$template .= '</'.$args['tag'].'>';
 
 	echo apply_filters( 'fs_cart_widget_template', $template );
 }
@@ -1080,8 +1081,8 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
  * @param $value
  * @param array $args
  */
-function fs_cart_quantity(int $item_id, float $value, array $args = array() ) {
-	$args  = wp_parse_args( $args, array(
+function fs_cart_quantity( int $item_id, float $value, array $args = array() ) {
+	$args = wp_parse_args( $args, array(
 		'wrapper'       => 'div',
 		'refresh'       => true,
 		'wrapper_class' => 'fs-qty-wrap',
@@ -1102,7 +1103,7 @@ function fs_cart_quantity(int $item_id, float $value, array $args = array() ) {
 			'data-fs-type' => "cart-quantity",
 			'data-item-id' => $item_id,
 			'step'         => $args['step'],
-			'min'         => $args['step']
+			'min'          => $args['step']
 		)
 	);
 
