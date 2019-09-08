@@ -213,14 +213,14 @@ class FS_Post_Type {
 	 * hook into WP's add_meta_boxes action hook
 	 */
 	public function add_meta_boxes() {
-		global $fs_config;
+
 		remove_meta_box( 'order-statusesdiv', 'orders', 'side' );
 		// Add this metabox to every selected post
 		add_meta_box(
-			sprintf( 'fast_shop_%s_metabox', $fs_config->data['post_type'] ),
+			sprintf( 'fast_shop_%s_metabox', FS_Config::get_data( 'post_type' ) ),
 			__( 'Product settings', 'f-shop' ),
 			array( &$this, 'add_inner_meta_boxes' ),
-			$fs_config->data['post_type'],
+			FS_Config::get_data( 'post_type' ),
 			'normal',
 			'high'
 		);
@@ -274,14 +274,104 @@ class FS_Post_Type {
 	}
 
 	/**
+	 * Gets the array that contains the list of product settings tabs.
+	 *
+	 * @return array
+	 */
+	public static function get_product_tabs() {
+		$tabs = array(
+			'prices'     => array(
+				'title'       => __( 'Prices', 'f-shop' ),
+				'on'          => true,
+				'description' => __( 'In this tab you can adjust the prices of goods.', 'f-shop' ),
+				'fields'      => array(
+					FS_Config::get_meta( 'price' )        => array(
+						'label' => __( 'Base price', 'f-shop' ),
+						'type'  => 'text',
+						'help'  => __( 'This is the main price on the site. Required field!', 'f-shop' )
+					),
+					FS_Config::get_meta( 'action_price' ) => array(
+						'label' => __( 'Promotional price', 'f-shop' ),
+						'type'  => 'text',
+						'help'  => __( 'If this field is filled, the base price loses its relevance. But you can display it on the site.', 'f-shop' )
+					),
+					FS_Config::get_meta( 'currency' )     => array(
+						'label'    => __( 'Item Currency', 'f-shop' ),
+						'on'       => fs_option( 'multi_currency_on' ) ? true : false,
+						'type'     => 'dropdown_categories',
+						'help'     => __( 'The field is active if you have enabled multicurrency in settings.', 'f-shop' ),
+						'taxonomy' => FS_Config::get_data( 'currencies_taxonomy' )
+					)
+				)
+			),
+			'gallery'    => array(
+				'title'    => __( 'Gallery', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'gallery'
+			),
+			'attributes' => array(
+				'title'    => __( 'Attributes', 'f-shop' ),
+				'on'       => false,
+				'body'     => '',
+				'template' => 'attributes'
+			),
+			'other'      => array(
+				'title'    => __( 'Other', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'other',
+			),
+			'related'    => array(
+				'title'    => __( 'Associated', 'f-shop' ),
+				'on'       => false, // Сейчас в разработке
+				'body'     => '',
+				'template' => 'related'
+			),
+			'up_sell'    => array(
+				'title'    => __( 'Up-sell', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'up-sell'
+			),
+			'cross_sell' => array(
+				'title'    => __( 'Cross-sell', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'cross-sell'
+			),
+			'variants'   => array(
+				'title'    => __( 'Variation', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'variants'
+			),
+			'delivery'   => array(
+				'title'  => __( 'Shipping and payment', 'f-shop' ),
+				'on'     => true,
+				'body'   => '',
+				'fields' => array(
+					'_fs_delivery_description' => array(
+						'label' => __( 'Shipping and Payment Details', 'f-shop' ),
+						'type'  => 'editor',
+						'help'  => ''
+					),
+
+				)
+			),
+		);
+
+		return apply_filters( 'fs_product_tabs_admin', $tabs );
+	}
+
+	/**
 	 * called off of the add meta box
 	 *
 	 * @param $post
 	 */
 	public function add_inner_meta_boxes( $post ) {
-		global $fs_config;
 		$form_class       = new FS_Form_Class();
-		$product_tabs     = $fs_config->get_product_tabs();
+		$product_tabs     = self::get_product_tabs();
 		$this->product_id = $post->ID;
 		$cookie           = isset( $_COOKIE['fs_active_tab'] ) ? $_COOKIE['fs_active_tab'] : 'prices';
 		echo '<div class="fs-metabox" id="fs-metabox">';
@@ -294,7 +384,7 @@ class FS_Post_Type {
 				}
 				if ( $cookie ) {
 					if ( $cookie == $key ) {
-						$class = 'class="fs-link-active"';
+						$class = 'fs-link-active';
 					} else {
 						$class = '';
 					}
@@ -360,6 +450,27 @@ class FS_Post_Type {
 			echo '<div class="clearfix"></div>';
 
 		}
+		?>
+		<!-- The modal / dialog box, hidden somewhere near the footer -->
+		<div id="fs-upsell-dialog" class="hidden fs-select-products-dialog" style="max-width:420px">
+			<?php
+			$args  = array(
+				'posts_per_page' => -1,
+				'post_type'      => FS_Config::get_data( 'post_type' )
+			);
+			$query = new \WP_Query( $args );
+			if ( $query->have_posts() ) {
+				echo '<ul>';
+				while ( $query->have_posts() ) {
+					$query->the_post();
+					the_title( '<li><span>', '</span><button class="button add-product" data-id="' . esc_attr( get_the_ID() ) . '" data-field="fs_up_sell" data-name="' . esc_attr( get_the_title() ) . '">' . esc_html__( 'choose', 'f-shop' ) . '</button></li>' );
+				}
+				echo '</ul>';
+			}
+			wp_reset_query();
+			?>
+		</div>
+		<?php
 		echo '</div>';
 	}
 

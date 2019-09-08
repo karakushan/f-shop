@@ -936,7 +936,7 @@ function fs_cart_widget( $args = array() ) {
 		'tag'   => 'a'
 	) );
 
-	$template = '<'.$args['tag'].' href="' . fs_cart_url( false ) . '" data-fs-element="cart-widget" class="' . esc_attr( $args['class'] ) . '">';
+	$template = '<' . $args['tag'] . ' href="' . fs_cart_url( false ) . '" data-fs-element="cart-widget" class="' . esc_attr( $args['class'] ) . '">';
 
 	// если параметр  $args['empty']  == true это значит использовать отдельный шаблон для пустой корзины
 	if ( $args['empty'] ) {
@@ -949,7 +949,7 @@ function fs_cart_widget( $args = array() ) {
 		$template .= fs_frontend_template( 'cart-widget/widget' );
 	}
 
-	$template .= '</'.$args['tag'].'>';
+	$template .= '</' . $args['tag'] . '>';
 
 	echo apply_filters( 'fs_cart_widget_template', $template );
 }
@@ -2954,4 +2954,62 @@ function fs_action_message( $title, $text, $status = 'info', $args = array() ) {
 	}
 
 	echo apply_filters( 'fs_action_message', $html );
+}
+
+/**
+ * Возвращает cross sell товары в виде объекта
+ *
+ * @param int $product_id
+ * @param int $limit
+ *
+ * @return WP_Query
+ */
+function fs_get_cross_sells( $product_id = 0, $limit = - 1 ) {
+	$product_id  = fs_get_product_id( $product_id );
+	$cross_sells = get_post_meta( $product_id, FS_Config::get_meta( 'cross_sell', 0 ) );
+
+	if ( ! is_array( $cross_sells ) || empty( $cross_sells ) ) {
+		return null;
+	}
+
+	$cross_sells = array_shift( $cross_sells );
+
+	if ( in_array( $product_id, $up_sells ) ) {
+		$cross_sells = array_diff( $cross_sells, [ $product_id ] );
+	}
+
+	return new WP_Query( array(
+		'post_type'      => FS_Config::get_data( 'post_type' ),
+		'posts_per_page' => $limit,
+		'post__in'       => $cross_sells
+	) );
+}
+
+/**
+ * Возвращает up sell товары в виде объекта
+ *
+ * @param int $product_id
+ * @param int $limit
+ *
+ * @return WP_Query
+ */
+function fs_get_up_sells( $product_id = 0, $limit = - 1 ) {
+	$product_id = fs_get_product_id( $product_id );
+	$up_sells   = get_post_meta( $product_id, FS_Config::get_meta( 'up_sell', 0 ) );
+
+	if ( ! is_array( $up_sells ) || empty( $up_sells ) ) {
+		return null;
+	}
+
+	$up_sells = array_shift( $up_sells );
+
+	if ( in_array( $product_id, $up_sells ) ) {
+		$up_sells = array_diff( $up_sells, [ $product_id ] );
+	}
+
+	return new WP_Query( array(
+		'post_type'      => FS_Config::get_data( 'post_type' ),
+		'posts_per_page' => $limit,
+		'post__in'       => $up_sells
+	) );
 }

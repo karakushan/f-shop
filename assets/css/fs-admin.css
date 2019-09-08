@@ -1190,4 +1190,46 @@ td.fs_menu_order.column-fs_menu_order {
   top: 2px;
 }
 
+.fs-select-products-dialog > ul {
+  max-height: 400px;
+  overflow: auto;
+}
+.fs-select-products-dialog > ul > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  border-bottom: 1px solid #eee;
+  font-size: 12px;
+  padding: 5px 5px 5px 0;
+  margin: 0;
+}
+.fs-select-products-dialog > ul > li.active {
+  opacity: 0.5;
+}
+.fs-select-products-dialog > ul > li button.button {
+  height: 22px;
+  line-height: 1;
+}
+.fs-select-products-dialog > ul > li span {
+  margin-right: 10px;
+}
+
+.fs-upsell-wrapper {
+  max-width: 600px;
+}
+.fs-upsell-wrapper > li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+  padding: 5px 0;
+  margin: 0;
+}
+.fs-upsell-wrapper > li .button-cancel:hover {
+  background: #ff5c5c;
+  color: #fff;
+  border: 1px solid #ff5c5c;
+}
+
 /*# sourceMappingURL=fs-admin.css.map */

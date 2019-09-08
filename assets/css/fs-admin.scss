@@ -1390,3 +1390,51 @@ td.fs_menu_order.column-fs_menu_order {
   content: "\f174";
   top: 2px
 }
+
+.fs-select-products-dialog{
+  >ul{
+    max-height: 400px;
+    overflow: auto;
+    >li{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-transform: uppercase;
+      border-bottom: 1px solid #eee;
+      font-size: 12px;
+
+      padding: 5px  5px 5px 0;
+
+      margin: 0;
+      &.active{
+        opacity: 0.5;
+      }
+      button.button{
+        height: 22px;
+        line-height: 1;
+      }
+      span{
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+.fs-upsell-wrapper{
+  max-width: 600px;
+  >li{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+    padding: 5px 0;
+    margin: 0;
+    .button-cancel{
+      &:hover{
+        background: #ff5c5c;
+        color: #fff;
+        border: 1px solid #ff5c5c;
+      }
+    }
+  }
+}

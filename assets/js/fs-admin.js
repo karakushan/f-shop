@@ -458,7 +458,8 @@ jQuery(document).ready(function ($) {
 });
 
 jQuery(document).ready(function ($) {
-    // табы
+    // Tabs in product editing
+
     $('#fs-metabox .tab-header a').on('click', function (event) {
         event.preventDefault();
         var target = $(this).attr('href');
@@ -469,11 +470,73 @@ jQuery(document).ready(function ($) {
             $(this).removeClass('fs-tab-active');
         });
         $(target).addClass('fs-tab-active');
-        $('#fs-metabox>ul>li').each(function (index, el) {
-            $(this).removeClass('fs-link-active');
-        });
+        $(this)
+            .parents('.tab-header')
+            .find('li')
+            .each(function (index, el) {
+                $(this).removeClass('fs-link-active');
+            });
         $(this).parent('li').addClass('fs-link-active');
     });
+
+    // Up sell dialog window
+    $('#fs-upsell-dialog').dialog({
+        title: 'Список товаров',
+        dialogClass: 'wp-dialog',
+        autoOpen: false,
+        draggable: false,
+        width: 'auto',
+        modal: true,
+        resizable: false,
+        closeOnEscape: true,
+        position: {
+            my: "center",
+            at: "center",
+            of: window
+        },
+        open: function () {
+            $('#fs-upsell-dialog li').removeClass('active');
+            // close dialog by clicking the overlay behind it
+            $('.ui-widget-overlay').bind('click', function () {
+                $('#fs-upsell-dialog').dialog('close');
+            })
+        },
+        create: function () {
+            // style fix for WordPress admin
+            $('.ui-dialog-titlebar-close').addClass('ui-button');
+        },
+    });
+    // bind a button or a link to open the dialog
+    $('.fs-metabox').on('click', '.fs-add-upsell', function (e) {
+        e.preventDefault();
+        $("#fs-upsell-dialog .add-product").attr('data-field', $(this).attr('data-field'));
+        $('#fs-upsell-dialog').dialog('open');
+    });
+
+    $(".fs-select-products-dialog").on('click', '.add-product', function (e) {
+            e.preventDefault();
+            let el = $(this);
+            let data = el.data();
+
+            if (el.parent().hasClass('active')) return false;
+
+            let parentLi = el.parent().clone();
+            parentLi.find('button').remove();
+            parentLi.removeClass('active');
+            parentLi.append('<button class="button button-cancel remove-product">&times;</button>' +
+                '<input type="hidden" name="' + data.field + '[]" value="' + data.id + '">');
+            $(this).parent().toggleClass('active');
+            $(".fs-tab-active .fs-upsell-wrapper").append(parentLi);
+        }
+    );
+
+    $(".fs-upsell-wrapper ").on('click', '.remove-product', function (e) {
+            e.preventDefault();
+            $(this).parent().remove();
+
+        }
+    );
+
 // добавление атрибута
     $('#fs-add-attr').on('click', function (event) {
         event.preventDefault();

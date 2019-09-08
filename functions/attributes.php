@@ -10,8 +10,7 @@ use FS\FS_Product_Class;
  * @return array массив атрибутов
  */
 function fs_get_attributes_group( $product_id = 0 ) {
-	global $post;
-	$product_id = $product_id == 0 ? $post->ID : $product_id;
+	$product_id = fs_get_product_id($product_id);
 	$terms      = wp_get_object_terms( $product_id, 'product-attributes' );
 	$parents    = array();
 	foreach ( $terms as $key => $term ) {
