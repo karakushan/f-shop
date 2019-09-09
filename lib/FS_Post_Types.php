@@ -12,8 +12,7 @@ class FS_Post_Types
 			'menu_icon' =>'dashicons-thumbs-up',
 			'exclude_from_search' =>true,
 			'taxonomies' => array(),
-			'supports' => array('title', 'editor', 'excerpt','thumbnail','comments')
-
+			'supports' => array('title', 'editor', 'excerpt','thumbnail','comments','gutenburg'),
 
 			));
 	
@@ -61,7 +60,8 @@ class FS_Post_Types
 				'taxonomies' => $type['taxonomies'],
 				'description' => __("Здесь размещены товары вашего сайта."),
 				'supports' => $type['supports' ],
-				'exclude_from_search'=>$type['exclude_from_search']
+				'exclude_from_search'=>$type['exclude_from_search'],
+				'show_in_rest' => true,
 				)
 			);
 	}
