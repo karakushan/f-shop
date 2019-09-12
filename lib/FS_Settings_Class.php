@@ -607,6 +607,7 @@ Your phone number.</p>', 'f-shop' ) )
 			$tab = esc_attr( $_GET['tab'] );
 		}
 		echo ' <form method="post" action="' . esc_url( add_query_arg( array( 'tab' => $tab ), 'options.php' ) ) . '"> ';
+		echo '<div class="fs-mb-preloader"></div>';
 		echo ' <h2 class="nav-tab-wrapper"> ';
 
 		foreach ( $settings as $key => $setting ) {

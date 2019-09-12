@@ -15,7 +15,11 @@ $gallery       = $gallery_class->get_gallery( 0, false, true );
 	<?php endif ?>
     <div class="fs-grid fs-sortable-items" id="fs-gallery-wrapper">
 		<?php if ( $gallery ) ?>
-		<?php foreach ( $gallery as $key => $img ): ?>
+		<?php foreach ( $gallery as $key => $img ):
+			if ( ! file_exists( get_attached_file( $img ) ) ) {
+				continue;
+			}
+			?>
 			<?php $image_attributes = wp_get_attachment_image_src( $img, 'medium' );
 			if ( ! empty( $image_attributes ) ) {
 				$src = $image_attributes[0];

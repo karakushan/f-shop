@@ -53,6 +53,7 @@ class FS_Images_Class {
 
 		$gallery_images = $this->get_gallery( $product_id, $args['thumbnail'], $args['attachments'] );
 
+
 		if ( ! is_array( $gallery_images ) && ! count( $gallery_images ) ) {
 			return;
 		}
