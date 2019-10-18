@@ -283,7 +283,11 @@ function fs_dropdown_cats_multiple( $output, $r ) {
 
 		$output = str_replace( "name='{$r['name']}'", "name='{$r['name']}[]'", $output );
 
-		foreach ( array_map( 'trim', explode( ",", $r['selected'] ) ) as $value ) {
+		$selected = is_array( $r['selected'] )
+			? $r['selected']
+			: explode( ",", $r['selected'] );
+
+		foreach ( array_map( 'trim', $selected ) as $value ) {
 			$output = str_replace( "value=\"{$value}\"", "value=\"{$value}\" selected", $output );
 		}
 
@@ -340,4 +344,91 @@ function fs_term_meta_name_filter( $meta_key ) {
 	}
 
 	return $meta_key;
+}
+
+add_filter( 'fs_price_discount_filter', 'fs_price_discount_filter', 10, 2 );
+/**
+ * Функция устанавливает скидку на одну позицию товара
+ *
+ * @param $product_id
+ * @param $price
+ *
+ * @return mixed
+ */
+function fs_price_discount_filter( $product_id, $price ) {
+	$dicount_terms_conf = array(
+		'taxonomy'   => FS_Config::get_data( 'discount_taxonomy' ),
+		'hide_empty' => false,
+		'meta_query' => array(
+			array(
+				'key'     => 'discount_type',
+				'value'   => 'product',
+				'compare' => '='
+			)
+		)
+	);
+	$dicount_terms      = get_terms( $dicount_terms_conf );
+	$product_terms      = wp_get_object_terms( $product_id,
+		[
+			FS_Config::get_data( 'product_taxonomy' ),
+			FS_Config::get_data( 'brand_taxonomy' )
+		] );
+
+
+	// Если товар не привязан ни к одному термину или нет скидок возвращаем исходную цену
+	if ( ! $dicount_terms || ! $product_terms ) {
+		return $price;
+	}
+
+
+	$discounts = [];
+
+	// Проходимся по всем скидкам, которые предназначены для товара (есть еще другие скидки, не путать)
+	foreach ( $dicount_terms as $dicount_term ) {
+		// Получаем скидку по категориям
+		$product_discount_categories = get_term_meta( $dicount_term->term_id, 'discount_categories', 0 );
+		$product_discount_categories = array_shift( $product_discount_categories );
+
+		// Получаем скидку по производителям
+		$product_discount_brands = get_term_meta( $dicount_term->term_id, 'discount_brands', 0 );
+		$product_discount_brands = array_shift( $product_discount_brands );
+
+		$product_in_categories = is_object_in_term( $product_id, FS_Config::get_data( 'product_taxonomy' ), $product_discount_categories );
+		$product_in_brands     = is_object_in_term( $product_id, FS_Config::get_data( 'brand_taxonomy' ), $product_discount_brands );
+
+		$discount = get_term_meta( $dicount_term->term_id, 'discount_amount', 1 );
+
+
+		// Ищем знак процента в строке
+		if ( strpos( $discount, '%' ) !== false ) {
+			$discount = preg_replace( "/[^0-9]/", '', $discount );
+			$discount = $price * $discount / 100;
+		}
+
+		// Если значение скидки 0 или пустое значение переходим на след. итерацию цикла
+		if ( empty( $discount ) ) {
+			continue;
+		}
+
+		// Проверям привязан ли товар к указанным выше категориям
+		if ( ! empty( $product_discount_categories ) && $product_in_categories ) {
+			// Добавляем все скидки в массив
+			array_push( $discounts, floatval( $discount ) );
+		}
+
+		// Проверям привязан ли товар к указанным выше брендам
+		if ( ! empty( $product_discount_brands ) && $product_in_brands ) {
+			// Добавляем все скидки в массив
+			array_push( $discounts, floatval( $discount ) );
+		}
+	}
+
+	if ( $discounts ) {
+		// Применяем максимальную скидку
+		$total_discount = max( $discounts );
+		$price          = $price - $total_discount;
+	}
+
+
+	return floatval( $price );
 }

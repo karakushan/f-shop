@@ -1232,4 +1232,9 @@ td.fs_menu_order.column-fs_menu_order {
   border: 1px solid #ff5c5c;
 }
 
+.fs-dropdown-categories-field {
+  max-height: 200px;
+  overflow: auto;
+}
+
 /*# sourceMappingURL=fs-admin.css.map */

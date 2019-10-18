@@ -38,36 +38,29 @@ class FS_Taxonomies_Class {
 		$fields = array(
 			FS_Config::get_data( 'product_taxonomy' )       =>
 				array(
-					'_content'           => array(
+					'_content'         => array(
 						'name' => __( 'Category text', 'f-shop' ),
 						'type' => 'editor',
 						'args' => array()
 					),
-					'_seo_title'         => array(
+					'_seo_title'       => array(
 						'name' => __( 'SEO title', 'f-shop' ),
 						'type' => 'text',
 						'args' => array()
 					),
-					'_seo_description'   => array(
+					'_seo_description' => array(
 						'name' => __( 'SEO description', 'f-shop' ),
 						'type' => 'textarea',
 						'args' => array()
 					),
-					'_thumbnail_id'      => array(
+					'_thumbnail_id'    => array(
 						'name' => __( 'Thumbnail', 'f-shop' ),
 						'type' => 'image',
 						'args' => array()
 					),
-					'_icon_id'           => array(
+					'_icon_id'         => array(
 						'name' => __( 'Icon', 'f-shop' ),
 						'type' => 'image',
-						'args' => array()
-					),
-					'_category_discount' => array(
-						'name' => __( 'Total discount for category products (in percent)', 'f-shop' ),
-						'type' => 'text',
-						'help' => __( 'Enter a number without a percent sign', 'f-shop' ),
-						'size' => 5,
 						'args' => array()
 					)
 				),
@@ -165,38 +158,44 @@ class FS_Taxonomies_Class {
 			// Дополнительные поля скидок
 			FS_Config::get_data( 'discount_taxonomy' )      =>
 				array(
-					'discount_where_is' => array(
-						'name' => __( 'The discount is activated provided', 'f-shop' ),
+					'discount_type' => array(
+						'name' => __( 'DiscountType', 'f-shop' ),
 						'type' => 'select',
+						'args' => array(
+							'values' => array(
+								'product' => __( 'Скидка применяется только к товарам', 'f-shop' )
 
-						'args' => array(
-							'values' => array(
-								'sum'   => __( 'The total amount of goods in the cart', 'f-shop' ),
-								'count' => __( 'Number of items in the cart', 'f-shop' )
+
 							)
 						)
 					),
-					'discount_where'    => array(
-						'name' => __( 'Discount condition', 'f-shop' ),
-						'type' => 'select',
+
+					'discount_categories' => array(
+						'name' => __( 'Категории на которые распространяется скидка', 'f-shop' ),
+						'type' => 'dropdown_categories',
+						'rule' => [ 'discount_where_is', '=', 'category' ],
 						'args' => array(
-							'values' => array(
-								'>=' => __( 'More or equal', 'f-shop' ),
-								'>'  => __( 'More', 'f-shop' ),
-								'<'  => __( 'Less', 'f-shop' ),
-								'<=' => __( 'Less or equal', 'f-shop' )
-							)
+							'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
+							'multiple' => true,
+
 						)
 					),
-					'discount_value'    => array(
-						'name' => __( 'Condition value', 'f-shop' ),
-						'type' => 'text',
-						'args' => array()
+					'discount_brands'     => array(
+						'name' => __( 'Бренды на которые распространяется скидка', 'f-shop' ),
+						'type' => 'dropdown_categories',
+						'rule' => [ 'discount_where_is', '=', 'category' ],
+						'args' => array(
+							'taxonomy' => FS_Config::get_data( 'brand_taxonomy' ),
+							'multiple' => true,
+
+						)
 					),
-					'discount_amount'   => array(
-						'name' => __( 'Discount amount', 'f-shop' ),
-						'type' => 'text',
-						'args' => array()
+					'discount_amount' => array(
+						'name'     => __( 'Discount amount', 'f-shop' ),
+						'type'     => 'text',
+						'args'     => array(),
+						'required' => true,
+						'help'     => 'Мужно указать фиксированную сумму, например "20" или в процентах "10%"'
 					)
 				)
 
@@ -325,7 +324,7 @@ class FS_Taxonomies_Class {
 				'hierarchical'       => true,
 				'show_in_quick_edit' => true
 			),
-			$config['product_brand_taxonomy'] => array(
+			$config['brand_taxonomy']         => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Manufacturers', 'f-shop' ),
 				'labels'             => array(
@@ -339,8 +338,8 @@ class FS_Taxonomies_Class {
 				"publicly_queryable" => true,
 				'show_in_rest'       => true,
 				'metabox'            => true,
-				'show_admin_column'  => false,
-				'hierarchical'       => false,
+				'show_admin_column'  => true,
+				'hierarchical'       => true,
 				'show_in_quick_edit' => true
 			),
 			$config['product_taxes_taxonomy'] => array(

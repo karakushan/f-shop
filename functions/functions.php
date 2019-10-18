@@ -109,25 +109,7 @@ function fs_get_price( $product_id = 0 ) {
 		$price = $action_price;
 	}
 
-
-	// Проверяем установлена ли скидка на все товары
-	if ( fs_option( 'fs_total_discount_percent' ) && is_numeric( fs_option( 'fs_total_discount_percent' ) ) ) {
-		$total_discount = floatval( fs_option( 'fs_total_discount_percent' ) );
-		$price          = $price - ( $price * $total_discount / 100 );
-	} else {
-		// Проверяем установлена ли скидка на всю категорию товаров
-		$product_categories = get_the_terms( $product_id, FS_Config::get_data( 'product_taxonomy' ) );
-
-		if ( $product_categories ) {
-			foreach ( $product_categories as $product_category ) {
-				$category_discount = get_term_meta( $product_category->term_id, '_category_discount', 1 );
-				if ( $category_discount && is_numeric( $category_discount ) ) {
-					$price = $price - ( $price * $category_discount / 100 );
-				}
-			}
-		}
-	}
-
+	$price = apply_filters( 'fs_price_discount_filter', $product_id, $price );
 	$price = apply_filters( 'fs_price_filter', $product_id, $price );
 
 	return floatval( $price );

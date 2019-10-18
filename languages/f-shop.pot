@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-16 08:31+0000\n"
+"POT-Creation-Date: 2019-10-10 18:59+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: functions/actions.php:65 lib/FS_Config.php:75
+#: functions/actions.php:65 lib/FS_Config.php:73
 #: templates/front-end/auth/lostpassword.php:2
 #: templates/front-end/shortcode/fs-order-info.php:51
 #: templates/back-end/metabox/order/meta-box-1.php:20
@@ -71,7 +71,7 @@ msgstr ""
 msgid "Phone"
 msgstr ""
 
-#: functions/actions.php:69 lib/FS_Config.php:81 lib/FS_Users_Class.php:163
+#: functions/actions.php:69 lib/FS_Config.php:79 lib/FS_Users_Class.php:163
 #: templates/front-end/dashboard/personal_info.php:70
 #: templates/front-end/order/last-order-info.php:27
 #: templates/front-end/shortcode/fs-order-info.php:59
@@ -88,25 +88,25 @@ msgstr ""
 msgid "Site name"
 msgstr ""
 
-#: functions/attributes.php:152 functions/filters.php:111
+#: functions/attributes.php:151 functions/filters.php:111
 msgid "in stock"
 msgstr ""
 
-#: functions/attributes.php:153 functions/filters.php:113
+#: functions/attributes.php:152 functions/filters.php:113
 msgid "not available"
 msgstr ""
 
-#: functions/attributes.php:444
+#: functions/attributes.php:443
 #, php-format
 msgid "Select %s"
 msgstr ""
 
-#: functions/attributes.php:518
+#: functions/attributes.php:517
 #, php-format
 msgid "Parameter $ group_id not specified in function %s"
 msgstr ""
 
-#: functions/attributes.php:527
+#: functions/attributes.php:526
 #, php-format
 msgid "Characteristic groups %d not on site in function %s"
 msgstr ""
@@ -117,8 +117,8 @@ msgstr ""
 
 #: functions/filters.php:66 lib/FS_Attribute_Widget.php:62
 #: lib/FS_Price_Widget.php:35 templates/front-end/dashboard/orders.php:27
-#: templates/front-end/shortcode/order-detail.php:16
 #: templates/front-end/shortcode/fs-order-info.php:10
+#: templates/front-end/shortcode/order-detail.php:16
 msgid "Title"
 msgstr ""
 
@@ -129,12 +129,12 @@ msgid "ID"
 msgstr ""
 
 #: functions/filters.php:68 functions/filters.php:176
+#: templates/front-end/cart/list-products.php:21
+#: templates/front-end/checkout/checkout.php:17
 #: templates/front-end/dashboard/orders.php:29
 #: templates/front-end/dashboard/wishlist.php:19
-#: templates/front-end/shortcode/order-detail.php:17
 #: templates/front-end/shortcode/fs-order-info.php:11
-#: templates/front-end/checkout/checkout.php:17
-#: templates/front-end/cart/list-products.php:21
+#: templates/front-end/shortcode/order-detail.php:17
 #: templates/back-end/metabox/order/meta-box-0.php:7
 #: templates/back-end/metabox/product-variations/add-variation.php:56
 #: templates/front-end/mail/themes/oxygen.php:469
@@ -142,9 +142,9 @@ msgid "Price"
 msgstr ""
 
 #: functions/filters.php:69 functions/filters.php:183
-#: templates/front-end/dashboard/wishlist.php:16
-#: templates/front-end/checkout/checkout.php:14
 #: templates/front-end/cart/list-products.php:18
+#: templates/front-end/checkout/checkout.php:14
+#: templates/front-end/dashboard/wishlist.php:16
 msgid "Vendor code"
 msgstr ""
 
@@ -153,13 +153,13 @@ msgstr ""
 msgid "Stock in stock"
 msgstr ""
 
-#: functions/filters.php:71 templates/front-end/dashboard/orders.php:28
-#: templates/front-end/dashboard/wishlist.php:10
-#: templates/front-end/dashboard/personal_info.php:40
-#: templates/front-end/shortcode/order-detail.php:15
-#: templates/front-end/shortcode/fs-order-info.php:9
+#: functions/filters.php:71 templates/front-end/cart/list-products.php:12
 #: templates/front-end/checkout/checkout.php:8
-#: templates/front-end/cart/list-products.php:12
+#: templates/front-end/dashboard/orders.php:28
+#: templates/front-end/dashboard/personal_info.php:40
+#: templates/front-end/dashboard/wishlist.php:10
+#: templates/front-end/shortcode/fs-order-info.php:9
+#: templates/front-end/shortcode/order-detail.php:15
 msgid "Photo"
 msgstr ""
 
@@ -208,71 +208,485 @@ msgstr ""
 msgid "Remove from wishlist"
 msgstr ""
 
-#: functions/functions.php:775 functions/functions.php:788
+#: functions/functions.php:770 functions/functions.php:782
 msgid "Add to cart"
 msgstr ""
 
-#: functions/functions.php:851
+#: functions/functions.php:845
 #, php-format
 msgid "Item «%s» added to comparison"
 msgstr ""
 
-#: functions/functions.php:852
+#: functions/functions.php:846
 msgid "Error adding product to comparison"
 msgstr ""
 
-#: functions/functions.php:892
+#: functions/functions.php:886
 msgid "Sent"
 msgstr ""
 
-#: functions/functions.php:1247
+#: functions/functions.php:1255
 msgid "Remove all items"
 msgstr ""
 
-#: functions/functions.php:1254
+#: functions/functions.php:1262
 msgid "Are you sure you want to empty the trash?"
 msgstr ""
 
-#: functions/functions.php:1360
+#: functions/functions.php:1368
 msgid "Add to wishlist"
 msgstr ""
 
-#: functions/functions.php:1468
+#: functions/functions.php:1476
 #, php-format
 msgid "Template file %s not found in function %s"
 msgstr ""
 
-#: functions/functions.php:2021
+#: functions/functions.php:2029
 msgid "No image"
 msgstr ""
 
-#: functions/functions.php:2330
+#: functions/functions.php:2338
 #, php-format
 msgid "Showing %1$d products from %2$d"
 msgstr ""
 
-#: functions/functions.php:2681
+#: functions/functions.php:2689
 #, php-format
 msgid "File \"%s\" not found"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:73
+#: lib/FS_Ajax_Class.php:148 lib/FS_Ajax_Class.php:423
+#: lib/FS_Users_Class.php:73 lib/FS_Users_Class.php:289
+#: lib/FS_Users_Class.php:323 lib/FS_Users_Class.php:474
+msgid "Failed verification of nonce form"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:152
+msgid "Please enter a valid email address"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:154
+msgid "Просьба уведомить о наличии товара"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:155
+#, php-format
+msgid ""
+"User %s requests to be notified of the availability of the product \"%s\". "
+"Product Link: %s"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:165
+msgid "Your request has been sent successfully!"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:171
+msgid "There was an error sending a letter to the site administrator!"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:287
+msgid ""
+"An unexpected error occurred while attaching the attribute to the product."
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:293
+msgid "Attribute successfully attached to product"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:314 lib/FS_Ajax_Class.php:351
+msgid ""
+"Goods with such a set of characteristics are not in stock. Try changing "
+"parameters."
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:470
+#, php-format
+msgid ""
+"User with such E-mail or Login is registered on the site. <a href=\"#fs-"
+"modal-login\" data-fs-action=\"modal\">Login to site</a>. <a href=\"%s\">"
+"Forgot your password?</a>"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:574 lib/FS_Ajax_Class.php:581
+#, php-format
+msgid "Order goods on the site \"%s\""
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:595
+#, php-format
+msgid "Order #%d successfully added"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:605
+msgid "Errors occurred while creating an order"
+msgstr ""
+
+#: lib/FS_Ajax_Class.php:614 lib/FS_Ajax_Class.php:701 lib/FS_Cart_Class.php:86
+msgid "Security check failed"
+msgstr ""
+
+#: lib/FS_Attribute_Widget.php:69
+msgid "Feature Group"
+msgstr ""
+
+#: lib/FS_Attribute_Widget.php:76
+msgid "Attributes for category only"
+msgstr ""
+
+#: lib/FS_Attribute_Widget.php:80
+msgid "Type"
+msgstr ""
+
+#: lib/FS_Attribute_Widget.php:83
+msgid "Normal"
+msgstr ""
+
+#: lib/FS_Attribute_Widget.php:85
+msgid "Color"
+msgstr ""
+
+#: lib/FS_Attribute_Widget.php:87 lib/FS_Taxonomies_Class.php:693
+#: lib/FS_Taxonomies_Class.php:731
+msgid "Image"
+msgstr ""
+
+#: lib/FS_Cart_Class.php:139
+msgid "Cart is empty"
+msgstr ""
+
+#: lib/FS_Cart_Class.php:171
+msgid "All items have been successfully removed from the cart."
+msgstr ""
+
+#: lib/FS_Cart_Class.php:173
+msgid ""
+"An error occurred while removing items from the cart or the cart is empty."
+msgstr ""
+
+#: lib/FS_Cart_Class.php:182
+msgid "Position successful removed from the basket"
+msgstr ""
+
+#: lib/FS_Cart_Class.php:187
+msgid "An error occurred while removing position from the cart"
+msgstr ""
+
+#: lib/FS_Config.php:57 lib/FS_Post_Type.php:289
+msgid "Base price"
+msgstr ""
+
+#: lib/FS_Config.php:60
+msgid "Basic price type"
+msgstr ""
+
+#: lib/FS_Config.php:64 lib/FS_Post_Type.php:294
+#: templates/back-end/metabox/product-variations/add-variation.php:62
+msgid "Promotional price"
+msgstr ""
+
+#: lib/FS_Config.php:67
+msgid "This type changes the base price displayed by default."
+msgstr ""
+
+#: lib/FS_Config.php:72
+msgid "Display Name"
+msgstr ""
+
+#: lib/FS_Config.php:74 lib/FS_Users_Class.php:156
+#: templates/front-end/dashboard/personal_info.php:83
+#: templates/front-end/order/last-order-info.php:23
+#: templates/front-end/shortcode/fs-order-info.php:55
+#: templates/back-end/metabox/order/meta-box-1.php:16
+#: templates/front-end/mail/themes/oxygen.php:404
+msgid "Phone number"
+msgstr ""
+
+#: lib/FS_Config.php:75
+msgid "Date of Birth"
+msgstr ""
+
+#: lib/FS_Config.php:76 lib/FS_Users_Class.php:142 lib/FS_Users_Class.php:149
+#: templates/front-end/dashboard/personal_info.php:53
+msgid "Gender"
+msgstr ""
+
+#: lib/FS_Config.php:77
+msgid "State / Province"
+msgstr ""
+
+#: lib/FS_Config.php:78 lib/FS_Users_Class.php:170
+#: templates/front-end/dashboard/personal_info.php:61
+msgid "Country"
+msgstr ""
+
+#: lib/FS_Config.php:80 lib/FS_Users_Class.php:190
+#: templates/front-end/dashboard/personal_info.php:79
+#: templates/front-end/mail/themes/oxygen.php:410
+msgid "Address"
+msgstr ""
+
+#: lib/FS_Config.php:81
+msgid "Position on the map"
+msgstr ""
+
+#: lib/FS_Config.php:82
+msgid "Update Date"
+msgstr ""
+
+#: lib/FS_Config.php:87
+msgid "US dollar"
+msgstr ""
+
+#: lib/FS_Config.php:88
+msgid "Ukrainian hryvnia"
+msgstr ""
+
+#: lib/FS_Config.php:89
+msgid "Russian ruble"
+msgstr ""
+
+#: lib/FS_Config.php:94
+msgid "Client"
+msgstr ""
+
+#: lib/FS_Config.php:109 templates/front-end/cart-widget/side-cart.php:2
+msgid "Basket"
+msgstr ""
+
+#: lib/FS_Config.php:114 lib/FS_Init.php:196
+#: templates/front-end/cart/list-products.php:85
+#: templates/front-end/cart-widget/side-cart.php:36
+msgid "Checkout"
+msgstr ""
+
+#: lib/FS_Config.php:119
+msgid "Payment order"
+msgstr ""
+
+#: lib/FS_Config.php:124
+msgid "Thank you for your purchase."
+msgstr ""
+
+#: lib/FS_Config.php:129
+msgid "Wishlist"
+msgstr ""
+
+#: lib/FS_Config.php:134
+msgid "Personal Area"
+msgstr ""
+
+#: lib/FS_Config.php:139
+msgid "Sign in"
+msgstr ""
+
+#: lib/FS_Config.php:144
+msgid "Register"
+msgstr ""
+
+#: lib/FS_Config.php:149 templates/front-end/mail/themes/oxygen.php:398
+msgid "Information about order"
+msgstr ""
+
+#: lib/FS_Config.php:154
+msgid "Password reset"
+msgstr ""
+
+#: lib/FS_Config.php:171 lib/FS_Filters.php:406 lib/FS_Settings_Class.php:197
+msgid "recently added"
+msgstr ""
+
+#: lib/FS_Config.php:174 lib/FS_Filters.php:409 lib/FS_Settings_Class.php:198
+msgid "later added"
+msgstr ""
+
+#: lib/FS_Config.php:177 lib/FS_Filters.php:412
+msgid "from cheap to expensive"
+msgstr ""
+
+#: lib/FS_Config.php:180 lib/FS_Filters.php:415
+msgid "from expensive to cheap"
+msgstr ""
+
+#: lib/FS_Config.php:183 lib/FS_Filters.php:418
+msgid "by title A to Z"
+msgstr ""
+
+#: lib/FS_Config.php:186 lib/FS_Filters.php:421
+msgid "by title Z to A"
+msgstr ""
+
+#: lib/FS_Config.php:203
+msgid ""
+"<p>This online store is powered by <a href=\"https://f-shop.top/\">F-Shop</a>"
+".  <a href=\"https://f-shop.top/dokumentacija/\">Documentation</a>. <a "
+"href=\"https://f-shop.top/novosti/\">News</a>.</p>"
+msgstr ""
+
+#: lib/FS_Config.php:592
+msgid "English"
+msgstr ""
+
+#: lib/FS_Config.php:596
+msgid "Russian"
+msgstr ""
+
+#: lib/FS_Config.php:600
+msgid "Ukrainian"
+msgstr ""
+
+#: lib/FS_Filters.php:98 lib/FS_Taxonomies_Class.php:285
+msgid "Product category"
+msgstr ""
+
+#: lib/FS_Form_Class.php:207
+msgid "this field is required"
+msgstr ""
+
+#: lib/FS_Init.php:186
+msgid "Success!"
+msgstr ""
+
+#: lib/FS_Init.php:187
+msgid "Error!"
+msgstr ""
+
+#: lib/FS_Init.php:188
+msgid "Your order has been successfully created. We will contact you shortly."
+msgstr ""
+
+#: lib/FS_Init.php:189
+msgid "You have selected all available items from stock."
+msgstr ""
+
+#: lib/FS_Init.php:190 lib/FS_Init.php:192
+msgid "Item &laquo;%product%&raquo; successfully added to cart."
+msgstr ""
+
+#: lib/FS_Init.php:195 templates/front-end/cart-widget/side-cart.php:38
+msgid "To catalog"
+msgstr ""
+
+#: lib/FS_Init.php:197
+msgid ""
+"Item &laquo;%product%&raquo; successfully added to wishlist. <a "
+"href=\"%wishlist_url%\">Go to wishlist</a>"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:78
 msgid "Order status"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:108
+#: lib/FS_Orders_Class.php:118
+msgid "New"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:119
+msgid ""
+"About all orders with the status of “New” administrator receives "
+"notification by mail, which allows him to immediately contact the buyer. For "
+"the convenience of accounting for new orders, they are automatically placed "
+"in the “New” tab on the order management panel and are displayed as a list, "
+"sorted by the date added."
+msgstr ""
+
+#: lib/FS_Orders_Class.php:122
+msgid "Processed"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:123
+msgid ""
+"The order is accepted and can be paid. The status is introduced mainly for "
+"the convenience of internal order management, not “New”, but not yet paid or "
+"not sent for delivery;"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:126
+msgid "In the process of payment"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:127
+msgid ""
+"The status can be assigned by the administrator after sending an invoice to "
+"the client for payment."
+msgstr ""
+
+#: lib/FS_Orders_Class.php:130
+msgid "Paid"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:131
+msgid ""
+"The status is assigned to the order automatically if the settlement is made "
+"through the Money Online payment system. If the goods were delivered by "
+"courier and paid in cash, the status can be used as a reporting;"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:134
+msgid "In delivery"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:135
+msgid ""
+"The administrator assigns this status to orders when drawing up the delivery "
+"list. The sheet is transferred to the courier along with the goods."
+msgstr ""
+
+#: lib/FS_Orders_Class.php:138
+msgid "Delivered"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:139
+msgid ""
+"The status is assigned to orders transferred to the courier. An order can "
+"maintain this status for a long time, depending on how far the customer is "
+"located;"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:142
+msgid "Denied"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:143
+msgid ""
+"The status is assigned to orders that cannot be satisfied (for example, the "
+"product is not in stock). Later, at any time you can change the status of "
+"the order (for example, if the product is in stock);"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:146
+msgid "Canceled"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:147
+msgid ""
+"The administrator assigns the status to the order if the client for some "
+"reason refused the order;"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:150
+msgid "Return"
+msgstr ""
+
+#: lib/FS_Orders_Class.php:151
+msgid ""
+"The administrator assigns the status to the order if the client for some "
+"reason returned the goods."
+msgstr ""
+
+#: lib/FS_Orders_Class.php:164
 msgid "Date of purchase"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:109
+#: lib/FS_Orders_Class.php:165
 msgid "Last modified"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:132
+#: lib/FS_Orders_Class.php:189
 msgid "Order number is not specified"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:173
+#: lib/FS_Orders_Class.php:232
 msgid ""
 "Your order #%order_id% has been successfully approved. The next stage is "
 "payment of the order. You can pay for the purchase by <a href=\"%pay_url%\">"
@@ -280,16 +694,158 @@ msgid ""
 "Good luck!"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:197
+#: lib/FS_Orders_Class.php:256
 msgid "Your order is approved"
 msgstr ""
 
-#: lib/FS_Orders_Class.php:327
+#: lib/FS_Orders_Class.php:392
 msgid "The order status is not defined"
 msgstr ""
 
-#: lib/FS_Form_Class.php:207
-msgid "this field is required"
+#: lib/FS_Payment_Class.php:50
+msgid "No order number specified."
+msgstr ""
+
+#: lib/FS_Payment_Class.php:58
+msgid "No payment method specified."
+msgstr ""
+
+#: lib/FS_Payment_Class.php:74
+#, php-format
+msgid "Order #%d paid successfully"
+msgstr ""
+
+#: lib/FS_Payment_Class.php:75
+msgid "You or someone else paid for this order."
+msgstr ""
+
+#: lib/FS_Payment_Class.php:87
+#, php-format
+msgid "Оплата заказа #%d с помощью &laquo;%s&raquo;"
+msgstr ""
+
+#: lib/FS_Payment_Class.php:88
+#, php-format
+msgid "В случае успешной оплаты с вас будет снято %s %s. "
+msgstr ""
+
+#: lib/FS_Post_Type.php:49 lib/FS_Post_Type.php:60
+#: lib/FS_Settings_Class.php:156 templates/front-end/dashboard/orders.php:21
+msgid "Products"
+msgstr ""
+
+#: lib/FS_Post_Type.php:50 templates/front-end/cart/list-products.php:15
+#: templates/front-end/checkout/checkout.php:11
+#: templates/front-end/dashboard/wishlist.php:13
+msgid "Product"
+msgstr ""
+
+#: lib/FS_Post_Type.php:51 lib/FS_Settings_Class.php:32
+msgid "Add product"
+msgstr ""
+
+#: lib/FS_Post_Type.php:53
+msgid "Edit product"
+msgstr ""
+
+#: lib/FS_Post_Type.php:97 lib/FS_Post_Type.php:108
+#: lib/FS_Settings_Class.php:40
+msgid "Orders"
+msgstr ""
+
+#: lib/FS_Post_Type.php:98
+msgid "Order"
+msgstr ""
+
+#: lib/FS_Post_Type.php:99
+msgid "Add Order"
+msgstr ""
+
+#: lib/FS_Post_Type.php:101
+msgid "Edit order"
+msgstr ""
+
+#: lib/FS_Post_Type.php:221
+msgid "Product settings"
+msgstr ""
+
+#: lib/FS_Post_Type.php:231
+msgid "List of products"
+msgstr ""
+
+#: lib/FS_Post_Type.php:241
+msgid "Customer data"
+msgstr ""
+
+#: lib/FS_Post_Type.php:284
+msgid "Prices"
+msgstr ""
+
+#: lib/FS_Post_Type.php:286
+msgid "In this tab you can adjust the prices of goods."
+msgstr ""
+
+#: lib/FS_Post_Type.php:291
+msgid "This is the main price on the site. Required field!"
+msgstr ""
+
+#: lib/FS_Post_Type.php:296
+msgid ""
+"If this field is filled, the base price loses its relevance. But you can "
+"display it on the site."
+msgstr ""
+
+#: lib/FS_Post_Type.php:299
+msgid "Item Currency"
+msgstr ""
+
+#: lib/FS_Post_Type.php:302
+msgid "The field is active if you have enabled multicurrency in settings."
+msgstr ""
+
+#: lib/FS_Post_Type.php:308
+msgid "Gallery"
+msgstr ""
+
+#: lib/FS_Post_Type.php:314 templates/back-end/metabox/order/meta-box-0.php:9
+msgid "Attributes"
+msgstr ""
+
+#: lib/FS_Post_Type.php:320
+msgid "Other"
+msgstr ""
+
+#: lib/FS_Post_Type.php:326
+msgid "Associated"
+msgstr ""
+
+#: lib/FS_Post_Type.php:332
+msgid "Up-sell"
+msgstr ""
+
+#: lib/FS_Post_Type.php:338
+msgid "Cross-sell"
+msgstr ""
+
+#: lib/FS_Post_Type.php:344
+msgid "Variation"
+msgstr ""
+
+#: lib/FS_Post_Type.php:350 lib/FS_Product_Class.php:584
+#: templates/front-end/mail/themes/oxygen.php:429
+msgid "Shipping and payment"
+msgstr ""
+
+#: lib/FS_Post_Type.php:355
+msgid "Shipping and Payment Details"
+msgstr ""
+
+#: lib/FS_Post_Type.php:441
+msgid "Template file not found"
+msgstr ""
+
+#: lib/FS_Post_Type.php:466
+msgid "choose"
 msgstr ""
 
 #: lib/FS_Product_Class.php:576
@@ -300,26 +856,12 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: lib/FS_Product_Class.php:584 lib/FS_Config.php:229
-#: templates/front-end/mail/themes/oxygen.php:429
-msgid "Shipping and payment"
-msgstr ""
-
 #: lib/FS_Product_Class.php:588 lib/FS_Users_Class.php:806
 msgid "Reviews"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:32 lib/FS_Post_Type.php:51
-msgid "Add product"
-msgstr ""
-
 #: lib/FS_Settings_Class.php:36
 msgid "Product Categories"
-msgstr ""
-
-#: lib/FS_Settings_Class.php:40 lib/FS_Post_Type.php:97
-#: lib/FS_Post_Type.php:108
-msgid "Orders"
 msgstr ""
 
 #: lib/FS_Settings_Class.php:44
@@ -364,11 +906,6 @@ msgstr ""
 
 #: lib/FS_Settings_Class.php:145
 msgid "Multi-language support"
-msgstr ""
-
-#: lib/FS_Settings_Class.php:156 lib/FS_Post_Type.php:49
-#: lib/FS_Post_Type.php:60 templates/front-end/dashboard/orders.php:21
-msgid "Products"
 msgstr ""
 
 #: lib/FS_Settings_Class.php:161
@@ -433,14 +970,6 @@ msgstr ""
 msgid "By name from Z to A"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:197 lib/FS_Config.php:255 lib/FS_Filters.php:406
-msgid "recently added"
-msgstr ""
-
-#: lib/FS_Settings_Class.php:198 lib/FS_Config.php:258 lib/FS_Filters.php:409
-msgid "later added"
-msgstr ""
-
 #: lib/FS_Settings_Class.php:200
 msgid "Sort items in the catalog by"
 msgstr ""
@@ -485,8 +1014,8 @@ msgstr ""
 msgid "The amount of goods in the basket at which free shipping is activated"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:249 lib/FS_Taxonomies_Class.php:389
-#: lib/FS_Taxonomies_Class.php:391
+#: lib/FS_Settings_Class.php:249 lib/FS_Taxonomies_Class.php:417
+#: lib/FS_Taxonomies_Class.php:419
 msgid "Currencies"
 msgstr ""
 
@@ -746,434 +1275,322 @@ msgstr ""
 msgid "Details of this order are not available for you"
 msgstr ""
 
-#: lib/FS_Config.php:59 lib/FS_Config.php:180
-msgid "Base price"
+#: lib/FS_Taxonomies_Class.php:42
+msgid "Category text"
 msgstr ""
 
-#: lib/FS_Config.php:62
-msgid "Basic price type"
+#: lib/FS_Taxonomies_Class.php:47
+msgid "SEO title"
 msgstr ""
 
-#: lib/FS_Config.php:66 lib/FS_Config.php:185
-#: templates/back-end/metabox/product-variations/add-variation.php:62
-msgid "Promotional price"
+#: lib/FS_Taxonomies_Class.php:52
+msgid "SEO description"
 msgstr ""
 
-#: lib/FS_Config.php:69
-msgid "This type changes the base price displayed by default."
+#: lib/FS_Taxonomies_Class.php:57 lib/FS_Taxonomies_Class.php:70
+#: lib/FS_Taxonomies_Class.php:102 lib/FS_Taxonomies_Class.php:153
+msgid "Thumbnail"
 msgstr ""
 
-#: lib/FS_Config.php:74
-msgid "Display Name"
+#: lib/FS_Taxonomies_Class.php:62
+msgid "Icon"
 msgstr ""
 
-#: lib/FS_Config.php:76 lib/FS_Users_Class.php:156
-#: templates/front-end/dashboard/personal_info.php:83
-#: templates/front-end/order/last-order-info.php:23
-#: templates/front-end/shortcode/fs-order-info.php:55
-#: templates/back-end/metabox/order/meta-box-1.php:16
-#: templates/front-end/mail/themes/oxygen.php:404
-msgid "Phone number"
+#: lib/FS_Taxonomies_Class.php:75
+msgid "E-mail message to the buyer if the order is confirmed by the manager"
 msgstr ""
 
-#: lib/FS_Config.php:77
-msgid "Date of Birth"
-msgstr ""
-
-#: lib/FS_Config.php:78 lib/FS_Users_Class.php:142 lib/FS_Users_Class.php:149
-#: templates/front-end/dashboard/personal_info.php:53
-msgid "Gender"
-msgstr ""
-
-#: lib/FS_Config.php:79
-msgid "State / Province"
-msgstr ""
-
-#: lib/FS_Config.php:80 lib/FS_Users_Class.php:170
-#: templates/front-end/dashboard/personal_info.php:61
-msgid "Country"
-msgstr ""
-
-#: lib/FS_Config.php:82 lib/FS_Users_Class.php:190
-#: templates/front-end/dashboard/personal_info.php:79
-#: templates/front-end/mail/themes/oxygen.php:410
-msgid "Address"
-msgstr ""
-
-#: lib/FS_Config.php:83
-msgid "Position on the map"
-msgstr ""
-
-#: lib/FS_Config.php:84
-msgid "Update Date"
-msgstr ""
-
-#: lib/FS_Config.php:89
-msgid "US dollar"
-msgstr ""
-
-#: lib/FS_Config.php:90
-msgid "Ukrainian hryvnia"
-msgstr ""
-
-#: lib/FS_Config.php:91
-msgid "Russian ruble"
-msgstr ""
-
-#: lib/FS_Config.php:96
-msgid "Client"
-msgstr ""
-
-#: lib/FS_Config.php:112 templates/front-end/cart-widget/side-cart.php:2
-msgid "Basket"
-msgstr ""
-
-#: lib/FS_Config.php:117 lib/FS_Init.php:195
-#: templates/front-end/cart-widget/side-cart.php:36
-#: templates/front-end/cart/list-products.php:85
-msgid "Checkout"
-msgstr ""
-
-#: lib/FS_Config.php:122
-msgid "Payment order"
-msgstr ""
-
-#: lib/FS_Config.php:127
-msgid "Thank you for your purchase."
-msgstr ""
-
-#: lib/FS_Config.php:132
-msgid "Wishlist"
-msgstr ""
-
-#: lib/FS_Config.php:137
-msgid "Personal Area"
-msgstr ""
-
-#: lib/FS_Config.php:142
-msgid "Sign in"
-msgstr ""
-
-#: lib/FS_Config.php:147
-msgid "Register"
-msgstr ""
-
-#: lib/FS_Config.php:152 templates/front-end/mail/themes/oxygen.php:398
-msgid "Information about order"
-msgstr ""
-
-#: lib/FS_Config.php:157
-msgid "Password reset"
-msgstr ""
-
-#: lib/FS_Config.php:175
-msgid "Prices"
-msgstr ""
-
-#: lib/FS_Config.php:177
-msgid "In this tab you can adjust the prices of goods."
-msgstr ""
-
-#: lib/FS_Config.php:182
-msgid "This is the main price on the site. Required field!"
-msgstr ""
-
-#: lib/FS_Config.php:187
+#: lib/FS_Taxonomies_Class.php:76
 msgid ""
-"If this field is filled, the base price loses its relevance. But you can "
-"display it on the site."
+"This message is sent to the buyer at the time the manager confirms the order."
+" You can use meta data of type: <code>%order_id%</code> - order number, "
+"<code>%pay_name%</code> - name of the payment method, <code>%pay_url%</code> "
+"- payment reference ."
 msgstr ""
 
-#: lib/FS_Config.php:190
-msgid "Item Currency"
+#: lib/FS_Taxonomies_Class.php:81
+msgid "Message to the buyer after payment on the site"
 msgstr ""
 
-#: lib/FS_Config.php:193
-msgid "The field is active if you have enabled multicurrency in settings."
-msgstr ""
-
-#: lib/FS_Config.php:199
-msgid "Gallery"
-msgstr ""
-
-#: lib/FS_Config.php:205 templates/back-end/metabox/order/meta-box-0.php:9
-msgid "Attributes"
-msgstr ""
-
-#: lib/FS_Config.php:211
-msgid "Other"
-msgstr ""
-
-#: lib/FS_Config.php:217
-msgid "Associated"
-msgstr ""
-
-#: lib/FS_Config.php:223
-msgid "Variation"
-msgstr ""
-
-#: lib/FS_Config.php:234
-msgid "Shipping and Payment Details"
-msgstr ""
-
-#: lib/FS_Config.php:261 lib/FS_Filters.php:412
-msgid "from cheap to expensive"
-msgstr ""
-
-#: lib/FS_Config.php:264 lib/FS_Filters.php:415
-msgid "from expensive to cheap"
-msgstr ""
-
-#: lib/FS_Config.php:267 lib/FS_Filters.php:418
-msgid "by title A to Z"
-msgstr ""
-
-#: lib/FS_Config.php:270 lib/FS_Filters.php:421
-msgid "by title Z to A"
-msgstr ""
-
-#: lib/FS_Config.php:286
-msgid "New"
-msgstr ""
-
-#: lib/FS_Config.php:287
+#: lib/FS_Taxonomies_Class.php:82
 msgid ""
-"About all orders with the status of “New” administrator receives "
-"notification by mail, which allows him to immediately contact the buyer. For "
-"the convenience of accounting for new orders, they are automatically placed "
-"in the “New” tab on the order management panel and are displayed as a list, "
-"sorted by the date added."
+"This message will be shown if the buyer has successfully paid the order. You "
+"can use these variables: <code>%order_id%</code> - order number, <code>"
+"%pay_name%</code> - name of the payment method"
 msgstr ""
 
-#: lib/FS_Config.php:290
-msgid "Processed"
+#: lib/FS_Taxonomies_Class.php:87
+msgid "Unavailable for payment"
 msgstr ""
 
-#: lib/FS_Config.php:291
+#: lib/FS_Taxonomies_Class.php:88
 msgid ""
-"The order is accepted and can be paid. The status is introduced mainly for "
-"the convenience of internal order management, not “New”, but not yet paid or "
-"not sent for delivery;"
+"If you turn off, then the payment method will not be visible to users, only "
+"in the admin panel."
 msgstr ""
 
-#: lib/FS_Config.php:294
-msgid "In the process of payment"
-msgstr ""
-
-#: lib/FS_Config.php:295
+#: lib/FS_Taxonomies_Class.php:93
 msgid ""
-"The status can be assigned by the administrator after sending an invoice to "
-"the client for payment."
+"When choosing this method, send the buyer immediately to the payment page"
 msgstr ""
 
-#: lib/FS_Config.php:298
-msgid "Paid"
-msgstr ""
-
-#: lib/FS_Config.php:299
+#: lib/FS_Taxonomies_Class.php:94
 msgid ""
-"The status is assigned to the order automatically if the settlement is made "
-"through the Money Online payment system. If the goods were delivered by "
-"courier and paid in cash, the status can be used as a reporting;"
+"This is convenient in some cases, but it is better to leave this option off"
 msgstr ""
 
-#: lib/FS_Config.php:302
-msgid "In delivery"
+#: lib/FS_Taxonomies_Class.php:107
+msgid "Shipping Cost in Base Currency"
 msgstr ""
 
-#: lib/FS_Config.php:303
+#: lib/FS_Taxonomies_Class.php:112
+msgid "Include address fields when choosing this method"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:120
+msgid "International currency code"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:125
+msgid "Cost in base currency"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:130
+msgid "Display on the site"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:135
+msgid "Currency Language (locale)"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:144
+msgid "The amount or value of tax as a percentage"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:162
+msgid "DiscountType"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:167
+msgid "Скидка применяется только к товарам"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:168
+msgid "Скидка применяется только к корзине"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:174 lib/FS_Taxonomies_Class.php:203
+msgid "The discount is activated provided"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:179
+msgid "The total amount of goods in the cart"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:180
+msgid "Number of items in the cart"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:185
+msgid "Discount condition"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:189
+msgid "More or equal"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:190
+msgid "More"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:191
+msgid "Less"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:192
+msgid "Less or equal"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:197
+msgid "Condition value"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:208
+msgid "The product belongs to one of the selected categories"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:209
+msgid "Product belongs to one of the selected brands."
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:214
+msgid "Категории на которые распространяется скидка"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:225
+msgid "Discount amount"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:282 lib/FS_Taxonomies_Class.php:284
+#: lib/FS_Taxonomies_Class.php:286 lib/FS_Taxonomies_Class.php:287
+#: lib/FS_Taxonomies_Class.php:288 lib/FS_Taxonomies_Class.php:289
+#: lib/FS_Taxonomies_Class.php:291 lib/FS_Taxonomies_Class.php:293
+#: lib/FS_Taxonomies_Class.php:294
+msgid "Product categories"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:290
+msgid "Category editing"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:292
+msgid "Add category"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:306 lib/FS_Taxonomies_Class.php:308
+msgid "Payment methods"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:309
+#: templates/back-end/metabox/order/meta-box-1.php:40
+#: templates/front-end/mail/themes/oxygen.php:433
+msgid "Payment method"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:310
+msgid "Add a payment method"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:323 lib/FS_Taxonomies_Class.php:325
+msgid "Delivery methods"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:326
+#: templates/back-end/metabox/order/meta-box-1.php:28
+#: templates/front-end/mail/themes/oxygen.php:430
+msgid "Delivery method"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:327
+msgid "Add a delivery method"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:340 lib/FS_Taxonomies_Class.php:342
+#: lib/FS_Taxonomies_Class.php:343
+msgid "Product attributes"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:344
+msgid "Add property / group of properties"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:358 lib/FS_Taxonomies_Class.php:360
+msgid "Manufacturers"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:361
+msgid "Manufacturer"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:362
+msgid "Add Manufacturer"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:376 lib/FS_Taxonomies_Class.php:378
+#: lib/FS_Taxonomies_Class.php:379
+msgid "Taxes"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:380
+msgid "Add tax"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:395 lib/FS_Taxonomies_Class.php:397
+msgid "Discounts"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:398
+msgid "Discount"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:399
+msgid "Add Discount"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:420
+msgid "Currency"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:421
+msgid "Add Currency"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:613 lib/FS_Taxonomies_Class.php:717
+msgid "text"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:614 lib/FS_Taxonomies_Class.php:718
+msgid "color"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:615 lib/FS_Taxonomies_Class.php:719
+msgid "image"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:616
+msgid "range"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:620 lib/FS_Taxonomies_Class.php:715
+msgid "Attribute type"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:629 lib/FS_Taxonomies_Class.php:721
 msgid ""
-"The administrator assigns this status to orders when drawing up the delivery "
-"list. The sheet is transferred to the courier along with the goods."
+"Products may have different properties. Here you can choose which type of "
+"property you need."
 msgstr ""
 
-#: lib/FS_Config.php:306
-msgid "Delivered"
+#: lib/FS_Taxonomies_Class.php:637 lib/FS_Taxonomies_Class.php:726
+msgid "Color value"
 msgstr ""
 
-#: lib/FS_Config.php:307
-msgid ""
-"The status is assigned to orders transferred to the courier. An order can "
-"maintain this status for a long time, depending on how far the customer is "
-"located;"
+#: lib/FS_Taxonomies_Class.php:649
+msgid "Beginning of range"
 msgstr ""
 
-#: lib/FS_Config.php:310
-msgid "Denied"
+#: lib/FS_Taxonomies_Class.php:659
+msgid "End of range"
 msgstr ""
 
-#: lib/FS_Config.php:311
-msgid ""
-"The status is assigned to orders that cannot be satisfied (for example, the "
-"product is not in stock). Later, at any time you can change the status of "
-"the order (for example, if the product is in stock);"
+#: lib/FS_Taxonomies_Class.php:670
+msgid "Use the number of purchased goods to compare with this attribute."
 msgstr ""
 
-#: lib/FS_Config.php:314
-msgid "Canceled"
+#: lib/FS_Taxonomies_Class.php:682
+msgid "change image"
 msgstr ""
 
-#: lib/FS_Config.php:315
-msgid ""
-"The administrator assigns the status to the order if the client for some "
-"reason refused the order;"
+#: lib/FS_Taxonomies_Class.php:682 lib/FS_Taxonomies_Class.php:734
+msgid "select image"
 msgstr ""
 
-#: lib/FS_Config.php:318
-msgid "Return"
+#: lib/FS_Taxonomies_Class.php:703 lib/FS_Taxonomies_Class.php:737
+msgid "delete image"
 msgstr ""
 
-#: lib/FS_Config.php:319
-msgid ""
-"The administrator assigns the status to the order if the client for some "
-"reason returned the goods."
+#: lib/FS_Taxonomies_Class.php:852
+msgid "Currency code"
 msgstr ""
 
-#: lib/FS_Config.php:336
-msgid ""
-"<p>This online store is powered by <a href=\"https://f-shop.top/\">F-Shop</a>"
-".  <a href=\"https://f-shop.top/dokumentacija/\">Documentation</a>. <a "
-"href=\"https://f-shop.top/novosti/\">News</a>.</p>"
-msgstr ""
-
-#: lib/FS_Config.php:732
-msgid "English"
-msgstr ""
-
-#: lib/FS_Config.php:736
-msgid "Russian"
-msgstr ""
-
-#: lib/FS_Config.php:740
-msgid "Ukrainian"
-msgstr ""
-
-#: lib/FS_Filters.php:98 lib/FS_Taxonomies_Class.php:257
-msgid "Product category"
-msgstr ""
-
-#: lib/FS_Post_Type.php:50 templates/front-end/dashboard/wishlist.php:13
-#: templates/front-end/checkout/checkout.php:11
-#: templates/front-end/cart/list-products.php:15
-msgid "Product"
-msgstr ""
-
-#: lib/FS_Post_Type.php:53
-msgid "Edit product"
-msgstr ""
-
-#: lib/FS_Post_Type.php:98
-msgid "Order"
-msgstr ""
-
-#: lib/FS_Post_Type.php:99
-msgid "Add Order"
-msgstr ""
-
-#: lib/FS_Post_Type.php:101
-msgid "Edit order"
-msgstr ""
-
-#: lib/FS_Post_Type.php:221
-msgid "Product settings"
-msgstr ""
-
-#: lib/FS_Post_Type.php:231
-msgid "List of products"
-msgstr ""
-
-#: lib/FS_Post_Type.php:241
-msgid "Customer data"
-msgstr ""
-
-#: lib/FS_Post_Type.php:351
-msgid "Template file not found"
-msgstr ""
-
-#: lib/FS_Cart_Class.php:69 lib/FS_Ajax_Class.php:629 lib/FS_Ajax_Class.php:716
-msgid "Security check failed"
-msgstr ""
-
-#: lib/FS_Cart_Class.php:122
-msgid "Cart is empty"
-msgstr ""
-
-#: lib/FS_Cart_Class.php:154
-msgid "All items have been successfully removed from the cart."
-msgstr ""
-
-#: lib/FS_Cart_Class.php:156
-msgid ""
-"An error occurred while removing items from the cart or the cart is empty."
-msgstr ""
-
-#: lib/FS_Cart_Class.php:165
-msgid "Position successful removed from the basket"
-msgstr ""
-
-#: lib/FS_Cart_Class.php:170
-msgid "An error occurred while removing position from the cart"
-msgstr ""
-
-#: lib/FS_Init.php:185
-msgid "Success!"
-msgstr ""
-
-#: lib/FS_Init.php:186
-msgid "Error!"
-msgstr ""
-
-#: lib/FS_Init.php:187
-msgid "Your order has been successfully created. We will contact you shortly."
-msgstr ""
-
-#: lib/FS_Init.php:188
-msgid "You have selected all available items from stock."
-msgstr ""
-
-#: lib/FS_Init.php:189 lib/FS_Init.php:191
-msgid "Item &laquo;%product%&raquo; successfully added to cart."
-msgstr ""
-
-#: lib/FS_Init.php:194 templates/front-end/cart-widget/side-cart.php:38
-msgid "To catalog"
-msgstr ""
-
-#: lib/FS_Init.php:196
-msgid ""
-"Item &laquo;%product%&raquo; successfully added to wishlist. <a "
-"href=\"%wishlist_url%\">Go to wishlist</a>"
-msgstr ""
-
-#: lib/FS_Attribute_Widget.php:69
-msgid "Feature Group"
-msgstr ""
-
-#: lib/FS_Attribute_Widget.php:76
-msgid "Attributes for category only"
-msgstr ""
-
-#: lib/FS_Attribute_Widget.php:80
-msgid "Type"
-msgstr ""
-
-#: lib/FS_Attribute_Widget.php:83
-msgid "Normal"
-msgstr ""
-
-#: lib/FS_Attribute_Widget.php:85
-msgid "Color"
-msgstr ""
-
-#: lib/FS_Attribute_Widget.php:87 lib/FS_Taxonomies_Class.php:665
-#: lib/FS_Taxonomies_Class.php:703
-msgid "Image"
-msgstr ""
-
-#: lib/FS_Users_Class.php:73 lib/FS_Users_Class.php:289
-#: lib/FS_Users_Class.php:323 lib/FS_Users_Class.php:474
-#: lib/FS_Ajax_Class.php:152 lib/FS_Ajax_Class.php:438
-msgid "Failed verification of nonce form"
+#: lib/FS_Taxonomies_Class.php:853
+#: templates/front-end/cart/list-products.php:27
+#: templates/front-end/checkout/checkout.php:23
+#: templates/front-end/dashboard/orders.php:31
+#: templates/front-end/shortcode/fs-order-info.php:13
+#: templates/front-end/shortcode/order-detail.php:19
+#: templates/back-end/metabox/order/meta-box-0.php:10
+msgid "Cost"
 msgstr ""
 
 #: lib/FS_Users_Class.php:89
@@ -1347,389 +1764,51 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:42
-msgid "Category text"
+#: templates/back-end/fields/image.php:15
+msgid "Add / Replace"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:47
-msgid "SEO title"
+#: templates/back-end/fields/image.php:19
+msgid "Delete"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:52
-msgid "SEO description"
+#: templates/back-end/fields/image.php:20
+msgid "Are you sure you want to delete the image?"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:57 lib/FS_Taxonomies_Class.php:77
-#: lib/FS_Taxonomies_Class.php:109 lib/FS_Taxonomies_Class.php:160
-msgid "Thumbnail"
+#: templates/back-end/metabox/attributes.php:32
+msgid "do I delete a property?"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:62
-msgid "Icon"
+#: templates/back-end/metabox/cross-sell.php:1
+msgid "Cross sell products"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:67
-msgid "Total discount for category products (in percent)"
+#: templates/back-end/metabox/cross-sell.php:3
+msgid "Add cross-sell products"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:69
-msgid "Enter a number without a percent sign"
+#: templates/back-end/metabox/gallery.php:1
+msgid "Product gallery"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:82
-msgid "E-mail message to the buyer if the order is confirmed by the manager"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:83
+#: templates/back-end/metabox/gallery.php:2
 msgid ""
-"This message is sent to the buyer at the time the manager confirms the order."
-" You can use meta data of type: <code>%order_id%</code> - order number, "
-"<code>%pay_name%</code> - name of the payment method, <code>%pay_url%</code> "
-"- payment reference ."
+"To select several images simultaneously from the media library, press "
+"\"Ctrl\" on the keyboard and click on\n"
+"    selectable images"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:88
-msgid "Message to the buyer after payment on the site"
+#: templates/back-end/metabox/gallery.php:6
+msgid "Choose from the library"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:89
-msgid ""
-"This message will be shown if the buyer has successfully paid the order. You "
-"can use these variables: <code>%order_id%</code> - order number, <code>"
-"%pay_name%</code> - name of the payment method"
+#: templates/back-end/metabox/gallery.php:14
+msgid "You can drag images to change positions in the gallery."
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:94
-msgid "Unavailable for payment"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:95
-msgid ""
-"If you turn off, then the payment method will not be visible to users, only "
-"in the admin panel."
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:100
-msgid ""
-"When choosing this method, send the buyer immediately to the payment page"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:101
-msgid ""
-"This is convenient in some cases, but it is better to leave this option off"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:114
-msgid "Shipping Cost in Base Currency"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:119
-msgid "Include address fields when choosing this method"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:127
-msgid "International currency code"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:132
-msgid "Cost in base currency"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:137
-msgid "Display on the site"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:142
-msgid "Currency Language (locale)"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:151
-msgid "The amount or value of tax as a percentage"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:169
-msgid "The discount is activated provided"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:174
-msgid "The total amount of goods in the cart"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:175
-msgid "Number of items in the cart"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:180
-msgid "Discount condition"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:184
-msgid "More or equal"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:185
-msgid "More"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:186
-msgid "Less"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:187
-msgid "Less or equal"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:192
-msgid "Condition value"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:197
-msgid "Discount amount"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:254 lib/FS_Taxonomies_Class.php:256
-#: lib/FS_Taxonomies_Class.php:258 lib/FS_Taxonomies_Class.php:259
-#: lib/FS_Taxonomies_Class.php:260 lib/FS_Taxonomies_Class.php:261
-#: lib/FS_Taxonomies_Class.php:263 lib/FS_Taxonomies_Class.php:265
-#: lib/FS_Taxonomies_Class.php:266
-msgid "Product categories"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:262
-msgid "Category editing"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:264
-msgid "Add category"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:278 lib/FS_Taxonomies_Class.php:280
-msgid "Payment methods"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:281
-#: templates/back-end/metabox/order/meta-box-1.php:40
-#: templates/front-end/mail/themes/oxygen.php:433
-msgid "Payment method"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:282
-msgid "Add a payment method"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:295 lib/FS_Taxonomies_Class.php:297
-msgid "Delivery methods"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:298
-#: templates/back-end/metabox/order/meta-box-1.php:28
-#: templates/front-end/mail/themes/oxygen.php:430
-msgid "Delivery method"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:299
-msgid "Add a delivery method"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:312 lib/FS_Taxonomies_Class.php:314
-#: lib/FS_Taxonomies_Class.php:315
-msgid "Product attributes"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:316
-msgid "Add property / group of properties"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:330 lib/FS_Taxonomies_Class.php:332
-msgid "Manufacturers"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:333
-msgid "Manufacturer"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:334
-msgid "Add Manufacturer"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:348 lib/FS_Taxonomies_Class.php:350
-#: lib/FS_Taxonomies_Class.php:351
-msgid "Taxes"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:352
-msgid "Add tax"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:367 lib/FS_Taxonomies_Class.php:369
-msgid "Discounts"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:370
-msgid "Discount"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:371
-msgid "Add Discount"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:392
-msgid "Currency"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:393
-msgid "Add Currency"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:585 lib/FS_Taxonomies_Class.php:689
-msgid "text"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:586 lib/FS_Taxonomies_Class.php:690
-msgid "color"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:587 lib/FS_Taxonomies_Class.php:691
-msgid "image"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:588
-msgid "range"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:592 lib/FS_Taxonomies_Class.php:687
-msgid "Attribute type"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:601 lib/FS_Taxonomies_Class.php:693
-msgid ""
-"Products may have different properties. Here you can choose which type of "
-"property you need."
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:609 lib/FS_Taxonomies_Class.php:698
-msgid "Color value"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:621
-msgid "Beginning of range"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:631
-msgid "End of range"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:642
-msgid "Use the number of purchased goods to compare with this attribute."
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:654
-msgid "change image"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:654 lib/FS_Taxonomies_Class.php:706
-msgid "select image"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:675 lib/FS_Taxonomies_Class.php:709
-msgid "delete image"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:824
-msgid "Currency code"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:825 templates/front-end/dashboard/orders.php:31
-#: templates/front-end/shortcode/order-detail.php:19
-#: templates/front-end/shortcode/fs-order-info.php:13
-#: templates/front-end/checkout/checkout.php:23
-#: templates/front-end/cart/list-products.php:27
-#: templates/back-end/metabox/order/meta-box-0.php:10
-msgid "Cost"
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:156
-msgid "Please enter a valid email address"
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:158
-msgid "Просьба уведомить о наличии товара"
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:159
-#, php-format
-msgid ""
-"User %s requests to be notified of the availability of the product \"%s\". "
-"Product Link: %s"
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:169
-msgid "Your request has been sent successfully!"
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:175
-msgid "There was an error sending a letter to the site administrator!"
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:302
-msgid ""
-"An unexpected error occurred while attaching the attribute to the product."
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:308
-msgid "Attribute successfully attached to product"
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:329 lib/FS_Ajax_Class.php:366
-msgid ""
-"Goods with such a set of characteristics are not in stock. Try changing "
-"parameters."
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:485
-#, php-format
-msgid ""
-"User with such E-mail or Login is registered on the site. <a href=\"#fs-"
-"modal-login\" data-fs-action=\"modal\">Login to site</a>. <a href=\"%s\">"
-"Forgot your password?</a>"
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:589 lib/FS_Ajax_Class.php:596
-#, php-format
-msgid "Order goods on the site \"%s\""
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:610
-#, php-format
-msgid "Order #%d successfully added"
-msgstr ""
-
-#: lib/FS_Ajax_Class.php:620
-msgid "Errors occurred while creating an order"
-msgstr ""
-
-#: lib/FS_Payment_Class.php:55
-msgid "No order number or payment method specified."
-msgstr ""
-
-#: lib/FS_Payment_Class.php:67
-msgid "Available payment methods"
-msgstr ""
-
-#: lib/FS_Payment_Class.php:68
-msgid ""
-"If the previously chosen payment method does not suit you, you can pay by "
-"one of the ways below"
-msgstr ""
-
-#: lib/FS_Payment_Class.php:94
-#, php-format
-msgid "Order #%d paid successfully"
-msgstr ""
-
-#: lib/FS_Payment_Class.php:106
-#, php-format
-msgid "Payment  <span>%s <span>%s</span></span> with  <span>%s</span>"
+#: templates/back-end/metabox/gallery.php:30
+msgid "Remove from gallery"
 msgstr ""
 
 #: templates/back-end/metabox/other.php:1
@@ -1785,6 +1864,14 @@ msgstr ""
 msgid "remove"
 msgstr ""
 
+#: templates/back-end/metabox/up-sell.php:1
+msgid "Up-sell products"
+msgstr ""
+
+#: templates/back-end/metabox/up-sell.php:3
+msgid "Add up-sell products"
+msgstr ""
+
 #: templates/back-end/metabox/variants.php:1
 msgid "Purchase options"
 msgstr ""
@@ -1801,43 +1888,100 @@ msgstr ""
 msgid "Expand / hide all"
 msgstr ""
 
-#: templates/back-end/metabox/attributes.php:32
-msgid "do I delete a property?"
+#: templates/front-end/archive-product/loop-product.php:19
+#: templates/front-end/archive-product/loop-product.php:24
+#, php-format
+msgid "Go to &laquo;%s&raquo;"
 msgstr ""
 
-#: templates/back-end/metabox/gallery.php:1
-msgid "Product gallery"
+#: templates/front-end/auth/login.php:2
+msgid "Email or login"
 msgstr ""
 
-#: templates/back-end/metabox/gallery.php:2
+#: templates/front-end/auth/login.php:4 templates/front-end/auth/login.php:10
+msgid "required"
+msgstr ""
+
+#: templates/front-end/auth/login.php:8
+#: templates/front-end/auth/register.php:14
+#: templates/front-end/dashboard/personal_info.php:132
+msgid "Password"
+msgstr ""
+
+#: templates/front-end/auth/login.php:14
+msgid "Login"
+msgstr ""
+
+#: templates/front-end/auth/login.php:18
+msgid "Registration"
+msgstr ""
+
+#: templates/front-end/auth/lostpassword.php:4
+msgid "This field is required"
+msgstr ""
+
+#: templates/front-end/auth/lostpassword.php:9
+msgid "Get a new password"
+msgstr ""
+
+#: templates/front-end/auth/register.php:2
+msgid "Your name"
+msgstr ""
+
+#: templates/front-end/auth/register.php:4
+#: templates/front-end/auth/register.php:16
+msgid "required field"
+msgstr ""
+
+#: templates/front-end/auth/register.php:10
+msgid "enter a valid email"
+msgstr ""
+
+#: templates/front-end/auth/register.php:20
+msgid "Repeat password"
+msgstr ""
+
+#: templates/front-end/auth/register.php:22
+msgid "password and repeat password must match"
+msgstr ""
+
+#: templates/front-end/auth/register.php:26
+msgid "Send"
+msgstr ""
+
+#: templates/front-end/auth/register.php:30
+msgid "Have an account?"
+msgstr ""
+
+#: templates/front-end/cart/list-products.php:24
+#: templates/front-end/checkout/checkout.php:20
+#: templates/front-end/shortcode/fs-order-info.php:12
+#: templates/front-end/shortcode/list-orders.php:9
+#: templates/back-end/metabox/order/meta-box-0.php:8
+msgid "Quantity"
+msgstr ""
+
+#: templates/front-end/cart/list-products.php:94
+msgid "To the catalog"
+msgstr ""
+
+#: templates/front-end/checkout/checkout-no-items.php:9
+#, php-format
+msgid "Your basket is empty. <a href=\"%s\">To catalog</a>"
+msgstr ""
+
+#: templates/front-end/checkout/checkout-success.php:10
+#, php-format
 msgid ""
-"To select several images simultaneously from the media library, press "
-"\"Ctrl\" on the keyboard and click on\n"
-"    selectable images"
+"Order #%s was successfully created. Check your mail for further instructions."
 msgstr ""
 
-#: templates/back-end/metabox/gallery.php:6
-msgid "Choose from the library"
+#: templates/front-end/checkout/checkout.php:2
+msgid "Items in the cart"
 msgstr ""
 
-#: templates/back-end/metabox/gallery.php:14
-msgid "You can drag images to change positions in the gallery."
-msgstr ""
-
-#: templates/back-end/metabox/gallery.php:26
-msgid "Remove from gallery"
-msgstr ""
-
-#: templates/back-end/fields/image.php:15
-msgid "Add / Replace"
-msgstr ""
-
-#: templates/back-end/fields/image.php:19
-msgid "Delete"
-msgstr ""
-
-#: templates/back-end/fields/image.php:20
-msgid "Are you sure you want to delete the image?"
+#: templates/front-end/checkout/checkout.php:96
+msgid "Information about delivery"
 msgstr ""
 
 #: templates/front-end/dashboard/orders.php:12
@@ -1864,22 +2008,6 @@ msgstr ""
 
 #: templates/front-end/dashboard/orders.php:71
 msgid "You currently have no orders."
-msgstr ""
-
-#: templates/front-end/dashboard/wishlist.php:22
-msgid "Notifications"
-msgstr ""
-
-#: templates/front-end/dashboard/wishlist.php:57
-msgid "Notify about availability"
-msgstr ""
-
-#: templates/front-end/dashboard/wishlist.php:62
-msgid "Follow the price"
-msgstr ""
-
-#: templates/front-end/dashboard/wishlist.php:75
-msgid "No product found in wish list"
 msgstr ""
 
 #: templates/front-end/dashboard/personal_info.php:6
@@ -1934,12 +2062,6 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: templates/front-end/dashboard/personal_info.php:132
-#: templates/front-end/auth/login.php:8
-#: templates/front-end/auth/register.php:14
-msgid "Password"
-msgstr ""
-
 #: templates/front-end/dashboard/personal_info.php:144
 #: templates/front-end/dashboard/personal_info.php:153
 msgid "Account deleting"
@@ -1949,57 +2071,20 @@ msgstr ""
 msgid "Current password"
 msgstr ""
 
-#: templates/front-end/auth/lostpassword.php:4
-msgid "This field is required"
+#: templates/front-end/dashboard/wishlist.php:22
+msgid "Notifications"
 msgstr ""
 
-#: templates/front-end/auth/lostpassword.php:9
-msgid "Get a new password"
+#: templates/front-end/dashboard/wishlist.php:57
+msgid "Notify about availability"
 msgstr ""
 
-#: templates/front-end/auth/login.php:2
-msgid "Email or login"
+#: templates/front-end/dashboard/wishlist.php:62
+msgid "Follow the price"
 msgstr ""
 
-#: templates/front-end/auth/login.php:4 templates/front-end/auth/login.php:10
-msgid "required"
-msgstr ""
-
-#: templates/front-end/auth/login.php:14
-msgid "Login"
-msgstr ""
-
-#: templates/front-end/auth/login.php:18
-msgid "Registration"
-msgstr ""
-
-#: templates/front-end/auth/register.php:2
-msgid "Your name"
-msgstr ""
-
-#: templates/front-end/auth/register.php:4
-#: templates/front-end/auth/register.php:16
-msgid "required field"
-msgstr ""
-
-#: templates/front-end/auth/register.php:10
-msgid "enter a valid email"
-msgstr ""
-
-#: templates/front-end/auth/register.php:20
-msgid "Repeat password"
-msgstr ""
-
-#: templates/front-end/auth/register.php:22
-msgid "password and repeat password must match"
-msgstr ""
-
-#: templates/front-end/auth/register.php:26
-msgid "Send"
-msgstr ""
-
-#: templates/front-end/auth/register.php:30
-msgid "Have an account?"
+#: templates/front-end/dashboard/wishlist.php:75
+msgid "No product found in wish list"
 msgstr ""
 
 #: templates/front-end/order/last-order-info.php:11
@@ -2020,10 +2105,29 @@ msgstr ""
 msgid "Payment type"
 msgstr ""
 
-#: templates/front-end/archive-product/loop-product.php:19
-#: templates/front-end/archive-product/loop-product.php:24
-#, php-format
-msgid "Go to &laquo;%s&raquo;"
+#: templates/front-end/shortcode/fs-order-info.php:3
+msgid "Purchased goods"
+msgstr ""
+
+#: templates/front-end/shortcode/fs-order-info.php:33
+#: templates/front-end/shortcode/list-orders.php:11
+msgid "Total Cost"
+msgstr ""
+
+#: templates/front-end/shortcode/fs-order-info.php:43
+msgid "First Name"
+msgstr ""
+
+#: templates/front-end/shortcode/fs-order-info.php:63
+msgid "Delivery type"
+msgstr ""
+
+#: templates/front-end/shortcode/fs-order-info.php:67
+msgid "Type of payment"
+msgstr ""
+
+#: templates/front-end/shortcode/fs-order-info.php:69
+msgid "pay now"
 msgstr ""
 
 #: templates/front-end/shortcode/list-orders.php:1
@@ -2039,21 +2143,8 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: templates/front-end/shortcode/list-orders.php:9
-#: templates/front-end/shortcode/fs-order-info.php:12
-#: templates/front-end/checkout/checkout.php:20
-#: templates/front-end/cart/list-products.php:24
-#: templates/back-end/metabox/order/meta-box-0.php:8
-msgid "Quantity"
-msgstr ""
-
 #: templates/front-end/shortcode/list-orders.php:10
 msgid "Status"
-msgstr ""
-
-#: templates/front-end/shortcode/list-orders.php:11
-#: templates/front-end/shortcode/fs-order-info.php:33
-msgid "Total Cost"
 msgstr ""
 
 #: templates/front-end/shortcode/list-orders.php:28
@@ -2075,49 +2166,6 @@ msgstr ""
 
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
-msgstr ""
-
-#: templates/front-end/shortcode/fs-order-info.php:3
-msgid "Purchased goods"
-msgstr ""
-
-#: templates/front-end/shortcode/fs-order-info.php:43
-msgid "First Name"
-msgstr ""
-
-#: templates/front-end/shortcode/fs-order-info.php:63
-msgid "Delivery type"
-msgstr ""
-
-#: templates/front-end/shortcode/fs-order-info.php:67
-msgid "Type of payment"
-msgstr ""
-
-#: templates/front-end/shortcode/fs-order-info.php:69
-msgid "pay now"
-msgstr ""
-
-#: templates/front-end/checkout/checkout.php:2
-msgid "Items in the cart"
-msgstr ""
-
-#: templates/front-end/checkout/checkout.php:96
-msgid "Information about delivery"
-msgstr ""
-
-#: templates/front-end/checkout/checkout-success.php:10
-#, php-format
-msgid ""
-"Order #%s was successfully created. Check your mail for further instructions."
-msgstr ""
-
-#: templates/front-end/checkout/checkout-no-items.php:9
-#, php-format
-msgid "Your basket is empty. <a href=\"%s\">To catalog</a>"
-msgstr ""
-
-#: templates/front-end/cart/list-products.php:94
-msgid "To the catalog"
 msgstr ""
 
 #: templates/back-end/metabox/order/meta-box-1.php:32
@@ -2156,14 +2204,6 @@ msgstr ""
 msgid "Stock"
 msgstr ""
 
-#: templates/front-end/widget/jquery-ui-slider/ui-slider.php:10
-msgid "from"
-msgstr ""
-
-#: templates/front-end/widget/jquery-ui-slider/ui-slider.php:15
-msgid "to"
-msgstr ""
-
 #: templates/front-end/mail/themes/oxygen.php:7
 msgid "Order on the site"
 msgstr ""
@@ -2179,6 +2219,14 @@ msgstr ""
 #: templates/front-end/mail/themes/oxygen.php:472
 #: templates/front-end/mail/themes/oxygen.php:527
 msgid "Total"
+msgstr ""
+
+#: templates/front-end/widget/jquery-ui-slider/ui-slider.php:10
+msgid "from"
+msgstr ""
+
+#: templates/front-end/widget/jquery-ui-slider/ui-slider.php:15
+msgid "to"
 msgstr ""
 
 #. Name of the plugin
