@@ -16,7 +16,8 @@ $default = array(
 	'value_field'       => 'term_id',
 	'orderby'           => 'name',
 	'order'             => 'ASC',
-	'hide_empty'        => 0
+	'hide_empty'        => 0,
+	'hierarchical'       => 1,
 );
 $args    = array_merge( $default, $args );
 wp_dropdown_categories( $args );
