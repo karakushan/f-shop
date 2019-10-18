@@ -439,10 +439,10 @@ class FS_Product_Class {
 				if ( empty( $att ) ) {
 					continue;
 				}
-				$attribute              = get_term( intval( $att ), $fs_config->data['product_att_taxonomy'] );
+				$attribute              = get_term( intval( $att ), $fs_config->data['features_taxonomy'] );
 				$attribute->parent_name = '';
 				if ( $attribute->parent ) {
-					$attribute->parent_name = get_term_field( 'name', $attribute->parent, $fs_config->data['product_att_taxonomy'] );
+					$attribute->parent_name = get_term_field( 'name', $attribute->parent, $fs_config->data['features_taxonomy'] );
 				}
 				$this->attributes[] = $attribute;
 			}

@@ -50,7 +50,7 @@ class FS_Attribute_Widget extends \WP_Widget {
 			'id'               => $this->get_field_id( 'fs_att_group' ),
 			'depth'            => 1,
 			'tab_index'        => 0,
-			'taxonomy'         => $fs_config->data['product_att_taxonomy'],
+			'taxonomy'         => $fs_config->data['features_taxonomy'],
 			'hide_if_empty'    => false,
 			'value_field'      => 'term_id', // значение value e option
 			'required'         => false,

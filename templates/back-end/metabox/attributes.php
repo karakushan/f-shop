@@ -2,7 +2,7 @@
 <p>Здесь можно указать какими свойствами обладает товар.</p>
 <?php
 global $fs_config;
-$attributes = get_the_terms($post->ID, $fs_config->data['product_att_taxonomy']);
+$attributes = get_the_terms($post->ID, $fs_config->data['features_taxonomy']);
 $att_hierarchy = [];
 if ($attributes) {
     foreach ($attributes as $att) {
@@ -21,7 +21,7 @@ if ($attributes) {
         <tbody>
         <?php if ($att_hierarchy): ?>
             <?php foreach ($att_hierarchy as $k => $att_h): ?>
-                <?php $parent = get_term($k, $fs_config->data['product_att_taxonomy']) ?>
+                <?php $parent = get_term($k, $fs_config->data['features_taxonomy']) ?>
                 <tr>
                     <td><?php echo esc_html(apply_filters('the_title', $parent->name)) ?></td>
                     <td>
@@ -56,7 +56,7 @@ if ($attributes) {
                             'class' => 'fs-select-att',
                             'depth' => 0,
                             'tab_index' => 0,
-                            'taxonomy' => $fs_config->data['product_att_taxonomy'],
+                            'taxonomy' => $fs_config->data['features_taxonomy'],
                             'hide_if_empty' => false,
                             'value_field' => 'term_id', // значение value e option
                             'required' => false,

@@ -637,7 +637,7 @@ class FS_Config {
 			'post_type'              => 'product',
 			'post_type_orders'       => 'orders',
 			'product_taxonomy'       => 'catalog',
-			'product_att_taxonomy'   => 'product-attributes',
+			'features_taxonomy'      => 'product-attributes',
 			'product_pay_taxonomy'   => 'fs-payment-methods',
 			'brand_taxonomy'         => 'fs-brands',
 			'product_del_taxonomy'   => 'fs-delivery-methods',

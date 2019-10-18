@@ -275,7 +275,7 @@ class FS_Ajax_Class
         global $fs_config;
         $post = array_map('sanitize_text_field', $_POST);
 
-        $post_terms = wp_set_post_terms(intval($post['post']), intval($post['term']), $fs_config->data['product_att_taxonomy'], true);
+        $post_terms = wp_set_post_terms(intval($post['post']), intval($post['term']), $fs_config->data['features_taxonomy'], true);
         if (is_wp_error($post_terms)) {
             echo json_encode(array(
                 'status' => 0,
@@ -289,7 +289,7 @@ class FS_Ajax_Class
         } else {
             echo json_encode(array(
                 'status' => 1,
-                'term_name' => get_term_field('name', intval($post['term']), $fs_config->data['product_att_taxonomy']),
+                'term_name' => get_term_field('name', intval($post['term']), $fs_config->data['features_taxonomy']),
                 'message' => __('Attribute successfully attached to product', 'f-shop')
             ));
         }
@@ -378,7 +378,7 @@ class FS_Ajax_Class
     {
         global $fs_config;
         $output = array_map('sanitize_text_field', $_POST);
-        $remove = wp_remove_object_terms((int)$output['product_id'], (int)$output['term_id'], $fs_config->data['product_att_taxonomy']);
+        $remove = wp_remove_object_terms((int)$output['product_id'], (int)$output['term_id'], $fs_config->data['features_taxonomy']);
         if ($remove) {
             echo json_encode(array(
                 'status' => true

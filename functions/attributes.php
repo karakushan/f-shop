@@ -83,7 +83,7 @@ function fs_current_screen_attributes( $group_id = 0, $args = array() ) {
 	global $fs_config;
 	$atts = [];
 	$args = wp_parse_args( $args, array(
-		'taxonomy'   => $fs_config->data['product_att_taxonomy'],
+		'taxonomy'   => $fs_config->data['features_taxonomy'],
 		'parent'     => $group_id,
 		'hide_empty' => false
 	) );
@@ -95,7 +95,7 @@ function fs_current_screen_attributes( $group_id = 0, $args = array() ) {
 		$posts                        = get_posts( $post_args );
 		if ( $posts ) {
 			foreach ( $posts as $post ) {
-				$post_terms = get_the_terms( $post, $fs_config->data['product_att_taxonomy'] );
+				$post_terms = get_the_terms( $post, $fs_config->data['features_taxonomy'] );
 				if ( $post_terms ) {
 					foreach ( $post_terms as $post_term ) {
 						if ( $post_term->parent != $group_id ) {
@@ -194,7 +194,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 		'input_class'         => 'checkStyle',
 		'after_input'         => '',
 		'label_class'         => 'checkLabel',
-		'taxonomy'            => $fs_config->data['product_att_taxonomy'],
+		'taxonomy'            => $fs_config->data['features_taxonomy'],
 		'type'                => 'normal',
 		'current_screen'      => false
 		// тип отображения, по умолчанию normal - обычные чекбоксы (color - квадратики с цветом, image - изображения)
@@ -345,7 +345,7 @@ function fs_attr_change( $required_atts = array() ) {
 
 function fs_list_product_att_group( $product_id, $group_id ) {
 	global $fs_config;
-	$terms = get_the_terms( $product_id, $fs_config->data['product_att_taxonomy'] );
+	$terms = get_the_terms( $product_id, $fs_config->data['features_taxonomy'] );
 	if ( $terms ) {
 		foreach ( $terms as $term ) {
 			if ( $term->parent == $group_id ) {
@@ -360,7 +360,7 @@ function fs_list_product_att_group( $product_id, $group_id ) {
 function fs_list_post_atts( $post_id = 0 ) {
 	global $fs_config, $post;
 	$post_id             = ! empty( $post_id ) ? $post_id : $post->ID;
-	$characteristics     = get_the_terms( $post_id, $fs_config->data['product_att_taxonomy'] );
+	$characteristics     = get_the_terms( $post_id, $fs_config->data['features_taxonomy'] );
 	$characteristic_sort = array();
 	if ( ! empty( $characteristics ) ) {
 		foreach ( $characteristics as $characteristic ) {
@@ -371,8 +371,8 @@ function fs_list_post_atts( $post_id = 0 ) {
 	if ( ! empty( $characteristic_sort ) ) {
 		foreach ( $characteristic_sort as $key => $parent ) {
 
-			$group      = get_term_field( 'name', $key, $fs_config->data['product_att_taxonomy'] );
-			$group_slug = get_term_field( 'slug', $key, $fs_config->data['product_att_taxonomy'] );
+			$group      = get_term_field( 'name', $key, $fs_config->data['features_taxonomy'] );
+			$group_slug = get_term_field( 'slug', $key, $fs_config->data['features_taxonomy'] );
 
 			echo '<div class="fs-attr-group-name">' . esc_html( $group ) . '</div>';
 			echo '<ul class="fs-attr-groups-list">';
@@ -433,7 +433,7 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 
 	$product_id = fs_get_product_id( $product_id );
 
-	$group_name = get_term_field( 'name', $parent, $fs_config->data['product_att_taxonomy'] );
+	$group_name = get_term_field( 'name', $parent, $fs_config->data['features_taxonomy'] );
 
 	$args  = wp_parse_args( $args, array(
 		'type'          => 'radio',
@@ -443,7 +443,7 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
 		'first'         => sprintf( __( 'Select %s', 'f-shop' ), esc_attr( $group_name ) )
 
 	) );
-	$terms = fs_get_the_terms_group( $product_id, $fs_config->data['product_att_taxonomy'] );
+	$terms = fs_get_the_terms_group( $product_id, $fs_config->data['features_taxonomy'] );
 
 	$tag_att = fs_parse_attr( array(
 		'class'           => $args['class'],
@@ -537,7 +537,7 @@ function fs_dropdown_attr_group( $group_id = 0, $product_id = 0, $args = array()
 		foreach ( $variations as $variation ) {
 			if ( ! empty( $variation['attr'] ) ) {
 				foreach ( $variation['attr'] as $attr ) {
-					$term = get_term( $attr, $fs_config->data['product_att_taxonomy'] );
+					$term = get_term( $attr, $fs_config->data['features_taxonomy'] );
 					if ( isset( $term->parent ) && $term->parent == $group_id && ! in_array( $term->term_id, $all_atts ) ) {
 						$all_atts[] = $term->term_id;
 						echo '<option value="' . esc_attr( $term->term_id ) . '">' . esc_attr( $term->name ) . '</option>';
@@ -547,7 +547,7 @@ function fs_dropdown_attr_group( $group_id = 0, $product_id = 0, $args = array()
 		}
 
 	} else {
-		$terms = get_the_terms( $product_id, $fs_config->data['product_att_taxonomy'] );
+		$terms = get_the_terms( $product_id, $fs_config->data['features_taxonomy'] );
 		foreach ( $terms as $term ) {
 			if ( $term->parent == $group_id ) {
 				echo '<option value="' . esc_attr( $term->term_id ) . '">' . esc_attr( $term->name ) . '</option>';

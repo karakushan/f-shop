@@ -25,7 +25,7 @@ $args = array(
 	'class'            => 'fs_select_variant',
 	'depth'            => 0,
 	'tab_index'        => 0,
-	'taxonomy'         => \FS\FS_Config::get_data( 'product_att_taxonomy' ),
+	'taxonomy'         => \FS\FS_Config::get_data( 'features_taxonomy' ),
 	'hide_if_empty'    => false,
 
 );

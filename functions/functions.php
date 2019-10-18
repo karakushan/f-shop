@@ -1886,7 +1886,7 @@ function fs_the_atts_list( $post_id = 0, $args = array() ) {
 		'hide_empty'   => false,
 		'exclude_tree' => $args['exclude'],
 	);
-	$post_terms = wp_get_object_terms( $post_id, $fs_config->data['product_att_taxonomy'], $term_args );
+	$post_terms = wp_get_object_terms( $post_id, $fs_config->data['features_taxonomy'], $term_args );
 	$parents    = array();
 	if ( $post_terms ) {
 		foreach ( $post_terms as $post_term ) {
@@ -1899,10 +1899,10 @@ function fs_the_atts_list( $post_id = 0, $args = array() ) {
 	}
 	if ( $parents ) {
 		foreach ( $parents as $k => $parent ) {
-			$primary_term = get_term( $k, $fs_config->data['product_att_taxonomy'] );
+			$primary_term = get_term( $k, $fs_config->data['features_taxonomy'] );
 			$second_term  = [];
 			foreach ( $parent as $p ) {
-				$s             = get_term( $p, $fs_config->data['product_att_taxonomy'] );
+				$s             = get_term( $p, $fs_config->data['features_taxonomy'] );
 				$second_term[] = $s->name;
 			}
 
@@ -2588,8 +2588,8 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 					if ( empty( $attr ) ) {
 						continue;
 					}
-					$term             = get_term( $attr, $fs_config->data['product_att_taxonomy'] );
-					$term_parent_name = get_term_field( 'name', $term->parent, $fs_config->data['product_att_taxonomy'] );
+					$term             = get_term( $attr, $fs_config->data['features_taxonomy'] );
+					$term_parent_name = get_term_field( 'name', $term->parent, $fs_config->data['features_taxonomy'] );
 					$att_type         = get_term_meta( $term->term_id, 'fs_att_type', 1 );
 					$att_show         = $term->name;
 					if ( $att_type == 'image' ) {

@@ -371,7 +371,8 @@ function fs_price_discount_filter( $product_id, $price ) {
 	$product_terms      = wp_get_object_terms( $product_id,
 		[
 			FS_Config::get_data( 'product_taxonomy' ),
-			FS_Config::get_data( 'brand_taxonomy' )
+			FS_Config::get_data( 'brand_taxonomy' ),
+			FS_Config::get_data( 'features_taxonomy' )
 		] );
 
 
@@ -393,8 +394,13 @@ function fs_price_discount_filter( $product_id, $price ) {
 		$product_discount_brands = get_term_meta( $dicount_term->term_id, 'discount_brands', 0 );
 		$product_discount_brands = array_shift( $product_discount_brands );
 
+		// Получаем скидку по характеристикам
+		$product_discount_features = get_term_meta( $dicount_term->term_id, 'discount_features', 0 );
+		$product_discount_features = array_shift( $product_discount_features );
+
 		$product_in_categories = is_object_in_term( $product_id, FS_Config::get_data( 'product_taxonomy' ), $product_discount_categories );
 		$product_in_brands     = is_object_in_term( $product_id, FS_Config::get_data( 'brand_taxonomy' ), $product_discount_brands );
+		$product_in_features     = is_object_in_term( $product_id, FS_Config::get_data( 'features_taxonomy' ), $product_discount_features );
 
 		$discount = get_term_meta( $dicount_term->term_id, 'discount_amount', 1 );
 
@@ -418,6 +424,12 @@ function fs_price_discount_filter( $product_id, $price ) {
 
 		// Проверям привязан ли товар к указанным выше брендам
 		if ( ! empty( $product_discount_brands ) && $product_in_brands ) {
+			// Добавляем все скидки в массив
+			array_push( $discounts, floatval( $discount ) );
+		}
+
+		// Проверям привязан ли товар к указанным выше свойствам
+		if ( ! empty( $product_discount_features ) && $product_in_features ) {
 			// Добавляем все скидки в массив
 			array_push( $discounts, floatval( $discount ) );
 		}

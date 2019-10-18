@@ -190,6 +190,15 @@ class FS_Taxonomies_Class {
 
 						)
 					),
+                    'discount_features'     => array(
+						'name' => __( 'Свойства товаров на которые распространяется скидка', 'f-shop' ),
+						'type' => 'dropdown_categories',
+						'args' => array(
+							'taxonomy' => FS_Config::get_data( 'features_taxonomy' ),
+							'multiple' => true,
+
+						)
+					),
 					'discount_amount' => array(
 						'name'     => __( 'Discount amount', 'f-shop' ),
 						'type'     => 'text',
@@ -306,7 +315,7 @@ class FS_Taxonomies_Class {
 				'show_admin_column'  => false,
 				'show_in_quick_edit' => false
 			),
-			$config['product_att_taxonomy']   => array(
+			$config['features_taxonomy']   => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Product attributes', 'f-shop' ),
 				'labels'             => array(
