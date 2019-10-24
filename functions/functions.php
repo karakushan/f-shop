@@ -652,7 +652,7 @@ function fs_product_count( $echo = true ) {
 function fs_get_base_price( $product_id = 0 ) {
 	$product_id = fs_get_product_id( $product_id );
 
-	$price = floatval( get_post_meta( $product_id, $fs_config->meta['price'], 1 ) );
+	$price = floatval( get_post_meta( $product_id,FS_Config::get_meta('price'), 1 ) );
 
 	$first_variation = fs_get_first_variation( $product_id );
 	if ( isset( $first_variation['price'] ) && is_numeric( $first_variation['price'] ) ) {
