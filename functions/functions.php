@@ -85,29 +85,34 @@ function fs_get_gallery( $product_id = 0, $thumbnail = true, $attachments = fals
  * @return float $price-значение цены
  */
 function fs_get_price( $product_id = 0 ) {
-	$product_id = fs_get_product_id( $product_id );
+	$product_id   = fs_get_product_id( $product_id );
+	$has_variared = false;
 
 	// получаем возможные типы цен
-	$base_price   = get_post_meta( $product_id, FS_Config::get_meta( 'price' ), true );//базовая и главная цена
-	$action_price = get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), true );//акионная цена
-	$price        = floatval( $base_price );
-	$action_price = floatval( $action_price );
+	$price        = floatval( get_post_meta( $product_id, FS_Config::get_meta( 'price' ), true ) ); //базовая и главная цена
+	$action_price = get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), true ); //акионная цена
 
-	if ( $price == 0 ) {
-		$first_variation = fs_get_first_variation( $product_id );
-		if ( $first_variation ) {
-			$price        = ! empty( $first_variation['price'] ) ? floatval( $first_variation['price'] ) : 0;
-			$action_price = ! empty( $first_variation['action_price'] ) ? floatval( $first_variation['action_price'] ) : 0;
-
-
-		}
-
-	}
-
-	//если поле акционной цены заполнено возвращаем его
-	if ( $action_price > 0 ) {
+	if ( is_numeric( $action_price ) && floatval( $action_price ) < $price ) {
 		$price = $action_price;
 	}
+
+	// Если товар вариативный, то  цена равна цене первой вариации
+	$first_variation = fs_get_first_variation( $product_id );
+
+	if ( isset( $first_variation['price'] ) && is_numeric( $first_variation['price'] ) ) {
+		$price        = floatval( $first_variation['price'] );
+		$has_variared = true;
+
+	}
+
+	// Если товар вариативный и у первой вариации есть акционная цена, то возваращаем ее
+	if ( $has_variared && isset( $first_variation['action_price'] ) && is_numeric( $first_variation['action_price'] ) ) {
+		$action_price = floatval( $first_variation['action_price'] );
+		if ( $action_price < $price ) {
+			$price = $action_price;
+		}
+	}
+
 
 	$price = apply_filters( 'fs_price_discount_filter', $product_id, $price );
 	$price = apply_filters( 'fs_price_filter', $product_id, $price );
@@ -645,31 +650,22 @@ function fs_product_count( $echo = true ) {
  * @return float $price
  */
 function fs_get_base_price( $product_id = 0 ) {
-	global $post, $fs_config;
+	$product_id = fs_get_product_id( $product_id );
 
-	$product_id   = empty( $product_id ) ? $post->ID : $product_id;
-	$price        = get_post_meta( $product_id, $fs_config->meta['price'], 1 );
-	$action_price = get_post_meta( $product_id, $fs_config->meta['action_price'], 1 );
-	// Проверяем установлена ли скидка на всю категорию товаров
-	$product_categories    = get_the_terms( $product_id, FS_Config::get_data( 'product_taxonomy' ) );
-	$category_discount_has = false;
-	if ( $product_categories ) {
-		foreach ( $product_categories as $product_category ) {
-			$category_discount = get_term_meta( $product_category->term_id, '_category_discount', 1 );
-			if ( $category_discount && is_numeric( $category_discount ) ) {
-				$category_discount_has = true;
-				break;
-			}
-		}
+	$price = floatval( get_post_meta( $product_id, $fs_config->meta['price'], 1 ) );
+
+	$first_variation = fs_get_first_variation( $product_id );
+	if ( isset( $first_variation['price'] ) && is_numeric( $first_variation['price'] ) ) {
+		$price = floatval( $first_variation['price'] );
+
 	}
-	if ( $price == fs_get_price( $product_id ) || ( empty( $action_price ) && fs_option( 'fs_total_discount_percent' ) == '' && ! $category_discount_has ) ) {
-		return;
+
+	$price     = apply_filters( 'fs_price_filter', $product_id, $price );
+	$buy_price = fs_get_price( $product_id );
+
+	if ( $buy_price < $price ) {
+		return $price;
 	}
-	$price = empty( $price ) ? 0 : (float) $price;
-
-	$price = apply_filters( 'fs_price_filter', $product_id, $price );
-
-	return $price;
 }
 
 /**
