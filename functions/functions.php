@@ -652,7 +652,7 @@ function fs_product_count( $echo = true ) {
 function fs_get_base_price( $product_id = 0 ) {
 	$product_id = fs_get_product_id( $product_id );
 
-	$price = floatval( get_post_meta( $product_id,FS_Config::get_meta('price'), 1 ) );
+	$price = floatval( get_post_meta( $product_id, FS_Config::get_meta( 'price' ), 1 ) );
 
 	$first_variation = fs_get_first_variation( $product_id );
 	if ( isset( $first_variation['price'] ) && is_numeric( $first_variation['price'] ) ) {
@@ -2526,9 +2526,10 @@ function fs_taxes_list( $args = [], $total = 0.0 ) {
  * @param mixed $data передаваемые данные
  * @param string $before
  * @param string $debug_type какую функцию для отладки использовать,
+ * @param  boolean $exit прекратить выполнение кода далее
  * по умолчанию var_dump
  */
-function fs_debug_data( $data, $before = '', $debug_type = 'var_dump' ) {
+function fs_debug_data( $data, $before = '', $debug_type = 'var_dump', $exit = false ) {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
@@ -2545,6 +2546,9 @@ function fs_debug_data( $data, $before = '', $debug_type = 'var_dump' ) {
 	}
 	echo "=== END DEBUG $before ===<br>";
 	echo '</pre>';
+	if ( $exit ) {
+		$exit;
+	}
 }
 
 /**
@@ -2990,4 +2994,98 @@ function fs_get_up_sells( $product_id = 0, $limit = - 1 ) {
 		'posts_per_page' => $limit,
 		'post__in'       => $up_sells
 	) );
+}
+
+/**
+ * Переводит строку из кирилицы в латиницу
+ *
+ * @param $name
+ *
+ * @return mixed
+ */
+function fs_convert_cyr_name( $name ) {
+	$iso = array(
+		"Є" => "YE",
+		"І" => "I",
+		"Ѓ" => "G",
+		"і" => "i",
+		"№" => "#",
+		"є" => "ye",
+		"ѓ" => "g",
+		"А" => "A",
+		"Б" => "B",
+		"В" => "V",
+		"Г" => "G",
+		"Д" => "D",
+		"Е" => "E",
+		"Ё" => "YO",
+		"Ж" => "ZH",
+		"З" => "Z",
+		"И" => "I",
+		"Й" => "J",
+		"К" => "K",
+		"Л" => "L",
+		"М" => "M",
+		"Н" => "N",
+		"О" => "O",
+		"П" => "P",
+		"Р" => "R",
+		"С" => "S",
+		"Т" => "T",
+		"У" => "U",
+		"Ф" => "F",
+		"Х" => "H",
+		"Ц" => "C",
+		"Ч" => "CH",
+		"Ш" => "SH",
+		"Щ" => "SHH",
+		"Ъ" => "'",
+		"Ы" => "Y",
+		"Ь" => "",
+		"Э" => "E",
+		"Ю" => "YU",
+		"Я" => "YA",
+		"а" => "a",
+		"б" => "b",
+		"в" => "v",
+		"г" => "g",
+		"д" => "d",
+		"е" => "e",
+		"ё" => "yo",
+		"ж" => "zh",
+		"з" => "z",
+		"и" => "i",
+		"й" => "j",
+		"к" => "k",
+		"л" => "l",
+		"м" => "m",
+		"н" => "n",
+		"о" => "o",
+		"п" => "p",
+		"р" => "r",
+		"с" => "s",
+		"т" => "t",
+		"у" => "u",
+		"ф" => "f",
+		"х" => "h",
+		"ц" => "c",
+		"ч" => "ch",
+		"ш" => "sh",
+		"щ" => "shh",
+		"ъ" => "",
+		"ы" => "y",
+		"ь" => "",
+		"э" => "e",
+		"ю" => "yu",
+		"я" => "ya",
+		"—" => "-",
+		"«" => "",
+		"»" => "",
+		"…" => "",
+		" " => "-"
+	);
+
+	$name = str_replace( array_keys( $iso ), array_values( $iso ), $name );
+
+	return strtolower( $name );
 }

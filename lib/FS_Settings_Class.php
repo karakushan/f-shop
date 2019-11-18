@@ -122,7 +122,7 @@ class FS_Settings_Class {
 
 
 		$settings = array(
-			'general'    => array(
+			'general'          => array(
 				'name'   => __( 'Basic settings', 'f-shop' ),
 				'fields' => array(
 					array(
@@ -152,7 +152,7 @@ class FS_Settings_Class {
 
 
 			),
-			'products'   => array(
+			'products'         => array(
 				'name'   => __( 'Products', 'f-shop' ),
 				'fields' => array(
 					array(
@@ -224,7 +224,29 @@ class FS_Settings_Class {
 
 
 			),
-			'shoppers'   => array(
+			'product_category' => array(
+				'name'   => __( 'Product Categories', 'f-shop' ),
+				'fields' => array(
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'fs_disable_taxonomy_slug',
+						'label' => __( 'Disable taxonomy slug in permalink', 'f-shop' ),
+						'help'  => '',
+						'value' => fs_option( 'fs_disable_taxonomy_slug' )
+					),
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'fs_localize_slug',
+						'label' => __( 'Localize Cyrillic slug', 'f-shop' ),
+						'help'  => '',
+						'value' => fs_option( 'fs_localize_slug' )
+					),
+
+				)
+
+
+			),
+			'shoppers'         => array(
 				'name'   => __( 'Buyers', 'f-shop' ),
 				'fields' => array(
 					array(
@@ -245,7 +267,7 @@ class FS_Settings_Class {
 
 
 			),
-			'currencies' => array(
+			'currencies'       => array(
 				'name'   => __( 'Currencies', 'f-shop' ),
 				'fields' => array(
 					array(
@@ -282,7 +304,7 @@ class FS_Settings_Class {
 
 				)
 			),
-			'templates'  => array(
+			'templates'        => array(
 				'name'   => __( 'Templates', 'f-shop' ),
 				'fields' => array(
 					array(
@@ -312,7 +334,7 @@ class FS_Settings_Class {
 					)
 				)
 			),
-			'letters'    => array(
+			'letters'          => array(
 				'name'   => __( 'Letters', 'f-shop' ),
 				'fields' => array(
 					array(
@@ -370,7 +392,7 @@ Your phone number.</p>', 'f-shop' ) )
 
 
 			),
-			'pages'      => array(
+			'pages'            => array(
 				'name'        => __( 'Service pages', 'f-shop' ),
 				'description' => __( 'Service pages are created and installed automatically when the plugin is activated. Can you also override them here', 'f-shop' ),
 				'fields'      => array(
@@ -438,7 +460,7 @@ Your phone number.</p>', 'f-shop' ) )
 
 
 			),
-			'export'     => array(
+			'export'           => array(
 				'name'        => __( 'Export of goods', 'f-shop' ),
 				'description' => sprintf( __( 'Link to product feed in YML format: <a href="%s" target="_blank">%s</a> or <a href="%s" target="_blank">%s</a>', 'f-shop' ), $feed_link, $feed_link, $feed_link_permalink, $feed_link_permalink ),
 				'fields'      => array(
@@ -459,7 +481,7 @@ Your phone number.</p>', 'f-shop' ) )
 
 
 			),
-			'debug'      => array(
+			'debug'            => array(
 				'name'        => __( 'Debugging', 'f-shop' ),
 				'description' => __( 'The debug data is displayed here as text.', 'f-shop' ),
 				'fields'      => array(

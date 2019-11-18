@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-10 17:54+0000\n"
+"POT-Creation-Date: 2019-10-10 18:59+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -346,8 +346,8 @@ msgstr ""
 msgid "Color"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:87 lib/FS_Taxonomies_Class.php:675
-#: lib/FS_Taxonomies_Class.php:713
+#: lib/FS_Attribute_Widget.php:87 lib/FS_Taxonomies_Class.php:693
+#: lib/FS_Taxonomies_Class.php:731
 msgid "Image"
 msgstr ""
 
@@ -535,7 +535,7 @@ msgstr ""
 msgid "Ukrainian"
 msgstr ""
 
-#: lib/FS_Filters.php:98 lib/FS_Taxonomies_Class.php:267
+#: lib/FS_Filters.php:98 lib/FS_Taxonomies_Class.php:285
 msgid "Product category"
 msgstr ""
 
@@ -1014,8 +1014,8 @@ msgstr ""
 msgid "The amount of goods in the basket at which free shipping is activated"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:249 lib/FS_Taxonomies_Class.php:399
-#: lib/FS_Taxonomies_Class.php:401
+#: lib/FS_Settings_Class.php:249 lib/FS_Taxonomies_Class.php:417
+#: lib/FS_Taxonomies_Class.php:419
 msgid "Currencies"
 msgstr ""
 
@@ -1287,8 +1287,8 @@ msgstr ""
 msgid "SEO description"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:57 lib/FS_Taxonomies_Class.php:77
-#: lib/FS_Taxonomies_Class.php:109 lib/FS_Taxonomies_Class.php:160
+#: lib/FS_Taxonomies_Class.php:57 lib/FS_Taxonomies_Class.php:70
+#: lib/FS_Taxonomies_Class.php:102 lib/FS_Taxonomies_Class.php:153
 msgid "Thumbnail"
 msgstr ""
 
@@ -1296,19 +1296,11 @@ msgstr ""
 msgid "Icon"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:67
-msgid "Total discount for category products (in percent)"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:69
-msgid "Enter a number without a percent sign"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:82
+#: lib/FS_Taxonomies_Class.php:75
 msgid "E-mail message to the buyer if the order is confirmed by the manager"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:83
+#: lib/FS_Taxonomies_Class.php:76
 msgid ""
 "This message is sent to the buyer at the time the manager confirms the order."
 " You can use meta data of type: <code>%order_id%</code> - order number, "
@@ -1316,266 +1308,282 @@ msgid ""
 "- payment reference ."
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:88
+#: lib/FS_Taxonomies_Class.php:81
 msgid "Message to the buyer after payment on the site"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:89
+#: lib/FS_Taxonomies_Class.php:82
 msgid ""
 "This message will be shown if the buyer has successfully paid the order. You "
 "can use these variables: <code>%order_id%</code> - order number, <code>"
 "%pay_name%</code> - name of the payment method"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:94
+#: lib/FS_Taxonomies_Class.php:87
 msgid "Unavailable for payment"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:95
+#: lib/FS_Taxonomies_Class.php:88
 msgid ""
 "If you turn off, then the payment method will not be visible to users, only "
 "in the admin panel."
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:100
+#: lib/FS_Taxonomies_Class.php:93
 msgid ""
 "When choosing this method, send the buyer immediately to the payment page"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:101
+#: lib/FS_Taxonomies_Class.php:94
 msgid ""
 "This is convenient in some cases, but it is better to leave this option off"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:114
+#: lib/FS_Taxonomies_Class.php:107
 msgid "Shipping Cost in Base Currency"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:119
+#: lib/FS_Taxonomies_Class.php:112
 msgid "Include address fields when choosing this method"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:127
+#: lib/FS_Taxonomies_Class.php:120
 msgid "International currency code"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:132
+#: lib/FS_Taxonomies_Class.php:125
 msgid "Cost in base currency"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:137
+#: lib/FS_Taxonomies_Class.php:130
 msgid "Display on the site"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:142
+#: lib/FS_Taxonomies_Class.php:135
 msgid "Currency Language (locale)"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:151
+#: lib/FS_Taxonomies_Class.php:144
 msgid "The amount or value of tax as a percentage"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:169
+#: lib/FS_Taxonomies_Class.php:162
+msgid "DiscountType"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:167
+msgid "Скидка применяется только к товарам"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:168
+msgid "Скидка применяется только к корзине"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:174 lib/FS_Taxonomies_Class.php:203
 msgid "The discount is activated provided"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:174
+#: lib/FS_Taxonomies_Class.php:179
 msgid "The total amount of goods in the cart"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:175
+#: lib/FS_Taxonomies_Class.php:180
 msgid "Number of items in the cart"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:176
-msgid "The product belongs to one of the selected categories"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:181
-msgid "Категории на которые распространяется скидка"
-msgstr ""
-
-#: lib/FS_Taxonomies_Class.php:190
+#: lib/FS_Taxonomies_Class.php:185
 msgid "Discount condition"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:194
+#: lib/FS_Taxonomies_Class.php:189
 msgid "More or equal"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:195
+#: lib/FS_Taxonomies_Class.php:190
 msgid "More"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:196
+#: lib/FS_Taxonomies_Class.php:191
 msgid "Less"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:197
+#: lib/FS_Taxonomies_Class.php:192
 msgid "Less or equal"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:202
+#: lib/FS_Taxonomies_Class.php:197
 msgid "Condition value"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:207
+#: lib/FS_Taxonomies_Class.php:208
+msgid "The product belongs to one of the selected categories"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:209
+msgid "Product belongs to one of the selected brands."
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:214
+msgid "Категории на которые распространяется скидка"
+msgstr ""
+
+#: lib/FS_Taxonomies_Class.php:225
 msgid "Discount amount"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:264 lib/FS_Taxonomies_Class.php:266
-#: lib/FS_Taxonomies_Class.php:268 lib/FS_Taxonomies_Class.php:269
-#: lib/FS_Taxonomies_Class.php:270 lib/FS_Taxonomies_Class.php:271
-#: lib/FS_Taxonomies_Class.php:273 lib/FS_Taxonomies_Class.php:275
-#: lib/FS_Taxonomies_Class.php:276
+#: lib/FS_Taxonomies_Class.php:282 lib/FS_Taxonomies_Class.php:284
+#: lib/FS_Taxonomies_Class.php:286 lib/FS_Taxonomies_Class.php:287
+#: lib/FS_Taxonomies_Class.php:288 lib/FS_Taxonomies_Class.php:289
+#: lib/FS_Taxonomies_Class.php:291 lib/FS_Taxonomies_Class.php:293
+#: lib/FS_Taxonomies_Class.php:294
 msgid "Product categories"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:272
+#: lib/FS_Taxonomies_Class.php:290
 msgid "Category editing"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:274
+#: lib/FS_Taxonomies_Class.php:292
 msgid "Add category"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:288 lib/FS_Taxonomies_Class.php:290
+#: lib/FS_Taxonomies_Class.php:306 lib/FS_Taxonomies_Class.php:308
 msgid "Payment methods"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:291
+#: lib/FS_Taxonomies_Class.php:309
 #: templates/back-end/metabox/order/meta-box-1.php:40
 #: templates/front-end/mail/themes/oxygen.php:433
 msgid "Payment method"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:292
+#: lib/FS_Taxonomies_Class.php:310
 msgid "Add a payment method"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:305 lib/FS_Taxonomies_Class.php:307
+#: lib/FS_Taxonomies_Class.php:323 lib/FS_Taxonomies_Class.php:325
 msgid "Delivery methods"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:308
+#: lib/FS_Taxonomies_Class.php:326
 #: templates/back-end/metabox/order/meta-box-1.php:28
 #: templates/front-end/mail/themes/oxygen.php:430
 msgid "Delivery method"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:309
+#: lib/FS_Taxonomies_Class.php:327
 msgid "Add a delivery method"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:322 lib/FS_Taxonomies_Class.php:324
-#: lib/FS_Taxonomies_Class.php:325
+#: lib/FS_Taxonomies_Class.php:340 lib/FS_Taxonomies_Class.php:342
+#: lib/FS_Taxonomies_Class.php:343
 msgid "Product attributes"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:326
+#: lib/FS_Taxonomies_Class.php:344
 msgid "Add property / group of properties"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:340 lib/FS_Taxonomies_Class.php:342
+#: lib/FS_Taxonomies_Class.php:358 lib/FS_Taxonomies_Class.php:360
 msgid "Manufacturers"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:343
+#: lib/FS_Taxonomies_Class.php:361
 msgid "Manufacturer"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:344
+#: lib/FS_Taxonomies_Class.php:362
 msgid "Add Manufacturer"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:358 lib/FS_Taxonomies_Class.php:360
-#: lib/FS_Taxonomies_Class.php:361
+#: lib/FS_Taxonomies_Class.php:376 lib/FS_Taxonomies_Class.php:378
+#: lib/FS_Taxonomies_Class.php:379
 msgid "Taxes"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:362
+#: lib/FS_Taxonomies_Class.php:380
 msgid "Add tax"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:377 lib/FS_Taxonomies_Class.php:379
+#: lib/FS_Taxonomies_Class.php:395 lib/FS_Taxonomies_Class.php:397
 msgid "Discounts"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:380
+#: lib/FS_Taxonomies_Class.php:398
 msgid "Discount"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:381
+#: lib/FS_Taxonomies_Class.php:399
 msgid "Add Discount"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:402
+#: lib/FS_Taxonomies_Class.php:420
 msgid "Currency"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:403
+#: lib/FS_Taxonomies_Class.php:421
 msgid "Add Currency"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:595 lib/FS_Taxonomies_Class.php:699
+#: lib/FS_Taxonomies_Class.php:613 lib/FS_Taxonomies_Class.php:717
 msgid "text"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:596 lib/FS_Taxonomies_Class.php:700
+#: lib/FS_Taxonomies_Class.php:614 lib/FS_Taxonomies_Class.php:718
 msgid "color"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:597 lib/FS_Taxonomies_Class.php:701
+#: lib/FS_Taxonomies_Class.php:615 lib/FS_Taxonomies_Class.php:719
 msgid "image"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:598
+#: lib/FS_Taxonomies_Class.php:616
 msgid "range"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:602 lib/FS_Taxonomies_Class.php:697
+#: lib/FS_Taxonomies_Class.php:620 lib/FS_Taxonomies_Class.php:715
 msgid "Attribute type"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:611 lib/FS_Taxonomies_Class.php:703
+#: lib/FS_Taxonomies_Class.php:629 lib/FS_Taxonomies_Class.php:721
 msgid ""
 "Products may have different properties. Here you can choose which type of "
 "property you need."
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:619 lib/FS_Taxonomies_Class.php:708
+#: lib/FS_Taxonomies_Class.php:637 lib/FS_Taxonomies_Class.php:726
 msgid "Color value"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:631
+#: lib/FS_Taxonomies_Class.php:649
 msgid "Beginning of range"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:641
+#: lib/FS_Taxonomies_Class.php:659
 msgid "End of range"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:652
+#: lib/FS_Taxonomies_Class.php:670
 msgid "Use the number of purchased goods to compare with this attribute."
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:664
+#: lib/FS_Taxonomies_Class.php:682
 msgid "change image"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:664 lib/FS_Taxonomies_Class.php:716
+#: lib/FS_Taxonomies_Class.php:682 lib/FS_Taxonomies_Class.php:734
 msgid "select image"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:685 lib/FS_Taxonomies_Class.php:719
+#: lib/FS_Taxonomies_Class.php:703 lib/FS_Taxonomies_Class.php:737
 msgid "delete image"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:834
+#: lib/FS_Taxonomies_Class.php:852
 msgid "Currency code"
 msgstr ""
 
-#: lib/FS_Taxonomies_Class.php:835
+#: lib/FS_Taxonomies_Class.php:853
 #: templates/front-end/cart/list-products.php:27
 #: templates/front-end/checkout/checkout.php:23
 #: templates/front-end/dashboard/orders.php:31

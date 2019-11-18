@@ -31,9 +31,12 @@ class FS_Taxonomies_Class {
 	/**
 	 * Registration of additional taxonomy fields
 	 *
+	 * @param null $term объект текущего термина таксономии
+	 *
 	 * @return array
 	 */
-	public static function get_taxonomy_fields() {
+	public static function get_taxonomy_fields( $term = null ) {
+
 
 		$fields = array(
 			FS_Config::get_data( 'product_taxonomy' )       =>
@@ -41,6 +44,11 @@ class FS_Taxonomies_Class {
 					'_content'         => array(
 						'name' => __( 'Category text', 'f-shop' ),
 						'type' => 'editor',
+						'args' => array()
+					),
+					'_seo_slug'        => array(
+						'name' => __( 'SEO slug', 'f-shop' ),
+						'type' => 'text',
 						'args' => array()
 					),
 					'_seo_title'       => array(
@@ -190,7 +198,7 @@ class FS_Taxonomies_Class {
 
 						)
 					),
-                    'discount_features'     => array(
+					'discount_features'   => array(
 						'name' => __( 'Свойства товаров на которые распространяется скидка', 'f-shop' ),
 						'type' => 'dropdown_categories',
 						'args' => array(
@@ -199,7 +207,7 @@ class FS_Taxonomies_Class {
 
 						)
 					),
-					'discount_amount' => array(
+					'discount_amount'     => array(
 						'name'     => __( 'Discount amount', 'f-shop' ),
 						'type'     => 'text',
 						'args'     => array(),
@@ -315,7 +323,7 @@ class FS_Taxonomies_Class {
 				'show_admin_column'  => false,
 				'show_in_quick_edit' => false
 			),
-			$config['features_taxonomy']   => array(
+			$config['features_taxonomy']      => array(
 				'object_type'        => 'product',
 				'label'              => __( 'Product attributes', 'f-shop' ),
 				'labels'             => array(
@@ -489,7 +497,7 @@ class FS_Taxonomies_Class {
 	 */
 	function edit_taxonomy_fields( $term, $taxonomy ) {
 		$form   = new FS_Form_Class();
-		$fields = self::get_taxonomy_fields();
+		$fields = self::get_taxonomy_fields( $term );
 
 		if ( count( $fields[ $taxonomy ] ) ) {
 
@@ -516,6 +524,7 @@ class FS_Taxonomies_Class {
 	 * @param $taxonomy
 	 */
 	function add_taxonomy_fields( $taxonomy ) {
+
 		$form   = new FS_Form_Class();
 		$fields = self::get_taxonomy_fields();
 		if ( count( $fields[ $taxonomy ] ) ) {
@@ -544,8 +553,11 @@ class FS_Taxonomies_Class {
 		$taxonomy = $term->taxonomy;
 		$fields   = self::get_taxonomy_fields();
 
-		$multi_lang = false;
-		$screen     = get_current_screen();
+		$multi_lang    = false;
+		$screen        = get_current_screen();
+		$rewrite_rules = false;
+		$lang      = $_POST['wpglobus_language'] ?? $_COOKIE['wpglobus_language'];
+
 		if ( fs_option( 'fs_multi_language_support' )
 		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
 		     && $screen->id == 'edit-catalog'
@@ -553,21 +565,46 @@ class FS_Taxonomies_Class {
 			$multi_lang = true;
 		}
 
+
 		if ( count( $fields[ $taxonomy ] ) ) {
 			foreach ( $fields[ $taxonomy ] as $name => $field ) {
 
 				if ( $multi_lang ) {
-					foreach ( FS_Config::get_languages() as $language ) {
+					foreach ( FS_Config::get_languages() as $key => $language ) {
 						if ( $language['locale'] == FS_Config::default_language() ) {
 							$meta_key = $name;
 						} else {
 							$meta_key = $name . '__' . $language['locale'];
 						}
+
+						// Если включена локализация ссылок и пустое значение для локализированого слага, делаем это автоматически
+						if ( isset( $_POST['wpglobus_language'] ) ) {
+							$post_name = $_POST['name'];
+						} else {
+							$post_name = $_POST[ 'name_' . $key ];
+						}
+
+
+						if ( fs_option( 'fs_localize_slug' )
+						     && $name == '_seo_slug' && $post_name != ''
+						     && $_POST[ $meta_key ] == ''
+						     && $lang == $key  ) {
+							$_POST[ $meta_key ] = fs_convert_cyr_name( $post_name );
+
+							$rewrite_rules = true;
+						}
+
 						if ( isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != '' ) {
 							update_term_meta( $term_id, $meta_key, $_POST[ $meta_key ] );
 						} else {
 							delete_term_meta( $term_id, $meta_key );
 						}
+
+						// Обновляем правил ЧПУ если нужно
+						if ( $rewrite_rules ) {
+							flush_rewrite_rules();
+						}
+
 					}
 				} else {
 					if ( isset( $_POST[ $name ] ) && $_POST[ $name ] != '' ) {

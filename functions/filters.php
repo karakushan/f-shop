@@ -447,3 +447,77 @@ function fs_price_discount_filter( $product_id, $price ) {
 
 	return floatval( $price );
 }
+
+add_filter( 'generate_rewrite_rules', 'generate_taxonomy_rewrite_rules' );
+
+// Remove taxonomy slug from links
+add_filter( 'term_link', 'fs_replace_taxonomy_slug_filter', 10, 3 );
+function fs_replace_taxonomy_slug_filter( $termlink, $term, $taxonomy ) {
+	if ( $taxonomy != FS_Config::get_data( 'product_taxonomy' ) ) {
+		return $termlink;
+	}
+
+	$meta_key = get_locale() != FS_Config::default_language() ? '_seo_slug__' . get_locale() : '_seo_slug';
+
+	// Remove the taxonomy prefix in links
+	if ( fs_option( 'fs_disable_taxonomy_slug' ) ) {
+		$termlink = str_replace( '/' . $taxonomy . '/', '/', $termlink );
+	}
+
+	// We convert the link in accordance with the Cyrillic name
+	if ( get_locale() != FS_Config::default_language()
+	     && fs_option( 'fs_localize_slug' )
+	     && get_term_meta( $term->term_id, $meta_key, 1 ) ) {
+		$localize_slug = get_term_meta( $term->term_id, $meta_key, 1 );
+		$termlink      = str_replace( $term->slug, $localize_slug, $termlink );
+	}
+
+	return $termlink;
+}
+
+// Add rewrite rules for terms
+function fs_generate_taxonomy_rewrite_rules( $wp_rewrite ) {
+	$rules = array();
+	$terms = get_terms( [ 'taxonomy' => FS_Config::get_data( 'product_taxonomy' ), 'hide_empty' => false ] );
+
+	if ( fs_option( 'fs_disable_taxonomy_slug' ) ) {
+		foreach ( FS_Config::get_languages() as $key => $language ) {
+			$meta_key = $language['locale'] != FS_Config::default_language() ? '_seo_slug__' . $language['locale'] : '_seo_slug';
+			foreach ( $terms as $term ) {
+				$localize_slug = get_term_meta( $term->term_id, $meta_key, 1 );
+				if ( $language['locale'] == FS_Config::default_language() ) {
+					$rules[ $term->slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+					$rules[ $term->slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+				} elseif ( $localize_slug ) {
+					$rules[ $localize_slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+					$rules[ $localize_slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+				}
+			}
+		}
+
+	}
+
+	$wp_rewrite->rules = $rules + $wp_rewrite->rules;
+
+	return $wp_rewrite->rules;
+}
+
+add_filter( 'generate_rewrite_rules', 'fs_generate_taxonomy_rewrite_rules' );
+
+// We redirect to a localized url
+add_action( 'template_redirect', function () {
+	if ( ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+		return;
+	}
+
+	$current_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+	$term_id   = get_queried_object_id();
+	$term_link = get_term_link( $term_id );
+	if ( $current_link != $term_link ) {
+		wp_safe_redirect( $term_link );
+		exit;
+	}
+
+	return;
+} );

@@ -88,7 +88,7 @@ class FS_Form_Class {
 		if ( fs_option( 'fs_multi_language_support' )
 		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
 		     && ( ! in_array( $type, [ 'image' ] ) )
-		     && (isset($screen->id) && $screen->id == 'edit-catalog')
+		     && ( isset( $screen->id ) && $screen->id == 'edit-catalog' )
 		) {
 			$multi_lang = true;
 		}
@@ -114,8 +114,12 @@ class FS_Form_Class {
 				$args['id'] = $args['id'] . '-' . $key;
 
 				echo '<div class="' . esc_attr( $tab_class ) . '" id="fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '">';
-				$name                                 = $item['locale'] != FS_Config::default_language() ? $name . '__' . $item['locale'] : $name;
-				$args['value']                        = ! empty( $_GET['tag_ID'] ) ? FS_Taxonomies_Class::fs_get_term_meta( intval( $_GET['tag_ID'] ), $name ) : null;
+				$name          = $item['locale'] != FS_Config::default_language() ? $name . '__' . $item['locale'] : $name;
+				$args['value'] = ! empty( $_GET['tag_ID'] ) ? FS_Taxonomies_Class::fs_get_term_meta( intval( $_GET['tag_ID'] ), $name ) : null;
+				if ( ! $args['value'] && $args['default'] ) {
+					$args['value'] = $args['default'];
+				}
+
 				$args['editor_args']['textarea_name'] = $name;
 
 				if ( in_array( $type, $this->registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
