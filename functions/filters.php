@@ -386,6 +386,9 @@ function fs_price_discount_filter( $product_id, $price ) {
 
 	// Проходимся по всем скидкам, которые предназначены для товара (есть еще другие скидки, не путать)
 	foreach ( $dicount_terms as $dicount_term ) {
+		if ( ! is_object( $dicount_term || ! isset( $dicount_term->term_id ) ) ) {
+			continue;
+		}
 		// Получаем скидку по категориям
 		$product_discount_categories = get_term_meta( $dicount_term->term_id, 'discount_categories', 0 );
 		$product_discount_categories = ! empty( $product_discount_categories ) && is_array( $product_discount_categories )
@@ -514,6 +517,9 @@ add_action( 'template_redirect', function () {
 
 	$term_id   = get_queried_object_id();
 	$term_link = get_term_link( $term_id );
+	if ( get_query_var( 'paged' ) && get_query_var( 'paged' ) > 1 ) {
+		$term_link = $term_link . 'page/' . get_query_var( 'paged' ) . '/';
+	}
 	if ( $current_link != $term_link ) {
 		wp_safe_redirect( $term_link );
 		exit;
