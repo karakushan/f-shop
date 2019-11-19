@@ -553,10 +553,9 @@ class FS_Taxonomies_Class {
 		$taxonomy = $term->taxonomy;
 		$fields   = self::get_taxonomy_fields();
 
-		$multi_lang    = false;
-		$screen        = get_current_screen();
-		$rewrite_rules = false;
-		$lang      = $_POST['wpglobus_language'] ?? $_COOKIE['wpglobus_language'];
+		$multi_lang = false;
+		$screen     = get_current_screen();
+		$lang       = $_POST['wpglobus_language'] ?? $_COOKIE['wpglobus_language'];
 
 		if ( fs_option( 'fs_multi_language_support' )
 		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
@@ -588,10 +587,8 @@ class FS_Taxonomies_Class {
 						if ( fs_option( 'fs_localize_slug' )
 						     && $name == '_seo_slug' && $post_name != ''
 						     && $_POST[ $meta_key ] == ''
-						     && $lang == $key  ) {
+						     && $lang == $key ) {
 							$_POST[ $meta_key ] = fs_convert_cyr_name( $post_name );
-
-							$rewrite_rules = true;
 						}
 
 						if ( isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != '' ) {
@@ -599,12 +596,6 @@ class FS_Taxonomies_Class {
 						} else {
 							delete_term_meta( $term_id, $meta_key );
 						}
-
-						// Обновляем правил ЧПУ если нужно
-						if ( $rewrite_rules ) {
-							flush_rewrite_rules();
-						}
-
 					}
 				} else {
 					if ( isset( $_POST[ $name ] ) && $_POST[ $name ] != '' ) {
@@ -616,6 +607,9 @@ class FS_Taxonomies_Class {
 
 			}
 		}
+
+		// Обновляем правил ЧПУ
+		flush_rewrite_rules();
 	}
 
 	/**
