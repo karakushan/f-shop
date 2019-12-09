@@ -70,7 +70,7 @@ class FS_Product {
 
 		global $wpdb;
 		$slug      = $query->query['product'];
-		$meta_key  = '_fs_seo_slug__' . get_locale();
+		$meta_key  = 'fs_seo_slug__' . get_locale();
 		$s_product = $wpdb->get_row( "SELECT *  FROM $wpdb->postmeta WHERE meta_key='$meta_key' AND meta_value='$slug'" );
 		if ( $s_product ) {
 			$post = get_post( $s_product->post_id );
