@@ -9,7 +9,7 @@
 namespace FS;
 
 
-class FS_Product_Class {
+class FS_Product {
 	public $variation = null;
 	public $id = 0;
 	public $item_id = 0;
@@ -37,6 +37,55 @@ class FS_Product_Class {
 
 		/** set the global variable $fs_product */
 		$GLOBALS['fs_product'] = $this;
+
+		add_action( 'save_post', array( $this, 'save_product_fields' ) );
+
+		add_action( 'init', array( $this, 'init' ), 12 );
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+
+		add_action( 'fs_before_product_meta', array( $this, 'before_product_meta' ) );
+
+		/* We set the real price with the discount and currency */
+		add_action( 'fs_after_save_meta_fields', array( $this, 'set_real_product_price' ), 10, 1 );
+
+		add_filter( 'pre_get_posts', array( $this, 'pre_get_posts_product' ) );
+	}
+
+	/**
+	 * hook into WP's init action hook
+	 */
+	public function init() {
+		// Initialize Post Type
+		$this->create_post_type();
+
+
+	} // END public function init()
+
+	function pre_get_posts_product( $query ) {
+
+		// Если это админка или не главный запрос
+		if ( $query->is_admin || ! $query->is_main_query() || ! $query->is_singular || $query->query['post_type'] != FS_Config::get_data( 'post_type' ) ) {
+			return;
+		}
+
+		global $wpdb;
+		$slug      = $query->query['product'];
+		$meta_key  = '_fs_seo_slug__' . get_locale();
+		$s_product = $wpdb->get_row( "SELECT *  FROM $wpdb->postmeta WHERE meta_key='$meta_key' AND meta_value='$slug'" );
+		if ( $s_product ) {
+			$post = get_post( $s_product->post_id );
+			$query->set( 'name', $post->post_name );
+			$query->set( 'product', $post->post_name );
+			$query->set( 'post_type', $query->query['post_type'] );
+		}
+
+		return $query;
+
+	}
+
+	// Выводит скрытый прелоадер перед полями метабокса
+	function before_product_meta() {
+		echo '<div class="fs-mb-preloader"></div>';
 	}
 
 	/**
@@ -410,10 +459,10 @@ class FS_Product_Class {
 	 * @return $this
 	 */
 	public function set_product( $product = [], $item_id = 0 ) {
-	    global $fs_config;
+		global $fs_config;
 		$this->setId( intval( $product['ID'] ) );
 		$this->set_item_id( $item_id );
-		
+
 		if ( isset( $product['variation'] ) && is_numeric( $product['variation'] ) ) {
 			$this->setVariation( $product['variation'] );
 			$variation        = $this->get_variation();
@@ -591,7 +640,7 @@ class FS_Product_Class {
 
 		);
 
-		$default_tabs = apply_filters( 'fs_product_tabs_items', $default_tabs , $product_id);
+		$default_tabs = apply_filters( 'fs_product_tabs_items', $default_tabs, $product_id );
 
 		if ( is_array( $default_tabs ) && ! empty( $default_tabs ) ) {
 
@@ -631,4 +680,432 @@ class FS_Product_Class {
 
 
 	}
+
+	/**
+	 * Create the post type
+	 */
+	public function create_post_type() {
+		/* регистрируем тип постов  - товары */
+		register_post_type( FS_Config::get_data( 'post_type' ),
+			array(
+				'labels'             => array(
+					'name'               => __( 'Products', 'f-shop' ),
+					'singular_name'      => __( 'Product', 'f-shop' ),
+					'add_new'            => __( 'Add product', 'f-shop' ),
+					'add_new_item'       => '',
+					'edit_item'          => __( 'Edit product', 'f-shop' ),
+					'new_item'           => '',
+					'view_item'          => '',
+					'search_items'       => '',
+					'not_found'          => '',
+					'not_found_in_trash' => '',
+					'parent_item_colon'  => '',
+					'menu_name'          => __( 'Products', 'f-shop' ),
+				),
+				'public'             => true,
+				'show_in_menu'       => true,
+				'yarpp_support'      => true,
+				'publicly_queryable' => true,
+				'show_ui'            => true,
+				'capability_type'    => 'post',
+				'menu_icon'          => 'dashicons-cart',
+				'map_meta_cap'       => true,
+				'show_in_nav_menus'  => true,
+				'show_in_rest'       => true,
+				'menu_position'      => 5,
+				'can_export'         => true,
+				'has_archive'        => true,
+				'rewrite'            => apply_filters( 'fs_product_slug', true ),
+				'query_var'          => true,
+				'taxonomies'         => array( 'catalog', 'product-attributes' ),
+				'description'        => __( "Here are the products of your site.", 'f-shop' ),
+
+				'supports' => array(
+					'title',
+					'editor',
+					'excerpt',
+					'thumbnail',
+					'comments',
+					'page-attributes',
+					'revisions',
+					'gutenburg'
+				)
+			)
+		);
+	}
+
+	/**
+	 * Save product fields
+	 *
+	 * @param $post_id
+	 */
+	function save_product_fields( $post_id ) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+		if ( ! isset( $_POST['post_type'] ) || ( isset( $_POST['post_type'] ) && $_POST['post_type'] != FS_Config::get_data( 'post_type' ) ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		do_action( 'fs_before_save_meta_fields', $post_id );
+
+
+		$save_meta_keys = $this->get_save_fields();
+
+
+		foreach ( $save_meta_keys as $key => $field_name ) {
+
+			if ( ! is_array( $_POST[ $field_name ] ) && ! isset( $_POST[ $field_name ] ) || ( (string) $_POST[ $field_name ] == '' && strpos( $field_name, 'fs_seo_slug' ) === false ) ) {
+				delete_post_meta( $post_id, $field_name );
+				continue;
+			}
+
+			if ( is_array( $_POST[ $field_name ] ) && empty( $_POST[ $field_name ] ) ) {
+				delete_post_meta( $post_id, $field_name );
+				continue;
+			}
+
+			$_POST[ $field_name ] = apply_filters( 'fs_filter_meta_field', $_POST[ $field_name ], $field_name, $post_id );
+
+			switch ( $field_name ) {
+				case 'fs_price':
+					$price = (float) str_replace( array( ',' ), array( '.' ), sanitize_text_field( $_POST[ $field_name ] ) );
+					update_post_meta( $post_id, $field_name, $price );
+					break;
+				case 'fs_related_products':
+					if ( empty( $field_value ) ) {
+						delete_post_meta( $post_id, $field_name );
+					} else {
+						update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
+					}
+					break;
+				default:
+					if ( is_array( $_POST[ $field_name ] ) ) {
+						update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
+					} else {
+						update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
+					}
+					break;
+			}
+
+
+		}
+
+		do_action( 'fs_after_save_meta_fields', $post_id );
+	}
+
+	/**
+	 * hook into WP's admin_init action hook
+	 */
+	public function admin_init() {
+		// Add metaboxes
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+	} // END public function admin_init()
+
+	/**
+	 * hook into WP's add_meta_boxes action hook
+	 */
+	public function add_meta_boxes() {
+
+		remove_meta_box( 'order-statusesdiv', 'orders', 'side' );
+		// Add this metabox to every selected post
+		add_meta_box(
+			sprintf( 'fast_shop_%s_metabox', FS_Config::get_data( 'post_type' ) ),
+			__( 'Product settings', 'f-shop' ),
+			array( &$this, 'add_inner_meta_boxes' ),
+			FS_Config::get_data( 'post_type' ),
+			'normal',
+			'high'
+		);
+
+		// добавляем метабокс списка товаров в заказе
+		add_meta_box(
+			sprintf( 'fast_shop_%s_metabox', 'orders' ),
+			__( 'List of products', 'f-shop' ),
+			array( &$this, 'add_order_products_meta_boxes' ),
+			'orders',
+			'normal',
+			'high'
+		);
+
+		// добавляем метабокс списка товаров в заказе
+		add_meta_box(
+			sprintf( 'fast_shop_%s_user_metabox', 'orders' ),
+			__( 'Customer data', 'f-shop' ),
+			array( &$this, 'add_order_user_meta_boxes' ),
+			'orders',
+			'normal',
+			'default'
+		);
+		// Add this metabox to every selected post
+
+	} // END public function add_meta_boxes()
+
+
+	/**
+	 *  Registers new metafields dynamically from tabs
+	 *
+	 * @return array
+	 */
+	function get_save_fields() {
+		$product_tabs = $this->get_product_tabs();
+
+		foreach ( $product_tabs as $product_tab ) {
+			if ( empty( $product_tab['fields'] ) ) {
+				continue;
+			}
+			foreach ( $product_tab['fields'] as $key => $field ) {
+				$key                 = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
+				$meta_fields[ $key ] = $key;
+
+			}
+		}
+
+		return array_merge( FS_Config::get_meta(), $meta_fields );
+	}
+
+	/**
+	 * Gets the array that contains the list of product settings tabs.
+	 *
+	 * @return array
+	 */
+	public static function get_product_tabs() {
+		$tabs = array(
+			'prices'     => array(
+				'title'       => __( 'Prices', 'f-shop' ),
+				'on'          => true,
+				'description' => __( 'In this tab you can adjust the prices of goods.', 'f-shop' ),
+				'fields'      => array(
+					FS_Config::get_meta( 'price' )        => array(
+						'label' => __( 'Base price', 'f-shop' ),
+						'type'  => 'text',
+						'help'  => __( 'This is the main price on the site. Required field!', 'f-shop' )
+					),
+					FS_Config::get_meta( 'action_price' ) => array(
+						'label' => __( 'Promotional price', 'f-shop' ),
+						'type'  => 'text',
+						'help'  => __( 'If this field is filled, the base price loses its relevance. But you can display it on the site.', 'f-shop' )
+					),
+					FS_Config::get_meta( 'currency' )     => array(
+						'label'    => __( 'Item Currency', 'f-shop' ),
+						'on'       => fs_option( 'multi_currency_on' ) ? true : false,
+						'type'     => 'dropdown_categories',
+						'help'     => __( 'The field is active if you have enabled multicurrency in settings.', 'f-shop' ),
+						'taxonomy' => FS_Config::get_data( 'currencies_taxonomy' )
+					)
+				)
+			),
+			'gallery'    => array(
+				'title'    => __( 'Gallery', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'gallery'
+			),
+			'attributes' => array(
+				'title'    => __( 'Attributes', 'f-shop' ),
+				'on'       => false,
+				'body'     => '',
+				'template' => 'attributes'
+			),
+			'other'      => array(
+				'title'    => __( 'Other', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'other',
+			),
+			'related'    => array(
+				'title'    => __( 'Associated', 'f-shop' ),
+				'on'       => false, // Сейчас в разработке
+				'body'     => '',
+				'template' => 'related'
+			),
+			'up_sell'    => array(
+				'title'    => __( 'Up-sell', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'up-sell'
+			),
+			'cross_sell' => array(
+				'title'    => __( 'Cross-sell', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'cross-sell'
+			),
+			'variants'   => array(
+				'title'    => __( 'Variation', 'f-shop' ),
+				'on'       => true,
+				'body'     => '',
+				'template' => 'variants'
+			),
+			'delivery'   => array(
+				'title'  => __( 'Shipping and payment', 'f-shop' ),
+				'on'     => true,
+				'body'   => '',
+				'fields' => array(
+					'_fs_delivery_description' => array(
+						'label' => __( 'Shipping and Payment Details', 'f-shop' ),
+						'type'  => 'editor',
+						'help'  => ''
+					),
+
+				)
+			),
+			'seo'        => array(
+				'title'  => __( 'SEO', 'f-shop' ),
+				'on'     => true,
+				'body'   => '',
+				'fields' => array(
+					'fs_seo_slug' => array(
+						'label'     => __( 'SEO slug', 'f-shop' ),
+						'type'      => 'text',
+						'multilang' => true,
+						'help'      => __( 'Allows you to set multilingual url', 'f-shop' )
+					),
+
+				)
+			),
+		);
+
+		return apply_filters( 'fs_product_tabs_admin', $tabs );
+	}
+
+	/**
+	 * called off of the add meta box
+	 *
+	 * @param $post
+	 */
+	public function add_inner_meta_boxes( $post ) {
+		$form_class       = new FS_Form_Class();
+		$product_tabs     = self::get_product_tabs();
+		$this->product_id = $post->ID;
+		$cookie           = isset( $_COOKIE['fs_active_tab'] ) ? $_COOKIE['fs_active_tab'] : 'prices';
+		echo '<div class="fs-metabox" id="fs-metabox">';
+		do_action( 'fs_before_product_meta' );
+		if ( count( $product_tabs ) ) {
+			echo '<ul class="tab-header">';
+			foreach ( $product_tabs as $key => $tab ) {
+				if ( ! $tab['on'] ) {
+					continue;
+				}
+				if ( $cookie ) {
+					if ( $cookie == $key ) {
+						$class = 'fs-link-active';
+					} else {
+						$class = '';
+					}
+				} else {
+					$class = $key == 0 ? 'fs-link-active' : '';
+				}
+				echo '<li class="' . esc_attr( $class ) . '"><a href="#tab-' . esc_attr( $key ) . '" data-tab="' . esc_attr( $key ) . '">' . esc_html__( $tab['title'], 'f-shop' ) . '</a></li>';
+			}
+			echo '</ul>';
+			echo "<div class=\"fs-tabs\">";
+			foreach ( $product_tabs as $key_body => $tab_body ) {
+				if ( ! $tab_body['on'] ) {
+					continue;
+				}
+
+				if ( $key_body == $cookie ) {
+					$class_tab = 'fs-tab-active';
+				} else {
+					$class_tab = '';
+				}
+
+
+				echo '<div class="fs-tab ' . esc_attr( $class_tab ) . '" id="tab-' . esc_attr( $key_body ) . '">';
+				if ( ! empty( $tab_body['fields'] ) ) {
+					if ( ! empty( $tab_body['title'] ) ) {
+						echo '<h3>' . esc_html( $tab_body['title'] ) . '</h3>';
+					}
+					if ( ! empty( $tab_body['description'] ) ) {
+						echo '<p class="description">' . esc_html( $tab_body['description'] ) . '</p>';
+					}
+					foreach ( $tab_body['fields'] as $key => $field ) {
+						$filter_meta[ $key ] = $key;
+					}
+
+					foreach ( $tab_body['fields'] as $key => $field ) {
+						// если у поля есть атрибут "on" и он выключён то выходим из цикла
+						if ( isset( $field['on'] ) && $field['on'] != true ) {
+							continue;
+						}
+						// если не указан атрибут type
+						if ( empty( $field['type'] ) ) {
+							$field['type'] = 'text';
+						}
+						echo '<div class="fs-field-row clearfix">';
+
+						$key            = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
+						$field['value'] = get_post_meta( $post->ID, $key, true );
+						$form_class->render_field( $key, $field['type'], $field );
+						echo '</div>';
+					}
+				} elseif ( ! empty( $tab_body['template'] ) ) {
+					$template_file = sprintf( FS_PLUGIN_PATH . 'templates/back-end/metabox/%s.php', $tab_body['template'] );
+					if ( file_exists( $template_file ) ) {
+						include( $template_file );
+					} else {
+						esc_html_e( 'Template file not found', 'f-shop' );
+					}
+				} elseif ( ! empty( $tab_body['body'] ) ) {
+					echo $tab_body['body'];
+				}
+				echo '</div>';
+
+			}
+			echo "</div>";
+			echo '<div class="clearfix"></div>';
+
+		}
+		?>
+        <!-- The modal / dialog box, hidden somewhere near the footer -->
+        <div id="fs-upsell-dialog" class="hidden fs-select-products-dialog" style="max-width:420px">
+			<?php
+			$args  = array(
+				'posts_per_page' => - 1,
+				'post_type'      => FS_Config::get_data( 'post_type' )
+			);
+			$query = new \WP_Query( $args );
+			if ( $query->have_posts() ) {
+				echo '<ul>';
+				while ( $query->have_posts() ) {
+					$query->the_post();
+					the_title( '<li><span>', '</span><button class="button add-product" data-id="' . esc_attr( get_the_ID() ) . '" data-field="fs_up_sell" data-name="' . esc_attr( get_the_title() ) . '">' . esc_html__( 'choose', 'f-shop' ) . '</button></li>' );
+				}
+				echo '</ul>';
+			}
+			wp_reset_query();
+			?>
+        </div>
+		<?php
+		echo '</div>';
+	}
+
+	/* метабокс списка товаров в редактировании заказа */
+	public function add_order_products_meta_boxes( $post ) {
+		$products = get_post_meta( $post->ID, '_products', 0 );
+		$products = ! empty( $products[0] ) ? $products[0] : [];
+		$amount   = get_post_meta( $post->ID, '_amount', 1 );
+		$amount   = apply_filters( 'fs_price_format', $amount ) . ' ' . fs_currency();
+		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-0.php';
+	}
+
+	/* метабокс данных пользователя в редактировании заказа */
+	public function add_order_user_meta_boxes( $post ) {
+		$user     = get_post_meta( $post->ID, '_user', 0 );
+		$user     = $user[0];
+		$payment  = get_post_meta( $post->ID, '_payment', 1 );
+		$delivery = get_post_meta( $post->ID, '_delivery', 0 );
+		$delivery = $delivery[0];
+
+		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-1.php';
+	}
+
+	public function set_real_product_price( $product_id = 0 ) {
+		update_post_meta( $product_id, '_fs_real_price', fs_get_price( $product_id ) );
+	}
+
 }

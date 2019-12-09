@@ -527,3 +527,84 @@ add_action( 'template_redirect', function () {
 
 	return;
 } );
+
+
+// Localization of product meta fields
+add_filter( 'fs_product_tab_admin_meta_key', 'fs_product_tab_admin_meta_key', 10, 2 );
+function fs_product_tab_admin_meta_key( $meta_key, $field ) {
+	if ( ! isset( $field['multilang'] ) || ( isset( $field['multilang'] ) && $field['multilang'] == false ) ) {
+		return $meta_key;
+	}
+
+	if ( isset( $_REQUEST['language'] ) ) {
+		$query_lang = $_REQUEST['language'];
+	} elseif ( isset( $_REQUEST['wpglobus_language'] ) ) {
+		$query_lang = $_REQUEST['wpglobus_language'];
+	} else {
+		return $meta_key;
+	}
+
+	$all_languages    = FS_Config::get_languages();
+	$default_language = FS_Config::default_language();
+
+	$current_language = isset( $all_languages[ $query_lang ]['locale'] )
+		? $all_languages[ $query_lang ]['locale']
+		: $default_language;
+
+	if ( $current_language == $default_language ) {
+		return $meta_key;
+	}
+
+	$meta_key = implode( '__', [ $meta_key, $current_language ] );
+
+	return $meta_key;
+}
+
+// Localize the url
+add_filter( 'post_type_link', 'fs_post_type_link_filters', 10, 4 );
+function fs_post_type_link_filters( $post_link, $post, $leavename, $sample ) {
+	$default_language = FS_Config::default_language();
+	$curent_locale    = get_locale();
+
+	if ( $post->post_type != FS_Config::get_data( 'post_type' ) || $curent_locale == $default_language ) {
+		return $post_link;
+	}
+
+	if ( $slug = get_post_meta( $post->ID, 'fs_seo_slug__' . $curent_locale, 1 ) ) {
+		$lang_prefix   = '';
+		$all_languages = FS_Config::get_languages();
+		foreach ( $all_languages as $id => $language ) {
+			if ( $language['locale'] == $curent_locale ) {
+				$lang_prefix = $id;
+				break;
+			}
+
+		}
+		$post_link = site_url( sprintf( '%s/%s/%s', $lang_prefix, $post->post_type, $slug ) );
+	}
+
+	return $post_link;
+}
+
+// Convert post name to slug
+add_filter( 'fs_filter_meta_field', 'fs_filter_meta_field', 10, 3 );
+function fs_filter_meta_field( $meta_value, $field_name, $post_id ) {
+	if ( strpos( $field_name, 'fs_seo_slug' ) !== false && empty( $meta_value ) ) {
+		$post  = get_post( $post_id );
+		$title = $post->post_title;
+		$slug  = fs_convert_cyr_name( $title );
+		if ( defined( 'WPGLOBUS_VERSION' ) && ! empty( $_REQUEST['wpglobus_language'] ) ) {
+			$slug = fs_convert_cyr_name( \WPGlobus_Core::extract_text( $title, $_REQUEST['wpglobus_language'] ) );
+		}
+		global $wpdb;
+		$query                 = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s' AND post_id!=%d ", $field_name, $slug,$post_id );
+		$slug_duplicates_count = $wpdb->get_var( $query );
+		if ( $slug_duplicates_count > 0 ) {
+			$slug = $slug . '-' . $post_id;
+		}
+
+		$meta_value = $slug;
+	}
+
+	return $meta_value;
+}

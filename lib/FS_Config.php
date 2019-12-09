@@ -32,7 +32,7 @@ class FS_Config {
 		$this->texts = self::get_texts();
 
 		// Tabs displayed in the metabox in product editing
-		$this->tabs = FS_Post_Type::get_product_tabs();
+		$this->tabs = FS_Product::get_product_tabs();
 
 		// Array of site settings
 		$this->options = get_option( 'fs_option', array() );

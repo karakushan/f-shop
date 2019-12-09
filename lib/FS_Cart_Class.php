@@ -85,7 +85,7 @@ class FS_Cart_Class {
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
 		}
-		$product_class = new FS_Product_Class();
+		$product_class = new FS_Product();
 		$attr          = ! empty( $_POST['attr'] ) ? $_POST['attr'] : array();
 		$product_id    = intval( $_POST['post_id'] );
 		$variation     = ! empty( $_POST['variation'] ) ? intval( $_POST['variation'] ) : null;

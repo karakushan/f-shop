@@ -63,7 +63,7 @@ class FS_Action_Class {
 		/* рейтинг товара */
 		add_action( 'fs_product_rating', array( $fs_product, 'product_rating' ), 10, 2 );
 		/* Табы в товаре */
-		add_action( 'fs_product_tabs', array( 'FS\FS_Product_Class', 'product_tabs' ), 10, 2 );
+		add_action( 'fs_product_tabs', array( 'FS\FS_Product', 'product_tabs' ), 10, 2 );
 		/* Выводит список всех установленных атрибутов товара в виде списка ul. Данные выводятся в  в виде: группа : свойство (свойства) */
 		add_action( 'fs_the_atts_list', 'fs_the_atts_list', 10, 2 );
 		/* отображение фактической цены */
@@ -126,7 +126,7 @@ class FS_Action_Class {
 		/* удаляет все заказы */
 		add_action( 'fs_delete_orders', array( 'FS\FS_Orders_Class', 'delete_orders' ) );
 		/* удаляет все товары */
-		add_action( 'fs_delete_products', array( 'FS\FS_Product_Class', 'delete_products' ) );
+		add_action( 'fs_delete_products', array( 'FS\FS_Product', 'delete_products' ) );
 	}
 
 

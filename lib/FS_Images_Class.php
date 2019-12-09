@@ -117,7 +117,7 @@ class FS_Images_Class {
 
 
 		// Получаем изображения первой вариации товара
-		$product_variations = FS_Product_Class::get_product_variations( $product_id );
+		$product_variations = FS_Product::get_product_variations( $product_id );
 		if ( ! empty( $product_variations ) && is_array( $product_variations ) ) {
 			$product_variations_first = array_shift( $product_variations );
 

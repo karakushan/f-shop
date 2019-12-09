@@ -2,7 +2,7 @@
 <p><?php esc_html_e( 'This tab is relevant if you have several varieties of a single product.', 'f-shop' ) ?></p>
 <?php
 global $fs_config;
-$product  = new FS\FS_Product_Class();
+$product  = new FS\FS_Product();
 $variants = $product->get_product_variations( 0, false );
 ?>
 <button type="button" class="button" id="fs-add-variant"><?php esc_html_e( 'add variant', 'f-shop' ) ?>

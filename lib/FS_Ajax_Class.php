@@ -190,7 +190,7 @@ class FS_Ajax_Class
         $gallery = '';
         // Получаем галерею вариативного товара
         if ($product_id && $variation_id) {
-            $product_class = new FS_Product_Class();
+            $product_class = new FS_Product();
             $variations = $product_class->get_product_variations($product_id);
 
             if (!empty($variations[$variation_id]['gallery'])) {
@@ -301,7 +301,7 @@ class FS_Ajax_Class
      */
     function fs_get_variated_callback()
     {
-        $product = new FS_Product_Class();
+        $product = new FS_Product();
         $product_id = intval($_POST['product_id']);
         $current_attr = intval($_POST['current']);
         $atts = array_map('intval', $_POST['atts']);
@@ -422,7 +422,7 @@ class FS_Ajax_Class
         if (!FS_Config::verify_nonce()) {
             wp_send_json_error(array('msg' => __('Failed verification of nonce form', 'f-shop')));
         }
-        $product_class = new FS_Product_Class();
+        $product_class = new FS_Product();
         $fs_products = FS_Cart_Class::get_cart();
 
         $fs_custom_products = !empty($_POST['fs_custom_product']) ? serialize($_POST['fs_custom_product']) : '';

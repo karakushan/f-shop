@@ -16,7 +16,6 @@ class FS_Init {
 	public $fs_cart;
 	public $fs_filters;
 	public $fs_post_types;
-	public $fs_post_type;
 	public $fs_rating;
 	public $fs_shortcode;
 	public $fs_ajax;
@@ -43,7 +42,6 @@ class FS_Init {
 		$this->fs_ajax       = new FS_Ajax_Class;
 		$this->fs_shortcode  = new FS_Shortcode;
 		$this->fs_rating     = new FS_Rating_Class;
-		$this->fs_post_type  = new FS_Post_Type;
 		$this->fs_post_types = new FS_Post_Types;
 		$this->fs_filters    = new FS_Filters;
 		$this->fs_cart       = new FS_Cart_Class;
@@ -55,9 +53,10 @@ class FS_Init {
 		$this->fs_api        = new FS_Api_Class();
 		$this->fs_payment    = new FS_Payment_Class();
 		$this->fs_widget     = new FS_Widget_CLass();
-		$this->fs_product    = new FS_Product_Class();
+		$this->fs_product    = new FS_Product();
 		$this->fs_migrate    = new FS_Migrate_Class();
 		$this->fs_export     = new FS_Export_Class();
+
 		add_filter( "plugin_action_links_" . plugin_basename( FS_PLUGIN_FILE ), array(
 			$this,
 			'plugin_settings_link'

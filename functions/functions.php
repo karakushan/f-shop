@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use FS\FS_Cart_Class;
 use \FS\FS_Config;
-use \FS\FS_Product_Class;
+use \FS\FS_Product;
 
 /**
  * Recursively get taxonomy and its children
@@ -703,7 +703,7 @@ function fs_base_price( $product_id = 0, $wrap = '%s <span>%s</span>', $args = a
  * @return int|string|null
  */
 function fs_get_first_variation( $product_id, $return = 'all' ) {
-	$product_class   = new FS\FS_Product_Class();
+	$product_class   = new FS\FS_Product();
 	$variations      = $product_class->get_product_variations( $product_id );
 	$first_variation = null;
 	if ( count( $variations ) ) {
@@ -978,7 +978,7 @@ function fs_checkout_url( $echo = true ) {
 function fs_aviable_product( $product_id = 0 ) {
 	global $fs_config;
 	$product_id    = fs_get_product_id( $product_id );
-	$product_class = new FS\FS_Product_Class();
+	$product_class = new FS\FS_Product();
 	$variations    = $product_class->get_product_variations( $product_id );
 	$aviable       = false;
 
@@ -2131,7 +2131,7 @@ function fs_in_array_multi( $needles, $haystack ) {
  * @return int
  */
 function fs_is_variated( $product_id = 0 ) {
-	$product_class = new FS_Product_Class();
+	$product_class = new FS_Product();
 
 	return $product_class->is_variable_product( $product_id );
 }
@@ -2145,7 +2145,7 @@ function fs_is_variated( $product_id = 0 ) {
  * @return float
  */
 function fs_get_variated_price( $product_id = 0, $variation_id ) {
-	$product_class = new FS_Product_Class();
+	$product_class = new FS_Product();
 
 	return $product_class->get_variation_price( $product_id, $variation_id );
 }
@@ -2566,7 +2566,7 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 		'show_sku'   => false
 	) );
 	$product_id = fs_get_product_id( $product_id );
-	$product    = new FS\FS_Product_Class();
+	$product    = new FS\FS_Product();
 	$variations = $product->get_product_variations( $product_id );
 	if ( ! empty( $variations ) ) {
 		echo '<ul class="' . esc_attr( $args['class'] ) . '">';
@@ -2643,10 +2643,10 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
  *
  * @param int $item_id
  *
- * @return \FS\FS_Product_Class
+ * @return \FS\FS_Product
  */
 function fs_set_product( $product, $item_id = 0 ) {
-	$product_class = new FS\FS_Product_Class();
+	$product_class = new FS\FS_Product();
 	$product_class->set_product( $product, $item_id );
 
 	return $product_class;
@@ -2772,7 +2772,7 @@ function fs_delivery_cost( $format = '%s <span>%s</span>', $delivery_method = 0 
  * @param array $args
  */
 function fs_product_rating( $product_id = 0, $args = array() ) {
-	$product = new FS\FS_Product_Class();
+	$product = new FS\FS_Product();
 	$product->product_rating( $product_id, $args );
 }
 

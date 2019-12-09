@@ -1,6 +1,6 @@
 <?php
 
-use FS\FS_Product_Class;
+use FS\FS_Product;
 
 /**
  * Возвращает массив атрибутов конкретного товара
@@ -510,7 +510,7 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
  */
 function fs_dropdown_attr_group( $group_id = 0, $product_id = 0, $args = array() ) {
 	global $fs_config;
-	$product    = new FS\FS_Product_Class();
+	$product    = new FS\FS_Product();
 	$variations = $product->get_product_variations( $product_id );
 	$product_id = fs_get_product_id( $product_id );
 	if ( ! $group_id ) {
