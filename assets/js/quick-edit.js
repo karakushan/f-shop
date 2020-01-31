@@ -5,7 +5,7 @@
 
 jQuery(document).ready(function ($) {
 
-    //Prepopulating our quick-edit post info
+    /*//Prepopulating our quick-edit post info
     var $inline_editor = inlineEditPost.edit;
     inlineEditPost.edit = function (id) {
 
@@ -30,6 +30,6 @@ jQuery(document).ready(function ($) {
             $("#edit-" + post_id + " .fs_stock").val(in_stock);
         }
 
-    }
+    }*/
 
 });

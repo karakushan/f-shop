@@ -163,42 +163,7 @@ function fs_orders_posts_custom_column( $colname, $post_id ) {
 
 }
 
-// Выводим поле в быстром редактировании записи
-add_action( 'quick_edit_custom_box', 'shiba_add_quick_edit', 10, 2 );
-function shiba_add_quick_edit( $column_name, $post_type ) {
-	global $fs_config;
-	if ( $column_name == 'fs_price' && $post_type == 'product' ) {
-		?>
-        <fieldset class="inline-edit-col-left inline-edit-fast-shop">
-            <legend class="inline-edit-legend"><?php esc_html_e( 'Product Settings', 'f-shop' ) ?></legend>
-            <div class="inline-edit-col">
-                <label>
-                    <span class="title"><?php esc_html_e( 'Price', 'f-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
-                    <span class="input-text-wrap">
-                        <input type="text" name="<?php echo esc_attr( $fs_config->meta['price'] ) ?>" class="fs_price"
-                               value="" required>
-                    </span>
-                </label>
-                <label>
-                    <span class="title"><?php esc_html_e( 'Vendor code', 'f-shop' ) ?></span>
-                    <span class="input-text-wrap">
-                        <input type="text" name="<?php echo esc_attr( $fs_config->meta['sku'] ) ?>"
-                               class="fs_vendor_code"
-                               value="">
-                    </span>
-                </label>
-                <label>
-            <span class="title"><?php esc_html_e( 'Stock in stock', 'f-shop' ) ?> (<?php esc_html_e( 'units', 'f-shop' ) ?>
-                )</span>
-                    <span class="input-text-wrap">
-                        <input type="text" name="<?php echo esc_attr( $fs_config->meta['remaining_amount'] ) ?>"
-                               class="fs_stock" value=""></span>
-                </label>
-            </div>
-        </fieldset>
-		<?php
-	}
-}
+
 
 
 // добавляем возможность сортировать колонку

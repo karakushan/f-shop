@@ -757,41 +757,15 @@ class FS_Product {
 
 
 		foreach ( $save_meta_keys as $key => $field_name ) {
-
-			if ( ! is_array( $_POST[ $field_name ] ) && ! isset( $_POST[ $field_name ] ) || ( (string) $_POST[ $field_name ] == '' && strpos( $field_name, 'fs_seo_slug' ) === false ) ) {
-				delete_post_meta( $post_id, $field_name );
+			// Skip fields that do not exist in the global variable $_POST
+			if ( ! isset( $_POST[ $field_name ] ) ) {
 				continue;
 			}
 
-			if ( is_array( $_POST[ $field_name ] ) && empty( $_POST[ $field_name ] ) ) {
-				delete_post_meta( $post_id, $field_name );
-				continue;
-			}
-
+			// Modify the saved field through the filter'fs_filter_meta_field'
 			$_POST[ $field_name ] = apply_filters( 'fs_filter_meta_field', $_POST[ $field_name ], $field_name, $post_id );
 
-			switch ( $field_name ) {
-				case 'fs_price':
-					$price = (float) str_replace( array( ',' ), array( '.' ), sanitize_text_field( $_POST[ $field_name ] ) );
-					update_post_meta( $post_id, $field_name, $price );
-					break;
-				case 'fs_related_products':
-					if ( empty( $field_value ) ) {
-						delete_post_meta( $post_id, $field_name );
-					} else {
-						update_post_meta( $post_id, $field_name, sanitize_text_field( $_POST[ $field_name ] ) );
-					}
-					break;
-				default:
-					if ( is_array( $_POST[ $field_name ] ) ) {
-						update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
-					} else {
-						update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
-					}
-					break;
-			}
-
-
+			update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
 		}
 
 		do_action( 'fs_after_save_meta_fields', $post_id );
@@ -875,18 +849,22 @@ class FS_Product {
 	public static function get_product_tabs() {
 		$tabs = array(
 			'prices'     => array(
-				'title'       => __( 'Prices', 'f-shop' ),
+				'title'       => __( 'Basic', 'f-shop' ),
 				'on'          => true,
 				'description' => __( 'In this tab you can adjust the prices of goods.', 'f-shop' ),
 				'fields'      => array(
 					FS_Config::get_meta( 'price' )        => array(
-						'label' => __( 'Base price', 'f-shop' ),
-						'type'  => 'text',
-						'help'  => __( 'This is the main price on the site. Required field!', 'f-shop' )
+						'label'      => __( 'Base price', 'f-shop' ),
+						'type'       => 'number',
+						'attributes' => [
+							'min'  => 0,
+							'step' => 0.01
+						],
+						'help'       => __( 'This is the main price on the site. Required field!', 'f-shop' )
 					),
 					FS_Config::get_meta( 'action_price' ) => array(
 						'label' => __( 'Promotional price', 'f-shop' ),
-						'type'  => 'text',
+						'type'       => 'number',
 						'help'  => __( 'If this field is filled, the base price loses its relevance. But you can display it on the site.', 'f-shop' )
 					),
 					FS_Config::get_meta( 'currency' )     => array(

@@ -24,6 +24,74 @@ class FS_Filters {
 		add_action( 'template_redirect', array( $this, 'redirect_per_page' ) );
 		// редиректы для админки
 		add_action( 'admin_init', array( $this, 'redirects_admin_pages' ) );
+
+		// Display the product edit fields in the quick editing mode
+		add_action( 'quick_edit_custom_box', array( $this, 'product_quick_edit_fields' ), 10, 2 );
+
+		// Modify the saved product field
+		add_filter( 'fs_filter_meta_field', array( $this, 'fs_filter_meta_field' ), 10, 3 );
+
+	}
+
+	/**
+	 * Modify the saved product field
+	 *
+	 * @param $value
+	 * @param $field_name
+	 * @param $post_id
+	 *
+	 * @return float
+	 */
+	function fs_filter_meta_field( $value, $field_name, $post_id ) {
+		if ( $field_name == FS_Config::get_meta( 'price' ) ) {
+			$value = floatval( str_replace( array( ',' ), array( '.' ), sanitize_text_field( $value ) ) );
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Display the product edit fields in the quick editing mode
+	 *
+	 * @param $column_name
+	 * @param $post_type
+	 */
+	function product_quick_edit_fields( $column_name, $post_type ) {
+
+		if ( $column_name == 'fs_price' && $post_type == 'product' ) {
+			?>
+            <fieldset class="inline-edit-col-left inline-edit-fast-shop">
+                <legend class="inline-edit-legend"><?php esc_html_e( 'Product Settings', 'f-shop' ) ?> </legend>
+                <div class="inline-edit-col">
+                    <label>
+                        <span class="title"><?php esc_html_e( 'Price', 'f-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
+                        <span class="input-text-wrap">
+                        <input type="number" name="<?php echo esc_attr( FS_Config::get_meta( 'price' ) ) ?>"
+                               class="fs_price"
+                               value="<?php echo esc_attr( get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 ) ) ?>"
+                               required step="0.01" min="0">
+                    </span>
+                    </label>
+                    <label>
+                        <span class="title"><?php esc_html_e( 'Vendor code', 'f-shop' ) ?></span>
+                        <span class="input-text-wrap">
+                        <input type="text" name="<?php echo esc_attr( FS_Config::get_meta( 'sku' ) ) ?>"
+                               class="fs_vendor_code"
+                               value="<?php echo esc_attr( get_post_meta( get_the_ID(), FS_Config::get_meta( 'sku' ), 1 ) ) ?>">
+                    </span>
+                    </label>
+                    <label>
+            <span class="title"><?php esc_html_e( 'Stock in stock', 'f-shop' ) ?> (<?php esc_html_e( 'units', 'f-shop' ) ?>
+                )</span>
+                        <span class="input-text-wrap">
+                        <input type="number" name="<?php echo esc_attr( FS_Config::get_meta( 'remaining_amount' ) ) ?>"
+                               class="fs_stock" min="0" step="1"
+                               value="<?php echo esc_attr( get_post_meta( get_the_ID(), FS_Config::get_meta( 'remaining_amount' ), 1 ) ) ?>"></span>
+                    </label>
+                </div>
+            </fieldset>
+			<?php
+		}
 	}
 
 	// редиректы для админки
@@ -114,7 +182,7 @@ class FS_Filters {
 	 */
 	public function filter_curr_product( $query ) {
 //		fs_debug_data($query,'$query','print_r');
-		
+
 
 		global $fs_config, $wpdb;
 
@@ -122,8 +190,6 @@ class FS_Filters {
 		if ( $query->is_admin || ! $query->is_main_query() ) {
 			return;
 		}
-
-
 
 
 		// If we are on the search page
@@ -138,7 +204,7 @@ class FS_Filters {
 			}
 
 			$query->set( 'post_type', 'product' );
-		} elseif ( $query->is_tax(FS_Config::get_data( 'product_taxonomy' )) || $query->is_post_type_archive(FS_Config::get_data( 'post_type' )) ) {
+		} elseif ( $query->is_tax( FS_Config::get_data( 'product_taxonomy' ) ) || $query->is_post_type_archive( FS_Config::get_data( 'post_type' ) ) ) {
 
 			// отфильтровываем выключенные для показа товары в админке
 			$meta_query [] = array(

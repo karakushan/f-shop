@@ -1528,8 +1528,7 @@ function fs_product_code( $product_id = 0, $wrap = '%s' ) {
 function fs_remaining_amount( $product_id = 0 ) {
 	global $post;
 	$product_id = ! empty( $product_id ) ? $product_id : $post->ID;
-	$config     = new FS\FS_Config();
-	$meta_field = $config->meta['remaining_amount'];
+	$meta_field = FS_Config::get_meta('remaining_amount');
 	$amount     = get_post_meta( $product_id, $meta_field, true );
 	$amount     = ( $amount === '' ) ? '' : (int) $amount;
 
