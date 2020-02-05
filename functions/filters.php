@@ -164,8 +164,6 @@ function fs_orders_posts_custom_column( $colname, $post_id ) {
 }
 
 
-
-
 // добавляем возможность сортировать колонку
 add_filter( 'manage_edit-product_sortable_columns', 'add_views_sortable_column' );
 function add_views_sortable_column( $sortable_columns ) {
@@ -321,7 +319,7 @@ add_filter( 'fs_price_discount_filter', 'fs_price_discount_filter', 10, 2 );
  * @return mixed
  */
 function fs_price_discount_filter( $product_id, $price ) {
-	$dicount_terms_conf = array(
+	$discount_terms_conf = array(
 		'taxonomy'   => FS_Config::get_data( 'discount_taxonomy' ),
 		'hide_empty' => false,
 		'meta_query' => array(
@@ -332,8 +330,8 @@ function fs_price_discount_filter( $product_id, $price ) {
 			)
 		)
 	);
-	$dicount_terms      = get_terms( $dicount_terms_conf );
-	$product_terms      = wp_get_object_terms( $product_id,
+	$discount_terms      = get_terms( $discount_terms_conf );
+	$product_terms       = wp_get_object_terms( $product_id,
 		[
 			FS_Config::get_data( 'product_taxonomy' ),
 			FS_Config::get_data( 'brand_taxonomy' ),
@@ -342,38 +340,46 @@ function fs_price_discount_filter( $product_id, $price ) {
 
 
 	// Если товар не привязан ни к одному термину или нет скидок возвращаем исходную цену
-	if ( ! $dicount_terms || ! $product_terms ) {
+	if ( ! $discount_terms || ! $product_terms ) {
 		return $price;
 	}
 
 
 	$discounts = [];
 
+
 	// Проходимся по всем скидкам, которые предназначены для товара (есть еще другие скидки, не путать)
-	foreach ( $dicount_terms as $dicount_term ) {
-		if ( ! is_object( $dicount_term || ! isset( $dicount_term->term_id ) ) ) {
+	foreach ( $discount_terms as $discount_term ) {
+
+		if ( ! is_object( $discount_term ) ) {
 			continue;
 		}
+
+		if ( ! isset( $discount_term->term_id ) ) {
+			continue;
+		}
+
 		// Получаем скидку по категориям
-		$product_discount_categories = get_term_meta( $dicount_term->term_id, 'discount_categories', 0 );
+		$product_discount_categories = get_term_meta( $discount_term->term_id, 'discount_categories', 0 );
 		$product_discount_categories = ! empty( $product_discount_categories ) && is_array( $product_discount_categories )
 			? array_shift( $product_discount_categories ) : [];
 
 		// Получаем скидку по производителям
-		$product_discount_brands = get_term_meta( $dicount_term->term_id, 'discount_brands', 0 );
+		$product_discount_brands = get_term_meta( $discount_term->term_id, 'discount_brands', 0 );
 		$product_discount_brands = ! empty( $product_discount_brands ) && is_array( $product_discount_brands )
 			? array_shift( $product_discount_brands ) : [];
 
 		// Получаем скидку по характеристикам
-		$product_discount_features = get_term_meta( $dicount_term->term_id, 'discount_features', 0 );
+		$product_discount_features = get_term_meta( $discount_term->term_id, 'discount_features', 0 );
 		$product_discount_features = ! empty( $product_discount_features ) && is_array( $product_discount_features )
 			? array_shift( $product_discount_features ) : [];
 
 		$product_in_categories = is_object_in_term( $product_id, FS_Config::get_data( 'product_taxonomy' ), $product_discount_categories );
-		$product_in_brands     = is_object_in_term( $product_id, FS_Config::get_data( 'brand_taxonomy' ), $product_discount_brands );
-		$product_in_features   = is_object_in_term( $product_id, FS_Config::get_data( 'features_taxonomy' ), $product_discount_features );
 
-		$discount = get_term_meta( $dicount_term->term_id, 'discount_amount', 1 );
+		$product_in_brands   = is_object_in_term( $product_id, FS_Config::get_data( 'brand_taxonomy' ), $product_discount_brands );
+		$product_in_features = is_object_in_term( $product_id, FS_Config::get_data( 'features_taxonomy' ), $product_discount_features );
+
+		$discount = get_term_meta( $discount_term->term_id, 'discount_amount', 1 );
 
 
 		// Ищем знак процента в строке
@@ -386,6 +392,7 @@ function fs_price_discount_filter( $product_id, $price ) {
 		if ( empty( $discount ) ) {
 			continue;
 		}
+
 
 		// Проверям привязан ли товар к указанным выше категориям
 		if ( ! empty( $product_discount_categories ) && $product_in_categories ) {
@@ -412,11 +419,8 @@ function fs_price_discount_filter( $product_id, $price ) {
 		$price          = $price - $total_discount;
 	}
 
-
 	return floatval( $price );
 }
-
-add_filter( 'generate_rewrite_rules', 'generate_taxonomy_rewrite_rules' );
 
 // Remove taxonomy slug from links
 add_filter( 'term_link', 'fs_replace_taxonomy_slug_filter', 10, 3 );
@@ -473,12 +477,20 @@ function fs_generate_taxonomy_rewrite_rules( $wp_rewrite ) {
 add_filter( 'generate_rewrite_rules', 'fs_generate_taxonomy_rewrite_rules' );
 
 // We redirect to a localized url
+// TODO проверить хук ниже, есть баги
 add_action( 'template_redirect', function () {
+	// Выходим если запрос пришел не из категории товара
 	if ( ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
 		return;
 	}
 
+	// Выходим если в админке отключена локализации слага
+	if ( fs_option( 'fs_localize_slug' ) !== '1' ) {
+		return;
+	}
+
 	$current_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
 
 	$term_id   = get_queried_object_id();
 	$term_link = get_term_link( $term_id );
@@ -562,7 +574,7 @@ function fs_filter_meta_field( $meta_value, $field_name, $post_id ) {
 			$slug = fs_convert_cyr_name( \WPGlobus_Core::extract_text( $title, $_REQUEST['wpglobus_language'] ) );
 		}
 		global $wpdb;
-		$query                 = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s' AND post_id!=%d ", $field_name, $slug,$post_id );
+		$query                 = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s' AND post_id!=%d ", $field_name, $slug, $post_id );
 		$slug_duplicates_count = $wpdb->get_var( $query );
 		if ( $slug_duplicates_count > 0 ) {
 			$slug = $slug . '-' . $post_id;

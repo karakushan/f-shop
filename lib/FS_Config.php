@@ -582,22 +582,86 @@ class FS_Config {
 	}
 
 	/**
+	 * Returns extended meta field data
+	 *
+	 * @param string $key
+	 *
+	 * @return array|mixed|void
+	 */
+	public static function get_product_field( $key = '' ) {
+		$fields = array(
+			'price'             => [ 'key' => 'fs_price' ],
+			'action_price'      => [ 'key' => 'fs_action_price' ],
+			'real_price'        => [ 'key' => '_fs_real_price' ],
+			'currency'          => [ 'key' => 'fs_currency' ],
+			'sku'               => [
+				'key'   => 'fs_articul',
+				'label' => __( 'SKU', 'f-shop' )
+			],
+			'quantity'          => [
+				'key'   => 'fs_remaining_amount',
+				'type'  => 'number',
+				'label' => __( 'Stock in stock', 'f-shop' ),
+				'help'  => __( 'Enter "0" if stock is exhausted. An empty field means inventory control for the item. disabled, and the goods are always in the presence!', 'f-shop' )
+			],
+			'gallery'           => [ 'key' => 'fs_galery' ],
+			'related_products'  => [ 'key' => 'fs_related_products' ],
+			'vendor'            => [ 'key' => 'fs_vendor' ],
+			'variants'          => [ 'key' => 'fs_variant' ],
+			'variants_price'    => [ 'key' => 'fs_variant_price' ],
+			'variant_count'     => [ 'key' => 'fs_variant_count' ],
+			'variant_count_max' => [ 'key' => 'fs_variant_count_max' ],
+			'variated_on'       => [ 'key' => 'fs_variated_on' ],
+			'exclude_archive'   => [
+				'key'   => 'fs_exclude_archive',
+				'type'  => 'checkbox',
+				'label' => __( 'Exclude from the archive of goods', 'f-shop' )
+			],
+			'label_bestseller'  => [
+				'key'   => 'fs_on_bestseller',
+				'type'  => 'checkbox',
+				'label' => __( 'Include the tag "Hit sales"', 'f-shop' )
+			],
+			'label_promotion'   => [
+				'key'   => 'fs_on_promotion',
+				'type'  => 'checkbox',
+				'label' => __( 'Include tag "Promotion"', 'f-shop' )
+			],
+			'label_novelty'     => [
+				'key'   => 'fs_on_novelty',
+				'type'  => 'checkbox',
+				'label' => __('Include tag "New"', 'f-shop')
+			],
+			'up_sell'           => [ 'key' => 'fs_up_sell' ],
+			'cross_sell'        => [ 'key' => 'fs_cross_sell' ]
+		);
+
+		$fields = apply_filters( 'fs_product_field', $fields );
+		if ( empty( $key ) ) {
+			return $fields;
+		} else {
+			return $fields[ $key ];
+		}
+	}
+
+	/**
 	 * Начальный список языков для мультиязычности полей
 	 *
 	 * @return mixed|void
 	 */
-	public static function get_languages() {
+	public
+	static function get_languages() {
 		$languages = array(
 			'en' => array(
-				'name'   => __( 'English', 'f-shop' ),
+				'name'   => __( 'English', 'f - shop' ),
 				'locale' => 'en_US'
 			),
 			'ru' => array(
-				'name'   => __( 'Russian', 'f-shop' ),
+				'name'   => __( 'Russian', 'f - shop' ),
 				'locale' => 'ru_RU'
 			),
 			'ua' => array(
-				'name'   => __( 'Ukrainian', 'f-shop' ),
+				'name'   => __( 'Ukrainian', 'f - shop' ),
 				'locale' => 'uk'
 			)
 		);
@@ -611,7 +675,8 @@ class FS_Config {
 	 *
 	 * @return mixed|void
 	 */
-	public static function default_language() {
+	public
+	static function default_language() {
 		return apply_filters( 'fs_default_language', 'ru_RU' );
 	}
 
@@ -625,7 +690,8 @@ class FS_Config {
 	 *
 	 * TODO: В будущем перенести все типы настроек в эту. Создать подмасив 'taxonomies' и поместить все таксономии, 'meta' с метаполями и т.д.
 	 */
-	public static function get_data( $key = '' ) {
+	public
+	static function get_data( $key = '') {
 		$data = array(
 			'plugin_path'            => FS_PLUGIN_PATH,
 			'plugin_url'             => FS_PLUGIN_URL,

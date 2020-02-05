@@ -847,8 +847,9 @@ class FS_Product {
 	 * @return array
 	 */
 	public static function get_product_tabs() {
-		$tabs = array(
-			'prices'     => array(
+		$product_fields = FS_Config::get_product_field();
+		$tabs           = array(
+			'basic'      => array(
 				'title'       => __( 'Basic', 'f-shop' ),
 				'on'          => true,
 				'description' => __( 'In this tab you can adjust the prices of goods.', 'f-shop' ),
@@ -864,16 +865,19 @@ class FS_Product {
 					),
 					FS_Config::get_meta( 'action_price' ) => array(
 						'label' => __( 'Promotional price', 'f-shop' ),
-						'type'       => 'number',
+						'type'  => 'number',
 						'help'  => __( 'If this field is filled, the base price loses its relevance. But you can display it on the site.', 'f-shop' )
 					),
-					FS_Config::get_meta( 'currency' )     => array(
+
+					$product_fields['sku']['key']      => $product_fields['sku'],
+					$product_fields['quantity']['key'] => $product_fields['quantity'],
+					FS_Config::get_meta( 'currency' )  => array(
 						'label'    => __( 'Item Currency', 'f-shop' ),
 						'on'       => fs_option( 'multi_currency_on' ) ? true : false,
 						'type'     => 'dropdown_categories',
 						'help'     => __( 'The field is active if you have enabled multicurrency in settings.', 'f-shop' ),
 						'taxonomy' => FS_Config::get_data( 'currencies_taxonomy' )
-					)
+					),
 				)
 			),
 			'gallery'    => array(
@@ -887,12 +891,6 @@ class FS_Product {
 				'on'       => false,
 				'body'     => '',
 				'template' => 'attributes'
-			),
-			'other'      => array(
-				'title'    => __( 'Other', 'f-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'other',
 			),
 			'related'    => array(
 				'title'    => __( 'Associated', 'f-shop' ),
@@ -942,6 +940,18 @@ class FS_Product {
 						'multilang' => true,
 						'help'      => __( 'Allows you to set multilingual url', 'f-shop' )
 					),
+
+				)
+			),
+            'additionally'        => array(
+				'title'  => __( 'Additionally', 'f-shop' ),
+				'on'     => true,
+				'body'   => '',
+				'fields' => array(
+					$product_fields['exclude_archive']['key']      => $product_fields['exclude_archive'],
+					$product_fields['label_bestseller']['key']      => $product_fields['label_bestseller'],
+					$product_fields['label_promotion']['key']      => $product_fields['label_promotion'],
+					$product_fields['label_novelty']['key']      => $product_fields['label_novelty'],
 
 				)
 			),
