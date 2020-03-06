@@ -49,7 +49,9 @@ class FS_Action_Class {
 	function register_plugin_action() {
 		global $fs_product;
 
-        //===== GENERAL =====
+		//===== GENERAL =====
+		/* Сохранение настроек плагина */
+		add_action( 'fs_save_options', array( $this, 'action_save_options' ), 10 );
 
 		//===== SINGLE PRODUCT =====
 		/* Hooks in this section only work on the product page. */
@@ -170,6 +172,10 @@ class FS_Action_Class {
 			return true;
 		}
 
+	}
+
+	function action_save_options( $data ) {
+		flush_rewrite_rules();
 	}
 
 

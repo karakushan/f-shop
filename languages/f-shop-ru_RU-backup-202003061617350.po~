@@ -928,11 +928,11 @@ msgstr "Детали доставки и оплаты"
 
 #: lib/FS_Product.php:933
 msgid "SEO"
-msgstr "СЕО"
+msgstr ""
 
 #: lib/FS_Product.php:938 lib/FS_Taxonomies_Class.php:50
 msgid "SEO slug"
-msgstr "СЕО слаг"
+msgstr ""
 
 #: lib/FS_Product.php:941
 msgid "Allows you to set multilingual url"

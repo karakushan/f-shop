@@ -113,8 +113,8 @@ class FS_Taxonomies_Class {
 					),
 					'_fs_delivery_cost'    => array(
 						'name' => __( 'Shipping Cost in Base Currency', 'f-shop' ),
-						'type' => 'text',
-						'args' => array( 'style' => 'width:72px;' )
+						'type' => 'number',
+						'args' => array( 'style' => 'width:72px;', 'step' => 0.01 )
 					),
 					'_fs_delivery_address' => array(
 						'name' => __( 'Include address fields when choosing this method', 'f-shop' ),
@@ -555,7 +555,7 @@ class FS_Taxonomies_Class {
 
 		$multi_lang = false;
 		$screen     = get_current_screen();
-		$lang       = $_POST['wpglobus_language'] ?? $_COOKIE['wpglobus_language'];
+		$lang       = $_POST['wpglobus_language'] ? $_POST['wpglobus_language'] : $_COOKIE['wpglobus_language'];
 
 		if ( fs_option( 'fs_multi_language_support' )
 		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )

@@ -75,7 +75,7 @@ class FS_Settings_Class {
 	 * Updating API settings
 	 */
 	public static function save_settings() {
-
+		do_action( 'fs_save_options', $_POST );
 		if ( ! empty( $_POST['fs_api'] ) ) {
 			update_option( 'fs_api_data', $_POST['fs_api'] );
 
