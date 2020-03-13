@@ -206,8 +206,13 @@
 .fs-metabox .fs-tabs > .fs-tab label .tooltip {
   font-size: 20px;
   position: relative;
-  top: -5px;
+  top: -12px;
   left: -5px;
+  margin: 0;
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
 }
 .fs-metabox .fs-tabs > .fs-tab button.button-sm {
   padding: 5px 10px;

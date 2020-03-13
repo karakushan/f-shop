@@ -201,8 +201,13 @@
         .tooltip {
           font-size: 20px;
           position: relative;
-          top: -5px;
+          top: -12px;
           left: -5px;
+          margin: 0;
+          width: auto;
+          height: auto;
+          background: none;
+          box-shadow: none;
         }
       }
 
