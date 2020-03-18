@@ -1528,7 +1528,7 @@ function fs_product_code( $product_id = 0, $wrap = '%s' ) {
 function fs_remaining_amount( $product_id = 0 ) {
 	global $post;
 	$product_id = ! empty( $product_id ) ? $product_id : $post->ID;
-	$meta_field = FS_Config::get_meta('remaining_amount');
+	$meta_field = FS_Config::get_meta( 'remaining_amount' );
 	$amount     = get_post_meta( $product_id, $meta_field, true );
 	$amount     = ( $amount === '' ) ? '' : (int) $amount;
 
@@ -1690,21 +1690,26 @@ function fs_discount_percent( $product_id = 0, $format = '-%s%s', $args = array(
  *
  * @param array $attr атрибуты которые доступны для изменения динамически
  * @param array $default атрибуты функции по умолчанию
+ * @param array $exclude атрибуты которые не нужно выводить в html теге
  *
  * @return string $att          строка атрибутов
  */
-function fs_parse_attr( $attr = array(), $default = array() ) {
-	$attr      = wp_parse_args( $attr, $default );
-	$atributes = array();
-	foreach ( $attr as $key => $att ) {
-		$atributes[] = esc_attr( $key ) . '="' . esc_attr( $att ) . '"';
+function fs_parse_attr( $attr = array(), $default = array(), $exclude = [] ) {
+	$attr       = wp_parse_args( $attr, $default );
+	$attributes = array();
+	foreach ( $attr as $key => $attribute ) {
+		if ( in_array( $key, $exclude ) ) {
+			continue;
+		}
+
+		$attributes[] = esc_attr( $key ) . '="' . esc_attr( $attribute ) . '"';
 	}
 
-	if ( count( $atributes ) ) {
-		$att = implode( ' ', $atributes );
+	if ( count( $attributes ) ) {
+		return implode( ' ', $attributes );
 	}
 
-	return $att;
+	return null;
 }
 
 
@@ -1785,7 +1790,7 @@ function fs_wishlist_widget( $html_attr = array() ) {
 function fs_get_order( $order_id = 0 ) {
 	$order = false;
 	if ( $order_id ) {
-		$orders = new \FS\FS_Orders_Class();
+		$orders = new \FS\FS_Orders();
 		$order  = $orders->get_order( $order_id );
 	}
 
@@ -2525,7 +2530,7 @@ function fs_taxes_list( $args = [], $total = 0.0 ) {
  * @param mixed $data передаваемые данные
  * @param string $before
  * @param string $debug_type какую функцию для отладки использовать,
- * @param  boolean $exit прекратить выполнение кода далее
+ * @param boolean $exit прекратить выполнение кода далее
  * по умолчанию var_dump
  */
 function fs_debug_data( $data, $before = '', $debug_type = 'var_dump', $exit = false ) {

@@ -34,7 +34,7 @@
     </tr>
     <tr>
         <th><?php esc_html_e('Delivery address', 'f-shop') ?></th>
-        <td><?php echo esc_html($delivery['adress']) ?></td>
+        <td><?php echo esc_html($delivery['address']) ?></td>
     </tr>
     <tr>
         <th><?php esc_html_e('Payment method', 'f-shop') ?></th>

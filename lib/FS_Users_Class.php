@@ -109,30 +109,40 @@ class FS_Users_Class {
 
 		$fields = array(
 			'fs_email'             => array(
+				'name'        => __( 'E-mail', 'f-shop' ),
 				'type'        => 'email',
 				'label'       => '',
 				'value'       => ! empty( $user->user_email ) ? $user->user_email : '',
 				'placeholder' => __( 'Your email', 'f-shop' ),
 				'title'       => __( 'Keep the correct email', 'f-shop' ),
-				'required'    => true
+				'required'    => true,
+				'checkout'    => true,
+
 			),
 			'fs_first_name'        => array(
+				'name'        => __( 'Firts name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'value'       => ! empty( $user->first_name ) ? $user->first_name : '',
 				'placeholder' => __( 'Firts name', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true
+				'required'    => true,
+				'checkout'    => true,
+
+
 			),
 			'fs_last_name'         => array(
+				'name'        => __( 'Last name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'value'       => ! empty( $user->last_name ) ? $user->last_name : '',
 				'placeholder' => __( 'Last name', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true
+				'required'    => true,
+				'checkout'    => true,
 			),
 			'fs_gender'            => array(
+				'name'        => __( 'Gender', 'f-shop' ),
 				'type'        => 'select',
 				'label'       => '',
 				'values'      => array(
@@ -144,6 +154,7 @@ class FS_Users_Class {
 				'required'    => false
 			),
 			'fs_user_avatar'       => array(
+				'name'        => __( 'Avatar', 'f-shop' ),
 				'type'        => 'file',
 				'label'       => '',
 				'placeholder' => __( 'Gender', 'f-shop' ),
@@ -151,69 +162,97 @@ class FS_Users_Class {
 				'required'    => false
 			),
 			'fs_phone'             => array(
+				'name'        => __( 'Phone number', 'f-shop' ),
 				'type'        => 'tel',
 				'label'       => '',
 				'placeholder' => __( 'Phone number', 'f-shop' ),
 				'title'       => __( 'Keep the correct phone number', 'f-shop' ),
-				'required'    => true
+				'required'    => true,
+				'checkout'    => true,
+
 			),
 			'fs_city'              => array(
+				'name'        => __( 'City', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'City', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true
+				'required'    => true,
+				'checkout'    => true,
+
 			),
 			'fs_country'           => array(
+				'name'        => __( 'Country', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Country', 'f-shop' ),
 				'title'       => '',
-				'required'    => false
+				'required'    => false,
+				'checkout'    => true,
+
 			),
 			'fs_zip_code'          => array(
+				'name'        => __( 'Zip Code', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Zip Code', 'f-shop' ),
-				'required'    => false
+				'required'    => false,
+				'checkout'    => true,
+
 			),
 			'fs_region'            => array(
+				'name'        => __( 'State / province', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'placeholder' => __( 'State / province', 'f-shop' ),
-				'required'    => true
+				'required'    => true,
+				'checkout'    => true,
+
 			),
-			'fs_adress'            => array(
+			'fs_address'            => array(
+				'name'        => __( 'Address', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Address', 'f-shop' ),
-				'required'    => false
+				'required'    => false,
+				'checkout'    => true,
+
 			),
 			'fs_home_num'          => array(
+				'name'        => __( 'House number', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'House number', 'f-shop' ),
-				'required'    => false
+				'required'    => false,
+				'checkout'    => true,
+
 			),
 			'fs_apartment_num'     => array(
+				'name'        => __( 'Apartment number', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Apartment number', 'f-shop' ),
-				'required'    => false
+				'required'    => false,
+				'checkout'    => true,
+
 			),
 			'fs_delivery_number'   => array(
+				'name'        => __( 'Branch number', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Branch number', 'f-shop' ),
-				'required'    => false
+				'required'    => false,
+				'checkout'    => true,
+
 			),
 			'fs_delivery_methods'  => array(
+				'name'         => __( 'Delivery methods', 'f-shop' ),
 				'type'         => 'dropdown_categories',
 				'first_option' => __( "Choose delivery method", 'f-shop' ),
 				'taxonomy'     => FS_Config::get_data( 'product_del_taxonomy' ),
 				'icon'         => true,
-				'title'       => __( 'Choose shipping method', 'f-shop' ),
+				'title'        => __( 'Choose shipping method', 'f-shop' ),
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -224,11 +263,12 @@ class FS_Users_Class {
 
 			),
 			'fs_payment_methods'   => array(
+				'name'         => __( 'Payment methods', 'f-shop' ),
 				'type'         => 'dropdown_categories',
 				'first_option' => __( "Choose a payment method", 'f-shop' ),
 				'taxonomy'     => FS_Config::get_data( 'product_pay_taxonomy' ),
 				'icon'         => true,
-				'title'       => __( 'Select a Payment Method', 'f-shop' ),
+				'title'        => __( 'Select a Payment Method', 'f-shop' ),
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -239,37 +279,51 @@ class FS_Users_Class {
 
 			),
 			'fs_comment'           => array(
+				'name'        => __( 'Comment on the order', 'f-shop' ),
 				'type'        => 'textarea',
 				'label'       => '',
-				'placeholder' => __( 'Comment', 'f-shop' ),
-				'required'    => false
+				'placeholder' => __( 'Comment on the order', 'f-shop' ),
+				'required'    => false,
+				'checkout'    => true,
+
 			),
 			'fs_customer_register' => array(
+				'name'           => __( 'Register on the site', 'f-shop' ),
 				'type'           => 'checkbox',
 				'label'          => __( 'Register on the site', 'f-shop' ),
 				'label_position' => 'after',
 				'value'          => 1,
-				'required'       => false
+				'required'       => false,
+				'checkout'    => true,
+
 			),
 			'fs_subscribe_news'    => array(
+				'name'           => __( 'Subscribe', 'f-shop' ),
 				'type'           => 'checkbox',
 				'label'          => __( 'Receive site news', 'f-shop' ),
 				'label_position' => 'after',
-				'required'       => false
+				'required'       => false,
+				'checkout'    => true,
+
 			),
 			'fs_subscribe_cart'    => array(
+				'name'           => __( 'Receive a message about goods left in the basket', 'f-shop' ),
 				'type'           => 'checkbox',
 				'label'          => __( 'Receive a message about goods left in the basket', 'f-shop' ),
 				'label_position' => 'after',
-				'required'       => false
+				'required'       => false,
+				'checkout'    => true,
+
 			),
 			'fs_login'             => array(
+				'name'     => __( 'Login', 'f-shop' ),
 				'type'     => 'text',
 				'label'    => '',
 				'value'    => $user->user_login,
 				'required' => true
 			),
 			'fs_password'          => array(
+				'name'     => __( 'Password', 'f-shop' ),
 				'type'     => 'password',
 				'label'    => '',
 				'value'    => '',
@@ -510,7 +564,7 @@ class FS_Users_Class {
 
 		// Отправляем сообщение успешной регистрации на экран
 		wp_send_json_success( array(
-			'msg' => sprintf( __( 'Congratulations! You have successfully registered! <a href="%s">Log in</a>', 'f-shop' ),esc_url( get_permalink( fs_option( 'page_auth' ) ) ) )
+			'msg' => sprintf( __( 'Congratulations! You have successfully registered! <a href="%s">Log in</a>', 'f-shop' ), esc_url( get_permalink( fs_option( 'page_auth' ) ) ) )
 		) );
 
 
@@ -522,7 +576,7 @@ class FS_Users_Class {
 		) {
 			echo json_encode( array(
 				'status'  => 0,
-				'message' => __('The form did not pass the security check!','f-shop')
+				'message' => __( 'The form did not pass the security check!', 'f-shop' )
 			) );
 			exit;
 		}
@@ -591,7 +645,7 @@ class FS_Users_Class {
 
 		echo json_encode( array(
 			'status'  => 1,
-			'message' => __('Your data has been updated successfully!','f-shop')
+			'message' => __( 'Your data has been updated successfully!', 'f-shop' )
 		) );
 		exit;
 	}
@@ -645,7 +699,7 @@ class FS_Users_Class {
 		$template = '';
 		if ( is_user_logged_in() ) {
 			$template .= '<p class="text-center">' . $args['logged_in_text'] . '</p>';
-			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">'.__('To personal account','f-shop').'</a></p>';
+			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
 		} else {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_profile_create' );
 			$template .= fs_frontend_template( 'auth/register', array( 'field' => array() ) );
@@ -675,7 +729,7 @@ class FS_Users_Class {
 		$template = '';
 		if ( is_user_logged_in() ) {
 			$template .= '<p class="text-center">' . $args['logged_in_text'] . '</p>';
-			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">'.__('To personal account','f-shop').'</a></p>';
+			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
 		} else {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_lostpassword' );
 			$template .= fs_frontend_template( 'auth/lostpassword', array( 'field' => array() ) );
@@ -777,7 +831,7 @@ class FS_Users_Class {
 				'title'     => __( 'Current orders', 'f-shop' ),
 				'content'   => fs_frontend_template( 'dashboard/orders', [
 					'vars' => array(
-						'orders' => FS_Orders_Class::get_user_orders()
+						'orders' => FS_Orders::get_user_orders()
 					)
 				] ),
 				'link'      => false,
@@ -788,7 +842,7 @@ class FS_Users_Class {
 				'title'     => __( 'Purchase history', 'f-shop' ),
 				'content'   => fs_frontend_template( 'dashboard/orders', [
 					'vars' => array(
-						'orders' => FS_Orders_Class::get_user_orders()
+						'orders' => FS_Orders::get_user_orders()
 					)
 				] ),
 				'link'      => false,

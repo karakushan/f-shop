@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Класс заказов
  */
-class FS_Orders_Class {
+class FS_Orders {
 	public $post_type = 'orders';
 
 	public $last_order_id = null;
@@ -54,7 +54,7 @@ class FS_Orders_Class {
 	 */
 	public function get_last_order_amount() {
 		$order_id   = $this->get_last_order_id();
-		$order      = new FS_Orders_Class;
+		$order      = new FS_Orders;
 		$order_info = $order->get_order( $order_id );
 		$amount     = floatval( $order_info->summa );
 		$amount     = apply_filters( 'fs_price_format', $amount );
@@ -180,7 +180,7 @@ class FS_Orders_Class {
 
 		return fs_frontend_template( 'shortcode/order-detail', array(
 			'vars' => array(
-				'order'   => FS_Orders_Class::get_order( $order_id ),
+				'order'   => FS_Orders::get_order( $order_id ),
 				'payment' => new FS_Payment_Class()
 			)
 		) );

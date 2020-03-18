@@ -505,7 +505,7 @@ class FS_Ajax_Class {
 				'_delivery'        => array(
 					'method'    => $sanitize_field['fs_delivery_methods'],
 					'secession' => $sanitize_field['fs_delivery_number'],
-					'adress'    => $sanitize_field['fs_adress']
+					'address'   => $sanitize_field['fs_address']
 				),
 				'_payment'         => $pay_method ? $pay_method->term_id : 0,
 				'_amount'          => $sum,
@@ -675,7 +675,7 @@ class FS_Ajax_Class {
 
 
 	/**
-	 * Возврщает HTML код шаблона расположеного по адресу /templates/front-end/checkout/shipping-fields.php
+	 * Подгружает стоимость доставки, поля которые нужно скрыть в оформлении покупки
 	 */
 	function fs_show_shipping_callback() {
 		if ( ! FS_Config::verify_nonce() ) {
@@ -691,12 +691,14 @@ class FS_Ajax_Class {
 		fs_taxes_list( array( 'wrapper' => false ), $total );
 		$taxes_out = ob_get_clean();
 
+		$disable_fields = get_term_meta( $term_id, '_fs_disable_fields', 0 );
+		$disable_fields = ! empty( $disable_fields ) ? array_shift( $disable_fields ) : [];
+
 		wp_send_json_success( array(
-			'show'  => get_term_meta( $term_id, '_fs_delivery_address', 1 ) ? 1 : 0,
-			'taxes' => $taxes_out,
-			'price' => $delivery_cost,
-			'total' => $total_amount,
-			'html'  => fs_frontend_template( 'checkout/shipping-fields' )
+			'disableFields' => $disable_fields,
+			'taxes'         => $taxes_out,
+			'price'         => $delivery_cost,
+			'total'         => $total_amount,
 		) );
 	}
 } 

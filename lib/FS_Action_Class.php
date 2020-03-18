@@ -126,7 +126,7 @@ class FS_Action_Class {
 		/* удаляет все термины из таксономий плагина */
 		add_action( 'fs_delete_taxonomy_terms', array( 'FS\FS_Taxonomies_Class', 'delete_taxonomy_terms' ), 10, 1 );
 		/* удаляет все заказы */
-		add_action( 'fs_delete_orders', array( 'FS\FS_Orders_Class', 'delete_orders' ) );
+		add_action( 'fs_delete_orders', array( 'FS\FS_Orders', 'delete_orders' ) );
 		/* удаляет все товары */
 		add_action( 'fs_delete_products', array( 'FS\FS_Product', 'delete_products' ) );
 	}

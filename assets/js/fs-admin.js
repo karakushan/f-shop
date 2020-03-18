@@ -51,6 +51,11 @@ jQuery(function ($) {
 
         }
     }
+
+    $('.fs-select-field').select2({
+        placeholder: "Выбрать"
+    });
+
     $(document).on('click', '.fs-collapse-all', function (event) {
         event.preventDefault();
         fShop.toggleCollapse("#fs-variants-wrapper .fs-rule")

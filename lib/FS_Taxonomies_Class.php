@@ -36,8 +36,12 @@ class FS_Taxonomies_Class {
 	 * @return array
 	 */
 	public static function get_taxonomy_fields( $term = null ) {
-
-
+		$checkout_fields = [];
+		foreach ( FS_Users_Class::get_user_fields() as $key => $user_field ) {
+			if ( isset( $user_field['checkout'] ) && $user_field['checkout'] == true ) {
+				$checkout_fields[ $key ] = $user_field['name'];
+			}
+		}
 		$fields = array(
 			FS_Config::get_data( 'product_taxonomy' )       =>
 				array(
@@ -106,20 +110,23 @@ class FS_Taxonomies_Class {
 				),
 			'fs-delivery-methods'                           =>
 				array(
-					'_thumbnail_id'        => array(
+					'_thumbnail_id'      => array(
 						'name' => __( 'Thumbnail', 'f-shop' ),
 						'type' => 'image',
 						'args' => array()
 					),
-					'_fs_delivery_cost'    => array(
+					'_fs_delivery_cost'  => array(
 						'name' => __( 'Shipping Cost in Base Currency', 'f-shop' ),
 						'type' => 'number',
 						'args' => array( 'style' => 'width:72px;', 'step' => 0.01 )
 					),
-					'_fs_delivery_address' => array(
-						'name' => __( 'Include address fields when choosing this method', 'f-shop' ),
-						'type' => 'checkbox',
-						'args' => array()
+					'_fs_disable_fields' => array(
+						'name' => __( 'Отключить некоторые поля при выборе данного типа доставки', 'f-shop' ),
+						'type' => 'select',
+						'args' => array(
+							'values'   => $checkout_fields,
+							'multiple' => true
+						)
 					)
 				),
 			'fs-currencies'                                 =>

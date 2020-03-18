@@ -497,53 +497,50 @@
         }
     });
 
+    // Скрываем некоторые поля в форме отправки заказа при загрузке страницы
+    function getCheckoutData() {
+        jQuery.ajax({
+            type: 'POST',
+            url: fShop.ajaxurl,
+            beforeSend: function () {
+
+            },
+            data: fShop.ajaxData('fs_show_shipping',
+                {
+                    delivery: jQuery('[name="fs_delivery_methods"]').val()
+                }),
+            success: function (result) {
+                if (!result.success) return;
+
+                if (result.data.price) {
+                    jQuery("[data-fs-element=\"delivery-cost\"]").html(result.data.price);
+                    jQuery("[data-fs-element=\"total-amount\"]").html(result.data.total);
+                    jQuery("[data-fs-element=\"taxes-list\"]").replaceWith(result.data.taxes);
+                }
+
+                if (result.data.disableFields.length) {
+                    $('.fs-checkout-form input').show(0);
+                    for (let i in result.data.disableFields) {
+                        $('[name="' + result.data.disableFields[i] + '"]').hide(0);
+                    }
+                }
+            }
+
+
+        });
+    }
+
+    getCheckoutData();
+
     // Shows address fields when choosing delivery to
     jQuery(document).on('change', '[name="fs_delivery_methods"]', function (event) {
+        // создаём событие
         let deliveryId = jQuery(this).val();
-        if (deliveryId.length)
-            jQuery.ajax({
-                type: 'POST',
-                url: fShop.ajaxurl,
-                beforeSend: function () {
-                    // создаём событие
-                    var fs_change_delivery = new CustomEvent("fs_change_delivery", {
-                        detail: {deliveryId: deliveryId}
-                    });
-                    document.dispatchEvent(fs_change_delivery);
-                },
-                data: fShop.ajaxData('fs_show_shipping', {delivery: deliveryId}),
-                success: function (result) {
-                    if (result.success) {
-                        if (result.data.price) {
-                            jQuery("[data-fs-element=\"delivery-cost\"]").html(result.data.price);
-                            jQuery("[data-fs-element=\"total-amount\"]").html(result.data.total);
-                            jQuery("[data-fs-element=\"taxes-list\"]").replaceWith(result.data.taxes);
-                        }
-                        if (result.data.show) {
-                            jQuery("#fs-shipping-fields")
-                                .html(result.data.html)
-                                .addClass('active')
-                                .fadeIn();
-                        } else {
-                            jQuery("#fs-shipping-fields")
-                                .html('')
-                                .removeClass('active')
-                                .fadeOut();
-                        }
-                    } else {
-                        jQuery("#fs-shipping-fields")
-                            .html('')
-                            .removeClass('active')
-                            .fadeOut();
-                        if (result.data.msg) {
-                            console.log(result.data.msg);
-                        }
-                    }
-
-                }
-            });
-
-
+        let fs_change_delivery = new CustomEvent("fs_change_delivery", {
+            detail: {deliveryId: deliveryId}
+        });
+        document.dispatchEvent(fs_change_delivery);
+        getCheckoutData();
     });
 
 //Удаление продукта из корзины

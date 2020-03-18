@@ -35,8 +35,8 @@ class FS_Shortcode {
 
 		add_shortcode( 'fs_order_info', array( $this, 'single_order_info' ) );
 		add_shortcode( 'fs_last_order_info', array( $this, 'last_order_info' ) );
-		add_shortcode( 'fs_last_order_id', array( 'FS\FS_Orders_Class', 'get_last_order_id' ) );
-		add_shortcode( 'fs_last_order_amount', array( 'FS\FS_Orders_Class', 'get_last_order_amount' ) );
+		add_shortcode( 'fs_last_order_id', array( 'FS\FS_Orders', 'get_last_order_id' ) );
+		add_shortcode( 'fs_last_order_amount', array( 'FS\FS_Orders', 'get_last_order_amount' ) );
 		add_shortcode( 'fs_have_cart_items', array( $this, 'have_cart_items' ) );
 
 		add_shortcode( 'fs_checkout_success', array( $this, 'fs_checkout_success' ) );
@@ -50,8 +50,8 @@ class FS_Shortcode {
 		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );
 		add_shortcode( 'fs_wishlist', array( $this, 'wishlist_shortcode' ) );
 		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
-		add_shortcode( 'fs_order_detail', array( 'FS\FS_Orders_Class', 'order_detail' ) );
-		add_shortcode( 'fs_list_orders', array( 'FS\FS_Orders_Class', 'list_orders' ) );
+		add_shortcode( 'fs_order_detail', array( 'FS\FS_Orders', 'order_detail' ) );
+		add_shortcode( 'fs_list_orders', array( 'FS\FS_Orders', 'list_orders' ) );
 
 
 	}
@@ -136,7 +136,7 @@ class FS_Shortcode {
 	 * @return mixed
 	 */
 	function last_order_info( $atts ) {
-		$orders_cl = new FS_Orders_Class;
+		$orders_cl = new FS_Orders;
 		$order     = $orders_cl->get_order( $orders_cl->last_order_id );
 
 
@@ -193,7 +193,7 @@ class FS_Shortcode {
 	 */
 	public function single_order_info( $atts ) {
 		$curent_user = wp_get_current_user();
-		$orders_cl   = new FS_Orders_Class;
+		$orders_cl   = new FS_Orders;
 		$order_id    = ! empty( $_REQUEST['order_detail'] ) ? intval( $_REQUEST['order_detail'] ) : $orders_cl->last_order_id;
 // белый список параметров и значения по умолчанию
 		$atts = shortcode_atts( array(
@@ -283,7 +283,7 @@ class FS_Shortcode {
 			return ' <p>' . __( 'The order number or method of payment is not specified . ', 'fast_shop' ) . ' </p > ';
 		}
 		$order_id     = intval( $_REQUEST['order_id'] );
-		$orders_class = new FS_Orders_Class();
+		$orders_class = new FS_Orders();
 		$order        = $orders_class->get_order( $order_id );
 		$html         = sprintf( '<h3 class="text-center">Paying for order #%d using %s</h3 >', esc_attr( $order_id ), esc_attr( $order->payment ) );
 		$html         .= '<div class="fs-pay-methods">';

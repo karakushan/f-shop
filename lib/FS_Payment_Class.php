@@ -43,14 +43,14 @@ class FS_Payment_Class {
 			'item-class'         => 'fs-pay-item'
 		), $atts );
 
-		$order_id = ! empty( $_GET['order_id'] ) && is_numeric( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : FS_Orders_Class::get_last_order_id();
+		$order_id = ! empty( $_GET['order_id'] ) && is_numeric( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : FS_Orders::get_last_order_id();
 
 		// Если не указан номер заказа
 		if ( ! $order_id ) {
 			return '<div class="fs-order-pay"><p>' . __( 'No order number specified.', 'f-shop' ) . '</p></div>';
 		}
 
-		$order = FS_Orders_Class::get_order( $order_id );
+		$order = FS_Orders::get_order( $order_id );
 		$pay_method = intval( $order->data->_payment );
 
 		// Если не указан метод оплаты
