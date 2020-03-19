@@ -759,6 +759,7 @@ class FS_Product {
 		foreach ( $save_meta_keys as $key => $field_name ) {
 			// Skip fields that do not exist in the global variable $_POST
 			if ( ! isset( $_POST[ $field_name ] ) ) {
+				delete_post_meta( $post_id, $field_name );
 				continue;
 			}
 

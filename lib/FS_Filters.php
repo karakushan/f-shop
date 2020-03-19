@@ -493,11 +493,24 @@ class FS_Filters {
 		if ( count( $attr['filters'] ) ) {
 			echo ' <select name="order_type"  class="' . esc_attr( $attr['class'] ) . '" data-fs-action="filter"> ';
 			foreach ( $attr['filters'] as $key => $order_type ) {
+				if ( $key == 'default' ) {
+					if ( is_page() ) {
+						$redirect_url = get_the_permalink( get_the_ID() );
+					} elseif ( is_tax() ) {
+						$redirect_url = get_term_link( get_queried_object_id() );
+					} elseif ( is_archive( FS_Config::get_data( 'post_type' ) ) ) {
+						$redirect_url = get_post_type_archive_link( FS_Config::get_data( 'post_type' ) );
+					} else {
+						$redirect_url = $_SERVER['REQUEST_URI'];
+					}
 
-				$redirect_url = add_query_arg( array(
-					'fs_filter'  => wp_create_nonce( 'f-shop' ),
-					'order_type' => $key
-				) );
+				} else {
+					$redirect_url = add_query_arg( array(
+						'fs_filter'  => wp_create_nonce( 'f-shop' ),
+						'order_type' => $key
+					) );
+				}
+
 				echo ' <option value="' . esc_url( $redirect_url ) . '" ' . selected( $key, $order_type_get, 0 ) . '> ' . esc_html( $order_type['name'] ) . ' </option> ';
 			}
 			echo '</select> ';
