@@ -62,13 +62,18 @@ class FS_Product {
 	} // END public function init()
 
 	function pre_get_posts_product( $query ) {
+		global $wpdb;
 
 		// Если это админка или не главный запрос
-		if ( $query->is_admin || ! $query->is_main_query() || ! $query->is_singular || $query->query['post_type'] != FS_Config::get_data( 'post_type' ) ) {
+		if ( $query->is_admin
+		     || ! $query->is_main_query()
+		     || ! $query->is_singular
+		     || ! isset( $query->query['post_type'] )
+		     || ( isset( $query->query['post_type'] ) && $query->query['post_type'] != FS_Config::get_data( 'post_type' ) ) ) {
 			return;
 		}
 
-		global $wpdb;
+
 		$slug      = $query->query['product'];
 		$meta_key  = 'fs_seo_slug__' . get_locale();
 		$s_product = $wpdb->get_row( "SELECT *  FROM $wpdb->postmeta WHERE meta_key='$meta_key' AND meta_value='$slug'" );
@@ -850,7 +855,7 @@ class FS_Product {
 	public static function get_product_tabs() {
 		$product_fields = FS_Config::get_product_field();
 		$tabs           = array(
-			'basic'      => array(
+			'basic'        => array(
 				'title'       => __( 'Basic', 'f-shop' ),
 				'on'          => true,
 				'description' => __( 'In this tab you can adjust the prices of goods.', 'f-shop' ),
@@ -881,43 +886,43 @@ class FS_Product {
 					),
 				)
 			),
-			'gallery'    => array(
+			'gallery'      => array(
 				'title'    => __( 'Gallery', 'f-shop' ),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'gallery'
 			),
-			'attributes' => array(
+			'attributes'   => array(
 				'title'    => __( 'Attributes', 'f-shop' ),
 				'on'       => false,
 				'body'     => '',
 				'template' => 'attributes'
 			),
-			'related'    => array(
+			'related'      => array(
 				'title'    => __( 'Associated', 'f-shop' ),
 				'on'       => false, // Сейчас в разработке
 				'body'     => '',
 				'template' => 'related'
 			),
-			'up_sell'    => array(
+			'up_sell'      => array(
 				'title'    => __( 'Up-sell', 'f-shop' ),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'up-sell'
 			),
-			'cross_sell' => array(
+			'cross_sell'   => array(
 				'title'    => __( 'Cross-sell', 'f-shop' ),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'cross-sell'
 			),
-			'variants'   => array(
+			'variants'     => array(
 				'title'    => __( 'Variation', 'f-shop' ),
 				'on'       => true,
 				'body'     => '',
 				'template' => 'variants'
 			),
-			'delivery'   => array(
+			'delivery'     => array(
 				'title'  => __( 'Shipping and payment', 'f-shop' ),
 				'on'     => true,
 				'body'   => '',
@@ -930,7 +935,7 @@ class FS_Product {
 
 				)
 			),
-			'seo'        => array(
+			'seo'          => array(
 				'title'  => __( 'SEO', 'f-shop' ),
 				'on'     => true,
 				'body'   => '',
@@ -944,15 +949,15 @@ class FS_Product {
 
 				)
 			),
-            'additionally'        => array(
+			'additionally' => array(
 				'title'  => __( 'Additionally', 'f-shop' ),
 				'on'     => true,
 				'body'   => '',
 				'fields' => array(
-					$product_fields['exclude_archive']['key']      => $product_fields['exclude_archive'],
-					$product_fields['label_bestseller']['key']      => $product_fields['label_bestseller'],
-					$product_fields['label_promotion']['key']      => $product_fields['label_promotion'],
-					$product_fields['label_novelty']['key']      => $product_fields['label_novelty'],
+					$product_fields['exclude_archive']['key']  => $product_fields['exclude_archive'],
+					$product_fields['label_bestseller']['key'] => $product_fields['label_bestseller'],
+					$product_fields['label_promotion']['key']  => $product_fields['label_promotion'],
+					$product_fields['label_novelty']['key']    => $product_fields['label_novelty'],
 
 				)
 			),
