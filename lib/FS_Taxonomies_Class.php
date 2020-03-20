@@ -537,7 +537,7 @@ class FS_Taxonomies_Class {
 
 		$form   = new FS_Form_Class();
 		$fields = self::get_taxonomy_fields();
-		if ( count( $fields[ $taxonomy ] ) ) {
+		if (isset($fields[ $taxonomy ]) && is_array($fields[ $taxonomy ]) && count( $fields[ $taxonomy ] ) ) {
 			foreach ( $fields[ $taxonomy ] as $name => $field ) {
 				$id = str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $field['type'] ) );
 				echo '<div class="form-field ' . esc_attr( $name ) . '-wrap">';
