@@ -282,7 +282,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 
 			$label_before_text = '';
 			if ( $args['type'] == 'color' ) {
-				$label_before_text = '<span class="fs-color-box" style="' . esc_attr( $color_box_style ) . '"></span>';
+				$label_before_text = '<span class="fs-color-box" data-toggle="tooltip" title="'.$term->name.'" style="' . esc_attr( $color_box_style ) . '"></span>';
 			}
 
 			echo '<label for="check-' . esc_attr( $term->slug ) . '"  class="' . esc_attr( $args['label_class'] ) . '">' . $label_before_text . ' ' . $term->name . '</label >';

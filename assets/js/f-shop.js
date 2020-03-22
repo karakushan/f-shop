@@ -530,7 +530,8 @@
         });
     }
 
-    getCheckoutData();
+    if (jQuery('[name="fs_delivery_methods"]').length)
+        getCheckoutData();
 
     // Shows address fields when choosing delivery to
     jQuery(document).on('change', '[name="fs_delivery_methods"]', function (event) {
