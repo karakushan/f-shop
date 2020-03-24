@@ -794,11 +794,16 @@
         sliderWrapper.find('[data-fs-element="range-end-input"]').val(p_end);
     });
 
-    jQuery(document).on('input keyup', '[data-fs-element="range-start-input"]', function (event) {
-        document.location.href = jQuery(this).data('url') + '&price_start=' + jQuery(this).val();
-    });
-    jQuery(document).on('input keyup', '[data-fs-element="range-end-input"]', function (event) {
-        document.location.href = jQuery(this).data('url') + '&price_end=' + jQuery(this).val();
+
+    function createFilterUrl(baseUrl) {
+        let start = jQuery('[data-fs-element="range-start-input"]').val();
+        let end = jQuery('[data-fs-element="range-end-input"]').val();
+        return baseUrl +'&price_start=' + start + '&price_end=' + end;
+    }
+
+    jQuery(document).on('input keyup', '[data-fs-element="range-start-input"],[data-fs-element="range-end-input"]', function (event) {
+        let baseUrl = jQuery(this).data('url');
+        document.location.href =createFilterUrl(baseUrl) ;
     });
 
 // валидация формы редактирования личных данных

@@ -1291,8 +1291,9 @@ function fs_attr_group_filter( $group, $type = 'option', $option_default = 'Вы
 
 function fs_range_slider() {
 	echo fs_frontend_template( 'widget/jquery-ui-slider/ui-slider', array(
-		'price_max' => fs_price_max(),
-		'currency'  => fs_currency()
+		'price_start' => isset( $_GET['price_start'] ) ? intval( $_GET['price_start'] ) : 0,
+		'price_max'   => isset( $_GET['price_end'] ) ? intval( $_GET['price_end'] ) : fs_price_max( false ),
+		'currency'    => fs_currency()
 
 	) );
 
@@ -2045,6 +2046,11 @@ function fs_get_product_thumbnail_url( $product_id = 0, $size = 'thumbnail' ) {
  */
 function fs_filter_link( $query = [], $catalog_link = null ) {
 	global $fs_config;
+
+	if ( ! $catalog_link && is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+		$catalog_link = get_term_link( get_queried_object_id() );
+	}
+
 
 	$query = wp_parse_args( $query, array(
 		'fs_filter' => wp_create_nonce( 'f-shop' )
