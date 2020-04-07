@@ -14,7 +14,6 @@ class FS_Settings_Class {
 		add_action( 'admin_init', array( $this, 'init_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
 		add_action( 'admin_bar_menu', array( $this, 'modify_admin_bar' ) );
-
 	}
 
 	/**
@@ -23,6 +22,10 @@ class FS_Settings_Class {
 	 * @param $wp_admin_bar
 	 */
 	function modify_admin_bar( $wp_admin_bar ) {
+        // Only admin sees the panel
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
 		ob_start(); ?>
         <div class="ab-sub-wrapper">
@@ -251,10 +254,10 @@ class FS_Settings_Class {
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
-						'name'  => 'autofill',
+						'name'  => 'fs_autofill_form',
 						'label' => __( 'Fill in the data of the authorized user automatically', 'f-shop' ),
 						'help'  => __( 'Used when placing the order, if the user is authorized', 'f-shop' ),
-						'value' => fs_option( 'autofill' )
+						'value' => fs_option( 'fs_autofill_form' )
 					),
 					array(
 						'type'  => 'text',

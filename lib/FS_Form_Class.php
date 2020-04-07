@@ -190,9 +190,9 @@ class FS_Form_Class {
 			? $fields[ $field_name ]
 			: array();
 
-		$value = ! empty( $field['value'] )
-			? $field['value']
-			: get_user_meta( $user_id, $field_name, 1 );
+		$value =  ! empty( $field['value'] ) && fs_option( 'fs_autofill_form', false )
+			? trim( $field['value'] )
+			: (is_user_logged_in() && fs_option( 'fs_autofill_form', false ) && get_user_meta( $user_id, $field_name, 1 ) ? get_user_meta( $user_id, $field_name, 1 ) : '' );
 
 
 		$default = array(
@@ -210,7 +210,7 @@ class FS_Form_Class {
 			'required'       => ! empty( $field['required'] ) ? $field['required'] : false,
 			'title'          => ! empty( $field['title'] ) ? $field['title'] : __( 'this field is required', 'f-shop' ),
 			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
-			'value'          => is_user_logged_in() && $value ? $value : null,
+			'value'          => $value,
 			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
 			'icon'           => ! empty( $field['icon'] ) ? $field['icon'] : '',
 			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',
