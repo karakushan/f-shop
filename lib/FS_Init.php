@@ -136,7 +136,7 @@ class FS_Init {
 		// TODO: если нет файла стилей для данной темы то необходимо создать уведомление в админке о том что можно купить или заказать адаптацию
 		if ( in_array( $textdomain, [ 'twentynineteen' ] ) ) {
 			if ( file_exists( get_template_directory() . DIRECTORY_SEPARATOR . FS_PLUGIN_NAME . '/assets/' . $textdomain . '/style.css' ) ) {
-				wp_enqueue_style( FS_PLUGIN_PREFIX . $textdomain, get_template_directory_uri() . DIRECTORY_SEPARATOR . FS_PLUGIN_NAME . '/assets/' . $textdomain . '/style.css' );
+				wp_enqueue_style( FS_PLUGIN_PREFIX . $textdomain, get_template_directory_uri() . '/' . FS_PLUGIN_NAME . '/assets/' . $textdomain . '/style.css' );
 			} elseif ( file_exists( FS_PLUGIN_PATH . 'templates/front-end/assets/' . $textdomain . '/style.css' ) ) {
 				wp_enqueue_style( FS_PLUGIN_PREFIX . $textdomain, FS_PLUGIN_URL . 'templates/front-end/assets/' . $textdomain . '/style.css' );
 			}
