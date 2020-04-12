@@ -22,7 +22,7 @@ class FS_Settings_Class {
 	 * @param $wp_admin_bar
 	 */
 	function modify_admin_bar( $wp_admin_bar ) {
-        // Only admin sees the panel
+		// Only admin sees the panel
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
@@ -92,7 +92,7 @@ class FS_Settings_Class {
 	 *
 	 * @return array
 	 */
-	function register_settings() {
+	function get_register_settings() {
 		global $fs_config;
 		$export_class = new FS_Export_Class();
 
@@ -113,7 +113,7 @@ class FS_Settings_Class {
 		// php settings
 		ob_start();
 		echo '<code class="fs-code"><pre>';
-		print_r( phpinfo2array() );
+		print_r( fs_phpinfo_to_array() );
 		echo '</pre></code>';
 		$phpinfo = ob_get_clean();
 
@@ -357,7 +357,8 @@ class FS_Settings_Class {
 						'type'  => 'email',
 						'name'  => 'email_sender',
 						'label' => __( 'Email sender', 'f-shop' ),
-						'value' => fs_option( 'email_sender' )
+						'value' => fs_option( 'email_sender' ),
+						'help'  => __( 'By default, this is the site administrator’s e-mail', 'f-shop' ),
 					),
 					array(
 						'type'  => 'text',
@@ -366,31 +367,19 @@ class FS_Settings_Class {
 						'value' => fs_option( 'name_sender', get_bloginfo( 'name' ) )
 					),
 					array(
-						'type'  => 'text',
-						'name'  => 'customer_mail_header',
-						'label' => __( 'The title of the letter to the customer', 'f-shop' ),
-						'value' => fs_option( 'customer_mail_header', __( sprintf( 'Order goods on the site "%s"', get_bloginfo( 'name' ) ), 'f-shop' ) )
+						'type'      => 'dropdown_posts',
+						'name'      => 'register_mail_template',
+						'label'     => __( 'Email template for user when creating an account', 'f-shop' ),
+						'value'     => fs_option( 'register_mail_template' ),
+						'post_type' => 'fs-mail-template'
 					),
 					array(
-						'type'  => 'editor',
-						'name'  => 'customer_mail',
-						'label' => __( 'The text of the letter to the customer after sending the order', 'f-shop' ),
-						'value' => fs_option( 'customer_mail', __( '<h3 style="text-align: center;">Thank you for your purchase.</h3>
-<p style="text-align: center;">Order #%order_id% created successfully. The order is considered confirmed after feedback from our operator on the specified
-Your phone number.</p>', 'f-shop' ) )
+						'type'      => 'dropdown_posts',
+						'name'      => 'create_order_mail_template',
+						'label'     => __( 'Letter template to the user when creating a new order', 'f-shop' ),
+						'value'     => fs_option( 'create_order_mail_template' ),
+						'post_type' => 'fs-mail-template'
 					),
-					array(
-						'type'  => 'editor',
-						'name'  => 'admin_mail',
-						'label' => __( 'The text of the letter to the administrator after sending the order', 'f-shop' ),
-						'value' => fs_option( 'admin_mail', __( '<h3 style="text-align: center;">On the site a new order #%order_id%</h3>', 'f-shop' ) )
-					),
-					array(
-						'type'  => 'editor',
-						'name'  => 'fs_mail_footer_message',
-						'label' => __( 'The text at the bottom of the letter', 'f-shop' ),
-						'value' => fs_option( 'fs_mail_footer_message', sprintf( __( '<p style="text-align: center;">Online store "%s" is functioning thanks to the plugin <a href="https://f-shop.top/" target="_blank" rel="noopener">F-Shop.</a></p>', 'f-shop' ), get_bloginfo( 'name' ) ) )
-					)
 				)
 
 
@@ -625,7 +614,7 @@ Your phone number.</p>', 'f-shop' ) )
 		echo ' <div class="wrap f-shop-settings"> ';
 		echo ' <h2> ' . esc_html__( 'Store settings', 'f-shop' ) . ' </h2> ';
 		settings_errors();
-		$settings      = $this->register_settings();
+		$settings      = $this->get_register_settings();
 		$settings_keys = array_keys( $settings );
 		$tab           = $settings_keys[0];
 		if ( ! empty( $_GET['tab'] ) ) {
@@ -655,7 +644,7 @@ Your phone number.</p>', 'f-shop' ) )
 	 * @return string
 	 */
 	function get_tab( $key ) {
-		$settings      = $this->register_settings();
+		$settings      = $this->get_register_settings();
 		$settings_keys = array_keys( $settings );
 
 		return ( isset( $_GET[ $key ] ) ? $_GET[ $key ] : $settings_keys[0] );
@@ -665,7 +654,7 @@ Your phone number.</p>', 'f-shop' ) )
 	 * Displays a description of the section, tab in the settings
 	 */
 	function get_tab_description() {
-		$settings    = $this->register_settings();
+		$settings    = $this->get_register_settings();
 		$setting_key = $this->get_tab( 'tab' );
 		$setting     = $settings[ $setting_key ];
 		if ( ! empty( $setting['description'] ) ) {
@@ -678,7 +667,7 @@ Your phone number.</p>', 'f-shop' ) )
 	 * Initializes the plugin settings defined in the register_settings () method
 	 */
 	function init_settings() {
-		$settings = $this->register_settings();
+		$settings = $this->get_register_settings();
 		// Регистрируем секции и опции в движке
 		$setting_key = $this->get_tab( 'tab' );
 
@@ -719,7 +708,7 @@ Your phone number.</p>', 'f-shop' ) )
 	 * @param $args
 	 */
 	function setting_field_callback( $args ) {
-		$form_class = new FS_Form_Class();
+		$form_class = new FS_Form();
 		if ( in_array( $args[1]['type'], array( 'text', 'email', 'number' ) ) ) {
 			$args[1]['class'] = 'regular-text';
 		}

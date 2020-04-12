@@ -36,7 +36,7 @@ class FS_Post_Types {
 	 * @param $args
 	 */
 	public function create_post_type( $name, $args ) {
-		$default = array(
+		$args = wp_parse_args( $args, array(
 			'labels'             => array(
 				'name'          => $name,
 				'singular_name' => $name,
@@ -57,9 +57,7 @@ class FS_Post_Types {
 			'rewrite'            => true,
 			'query_var'          => true,
 			'show_in_rest'       => true,
-		);
-
-		$args = wp_parse_args( $args, $default );
+		) );
 
 		register_post_type( $name, $args );
 	}
@@ -78,7 +76,22 @@ class FS_Post_Types {
 				'exclude_from_search' => true,
 				'taxonomies'          => array(),
 				'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail', 'comments', 'gutenburg' ),
+			),
+			'fs-mail-template'                                 => array(
+				'labels'             => array(
+					'name'                => __( 'Email Templates', 'f-shop' ),
+					'singular_name'       => __( 'Email Template', 'f-shop' ),
+					'add_new'            => __( 'Add Email Template', 'f-shop' ),
+					'edit_item'          => __( 'Edit Email Template', 'f-shop' ),
+					'menu_name'          => __(  'Email Templates', 'f-shop' ),
+				),
 
+				'menu_icon'           => 'dashicons-email-alt',
+				'exclude_from_search' => true,
+				'taxonomies'          => array(),
+				'supports'            => array( 'title', 'editor' ),
+				'publicly_queryable' => false,
+				'show_ui'            => true,
 			),
 			FS_Config::get_data( 'post_type_orders' ) => array(
 				'labels'             => array(
@@ -117,6 +130,4 @@ class FS_Post_Types {
 
 		return apply_filters( 'fs_register_custom_post_types', $types );
 	}
-
-
 }

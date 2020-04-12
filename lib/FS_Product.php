@@ -972,7 +972,7 @@ class FS_Product {
 	 * @param $post
 	 */
 	public function add_inner_meta_boxes( $post ) {
-		$form_class       = new FS_Form_Class();
+		$form_class       = new FS_Form();
 		$product_tabs     = self::get_product_tabs();
 		$this->product_id = $post->ID;
 		$cookie           = isset( $_COOKIE['fs_active_tab'] ) ? $_COOKIE['fs_active_tab'] : 'prices';

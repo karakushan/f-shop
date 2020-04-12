@@ -417,7 +417,7 @@ class FS_Ajax_Class {
 		$wpdb->show_errors(); // включаем показывать ошибки при работе с базой
 
 		//Производим очистку полученных данных с формы заказа
-		$form_fields    = FS_Users_Class::get_user_fields();
+		$form_fields    = FS_Users::get_user_fields();
 		$sanitize_field = array();
 		if ( $form_fields ) {
 			foreach ( $form_fields as $field_name => $form_field ) {
@@ -470,7 +470,7 @@ class FS_Ajax_Class {
 				'first_name' => $sanitize_field['fs_first_name'],
 				'last_name'  => $sanitize_field['fs_last_name']
 			) );
-			foreach ( FS_Users_Class::get_user_fields() as $key => $user_meta ) {
+			foreach ( FS_Users::get_user_fields() as $key => $user_meta ) {
 				if ( ! empty( $sanitize_field[ $key ] ) && ! empty( $user_meta['save_meta'] ) ) {
 					update_user_meta( $user_id, $key, $sanitize_field[ $key ] );
 				}

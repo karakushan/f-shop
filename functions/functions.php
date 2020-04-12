@@ -1434,16 +1434,18 @@ function fs_transliteration( $s ) {
  * @param $template -название папки и шаблона без расширения
  * @param array $args -дополнительные аргументы
  *
+ * @param string $extension
+ *
  * @return mixed|void
  */
-function fs_frontend_template( $template, $args = array() ) {
+function fs_frontend_template( $template, $args = array(), $extension = '.php' ) {
 	$args            = wp_parse_args( $args, array(
 		'theme_base_path'  => TEMPLATEPATH . DIRECTORY_SEPARATOR . 'f-shop' . DIRECTORY_SEPARATOR,
 		'plugin_base_path' => FS_PLUGIN_PATH . 'templates' . DIRECTORY_SEPARATOR . 'front-end' . DIRECTORY_SEPARATOR,
 		'vars'             => array()
 	) );
-	$template_plugin = $args['plugin_base_path'] . $template . '.php';
-	$template_theme  = $args['theme_base_path'] . $template . '.php';
+	$template_plugin = $args['plugin_base_path'] . $template . $extension;
+	$template_theme  = $args['theme_base_path'] . $template . $extension;
 	extract( $args['vars'] );
 
 	ob_start();
@@ -1817,7 +1819,7 @@ function fs_get_payment( $payment_id ) {
  * @param array $args массив аргументов типа класс, тип, обязательность заполнения, title
  */
 function fs_form_field( $field_name, $args = array() ) {
-	$form_class = new \FS\FS_Form_Class();
+	$form_class = new \FS\FS_Form();
 	$form_class->fs_form_field( $field_name, $args );
 }
 
@@ -2786,21 +2788,23 @@ function fs_product_rating( $product_id = 0, $args = array() ) {
 	$product->product_rating( $product_id, $args );
 }
 
-/**
- * Returns the product category text
- *
- * @param int $category_id
- *
- * @return mixed
- */
-function fs_get_category_text( $category_id = 0 ) {
-	if ( ! $category_id && is_tax() ) {
-		$category_id = get_queried_object_id();
+if ( ! function_exists( 'fs_get_category_text' ) ) {
+	/**
+	 * Returns the product category text
+	 *
+	 * @param int $category_id
+	 *
+	 * @return mixed
+	 */
+	function fs_get_category_text( $category_id = 0 ) {
+		if ( ! $category_id && is_tax() ) {
+			$category_id = get_queried_object_id();
+		}
+
+		return apply_filters( 'the_content', fs_get_term_meta( '_content', $category_id, 1 ) );
 	}
-
-	return apply_filters( 'the_content', fs_get_term_meta( $meta_key, $category_id, 1 ) );
-
 }
+
 
 /**
  * Displays a link to reset the filters.
@@ -2817,59 +2821,66 @@ function fs_reset_filter_link( $base_url = '' ) {
 	echo esc_url( $base_url );
 }
 
-function phpinfo2array() {
-	$entitiesToUtf8 = function ( $input ) {
-		// http://php.net/manual/en/function.html-entity-decode.php#104617
-		return preg_replace_callback( "/(&#[0-9]+;)/", function ( $m ) {
-			return mb_convert_encoding( $m[1], "UTF-8", "HTML-ENTITIES" );
-		}, $input );
-	};
-	$plainText      = function ( $input ) use ( $entitiesToUtf8 ) {
-		return trim( html_entity_decode( $entitiesToUtf8( strip_tags( $input ) ) ) );
-	};
-	$titlePlainText = function ( $input ) use ( $plainText ) {
-		return '# ' . $plainText( $input );
-	};
+if ( ! function_exists( 'fs_phpinfo_to_array' ) ) {
+	/**
+	 * Converts phpinfo data to an array
+	 *
+	 * @return array
+	 */
+	function fs_phpinfo_to_array() {
+		$entitiesToUtf8 = function ( $input ) {
+			// http://php.net/manual/en/function.html-entity-decode.php#104617
+			return preg_replace_callback( "/(&#[0-9]+;)/", function ( $m ) {
+				return mb_convert_encoding( $m[1], "UTF-8", "HTML-ENTITIES" );
+			}, $input );
+		};
+		$plainText      = function ( $input ) use ( $entitiesToUtf8 ) {
+			return trim( html_entity_decode( $entitiesToUtf8( strip_tags( $input ) ) ) );
+		};
+		$titlePlainText = function ( $input ) use ( $plainText ) {
+			return '# ' . $plainText( $input );
+		};
 
-	ob_start();
-	phpinfo( - 1 );
+		ob_start();
+		phpinfo( - 1 );
 
-	$phpinfo = array( 'phpinfo' => array() );
+		$phpinfo = array( 'phpinfo' => array() );
 
-	// Strip everything after the <h1>Configuration</h1> tag (other h1's)
-	if ( ! preg_match( '#(.*<h1[^>]*>\s*Configuration.*)<h1#s', ob_get_clean(), $matches ) ) {
-		return array();
-	}
-
-	$input   = $matches[1];
-	$matches = array();
-
-	if ( preg_match_all(
-		'#(?:<h2.*?>(?:<a.*?>)?(.*?)(?:<\/a>)?<\/h2>)|' .
-		'(?:<tr.*?><t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
-		$input,
-		$matches,
-		PREG_SET_ORDER
-	) ) {
-		foreach ( $matches as $match ) {
-			$fn = strpos( $match[0], '<th' ) === false ? $plainText : $titlePlainText;
-			if ( strlen( $match[1] ) ) {
-				$phpinfo[ $match[1] ] = array();
-			} elseif ( isset( $match[3] ) ) {
-				$keys1                                        = array_keys( $phpinfo );
-				$phpinfo[ end( $keys1 ) ][ $fn( $match[2] ) ] = isset( $match[4] ) ? array(
-					$fn( $match[3] ),
-					$fn( $match[4] )
-				) : $fn( $match[3] );
-			} else {
-				$keys1                      = array_keys( $phpinfo );
-				$phpinfo[ end( $keys1 ) ][] = $fn( $match[2] );
-			}
-
+		// Strip everything after the <h1>Configuration</h1> tag (other h1's)
+		if ( ! preg_match( '#(.*<h1[^>]*>\s*Configuration.*)<h1#s', ob_get_clean(), $matches ) ) {
+			return array();
 		}
-	}
 
-	return $phpinfo;
+		$input   = $matches[1];
+		$matches = array();
+
+		if ( preg_match_all(
+			'#(?:<h2.*?>(?:<a.*?>)?(.*?)(?:<\/a>)?<\/h2>)|' .
+			'(?:<tr.*?><t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
+			$input,
+			$matches,
+			PREG_SET_ORDER
+		) ) {
+			foreach ( $matches as $match ) {
+				$fn = strpos( $match[0], '<th' ) === false ? $plainText : $titlePlainText;
+				if ( strlen( $match[1] ) ) {
+					$phpinfo[ $match[1] ] = array();
+				} elseif ( isset( $match[3] ) ) {
+					$keys1                                        = array_keys( $phpinfo );
+					$phpinfo[ end( $keys1 ) ][ $fn( $match[2] ) ] = isset( $match[4] ) ? array(
+						$fn( $match[3] ),
+						$fn( $match[4] )
+					) : $fn( $match[3] );
+				} else {
+					$keys1                      = array_keys( $phpinfo );
+					$phpinfo[ end( $keys1 ) ][] = $fn( $match[2] );
+				}
+
+			}
+		}
+
+		return $phpinfo;
+	}
 }
 
 function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик', $args = array() ) {
@@ -2966,7 +2977,7 @@ function fs_get_cross_sells( $product_id = 0, $limit = - 1 ) {
 
 	$cross_sells = array_shift( $cross_sells );
 
-	if ( in_array( $product_id, $up_sells ) ) {
+	if ( in_array( $product_id, $cross_sells ) ) {
 		$cross_sells = array_diff( $cross_sells, [ $product_id ] );
 	}
 
@@ -3006,96 +3017,129 @@ function fs_get_up_sells( $product_id = 0, $limit = - 1 ) {
 	) );
 }
 
-/**
- * Переводит строку из кирилицы в латиницу
- *
- * @param $name
- *
- * @return mixed
- */
-function fs_convert_cyr_name( $name ) {
-	$iso = array(
-		"Є" => "YE",
-		"І" => "I",
-		"Ѓ" => "G",
-		"і" => "i",
-		"№" => "#",
-		"є" => "ye",
-		"ѓ" => "g",
-		"А" => "A",
-		"Б" => "B",
-		"В" => "V",
-		"Г" => "G",
-		"Д" => "D",
-		"Е" => "E",
-		"Ё" => "YO",
-		"Ж" => "ZH",
-		"З" => "Z",
-		"И" => "I",
-		"Й" => "J",
-		"К" => "K",
-		"Л" => "L",
-		"М" => "M",
-		"Н" => "N",
-		"О" => "O",
-		"П" => "P",
-		"Р" => "R",
-		"С" => "S",
-		"Т" => "T",
-		"У" => "U",
-		"Ф" => "F",
-		"Х" => "H",
-		"Ц" => "C",
-		"Ч" => "CH",
-		"Ш" => "SH",
-		"Щ" => "SHH",
-		"Ъ" => "'",
-		"Ы" => "Y",
-		"Ь" => "",
-		"Э" => "E",
-		"Ю" => "YU",
-		"Я" => "YA",
-		"а" => "a",
-		"б" => "b",
-		"в" => "v",
-		"г" => "g",
-		"д" => "d",
-		"е" => "e",
-		"ё" => "yo",
-		"ж" => "zh",
-		"з" => "z",
-		"и" => "i",
-		"й" => "j",
-		"к" => "k",
-		"л" => "l",
-		"м" => "m",
-		"н" => "n",
-		"о" => "o",
-		"п" => "p",
-		"р" => "r",
-		"с" => "s",
-		"т" => "t",
-		"у" => "u",
-		"ф" => "f",
-		"х" => "h",
-		"ц" => "c",
-		"ч" => "ch",
-		"ш" => "sh",
-		"щ" => "shh",
-		"ъ" => "",
-		"ы" => "y",
-		"ь" => "",
-		"э" => "e",
-		"ю" => "yu",
-		"я" => "ya",
-		"—" => "-",
-		"«" => "",
-		"»" => "",
-		"…" => "",
-		" " => "-"
-	);
+if ( ! function_exists( 'fs_convert_cyr_name' ) ) {
+	/**
+	 * Converts a string from Cyrillic to Latin
+	 *
+	 * @param $name
+	 *
+	 * @return mixed
+	 */
+	function fs_convert_cyr_name( $name ) {
+		$iso = array(
+			"Є" => "YE",
+			"І" => "I",
+			"Ѓ" => "G",
+			"і" => "i",
+			"№" => "#",
+			"є" => "ye",
+			"ѓ" => "g",
+			"А" => "A",
+			"Б" => "B",
+			"В" => "V",
+			"Г" => "G",
+			"Д" => "D",
+			"Е" => "E",
+			"Ё" => "YO",
+			"Ж" => "ZH",
+			"З" => "Z",
+			"И" => "I",
+			"Й" => "J",
+			"К" => "K",
+			"Л" => "L",
+			"М" => "M",
+			"Н" => "N",
+			"О" => "O",
+			"П" => "P",
+			"Р" => "R",
+			"С" => "S",
+			"Т" => "T",
+			"У" => "U",
+			"Ф" => "F",
+			"Х" => "H",
+			"Ц" => "C",
+			"Ч" => "CH",
+			"Ш" => "SH",
+			"Щ" => "SHH",
+			"Ъ" => "'",
+			"Ы" => "Y",
+			"Ь" => "",
+			"Э" => "E",
+			"Ю" => "YU",
+			"Я" => "YA",
+			"а" => "a",
+			"б" => "b",
+			"в" => "v",
+			"г" => "g",
+			"д" => "d",
+			"е" => "e",
+			"ё" => "yo",
+			"ж" => "zh",
+			"з" => "z",
+			"и" => "i",
+			"й" => "j",
+			"к" => "k",
+			"л" => "l",
+			"м" => "m",
+			"н" => "n",
+			"о" => "o",
+			"п" => "p",
+			"р" => "r",
+			"с" => "s",
+			"т" => "t",
+			"у" => "u",
+			"ф" => "f",
+			"х" => "h",
+			"ц" => "c",
+			"ч" => "ch",
+			"ш" => "sh",
+			"щ" => "shh",
+			"ъ" => "",
+			"ы" => "y",
+			"ь" => "",
+			"э" => "e",
+			"ю" => "yu",
+			"я" => "ya",
+			"—" => "-",
+			"«" => "",
+			"»" => "",
+			"…" => "",
+			" " => "-"
+		);
 
-	$name = str_replace( array_keys( $iso ), array_values( $iso ), $name );
+		$name = str_replace( array_keys( $iso ), array_values( $iso ), $name );
 
-	return strtolower( $name );
+		return strtolower( $name );
+	}
+}
+
+
+if ( ! function_exists( 'fs_is_product' ) ) {
+
+	/**
+	 * Is_product - Returns true when viewing a single product.
+	 *
+	 * @return bool
+	 */
+	function fs_is_product() {
+		return is_singular( array( 'product' ) );
+	}
+}
+
+if ( ! function_exists( 'fs_form_submit' ) ) {
+	/**
+	 * Displays a submit button of any form
+	 *
+	 * @param string $text
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	function fs_form_submit( $text = 'Send', $args = [] ) {
+		$args = wp_parse_args( $args, [
+			'class' => 'btn btn-success btn-lg'
+		] );
+
+		echo '<button type="submit" ' . fs_parse_attr( $args ) . '>' . $text . '</button>';
+	}
 }

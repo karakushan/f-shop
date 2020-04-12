@@ -37,7 +37,7 @@ class FS_Taxonomies_Class {
 	 */
 	public static function get_taxonomy_fields( $term = null ) {
 		$checkout_fields = [];
-		foreach ( FS_Users_Class::get_user_fields() as $key => $user_field ) {
+		foreach ( FS_Users::get_user_fields() as $key => $user_field ) {
 			if ( isset( $user_field['checkout'] ) && $user_field['checkout'] == true ) {
 				$checkout_fields[ $key ] = $user_field['name'];
 			}
@@ -506,7 +506,7 @@ class FS_Taxonomies_Class {
 	 * @param $taxonomy
 	 */
 	function edit_taxonomy_fields( $term, $taxonomy ) {
-		$form   = new FS_Form_Class();
+		$form   = new FS_Form();
 		$fields = self::get_taxonomy_fields( $term );
 
 		if ( count( $fields[ $taxonomy ] ) ) {
@@ -535,7 +535,7 @@ class FS_Taxonomies_Class {
 	 */
 	function add_taxonomy_fields( $taxonomy ) {
 
-		$form   = new FS_Form_Class();
+		$form   = new FS_Form();
 		$fields = self::get_taxonomy_fields();
 		if (isset($fields[ $taxonomy ]) && is_array($fields[ $taxonomy ]) && count( $fields[ $taxonomy ] ) ) {
 			foreach ( $fields[ $taxonomy ] as $name => $field ) {

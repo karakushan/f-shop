@@ -16,16 +16,16 @@ class FS_Shortcode {
 
 
 		// Шорткод формы входа
-		add_shortcode( 'fs_login', array( 'FS\FS_Users_Class', 'login_form' ) );
+		add_shortcode( 'fs_login', array( 'FS\FS_Users', 'login_form' ) );
 
 		// Шорткод формы регистрации
-		add_shortcode( 'fs_register', array( 'FS\FS_Users_Class', 'register_form' ) );
+		add_shortcode( 'fs_register', array( 'FS\FS_Users', 'register_form' ) );
 
 		// Шорткод формы сброса пароля
-		add_shortcode( 'fs_lostpassword', array( 'FS\FS_Users_Class', 'lostpassword_form' ) );
+		add_shortcode( 'fs_lostpassword', array( 'FS\FS_Users', 'lostpassword_form' ) );
 
 		// Шорткод личного кабинета
-		add_shortcode( 'fs_user_cabinet', array( 'FS\FS_Users_Class', 'user_cabinet' ) );
+		add_shortcode( 'fs_user_cabinet', array( 'FS\FS_Users', 'user_cabinet' ) );
 
 		// Шорткод страницы корзины
 		add_shortcode( 'fs_cart', array( $this, 'cart_shortcode' ) );
@@ -44,7 +44,7 @@ class FS_Shortcode {
 
 		add_shortcode( 'fs_single_order', array( $this, 'single_order' ) );
 
-		add_shortcode( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info' ) );
+		add_shortcode( 'fs_user_info', array( 'FS\FS_Users', 'user_info' ) );
 		add_shortcode( 'fs_user_orders', array( $this, 'user_orders' ) );
 		add_shortcode( 'fs_profile_edit', array( $this, 'profile_edit' ) );
 		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );

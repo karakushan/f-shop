@@ -1,6 +1,9 @@
 <?php
 
 namespace FS;
+
+
+
 /**
  * Инициализирует функции и классы плагина
  */
@@ -49,7 +52,7 @@ class FS_Init {
 		$this->fs_images     = new FS_Images_Class;
 		$this->fs_taxonomies = new FS_Taxonomies_Class;
 		$this->fs_action     = new FS_Action_Class;
-		$this->fs_users      = new FS_Users_Class;
+		$this->fs_users      = new FS_Users;
 		$this->fs_api        = new FS_Api_Class();
 		$this->fs_payment    = new FS_Payment_Class();
 		$this->fs_widget     = new FS_Widget_CLass();

@@ -113,11 +113,11 @@ class FS_Action_Class {
 
 		//===== USERS =====
 		/* Выводит форму авторизации на сайте */
-		add_action( 'fs_login_form', array( 'FS\FS_Users_Class', 'login_form' ), 10, 1 );
+		add_action( 'fs_login_form', array( 'FS\FS_Users', 'login_form' ), 10, 1 );
 		/* Выводит всю информацию о текущем пользователе в виде списка */
-		add_action( 'fs_user_info', array( 'FS\FS_Users_Class', 'user_info_show' ), 10 );
+		add_action( 'fs_user_info', array( 'FS\FS_Users', 'user_info_show' ), 10 );
 		/* Выводит форму редактирования профиля */
-		add_action( 'fs_profile_edit', array( 'FS\FS_Users_Class', 'profile_edit' ), 10, 1 );
+		add_action( 'fs_profile_edit', array( 'FS\FS_Users', 'profile_edit' ), 10, 1 );
 
 		//===== COMPARISON LIST ====
 		add_action( 'fs_add_to_comparison', 'fs_add_to_comparison', 10, 3 );
@@ -177,6 +177,4 @@ class FS_Action_Class {
 	function action_save_options( $data ) {
 		flush_rewrite_rules();
 	}
-
-
 }

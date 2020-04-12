@@ -16,7 +16,7 @@
         <div class="tab-content">
             <div class="tab-pane fade active show" id="fs-dashboard-sub-tab-1" role="tabpanel">
                 <h4 class="tab-title"><?php esc_html_e( 'Edit profile', 'f-shop' ); ?></h4>
-				<?php echo FS\FS_Form_Class::form_open( array(
+				<?php echo FS\FS_Form::form_open( array(
 					'class'       => 'fs-dashboard-personal',
 					'id'          => 'fs-save-user-data',
 					'name'        => 'fs-save-user-data',
@@ -41,7 +41,7 @@
 
                         <div class="col-sm-10">
                             <div class="fs-user-avatar"
-                                 style="background-image:url(<?php echo esc_url( \FS\FS_Users_Class::get_user_avatar_url() ) ?>);">
+                                 style="background-image:url(<?php echo esc_url( \FS\FS_Users::get_user_avatar_url() ) ?>);">
 								<?php fs_form_field( 'fs_user_avatar', [ 'class' => 'form-control ' ] ) ?>
                                 <label for="fs_user_avatar" class="btn btn-dark btn-sm"
                                 ><?php esc_html_e( 'Choose a photo', 'f-shop' ) ?></label>
@@ -87,10 +87,10 @@
 
                 </fieldset>
                 <button type="submit" class="btn btn-lg btn-primary bts bts-lg"><?php esc_html_e( 'Save' ) ?></button>
-				<?php echo FS\FS_Form_Class::form_close(); ?>
+				<?php echo FS\FS_Form::form_close(); ?>
             </div>
             <div class="tab-pane fade" id="fs-dashboard-sub-tab-2" role="tabpanel">
-				<?php echo FS\FS_Form_Class::form_open( array(
+				<?php echo FS\FS_Form::form_open( array(
 					'class'       => 'fs-dashboard-personal',
 					'id'          => 'fs-save-user-data',
 					'name'        => 'fs-save-user-data',
@@ -108,11 +108,11 @@
 
                 </fieldset>
                 <button type="submit" class="btn btn-lg btn-primary bts bts-lg"><?php esc_html_e( 'Save' ) ?></button>
-				<?php echo FS\FS_Form_Class::form_close(); ?>
+				<?php echo FS\FS_Form::form_close(); ?>
             </div>
             <div class="tab-pane fade" id="fs-dashboard-sub-tab-3" role="tabpanel">
                 <h4 class="tab-title"><?php esc_html_e( 'Login and password', 'f-shop' ); ?></h4>
-				<?php echo FS\FS_Form_Class::form_open( array(
+				<?php echo FS\FS_Form::form_open( array(
 					'class'       => 'fs-dashboard-personal',
 					'id'          => 'fs_change_login',
 					'name'        => 'fs_change_login',
@@ -138,11 +138,11 @@
                     </div>
                 </fieldset>
                 <button type="submit" class="btn btn-lg btn-primary bts bts-lg"><?php esc_html_e( 'Save' ) ?></button>
-				<?php echo FS\FS_Form_Class::form_close(); ?>
+				<?php echo FS\FS_Form::form_close(); ?>
             </div>
             <div class="tab-pane fade" id="fs-dashboard-sub-tab-4" role="tabpanel">
                 <h4 class="tab-title"><?php esc_html_e( 'Account deleting', 'f-shop' ); ?></h4>
-				<?php echo FS\FS_Form_Class::form_open( array(
+				<?php echo FS\FS_Form::form_open( array(
 					'class'       => 'fs-dashboard-personal',
 					'id'          => 'fs-save-user-data',
 					'name'        => 'fs_delete_account',
@@ -161,7 +161,7 @@
                     </div>
                 </fieldset>
                 <button type="submit" class="btn btn-lg btn-primary bts bts-lg"><?php esc_html_e( 'Save' ) ?></button>
-				<?php echo FS\FS_Form_Class::form_close(); ?>
+				<?php echo FS\FS_Form::form_close(); ?>
             </div>
         </div>
     </div>
