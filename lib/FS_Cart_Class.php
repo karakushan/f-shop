@@ -92,7 +92,7 @@ class FS_Cart_Class {
 		$count         = floatval( $_POST['count'] );
 		$variations    = $product_class->get_product_variations( $product_id, false );
 		$is_variated   = count( $variations ) ? true : false;
-		$search_item   = 0;
+		$search_item   = -1;
 
 		// Выполняем поиск подобной позиции в корзине
 		if ( ! empty( $_SESSION['cart'] ) ) {
@@ -105,7 +105,7 @@ class FS_Cart_Class {
 			}
 		}
 
-		if ( $search_item && ! empty( $_SESSION['cart'] ) ) {
+		if ( $search_item != -1 && ! empty( $_SESSION['cart'] ) ) {
 			$_SESSION['cart'][ $search_item ] = array(
 				'ID'        => $product_id,
 				'count'     => floatval( $_SESSION['cart'][ $search_item ]['count'] + $count ),
