@@ -478,7 +478,7 @@ add_filter( 'generate_rewrite_rules', 'fs_generate_taxonomy_rewrite_rules' );
 
 // We redirect to a localized url
 // TODO проверить хук ниже, есть баги
-add_action( 'template_redirect', function () {
+/*add_action( 'template_redirect', function () {
 	// Выходим если запрос пришел не из категории товара
 	if ( ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
 		return;
@@ -503,7 +503,7 @@ add_action( 'template_redirect', function () {
 	}
 
 	return;
-} );
+} );*/
 
 
 // Localization of product meta fields
