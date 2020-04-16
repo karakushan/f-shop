@@ -610,6 +610,8 @@ class FS_Product {
 
 		$args = wp_parse_args( $args, array(
 			'wrapper_class'   => 'fs-product-tabs',
+			'before'   => '',
+			'after'   => '',
 			'attributes_args' => array()
 
 		) );
@@ -650,6 +652,7 @@ class FS_Product {
 		if ( is_array( $default_tabs ) && ! empty( $default_tabs ) ) {
 
 			$html = '<div class="' . esc_attr( $args['wrapper_class'] ) . '">';
+			$html .= $args['before'];
 			$html .= '<ul class="nav nav-tabs" id="fs-product-tabs-nav" role="tablist">';
 
 			// Display tab switches
@@ -677,7 +680,7 @@ class FS_Product {
 			}
 
 			$html .= '</div><!-- END #fs-product-tabs-content -->';
-
+			$html .= $args['after'];
 			$html .= ' </div><!-- END .product-meta__row -->';
 
 			echo apply_filters( 'fs_product_tabs_html', $html );

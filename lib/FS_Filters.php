@@ -6,23 +6,20 @@ namespace FS;
  * @package FS
  */
 class FS_Filters {
-	private $exclude = array(
-		'fs_filter',
-		'price_start',
-		'price_end',
-		'sort_custom'
-	);
-
 	function __construct() {
-		// Фильтрация постов на фронтэнде
+		// Filtering posts on the front end
 		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ), 12, 1 );
-		// Фильтрация товаров на бэкенде
+
+		// Backend product filtering
 		add_action( 'pre_get_posts', array( $this, 'filter_products_admin' ), 10, 1 );
-		// фильтр по категориям товаров в админке
+
+		// Filter by product categories in the admin panel
 		add_action( 'restrict_manage_posts', array( $this, 'category_filter_admin' ) );
-		// настройка к-ва товаров на странице архива товаров
+
+		// Setting the quantity of goods on the page of the archive of goods
 		add_action( 'template_redirect', array( $this, 'redirect_per_page' ) );
-		// редиректы для админки
+
+		// Admin redirects
 		add_action( 'admin_init', array( $this, 'redirects_admin_pages' ) );
 
 		// Display the product edit fields in the quick editing mode
@@ -31,6 +28,18 @@ class FS_Filters {
 		// Modify the saved product field
 		add_filter( 'fs_filter_meta_field', array( $this, 'fs_filter_meta_field' ), 10, 3 );
 
+		// Here are the hooks for changing the name and mail of the sender
+		add_filter( 'wp_mail_from', array( $this, 'sender_email' ) );
+		add_filter( 'wp_mail_from_name', array( $this, 'sender_name' ) );
+
+	}
+
+	function sender_email( $original_email_address ) {
+		return fs_option( 'email_sender', $original_email_address );
+	}
+
+	function sender_name( $original_email_from ) {
+		return fs_option( 'name_sender', $original_email_from );
 	}
 
 	/**
