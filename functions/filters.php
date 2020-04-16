@@ -460,9 +460,11 @@ function fs_generate_taxonomy_rewrite_rules( $wp_rewrite ) {
 				if ( $language['locale'] == FS_Config::default_language() ) {
 					$rules[ $term->slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
 					$rules[ $term->slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+					$rules[ $term->slug . '/page-(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
 				} elseif ( $localize_slug ) {
 					$rules[ $localize_slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
 					$rules[ $localize_slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+					$rules[ $localize_slug . '/page-(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
 				}
 			}
 		}
@@ -475,36 +477,6 @@ function fs_generate_taxonomy_rewrite_rules( $wp_rewrite ) {
 }
 
 add_filter( 'generate_rewrite_rules', 'fs_generate_taxonomy_rewrite_rules' );
-
-// We redirect to a localized url
-// TODO проверить хук ниже, есть баги
-/*add_action( 'template_redirect', function () {
-	// Выходим если запрос пришел не из категории товара
-	if ( ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-		return;
-	}
-
-	// Выходим если в админке отключена локализации слага
-	if ( fs_option( 'fs_localize_slug' ) !== '1' ) {
-		return;
-	}
-
-	$current_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-
-	$term_id   = get_queried_object_id();
-	$term_link = get_term_link( $term_id );
-	if ( get_query_var( 'paged' ) && get_query_var( 'paged' ) > 1 ) {
-		$term_link = $term_link . 'page/' . get_query_var( 'paged' ) . '/';
-	}
-	if ( $current_link != $term_link ) {
-		wp_safe_redirect( $term_link );
-		exit;
-	}
-
-	return;
-} );*/
-
 
 // Localization of product meta fields
 add_filter( 'fs_product_tab_admin_meta_key', 'fs_product_tab_admin_meta_key', 10, 2 );

@@ -52,6 +52,84 @@ class FS_Product {
 	}
 
 	/**
+	 * Micro-marking of product card
+	 */
+	function product_microdata() {
+		$product_taxonomy = FS_Config::get_data( 'post_type' );
+		if ( is_admin() || ! is_singular( $product_taxonomy ) ) {
+			return;
+		}
+		global $post;
+		$product_id   = intval( $post->ID );
+		$categories   = get_the_terms( $product_id, $product_taxonomy );
+		$manufacturer = get_the_terms( $product_id, 'brands' );
+		$brand        = ! is_wp_error( $manufacturer ) && ! empty( $manufacturer[0]->name ) ? $manufacturer[0]->name : get_bloginfo( 'name' );
+		$description  = $post->post_excerpt
+			? apply_filters( 'the_content', $post->post_excerpt )
+			: apply_filters( 'the_content', $post->post_content );
+		$description  = strip_tags( $description );
+
+		$schema = array(
+			"@context"     => "https://schema.org",
+			"@type"        => "Product",
+			"url"          => get_the_permalink(),
+			"category"     => ! is_wp_error( $categories ) && ! empty( $categories[0]->name ) ? esc_attr( $categories[0]->name ) : '',
+			"image"        => esc_url( fs_get_product_thumbnail_url( 0, 'full' ) ),
+			"brand"        => $brand,
+			"manufacturer" => $brand,
+			"model"        => get_the_title(),
+			"sku"          => fs_get_product_code(),
+			"mpn"          => fs_get_product_code(),
+			"productID"    => $product_id,
+			"description"  => $description,
+			"name"         => get_the_title( $product_id ),
+			"offers"       => [
+				"@type"           => "Offer",
+				"availability"    => fs_aviable_product() ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+				"price"           => fs_get_price(),
+				"priceCurrency"   => fs_option( 'fs_currency_code', 'UAH' ),
+				"url"             => get_the_permalink(),
+				"priceValidUntil" => date( "Y-m-d", strtotime( 'tomorrow' ) ),
+			]
+		);
+
+
+		// -->aggregateRating
+		$total_vote = get_post_meta( $product_id, 'fs_product_rating' );
+		if ( count( $total_vote ) ) {
+			$schema["aggregateRating"] = [
+				"@type"       => "AggregateRating",
+				"ratingCount" => count( $total_vote ),
+				"ratingValue" => self::get_average_rating( $product_id )
+			];
+		}
+
+		// -->review
+		$comments = get_comments( [ 'post_id' => $product_id ] );
+		if ( $comments ) {
+			foreach ( $comments as $comment ) {
+				$schema['review'] = [
+					"@type"        => "Review",
+					"reviewRating" => [
+						"@type"       => "Rating",
+						"ratingValue" => "5",
+						"bestRating"  => "5"
+					],
+					"author"       => [
+						"@type" => "Person",
+						"name"  => $comment->comment_author
+					]
+				];
+			}
+		}
+
+		echo ' <script type="application/ld+json">';
+		echo json_encode( $schema );
+		echo ' </script>';
+
+	}
+
+	/**
 	 * hook into WP's init action hook
 	 */
 	public function init() {
@@ -217,10 +295,10 @@ class FS_Product {
 	 *
 	 * @return float|int
 	 */
-	public static function get_vote_counting( $product_id = 0 ) {
+	public static function get_average_rating( $product_id = 0 ) {
 		$product_id = fs_get_product_id( $product_id );
 		$rate       = 0;
-		$total_vote = get_post_meta( $product_id, 'fs_product_rating', 0 );
+		$total_vote = get_post_meta( $product_id, 'fs_product_rating' );
 		if ( $total_vote ) {
 			$sum_votes   = array_sum( $total_vote );
 			$count_votes = count( $total_vote );
@@ -241,7 +319,7 @@ class FS_Product {
 		$args       = wp_parse_args( $args, array(
 			'wrapper_class' => 'fs-rating',
 			'stars'         => 5,
-			'default_value' => self::get_vote_counting( $product_id ),
+			'default_value' => self::get_average_rating( $product_id ),
 			'star_class'    => 'fa fa-star'
 		) );
 		?>
@@ -610,8 +688,8 @@ class FS_Product {
 
 		$args = wp_parse_args( $args, array(
 			'wrapper_class'   => 'fs-product-tabs',
-			'before'   => '',
-			'after'   => '',
+			'before'          => '',
+			'after'           => '',
 			'attributes_args' => array()
 
 		) );

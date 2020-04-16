@@ -17,6 +17,8 @@
 
 namespace FS;
 class FS_Taxonomies_Class {
+	public $taxonomy_pagination_structure = 'page/%d';
+
 	function __construct() {
 		add_action( 'init', array( $this, 'create_taxonomy' ) );
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
@@ -25,7 +27,88 @@ class FS_Taxonomies_Class {
 		add_filter( 'document_title_parts', array( $this, 'document_title_parts_filter' ), 10, 1 );
 		add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
 		add_action( 'wp_head', array( $this, 'wp_head_action' ), 1 );
+		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
+	}
 
+
+	/**
+	 * Redirect to a localized url
+	 */
+	function redirect_to_localize_url() {
+		// Leave if the request came not from the product category
+		if ( ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+			return;
+		}
+
+		// Exit if slug localization is disabled in the admin panel.
+		if ( fs_option( 'fs_localize_slug' ) !== '1' ) {
+			return;
+		}
+		$current_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$term_id      = get_queried_object_id();
+		$term_link    = get_term_link( $term_id );
+		if ( get_query_var( 'paged' ) && get_query_var( 'paged' ) > 1 ) {
+			$taxonomy_pagination_structure = apply_filters( 'fs_taxonomy_pagination_structure', $this->taxonomy_pagination_structure );
+			$term_link                     = $term_link . sprintf( $taxonomy_pagination_structure, get_query_var( 'paged' ) ) . '/';
+
+
+		}
+		if ( $_SERVER['QUERY_STRING'] ) {
+			$term_link .= '?' . $_SERVER['QUERY_STRING'];
+		}
+		if ( $current_link != $term_link ) {
+			wp_safe_redirect( $term_link );
+			exit;
+		}
+
+		return;
+	}
+
+	/**
+	 * Micro-marking of product category
+	 */
+	function product_category_microdata() {
+		if ( is_admin() || ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+			return;
+		}
+
+		global $wp_query, $wpdb;
+
+		// Get the current product category term object
+		$term = get_queried_object();
+
+		$price_field = FS_Config::get_meta( 'price' );
+
+		# Get ALL related products prices related to a specific product category
+		$results = $wpdb->get_col( " SELECT pm.meta_value FROM {$wpdb->prefix}term_relationships as tr INNER JOIN {$wpdb->prefix}term_taxonomy as tt ON tr.term_taxonomy_id = tt.term_taxonomy_id INNER JOIN {$wpdb->prefix}terms as t ON tr.term_taxonomy_id = t.term_id INNER JOIN {$wpdb->prefix}postmeta as pm ON tr.object_id = pm.post_id WHERE tt.taxonomy LIKE 'catalog' AND t.term_id = {$term->term_id} AND pm.meta_key = '$price_field' " );
+
+		// Sorting prices numerically
+		sort( $results, SORT_NUMERIC );
+
+		// Get the min and max prices
+		$min = current( $results );
+		$max = end( $results );
+
+		$schema = array(
+			"@context" => "https://schema.org",
+			"@type"    => "Product",
+			"name"     => single_term_title( '', 0 ),
+			"offers"   => [
+				"@type"         => "AggregateOffer",
+				"lowPrice"      => floatval( $min ),
+				"highPrice"     => floatval( $max ),
+				"offerCount"    => intval( $wp_query->found_posts ),
+				"priceCurrency" => "UAH"
+
+			],
+			"url"      => get_term_link( get_queried_object_id() )
+		);
+
+		if ( ! empty( $schema ) ) {
+			echo ' <script type="application/ld+json">';
+			echo json_encode( $schema );
+			echo ' </script>';
+		}
 	}
 
 	/**
@@ -537,7 +620,7 @@ class FS_Taxonomies_Class {
 
 		$form   = new FS_Form();
 		$fields = self::get_taxonomy_fields();
-		if (isset($fields[ $taxonomy ]) && is_array($fields[ $taxonomy ]) && count( $fields[ $taxonomy ] ) ) {
+		if ( isset( $fields[ $taxonomy ] ) && is_array( $fields[ $taxonomy ] ) && count( $fields[ $taxonomy ] ) ) {
 			foreach ( $fields[ $taxonomy ] as $name => $field ) {
 				$id = str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $field['type'] ) );
 				echo '<div class="form-field ' . esc_attr( $name ) . '-wrap">';

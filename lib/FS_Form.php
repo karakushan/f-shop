@@ -3,15 +3,6 @@
 namespace FS;
 
 class FS_Form {
-
-	public function __construct() {
-
-	}
-
-
-
-
-
 	/**
 	 * Returns all registered field types
 	 *

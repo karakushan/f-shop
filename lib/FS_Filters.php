@@ -8,7 +8,7 @@ namespace FS;
 class FS_Filters {
 	function __construct() {
 		// Filtering posts on the front end
-		add_action( 'pre_get_posts', array( $this, 'filter_curr_product' ), 12, 1 );
+		add_action( 'pre_get_posts', array( $this, 'taxonomy_filter_products' ), 12, 1 );
 
 		// Backend product filtering
 		add_action( 'pre_get_posts', array( $this, 'filter_products_admin' ), 10, 1 );
@@ -189,17 +189,13 @@ class FS_Filters {
 	 *
 	 * @param $query
 	 */
-	public function filter_curr_product( $query ) {
-//		fs_debug_data($query,'$query','print_r');
-
-
+	public function taxonomy_filter_products( $query ) {
 		global $fs_config, $wpdb;
 
 		// Если это админка или не главный запрос
 		if ( $query->is_admin || ! $query->is_main_query() ) {
 			return;
 		}
-
 
 		// If we are on the search page
 		if ( $query->is_search ) {
