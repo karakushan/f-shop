@@ -1,5 +1,6 @@
 <?php
 
+use FS\FS_Config;
 use FS\FS_Product;
 
 /**
@@ -10,7 +11,7 @@ use FS\FS_Product;
  * @return array массив атрибутов
  */
 function fs_get_attributes_group( $product_id = 0 ) {
-	$product_id = fs_get_product_id($product_id);
+	$product_id = fs_get_product_id( $product_id );
 	$terms      = wp_get_object_terms( $product_id, 'product-attributes' );
 	$parents    = array();
 	foreach ( $terms as $key => $term ) {
@@ -282,7 +283,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 
 			$label_before_text = '';
 			if ( $args['type'] == 'color' ) {
-				$label_before_text = '<span class="fs-color-box" data-toggle="tooltip" title="'.$term->name.'" style="' . esc_attr( $color_box_style ) . '"></span>';
+				$label_before_text = '<span class="fs-color-box" data-toggle="tooltip" title="' . $term->name . '" style="' . esc_attr( $color_box_style ) . '"></span>';
 			}
 
 			echo '<label for="check-' . esc_attr( $term->slug ) . '"  class="' . esc_attr( $args['label_class'] ) . '">' . $label_before_text . ' ' . $term->name . '</label >';

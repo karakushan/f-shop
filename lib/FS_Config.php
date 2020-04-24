@@ -680,6 +680,16 @@ class FS_Config {
 		return apply_filters( 'fs_default_language', 'ru_RU' );
 	}
 
+	/**
+	 * Язык (локаль) по умолчанию
+	 *
+	 * @return mixed|void
+	 */
+	public
+	static function default_language_name() {
+		return apply_filters( 'default_language_name', 'ru' );
+	}
+
 
 	/**
 	 * Returns a setting or array of basic plugin settings

@@ -1,38 +1,35 @@
 <div class="fs-widget-wrapper">
-	<p>
-		<label
-			for="<?php use FS\FS_Config;
-
-			echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
-		<input class="widefat wpglobus-dialog-field" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
-		       name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
-		       value="<?php echo esc_attr( $title ); ?>"/>
-	</p>
-	<p>
-		<label
-			for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>"><?php esc_html_e( 'Feature Group', 'f-shop' ) ?></label>
+    <p>
+        <label
+                for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
+        <input class="widefat wpglobus-dialog-field" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+               name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
+               value="<?php echo esc_attr( $title ); ?>"/>
+    </p>
+    <p>
+        <label
+                for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>"><?php esc_html_e( 'Feature Group', 'f-shop' ) ?></label>
 		<?php wp_dropdown_categories( $args ); ?>
-	</p>
-	<p>
-		<input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'fs_screen_atts' ) ); ?>"
-		       value="1"
-		       id="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>" <?php checked( 1, $fs_screen_atts ) ?>>
-		<label for="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>"><?php esc_html_e( 'Attributes for category only', 'f-shop' ) ?></label>
-	</p>
-	<p>
-		<label
-			for="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>"><?php esc_html_e( 'Type', 'f-shop' ) ?></label><br>
-		<select name="<?php echo esc_attr( $this->get_field_name( 'fs_att_types' ) ); ?>"
-		        id="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>">
-			<option value="normal"><?php esc_html_e( 'Normal', 'f-shop' ) ?></option>
-			<option
-				value="color" <?php selected( 'color', $fs_att_types ) ?>><?php esc_html_e( 'Color', 'f-shop' ) ?></option>
-			<option
-				value="image" <?php selected( 'image', $fs_att_types ) ?>><?php esc_html_e( 'Image', 'f-shop' ) ?></option>
-		</select>
-	</p>
-	<p>
-		<label for="">Показывать только в категориях</label>
+    </p>
+    <p>
+        <input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'fs_screen_atts' ) ); ?>"
+               value="1"
+               id="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>" <?php checked( 1, $fs_screen_atts ) ?>>
+        <label for="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>"><?php esc_html_e( 'Attributes for category only', 'f-shop' ) ?></label>
+    </p>
+    <p>
+        <label for="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>"><?php esc_html_e( 'Type', 'f-shop' ) ?></label>
+        <select name="<?php echo esc_attr( $this->get_field_name( 'fs_att_types' ) ); ?>"
+                id="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>">
+            <option value="normal"><?php esc_html_e( 'Normal', 'f-shop' ) ?></option>
+            <option
+                    value="color" <?php selected( 'color', $fs_att_types ) ?>><?php esc_html_e( 'Color', 'f-shop' ) ?></option>
+            <option
+                    value="image" <?php selected( 'image', $fs_att_types ) ?>><?php esc_html_e( 'Image', 'f-shop' ) ?></option>
+        </select>
+    </p>
+    <p>
+        <label for=""><?php esc_html_e('Show only in categories','f-shop'); ?></label>
 		<?php $args = array(
 			'show_option_all'   => '',
 			'show_option_none'  => '',
@@ -60,5 +57,5 @@
 		);
 
 		wp_dropdown_categories( $args ); ?>
-	</p>
+    </p>
 </div>
