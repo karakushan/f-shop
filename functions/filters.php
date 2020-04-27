@@ -534,26 +534,3 @@ function fs_post_type_link_filters( $post_link, $post, $leavename, $sample ) {
 
 	return $post_link;
 }
-
-// Convert post name to slug
-add_filter( 'fs_filter_meta_field', 'fs_filter_meta_field', 10, 3 );
-function fs_filter_meta_field( $meta_value, $field_name, $post_id ) {
-	if ( strpos( $field_name, 'fs_seo_slug' ) !== false && empty( $meta_value ) ) {
-		$post  = get_post( $post_id );
-		$title = $post->post_title;
-		$slug  = fs_convert_cyr_name( $title );
-		if ( defined( 'WPGLOBUS_VERSION' ) && ! empty( $_REQUEST['wpglobus_language'] ) ) {
-			$slug = fs_convert_cyr_name( \WPGlobus_Core::extract_text( $title, $_REQUEST['wpglobus_language'] ) );
-		}
-		global $wpdb;
-		$query                 = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s' AND post_id!=%d ", $field_name, $slug, $post_id );
-		$slug_duplicates_count = $wpdb->get_var( $query );
-		if ( $slug_duplicates_count > 0 ) {
-			$slug = $slug . '-' . $post_id;
-		}
-
-		$meta_value = $slug;
-	}
-
-	return $meta_value;
-}

@@ -38,7 +38,7 @@ class FS_Product {
 		/** set the global variable $fs_product */
 		$GLOBALS['fs_product'] = $this;
 
-		add_action( 'save_post', array( $this, 'save_product_fields' ) );
+		add_action( 'save_post', array( $this, 'save_product_fields' ),10,3 );
 
 		add_action( 'init', array( $this, 'init' ), 12 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
@@ -825,7 +825,7 @@ class FS_Product {
 	 *
 	 * @param $post_id
 	 */
-	function save_product_fields( $post_id ) {
+	function save_product_fields( $post_id ,$post, $update) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
@@ -850,9 +850,10 @@ class FS_Product {
 			}
 
 			// Modify the saved field through the filter'fs_filter_meta_field'
-			$_POST[ $field_name ] = apply_filters( 'fs_filter_meta_field', $_POST[ $field_name ], $field_name, $post_id );
+			$value = apply_filters( 'fs_filter_meta_field', $_POST[ $field_name ], $field_name, $post );
+			$value = apply_filters( 'fs_filter_meta_field__' . $field_name, $value, $field_name, $post );
 
-			update_post_meta( $post_id, $field_name, $_POST[ $field_name ] );
+			update_post_meta( $post_id, $field_name, $value );
 		}
 
 		do_action( 'fs_after_save_meta_fields', $post_id );

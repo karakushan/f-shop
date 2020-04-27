@@ -32,6 +32,46 @@ class FS_Filters {
 		add_filter( 'wp_mail_from', array( $this, 'sender_email' ) );
 		add_filter( 'wp_mail_from_name', array( $this, 'sender_name' ) );
 
+		/**
+		 * Transliteration of text for use in the slug
+		 */
+		add_filter( 'fs_filter_meta_field', array( $this, 'transliteration_product_slug' ), 10, 3 );
+
+	}
+
+	/**
+	 * Transliteration of text for use in the slug
+	 *
+	 * @param $title
+	 * @param $field_name
+	 * @param $post
+	 *
+	 * @return mixed|string
+	 */
+	function transliteration_product_slug( $title, $field_name, $post ) {
+
+		if ( strpos( $field_name, 'fs_seo_slug' ) === false ) {
+			return $title;
+		}
+
+		global $wpdb;
+
+		if ( empty( $title ) && defined( 'WPGLOBUS_VERSION' ) && ! empty( $_REQUEST['wpglobus_language'] ) ) {
+			$title = \WPGlobus_Core::extract_text( $post->post_title, $_REQUEST['wpglobus_language'] );
+		}elseif ( empty( $title ) && isset( $post->post_title ) ) {
+			$title = apply_filters( 'the_title', $post->post_title );
+		}
+
+		$slug = fs_transliteration( $title );
+
+		// Looking for a similar slug in the database, if found, add a suffix
+		$query                 = $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s' AND post_id!=%d ", $field_name, $slug, $post->ID );
+		$slug_duplicates_count = $wpdb->get_var( $query );
+		if ( $slug_duplicates_count > 0 ) {
+			$slug = $slug . '-' . $post->ID;
+		}
+
+		return $slug;
 	}
 
 	function sender_email( $original_email_address ) {
@@ -47,11 +87,11 @@ class FS_Filters {
 	 *
 	 * @param $value
 	 * @param $field_name
-	 * @param $post_id
+	 * @param $post
 	 *
 	 * @return float
 	 */
-	function fs_filter_meta_field( $value, $field_name, $post_id ) {
+	function fs_filter_meta_field( $value, $field_name, $post ) {
 		if ( $field_name == FS_Config::get_meta( 'price' ) ) {
 			$value = floatval( str_replace( array( ',' ), array( '.' ), sanitize_text_field( $value ) ) );
 		}
