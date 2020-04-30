@@ -126,7 +126,7 @@ class FS_Form {
 
 				echo '<div class="' . esc_attr( $tab_class ) . '" id="fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '">';
 				$name          = $item['locale'] != FS_Config::default_language() ? $name . '__' . $item['locale'] : $name;
-				$args['value'] = ! empty( $_GET['tag_ID'] ) ? FS_Taxonomies_Class::fs_get_term_meta( intval( $_GET['tag_ID'] ), $name ) : null;
+				$args['value'] = ! empty( $_GET['tag_ID'] ) ? FS_Taxonomy::fs_get_term_meta( intval( $_GET['tag_ID'] ), $name ) : null;
 				if ( ! $args['value'] && $args['default'] ) {
 					$args['value'] = $args['default'];
 				}

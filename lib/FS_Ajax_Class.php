@@ -262,7 +262,7 @@ class FS_Ajax_Class {
 
 	// привязка атрибута к товару
 	function fs_add_att_callback() {
-		global $fs_config;
+		$fs_config=new FS_Config();
 		$post = array_map( 'sanitize_text_field', $_POST );
 
 		$post_terms = wp_set_post_terms( intval( $post['post'] ), intval( $post['term'] ), $fs_config->data['features_taxonomy'], true );
@@ -363,7 +363,7 @@ class FS_Ajax_Class {
 	 * удаляет один термин (свойство) товара
 	 */
 	function fs_remove_product_term_callback() {
-		global $fs_config;
+		$fs_config=new FS_Config();
 		$output = array_map( 'sanitize_text_field', $_POST );
 		$remove = wp_remove_object_terms( (int) $output['product_id'], (int) $output['term_id'], $fs_config->data['features_taxonomy'] );
 		if ( $remove ) {
@@ -403,7 +403,8 @@ class FS_Ajax_Class {
 	 *Отправка заказа в базу, на почту админа и заказчика
 	 */
 	function order_send_ajax() {
-		global $fs_config, $wpdb;
+		global $wpdb;
+		$fs_config=new FS_Config();
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
 		}

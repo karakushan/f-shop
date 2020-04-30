@@ -93,7 +93,7 @@ class FS_Settings_Class {
 	 * @return array
 	 */
 	function get_register_settings() {
-		global $fs_config;
+		$fs_config    = new FS_Config();
 		$export_class = new FS_Export_Class();
 
 		// Дебаг сессий

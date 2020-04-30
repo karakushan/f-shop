@@ -1,7 +1,7 @@
 <?php
-//фильтр преобразует необработанную цену в формат денег
 use FS\FS_Config;
 
+//фильтр преобразует необработанную цену в формат денег
 add_filter( 'fs_price_format', 'fs_price_format', 10, 2 );
 function fs_price_format( $price, $delimiter = '' ) {
 	$cents     = fs_option( 'price_cents' ) == 1 ? 2 : 0;
@@ -21,7 +21,7 @@ function fs_price_format( $price, $delimiter = '' ) {
  */
 function fs_discount_filter__callback( $price ) {
 
-	global $fs_config;
+	$fs_config      = new FS_Config();
 	$discounts      = get_terms( array( 'taxonomy' => $fs_config->data['discount_taxonomy'], 'hide_empty' => 0 ) );
 	$discounts_cart = [];
 	if ( $discounts ) {
@@ -266,7 +266,8 @@ function fs_price_filter_callback( $post_id, $price ) {
 	if ( fs_option( 'multi_currency_on' ) != 1 ) {
 		return $price;
 	}
-	global $fs_config, $wpdb;
+	global  $wpdb;
+	$fs_config=new FS_Config();
 	$default_currency_id = fs_option( 'default_currency' ); // id валюты установленной в настройках
 	$product_currency_id = get_post_meta( $post_id, $fs_config->meta['currency'], true );// id валюты товара
 	// default_currency_cost = get_term_meta( $default_currency_id, '_fs_currency_cost', true ); // стоимость валюты установленной в настройках
@@ -422,61 +423,6 @@ function fs_price_discount_filter( $product_id, $price ) {
 	return floatval( $price );
 }
 
-// Remove taxonomy slug from links
-add_filter( 'term_link', 'fs_replace_taxonomy_slug_filter', 10, 3 );
-function fs_replace_taxonomy_slug_filter( $termlink, $term, $taxonomy ) {
-	if ( $taxonomy != FS_Config::get_data( 'product_taxonomy' ) ) {
-		return $termlink;
-	}
-
-	$meta_key = get_locale() != FS_Config::default_language() ? '_seo_slug__' . get_locale() : '_seo_slug';
-
-	// Remove the taxonomy prefix in links
-	if ( fs_option( 'fs_disable_taxonomy_slug' ) ) {
-		$termlink = str_replace( '/' . $taxonomy . '/', '/', $termlink );
-	}
-
-	// We convert the link in accordance with the Cyrillic name
-	if ( get_locale() != FS_Config::default_language()
-	     && fs_option( 'fs_localize_slug' )
-	     && get_term_meta( $term->term_id, $meta_key, 1 ) ) {
-		$localize_slug = get_term_meta( $term->term_id, $meta_key, 1 );
-		$termlink      = str_replace( $term->slug, $localize_slug, $termlink );
-	}
-
-	return $termlink;
-}
-
-// Add rewrite rules for terms
-function fs_generate_taxonomy_rewrite_rules( $wp_rewrite ) {
-	$rules = array();
-	$terms = get_terms( [ 'taxonomy' => FS_Config::get_data( 'product_taxonomy' ), 'hide_empty' => false ] );
-
-	if ( fs_option( 'fs_disable_taxonomy_slug' ) ) {
-		foreach ( FS_Config::get_languages() as $key => $language ) {
-			$meta_key = $language['locale'] != FS_Config::default_language() ? '_seo_slug__' . $language['locale'] : '_seo_slug';
-			foreach ( $terms as $term ) {
-				$localize_slug = get_term_meta( $term->term_id, $meta_key, 1 );
-				if ( $language['locale'] == FS_Config::default_language() ) {
-					$rules[ $term->slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
-					$rules[ $term->slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
-					$rules[ $term->slug . '/page-(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
-				} elseif ( $localize_slug ) {
-					$rules[ $localize_slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
-					$rules[ $localize_slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
-					$rules[ $localize_slug . '/page-(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
-				}
-			}
-		}
-
-	}
-
-	$wp_rewrite->rules = $rules + $wp_rewrite->rules;
-
-	return $wp_rewrite->rules;
-}
-
-add_filter( 'generate_rewrite_rules', 'fs_generate_taxonomy_rewrite_rules' );
 
 // Localization of product meta fields
 add_filter( 'fs_product_tab_admin_meta_key', 'fs_product_tab_admin_meta_key', 10, 2 );

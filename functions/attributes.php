@@ -81,7 +81,7 @@ function fs_get_attribute( $attr_id, $product_id = 0, $args = array() ) {
  * @return array массив объектов поста
  */
 function fs_current_screen_attributes( $group_id = 0, $args = array() ) {
-	global $fs_config;
+	$fs_config=new FS_Config();
 	$atts = [];
 	$args = wp_parse_args( $args, array(
 		'taxonomy'   => $fs_config->data['features_taxonomy'],
@@ -181,7 +181,7 @@ function fs_aviable_select_filter( $first_option = 'сделайте выбор'
  */
 
 function fs_attr_filter( $group_id, $args = array() ) {
-	global $fs_config;
+	$fs_config=new FS_Config();
 	$default = array(
 		'redirect'            => true,
 		'container'           => 'ul',
@@ -345,7 +345,7 @@ function fs_attr_change( $required_atts = array() ) {
 }
 
 function fs_list_product_att_group( $product_id, $group_id ) {
-	global $fs_config;
+	$fs_config=new FS_Config();
 	$terms = get_the_terms( $product_id, $fs_config->data['features_taxonomy'] );
 	if ( $terms ) {
 		foreach ( $terms as $term ) {
@@ -359,7 +359,8 @@ function fs_list_product_att_group( $product_id, $group_id ) {
 }
 
 function fs_list_post_atts( $post_id = 0 ) {
-	global $fs_config, $post;
+	global $post;
+	$fs_config           = new FS_Config();
 	$post_id             = ! empty( $post_id ) ? $post_id : $post->ID;
 	$characteristics     = get_the_terms( $post_id, $fs_config->data['features_taxonomy'] );
 	$characteristic_sort = array();
@@ -430,7 +431,7 @@ function fs_get_the_terms_group( $product_id = 0, $taxonomy = 'product-attribute
  */
 function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) {
 
-	global $fs_config;
+	$fs_config = new FS_Config();
 
 	$product_id = fs_get_product_id( $product_id );
 
@@ -510,7 +511,7 @@ function fs_product_att_select( $product_id = 0, $parent = 0, $args = array() ) 
  * @param array $args - дополнительные атрибуты
  */
 function fs_dropdown_attr_group( $group_id = 0, $product_id = 0, $args = array() ) {
-	global $fs_config;
+	$fs_config  = new FS_Config();
 	$product    = new FS\FS_Product();
 	$variations = $product->get_product_variations( $product_id );
 	$product_id = fs_get_product_id( $product_id );

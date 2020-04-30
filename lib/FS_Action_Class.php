@@ -47,7 +47,7 @@ class FS_Action_Class {
 	 * метод регистрирует хуки-события плагина
 	 */
 	function register_plugin_action() {
-		global $fs_product;
+		$fs_product = new FS_Product();
 
 		//===== GENERAL =====
 		/* Сохранение настроек плагина */
@@ -124,7 +124,7 @@ class FS_Action_Class {
 
 		// ==== API ====
 		/* удаляет все термины из таксономий плагина */
-		add_action( 'fs_delete_taxonomy_terms', array( 'FS\FS_Taxonomies_Class', 'delete_taxonomy_terms' ), 10, 1 );
+		add_action( 'fs_delete_taxonomy_terms', array( 'FS\FS_Taxonomy', 'delete_taxonomy_terms' ), 10, 1 );
 		/* удаляет все заказы */
 		add_action( 'fs_delete_orders', array( 'FS\FS_Orders', 'delete_orders' ) );
 		/* удаляет все товары */

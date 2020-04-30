@@ -16,18 +16,334 @@
  */
 
 namespace FS;
-class FS_Taxonomies_Class {
+class FS_Taxonomy {
 	public $taxonomy_pagination_structure = 'page/%d';
+	public $taxonomy_name;
 
 	function __construct() {
+		$this->taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
+
 		add_action( 'init', array( $this, 'create_taxonomy' ) );
-		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
-		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'fs_currencies_column_content' ), 10, 3 );
+
+		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'currencies_column_content' ), 10, 3 );
+		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_edit-fs-currencies_columns', array( $this, 'add_fs_currencies_columns' ) );
 		add_filter( 'document_title_parts', array( $this, 'document_title_parts_filter' ), 10, 1 );
-		add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
+
 		add_action( 'wp_head', array( $this, 'wp_head_action' ), 1 );
 		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
+
+		// Change SEO Title
+		add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
+
+		// Remove taxonomy slug from links
+		add_filter( 'term_link', array( $this, 'replace_taxonomy_slug_filter' ), 10, 3 );
+
+		// Generate rewrite rules
+		add_action( 'generate_rewrite_rules', array( $this, 'taxonomy_rewrite_rules' ) );
+
+		// Change wordpress seo canonical
+		add_filter( 'wpseo_canonical', array( $this, 'change_taxonomy_canonical' ), 10, 1 );
+
+		// Filtering products on the category page and in the product archives
+		add_action( 'pre_get_posts', array( $this, 'taxonomy_filter_products' ), 12, 1 );
+	}
+
+	/**
+	 * Filtering products on the category page and in the product archives
+	 *
+	 * @param $query
+	 */
+	public function taxonomy_filter_products( $query ) {
+		global $wpdb;
+		$fs_config = new FS_Config();
+
+		// Если это админка или не главный запрос
+		if ( $query->is_admin || ! $query->is_main_query() ) {
+			return;
+		}
+
+		// If we are on the search page
+		if ( $query->is_search ) {
+			// Search by sku
+			$search_query = str_replace( ' ', '%', get_search_query() );
+			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value LIKE '%s'", $fs_config->meta['sku'], '%' . $search_query . '%' ) );
+
+			if ( $sku_products ) {
+				$query->set( 's', '' );
+				$query->set( 'post__in', $sku_products );
+			}
+
+			$query->set( 'post_type', 'product' );
+		} elseif ( $query->is_tax( FS_Config::get_data( 'product_taxonomy' ) ) || $query->is_post_type_archive( FS_Config::get_data( 'post_type' ) ) ) {
+
+			// отфильтровываем выключенные для показа товары в админке
+			$meta_query [] = array(
+				'relation' => 'AND',
+				'exclude'  => array(
+					'relation' => 'OR',
+					array(
+						'key'     => $fs_config->meta['exclude_archive'],
+						'compare' => 'NOT EXISTS'
+					),
+					array(
+						'key'     => $fs_config->meta['exclude_archive'],
+						'compare' => '!=',
+						'value'   => "1"
+					)
+				)
+			);
+
+			// Скрывать товары которых нет в наличии
+			if ( fs_option( 'fs_not_aviable_hidden' ) ) {
+				$meta_query [] = array(
+					'key'     => $fs_config->meta['remaining_amount'],
+					'compare' => '!=',
+					'value'   => "0"
+				);
+			}
+			$orderby   = array();
+			$order     = '';
+			$tax_query = array();
+			$per_page  = get_option( "posts_per_page" );
+			$arr_url   = urldecode( $_SERVER['QUERY_STRING'] );
+			parse_str( $arr_url, $url );
+
+
+			//Фильтрируем по значениям диапазона цен
+			if ( isset( $url['price_start'] ) && isset( $url['price_end'] ) ) {
+
+				$price_start                  = ! empty( $url['price_start'] ) ? (int) $url['price_start'] : 0;
+				$price_end                    = ! empty( $url['price_end'] ) ? (int) $url['price_end'] : 99999999999999999;
+				$meta_query['price_interval'] =
+					array(
+						'key'     => $fs_config->meta['price'],
+						'value'   => array( $price_start, $price_end ),
+						'compare' => 'BETWEEN',
+						'type'    => 'NUMERIC',
+					);
+			}
+
+			//Фильтрируем по к-во выводимых постов на странице
+			if ( isset( $url['per_page'] ) ) {
+				$per_page                                 = $url['per_page'];
+				$_SESSION['fs_user_settings']['per_page'] = $per_page;
+			}
+
+			//Устанавливаем страницу пагинации
+			if ( isset( $url['paged'] ) ) {
+				$query->set( 'paged', $url['paged'] );
+			}
+
+			// фильтр товаров по признакам
+			if ( ! empty( $url['filter_by'] ) ) {
+
+				switch ( $url['filter_by'] ) {
+					case 'action_price' :
+						$meta_query['action_price'] = array(
+							'key'     => $fs_config->meta['action_price'],
+							'compare' => '>',
+							'value'   => 0
+						);
+						$orderby['action_price']    = 'DESC';
+						break;
+				}
+
+			}
+
+
+			// Set the sort order in the default directory.
+			if ( empty( $url['order_type'] ) && fs_option( 'fs_product_sort_by' ) ) {
+				$url['order_type'] = fs_option( 'fs_product_sort_by' );
+			}
+
+			// Specify sorting rules
+			if ( ! empty( $url['order_type'] ) ) {
+
+				switch ( $url['order_type'] ) {
+					case 'price_asc': //sort by price in ascending order
+						$meta_query['price'] = array(
+							'key'  => FS_Config::get_meta( 'real_price' ),
+							'type' => 'DECIMAL'
+						);
+						$orderby['price']    = 'ASC';
+						break;
+					case 'price_desc': //sort by price in a falling order
+						$meta_query['price'] = array(
+							'key'  => FS_Config::get_meta( 'real_price' ),
+							'type' => 'DECIMAL'
+						);
+						$orderby['price']    = 'DESC';
+						break;
+					case 'views_desc': //сортируем по просмотрам в спадающем порядке
+						$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
+						$orderby['views']    = 'DESC';
+						break;
+					case 'views_asc': //сортируем по просмотрам в спадающем порядке
+						$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
+						$orderby['views']    = 'ASC';
+						break;
+					case 'name_asc': //сортируем по названию по алфавиту
+						$orderby['title'] = 'ASC';
+						break;
+					case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
+						$orderby['title'] = 'DESC';
+						break;
+					case 'date_desc':
+						$orderby['date'] = 'DESC';
+						break;
+					case 'date_asc':
+						$orderby['date'] = 'ASC';
+						break;
+					case 'action_price' :
+						$orderby['action_price'] = 'DESC';
+						break;
+
+				}
+			} else {
+				if ( fs_option( 'fs_product_sort_by' ) == 'menu_order' ) {
+					$orderby['menu_order'] = 'ASC';
+				}
+			}
+
+			if ( ! empty( $_REQUEST['aviable'] ) ) {
+				switch ( $_REQUEST['aviable'] ) {
+					case 'aviable':
+						$meta_query['aviable'] = array(
+							'key'     => $fs_config->meta['remaining_amount'],
+							'compare' => ' != ',
+							'value'   => '0'
+						);
+						break;
+					case 'not_available':
+						$meta_query['aviable'] = array(
+							'key'     => $fs_config->meta['remaining_amount'],
+							'compare' => ' == ',
+							'value'   => '0'
+						);
+						break;
+				}
+
+			}
+
+			//Фильтруем по свойствам (атрибутам)
+			if ( ! empty( $_REQUEST['attributes'] ) ) {
+				$tax_query[] = array(
+					'relation' => 'AND',
+					array(
+						'taxonomy' => 'product-attributes',
+						'field'    => 'id',
+						'terms'    => array_values( $_REQUEST['attributes'] ),
+						'operator' => 'IN'
+					)
+				);
+			}
+
+
+			$query->set( 'posts_per_page', $per_page );
+			if ( ! empty( $meta_query ) ) {
+				$query->set( 'meta_query', $meta_query );
+			}
+			if ( ! empty( $tax_query ) ) {
+				$tax_query = array_merge( $query->tax_query->queries, $tax_query );
+				$query->set( 'tax_query', $tax_query );
+			}
+			if ( ! empty( $orderby ) ) {
+				$query->set( 'orderby', $orderby );
+			}
+			if ( ! empty( $order ) ) {
+				$query->set( 'order', $order );
+			}
+		}
+
+	}//end filter_curr_product()
+
+
+	/**
+	 * Change wordpress seo canonical
+	 *
+	 * @param $canonical
+	 *
+	 * @return string|string[]
+	 */
+	function change_taxonomy_canonical( $canonical ) {
+		if ( is_tax( $this->taxonomy_name ) && fs_option( 'fs_disable_taxonomy_slug' ) ) {
+			$canonical = get_term_link( get_queried_object_id(), $this->taxonomy_name );
+			if ( get_locale() != FS_Config::default_language() ) {
+				$canonical = str_replace( [ '/ua','/uk' ], [ '' ], $canonical );
+			}
+		}
+
+		return $canonical;
+	}
+
+	/**
+	 * Add rewrite rules for terms
+	 *
+	 * @param $wp_rewrite
+	 *
+	 * @return array
+	 */
+	function taxonomy_rewrite_rules( $wp_rewrite ) {
+		if ( ! fs_option( 'fs_disable_taxonomy_slug' ) ) {
+			return;
+		}
+
+		$rules = array();
+		$terms = get_terms( [ 'taxonomy' => $this->taxonomy_name, 'hide_empty' => false ] );
+
+		if ( fs_option( 'fs_disable_taxonomy_slug' ) ) {
+			foreach ( FS_Config::get_languages() as $key => $language ) {
+				$meta_key = $language['locale'] != FS_Config::default_language() ? '_seo_slug__' . $language['locale'] : '_seo_slug';
+				foreach ( $terms as $term ) {
+					$localize_slug = get_term_meta( $term->term_id, $meta_key, 1 );
+					if ( $language['locale'] == FS_Config::default_language() ) {
+						$rules[ $term->slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+						$rules[ $term->slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+						$rules[ $term->slug . '/page-(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+					} elseif ( $localize_slug ) {
+						$rules[ $localize_slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+						$rules[ $localize_slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+						$rules[ $localize_slug . '/page-(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+					}
+				}
+			}
+
+		}
+
+		$wp_rewrite->rules = $rules + $wp_rewrite->rules;
+
+		return $wp_rewrite->rules;
+	}
+
+	/**
+	 * Removes the taxonomy prefix in the product category link
+	 *
+	 * @param $term_link
+	 * @param $term
+	 * @param $taxonomy
+	 *
+	 * @return string|string[]
+	 */
+	function replace_taxonomy_slug_filter( $term_link, $term, $taxonomy ) {
+		if ( $taxonomy != $this->taxonomy_name ) {
+			return $term_link;
+		}
+
+		$meta_key = get_locale() != FS_Config::default_language() ? '_seo_slug__' . get_locale() : '_seo_slug';
+
+		// Remove the taxonomy prefix in links
+		if ( fs_option( 'fs_disable_taxonomy_slug' ) ) {
+			$term_link = str_replace( '/' . $taxonomy . '/', '/', $term_link );
+		}
+
+		// Convert the link in accordance with the Cyrillic name
+		if ( get_locale() != FS_Config::default_language() && fs_option( 'fs_localize_slug' ) && get_term_meta( $term->term_id, $meta_key, 1 ) ) {
+			$localize_slug = get_term_meta( $term->term_id, $meta_key, 1 );
+			$term_link     = str_replace( $term->slug, $localize_slug, $term_link );
+		}
+
+		return $term_link;
 	}
 
 
@@ -36,7 +352,7 @@ class FS_Taxonomies_Class {
 	 */
 	function redirect_to_localize_url() {
 		// Leave if the request came not from the product category
-		if ( ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+		if ( ! is_tax( $this->taxonomy_name ) ) {
 			return;
 		}
 
@@ -960,7 +1276,7 @@ class FS_Taxonomies_Class {
 		return $columns;
 	}
 
-	function fs_currencies_column_content( $content, $column_name, $term_id ) {
+	function currencies_column_content( $content, $column_name, $term_id ) {
 		switch ( $column_name ) {
 			case 'сurrency-code':
 				//do your stuff here with $term or $term_id

@@ -82,7 +82,8 @@ class FS_Orders {
 	 * создано для удобства и информирования админов
 	 */
 	function orders_bubble() {
-		global $menu, $fs_config;
+		global $menu;
+		$fs_config                 = new FS_Config();
 		$custom_post_count         = wp_count_posts( $this->post_type );
 		$custom_post_pending_count = $custom_post_count->{$fs_config->data['default_order_status']};
 		if ( ! $custom_post_pending_count ) {
@@ -206,7 +207,8 @@ class FS_Orders {
 	 * @param $new_status
 	 */
 	function fs_change_order_status( $new_status ) {
-		global $post, $fs_config;
+		global $post;
+		$fs_config = new FS_Config();
 
 		// Если новый статус заказа "обработан" (processed)
 		if ( $post && $post->post_type == $this->post_type && $new_status == 'processed' ) {
@@ -447,8 +449,8 @@ Good luck!', 'f-shop' );
 	}
 
 	public static function delete_orders() {
-		global $fs_config;
-		$posts = new \WP_Query( array(
+		$fs_config = new FS_Config();
+		$posts     = new \WP_Query( array(
 			'post_type'      => array( $fs_config->data['post_type_orders'] ),
 			'posts_per_page' => - 1
 		) );
@@ -462,7 +464,7 @@ Good luck!', 'f-shop' );
 	}
 
 	/**
-	 * Создаёт возможность поиска по метаполям на странце заказов
+	 * Creates the ability to search by meta-fields on the order page
 	 *
 	 * @param $query
 	 */

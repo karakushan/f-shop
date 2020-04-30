@@ -5,7 +5,10 @@
  * Date: 26.11.2018
  * Time: 18:03
  */
-global $fs_config;
+
+use FS\FS_Config;
+
+$fs_config = new FS_Config();
 
 $args = array(
 	'show_option_all'  => 'Свойство товара',
@@ -33,7 +36,7 @@ $args = array(
 
 echo '<div class="fs-prop-row">';
 
-if (!empty($att)  && is_numeric( $att ) ) {
+if ( ! empty( $att ) && is_numeric( $att ) ) {
 	$term        = get_term( intval( $att ) );
 	$parent_name = get_term_field( 'name', $term->parent );
 	echo '<span class="fs-prop-group-name">' . esc_attr( apply_filters( 'the_title', $parent_name ) ) . '</span>';
@@ -42,6 +45,3 @@ if (!empty($att)  && is_numeric( $att ) ) {
 echo wp_dropdown_categories( $args );
 echo '<span class="dashicons dashicons-trash" data-fs-element="remove-var-prop" title="Remove property"></span>';
 echo '</div>';
-
-
-

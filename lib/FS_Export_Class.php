@@ -37,7 +37,7 @@ class FS_Export_Class {
 
 
 	function products_to_yml( $admin_notices = false ) {
-		global $fs_config;
+		$fs_config=new FS_Config();
 
 		header( 'Content-type: text/xml' );
 

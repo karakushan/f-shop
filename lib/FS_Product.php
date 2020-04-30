@@ -34,11 +34,7 @@ class FS_Product {
 	 * FS_Product_Class constructor.
 	 */
 	public function __construct() {
-
-		/** set the global variable $fs_product */
-		$GLOBALS['fs_product'] = $this;
-
-		add_action( 'save_post', array( $this, 'save_product_fields' ),10,3 );
+		add_action( 'save_post', array( $this, 'save_product_fields' ), 10, 3 );
 
 		add_action( 'init', array( $this, 'init' ), 12 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
@@ -267,8 +263,8 @@ class FS_Product {
 	 * @param null $variant - если товар вариативный, то здесь нужно указывать номер варианта покупки
 	 */
 	function fs_change_stock_count( $product_id = 0, $count = 0, $variant = null ) {
-		global $fs_config;
-		$variants = $this->get_product_variations( $product_id, false );
+		$fs_config = new FS_Config();
+		$variants  = $this->get_product_variations( $product_id, false );
 
 		//если указан вариант покупки
 		if ( count( $variants ) && ! is_null( $variant ) && is_numeric( $variant ) ) {
@@ -348,7 +344,7 @@ class FS_Product {
 	 *
 	 */
 	public static function delete_products() {
-		global $fs_config;
+		$fs_config   = new FS_Config();
 		$attachments = true;
 		$posts       = new \WP_Query( array(
 			'post_type'      => array( $fs_config->data['post_type'] ),
@@ -542,7 +538,7 @@ class FS_Product {
 	 * @return $this
 	 */
 	public function set_product( $product = [], $item_id = 0 ) {
-		global $fs_config;
+		$fs_config = new FS_Config();
 		$this->setId( intval( $product['ID'] ) );
 		$this->set_item_id( $item_id );
 
@@ -650,7 +646,7 @@ class FS_Product {
 	 * @return mixed
 	 */
 	public function get_base_price( $product_id = 0, $variation_id = null ) {
-		global $fs_config;
+		$fs_config = new FS_Config();
 
 		$product_id   = $product_id ? $product_id : $this->id;
 		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
@@ -825,7 +821,7 @@ class FS_Product {
 	 *
 	 * @param $post_id
 	 */
-	function save_product_fields( $post_id ,$post, $update) {
+	function save_product_fields( $post_id, $post, $update ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}

@@ -26,7 +26,7 @@ class FS_Attribute_Widget extends \WP_Widget {
 	 * @return string|void
 	 */
 	public function form( $instance ) {
-		global $fs_config;
+		$fs_config = new FS_Config();
 
 		$title          = ! empty( $instance['title'] ) ? $instance['title'] : '';
 		$fs_att_group   = ! empty( $instance['fs_att_group'] ) ? $instance['fs_att_group'] : '';
@@ -65,7 +65,7 @@ class FS_Attribute_Widget extends \WP_Widget {
                         for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
 				<?php if ( fs_option( 'fs_multi_language_support' ) ) : ?>
                 <div class="form-group">
-                    <span class="form-group__sub"><?php  echo esc_html(FS_Config::default_language_name())  ?></span>
+                    <span class="form-group__sub"><?php echo esc_html( FS_Config::default_language_name() ) ?></span>
 					<?php endif; ?>
                     <input class="widefat title"
                            id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"

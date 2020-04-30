@@ -48,7 +48,7 @@ class FS_Init {
 		$this->fs_cart       = new FS_Cart_Class;
 		$this->fs_orders     = new FS_Orders;
 		$this->fs_images     = new FS_Images_Class;
-		$this->fs_taxonomies = new FS_Taxonomies_Class;
+		$this->fs_taxonomies = new FS_Taxonomy;
 		$this->fs_action     = new FS_Action_Class;
 		$this->fs_users      = new FS_Users;
 		$this->fs_api        = new FS_Api_Class();

@@ -66,7 +66,7 @@ class FS_Api_Class {
 		if ( empty( $api_command ) ) {
 			wp_die( 'Не задана API команда' );
 		}
-		global $fs_config;
+		$fs_config=new FS_Config();
 		// импортирует свойства товаров из опций
 		if ( $api_command == 'migrate' ) {
 			FS_Migrate_Class::import_option_attr();

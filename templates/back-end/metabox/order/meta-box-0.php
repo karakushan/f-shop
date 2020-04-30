@@ -1,7 +1,9 @@
 <table class="wp-list-table widefat fixed striped order-list">
     <thead>
     <tr>
-        <th><?php esc_html_e('ID', 'f-shop') ?></th>
+        <th><?php use FS\FS_Config;
+
+	        esc_html_e('ID', 'f-shop') ?></th>
         <th><?php esc_html_e('Name', 'f-shop') ?></th>
         <th><?php esc_html_e('SKU', 'f-shop') ?></th>
         <th><?php esc_html_e('Price', 'f-shop') ?></th>
@@ -24,7 +26,7 @@
             <td><?php echo esc_attr($offer->count) ?></td>
             <td>
                 <?php
-                global $fs_config;
+                $fs_config=new FS_Config();
                 if (count($offer->attributes)) {
                     echo '<ul class="product-att">';
                     foreach ($offer->attributes as $att) {

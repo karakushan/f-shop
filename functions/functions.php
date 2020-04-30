@@ -419,7 +419,7 @@ function fs_get_full_cart_discount() {
  */
 function fs_get_first_discount() {
 
-	global $fs_config;
+	$fs_config           = new FS_Config();
 	$total_amount        = fs_get_total_amount();
 	$discounts           = get_terms( array( 'taxonomy' => $fs_config->data['discount_taxonomy'], 'hide_empty' => 0 ) );
 	$discounts_cart      = [];
@@ -588,7 +588,7 @@ function fs_delete_position( $cart_item = 0, $args = array() ) {
  * @return false|string
  */
 function fs_get_catalog_link() {
-	global $fs_config;
+	$fs_config = new FS_Config();
 
 	return get_post_type_archive_link( $fs_config->data['post_type'] );
 }
@@ -976,7 +976,7 @@ function fs_checkout_url( $echo = true ) {
  * @return bool  true - товар есть на складе, false - нет
  */
 function fs_aviable_product( $product_id = 0 ) {
-	global $fs_config;
+	$fs_config     = new FS_Config();
 	$product_id    = fs_get_product_id( $product_id );
 	$product_class = new FS\FS_Product();
 	$variations    = $product_class->get_product_variations( $product_id );
@@ -1172,7 +1172,7 @@ function fs_user_viewed( $args = [] ) {
  * @return array;
  */
 function fs_get_product_currency( $product_id = 0 ) {
-	global $fs_config;
+	$fs_config             = new FS_Config();
 	$product_id            = fs_get_product_id( $product_id );
 	$product_currency_id   = intval( get_post_meta( $product_id, $fs_config->meta['currency'], 1 ) );
 	$product_currency_code = get_term_meta( $product_currency_id, 'currency-code', 1 );
@@ -1307,7 +1307,8 @@ function fs_range_slider() {
  * @return float|int|null|string
  */
 function fs_price_max( $filter = true ) {
-	global $wpdb, $fs_config;
+	global $wpdb;
+	$fs_config      = new FS_Config();
 	$meta_value_max = $wpdb->get_var( $wpdb->prepare( "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'", $fs_config->meta['price'] ) );
 	$meta_value_max = ! is_null( $meta_value_max ) ? (float) $meta_value_max : 20000;
 	if ( $filter ) {
@@ -1593,7 +1594,7 @@ function fs_gallery_images_url( $product_id = 0, $args = array() ) {
  * @return bool
  */
 function fs_is_bestseller( $product_id = 0 ) {
-	global $fs_config;
+	$fs_config  = new FS_Config();
 	$product_id = fs_get_product_id( $product_id );
 
 	return get_post_meta( $product_id, $fs_config->meta['label_bestseller'], 1 ) ? true : false;
@@ -1609,7 +1610,8 @@ function fs_is_bestseller( $product_id = 0 ) {
  * @return object                  объект с товарами
  */
 function fs_get_related_products( $product_id = 0, $args = array() ) {
-	global $post, $fs_config;
+	global $post;
+	$fs_config  = new FS_Config();
 	$product_id = empty( $product_id ) ? $post->ID : $product_id;
 	$products   = get_post_meta( $product_id, $fs_config->meta['related_products'], false );
 	$args       = wp_parse_args( $args, array(
@@ -1879,7 +1881,8 @@ function fs_attr_list( $attr_group = 0 ) {
  * @param array $args -дополнительные аргументы вывода
  */
 function fs_the_atts_list( $post_id = 0, $args = array() ) {
-	global $post, $fs_config;
+	global $post;
+	$fs_config  = new FS_Config();
 	$list       = '';
 	$post_id    = ! empty( $post_id ) ? $post_id : $post->ID;
 	$args       = wp_parse_args( $args, array(
@@ -1977,7 +1980,8 @@ function fs_get_image_sizes( $unset_disabled = true ) {
  * @return array
  */
 function fs_gallery_images_ids( $post_id = 0, $thumbnail = true ) {
-	global $post, $fs_config;
+	global $post;
+	$fs_config         = new FS_Config();
 	$post_id           = ! empty( $post_id ) ? $post_id : $post->ID;
 	$fs_gallery        = get_post_meta( $post_id, $fs_config->meta['gallery'], false );
 	$gallery           = array();
@@ -2051,7 +2055,7 @@ function fs_get_product_thumbnail_url( $product_id = 0, $size = 'thumbnail' ) {
  * @param array $unset параметры, которые нужно удалить из строки запроса
  */
 function fs_filter_link( $query = [], $catalog_link = null ) {
-	global $fs_config;
+	$fs_config = new FS_Config();
 
 	if ( ! $catalog_link && is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
 		$catalog_link = get_term_link( get_queried_object_id() );
@@ -2075,7 +2079,7 @@ function fs_filter_link( $query = [], $catalog_link = null ) {
  * @param array $args массив дополнительных параметров
  */
 function fs_order_by_links( $args = array() ) {
-	global $fs_config;
+	$fs_config = new FS_Config();
 
 	/** @var array $args список аргументов функции */
 	$args = wp_parse_args( $args, array(
@@ -2374,7 +2378,8 @@ function fs_copy_all( $from, $to, $rewrite = true ) {
  * @return stdClass
  */
 function fs_get_category_meta( $category_id = 0 ) {
-	global $wpdb, $fs_config;
+	global $wpdb;
+	$fs_config = new FS_Config();
 	if ( ! $category_id ) {
 		$category_id = get_queried_object_id();
 	}
@@ -2574,7 +2579,7 @@ function fs_debug_data( $data, $before = '', $debug_type = 'var_dump', $exit = f
  * @param array $args
  */
 function fs_list_variations( $product_id = 0, $args = array() ) {
-	global $fs_config;
+	$fs_config  = new FS_Config();
 	$args       = wp_parse_args( $args, array(
 		'class'      => 'fs-select-variation',
 		'show_price' => true,
@@ -2696,7 +2701,7 @@ function fs_load_template( $template_path ) {
  * @return array|int|WP_Error
  */
 function fs_get_shipping_methods() {
-	global $fs_config;
+	$fs_config        = new FS_Config();
 	$shipping_methods = get_terms( array(
 		'taxonomy'   => $fs_config->data['product_del_taxonomy'],
 		'hide_empty' => false
@@ -2744,7 +2749,7 @@ function fs_is_label( $label ) {
  * @return float $cost
  */
 function fs_get_delivery_cost( $delivery_method = 0 ) {
-	global $fs_config;
+	$fs_config = new FS_Config();
 
 	$delivery_methods = get_terms( array(
 		'taxonomy'   => $fs_config->data['product_del_taxonomy'],
@@ -2816,7 +2821,7 @@ if ( ! function_exists( 'fs_get_category_text' ) ) {
  * @param string $base_url url to return when pressed
  */
 function fs_reset_filter_link( $base_url = '' ) {
-	global $fs_config;
+	$fs_config = new FS_Config();
 	if ( empty( $base_url ) && is_tax() ) {
 		$base_url = get_term_link( get_queried_object_id() );
 	} else {

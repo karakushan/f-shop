@@ -1,7 +1,9 @@
-<h3><?php esc_html_e( 'Purchase options', 'f-shop' ) ?></h3>
+<h3><?php use FS\FS_Config;
+
+	esc_html_e( 'Purchase options', 'f-shop' ) ?></h3>
 <p><?php esc_html_e( 'This tab is relevant if you have several varieties of a single product.', 'f-shop' ) ?></p>
 <?php
-global $fs_config;
+$fs_config=new FS_Config();
 $product  = new FS\FS_Product();
 $variants = $product->get_product_variations( 0, false );
 ?>
