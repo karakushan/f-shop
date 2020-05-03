@@ -557,7 +557,7 @@ function fs_dropdown_attr_group( $group_id = 0, $product_id = 0, $args = array()
 		}
 	}
 
-	echo '<select>';
+	echo '</select>';
 
 }
 
