@@ -209,7 +209,8 @@ class FS_Settings_Class {
 						'name'   => 'fs_product_filter_type',
 						'values' => array(
 							'IN'  => __( 'The product must have at least one of the selected characteristics in the filter', 'f-shop' ),
-							'AND' => __( 'The product must have all of the selected characteristics in the filter', 'f-shop' )
+							'AND' => __( 'The product must have all of the selected characteristics in the filter', 'f-shop' ),
+							'GROUP' => __( 'The product must have at least one of the group properties', 'f-shop' )
 						),
 						'label'  => __( 'Method of applying filters in the catalog', 'f-shop' ),
 						'help'   => null,

@@ -227,16 +227,41 @@ class FS_Taxonomy {
 			}
 
 			//Фильтруем по свойствам (атрибутам)
-			if ( ! empty( $_REQUEST['attributes'] ) ) {
-				$tax_query[] = array(
-					'relation' => 'AND',
-					array(
-						'taxonomy' => 'product-attributes',
-						'field'    => 'id',
-						'terms'    => array_values( $_REQUEST['attributes'] ),
-						'operator' => 'IN'
-					)
-				);
+			if ( is_array( $url['attributes'] ) && count( $url['attributes'] ) ) {
+
+			    $features_taxonomy=FS_Config::get_data( 'features_taxonomy' );
+
+				if ( in_array( fs_option( 'fs_product_filter_type', 'IN' ), [ 'IN', 'AND' ] ) ) {
+					$tax_query[] = array(
+						'relation' => 'AND',
+						array(
+							'taxonomy' => $features_taxonomy,
+							'field'    => 'id',
+							'terms'    => array_values( $_REQUEST['attributes'] ),
+							'operator' => fs_option( 'fs_product_filter_type', 'IN' )
+						)
+					);
+				} else {
+
+					$attributes = [];
+					foreach ( $url['attributes'] as $atts ) {
+						$term = get_term( $atts, $features_taxonomy );
+						if ( ! $term ) {
+							continue;
+						}
+						$attributes[ $term->parent ][ $term->term_id ] = $term->term_id;
+
+					}
+					$tax_query=['relation'=>'AND'];
+					foreach ( $attributes as $group ) {
+						array_push($tax_query,[
+							'taxonomy' => 'product-attributes',
+							'field'    => 'id',
+							'terms'    => $group,
+							'operator' => 'IN'
+                        ]);
+					}
+				}
 			}
 
 
@@ -270,7 +295,7 @@ class FS_Taxonomy {
 		if ( is_tax( $this->taxonomy_name ) && fs_option( 'fs_disable_taxonomy_slug' ) ) {
 			$canonical = get_term_link( get_queried_object_id(), $this->taxonomy_name );
 			if ( get_locale() != FS_Config::default_language() ) {
-				$canonical = str_replace( [ '/ua','/uk' ], [ '' ], $canonical );
+				$canonical = str_replace( [ '/ua', '/uk' ], [ '' ], $canonical );
 			}
 		}
 

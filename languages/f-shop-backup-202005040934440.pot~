@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-12 19:51+0000\n"
+"POT-Creation-Date: 2020-04-12 20:25+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -251,7 +251,7 @@ msgid "File \"%s\" not found"
 msgstr ""
 
 #: lib/FS_Ajax_Class.php:143 lib/FS_Ajax_Class.php:408 lib/FS_Users.php:234
-#: lib/FS_Users.php:528 lib/FS_Users.php:562 lib/FS_Users.php:713
+#: lib/FS_Users.php:528 lib/FS_Users.php:568 lib/FS_Users.php:719
 msgid "Failed verification of nonce form"
 msgstr ""
 
@@ -752,7 +752,7 @@ msgstr ""
 msgid "В случае успешной оплаты с вас будет снято %s %s. "
 msgstr ""
 
-#: lib/FS_Post_Types.php:73 lib/FS_Product.php:642 lib/FS_Users.php:1101
+#: lib/FS_Post_Types.php:73 lib/FS_Product.php:642 lib/FS_Users.php:1107
 msgid "Reviews"
 msgstr ""
 
@@ -1177,121 +1177,125 @@ msgstr ""
 msgid "Email sender"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:365
+#: lib/FS_Settings_Class.php:361
+msgid "By default, this is the site administrator’s e-mail"
+msgstr ""
+
+#: lib/FS_Settings_Class.php:366
 msgid "Name of the sender of letters"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:371
+#: lib/FS_Settings_Class.php:372
 msgid "Email template for user when creating an account"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:378
+#: lib/FS_Settings_Class.php:379
 msgid "Letter template to the user when creating a new order"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:387
+#: lib/FS_Settings_Class.php:388
 msgid "Service pages"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:388
+#: lib/FS_Settings_Class.php:389
 msgid ""
 "Service pages are created and installed automatically when the plugin is "
 "activated. Can you also override them here"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:393
+#: lib/FS_Settings_Class.php:394
 msgid "Cart page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:399
+#: lib/FS_Settings_Class.php:400
 msgid "Checkout Page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:405
+#: lib/FS_Settings_Class.php:406
 msgid "Payment page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:411
+#: lib/FS_Settings_Class.php:412
 msgid "Successful ordering page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:417
+#: lib/FS_Settings_Class.php:418
 msgid "Wish List Page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:423
+#: lib/FS_Settings_Class.php:424
 msgid "Personal account page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:429
+#: lib/FS_Settings_Class.php:430
 msgid "Login page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:435
+#: lib/FS_Settings_Class.php:436
 msgid "Register page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:441 templates/front-end/auth/login.php:20
+#: lib/FS_Settings_Class.php:442 templates/front-end/auth/login.php:20
 msgid "Forgot your password?"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:447
+#: lib/FS_Settings_Class.php:448
 msgid "Order Information Page"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:455
+#: lib/FS_Settings_Class.php:456
 msgid "Export of goods"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:456
+#: lib/FS_Settings_Class.php:457
 #, php-format
 msgid ""
 "Link to product feed in YML format: <a href=\"%s\" target=\"_blank\">%s</a> "
 "or <a href=\"%s\" target=\"_blank\">%s</a>"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:461
+#: lib/FS_Settings_Class.php:462
 msgid "Export to the site"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:463
+#: lib/FS_Settings_Class.php:464
 msgid "Розетка"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:464
+#: lib/FS_Settings_Class.php:465
 msgid "Prom.ua"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:476
+#: lib/FS_Settings_Class.php:477
 msgid "Debugging"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:477
+#: lib/FS_Settings_Class.php:478
 msgid "The debug data is displayed here as text."
 msgstr ""
 
-#: lib/FS_Settings_Class.php:482
+#: lib/FS_Settings_Class.php:483
 msgid "Sessions"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:508
+#: lib/FS_Settings_Class.php:509
 msgid "Default currency"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:520
+#: lib/FS_Settings_Class.php:521
 msgid "Determine your store settings."
 msgstr ""
 
-#: lib/FS_Settings_Class.php:531 lib/FS_Settings_Class.php:532
-#: lib/FS_Settings_Class.php:614
+#: lib/FS_Settings_Class.php:532 lib/FS_Settings_Class.php:533
+#: lib/FS_Settings_Class.php:615
 msgid "Store settings"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:540
+#: lib/FS_Settings_Class.php:541
 msgid "F-SHOP API"
 msgstr ""
 
-#: lib/FS_Settings_Class.php:541
+#: lib/FS_Settings_Class.php:542
 msgid "API"
 msgstr ""
 
@@ -1712,88 +1716,78 @@ msgstr ""
 msgid "You are already logged in"
 msgstr ""
 
-#: lib/FS_Users.php:547
-#, php-format
-msgid "You or someone else initiated a password reset on the site %s"
-msgstr ""
-
-#: lib/FS_Users.php:548
-#, php-format
-msgid "New password: %s"
-msgstr ""
-
-#: lib/FS_Users.php:549
-#, php-format
-msgid "If it was not you tell the site administrator на e-mail: %s"
-msgstr ""
-
-#: lib/FS_Users.php:551
+#: lib/FS_Users.php:557
 msgid "Password reset on the site"
 msgstr ""
 
-#: lib/FS_Users.php:575
+#: lib/FS_Users.php:559
+msgid ""
+"Your password has been successfully reset. Password sent to your e-mail."
+msgstr ""
+
+#: lib/FS_Users.php:581
 msgid "No fields found to save user data"
 msgstr ""
 
-#: lib/FS_Users.php:580
+#: lib/FS_Users.php:586
 msgid "User is not found"
 msgstr ""
 
-#: lib/FS_Users.php:626
+#: lib/FS_Users.php:632
 msgid "Your data has been successfully updated."
 msgstr ""
 
-#: lib/FS_Users.php:733
+#: lib/FS_Users.php:739
 msgid "Email does not match format"
 msgstr ""
 
-#: lib/FS_Users.php:738
+#: lib/FS_Users.php:744
 msgid "Name field cannot be empty"
 msgstr ""
 
-#: lib/FS_Users.php:787 lib/FS_Users.php:800
+#: lib/FS_Users.php:793 lib/FS_Users.php:806
 msgid "Registration on the website «{{ site_name }}»"
 msgstr ""
 
-#: lib/FS_Users.php:808
+#: lib/FS_Users.php:814
 #, php-format
 msgid ""
 "Congratulations! You have successfully registered! <a href=\"%s\">Log in</a>"
 msgstr ""
 
-#: lib/FS_Users.php:821
+#: lib/FS_Users.php:827
 msgid "The form did not pass the security check!"
 msgstr ""
 
-#: lib/FS_Users.php:889
+#: lib/FS_Users.php:895
 msgid "Your data has been updated successfully!"
 msgstr ""
 
-#: lib/FS_Users.php:906 lib/FS_Users.php:936 lib/FS_Users.php:966
+#: lib/FS_Users.php:912 lib/FS_Users.php:942 lib/FS_Users.php:972
 msgid "You are already logged in."
 msgstr ""
 
-#: lib/FS_Users.php:943 lib/FS_Users.php:973
+#: lib/FS_Users.php:949 lib/FS_Users.php:979
 msgid "To personal account"
 msgstr ""
 
-#: lib/FS_Users.php:1061
+#: lib/FS_Users.php:1067
 msgid "Personal information"
 msgstr ""
 
-#: lib/FS_Users.php:1072
+#: lib/FS_Users.php:1078
 msgid "Current orders"
 msgstr ""
 
-#: lib/FS_Users.php:1083
+#: lib/FS_Users.php:1089
 msgid "Purchase history"
 msgstr ""
 
-#: lib/FS_Users.php:1094
+#: lib/FS_Users.php:1100
 msgid "WishList"
 msgstr ""
 
-#: lib/FS_Users.php:1108
+#: lib/FS_Users.php:1114
 msgid "Logout"
 msgstr ""
 
