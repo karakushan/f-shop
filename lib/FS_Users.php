@@ -79,7 +79,7 @@ class FS_Users {
 	 */
 	public function admin_profile_edit_fields( $user ) {
 		?>
-        <h2><?php esc_html_e( 'Store Settings', 'f-shop' ); ?></h2>
+        <h2><?php esc_html_e( 'Delivery Settings', 'f-shop' ); ?></h2>
         <table class="form-table">
 			<?php foreach ( self::get_user_fields( $user->ID ) as $name => $user_field ) {
 				if ( isset( $user_field['save_meta'] ) && $user_field['save_meta'] == false ) {
@@ -95,11 +95,11 @@ class FS_Users {
 						$args = wp_parse_args( $user_field, [
 							'value' => get_user_meta( $user->ID, $name, 1 ),
 							'id'    => str_replace( '_', '-', $name ),
-							'class' => 'regular-text'
+							'class' => 'regular-text',
 						] );
-						$this->form->render_field( $name, $user_field['type'], $args ); ?>
-
-						<?php if ( ! empty( $user_field['description'] ) ): ?>
+						unset( $args['name'] );
+						$this->form->render_field( $name, $user_field['type'], $args );
+						if ( ! empty( $user_field['description'] ) ): ?>
                             <p class="description">
 								<?php echo $user_field['description']; ?>
                             </p>
@@ -397,7 +397,8 @@ class FS_Users {
 				'label'       => '',
 				'placeholder' => __( 'Gender', 'f-shop' ),
 				'title'       => '',
-				'required'    => false
+				'required'    => false,
+				'save_meta'   => false
 			),
 			'fs_phone'             => array(
 				'name'        => __( 'Phone number', 'f-shop' ),

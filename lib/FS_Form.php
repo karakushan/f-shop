@@ -65,6 +65,14 @@ class FS_Form {
 	 * @param array $args
 	 */
 	function render_field( $name, $type = 'text', $args = [] ) {
+
+		$field_path = FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
+
+		// If the field is not registered or there is no template file, exit
+		if ( ! in_array( $type, $this->get_registered_field_types() ) || ! file_exists( $field_path ) ) {
+			return;
+		}
+
 		$args = wp_parse_args( $args, array(
 			'value'          => '',
 			'values'         => array(),
@@ -90,7 +98,6 @@ class FS_Form {
 				'textarea_name' => $name
 			)
 		) );
-
 
 		$label_after = $args['required'] ? ' <i>*</i>' : '';
 
@@ -160,25 +167,25 @@ class FS_Form {
 			}
 
 		} else {
-			if ( in_array( $type, $this->get_registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
-				if ( ( $args['label'] || $args['help'] ) && $args['label_position'] == 'before' ) {
-					echo '<label for="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['label_class'] ) . '">' . esc_html( $args['label'] ) . $label_after;
-					if ( $args['help'] ) {
-						echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
-					}
-					echo '</label>';
-				}
-				include FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
 
-				if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
-
-					echo '<label for="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['label_class'] ) . '">' . esc_html( $args['label'] ) . $label_after;
-					if ( $args['help'] ) {
-						echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
-					}
-					echo '</label>';
+			if ( ( $args['label'] || $args['help'] ) && $args['label_position'] == 'before' ) {
+				echo '<label for="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['label_class'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+				if ( $args['help'] ) {
+					echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
 				}
+				echo '</label>';
 			}
+			include( $field_path );
+
+			if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
+
+				echo '<label for="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['label_class'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+				if ( $args['help'] ) {
+					echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
+				}
+				echo '</label>';
+			}
+
 		}
 
 		if ( $multi_lang ) {
