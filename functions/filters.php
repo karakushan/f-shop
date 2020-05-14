@@ -304,7 +304,7 @@ function fs_price_filter_callback( $post_id, $price ) {
 add_filter( 'fs_term_meta_name', 'fs_term_meta_name_filter' );
 function fs_term_meta_name_filter( $meta_key ) {
 	if ( fs_option( 'fs_multi_language_support' ) ) {
-		$meta_key = get_locale() == FS_Config::default_language() ? $meta_key : $meta_key . '__' . get_locale();
+		$meta_key = get_locale() == FS_Config::default_locale() ? $meta_key : $meta_key . '__' . get_locale();
 	}
 
 	return $meta_key;
@@ -440,7 +440,7 @@ function fs_product_tab_admin_meta_key( $meta_key, $field ) {
 	}
 
 	$all_languages    = FS_Config::get_languages();
-	$default_language = FS_Config::default_language();
+	$default_language = FS_Config::default_locale();
 
 	$current_language = isset( $all_languages[ $query_lang ]['locale'] )
 		? $all_languages[ $query_lang ]['locale']
@@ -458,7 +458,7 @@ function fs_product_tab_admin_meta_key( $meta_key, $field ) {
 // Localize the url
 add_filter( 'post_type_link', 'fs_post_type_link_filters', 10, 4 );
 function fs_post_type_link_filters( $post_link, $post, $leavename, $sample ) {
-	$default_language = FS_Config::default_language();
+	$default_language = FS_Config::default_locale();
 	$curent_locale    = get_locale();
 
 	if ( $post->post_type != FS_Config::get_data( 'post_type' ) || $curent_locale == $default_language ) {

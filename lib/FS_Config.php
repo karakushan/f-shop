@@ -630,7 +630,7 @@ class FS_Config {
 			'label_novelty'     => [
 				'key'   => 'fs_on_novelty',
 				'type'  => 'checkbox',
-				'label' => __('Include tag "New"', 'f-shop')
+				'label' => __( 'Include tag "New"', 'f-shop' )
 			],
 			'up_sell'           => [ 'key' => 'fs_up_sell' ],
 			'cross_sell'        => [ 'key' => 'fs_cross_sell' ]
@@ -676,7 +676,7 @@ class FS_Config {
 	 * @return mixed|void
 	 */
 	public
-	static function default_language() {
+	static function default_locale() {
 		return apply_filters( 'fs_default_language', 'ru_RU' );
 	}
 
@@ -690,6 +690,15 @@ class FS_Config {
 		return apply_filters( 'default_language_name', 'ru' );
 	}
 
+	/**
+	 * Возвращает true если используется локаль по умолчанию
+	 *
+	 * @return bool
+	 */
+	public static function is_default_locale() {
+		return self::default_locale() == get_locale();
+	}
+
 
 	/**
 	 * Returns a setting or array of basic plugin settings
@@ -701,7 +710,9 @@ class FS_Config {
 	 * TODO: В будущем перенести все типы настроек в эту. Создать подмасив 'taxonomies' и поместить все таксономии, 'meta' с метаполями и т.д.
 	 */
 	public
-	static function get_data( $key = '') {
+	static function get_data(
+		$key = ''
+	) {
 		$data = array(
 			'plugin_path'            => FS_PLUGIN_PATH,
 			'plugin_url'             => FS_PLUGIN_URL,

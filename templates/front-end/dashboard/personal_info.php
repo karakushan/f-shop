@@ -14,7 +14,7 @@
     </div>
     <div class="col">
         <div class="tab-content">
-            <div class="tab-pane fade active show" id="fs-dashboard-sub-tab-1" role="tabpanel">
+            <div class="tab-pane fade active show in" id="fs-dashboard-sub-tab-1" role="tabpanel">
                 <h4 class="tab-title"><?php esc_html_e( 'Edit profile', 'f-shop' ); ?></h4>
 				<?php echo FS\FS_Form::form_open( array(
 					'class'       => 'fs-dashboard-personal',

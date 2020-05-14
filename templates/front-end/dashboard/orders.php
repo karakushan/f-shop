@@ -17,11 +17,8 @@ global $post;
                 </div>
                 <div class="fs-dashboard-order__hide collapse" id="fs-dashboard-order-<?php the_ID() ?>">
                     <div class="row">
-                        <div class="col-lg-3">
-                            <div class="label"><?php esc_html_e( 'Products', 'f-shop' ); ?></div>
-                        </div>
-                        <div class="col-lg-9">
-                            <table class="table table-bordered">
+                        <div class="col-lg-12">
+                            <table class="table">
                                 <thead>
                                 <tr>
                                     <th scope="col" style="width: 270px;"><?php esc_html_e( 'Title', 'f-shop' ); ?></th>

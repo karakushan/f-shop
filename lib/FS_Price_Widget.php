@@ -46,7 +46,7 @@ class FS_Price_Widget extends \WP_Widget {
 
 				if ( fs_option( 'fs_multi_language_support' ) ) {
 					foreach ( FS_Config::get_languages() as $key => $language ) {
-						if ( $language['locale'] == FS_Config::default_language() ) {
+						if ( $language['locale'] == FS_Config::default_locale() ) {
 							continue;
 						}
 						$name  = 'title_' . $language['locale'];
@@ -74,7 +74,7 @@ class FS_Price_Widget extends \WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		$title_name = fs_option( 'fs_multi_language_support' )
-		              && FS_Config::default_language() != get_locale() ? 'title_' . get_locale() : 'title';
+		              && FS_Config::default_locale() != get_locale() ? 'title_' . get_locale() : 'title';
 		if ( empty( $instance[ $title_name ] ) ) {
 			$title_name = 'title';
 		}
@@ -97,7 +97,7 @@ class FS_Price_Widget extends \WP_Widget {
 		// Saving multilingual titles
 		if ( fs_option( 'fs_multi_language_support' ) ) {
 			foreach ( FS_Config::get_languages() as $key => $language ) {
-				if ( $language['locale'] == FS_Config::default_language() ) {
+				if ( $language['locale'] == FS_Config::default_locale() ) {
 					continue;
 				}
 				$name              = 'title_' . $language['locale'];

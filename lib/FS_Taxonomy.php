@@ -269,7 +269,7 @@ class FS_Taxonomy {
 	function change_taxonomy_canonical( $canonical ) {
 		if ( is_tax( $this->taxonomy_name ) && fs_option( 'fs_disable_taxonomy_slug' ) ) {
 			$canonical = get_term_link( get_queried_object_id(), $this->taxonomy_name );
-			if ( get_locale() != FS_Config::default_language() ) {
+			if ( get_locale() != FS_Config::default_locale() ) {
 				$canonical = str_replace( [ '/ua','/uk' ], [ '' ], $canonical );
 			}
 		}
@@ -294,10 +294,10 @@ class FS_Taxonomy {
 
 		if ( fs_option( 'fs_disable_taxonomy_slug' ) ) {
 			foreach ( FS_Config::get_languages() as $key => $language ) {
-				$meta_key = $language['locale'] != FS_Config::default_language() ? '_seo_slug__' . $language['locale'] : '_seo_slug';
+				$meta_key = $language['locale'] != FS_Config::default_locale() ? '_seo_slug__' . $language['locale'] : '_seo_slug';
 				foreach ( $terms as $term ) {
 					$localize_slug = get_term_meta( $term->term_id, $meta_key, 1 );
-					if ( $language['locale'] == FS_Config::default_language() ) {
+					if ( $language['locale'] == FS_Config::default_locale() ) {
 						$rules[ $term->slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
 						$rules[ $term->slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
 						$rules[ $term->slug . '/page-(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
@@ -330,7 +330,7 @@ class FS_Taxonomy {
 			return $term_link;
 		}
 
-		$meta_key = get_locale() != FS_Config::default_language() ? '_seo_slug__' . get_locale() : '_seo_slug';
+		$meta_key = get_locale() != FS_Config::default_locale() ? '_seo_slug__' . get_locale() : '_seo_slug';
 
 		// Remove the taxonomy prefix in links
 		if ( fs_option( 'fs_disable_taxonomy_slug' ) ) {
@@ -338,7 +338,7 @@ class FS_Taxonomy {
 		}
 
 		// Convert the link in accordance with the Cyrillic name
-		if ( get_locale() != FS_Config::default_language() && fs_option( 'fs_localize_slug' ) && get_term_meta( $term->term_id, $meta_key, 1 ) ) {
+		if ( get_locale() != FS_Config::default_locale() && fs_option( 'fs_localize_slug' ) && get_term_meta( $term->term_id, $meta_key, 1 ) ) {
 			$localize_slug = get_term_meta( $term->term_id, $meta_key, 1 );
 			$term_link     = str_replace( $term->slug, $localize_slug, $term_link );
 		}
@@ -631,7 +631,7 @@ class FS_Taxonomy {
 		if ( ! is_tax( 'catalog' ) ) {
 			return $title;
 		}
-		$meta_key   = get_locale() == FS_Config::default_language() ? '_seo_title' : '_seo_title__' . get_locale();
+		$meta_key   = get_locale() == FS_Config::default_locale() ? '_seo_title' : '_seo_title__' . get_locale();
 		$meta_title = get_term_meta( get_queried_object_id(), $meta_key, 1 );
 		$title      = $meta_title ? $meta_title : $title;
 
@@ -642,7 +642,7 @@ class FS_Taxonomy {
 		if ( ! is_tax( 'catalog' ) ) {
 			return $title;
 		}
-		$meta_key       = get_locale() == FS_Config::default_language() ? '_seo_title' : '_seo_title__' . get_locale();
+		$meta_key       = get_locale() == FS_Config::default_locale() ? '_seo_title' : '_seo_title__' . get_locale();
 		$meta_title     = get_term_meta( get_queried_object_id(), $meta_key, 1 );
 		$title['title'] = $meta_title ? $meta_title : $title['title'];
 
@@ -653,7 +653,7 @@ class FS_Taxonomy {
 		if ( ! is_tax( 'catalog' ) ) {
 			return;
 		}
-		$meta_key         = get_locale() == FS_Config::default_language() ? '_seo_description' : '_seo_description__' . get_locale();
+		$meta_key         = get_locale() == FS_Config::default_locale() ? '_seo_description' : '_seo_description__' . get_locale();
 		$meta_description = get_term_meta( get_queried_object_id(), $meta_key, 1 );
 
 		if ( $meta_description ) {
@@ -979,7 +979,7 @@ class FS_Taxonomy {
 
 				if ( $multi_lang ) {
 					foreach ( FS_Config::get_languages() as $key => $language ) {
-						if ( $language['locale'] == FS_Config::default_language() ) {
+						if ( $language['locale'] == FS_Config::default_locale() ) {
 							$meta_key = $name;
 						} else {
 							$meta_key = $name . '__' . $language['locale'];

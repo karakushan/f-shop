@@ -71,6 +71,7 @@ class FS_Form {
 			'required'       => false,
 			'title'          => '',
 			'label'          => '',
+			'label_class'    => '',
 			'placeholder'    => '',
 			'label_position' => 'before',
 			'taxonomy'       => 'category',
@@ -125,7 +126,7 @@ class FS_Form {
 				$args['id'] = $args['id'] . '-' . $key;
 
 				echo '<div class="' . esc_attr( $tab_class ) . '" id="fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '">';
-				$name          = $item['locale'] != FS_Config::default_language() ? $name . '__' . $item['locale'] : $name;
+				$name          = $item['locale'] != FS_Config::default_locale() ? $name . '__' . $item['locale'] : $name;
 				$args['value'] = ! empty( $_GET['tag_ID'] ) ? FS_Taxonomy::fs_get_term_meta( intval( $_GET['tag_ID'] ), $name ) : null;
 				if ( ! $args['value'] && $args['default'] ) {
 					$args['value'] = $args['default'];
@@ -135,7 +136,7 @@ class FS_Form {
 
 				if ( in_array( $type, $this->get_registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
 					if ( ( $args['label'] || $args['help'] ) && $args['label_position'] == 'before' ) {
-						echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+						echo '<label for="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['label_class'] ) . '">' . esc_html( $args['label'] ) . $label_after;
 						if ( $args['help'] ) {
 							echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
 						}
@@ -145,7 +146,7 @@ class FS_Form {
 
 					if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
 
-						echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+						echo '<label for="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['label_class'] ) . '">' . esc_html( $args['label'] ) . $label_after;
 						if ( $args['help'] ) {
 							echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
 						}
@@ -161,7 +162,7 @@ class FS_Form {
 		} else {
 			if ( in_array( $type, $this->get_registered_field_types() ) && file_exists( FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php' ) ) {
 				if ( ( $args['label'] || $args['help'] ) && $args['label_position'] == 'before' ) {
-					echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+					echo '<label for="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['label_class'] ) . '">' . esc_html( $args['label'] ) . $label_after;
 					if ( $args['help'] ) {
 						echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
 					}
@@ -171,7 +172,7 @@ class FS_Form {
 
 				if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
 
-					echo '<label for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . $label_after;
+					echo '<label for="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['label_class'] ) . '">' . esc_html( $args['label'] ) . $label_after;
 					if ( $args['help'] ) {
 						echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html( $args['help'] ) . '"></span>';
 					}
@@ -193,18 +194,11 @@ class FS_Form {
 	 */
 	function fs_form_field( $field_name, $args = array() ) {
 
-		$user_id = get_current_user_id();
-
 		$fields = FS_Users::get_user_fields();
 
 		$field = ! empty( $fields[ $field_name ] ) && is_array( $fields[ $field_name ] )
 			? $fields[ $field_name ]
 			: array();
-
-		$value = ! empty( $field['value'] ) && fs_option( 'fs_autofill_form', false )
-			? trim( $field['value'] )
-			: ( is_user_logged_in() && fs_option( 'fs_autofill_form', false ) && get_user_meta( $user_id, $field_name, 1 ) ? get_user_meta( $user_id, $field_name, 1 ) : '' );
-
 
 		$default = array(
 			'type'           => ! empty( $field['type'] ) ? $field['type'] : 'text',
@@ -221,7 +215,7 @@ class FS_Form {
 			'required'       => ! empty( $field['required'] ) ? $field['required'] : false,
 			'title'          => ! empty( $field['title'] ) ? $field['title'] : __( 'this field is required', 'f-shop' ),
 			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
-			'value'          => $value,
+			'value'          => '',
 			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
 			'icon'           => ! empty( $field['icon'] ) ? $field['icon'] : '',
 			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',

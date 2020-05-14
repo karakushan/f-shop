@@ -119,6 +119,13 @@ class FS_Action_Class {
 		/* Выводит форму редактирования профиля */
 		add_action( 'fs_profile_edit', array( 'FS\FS_Users', 'profile_edit' ), 10, 1 );
 
+
+// Add the field to user profile editing screen.
+		add_action(
+			'edit_user_profile',
+			'wporg_usermeta_form_field_birthday'
+		);
+
 		//===== COMPARISON LIST ====
 		add_action( 'fs_add_to_comparison', 'fs_add_to_comparison', 10, 3 );
 
