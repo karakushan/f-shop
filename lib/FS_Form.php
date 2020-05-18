@@ -215,7 +215,7 @@ class FS_Form {
 			'required'       => ! empty( $field['required'] ) ? $field['required'] : false,
 			'title'          => ! empty( $field['title'] ) ? $field['title'] : __( 'this field is required', 'f-shop' ),
 			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
-			'value'          => '',
+			'value'          =>! empty( $field['value'] ) ? $field['value'] : null,
 			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
 			'icon'           => ! empty( $field['icon'] ) ? $field['icon'] : '',
 			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',

@@ -403,6 +403,7 @@ class FS_Users {
 				'name'        => __( 'Phone number', 'f-shop' ),
 				'type'        => 'tel',
 				'label'       => '',
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_phone', 1 ) : '',
 				'placeholder' => __( 'Phone number', 'f-shop' ),
 				'title'       => __( 'Keep the correct phone number', 'f-shop' ),
 				'required'    => true,
@@ -417,6 +418,7 @@ class FS_Users {
 					'Male'   => __( 'Male', 'f-shop' ),
 					'Female' => __( 'Female', 'f-shop' )
 				),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_gender', 1 ) : '',
 				'placeholder' => __( 'Gender', 'f-shop' ),
 				'title'       => '',
 				'required'    => false
@@ -428,6 +430,7 @@ class FS_Users {
 				'placeholder' => __( 'City', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'required'    => true,
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_city', 1 ) : '',
 				'checkout'    => true,
 
 			),
@@ -437,6 +440,7 @@ class FS_Users {
 				'label'       => '',
 				'placeholder' => __( 'Country', 'f-shop' ),
 				'title'       => '',
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_country', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 
@@ -446,6 +450,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Zip Code', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_zip_code', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 
@@ -456,7 +461,8 @@ class FS_Users {
 				'label'       => '',
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'placeholder' => __( 'State / province', 'f-shop' ),
-				'required'    => true,
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_region', 1 ) : '',
+				'required'    => false,
 				'checkout'    => true,
 
 			),
@@ -465,6 +471,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Address', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_address', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 
@@ -474,6 +481,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'House number', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_home_num', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 
@@ -483,6 +491,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Apartment number', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_apartment_num', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 
@@ -492,6 +501,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Branch number', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_delivery_number', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 
@@ -503,6 +513,7 @@ class FS_Users {
 				'taxonomy'     => FS_Config::get_data( 'product_del_taxonomy' ),
 				'icon'         => true,
 				'title'        => __( 'Choose shipping method', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_delivery_methods', 1 ) : '',
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -520,6 +531,7 @@ class FS_Users {
 				'taxonomy'     => FS_Config::get_data( 'product_pay_taxonomy' ),
 				'icon'         => true,
 				'title'        => __( 'Select a Payment Method', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_payment_methods', 1 ) : '',
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -672,10 +684,14 @@ class FS_Users {
 
 		// Сохраняем данные пользователя
 		foreach ( $user_fields as $meta_key => $user_field ) {
-
-
 			if ( ( $user_field['type'] == 'file' && empty( $_FILES[ $meta_key ] ) ) ) {
 				continue;
+			}
+
+			$meta_value = trim( $_POST[ $meta_key ] );
+
+			if ( $user_field['type'] == 'checkbox' && isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != 1 ) {
+				$meta_value = 0;
 			}
 
 			// Сохраняем аватарку
@@ -683,32 +699,34 @@ class FS_Users {
 				if ( $_FILES[ $meta_key ]['error'] ) {
 					wp_send_json_error( array( 'msg' => $_FILES ) );
 				}
+
 				$attach_id = media_handle_upload( $meta_key, 0 );
+
 				if ( is_wp_error( $attach_id ) ) {
 					wp_send_json_error( array( 'msg' => $attach_id->get_error_message() ) );
 				}
+
 				update_user_meta( $user_id, $meta_key, intval( $attach_id ) );
 				continue;
-
 			}
 
-			// Сохраняем или удаляем поля
-			if ( ( $user_field['type'] != 'file' && ! empty( $_POST[ $meta_key ] ) ) ) {
-
-				if ( $meta_key == 'fs_first_name' ) {
-					wp_update_user( array(
-						'ID'         => $user_id,
-						'first_name' => sanitize_text_field( $_POST[ $meta_key ] )
-					) );
-				} elseif ( $meta_key == 'fs_last_name' ) {
-					wp_update_user( array(
-						'ID'        => $user_id,
-						'last_name' => sanitize_text_field( $_POST[ $meta_key ] )
-					) );
-				} else {
-					update_user_meta( $user_id, $meta_key, $_POST[ $meta_key ] );
-				}
+			// Сохраняем поля в данных ВП
+			if ( $meta_key == 'fs_first_name' ) {
+				wp_update_user( array(
+					'ID'         => $user_id,
+					'first_name' => $meta_value
+				) );
+				continue;
+			} elseif ( $meta_key == 'fs_last_name' ) {
+				wp_update_user( array(
+					'ID'        => $user_id,
+					'last_name' => $meta_value
+				) );
+				continue;
 			}
+
+			update_user_meta( $user_id, $meta_key, $meta_value );
+
 
 		}
 
@@ -1157,7 +1175,7 @@ class FS_Users {
 				'title'     => __( 'Current orders', 'f-shop' ),
 				'content'   => fs_frontend_template( 'dashboard/orders', [
 					'vars' => array(
-						'orders' => FS_Orders::get_user_orders()
+						'orders' => FS_Orders::get_user_orders( 0, 'new' )
 					)
 				] ),
 				'link'      => false,
