@@ -433,6 +433,7 @@ class FS_Users {
 				'required'    => true,
 				'value'       => $user_id ? get_user_meta( $user_id, 'fs_city', 1 ) : '',
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_country'           => array(
@@ -444,6 +445,7 @@ class FS_Users {
 				'value'       => $user_id ? get_user_meta( $user_id, 'fs_country', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_zip_code'          => array(
@@ -454,6 +456,7 @@ class FS_Users {
 				'value'       => $user_id ? get_user_meta( $user_id, 'fs_zip_code', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_region'            => array(
@@ -465,6 +468,7 @@ class FS_Users {
 				'value'       => $user_id ? get_user_meta( $user_id, 'fs_region', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_address'           => array(
@@ -475,6 +479,7 @@ class FS_Users {
 				'value'       => $user_id ? get_user_meta( $user_id, 'fs_address', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_home_num'          => array(
@@ -485,6 +490,7 @@ class FS_Users {
 				'value'       => $user_id ? get_user_meta( $user_id, 'fs_home_num', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_apartment_num'     => array(
@@ -495,6 +501,7 @@ class FS_Users {
 				'value'       => $user_id ? get_user_meta( $user_id, 'fs_apartment_num', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_delivery_number'   => array(
@@ -505,6 +512,7 @@ class FS_Users {
 				'value'       => $user_id ? get_user_meta( $user_id, 'fs_delivery_number', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_delivery_methods'  => array(
@@ -514,7 +522,7 @@ class FS_Users {
 				'taxonomy'     => FS_Config::get_data( 'product_del_taxonomy' ),
 				'icon'         => true,
 				'title'        => __( 'Choose shipping method', 'f-shop' ),
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_delivery_methods', 1 ) : '',
+				'value'        => $user_id ? get_user_meta( $user_id, 'fs_delivery_methods', 1 ) : '',
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -522,6 +530,7 @@ class FS_Users {
 					'parent'     => 0
 				) ),
 				'required'     => true,
+				'save_meta'   => true
 
 
 			),
@@ -532,7 +541,7 @@ class FS_Users {
 				'taxonomy'     => FS_Config::get_data( 'product_pay_taxonomy' ),
 				'icon'         => true,
 				'title'        => __( 'Select a Payment Method', 'f-shop' ),
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_payment_methods', 1 ) : '',
+				'value'        => $user_id ? get_user_meta( $user_id, 'fs_payment_methods', 1 ) : '',
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -540,6 +549,7 @@ class FS_Users {
 					'parent'     => 0
 				) ),
 				'required'     => true,
+				'save_meta'   => true
 
 
 			),
@@ -685,13 +695,18 @@ class FS_Users {
 
 		// Сохраняем данные пользователя
 		foreach ( $user_fields as $meta_key => $user_field ) {
-			if ( ( $user_field['type'] == 'file' && empty( $_FILES[ $meta_key ] ) ) ) {
+			if ( $user_field['type'] == 'file' && empty( $_FILES[ $meta_key ] ) ) {
+				continue;
+			}
+
+			// Выходим из цикла если поля не существует
+			if ( ! isset( $_POST[ $meta_key ] ) ) {
 				continue;
 			}
 
 			$meta_value = trim( $_POST[ $meta_key ] );
 
-			if ( $user_field['type'] == 'checkbox' && isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != 1 ) {
+			if ( $user_field['type'] == 'checkbox' && $meta_value != 1 ) {
 				$meta_value = 0;
 			}
 
