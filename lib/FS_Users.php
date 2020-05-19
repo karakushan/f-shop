@@ -354,7 +354,12 @@ class FS_Users {
 	 * @return mixed|void
 	 */
 	public static function get_user_fields( $user_id = 0 ) {
-		$user = ! $user_id ? wp_get_current_user() : get_user_by( 'ID', $user_id );
+
+		$user = $user_id == 0 ? wp_get_current_user() : get_user_by( 'ID', $user_id );
+
+		if ( isset( $user->ID ) ) {
+			$user_id = intval( $user->ID );
+		}
 
 		$fields = array(
 			'fs_email'      => array(
@@ -530,7 +535,7 @@ class FS_Users {
 					'parent'     => 0
 				) ),
 				'required'     => true,
-				'save_meta'   => true
+				'save_meta'    => true
 
 
 			),
@@ -549,7 +554,7 @@ class FS_Users {
 					'parent'     => 0
 				) ),
 				'required'     => true,
-				'save_meta'   => true
+				'save_meta'    => true
 
 
 			),
