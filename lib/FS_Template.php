@@ -34,6 +34,8 @@ class FS_Template {
 	}
 
 	/**
+	 * Создание шаблона из переданной строки
+	 *
 	 * @param string $html
 	 * @param array $params
 	 *

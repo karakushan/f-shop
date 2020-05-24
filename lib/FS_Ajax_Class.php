@@ -262,8 +262,8 @@ class FS_Ajax_Class {
 
 	// привязка атрибута к товару
 	function fs_add_att_callback() {
-		$fs_config=new FS_Config();
-		$post = array_map( 'sanitize_text_field', $_POST );
+		$fs_config = new FS_Config();
+		$post      = array_map( 'sanitize_text_field', $_POST );
 
 		$post_terms = wp_set_post_terms( intval( $post['post'] ), intval( $post['term'] ), $fs_config->data['features_taxonomy'], true );
 		if ( is_wp_error( $post_terms ) ) {
@@ -363,9 +363,9 @@ class FS_Ajax_Class {
 	 * удаляет один термин (свойство) товара
 	 */
 	function fs_remove_product_term_callback() {
-		$fs_config=new FS_Config();
-		$output = array_map( 'sanitize_text_field', $_POST );
-		$remove = wp_remove_object_terms( (int) $output['product_id'], (int) $output['term_id'], $fs_config->data['features_taxonomy'] );
+		$fs_config = new FS_Config();
+		$output    = array_map( 'sanitize_text_field', $_POST );
+		$remove    = wp_remove_object_terms( (int) $output['product_id'], (int) $output['term_id'], $fs_config->data['features_taxonomy'] );
 		if ( $remove ) {
 			echo json_encode( array(
 				'status' => true
@@ -404,7 +404,9 @@ class FS_Ajax_Class {
 	 */
 	function order_send_ajax() {
 		global $wpdb;
-		$fs_config=new FS_Config();
+		$fs_config   = new FS_Config();
+		$fs_template = new FS_Template();
+
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
 		}
@@ -538,34 +540,15 @@ class FS_Ajax_Class {
 			$_SESSION['fs_last_order_id']          = $order_id;
 			$_SESSION['fs_last_order_pay']         = $pay_method ? $pay_method->slug : 0;
 
-			// текст письма заказчику
-			$sanitize_field['message'] = fs_option( 'customer_mail' );
-			$user_message              = apply_filters( 'fs_email_template', $sanitize_field );
-
-			// текст письма админу
-			$sanitize_field['message'] = fs_option( 'admin_mail' );
-			$admin_message             = apply_filters( 'fs_email_template', $sanitize_field );
-
-			// Заголовки E-mail
-			$headers = array(
-				sprintf(
-					'From: %s <%s>',
-					fs_option( 'name_sender', get_bloginfo( 'name' ) ),
-					fs_option( 'email_sender', 'shop@' . $_SERVER['SERVER_NAME'] )
-				),
-				'Content-type: text/html; charset=utf-8'
-			);
-
 			//Отсылаем письмо с данными заказа заказчику
-			$customer_mail_header = fs_option( 'customer_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
-			if ( $sanitize_field['fs_email'] ) {
-				wp_mail( $sanitize_field['fs_email'], $customer_mail_header, $user_message, $headers );
-			}
+			$customer_mail_subject = fs_option( 'customer_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
+			$user_email_message              = $fs_template->get('mail/templates/ru_RU/user-create-order');
+			FS_Form::send_email( $sanitize_field['fs_email'], $customer_mail_subject, $user_email_message );
 
-			//Отсылаем письмо с данными заказа админу
-			$admin_email       = fs_option( 'manager_email', get_option( 'admin_email' ) );
-			$admin_mail_header = fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
-			wp_mail( $admin_email, $admin_mail_header, $admin_message, $headers );
+			//Отсылаем письмо с данными заказа на почту указанную в настроках для оповещения о заказах
+			$admin_mail_subject = fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
+			$admin_message              = $fs_template->get('mail/templates/ru_RU/user-create-order');
+			FS_Form::send_email( fs_option( 'manager_email', get_option( 'admin_email' ) ), $admin_mail_subject, $admin_message );
 
 			/* обновляем название заказа для админки */
 			wp_update_post( array(

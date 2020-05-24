@@ -40,19 +40,23 @@ class FS_Form {
 	/**
 	 * Sending Email
 	 *
-	 * @param $email
-	 * @param $subject
-	 * @param $message
-	 * @param string $headers
-	 * @param array $attachments
+	 * @param string $email почта на которую отправляется письмо
+	 * @param string $subject тема письма
+	 * @param array $message отправляемое сообщение
+	 * @param array $headers заголовки письма
+	 * @param array $attachments файлы, вложения
 	 *
 	 * @return bool
 	 */
-	public static function send_email( $email, $subject, $message, $headers = '', $attachments = array() ) {
-		if ( ! $headers ) {
-
-			$headers = 'Content-type: text/html; charset=utf-8';
-		}
+	public static function send_email( $email, $subject, $message, $headers = [], $attachments = array() ) {
+		$headers = wp_parse_args( $headers, array(
+			sprintf(
+				'From: %s <%s>',
+				fs_option( 'name_sender', get_bloginfo( 'name' ) ),
+				fs_option( 'email_sender', 'shop@' . $_SERVER['SERVER_NAME'] )
+			),
+			'Content-type: text/html; charset=utf-8'
+		) );
 
 		return wp_mail( $email, $subject, $message, $headers, $attachments );
 	}
@@ -222,7 +226,7 @@ class FS_Form {
 			'required'       => ! empty( $field['required'] ) ? $field['required'] : false,
 			'title'          => ! empty( $field['title'] ) ? $field['title'] : __( 'this field is required', 'f-shop' ),
 			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
-			'value'          =>! empty( $field['value'] ) ? $field['value'] : null,
+			'value'          => ! empty( $field['value'] ) ? $field['value'] : null,
 			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
 			'icon'           => ! empty( $field['icon'] ) ? $field['icon'] : '',
 			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',
