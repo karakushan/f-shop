@@ -471,13 +471,13 @@
                                             <table cellspacing="0" cellpadding="0" width="100%">
                                                 <tr>
                                                     <td class="mobile-hide-img">
-                                                        <a href="">
+                                                        <a href="{{ item.link }}" target="_blank">
                                                             <img width="110" src="{{ item.thumb }}"
                                                                  alt="{{ item.name }}">
                                                         </a>
                                                     </td>
                                                     <td class="product">
-                                                        <span style="color: #4d4d4d; font-weight:bold;">{{ item.name }}</span>
+                                                        <a href="{{ item.link }}" target="_blank" style="color: #4d4d4d; font-weight:bold;">{{ item.name }}</a>
                                                         <br/>
                                                         {% for attribute in item.attr %}
                                                             {{ attribute.parent_name }}: {{ attribute.name }}  <br/>
