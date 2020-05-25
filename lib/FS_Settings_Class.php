@@ -338,7 +338,7 @@ class FS_Settings_Class {
 				)
 			),
 			'letters'          => array(
-				'name'   => __( 'Letters', 'f-shop' ),
+				'name'   => __( 'Orders', 'f-shop' ),
 				'fields' => array(
 					array(
 						'type'  => 'text',
@@ -347,7 +347,7 @@ class FS_Settings_Class {
 						'help'  => __( 'You can specify multiple recipients separated by commas.', 'f-shop' ),
 						'value' => fs_option( 'manager_email', get_option( 'admin_email' ) )
 					),
-                    array(
+					array(
 						'type'  => 'text',
 						'name'  => 'contact_phone',
 						'label' => __( 'Телефон для связи', 'f-shop' ),
@@ -361,18 +361,33 @@ class FS_Settings_Class {
 						'value' => fs_option( 'site_logo' )
 					),
 					array(
-						'type'  => 'email',
-						'name'  => 'email_sender',
-						'label' => __( 'Email sender', 'f-shop' ),
-						'value' => fs_option( 'email_sender' ),
-						'help'  => __( 'By default, this is the site administrator’s e-mail', 'f-shop' ),
-					),
-					array(
 						'type'  => 'text',
 						'name'  => 'name_sender',
 						'label' => __( 'Name of the sender of letters', 'f-shop' ),
 						'value' => fs_option( 'name_sender', get_bloginfo( 'name' ) )
 					),
+					array(
+						'type'  => 'email',
+						'name'  => 'email_sender',
+						'label' => __( 'Email sender', 'f-shop' ),
+						'value' => fs_option( 'email_sender', get_option( 'admin_email' ) ),
+						'help'  => __( 'By default, this is the site administrator’s e-mail', 'f-shop' ),
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'admin_mail_header',
+						'label' => __( 'Title in the order letter to the administrator', 'f-shop' ),
+						'value' => fs_option( 'admin_mail_header',sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ),
+						'help'  => '',
+					),
+                    array(
+						'type'  => 'text',
+						'name'  => 'customer_mail_header',
+						'label' => __( 'Title in the order letter to the buyer', 'f-shop' ),
+						'value' => fs_option( 'customer_mail_header',sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ),
+						'help'  => '',
+					),
+
 					array(
 						'type'      => 'dropdown_posts',
 						'name'      => 'register_mail_template',
