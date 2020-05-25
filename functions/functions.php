@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
-use FS\FS_Cart_Class;
+use FS\FS_Cart;
 use \FS\FS_Config;
 use \FS\FS_Product;
 
@@ -190,7 +190,7 @@ function fs_total_amount( $wrap = '%s <span>%s</span>', $delivery_cost = false )
  * @return float|int
  */
 function fs_get_cart_cost() {
-	$products = \FS\FS_Cart_Class::get_cart();
+	$products = \FS\FS_Cart::get_cart();
 	$cost     = 0;
 	if ( is_array( $products ) && count( $products ) ) {
 		foreach ( $products as $key => $product ) {
@@ -266,7 +266,7 @@ function fs_get_total_amount( $delivery_cost = false ) {
  */
 function fs_total_amount_without_discount( $wrap = '%s <span>%s</span>' ) {
 
-	$cart_items = FS\FS_Cart_Class::get_cart();
+	$cart_items = FS\FS_Cart::get_cart();
 
 	$total = 0;
 
@@ -326,7 +326,7 @@ function fs_get_taxes_amount( $amount ) {
  */
 function fs_get_total_discount() {
 	$discount = 0;
-	$cart     = FS\FS_Cart_Class::get_cart();
+	$cart     = FS\FS_Cart::get_cart();
 
 	if ( $cart ) {
 		foreach ( $cart as $key => $product ) {
@@ -505,7 +505,7 @@ function fs_total_count( $products = array() ) {
  *         'all_price'-общая цена
  */
 function fs_get_cart( $args = array() ) {
-	$cart_items = FS\FS_Cart_Class::get_cart();
+	$cart_items = FS\FS_Cart::get_cart();
 	$args       = wp_parse_args( $args, array(
 		'price_format'   => '%s <span>%s</span>',
 		'thumbnail_size' => 'thumbnail'
@@ -550,7 +550,7 @@ function fs_get_cart( $args = array() ) {
  *        'class'- класс для кнопки, ссылки (по умолчанию класс 'fs-delete-position')
  */
 function fs_delete_position( $cart_item = 0, $args = array() ) {
-	$cart = FS\FS_Cart_Class::get_cart();
+	$cart = FS\FS_Cart::get_cart();
 	$name = ! empty( $cart[ $cart_item ] ) ? get_the_title( $cart[ $cart_item ]['ID'] ) : '';
 	$args = wp_parse_args( $args, array(
 		'content' => '&#10006;',
@@ -631,8 +631,8 @@ function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args 
  */
 function fs_product_count( $echo = true ) {
 
-	$count = FS_Cart_Class::get_cart() && is_array( FS_Cart_Class::get_cart() )
-		? count( FS_Cart_Class::get_cart() )
+	$count = FS_Cart::get_cart() && is_array( FS_Cart::get_cart() )
+		? count( FS_Cart::get_cart() )
 		: 0;
 
 	if ( $echo ) {

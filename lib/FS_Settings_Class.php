@@ -347,6 +347,13 @@ class FS_Settings_Class {
 						'help'  => __( 'You can specify multiple recipients separated by commas.', 'f-shop' ),
 						'value' => fs_option( 'manager_email', get_option( 'admin_email' ) )
 					),
+                    array(
+						'type'  => 'text',
+						'name'  => 'contact_phone',
+						'label' => __( 'Телефон для связи', 'f-shop' ),
+						'help'  => __( 'Published on the website so that buyers can contact you', 'f-shop' ),
+						'value' => fs_option( 'contact_phone' )
+					),
 					array(
 						'type'  => 'image',
 						'name'  => 'site_logo',

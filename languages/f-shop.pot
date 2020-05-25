@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-14 15:34+0000\n"
+"POT-Creation-Date: 2020-05-25 10:57+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -2249,4 +2249,19 @@ msgstr ""
 
 #. Author of the plugin
 msgid "Vitaliy Karakushan"
+msgstr ""
+
+msgid "Date Ordered"
+msgstr ""
+
+msgid "Thank you for your order!"
+msgstr ""
+
+msgid "Cost of delivery"
+msgstr ""
+
+msgid "Cost of goods"
+msgstr ""
+
+msgid "Last Name"
 msgstr ""

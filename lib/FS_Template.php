@@ -9,6 +9,9 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Extension\StringLoaderExtension;
+use Twig\Extension\DebugExtension;
+use \Twig\TwigFilter;
+use Twig\TwigFunction;
 
 class FS_Template {
 	protected $environment;
@@ -27,6 +30,19 @@ class FS_Template {
 			'debug' => true
 		] );
 		$this->environment->addExtension( new StringLoaderExtension() );
+
+		// Add function "__"
+		$function_localize = new TwigFunction( '__', function ( $string ) {
+			return __( $string, 'f-shop' );
+		} );
+		$this->environment->addFunction( $function_localize );
+
+		//  Add filter "clean_number"
+		$filter_clean_number = new \Twig\TwigFilter('clean_number', function ($string) {
+			return preg_replace("/[^0-9]/", '', $string);
+		});
+		$this->environment->addFilter( $filter_clean_number );
+
 
 		if ( current_user_can( 'administrator' ) ) {
 			$this->environment->addExtension( new DebugExtension() );

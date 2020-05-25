@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Класс для работы с корзиной
  */
-class FS_Cart_Class {
+class FS_Cart {
 
 	public $cart = null;
 

@@ -45,7 +45,7 @@ class FS_Init {
 		$this->fs_rating     = new FS_Rating_Class;
 		$this->fs_post_types = new FS_Post_Types;
 		$this->fs_filters    = new FS_Filters;
-		$this->fs_cart       = new FS_Cart_Class;
+		$this->fs_cart       = new FS_Cart;
 		$this->fs_orders     = new FS_Orders;
 		$this->fs_images     = new FS_Images_Class;
 		$this->fs_taxonomies = new FS_Taxonomy;

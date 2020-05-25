@@ -109,7 +109,7 @@ class FS_Action_Class {
 		/* Выводит форму заполнения личных данных при отправке заказа */
 		add_action( 'fs_order_form', 'fs_order_send_form', 10, 1 );
 		/* Показывает поля адреса. Срабатывает при условии что способ доставки требует поля адреса */
-		add_action( 'fs_shipping_fields', array( 'FS\FS_Cart_Class', 'show_shipping_fields' ) );
+		add_action( 'fs_shipping_fields', array( 'FS\FS_Cart', 'show_shipping_fields' ) );
 
 		//===== USERS =====
 		/* Выводит форму авторизации на сайте */

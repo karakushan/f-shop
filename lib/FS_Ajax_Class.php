@@ -404,14 +404,16 @@ class FS_Ajax_Class {
 	 */
 	function order_send_ajax() {
 		global $wpdb;
-		$fs_config   = new FS_Config();
-		$fs_template = new FS_Template();
+		$fs_config                 = new FS_Config();
+		$fs_template               = new FS_Template();
+		$order_create_time         = time();
+		$order_create_date_display = date_i18n( 'd F Y H:i', $order_create_time );
 
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
 		}
 		$product_class = new FS_Product();
-		$fs_products   = FS_Cart_Class::get_cart();
+		$fs_products   = FS_Cart::get_cart();
 
 		$fs_custom_products = ! empty( $_POST['fs_custom_product'] ) ? serialize( $_POST['fs_custom_product'] ) : '';
 		$user_id            = 0;
@@ -422,19 +424,14 @@ class FS_Ajax_Class {
 		//Производим очистку полученных данных с формы заказа
 		$form_fields    = FS_Users::get_user_fields();
 		$sanitize_field = array();
-		if ( $form_fields ) {
-			foreach ( $form_fields as $field_name => $form_field ) {
-				if ( empty( $_POST[ $field_name ] ) ) {
-					$sanitize_field[ $field_name ] = '-';
-				} else {
-					if ( $form_field['type'] == 'email' ) {
-						$sanitize_field[ $field_name ] = sanitize_email( $_POST[ $field_name ] );
-					} else {
-						$sanitize_field[ $field_name ] = sanitize_text_field( $_POST[ $field_name ] );
-					}
-				}
+		foreach ( $form_fields as $field_name => $form_field ) {
+			if ( $form_field['type'] == 'email' ) {
+				$sanitize_field[ $field_name ] = sanitize_email( $_POST[ $field_name ] );
+			} else {
+				$sanitize_field[ $field_name ] = sanitize_text_field( $_POST[ $field_name ] );
 			}
 		}
+
 
 		// проверяем существование пользователя
 		if ( is_user_logged_in() ) {
@@ -532,22 +529,56 @@ class FS_Ajax_Class {
 			// Здесь уже можно навешивать сторонние обработчики
 			do_action( 'fs_create_order', $order_id );
 
-			$sanitize_field['order_id']            = $order_id;
-			$sanitize_field['total_amount']        = $sum . ' ' . fs_currency();
-			$sanitize_field['site_name']           = get_bloginfo( 'name' );
-			$sanitize_field['fs_delivery_methods'] = fs_get_delivery( $sanitize_field['fs_delivery_methods'] );
-			$sanitize_field['fs_payment_methods']  = $pay_method->name;
-			$_SESSION['fs_last_order_id']          = $order_id;
-			$_SESSION['fs_last_order_pay']         = $pay_method ? $pay_method->slug : 0;
+			$_SESSION['fs_last_order_id']  = $order_id;
+			$_SESSION['fs_last_order_pay'] = $pay_method ? $pay_method->slug : 0;
+
+			$customer_mail_subject = fs_option( 'customer_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
+
+			// Здесь мы определяем переменные для шаблона письма
+			$mail_data = [
+				// Cart data
+				'order_date'        => $order_create_date_display,
+				'order_id'         => $order_id,
+				'cart_discount'     => '0 ' . fs_currency(),
+				'cart_amount'       => $sum . ' ' . fs_currency(),
+				'delivery_cost'     => $delivery_cost . ' ' . fs_currency(),
+				'products_cost'     => $sum . ' ' . fs_currency(),
+				'delivery_method'   => fs_get_delivery( $sanitize_field['fs_delivery_methods'] ),
+				'delivery_number'   =>  $sanitize_field['fs_delivery_number'],
+				'payment_method'   => $pay_method->name,
+				'cart_items'        => fs_get_cart(),
+				'order_title'       => $customer_mail_subject,
+
+				// Site data
+				'site_name'         => get_bloginfo( 'name' ),
+				'home_url'          => home_url( '/' ),
+				'dashboard_url'     => fs_account_url(),
+				'admin_email'       => get_option( 'admin_email' ),
+				'contact_email'     => fs_option( 'manager_email', get_option( 'admin_email' ) ),
+				'contact_phone'     => fs_option( 'contact_phone' ),
+				'mail_logo'         => fs_option( 'site_logo' ) ? wp_get_attachment_image_url( fs_option( 'site_logo' ), 'full' ) : '',
+				'social_links'      => [],
+
+				// Client data
+				'client_city'       => $sanitize_field['fs_city'],
+				'client_address'    => $sanitize_field['fs_address'],
+				'client_phone'      => $sanitize_field['fs_phone'],
+				'client_email'      => $sanitize_field['fs_email'],
+				'client_first_name' => $sanitize_field['fs_first_name'],
+				'client_last_name'  => $sanitize_field['fs_last_name'],
+				'client_id'         => $user_id,
+			];
+
+			$mail_data = apply_filters( 'fs_create_order_mail_data', $mail_data );
 
 			//Отсылаем письмо с данными заказа заказчику
-			$customer_mail_subject = fs_option( 'customer_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
-			$user_email_message              = $fs_template->get('mail/templates/ru_RU/user-create-order');
+
+			$user_email_message    = $fs_template->get( 'mail/user-create-order', $mail_data );
 			FS_Form::send_email( $sanitize_field['fs_email'], $customer_mail_subject, $user_email_message );
 
 			//Отсылаем письмо с данными заказа на почту указанную в настроках для оповещения о заказах
 			$admin_mail_subject = fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
-			$admin_message              = $fs_template->get('mail/templates/ru_RU/user-create-order');
+			$admin_message      = $fs_template->get( 'mail/user-create-order', $mail_data );
 			FS_Form::send_email( fs_option( 'manager_email', get_option( 'admin_email' ) ), $admin_mail_subject, $admin_message );
 
 			/* обновляем название заказа для админки */

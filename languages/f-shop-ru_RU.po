@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-14 15:34+0000\n"
-"PO-Revision-Date: 2020-05-14 15:34+0000\n"
-"Last-Translator: umbrella-admin <admin@umbrella.loc>\n"
+"POT-Creation-Date: 2020-05-25 10:57+0000\n"
+"PO-Revision-Date: 2020-05-25 11:02+0000\n"
+"Last-Translator: \n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -24,7 +24,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Loco-Target-Locale: ru_RU\n"
-"X-Loco-Version: 2.3.1; wp-5.4"
+"X-Loco-Version: 2.3.4; wp-5.4.1"
 
 #: functions/actions.php:33
 msgid "Views"
@@ -331,7 +331,7 @@ msgstr "Ошибка при проверке безопасности"
 
 #: lib/FS_Attribute_Widget.php:16
 msgid "Product attribute filter"
-msgstr ""
+msgstr "Фильтр атрибутов товара"
 
 #: lib/FS_Attribute_Widget.php:17
 msgid "Allows you to display a filter to filter products by attributes"
@@ -371,7 +371,7 @@ msgstr "Изображение"
 #: lib/FS_Attribute_Widget.php:122
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:32
 msgid "Show only in categories"
-msgstr ""
+msgstr "Показывать только в категориях"
 
 #: lib/FS_Cart_Class.php:139
 msgid "Cart is empty"
@@ -2346,3 +2346,18 @@ msgstr ""
 #. Author of the plugin
 msgid "Vitaliy Karakushan"
 msgstr "Виталий Каракушан"
+
+msgid "Date Ordered"
+msgstr "Дата заказа"
+
+msgid "Thank you for your order!"
+msgstr "Благодарим за заказ!"
+
+msgid "Cost of delivery"
+msgstr "Стоимость доставки"
+
+msgid "Cost of goods"
+msgstr "Стоимость товаров"
+
+msgid "Last Name"
+msgstr "Фамилия"
