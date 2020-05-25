@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 10:30+0000\n"
-"PO-Revision-Date: 2020-05-25 10:36+0000\n"
+"POT-Creation-Date: 2020-05-25 10:57+0000\n"
+"PO-Revision-Date: 2020-05-25 11:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -2352,3 +2352,12 @@ msgstr "Дата заказа"
 
 msgid "Thank you for your order!"
 msgstr "Благодарим за заказ!"
+
+msgid "Cost of delivery"
+msgstr "Стоимость доставки"
+
+msgid "Cost of goods"
+msgstr "Стоимость товаров"
+
+msgid "Last Name"
+msgstr "Фамилия"

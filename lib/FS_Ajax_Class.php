@@ -538,16 +538,17 @@ class FS_Ajax_Class {
 			$mail_data = [
 				// Cart data
 				'order_date'        => $order_create_date_display,
-				'order_id'         => $order_id,
+				'order_id'          => $order_id,
 				'cart_discount'     => '0 ' . fs_currency(),
 				'cart_amount'       => $sum . ' ' . fs_currency(),
 				'delivery_cost'     => $delivery_cost . ' ' . fs_currency(),
-				'products_cost'     => $sum . ' ' . fs_currency(),
+				'products_cost'     => fs_get_cart_cost() . ' ' . fs_currency(),
 				'delivery_method'   => fs_get_delivery( $sanitize_field['fs_delivery_methods'] ),
-				'delivery_number'   =>  $sanitize_field['fs_delivery_number'],
-				'payment_method'   => $pay_method->name,
+				'delivery_number'   => $sanitize_field['fs_delivery_number'],
+				'payment_method'    => $pay_method->name,
 				'cart_items'        => fs_get_cart(),
 				'order_title'       => $customer_mail_subject,
+				'order_edit_url'    => admin_url( 'post.php?post=' . $order_id . '&action=edit' ),
 
 				// Site data
 				'site_name'         => get_bloginfo( 'name' ),
@@ -573,12 +574,12 @@ class FS_Ajax_Class {
 
 			//Отсылаем письмо с данными заказа заказчику
 
-			$user_email_message    = $fs_template->get( 'mail/user-create-order', $mail_data );
+			$user_email_message = $fs_template->get( 'mail/user-create-order', $mail_data );
 			FS_Form::send_email( $sanitize_field['fs_email'], $customer_mail_subject, $user_email_message );
 
 			//Отсылаем письмо с данными заказа на почту указанную в настроках для оповещения о заказах
 			$admin_mail_subject = fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
-			$admin_message      = $fs_template->get( 'mail/user-create-order', $mail_data );
+			$admin_message      = $fs_template->get( 'mail/admin-create-order', $mail_data );
 			FS_Form::send_email( fs_option( 'manager_email', get_option( 'admin_email' ) ), $admin_mail_subject, $admin_message );
 
 			/* обновляем название заказа для админки */
