@@ -38,11 +38,16 @@ class FS_Template {
 		$this->environment->addFunction( $function_localize );
 
 		//  Add filter "clean_number"
-		$filter_clean_number = new \Twig\TwigFilter('clean_number', function ($string) {
-			return preg_replace("/[^0-9]/", '', $string);
-		});
+		$filter_clean_number = new TwigFilter( 'clean_number', function ( $string ) {
+			return preg_replace( "/[^0-9]/", '', $string );
+		} );
 		$this->environment->addFilter( $filter_clean_number );
 
+		//  Add filter "html_entity_decode"
+		$filter_html_entity_decode = new TwigFilter( 'html_entity_decode', function ( $string ) {
+			return html_entity_decode( $string );
+		} );
+		$this->environment->addFilter( $filter_html_entity_decode );
 
 		if ( current_user_can( 'administrator' ) ) {
 			$this->environment->addExtension( new DebugExtension() );

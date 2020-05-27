@@ -518,13 +518,18 @@ function fs_get_cart( $args = array() ) {
 				continue;
 			}
 
+			$product_image_url = fs_get_product_thumbnail_url( $offer->id, $args['thumbnail_size'] );
+
 			$products[ $key ] = array(
 				'ID'         => $offer->id,
 				'id'         => $offer->id,
 				'name'       => $offer->title,
 				'count'      => $offer->count,
-				'thumb'      => get_the_post_thumbnail_url( $offer->id, $args['thumbnail_size'] ),
-				'thumbnail'  => get_the_post_thumbnail( $offer->id, $args['thumbnail_size'] ),
+				'qty'      => $offer->count,
+				/* @deprecated */
+				'thumb'      => $product_image_url,
+				'thumbnail_url'      => $product_image_url,
+				'thumbnail'  => '<img src="' . esc_attr( $product_image_url ) . '" alt="' . esc_attr( $offer->title ) . '" title="' . esc_attr( $offer->title ) . '">',
 				'attr'       => $offer->attributes,
 				'link'       => $offer->permalink,
 				'price'      => $offer->price_display,

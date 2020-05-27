@@ -471,12 +471,12 @@
                                                 <tr>
                                                     <td class="mobile-hide-img">
                                                         <a href="{{ item.link }}" target="_blank">
-                                                            <img width="110" src="{{ item.thumb }}"
+                                                            <img width="110" src="{{ item.thumbnail_url }}"
                                                                  alt="{{ item.name }}">
                                                         </a>
                                                     </td>
                                                     <td class="product">
-                                                        <a href="{{ item.link }}" target="_blank" style="color: #4d4d4d; font-weight:bold;">{{ item.name }}</a>
+                                                        <a href="{{ item.link }}" target="_blank" style="color: #4d4d4d; font-weight:bold;">{{ item.name|html_entity_decode }}</a>
                                                         <br/>
                                                         {% for attribute in item.attr %}
                                                             {{ attribute.parent_name }}: {{ attribute.name }}  <br/>
