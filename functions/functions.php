@@ -521,22 +521,22 @@ function fs_get_cart( $args = array() ) {
 			$product_image_url = fs_get_product_thumbnail_url( $offer->id, $args['thumbnail_size'] );
 
 			$products[ $key ] = array(
-				'ID'         => $offer->id,
-				'id'         => $offer->id,
-				'name'       => $offer->title,
-				'count'      => $offer->count,
-				'qty'      => $offer->count,
+				'ID'            => $offer->id,
+				'id'            => $offer->id,
+				'name'          => $offer->title,
+				'count'         => $offer->count,
+				'qty'           => $offer->count,
 				/* @deprecated */
-				'thumb'      => $product_image_url,
-				'thumbnail_url'      => $product_image_url,
-				'thumbnail'  => '<img src="' . esc_attr( $product_image_url ) . '" alt="' . esc_attr( $offer->title ) . '" title="' . esc_attr( $offer->title ) . '">',
-				'attr'       => $offer->attributes,
-				'link'       => $offer->permalink,
-				'price'      => $offer->price_display,
-				'base_price' => $offer->base_price_display,
-				'all_price'  => $offer->cost_display,
-				'sku'        => $offer->sku,
-				'currency'   => $offer->currency
+				'thumb'         => $product_image_url,
+				'thumbnail_url' => $product_image_url,
+				'thumbnail'     => '<img src="' . esc_attr( $product_image_url ) . '" alt="' . esc_attr( $offer->title ) . '" title="' . esc_attr( $offer->title ) . '">',
+				'attr'          => $offer->attributes,
+				'link'          => $offer->permalink,
+				'price'         => $offer->price_display,
+				'base_price'    => $offer->base_price_display,
+				'all_price'     => $offer->cost_display,
+				'sku'           => $offer->sku,
+				'currency'      => $offer->currency
 			);
 		}
 	}
@@ -2258,27 +2258,25 @@ function fs_get_product_id( $product = 0 ) {
  * @param array $labels HTML код метки
  *              могут быть метки типа: 'action','popular','new'
  */
-function fs_product_label( $product_id = 0, $labels = array() ) {
-	$product_id = fs_get_product_id( $product_id );
-	$args       = wp_parse_args( $labels, array(
-		'action'  => '',
-		'popular' => '',
-		'new'     => ''
-	) );
-	if ( ! empty( $_GET['order_type'] ) ) {
-		if ( $_GET['order_type'] == 'field_action' ) {
-			echo $args['action'];
-		} elseif ( $_GET['order_type'] == 'views_desc' ) {
-			echo $args['popular'];
-		} elseif ( $_GET['order_type'] == 'date_desc' ) {
-			echo $args['new'];
-		}
-	} else {
-		if ( fs_is_action( $product_id ) ) {
-			echo $args['action'];
-		}
+function fs_product_label() {
+	global $post;
+
+	$label_show  = false;
+	$label_text  = '';
+	$label_class = '';
+
+
+	if ( isset( $post->label_text ) ) {
+		$label_show  = true;
+		$label_text  = $post->label_text;
+		$label_class = $post->label_class;
+
+
 	}
 
+	if ( $label_show ) {
+		echo '<span class="' . esc_attr( $label_class ) . '">' . esc_html( $label_text ) . '</span>';
+	}
 
 }
 
