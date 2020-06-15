@@ -480,3 +480,4 @@ function fs_post_type_link_filters( $post_link, $post, $leavename, $sample ) {
 
 	return $post_link;
 }
+

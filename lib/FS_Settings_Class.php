@@ -348,13 +348,6 @@ class FS_Settings_Class {
 						'value' => fs_option( 'manager_email', get_option( 'admin_email' ) )
 					),
 					array(
-						'type'  => 'text',
-						'name'  => 'contact_phone',
-						'label' => __( 'Телефон для связи', 'f-shop' ),
-						'help'  => __( 'Published on the website so that buyers can contact you', 'f-shop' ),
-						'value' => fs_option( 'contact_phone' )
-					),
-					array(
 						'type'  => 'image',
 						'name'  => 'site_logo',
 						'label' => __( 'Letter Logo', 'f-shop' ),
@@ -377,14 +370,14 @@ class FS_Settings_Class {
 						'type'  => 'text',
 						'name'  => 'admin_mail_header',
 						'label' => __( 'Title in the order letter to the administrator', 'f-shop' ),
-						'value' => fs_option( 'admin_mail_header',sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ),
+						'value' => fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ),
 						'help'  => '',
 					),
-                    array(
+					array(
 						'type'  => 'text',
 						'name'  => 'customer_mail_header',
 						'label' => __( 'Title in the order letter to the buyer', 'f-shop' ),
-						'value' => fs_option( 'customer_mail_header',sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ),
+						'value' => fs_option( 'customer_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ),
 						'help'  => '',
 					),
 
@@ -402,6 +395,71 @@ class FS_Settings_Class {
 						'value'     => fs_option( 'create_order_mail_template' ),
 						'post_type' => 'fs-mail-template'
 					),
+				)
+
+
+			),
+			'contacts'         => array(
+				'name'   => __( 'Контакты', 'f-shop' ),
+				'fields' => array(
+
+					array(
+						'type'  => 'text',
+						'name'  => 'contact_type',
+						'label' => __( 'Тип магазина', 'f-shop' ),
+						'help'  => __( 'Используется для микроразметки', 'f-shop' ),
+						'value' => fs_option( 'contact_type' )
+					),
+                    array(
+						'type'  => 'text',
+						'name'  => 'contact_name',
+						'label' => __( 'Название магазина', 'f-shop' ),
+						'help'  => __( 'Используется для микроразметки', 'f-shop' ),
+						'value' => fs_option( 'contact_name' )
+					),
+                    array(
+						'type'  => 'text',
+						'name'  => 'contact_phone',
+						'label' => __( 'Телефон для связи', 'f-shop' ),
+						'help'  => __( 'Published on the website so that buyers can contact you', 'f-shop' ),
+						'value' => fs_option( 'contact_phone' )
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'contact_country',
+						'label' => __( 'Страна', 'f-shop' ),
+						'help'  => __( 'Используется для микроразметки, и в других целях', 'f-shop' ),
+						'value' => fs_option( 'contact_country' )
+					),
+                    array(
+						'type'  => 'text',
+						'name'  => 'contact_zip',
+						'label' => __( 'Почтовый индекс', 'f-shop' ),
+						'help'  => __( 'Используется для микроразметки, и в других целях', 'f-shop' ),
+						'value' => fs_option( 'contact_zip' )
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'contact_city',
+						'label' => __( 'Город', 'f-shop' ),
+						'help'  => __( 'Используется для микроразметки, и в других целях', 'f-shop' ),
+						'value' => fs_option( 'contact_city' )
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'contact_address',
+						'label' => __( 'Физический адрес магазина', 'f-shop' ),
+						'help'  => __( 'Используется для микроразметки, и в других целях', 'f-shop' ),
+						'value' => fs_option( 'contact_address' )
+					),
+                    array(
+						'type'  => 'text',
+						'name'  => 'opening_hours',
+						'label' => __( 'Время работы', 'f-shop' ),
+						'help'  => __( 'Используется для микроразметки, и в других целях', 'f-shop' ),
+						'value' => fs_option( 'opening_hours' )
+					),
+
 				)
 
 
