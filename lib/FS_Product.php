@@ -66,6 +66,10 @@ class FS_Product {
 	 * @return string
 	 */
 	function product_link_localize( $post_link, $post, $leavename, $sample ) {
+	    if (!class_exists('WPGlobus_Utils') && !class_exists('WPGlobus')){
+		    return $post_link;
+        }
+
 		if ( $post->post_type != $this->post_type || FS_Config::is_default_locale() ) {
 			return $post_link;
 		}
