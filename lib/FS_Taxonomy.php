@@ -369,7 +369,7 @@ class FS_Taxonomy {
 
 
 		}
-		if ( $_SERVER['QUERY_STRING'] ) {
+		if ( $_SERVER['QUERY_STRING'] && !isset($_GET['q'])) {
 			$term_link .= '?' . $_SERVER['QUERY_STRING'];
 		}
 		if ( $current_link != $term_link ) {
