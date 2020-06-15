@@ -456,7 +456,7 @@ function fs_product_tab_admin_meta_key( $meta_key, $field ) {
 }
 
 // Localize the url
-add_filter( 'post_type_link', 'fs_post_type_link_filters', 10, 4 );
+//add_filter( 'post_type_link', 'fs_post_type_link_filters', 10, 4 );
 function fs_post_type_link_filters( $post_link, $post, $leavename, $sample ) {
 	$default_language = FS_Config::default_locale();
 	$curent_locale    = get_locale();

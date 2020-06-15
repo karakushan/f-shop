@@ -45,11 +45,42 @@ class FS_Product {
 		/* We set the real price with the discount and currency */
 		add_action( 'fs_after_save_meta_fields', array( $this, 'set_real_product_price' ), 10, 1 );
 
-		add_filter( 'pre_get_posts', array( $this, 'pre_get_posts_product' ) );
+		add_filter( 'pre_get_posts', array( $this, 'pre_get_posts_product' ), 10, 1 );
 
 		// Redirect to a localized url
 		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
+
+		add_filter( 'post_type_link', [ $this, 'product_link_localize' ], 99, 4 );
+
+
 	}
+
+	/**
+	 * Локализируем ссылки товаров
+	 *
+	 * @param $post_link
+	 * @param $post
+	 * @param $leavename
+	 * @param $sample
+	 *
+	 * @return string
+	 */
+	function product_link_localize( $post_link, $post, $leavename, $sample ) {
+		if ( $post->post_type != $this->post_type || FS_Config::is_default_locale() ) {
+			return $post_link;
+		}
+
+		$custom_slug = get_post_meta( $post->ID, 'fs_seo_slug__' . get_locale(), 1 );
+
+		if ( ! $custom_slug ) {
+			return $post_link;
+		}
+
+		$post_link = str_replace( $post->post_name, $custom_slug, $post_link );
+
+		return \WPGlobus_Utils::localize_url( $post_link, \WPGlobus::Config()->language );
+	}
+
 
 	/**
 	 * Redirect to a localized url
@@ -60,6 +91,7 @@ class FS_Product {
 		if ( ! is_singular( $this->post_type ) || get_locale() == FS_Config::default_locale() ) {
 			return;
 		}
+
 		$meta_key = 'fs_seo_slug__' . get_locale();
 		$slug     = get_post_meta( $post->ID, $meta_key, 1 );
 
@@ -73,8 +105,9 @@ class FS_Product {
 
 		$localized_url = sprintf( '/%s/%s/%s/', $lang, $this->post_type, $slug );
 
+
 		if ( $uri !== $localized_url ) {
-			wp_safe_redirect( $localized_url );
+			wp_redirect( home_url( $localized_url ) );
 			exit;
 		}
 
@@ -168,27 +201,49 @@ class FS_Product {
 
 	} // END public function init()
 
-	function pre_get_posts_product( $query ) {
-		global $wpdb;
 
+	/**
+	 * Получаем пост по мета полю - оно же слаг для любого языка кроме установленого по умолчанию
+	 *
+	 * @param $query
+	 */
+	function pre_get_posts_product( $query ) {
 		// Если это админка или не главный запрос
-		if ( $query->is_admin
-		     || ! $query->is_main_query()
-		     || ! $query->is_singular
-		     || ! isset( $query->query['post_type'] )
-		     || ( isset( $query->query['post_type'] ) && $query->query['post_type'] != FS_Config::get_data( 'post_type' ) ) ) {
-			return;
+		if ( $query->is_admin || ! $query->is_main_query() || ! $query->is_singular ) {
+			return $query;
 		}
 
+		// Разбиваем текущий урл на компоненты
+		$url_components = explode( '/', $_SERVER['REQUEST_URI'] );
 
-		$slug      = $query->query['product'];
-		$meta_key  = 'fs_seo_slug__' . get_locale();
-		$s_product = $wpdb->get_row( "SELECT *  FROM $wpdb->postmeta WHERE meta_key='$meta_key' AND meta_value='$slug'" );
-		if ( $s_product ) {
-			$post = get_post( $s_product->post_id );
-			$query->set( 'name', $post->post_name );
-			$query->set( 'product', $post->post_name );
-			$query->set( 'post_type', $query->query['post_type'] );
+		// нам нужно чтобы было как миннимум 4 компонента
+		if ( count( $url_components ) < 4 ) {
+			return $query;
+		}
+
+		$lang      = $url_components[1];
+		$post_type = $url_components[2];
+		$slug      = $url_components[3];
+
+		if ( $post_type != $this->post_type || empty( $slug ) ) {
+			return $query;
+		}
+
+		// Получаем ID поста по метаполю
+		global $wpdb;
+		$meta_key = 'fs_seo_slug__' . get_locale();
+		$post_id  = $wpdb->get_var( "SELECT post_id  FROM $wpdb->postmeta WHERE meta_key='$meta_key' AND meta_value='$slug'" );
+		if ( ! $post_id ) {
+			return $query;
+		}
+
+		// Получаем слаг по ID
+		$post_name = $wpdb->get_var( "SELECT post_name FROM $wpdb->posts WHERE ID=$post_id" );
+		if ( $post_name ) {
+			$query->set( 'name', $post_name );
+			$query->set( 'product', $post_name );
+			$query->set( 'post_type', $post_type );
+			$query->set( 'do_not_redirect', 1 );
 		}
 
 		return $query;
@@ -872,17 +927,22 @@ class FS_Product {
 
 
 		foreach ( $save_meta_keys as $key => $field_name ) {
+			$name = $key;
+			if ( is_array( $field_name ) && ! empty( $field_name['multilang'] ) ) {
+				$name = $key . '__' . get_locale();
+			}
+
 			// Skip fields that do not exist in the global variable $_POST
-			if ( ! isset( $_POST[ $field_name ] ) ) {
-				delete_post_meta( $post_id, $field_name );
+			if ( ! isset( $_POST[ $name ] ) ) {
+				delete_post_meta( $post_id, $name );
 				continue;
 			}
 
 			// Modify the saved field through the filter'fs_filter_meta_field'
-			$value = apply_filters( 'fs_filter_meta_field', $_POST[ $field_name ], $field_name, $post );
-			$value = apply_filters( 'fs_filter_meta_field__' . $field_name, $value, $field_name, $post );
+			$value = apply_filters( 'fs_filter_meta_field', $_POST[ $name ], $name, $post );
+			$value = apply_filters( 'fs_filter_meta_field__' . $field_name, $value, $name, $post );
 
-			update_post_meta( $post_id, $field_name, $value );
+			update_post_meta( $post_id, $name, $value );
 		}
 
 		do_action( 'fs_after_save_meta_fields', $post_id );
@@ -939,18 +999,26 @@ class FS_Product {
 	/**
 	 *  Registers new metafields dynamically from tabs
 	 *
+	 * @param bool $data если поставить true до будут добавлены дополнительные данные к полю
+	 *
 	 * @return array
 	 */
-	function get_save_fields() {
+	function get_save_fields( $data = false ) {
 		$product_tabs = $this->get_product_tabs();
+		$meta_fields  = [];
 
 		foreach ( $product_tabs as $product_tab ) {
 			if ( empty( $product_tab['fields'] ) ) {
 				continue;
 			}
 			foreach ( $product_tab['fields'] as $key => $field ) {
-				$key                 = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
-				$meta_fields[ $key ] = $key;
+				$key = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
+				if ( $data ) {
+					$meta_fields[ $key ] = $key;
+				} else {
+					$meta_fields[ $key ] = $key;
+				}
+
 
 			}
 		}
