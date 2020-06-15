@@ -28,6 +28,7 @@ class FS_Product {
 	public $cost_display;
 	public $count = 1;
 	public $attributes = [];
+	public $post_type = 'product';
 
 
 	/**
@@ -45,6 +46,38 @@ class FS_Product {
 		add_action( 'fs_after_save_meta_fields', array( $this, 'set_real_product_price' ), 10, 1 );
 
 		add_filter( 'pre_get_posts', array( $this, 'pre_get_posts_product' ) );
+
+		// Redirect to a localized url
+		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
+	}
+
+	/**
+	 * Redirect to a localized url
+	 */
+	function redirect_to_localize_url() {
+		global $post;
+		// Leave if the request came not from the product category
+		if ( ! is_singular( $this->post_type ) || get_locale() == FS_Config::default_locale() ) {
+			return;
+		}
+		$meta_key = 'fs_seo_slug__' . get_locale();
+		$slug     = get_post_meta( $post->ID, $meta_key, 1 );
+
+		if ( ! $slug ) {
+			return;
+		}
+
+		$uri            = $_SERVER['REQUEST_URI'];
+		$uri_components = explode( '/', $uri );
+		$lang           = $uri_components[1];
+
+		$localized_url = sprintf( '/%s/%s/%s/', $lang, $this->post_type, $slug );
+
+		if ( $uri !== $localized_url ) {
+			wp_safe_redirect( $localized_url );
+			exit;
+		}
+
 	}
 
 	/**
