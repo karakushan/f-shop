@@ -31,7 +31,7 @@ class FS_Taxonomy {
 		add_filter( 'document_title_parts', array( $this, 'document_title_parts_filter' ), 10, 1 );
 
 		add_action( 'wp_head', array( $this, 'wp_head_action' ), 1 );
-		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
+//		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
 
 		// Change SEO Title
 		add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
@@ -360,6 +360,7 @@ class FS_Taxonomy {
 		if ( fs_option( 'fs_localize_slug' ) !== '1' ) {
 			return;
 		}
+
 		$current_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 		$term_id      = get_queried_object_id();
 		$term_link    = get_term_link( $term_id );
