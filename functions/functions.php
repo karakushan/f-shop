@@ -1793,7 +1793,11 @@ function fs_wishlist_widget( $html_attr = array() ) {
 		'data-fs-element' => 'whishlist-widget'
 	);
 	$html_attr = fs_parse_attr( $html_attr, $attr_set );
-	printf( '<a href="%s" %s>%s</a>', esc_url( fs_wishlist_url() ), $html_attr, $template );
+	if($template){
+		echo $template;
+	}else{
+		printf( '<a href="%s" %s>%s</a>', esc_url( fs_wishlist_url() ), $html_attr, $template );
+	}
 }
 
 /**
