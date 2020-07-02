@@ -1793,9 +1793,9 @@ function fs_wishlist_widget( $html_attr = array() ) {
 		'data-fs-element' => 'whishlist-widget'
 	);
 	$html_attr = fs_parse_attr( $html_attr, $attr_set );
-	if($template){
+	if ( $template ) {
 		echo $template;
-	}else{
+	} else {
 		printf( '<a href="%s" %s>%s</a>', esc_url( fs_wishlist_url() ), $html_attr, $template );
 	}
 }
@@ -2639,15 +2639,15 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 			// Если включено показывать цену
 			if ( $args['show_price'] ) {
 				if ( ! empty( $variation['action_price'] ) && $variation['price'] > $variation['action_price'] ) {
-					$price        = apply_filters( 'fs_price_filter', $product_id, $price );
-					$price        = apply_filters( 'fs_price_format', $variation['price'] );
-					$action_price = apply_filters( 'fs_price_filter', $product_id, $action_price );
-					$action_price = apply_filters( 'fs_price_format', $variation['action_price'] );
+					$price        = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
+					$price        = apply_filters( 'fs_price_format', $price );
+					$action_price = apply_filters( 'fs_price_filter', $product_id, $variation['action_price'] );
+					$action_price = apply_filters( 'fs_price_format', $action_price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $action_price ), esc_attr( fs_currency() ) ) . '</span>';
 					echo '<del class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</del>';
 				} else {
-					$price = apply_filters( 'fs_price_format', $variation['price'] );
-					$price = apply_filters( 'fs_price_filter', $product_id, $price );
+					$price = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
+					$price = apply_filters( 'fs_price_format', $price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</span>';
 				}
 			}
