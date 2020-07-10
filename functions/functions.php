@@ -1359,11 +1359,14 @@ function fs_range_slider()
  */
 function fs_price_max()
 {
+    $post_type = FS_Config::get_data('post_type');
+
+    if (!is_tax(FS_Config::get_data('product_taxonomy')) || !is_archive($post_type)) return;
+
     global $wpdb;
 
     if (is_tax(FS_Config::get_data('product_taxonomy'))) {
         $term_id = get_queried_object_id();
-        $post_type = FS_Config::get_data('post_type');
         $sql = "SELECT max(cast({$wpdb->postmeta}.meta_value as unsigned)) FROM {$wpdb->posts} 
 LEFT JOIN {$wpdb->term_relationships} ON ({$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id) 
 LEFT JOIN {$wpdb->term_taxonomy} ON ({$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_taxonomy_id) 
@@ -1375,7 +1378,7 @@ AND {$wpdb->postmeta}.meta_key='%s'";
         $max = $wpdb->get_var($wpdb->prepare($sql, FS_Config::get_meta('price')));
     } else {
         $sql = "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
-        $max = $wpdb->get_var($wpdb->prepare($sql, FS_Config::get_meta['price']));
+        $max = $wpdb->get_var($wpdb->prepare($sql, FS_Config::get_meta('price')));
     }
 
     return (float)$max;
@@ -1389,13 +1392,16 @@ AND {$wpdb->postmeta}.meta_key='%s'";
  *
  * @return float|int|null|string
  */
-function fs_price_min($filter = true)
+function fs_price_min()
 {
+    $post_type = FS_Config::get_data('post_type');
+
+    if (!is_tax(FS_Config::get_data('product_taxonomy')) || !is_archive($post_type)) return;
+
     global $wpdb;
 
     if (is_tax(FS_Config::get_data('product_taxonomy'))) {
         $term_id = get_queried_object_id();
-        $post_type = FS_Config::get_data('post_type');
         $sql = "SELECT min(cast({$wpdb->postmeta}.meta_value as unsigned)) FROM {$wpdb->posts}  
 LEFT JOIN {$wpdb->term_relationships} ON ({$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id) 
 LEFT JOIN {$wpdb->term_taxonomy} ON ({$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_taxonomy_id) 
