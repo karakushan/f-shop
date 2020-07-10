@@ -8,12 +8,12 @@
     <div class="price--inputs">
         <span>
             <?php esc_html_e('from', 'f-shop') ?>
-            <input type="text" value="0" data-fs-element="range-start-input"
-                   data-url="<?php fs_filter_link([], null, array('price_start')) ?>">
+            <input type="number" value="0" data-fs-element="range-start-input"
+                   data-url="<?php fs_filter_link([], null, array('price_start')) ?>" min="0">
         </span>
         <span>
             <?php esc_html_e('to', 'f-shop') ?>
-            <input type="text" value="<?php echo esc_attr($args['price_max']) ?>" data-fs-element="range-end-input"
+            <input type="number" value="<?php echo esc_attr($args['price_max']) ?>" data-fs-element="range-end-input"
                    data-url="<?php fs_filter_link([], null, array('price_end')) ?>">
             <?php echo esc_html($args['currency']) ?>.</span>
     </div>

@@ -347,16 +347,7 @@ Good luck!', 'f-shop' );
 			'meta_value'  => $user_id,
 		) );
 
-		$orders = get_posts( $args );
-		$data   = [];
-		if ( $orders ) {
-			foreach ( $orders as $order ) {
-				$order->data = self::set_order_data( $order->ID );
-				$data[]      = $order;
-			}
-		}
-
-		return $orders;
+		return new \WP_Query($args);
 	}
 
 	/**
