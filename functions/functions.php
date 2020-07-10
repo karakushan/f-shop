@@ -1343,11 +1343,18 @@ function fs_attr_group_filter($group, $type = 'option', $option_default = 'Вы�
     echo $fs_filter->attr_group_filter($group, $type, $option_default);
 }
 
+/**
+ * Displays a price slider.
+ *
+ * - it is recommended to call only on the page of the archive of goods
+ *   and taxonomy of the category of goods
+ *
+ */
 function fs_range_slider()
 {
     echo fs_frontend_template('widget/jquery-ui-slider/ui-slider', array(
-        'price_start' => !empty($_GET['price_start']) ? intval($_GET['price_start']) : fs_price_min(false),
-        'price_max' => !empty($_GET['price_end']) ? intval($_GET['price_end']) : fs_price_max(false),
+        'price_start' => !empty($_GET['price_start']) ? intval($_GET['price_start']) : fs_price_min(),
+        'price_max' => !empty($_GET['price_end']) ? intval($_GET['price_end']) : fs_price_max(),
         'currency' => fs_currency()
     ));
 }

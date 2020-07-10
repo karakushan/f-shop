@@ -1,10 +1,10 @@
 (function ($) {
     window.fShop = {
-        ajaxurl: FastShopData.ajaxurl,
-        nonce: FastShopData.fs_nonce,
-        langs: FastShopData.lang,
+        ajaxurl: fShop.ajaxurl, 
+        nonce: fShop.fs_nonce,
+        langs: fShop.lang,
         getLang: function (string) {
-            return FastShopData.lang[string];
+            return fShop.lang[string];
         },
         // Выполняет поиск значения value в массиве array
         find:
@@ -29,7 +29,7 @@
             return string;
         },
         getSettings: function (settingName) {
-            return FastShopData[settingName];
+            return fShop[settingName];
         },
         sendOrder: function () {
 
@@ -365,7 +365,7 @@
         if (variated) {
             jQuery.ajax({
                 type: 'POST',
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 data: {action: "fs_get_variated", product_id: productId, atts: attrObj},
                 beforeSend: function () {
                     parent.find("[data-fs-element=\"price\"]").addClass('blink');
@@ -557,7 +557,7 @@
 
         if (!el.data('confirm') || confirm(el.data("confirm"))) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: sendData
             }).success(function (result) {
@@ -593,7 +593,7 @@
         };
         if (confirm(el.data("confirm"))) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: sendData
             }).success(function (result) {
@@ -624,7 +624,7 @@
         event.preventDefault();
         var el = jQuery(this);
         jQuery.ajax({
-            url: FastShopData.ajaxurl,
+            url: fShop.ajaxurl,
             type: 'POST',
             beforeSend: function () {
                 el.find('.fs-atc-preloader').fadeIn();
@@ -741,7 +741,7 @@
 //слайдер диапазона цены
     var u = new Url;
     var p_start = u.query.price_start == undefined ? 0 : u.query.price_start;
-    var p_end = u.query.price_end == undefined ? FastShopData.fs_slider_max : u.query.price_end;
+    var p_end = u.query.price_end == undefined ? fShop.fs_slider_max : u.query.price_end;
 
 
     jQuery('[data-fs-element="range-slider"]').each(function (index, value) {
@@ -751,17 +751,17 @@
         var sliderStart = sliderWrapper.find('[data-fs-element="range-start"]');
         rangeSLider.slider({
             range: true,
-            min: 0,
-            max: FastShopData.fs_slider_max,
+            min: fShop.catalogMinPrice,
+            max: fShop.catalogMaxPrice,
             values: [p_start, p_end],
             slide: function (event, ui) {
                 if (sliderStart.data("currency")) {
-                    sliderStart.html(ui.values[0] + ' <span>' + FastShopData.fs_currency + '</span>');
+                    sliderStart.html(ui.values[0] + ' <span>' + fShop.fs_currency + '</span>');
                 } else {
                     sliderStart.html(ui.values[0]);
                 }
                 if (sliderEnd.data("currency")) {
-                    sliderEnd.html(ui.values[1] + ' <span>' + FastShopData.fs_currency + '</span>');
+                    sliderEnd.html(ui.values[1] + ' <span>' + fShop.fs_currency + '</span>');
                 } else {
                     sliderEnd.html(ui.values[1]);
                 }
@@ -770,7 +770,7 @@
             },
             change: function (event, ui) {
 
-                u.query.fs_filter = FastShopData.fs_nonce;
+                u.query.fs_filter = fShop.fs_nonce;
                 u.query.price_start = ui.values[0];
                 u.query.price_end = ui.values[1];
                 window.location.href = u.toString();
@@ -780,12 +780,12 @@
         });
 
         if (sliderStart.data("currency")) {
-            sliderStart.html(p_start + ' <span>' + FastShopData.fs_currency + '</span>');
+            sliderStart.html(p_start + ' <span>' + fShop.fs_currency + '</span>');
         } else {
             sliderStart.html(p_start);
         }
         if (sliderEnd.data("currency")) {
-            sliderEnd.html(p_end + ' <span>' + FastShopData.fs_currency + '</span>');
+            sliderEnd.html(p_end + ' <span>' + fShop.fs_currency + '</span>');
         } else {
             sliderEnd.html(p_end);
         }
@@ -827,7 +827,7 @@
         },
         submitHandler: function (form) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: userInfoEdit.serialize(),
                 beforeSend: function () {
@@ -904,7 +904,7 @@
     loginForm.validate({
         submitHandler: function (form) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: loginForm.serialize(),
                 beforeSend: function () {
@@ -1079,7 +1079,7 @@
 
                 jQuery.ajax({
                     type: 'POST',
-                    url: FastShopData.ajaxurl,
+                    url: fShop.ajaxurl,
                     data: {
                         action: "fs_set_rating",
                         value: ratingVal,
@@ -1165,7 +1165,7 @@
 
         if (confirm(fs_message.confirm_text.replace('%s', product_name))) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 data: {
                     action: 'fs_del_wishlist_pos',
                     position: product_id
