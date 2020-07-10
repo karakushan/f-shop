@@ -762,7 +762,7 @@ jQuery(document).ready(function ($) {
                 $('[data-fs-element="range-end-input"]').val(ui.values[1]);
             },
             change: function (event, ui) {
-                u.query.fs_filter = fShop.fs_nonce;
+                u.query.fs_filter = fShop.nonce;
                 u.query.price_start = ui.values[0];
                 u.query.price_end = ui.values[1];
                 window.location.href = u.toString();

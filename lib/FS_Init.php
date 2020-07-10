@@ -194,8 +194,8 @@ class FS_Init
                     fs_checkout_url(false), __('Checkout', 'f-shop')),
                 'addToWishlist' => __('Item &laquo;%product%&raquo; successfully added to wishlist. <a href="%wishlist_url%">Go to wishlist</a>', 'f-shop'),
             ),
-            'catalogMinPrice' => !empty($_GET['price_start']) && is_numeric($_GET['price_start']) ? $_GET['price_start'] : fs_price_min(),
-            'catalogMaxPrice' => !empty($_GET['price_end']) && is_numeric($_GET['price_end']) ? $_GET['price_end'] : fs_price_max(),
+            'catalogMinPrice' => fs_price_min(),
+            'catalogMaxPrice' => fs_price_max(),
             'fs_cart_type' => fs_option('fs_cart_type', 'modal')
         );
         wp_localize_script(FS_PLUGIN_PREFIX . 'main', 'fShop', $l10n);
