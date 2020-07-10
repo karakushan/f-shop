@@ -167,31 +167,20 @@ class FS_Init
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/js/iziToast.min.js', array('jquery'), null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/js/lightslider.min.js', array('jquery'), null, true);
 
-        wp_enqueue_script(FS_PLUGIN_PREFIX . 'library', FS_PLUGIN_URL . 'assets/js/fs-library.js', array('jquery'), FS_Config::get_data('plugin_ver'), true);
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', array(
-            'jquery',
-            FS_PLUGIN_PREFIX . 'library'
+            'jquery'
         ), FS_Config::get_data('plugin_ver'), true);
-
-        // Здесь подгружается обработчик событий плагина, вы можете отключить его в опциях
-        if (!fs_option('fs_disable_messages', 0)) {
-            wp_enqueue_script(FS_PLUGIN_PREFIX . 'events', FS_PLUGIN_URL . 'assets/js/fs-events.js', array(
-                'jquery',
-                FS_PLUGIN_PREFIX . 'library',
-                FS_PLUGIN_PREFIX . 'main'
-            ), FS_Config::get_data('plugin_ver'), true);
-        }
 
         $l10n = array(
             'ajaxurl' => admin_url("admin-ajax.php"),
-            'fs_nonce' => wp_create_nonce('f-shop'),
+            'nonce' => wp_create_nonce('f-shop'),
             'fs_currency' => fs_currency(),
             'cartUrl' => fs_cart_url(false),
             'checkoutUrl' => fs_checkout_url(false),
             'catalogUrl' => fs_get_catalog_link(),
             'wishlistUrl' => fs_wishlist_url(),
             'preorderWindow' => fs_option('fs_preorder_services', 0),
-            'lang' => array(
+            'langs' => array(
                 'success' => __('Success!', 'f-shop'),
                 'error' => __('Error!', 'f-shop'),
                 'order_send_success' => __('Your order has been successfully created. We will contact you shortly.', 'f-shop'),
@@ -205,8 +194,8 @@ class FS_Init
                     fs_checkout_url(false), __('Checkout', 'f-shop')),
                 'addToWishlist' => __('Item &laquo;%product%&raquo; successfully added to wishlist. <a href="%wishlist_url%">Go to wishlist</a>', 'f-shop'),
             ),
-            'catalogMinPrice' => !empty($_GET['price_start']) ? $_GET['price_start'] : fs_price_min(),
-            'catalogMaxPrice' => !empty($_GET['price_end']) ? $_GET['price_end'] : fs_price_max(),
+            'catalogMinPrice' => !empty($_GET['price_start']) && is_numeric($_GET['price_start']) ? $_GET['price_start'] : fs_price_min(),
+            'catalogMaxPrice' => !empty($_GET['price_end']) && is_numeric($_GET['price_end']) ? $_GET['price_end'] : fs_price_max(),
             'fs_cart_type' => fs_option('fs_cart_type', 'modal')
         );
         wp_localize_script(FS_PLUGIN_PREFIX . 'main', 'fShop', $l10n);
