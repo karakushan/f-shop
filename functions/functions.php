@@ -1269,7 +1269,9 @@ function fs_currency($product_id = 0)
  */
 function fs_option($option_name, $default = '')
 {
-    $option = get_option($option_name, $default);
+    $option = get_option($option_name);
+
+    if (empty($option) && !empty($default)) $option = $default;
 
     return $option;
 }
