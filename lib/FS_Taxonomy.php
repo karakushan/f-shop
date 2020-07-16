@@ -28,9 +28,9 @@ class FS_Taxonomy {
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_edit-fs-currencies_columns', array( $this, 'add_fs_currencies_columns' ) );
-		add_filter( 'document_title_parts', array( $this, 'document_title_parts_filter' ), 10, 1 );
+//		add_filter( 'document_title_parts', array( $this, 'document_title_parts_filter' ), 10, 1 );
 
-		add_action( 'wp_head', array( $this, 'wp_head_action' ), 1 );
+//		add_action( 'wp_head', array( $this, 'wp_head_action' ), 1 );
 //		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
 
 		// Change SEO Title
@@ -562,7 +562,7 @@ class FS_Taxonomy {
 					)
 				),
 			// Дополнительные поля налога
-			FS_Config::get_data( 'manufacturer_taxonomy' )  =>
+			FS_Config::get_data( 'brand_taxonomy' )  =>
 				array(
 					'_thumbnail_id' => array(
 						'name' => __( 'Thumbnail', 'f-shop' ),
