@@ -28,9 +28,9 @@ class FS_Taxonomy {
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_edit-fs-currencies_columns', array( $this, 'add_fs_currencies_columns' ) );
-//		add_filter( 'document_title_parts', array( $this, 'document_title_parts_filter' ), 10, 1 );
+		add_filter( 'document_title_parts', array( $this, 'document_title_parts_filter' ), 10, 1 );
 
-//		add_action( 'wp_head', array( $this, 'wp_head_action' ), 1 );
+		add_action( 'wp_head', array( $this, 'wp_head_action' ), 1 );
 //		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
 
 		// Change SEO Title

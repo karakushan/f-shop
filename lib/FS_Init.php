@@ -143,7 +143,7 @@ class FS_Init
         wp_enqueue_style(FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', array(), FS_Config::get_data('plugin_ver'), 'all');
         wp_enqueue_style(FS_PLUGIN_PREFIX . 'style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), FS_Config::get_data('plugin_ver'), 'all');
         wp_enqueue_style(FS_PLUGIN_PREFIX . 'lightgallery', FS_PLUGIN_URL . 'assets/plugins/lightGallery/dist/css/lightgallery.min.css');
-        wp_enqueue_style(FS_PLUGIN_PREFIX . 'jquery-ui', FS_PLUGIN_URL . 'assets/css/jquery-ui.min.css');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'jquery-ui',  'https://code.jquery.com/ui/1.12.0/jquery-ui.min.js');
 
         // Подключаем стили для основных тем Вордпресса
         // TODO: если нет файла стилей для данной темы то необходимо создать уведомление в админке о том что можно купить или заказать адаптацию
