@@ -1052,9 +1052,9 @@ function fs_quantity_product($product_id = 0, $args = array())
         'wrapper' => 'div',
         'wrapper_class' => 'fs-qty-wrap',
         'pluss_class' => 'fs-pluss',
-        'pluss_content' => '+',
+        'pluss_content' => '&plus;',
         'minus_class' => 'fs-minus',
-        'minus_content' => '-',
+        'minus_content' => '&ndash;',
         'input_class' => 'fs-quantity',
         'step' => 1
 

@@ -235,8 +235,7 @@ class FS_Init
 
             'jquery',
             'jquery-ui-dialog',
-            FS_PLUGIN_PREFIX . 'js-cookie',
-            FS_PLUGIN_PREFIX . 'library'
+            FS_PLUGIN_PREFIX . 'js-cookie'
         ), null, true);
 
         $l10n = array(
