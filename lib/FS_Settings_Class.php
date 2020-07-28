@@ -14,7 +14,51 @@ class FS_Settings_Class {
 		add_action( 'admin_init', array( $this, 'init_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
 		add_action( 'admin_bar_menu', array( $this, 'modify_admin_bar' ) );
+		add_action( 'admin_init', array( $this, 'permalink_settings' ) );
+		add_action( 'admin_init', array( $this, 'save_plugin_settings' ) );
+
+
 	}
+
+	/**
+	 *
+	 */
+	function permalink_settings() {
+		add_settings_section(
+			'fs_permalink_settings', // ID
+			__( 'Store link settings','f-shop' ), // Section title
+			[ $this, 'permalink_settings_fields' ], // Callback for your function
+			'permalink' // Location (Settings > Permalinks)
+		);
+	}
+
+	public function permalink_settings_fields() {
+		?>
+        <table class="form-table" role="presentation">
+            <tbody>
+            <tr>
+                <th><label for="category_base"><?php _e( 'Slug for product categories', 'f-shop' ); ?></label></th>
+                <td>
+                    <input name="fs_settings[fs_product_category_slug]" id="fs_product_category_slug" type="text"
+                           value="<?php echo esc_attr( fs_option( 'fs_product_category_slug', 'catalog' ) ); ?>"
+                           class="regular-text code">
+                    <p><?php esc_html_e( 'Default: catalog', 'f-shop' ); ?></p>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="tag_base"><?php _e( 'Product slug', 'f-shop' ); ?></label></th>
+                <td>
+                    <input name="fs_settings[fs_product_slug]" id="fs_product_slug" type="text"
+                           value="<?php echo esc_attr( fs_option( 'fs_product_slug', 'product' ) ); ?>"
+                           class="regular-text code">
+                    <p><?php esc_html_e( 'Default: product', 'f-shop' ); ?></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+		<?php
+	}
+
 
 	/**
 	 * Adds the inscription "Store" in the upper toolbar
@@ -85,6 +129,20 @@ class FS_Settings_Class {
 			return;
 		}
 
+	}
+
+	/**
+	 * Saves plugin settings
+	 */
+	public static function save_plugin_settings() {
+		do_action( 'fs_save_options', $_POST );
+		if ( ! empty( $_POST['fs_settings'] ) ) {
+			foreach ( $_POST['fs_settings'] as $key => $setting ) {
+				update_option( $key, sanitize_text_field( $setting ) );
+			}
+
+			return;
+		}
 	}
 
 	/**
@@ -410,14 +468,14 @@ class FS_Settings_Class {
 						'help'  => __( 'Используется для микроразметки', 'f-shop' ),
 						'value' => fs_option( 'contact_type' )
 					),
-                    array(
+					array(
 						'type'  => 'text',
 						'name'  => 'contact_name',
 						'label' => __( 'Название магазина', 'f-shop' ),
 						'help'  => __( 'Используется для микроразметки', 'f-shop' ),
 						'value' => fs_option( 'contact_name' )
 					),
-                    array(
+					array(
 						'type'  => 'text',
 						'name'  => 'contact_phone',
 						'label' => __( 'Телефон для связи', 'f-shop' ),
@@ -431,7 +489,7 @@ class FS_Settings_Class {
 						'help'  => __( 'Используется для микроразметки, и в других целях', 'f-shop' ),
 						'value' => fs_option( 'contact_country' )
 					),
-                    array(
+					array(
 						'type'  => 'text',
 						'name'  => 'contact_zip',
 						'label' => __( 'Почтовый индекс', 'f-shop' ),
@@ -452,7 +510,7 @@ class FS_Settings_Class {
 						'help'  => __( 'Используется для микроразметки, и в других целях', 'f-shop' ),
 						'value' => fs_option( 'contact_address' )
 					),
-                    array(
+					array(
 						'type'  => 'text',
 						'name'  => 'opening_hours',
 						'label' => __( 'Время работы', 'f-shop' ),

@@ -78,6 +78,10 @@ class FS_Init
 
         // Micro-marking of product category
         add_action('wp_head', array($this->fs_taxonomies, 'product_category_microdata'));
+
+
+
+
     } // END public function __construct
 
 

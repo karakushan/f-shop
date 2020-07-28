@@ -270,7 +270,7 @@ class FS_Taxonomy {
 		if ( is_tax( $this->taxonomy_name ) && fs_option( 'fs_disable_taxonomy_slug' ) ) {
 			$canonical = get_term_link( get_queried_object_id(), $this->taxonomy_name );
 			if ( get_locale() != FS_Config::default_locale() ) {
-				$canonical = str_replace( [ '/ua','/uk' ], [ '' ], $canonical );
+				$canonical = str_replace( [ '/ua', '/uk' ], [ '' ], $canonical );
 			}
 		}
 
@@ -370,7 +370,7 @@ class FS_Taxonomy {
 
 
 		}
-		if ( $_SERVER['QUERY_STRING'] && !isset($_GET['q'])) {
+		if ( $_SERVER['QUERY_STRING'] && ! isset( $_GET['q'] ) ) {
 			$term_link .= '?' . $_SERVER['QUERY_STRING'];
 		}
 		if ( $current_link != $term_link ) {
@@ -562,7 +562,7 @@ class FS_Taxonomy {
 					)
 				),
 			// Дополнительные поля налога
-			FS_Config::get_data( 'brand_taxonomy' )  =>
+			FS_Config::get_data( 'brand_taxonomy' )         =>
 				array(
 					'_thumbnail_id' => array(
 						'name' => __( 'Thumbnail', 'f-shop' ),
@@ -663,6 +663,22 @@ class FS_Taxonomy {
 		}
 	}
 
+	/**
+	 * Sets a slug for a product category
+	 *
+	 * @return mixed|void
+	 */
+	public function product_category_rewrite_slug() {
+		$rewrite = false;
+
+		if ( fs_option( 'fs_product_category_slug' ) ) {
+			$rewrite = [
+				'slug' => fs_option( 'fs_product_category_slug', 'catalog' )
+			];
+		}
+
+		return apply_filters( 'fs_product_category_rewrite_slug', $rewrite );
+	}
 
 	/**
 	 * Register custom taxonomies
@@ -694,7 +710,8 @@ class FS_Taxonomy {
 				"show_ui"            => true,
 				"publicly_queryable" => true,
 				'show_in_rest'       => true,
-				'show_admin_column'  => true
+				'show_admin_column'  => true,
+				'rewrite'            => $this->product_category_rewrite_slug()
 			),
 			$config['product_pay_taxonomy']   => array(
 				'object_type'        => 'product',
