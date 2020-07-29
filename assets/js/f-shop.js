@@ -687,10 +687,13 @@ jQuery(document).ready(function ($) {
     });
 
 // слайдер товара
-    var lightGallery = jQuery("#product_slider").lightGallery();
-    if (typeof fs_lightslider_options != "undefined") {
-        window.lightSlider = jQuery('#product_slider').lightSlider(fs_lightslider_options);
+    if(jQuery("#product_slider").length){
+       jQuery("#product_slider").lightGallery();
+        if (typeof fs_lightslider_options != "undefined") {
+            window.lightSlider = jQuery('#product_slider').lightSlider(fs_lightslider_options);
+        }
     }
+
 // Квантификатор товара
     jQuery(document).ready(function (jQuery) {
         // уменьшение к-ва товара на единицу
