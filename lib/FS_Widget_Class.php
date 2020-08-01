@@ -9,7 +9,7 @@
 namespace FS;
 
 
-class FS_Widget_CLass {
+class FS_Widget_Class {
 
 	public function __construct() {
 		add_action( 'widgets_init', array( $this, 'register_widgets' ) );
@@ -19,5 +19,6 @@ class FS_Widget_CLass {
 		register_widget( '\FS\FS_Cart_Widget' );
 		register_widget( '\FS\FS_Attribute_Widget' );
 		register_widget( '\FS\FS_Price_Widget' );
+		register_widget( '\FS\FS_Category_Widget' );
 	}
 }

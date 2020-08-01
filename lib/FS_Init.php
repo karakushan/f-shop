@@ -53,7 +53,7 @@ class FS_Init {
 		$this->fs_users      = new FS_Users;
 		$this->fs_api        = new FS_Api_Class();
 		$this->fs_payment    = new FS_Payment_Class();
-		$this->fs_widget     = new FS_Widget_CLass();
+		$this->fs_widget     = new FS_Widget_Class();
 		$this->fs_product    = new FS_Product();
 		$this->fs_migrate    = new FS_Migrate_Class();
 		$this->fs_export     = new FS_Export_Class();

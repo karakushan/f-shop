@@ -7,8 +7,6 @@ namespace FS;
  */
 class FS_Filters {
 	function __construct() {
-
-
 		// Backend product filtering
 		add_action( 'pre_get_posts', array( $this, 'filter_products_admin' ), 10, 1 );
 

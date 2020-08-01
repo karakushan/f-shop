@@ -47,6 +47,78 @@ class FS_Taxonomy {
 
 		// Filtering products on the category page and in the product archives
 		add_action( 'pre_get_posts', array( $this, 'taxonomy_filter_products' ), 12, 1 );
+
+		add_action( 'fs_product_category_filter', [ $this, 'product_category_filter' ] );
+	}
+
+	/**
+	 * Фильтр по категориям
+	 * Позволяет отфильтровать товары на странице архива или категории товара по принадлежности к категории
+	 * На странице категории фильтрует по дочерним категориям
+	 *
+	 * @param int $parent id родительской категории
+	 * @param array $args массив аргументов
+	 */
+	public function product_category_filter( $parent = 0, $args = [] ) {
+		$args = wp_parse_args( $args, [
+			'wrapper_class' => 'fs-category-filter'
+		] );
+
+		$product_categories = get_terms( [
+			'taxonomy'     => $this->taxonomy_name,
+			'hide_empty'   => false,
+			'parent'       => $parent,
+			'hierarchical' => true,
+		] );
+		$arr_url            = urldecode( $_SERVER['QUERY_STRING'] );
+		$nonce              = wp_create_nonce( 'f-shop' );
+		parse_str( $arr_url, $url );
+		$url['categories'] = explode( ';', $url['categories'] );
+		$url['categories'] = array_map( 'intval', $url['categories'] );
+		if ( ( $key = array_search( 0, $url['categories'] ) ) !== false ) {
+			unset( $url['categories'][ $key ] );
+		}
+		echo '<ul class="' . esc_attr( $args['wrapper_class'] ) . '">';
+		foreach ( $product_categories as $product_category ) {
+			$checked = false;
+
+			if ( ! in_array( $product_category->term_id, $url['categories'] ) ) {
+				$categories = array_merge( $url["categories"], [ $product_category->term_id => $product_category->term_id ] );
+			} else {
+				$categories = $url['categories'];
+				$checked    = true;
+			}
+
+			$value = add_query_arg( array(
+				'fs_filter'  => $nonce,
+				'categories' => implode( ';', $categories )
+			) );
+
+			if ( ( $key = array_search( $product_category->term_id, $categories ) ) !== false ) {
+				unset( $categories[ $key ] );
+			}
+
+			$redirect = add_query_arg( array(
+				'fs_filter'  => $nonce,
+				'categories' => implode( ';', $categories )
+			) );
+
+
+			echo '<li>';
+			echo '<input type="checkbox" name="categories[' . esc_attr( $product_category->term_id ) . ']" id="fs-category-filter-' . esc_attr( $product_category->slug ) . '" data-fs-action="filter" data-fs-redirect="' . esc_url( $redirect ) . '" value="' . esc_url( $value ) . '" ' . checked( $checked, true, false ) . '>';
+			echo '<label for="fs-category-filter-' . $product_category->slug . '">' . esc_html( $product_category->name ) . '</label>';
+			$product_categories_child = get_terms( [
+				'taxonomy'     => $this->taxonomy_name,
+				'hide_empty'   => false,
+				'parent'       => $product_category->term_id,
+				'hierarchical' => true
+			] );
+			if ( $product_categories_child ) {
+				$this->product_category_filter( $product_category->term_id );
+			}
+			echo '</li>';
+		}
+		echo '</ul>';
 	}
 
 	/**
@@ -234,6 +306,19 @@ class FS_Taxonomy {
 						'taxonomy' => 'product-attributes',
 						'field'    => 'id',
 						'terms'    => array_values( $_REQUEST['attributes'] ),
+						'operator' => 'IN'
+					)
+				);
+			}
+
+			// Фильтрируем по категориям
+			if ( ! empty( $_REQUEST['categories'] ) ) {
+				$tax_query[] = array(
+					'relation' => 'AND',
+					array(
+						'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
+						'field'    => 'id',
+						'terms'    => explode( ';', $_REQUEST['categories'] ),
 						'operator' => 'IN'
 					)
 				);

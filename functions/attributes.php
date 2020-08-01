@@ -270,7 +270,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 			$remove_attr = add_query_arg( array(
 				'fs_filter'  => wp_create_nonce( 'f-shop' ),
 				'attributes' => $attributes
-			), $_SERVER['REQUEST_URI'] );;
+			), $_SERVER['REQUEST_URI'] );
 
 			if ( ! $args['redirect'] ) {
 				$value = $term->term_id;

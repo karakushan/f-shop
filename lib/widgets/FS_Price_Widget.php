@@ -16,8 +16,8 @@ class FS_Price_Widget extends \WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'fs_price_widget',
-			'Слайдер цены (F-SHOP)',
-			array( 'description' => 'Позволяет вывести фильтр для фильтрации товара по атрибутам' )
+			__('Filter by price range (F-SHOP)','f-shop'),
+			array( 'description' => __('Filtering products by price range','f-shop') )
 		);
 	}
 

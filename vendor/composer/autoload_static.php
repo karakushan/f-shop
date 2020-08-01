@@ -47,6 +47,7 @@ class ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c
         'FS\\' => 
         array (
             0 => __DIR__ . '/../..' . '/lib',
+            1 => __DIR__ . '/../..' . '/lib/widgets',
         ),
     );
 

@@ -1933,4 +1933,16 @@ td.fs_photo.column-fs_photo img {
   top: 2px;
 }
 
+.fs-category-filter {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.fs-category-filter li input[type=checkbox] {
+  margin-right: 12px;
+}
+.fs-category-filter li ul {
+  margin-left: 12px;
+}
+
 /*# sourceMappingURL=f-shop.css.map */

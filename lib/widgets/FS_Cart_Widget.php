@@ -16,8 +16,8 @@ class FS_Cart_Widget extends \WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'fs_cart_widget',
-			'Корзина',
-			array( 'description' => 'Позволяет вывести корзину в любом удобном месте' )
+			__( 'Cart', 'f-shop' ),
+			array( 'description' => __( 'Cart widget', 'f-shop' ) )
 		);
 	}
 
