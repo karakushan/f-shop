@@ -123,10 +123,6 @@ class FS_Action_Class
         /* Выводит форму редактирования профиля */
         add_action('fs_profile_edit', array('FS\FS_Users', 'profile_edit'), 10, 1);
 
-        // ====== HOME =====
-        /* Выводит микроразмету на главной магазина */
-        add_action('wp_head', array($this, 'home_page_microdata'));
-
 
 // Add the field to user profile editing screen.
         add_action(
@@ -146,40 +142,7 @@ class FS_Action_Class
         add_action('fs_delete_products', array('FS\FS_Product', 'delete_products'));
     }
 
-    /**
-     * Displays the micro-layout of the store on the main
-     */
-    public function home_page_microdata()
-    {
-        if (!is_front_page()) {
-            return;
-        }
-        $custom_logo_id = get_theme_mod('custom_logo');
-        $custom_logo_url = $custom_logo_id ? wp_get_attachment_image_url($custom_logo_id, 'full') : ' ';
-        $micro_data = [
-            "@context" => "http://www.schema.org",
-            "@type" => fs_option('contact_type', 'LocalBusiness'),
-            "priceRange" => "$$",
-            "name" => fs_option('contact_name', get_bloginfo('name')),
-            "url" => home_url('/'),
-            "logo" => $custom_logo_url,
-            "image" => $custom_logo_url,
-            "description" => get_bloginfo('description'),
-            "address" => [
-                "@type" => "PostalAddress",
-                "streetAddress" => fs_option('contact_address'),
-                "addressLocality" => fs_option('contact_city'),
-                "postalCode" => fs_option('contact_zip'),
-                "addressCountry" => fs_option('contact_country')
-            ],
-            "openingHours" => fs_option('opening_hours'),
-            "telephone" => fs_option('contact_phone')
-        ];
 
-        echo '<script type=\'application/ld+json\'>';
-        echo json_encode($micro_data);
-        echo '</script>';
-    }
 
 
     /**
