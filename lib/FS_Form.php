@@ -266,7 +266,7 @@ class FS_Form
 
         echo $args['before'];
         if ($args['wrapper']) {
-            echo '<div class="' . esc_attr($args['wrapper_class']) . '">';
+            echo '<div class="' . esc_attr('fs-field-wrap '.$args['wrapper_class']) . '">';
         }
         $this->render_field($field_name, $args['type'], $args);
 

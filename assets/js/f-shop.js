@@ -86,6 +86,7 @@ jQuery(document).ready(function ($) {
             if (productCount < min) {
                 el.val(min);
             } else {
+                let plugin = this;
                 $.ajax({
                     url: this.ajaxurl,
                     type: 'POST',
@@ -96,7 +97,8 @@ jQuery(document).ready(function ($) {
                     },
                     success: function (res) {
                         if (res.success) {
-                            this.updateCarts();
+
+                            plugin.updateCarts();
 
                             // создаём событие
                             let cart_change_count = new CustomEvent("fs_cart_change_count", {
@@ -491,6 +493,13 @@ jQuery(document).ready(function ($) {
 
     // Скрываем некоторые поля в форме отправки заказа при загрузке страницы
     function getCheckoutData() {
+        let el = jQuery('[name="fs_delivery_methods"]');
+        let val = el.val();
+
+        if (el.attr('type') == 'radio' || el.attr('type') == 'checkbox') {
+            val = jQuery('[name="fs_delivery_methods"]:checked').val();
+        }
+
         jQuery.ajax({
             type: 'POST',
             url: fShop.ajaxurl,
@@ -499,7 +508,7 @@ jQuery(document).ready(function ($) {
             },
             data: fShop.ajaxData('fs_show_shipping',
                 {
-                    delivery: jQuery('[name="fs_delivery_methods"]').val()
+                    delivery: val
                 }),
             success: function (result) {
                 if (!result.success) return;
@@ -510,10 +519,20 @@ jQuery(document).ready(function ($) {
                     jQuery("[data-fs-element=\"taxes-list\"]").replaceWith(result.data.taxes);
                 }
 
+                // Оключаем поля которые нужно скрыть
+                $('.fs-checkout-form input,.fs-checkout-form .fs-field-wrap').fadeIn(0);
                 if (result.data.disableFields.length) {
-                    $('.fs-checkout-form input').show(0);
                     for (let i in result.data.disableFields) {
-                        $('[name="' + result.data.disableFields[i] + '"]').hide(0);
+                        $('[name="' + result.data.disableFields[i] + '"]').parents('.fs-field-wrap').fadeOut(0)
+                        $('[name="' + result.data.disableFields[i] + '"]').fadeOut(0);
+                    }
+                }
+
+                // Устанавливаем обязательные поля
+                $('.fs-checkout-form [data-ajax-req="true"]').removeAttr('required');
+                if (result.data.requiredFields.length) {
+                    for (let i in result.data.requiredFields) {
+                        $('[name="' + result.data.requiredFields[i] + '"]').attr('required', 'required').attr('data-ajax-req', true);
                     }
                 }
             }
@@ -687,8 +706,8 @@ jQuery(document).ready(function ($) {
     });
 
 // слайдер товара
-    if(jQuery("#product_slider").length){
-       jQuery("#product_slider").lightGallery();
+    if (jQuery("#product_slider").length) {
+        jQuery("#product_slider").lightGallery();
         if (typeof fs_lightslider_options != "undefined") {
             window.lightSlider = jQuery('#product_slider').lightSlider(fs_lightslider_options);
         }

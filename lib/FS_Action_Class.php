@@ -143,8 +143,6 @@ class FS_Action_Class
     }
 
 
-
-
     /**
      * Function registers plug-in hook filters
      */
@@ -192,6 +190,11 @@ class FS_Action_Class
 
     function action_save_options($data)
     {
+        if (!isset($_GET['page'])) return;
+
+        if ($_GET['page'] != 'f-shop-settings') return;
+
+
         flush_rewrite_rules();
     }
 }
