@@ -82,6 +82,8 @@ jQuery(document).ready(function ($) {
             let step = Number(el.attr('step'));
             let min = Number(el.attr('min'));
 
+
+
             //если покупатель вбил неправильное к-во товаров
             if (productCount < min) {
                 el.val(min);
@@ -95,10 +97,12 @@ jQuery(document).ready(function ($) {
                         item_id: cartItem,
                         count: productCount
                     },
-                    success: function (res) {
-                        if (res.success) {
-
+                    success: function (response) {
+                        if (response.success) {
                             plugin.updateCarts();
+                            let cartPos = el.parents('[data-fs-element="cart-item"]');
+                            cartPos.find('[data-fs-element="cart-item-sum"]').text(response.data.cost)
+                            $('[data-fs-element="total-amount"]').text(response.data.total)
 
                             // создаём событие
                             let cart_change_count = new CustomEvent("fs_cart_change_count", {
