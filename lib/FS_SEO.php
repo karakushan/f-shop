@@ -8,17 +8,61 @@ class FS_SEO
 {
     function __construct()
     {
-        /* Добавляет микроразметку типа Огранизация */
+        // Добавляет микроразметку типа Organization
         add_action('fs_organization_microdata', [$this, 'schema_organization_microdata']);
 
-        /* Выводит микроразмету типа LocalBusiness */
+        // Выводит микроразмету типа LocalBusiness
         add_action('fs_local_business_microdata', [$this, 'schema_local_business_microdata']);
 
-        /* Позволяет регистрировать события для ремаркетинга Google Adwords */
+        // Позволяет регистрировать события для ремаркетинга Google Adwords
         add_action('fs_adwords_remarketing', [$this, 'adwords_remarketing']);
+
+        // Изменяет meta title
+        add_filter('document_title_parts', array($this, 'meta_title_filter'), 10, 1);
 
         add_action('wp_footer', [$this, 'scripts_in_footer']);
         add_action('wp_head', [$this, 'scripts_in_head']);
+    }
+
+    /**
+     * Изменяет meta title
+     * @param $title
+     * @return mixed
+     */
+    public function meta_title_filter($title)
+    {
+        if (is_archive(FS_Config::get_data('post_type')) && !is_tax(FS_Config::get_data('product_taxonomy'))) {
+            $meta_title = fs_option('_fs_catalog_meta_title') ?: __('Catalog', 'f-shop');
+            $title['title'] = esc_attr($meta_title);
+        } elseif (is_tax(FS_Config::get_data('product_taxonomy'))) {
+            $meta_title = get_term_meta(get_queried_object_id(), fs_localize_meta_key('_seo_title'), 1);
+            $meta_title = $meta_title ? $meta_title : $title['title'];
+            $title['title'] = esc_attr($meta_title);
+        }
+
+        return $title;
+    }
+
+    /**
+     * Добавляет meta descriptio
+     */
+    public function meta_description_action()
+    {
+        $meta_description = '';
+
+        // Если посетитель находится на странице архива товаров
+        if (is_archive(FS_Config::get_data('post_type')) && !is_tax('catalog')) {
+            $meta_description = fs_option('_fs_catalog_meta_description') ?: '';
+
+        } elseif (is_archive(FS_Config::get_data('post_type')) && is_tax('catalog')) { // Если посетитель находится на странице таксономии товаров
+            $meta_description = get_term_meta(get_queried_object_id(), fs_localize_meta_key('_seo_description'), 1);
+        }
+
+        $meta_description = apply_filters('fs_meta_description', $meta_description);
+
+        if ($meta_description) {
+            echo PHP_EOL . '<meta name="description" content="' . esc_attr($meta_description) . '"/>' . PHP_EOL;
+        }
     }
 
     /**
@@ -26,6 +70,8 @@ class FS_SEO
      */
     public function scripts_in_head()
     {
+        $this->meta_description_action();
+
         do_action('fs_local_business_microdata');
         do_action('fs_organization_microdata');
     }

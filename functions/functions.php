@@ -3330,3 +3330,22 @@ if (!function_exists('fs_form_submit')) {
         echo '<button type="submit" ' . fs_parse_attr($args) . '>' . $text . '</button>';
     }
 }
+
+if (!function_exists('fs_localize_meta_key')) {
+    /**
+     * Localizes the meta field key
+     *
+     * @param string $meta_key
+     * @return string
+     */
+    function fs_localize_meta_key($meta_key = '')
+    {
+        if (fs_option('fs_multi_language_support') && get_locale() != FS_Config::default_locale()) {
+            $meta_key = $meta_key . '__' . get_locale();
+        }
+
+        return $meta_key;
+    }
+}
+
+

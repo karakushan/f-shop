@@ -30,9 +30,9 @@ class FS_Taxonomy
         add_filter('manage_fs-currencies_custom_column', array($this, 'currencies_column_content'), 10, 3);
         add_filter('manage_fs-currencies_custom_column', array($this, 'currencies_column_content'), 10, 3);
         add_filter('manage_edit-fs-currencies_columns', array($this, 'add_fs_currencies_columns'));
-        add_filter('document_title_parts', array($this, 'document_title_parts_filter'), 10, 1);
 
-        add_action('wp_head', array($this, 'wp_head_action'), 1);
+
+
 //		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
 
         // Change SEO Title
@@ -741,34 +741,6 @@ class FS_Taxonomy
         $title = $meta_title ? $meta_title : $title;
 
         return $title;
-    }
-
-    function document_title_parts_filter($title)
-    {
-        if (!is_tax('catalog')) {
-            return $title;
-        }
-        $meta_key = get_locale() == FS_Config::default_locale() ? '_seo_title' : '_seo_title__' . get_locale();
-        $meta_title = get_term_meta(get_queried_object_id(), $meta_key, 1);
-        $title['title'] = $meta_title ? $meta_title : $title['title'];
-
-        return $title;
-    }
-
-    function wp_head_action()
-    {
-        if (is_tax('catalog') || is_archive(FS_Config::get_data('post_type'))) {
-
-            $meta_key = get_locale() == FS_Config::default_locale() ? '_seo_description' : '_seo_description__' . get_locale();
-            $meta_description = get_term_meta(get_queried_object_id(), $meta_key, 1);
-
-            $meta_description = apply_filters('fs_meta_description', $meta_description);
-
-            if ($meta_description) {
-                echo PHP_EOL . '<meta name="description" content="' . esc_html($meta_description) . '"/>' . PHP_EOL;
-            }
-
-        }
     }
 
 
