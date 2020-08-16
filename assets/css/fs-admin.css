@@ -1093,8 +1093,10 @@ progress:after {
   color: #ff0000;
 }
 
-.fast-shop-settings textarea {
-  width: 100%;
+.f-shop-settings textarea {
+  width: 351px;
+  max-width: 100%;
+  height: 105px;
 }
 
 td.fs_menu_order.column-fs_menu_order {

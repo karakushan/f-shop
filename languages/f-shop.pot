@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-15 16:03+0000\n"
+"POT-Creation-Date: 2020-08-16 11:15+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -2378,4 +2378,16 @@ msgid "Cost of goods"
 msgstr ""
 
 msgid "Cost of delivery"
+msgstr ""
+
+msgid "Basic SEO settings for your store"
+msgstr ""
+
+msgid "Support for Google Adwords Remarketing Events"
+msgstr ""
+
+msgid "Meta title for product archive"
+msgstr ""
+
+msgid "Meta description for product archive"
 msgstr ""

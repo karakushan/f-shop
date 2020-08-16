@@ -605,6 +605,35 @@ class FS_Settings_Class
 
 
             ),
+            'seo' => array(
+                'name' => __('SEO', 'f-shop'),
+                'description' => __('Basic SEO settings for your store', 'f-shop'),
+                'fields' => array(
+                    array(
+                        'type' => 'checkbox',
+                        'name' => '_fs_adwords_remarketing',
+                        'label' => __('Support for Google Adwords Remarketing Events', 'f-shop'),
+//						'help'   => __( 'Your export file will contain additional settings', 'f-shop' ),
+                        'value' => fs_option('_fs_adwords_remarketing')
+                    ),
+                    array(
+                        'type' => 'text',
+                        'name' => '_fs_catalog_meta_title',
+                        'label' => __('Meta title for product archive', 'f-shop'),
+                        'value' => fs_option('_fs_catalog_meta_title')
+                    ),
+                    array(
+                        'type' => 'textarea',
+                        'name' => '_fs_catalog_meta_description',
+                        'label' => __('Meta description for product archive', 'f-shop'),
+                        'value' => fs_option('_fs_catalog_meta_description')
+                    ),
+
+
+                )
+
+
+            ),
             'export' => array(
                 'name' => __('Export of goods', 'f-shop'),
                 'description' => sprintf(__('Link to product feed in YML format: <a href="%s" target="_blank">%s</a> or <a href="%s" target="_blank">%s</a>', 'f-shop'), $feed_link, $feed_link, $feed_link_permalink, $feed_link_permalink),

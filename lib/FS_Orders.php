@@ -56,10 +56,7 @@ class FS_Orders {
 		$order_id   = $this->get_last_order_id();
 		$order      = new FS_Orders;
 		$order_info = $order->get_order( $order_id );
-		$amount     = floatval( $order_info->summa );
-		$amount     = apply_filters( 'fs_price_format', $amount );
-
-		return $amount;
+		return floatval( $order_info->summa );
 	}
 
 	/**
