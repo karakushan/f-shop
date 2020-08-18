@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-16 11:15+0000\n"
-"PO-Revision-Date: 2020-08-16 11:21+0000\n"
+"POT-Creation-Date: 2020-08-18 14:53+0000\n"
+"PO-Revision-Date: 2020-08-18 14:54+0000\n"
 "Last-Translator: Виталий Каракушан\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -2488,3 +2488,18 @@ msgstr "Мета заголовок для страницы архива тов�
 
 msgid "Meta description for product archive"
 msgstr "Мета описание для страницы архива товаров"
+
+msgid "Attribute"
+msgstr "Атрибут"
+
+msgid "Value"
+msgstr "Значение"
+
+msgid "add attribute"
+msgstr "добавить атрибут"
+
+msgid "Here you can specify what properties the product has."
+msgstr "Здесь вы можете установить атрибуты для товара."
+
+msgid "Product archive title"
+msgstr "Заголовок страницы архива товаров"

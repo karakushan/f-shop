@@ -618,6 +618,12 @@ class FS_Settings_Class
                     ),
                     array(
                         'type' => 'text',
+                        'name' => '_fs_catalog_title',
+                        'label' => __('Product archive title', 'f-shop'),
+                        'value' => fs_option('_fs_catalog_title')
+                    ),
+                    array(
+                        'type' => 'text',
                         'name' => '_fs_catalog_meta_title',
                         'label' => __('Meta title for product archive', 'f-shop'),
                         'value' => fs_option('_fs_catalog_meta_title')

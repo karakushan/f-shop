@@ -61,7 +61,7 @@ class FS_SEO
         $meta_description = apply_filters('fs_meta_description', $meta_description);
 
         if ($meta_description) {
-            echo PHP_EOL . '<meta name="description" content="' . esc_attr($meta_description) . '"/>' . PHP_EOL;
+            echo PHP_EOL . '<meta name="description" content="' . esc_attr(apply_filters('the_title',$meta_description)) . '"/>' . PHP_EOL;
         }
     }
 
