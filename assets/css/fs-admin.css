@@ -168,6 +168,29 @@
     margin: 0;
   }
 }
+.fs-metabox .fs-tabs > .fs-tab .fs-childs-list {
+  margin: 0;
+}
+.fs-metabox .fs-tabs > .fs-tab .fs-childs-list li {
+  display: inline-flex;
+  margin-right: 15px;
+}
+.fs-metabox .fs-tabs > .fs-tab .remove-att {
+  cursor: pointer;
+  color: #007cba;
+  background-color: #f1f1f1;
+  padding: 0;
+  margin-left: 8px;
+}
+.fs-metabox .fs-tabs > .fs-tab .remove-att:hover {
+  background-color: #e5e5e5;
+}
+.fs-metabox .fs-tabs > .fs-tab .fs-add-attributes {
+  margin: 15px 0;
+}
+.fs-metabox .fs-tabs > .fs-tab .fs-add-attributes .wp-list-table tr td input {
+  width: 100%;
+}
 .fs-metabox .fs-tabs > .fs-tab .fs-deactive-variant {
   display: inline-block;
   width: auto;

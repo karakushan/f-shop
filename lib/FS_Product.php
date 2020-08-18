@@ -1077,7 +1077,7 @@ class FS_Product {
 			),
 			'attributes'   => array(
 				'title'    => __( 'Attributes', 'f-shop' ),
-				'on'       => false,
+				'on'       => true,
 				'body'     => '',
 				'template' => 'attributes'
 			),

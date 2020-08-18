@@ -84,6 +84,64 @@ class FS_Ajax_Class
         add_action('wp_ajax_fs_get_api_key', array($this, 'fs_get_api_key'));
         add_action('wp_ajax_fs_get_api_key', array($this, 'fs_get_api_key'));
 
+        add_action('wp_ajax_fs_add_custom_attribute', array($this, 'fs_add_custom_attribute_callback'));
+        add_action('wp_ajax_nopriv_fs_add_custom_attribute', array($this, 'fs_add_custom_attribute_callback'));
+
+        add_action('wp_ajax_fs_get_admin_attributes_table', array('FS\FS_Taxonomy', 'fs_get_admin_product_attributes_table'));
+        add_action('wp_ajax_nopriv_fs_get_admin_attributes_table', array('FS\FS_Taxonomy', 'fs_get_admin_product_attributes_table'));
+    }
+
+
+
+    /**
+     * Добавляет атрибуты к товару
+     */
+    function fs_add_custom_attribute_callback()
+    {
+        global $wpdb;
+        $post_id = (int)$_POST['post_id'];
+        $attribute_name = trim($_POST['name']);
+        $attribute_value = trim($_POST['value']);
+        $attribute_tax = FS_Config::get_data('features_taxonomy');
+
+        if (empty($attribute_name) || empty($attribute_value)) wp_send_json_error(['message' => __('Название атрибута или значение не может быть пустым!')]);
+
+        $query = "SELECT t1.name, t1.term_id FROM {$wpdb->terms} t1 LEFT JOIN {$wpdb->term_taxonomy} t2 ON t2.term_taxonomy_id=t1.term_id WHERE t2.parent=0 AND t1.name LIKE '%{$attribute_name}%'";
+        $search_term = $wpdb->get_row($query);
+
+
+        if ($search_term) {
+            $name_term_id = (int)$search_term->term_id;
+        } else {
+            $term = wp_insert_term($attribute_name, $attribute_tax, [
+                'parent' => 0
+            ]);
+            if (is_wp_error($term)) {
+                $name_term_id = 0;
+                wp_send_json_error(['message' => $term->get_error_message()]);
+            } else {
+                $name_term_id = (int)$term['term_id'];
+            }
+        }
+
+
+        if ($name_term_id) {
+            $term_child = wp_insert_term($attribute_value, $attribute_tax, [
+                'parent' => $name_term_id
+            ]);
+
+            if (!is_wp_error($term_child)) {
+                $value_term_id = (int)$term_child['term_id'];
+                $set_terms = wp_set_object_terms($post_id, [$name_term_id, $value_term_id], $attribute_tax, true);
+                if (!is_wp_error($set_terms)) {
+                    wp_send_json_success(['message' => __('Атрибуты успешно добавленны!', 'f-shop')]);
+                }
+            }
+        }
+
+        wp_send_json_error([
+            'message' => __('Возникла ошибка при добавлении атрибута к товару', 'f-shop')
+        ]);
     }
 
 
@@ -269,31 +327,30 @@ class FS_Ajax_Class
         exit();
     }
 
-    // привязка атрибута к товару
+
+    /**
+     * Linking an attribute to a product
+     */
     function fs_add_att_callback()
     {
-        $fs_config = new FS_Config();
-        $post = array_map('sanitize_text_field', $_POST);
+        $features_taxonomy = FS_Config::get_data('features_taxonomy');
+        $term_id = intval($_POST['term']);
+        $post_id = intval($_POST['post']);
 
-        $post_terms = wp_set_post_terms(intval($post['post']), intval($post['term']), $fs_config->data['features_taxonomy'], true);
+        $post_terms = wp_set_post_terms($post_id, $term_id, $features_taxonomy, true);
+
         if (is_wp_error($post_terms)) {
-            echo json_encode(array(
-                'status' => 0,
-                'message' => $post_terms->get_error_message()
-            ));
+            wp_send_json_error(['message' => $post_terms->get_error_message()]);
         } elseif ($post_terms === false) {
-            echo json_encode(array(
-                'status' => 0,
-                'message' => __('An unexpected error occurred while attaching the attribute to the product.', 'f-shop')
-            ));
+            wp_send_json_error(['message' => __('An unexpected error occurred while attaching the attribute to the product.', 'f-shop')]);
         } else {
-            echo json_encode(array(
-                'status' => 1,
-                'term_name' => get_term_field('name', intval($post['term']), $fs_config->data['features_taxonomy']),
+            wp_send_json_success([
+                'term_name' => get_term_field('name', $term_id, $features_taxonomy),
                 'message' => __('Attribute successfully attached to product', 'f-shop')
-            ));
+            ]);
         }
-        wp_die();
+
+        wp_send_json_error(['message' => __('An unexpected error occurred while attaching the attribute to the product.', 'f-shop')]);
     }
 
     /**
@@ -380,15 +437,10 @@ class FS_Ajax_Class
         $output = array_map('sanitize_text_field', $_POST);
         $remove = wp_remove_object_terms((int)$output['product_id'], (int)$output['term_id'], $fs_config->data['features_taxonomy']);
         if ($remove) {
-            echo json_encode(array(
-                'status' => true
-            ));
-        } else {
-            echo json_encode(array(
-                'status' => false
-            ));
+            wp_send_json_success();
         }
-        exit();
+
+        wp_send_json_error();
     }
 
     /**

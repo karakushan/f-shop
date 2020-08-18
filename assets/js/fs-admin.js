@@ -136,30 +136,110 @@ jQuery(function ($) {
         trigger: 'hover'
     });
 
-    // === АТРИБУТЫ НА ВКЛАДКЕ РЕДАКТИРВОАНИЯ ТОВАРА ===
-    $(document).on('click', '[data-fs-action="add-atts-from"]', function (event) {
+    // Добавление кастомных атрибутов
+
+    $(document).on('click', '[data-fs-element="add-custom-attribute"]', function (event) {
         event.preventDefault();
-        var el = $(this);
-        // c.parents('.fs-childs-list').find('li').last().after('<li>test</li>');
-        var data = {
-            action: 'fs_add_att',
-            term: el.prev().val(),
-            post: el.data('post')
-        }
+        let el = $(this);
+        let postId = $(this).data('post-id');
+        let row = $(this).parents('[data-fs-element="item"]');
+        let name = row.find('[data-fs-element="attribute-name"]').val();
+        let value = row.find('[data-fs-element="attribute-value"]').val();
+
         $.ajax({
             type: 'POST',
             url: ajaxurl,
-            //data: JSON.stringify(parameters),
-            data: data,
+            data: {
+                action: 'fs_add_custom_attribute',
+                post_id: postId,
+                name: name,
+                value: value,
+            },
+            cache: false,
+            success: function (data) {
+                let event = new CustomEvent('fs_changed_attribute', {
+                    detail: {
+                        post_id: postId
+                    }
+                });
+                window.dispatchEvent(event);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            },
+            complete: function () {
+                //afer ajax call is completed
+            }
+        });
+    });
+
+    // Обновляет таблицу атрибутов товара
+    function refresh_product_attributes(post_id) {
+        let table = $(".fs-atts-list-table");
+
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            beforeSend: function () {
+                table.css({
+                    opacity: .5
+                })
+            },
+            data: {
+                action: 'fs_get_admin_attributes_table',
+                post_id: post_id,
+                is_ajax: 1
+            },
+            cache: false,
+            success: function (data) {
+                if (data.success) {
+                    table.html(data.data);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            },
+            complete: function () {
+                table.css({
+                    opacity: 1
+                })
+            }
+        });
+    }
+
+    $(window).on('fs_changed_attribute', function (event) {
+        refresh_product_attributes(event.detail.post_id)
+    });
+
+
+    // === АТРИБУТЫ НА ВКЛАДКЕ РЕДАКТИРОВАНИЯ ТОВАРА ===
+    $(document).on('click', '[data-fs-action="add-atts-from"]', function (event) {
+        event.preventDefault();
+        let el = $(this);
+        let postId = el.data('post');
+
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            data: {
+                action: 'fs_add_att',
+                term: el.prev().val(),
+                post: postId
+            },
             cache: false,
             success: function (result) {
-                console.log(result);
-                // do something with ajax data
-                var json = JSON.parse(result);
-                if (json.status) {
-                    el.parents('td').find('.fs-childs-list').append('<li>' + json.term_name + ' <a class="remove-att" title="do I delete a property?" data-action="remove-att" data-category-id="' + data.term + '" data-product-id="' + data.term + '">удалить</a></li>')
+                if (result.success) {
+                    let event = new CustomEvent('fs_changed_attribute', {
+                        detail: {
+                            post_id: postId
+                        }
+                    });
+                    window.dispatchEvent(event);
+                } else {
+                    console.log(result);
                 }
-
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log('error...', xhr);
@@ -350,6 +430,7 @@ jQuery(document).ready(function ($) {
     $('body').on('click', '[data-fs-action="delete_parents"]', function (event) {
         $(this).parents($(this).data('target')).remove();
     });
+
     // получаем посты термина во вкладке связанные в редактировании товара
     $('#tab-4').on('change', '[data-fs-action="get_taxonomy_posts"]', function (event) {
         var term = $(this).val();
@@ -372,27 +453,31 @@ jQuery(document).ready(function ($) {
     $(".fs-sortable-items").sortable();
 
     // удаление свойства на вкладке "Атрибуты"
-    $(document).on('click', '[data-action="remove-att"]', function (event) {
+    $('.fs-atts-list-table').on('click', '[data-action="remove-att"]', function (event) {
         event.preventDefault();
-        var el = $(this);
-        if (confirm('Confirm?')) {
-            $.ajax({
-                url: ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'fs_remove_product_term',
-                    term_id: el.data('category-id'),
-                    product_id: el.data('product-id')
-                },
-            })
-                .done(function (data) {
-                    if (!IsJsonString(data)) return;
-                    var json = $.parseJSON(data);
-                    if (json.status) {
-                        el.parent().remove();
-                    }
-                });
-        }
+        let el = $(this);
+        let postId = el.data('product-id');
+
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'fs_remove_product_term',
+                term_id: el.data('category-id'),
+                product_id: postId
+            },
+        })
+            .done(function (data) {
+                if (data.success == true) {
+                    let event = new CustomEvent('fs_changed_attribute', {
+                        detail: {
+                            post_id: postId
+                        }
+                    });
+                    window.dispatchEvent(event);
+                }
+            });
+
     });
     // клонирует свойство вариативного товара
     $(document).on('click', '[data-fs-element="clone-att"]', function (event) {

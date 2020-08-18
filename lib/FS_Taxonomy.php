@@ -32,7 +32,6 @@ class FS_Taxonomy
         add_filter('manage_edit-fs-currencies_columns', array($this, 'add_fs_currencies_columns'));
 
 
-
 //		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
 
         // Change SEO Title
@@ -1404,6 +1403,104 @@ class FS_Taxonomy
         }
 
         return $content;
+    }
+
+    /**
+     * Returns the attribute table for the admin
+     *
+     * @param int $post_id ID поста
+     * @return false|string
+     */
+    public static function fs_get_admin_product_attributes_table($post_id = 0)
+    {
+        $post_id = (int)$_POST['post_id'] ?: $post_id;
+        $is_ajax = (int)$_POST['is_ajax'] === 1 ?: false;
+        $taxonomy = FS_Config::get_data('features_taxonomy');
+
+        $fs_config = new FS_Config();
+        $attributes = get_the_terms($post_id, $taxonomy);
+
+        $attributes_hierarchy = [];
+        if ($attributes) {
+            foreach ($attributes as $att) {
+                if ($att->parent == 0) continue;
+
+                $attributes_hierarchy[$att->parent][] = $att;
+            }
+        }
+        ob_start();
+        ?>
+        <table class="wp-list-table widefat fixed striped" data-fs-element="product-feature-table">
+            <thead>
+            <tr>
+                <th><?php esc_html_e('Attribute', 'f-shop'); ?></th>
+                <th><?php esc_html_e('Value', 'f-shop'); ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if ($attributes_hierarchy): ?>
+                <?php foreach ($attributes_hierarchy as $k => $att_h): ?>
+                    <?php $parent = get_term($k, $fs_config->data['features_taxonomy']) ?>
+                    <tr>
+                        <td><?php echo esc_html(apply_filters('the_title', $parent->name)) ?></td>
+                        <td>
+
+                            <ul class="fs-childs-list">   <?php foreach ($att_h as $child): ?>
+                                    <li><?php echo esc_html(apply_filters('the_title', $child->name)) ?> <a
+                                                class="remove-att"
+                                                title="<?php esc_attr_e('do I delete a property?', 'f-shop') ?>"
+                                                data-action="remove-att"
+                                                data-category-id="<?php echo esc_attr($child->term_id) ?>"
+                                                data-product-id="<?php echo esc_attr($post_id) ?>"><span
+                                                    class="dashicons dashicons-no-alt"></span></a>
+                                    </li>
+
+                                <?php endforeach; ?>
+
+                            </ul>
+                            <?php $args = array(
+                                'show_option_all' => '',
+                                'show_option_none' => '',
+                                'orderby' => 'ID',
+                                'order' => 'ASC',
+                                'show_last_update' => 0,
+                                'show_count' => 0,
+                                'hide_empty' => 0,
+                                'child_of' => $parent->term_id,
+                                'exclude' => '',
+                                'echo' => 1,
+                                'selected' => 0,
+                                'hierarchical' => 0,
+                                'name' => 'cat',
+                                'id' => 'name',
+                                'class' => 'fs-select-att',
+                                'depth' => 0,
+                                'tab_index' => 0,
+                                'taxonomy' => $fs_config->data['features_taxonomy'],
+                                'hide_if_empty' => false,
+                                'value_field' => 'term_id', // значение value e option
+                                'required' => false,
+                            );
+
+                            wp_dropdown_categories($args); ?>
+                            <button type="button" class="button button-secondary" data-fs-action="add-atts-from"
+                                    data-post="<?php echo esc_attr($post_id) ?>"><?php esc_html_e('add attribute','f-shop'); ?>
+                            </button>
+
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            </tbody>
+        </table>
+        <?php
+        $output = ob_get_clean();
+
+        if ($is_ajax) {
+            wp_send_json_success($output);
+        }
+
+        return $output;
     }
 
 }
