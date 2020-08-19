@@ -536,7 +536,16 @@ jQuery(document).ready(function ($) {
                 $('.fs-checkout-form [data-ajax-req="true"]').removeAttr('required');
                 if (result.data.requiredFields.length) {
                     for (let i in result.data.requiredFields) {
-                        $('[name="' + result.data.requiredFields[i] + '"]').attr('required', 'required').attr('data-ajax-req', true);
+                        let field=$('[name="' + result.data.requiredFields[i] + '"]');
+                       // Добавляем звёздочку в placeholder  к обязательным полям
+                        if(!field.data('placeholder')){
+                            let placeholder=field.attr('placeholder');
+                            field.attr('data-placeholder', placeholder);
+                            if(placeholder.indexOf('*')===-1){
+                                field.attr('placeholder',field.attr('data-placeholder')+'*')
+                            }
+                        }
+                        field.attr('required', 'required').attr('data-ajax-req', true);
                     }
                 }
             }
