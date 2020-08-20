@@ -76,6 +76,8 @@ class FS_Action_Class
         add_action('fs_the_price', 'fs_the_price', 10, 3);
         /* отображение базовой цены без учёта скидки */
         add_action('fs_base_price', 'fs_base_price', 10, 3);
+        /* выводит надпись , метку товара */
+        add_action('fs_product_label','fs_product_label',10,1);
 
         //===== PRODUCT CATEGORY  =====
         /* выводит select для сортировки по параметрам (обычно применяется в каталоге или на страницах категорий) */

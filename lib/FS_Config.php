@@ -620,16 +620,19 @@ class FS_Config {
 			'label_bestseller'  => [
 				'key'   => 'fs_on_bestseller',
 				'type'  => 'checkbox',
+				'text'  => __( 'Best-seller', 'f-shop' ),
 				'label' => __( 'Include the tag "Hit sales"', 'f-shop' )
 			],
 			'label_promotion'   => [
 				'key'   => 'fs_on_promotion',
 				'type'  => 'checkbox',
+				'text'  => __( 'Sale', 'f-shop' ),
 				'label' => __( 'Include tag "Promotion"', 'f-shop' )
 			],
 			'label_novelty'     => [
 				'key'   => 'fs_on_novelty',
 				'type'  => 'checkbox',
+				'text'  => __( 'Novelty', 'f-shop' ),
 				'label' => __( 'Include tag "New"', 'f-shop' )
 			],
 			'up_sell'           => [ 'key' => 'fs_up_sell' ],
