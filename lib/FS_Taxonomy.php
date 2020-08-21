@@ -844,7 +844,8 @@ class FS_Taxonomy
                 "show_ui" => true,
                 "publicly_queryable" => true,
                 'show_in_rest' => true,
-                'metabox' => true,
+                'meta_box_cb' => false,
+                'metabox' => false,
                 'show_admin_column' => true,
                 'hierarchical' => true,
                 'show_in_quick_edit' => true
@@ -1484,7 +1485,7 @@ class FS_Taxonomy
 
                             wp_dropdown_categories($args); ?>
                             <button type="button" class="button button-secondary" data-fs-action="add-atts-from"
-                                    data-post="<?php echo esc_attr($post_id) ?>"><?php esc_html_e('add attribute','f-shop'); ?>
+                                    data-post="<?php echo esc_attr($post_id) ?>"><?php esc_html_e('add attribute', 'f-shop'); ?>
                             </button>
 
                         </td>
