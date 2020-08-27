@@ -92,13 +92,11 @@ class FS_Ajax_Class
     }
 
 
-
     /**
      * Добавляет атрибуты к товару
      */
     function fs_add_custom_attribute_callback()
     {
-        global $wpdb;
         $post_id = (int)$_POST['post_id'];
         $attribute_name = trim($_POST['name']);
         $attribute_value = trim($_POST['value']);
@@ -106,37 +104,36 @@ class FS_Ajax_Class
 
         if (empty($attribute_name) || empty($attribute_value)) wp_send_json_error(['message' => __('Название атрибута или значение не может быть пустым!')]);
 
-        $query = "SELECT t1.name, t1.term_id FROM {$wpdb->terms} t1 LEFT JOIN {$wpdb->term_taxonomy} t2 ON t2.term_taxonomy_id=t1.term_id WHERE t2.parent=0 AND t1.name LIKE '%{$attribute_name}%'";
-        $search_term = $wpdb->get_row($query);
+        $term_parent = term_exists($attribute_name, $attribute_tax, 0);
 
-
-        if ($search_term) {
-            $name_term_id = (int)$search_term->term_id;
-        } else {
-            $term = wp_insert_term($attribute_name, $attribute_tax, [
+        if (!$term_parent) {
+            $term_parent = wp_insert_term($attribute_name, $attribute_tax, [
                 'parent' => 0
             ]);
-            if (is_wp_error($term)) {
-                $name_term_id = 0;
-                wp_send_json_error(['message' => $term->get_error_message()]);
-            } else {
-                $name_term_id = (int)$term['term_id'];
-            }
         }
 
+        if (is_wp_error($term_parent) || !$term_parent) {
+            wp_send_json_error(['message' => $term_parent->get_error_message()]);
+        }
 
-        if ($name_term_id) {
+        $term_child = term_exists($attribute_value, $attribute_tax, $term_parent['term_id']);
+
+        if (!$term_child) {
             $term_child = wp_insert_term($attribute_value, $attribute_tax, [
-                'parent' => $name_term_id
+                'parent' => $term_parent['term_id']
             ]);
+        }
 
-            if (!is_wp_error($term_child)) {
-                $value_term_id = (int)$term_child['term_id'];
-                $set_terms = wp_set_object_terms($post_id, [$name_term_id, $value_term_id], $attribute_tax, true);
-                if (!is_wp_error($set_terms)) {
-                    wp_send_json_success(['message' => __('Атрибуты успешно добавленны!', 'f-shop')]);
-                }
-            }
+        if (is_wp_error($term_child)) {
+            wp_send_json_error([
+                'message' => $attribute_value . ': ' . $term_child->get_error_message()
+            ]);
+        }
+
+        $value_term_id = (int)$term_child['term_id'];
+        $set_terms = wp_set_object_terms($post_id, [$term_parent['term_id'], $value_term_id], $attribute_tax, true);
+        if (!is_wp_error($set_terms)) {
+            wp_send_json_success(['message' => __('Атрибуты успешно добавленны!', 'f-shop')]);
         }
 
         wp_send_json_error([
