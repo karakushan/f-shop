@@ -1727,45 +1727,6 @@ td.fs_photo.column-fs_photo img {
   }
 }
 
-
-/* Login and register form */
-.fs-login-form, .fs-register, .fs-lostpassword {
-  max-width: 360px;
-  margin: 0 auto 50px;
-  padding: 20px;
-  border: 1px solid #eee;
-
-  a, a:visited {
-    color: royalblue;
-    text-decoration: underline;
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
-  .fs-login-bottom {
-    display: flex;
-    justify-content: space-between;
-
-  }
-
-  label {
-    sup {
-      color: red;
-    }
-  }
-
-  label.error {
-    color: red;
-  }
-
-  button[type=submit] {
-    width: 100%;
-    border-radius: 0;
-  }
-}
-
 .fs-dashboard-order {
   margin-bottom: 15px;
 

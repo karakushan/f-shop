@@ -66,9 +66,9 @@ class FS_Product {
 	 * @return string
 	 */
 	function product_link_localize( $post_link, $post, $leavename, $sample ) {
-	    if (!class_exists('WPGlobus_Utils') && !class_exists('WPGlobus')){
-		    return $post_link;
-        }
+		if ( ! class_exists( 'WPGlobus_Utils' ) && ! class_exists( 'WPGlobus' ) ) {
+			return $post_link;
+		}
 
 		if ( $post->post_type != $this->post_type || FS_Config::is_default_locale() ) {
 			return $post_link;
@@ -572,10 +572,10 @@ class FS_Product {
 	 *
 	 * @param string $format
 	 */
-	function the_price( $format = '' ) {
+	function the_price( $format = '%s <span>%s</span>' ) {
 		$format = ! empty( $format ) ? $format : $this->price_format;
 
-		printf( $format, apply_filters( 'fs_price_format', $this->get_price() ), $this->currency );
+		printf( '<span class="fs-price">' . $format . '</span>', apply_filters( 'fs_price_format', $this->get_price() ), $this->currency );
 	}
 
 	/**
@@ -583,10 +583,10 @@ class FS_Product {
 	 *
 	 * @param string $format
 	 */
-	function the_base_price( $format = '<del>%s <span>%s</span></del>' ) {
+	function the_base_price( $format = '%s <span>%s</span>' ) {
 		$format = ! empty( $format ) ? $format : $this->price_format;
 		if ( $this->get_base_price() > $this->get_price() ) {
-			printf( $format, apply_filters( 'fs_price_format', $this->get_base_price() ), $this->currency );
+			printf( '<del class="fs-base-price">' . $format . '</del>', apply_filters( 'fs_price_format', $this->get_base_price() ), $this->currency );
 		}
 	}
 
@@ -1283,6 +1283,18 @@ class FS_Product {
 
 	public function set_real_product_price( $product_id = 0 ) {
 		update_post_meta( $product_id, '_fs_real_price', fs_get_price( $product_id ) );
+	}
+
+	public function the_title() {
+		echo esc_html( $this->get_title() );
+	}
+
+	public function the_thumbnail( $size = 'thumbnail', $args = array() ) {
+		fs_product_thumbnail( $this->getId(), $size, $args );
+	}
+
+	public function getCount() {
+		return (int) $this->count;
 	}
 
 }

@@ -1246,7 +1246,9 @@ class FS_Users {
 
 
 		$out = '<div class="fs-dashboard">';
+		$out .= apply_filters( 'fs_dashboard_tabs_before', '' );
 		$out .= '<div class="nav nav-tabs" id="fs-dashboard-nav" role="tablist">';
+		$out .= apply_filters( 'fs_dashboard_nav_before', '' );
 
 		foreach ( $tabs as $tab_id => $tab ) {
 			$href   = '#fs-dashboard-' . $tab_id;
@@ -1257,6 +1259,8 @@ class FS_Users {
 			}
 			$out .= '<a class="' . esc_attr( $tab['nav_class'] ) . '" data-toggle="' . esc_attr( $toggle ) . '" href="' . esc_attr( $href ) . '" role="tab" aria-controls="' . esc_attr( $tab_id ) . '">' . $tab['title'] . '</a>';
 		}
+
+		$out .= apply_filters( 'fs_dashboard_nav_after', '' );
 
 		$out .= '</div><!-- end #fs-dashboard-nav -->';
 
@@ -1276,6 +1280,7 @@ class FS_Users {
 		}
 
 		$out .= '</div><!-- end #fs-dashboard-content -->';
+		$out .= apply_filters( 'fs_dashboard_tabs_after', '' );
 		$out .= '</div><!-- end #fs-dashboard -->';
 
 		return $out;

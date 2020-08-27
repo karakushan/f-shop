@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use FS\FS_Cart;
 use \FS\FS_Config;
+use FS\FS_Order;
 use \FS\FS_Product;
 
 /**
@@ -1526,6 +1527,7 @@ function fs_get_current_user() {
 		$user->phone     = get_user_meta( $user->ID, 'phone', 1 );
 		$user->city      = get_user_meta( $user->ID, 'city', 1 );
 		$user->adress    = get_user_meta( $user->ID, 'adress', 1 );
+		$user->delivery_addresses    = get_user_meta( $user->ID, 'delivery_addresses', 1 );  
 		$user->birth_day = get_user_meta( $user->ID, 'birth_day', 1 );
 		if ( ! empty( $user->birth_day ) ) {
 			$user->birth_day = $user->birth_day;
@@ -2526,33 +2528,29 @@ function fs_get_category_icon( $term_id = 0, $size = 'thumbnail', $args = array(
 	if ( ! $term_id ) {
 		$term_id = get_queried_object_id();
 	}
-	$args     = wp_parse_args( $args, array(
+	$image = null;
+
+	$args = wp_parse_args( $args, array(
 		'return'  => 'image',
 		'attr'    => array(),
 		'default' => FS_PLUGIN_URL . 'assets/img/no-image.png'
 	) );
-	$image_id = get_term_meta( $term_id, '_icon_id', 1 );
 
-	if ( ! $image_id ) {
-		return '<img src="' . esc_url( $args['default'] ) . '" alt="No image">';
-	}
+	$image_id = (int) get_term_meta( $term_id, '_icon_id', 1 );
 
-	$image_id = intval( $image_id );
 	if ( $args['return'] == 'image' ) {
-		if ( ! $image_id ) {
-			$image = '<img src="' . esc_attr( $args['default'] ) . '" alt="No image">';
-		} else {
+		if ( $image_id ) {
 			$image = wp_get_attachment_image( $image_id, $size, false, $args['attr'] );
+		} elseif ( ! $image_id && $args['default'] ) {
+			$image = '<img src="' . esc_attr( $args['default'] ) . '" alt="No image">';
 		}
 
 	} elseif ( $args['return'] == 'url' ) {
-		if ( ! $image_id ) {
-			$image = $args['default'];
-		} else {
+		if ( $image_id ) {
 			$image = wp_get_attachment_image_url( $image_id, $size, false );
+		} elseif ( ! $image_id && $args['default'] ) {
+			$image = $args['default'];
 		}
-	} else {
-		$image = $image_id;
 	}
 
 	return $image;
@@ -2747,6 +2745,17 @@ function fs_set_product( $product, $item_id = 0 ) {
 	$product_class->set_product( $product, $item_id );
 
 	return $product_class;
+}
+
+/**
+ * Устанавливает данные заказа
+ *
+ * @param WP_Post $order
+ *
+ * @return FS_Order
+ */
+function fs_set_order( WP_Post $order ) {
+	return new FS_Order( $order );
 }
 
 /**

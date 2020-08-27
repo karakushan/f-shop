@@ -1692,35 +1692,6 @@ td.fs_photo.column-fs_photo img {
   cursor: pointer;
 }
 
-/* Login and register form */
-.fs-login-form, .fs-register, .fs-lostpassword {
-  max-width: 360px;
-  margin: 0 auto 50px;
-  padding: 20px;
-  border: 1px solid #eee;
-}
-.fs-login-form a, .fs-login-form a:visited, .fs-register a, .fs-register a:visited, .fs-lostpassword a, .fs-lostpassword a:visited {
-  color: royalblue;
-  text-decoration: underline;
-}
-.fs-login-form a:hover, .fs-login-form a:visited:hover, .fs-register a:hover, .fs-register a:visited:hover, .fs-lostpassword a:hover, .fs-lostpassword a:visited:hover {
-  text-decoration: none;
-}
-.fs-login-form .fs-login-bottom, .fs-register .fs-login-bottom, .fs-lostpassword .fs-login-bottom {
-  display: flex;
-  justify-content: space-between;
-}
-.fs-login-form label sup, .fs-register label sup, .fs-lostpassword label sup {
-  color: red;
-}
-.fs-login-form label.error, .fs-register label.error, .fs-lostpassword label.error {
-  color: red;
-}
-.fs-login-form button[type=submit], .fs-register button[type=submit], .fs-lostpassword button[type=submit] {
-  width: 100%;
-  border-radius: 0;
-}
-
 .fs-dashboard-order {
   margin-bottom: 15px;
 }

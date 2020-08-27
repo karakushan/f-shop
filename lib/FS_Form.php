@@ -264,15 +264,19 @@ class FS_Form
         $args = wp_parse_args($args, $default);
 
 
-        echo $args['before'];
+
         if ($args['wrapper']) {
             echo '<div class="' . esc_attr('fs-field-wrap '.$args['wrapper_class']) . '">';
         }
+	   if (!empty($args['before'])) echo $args['before'];
+
         $this->render_field($field_name, $args['type'], $args);
 
         if (!empty($args['help']) && !in_array($args['type'], array('checkbox'))) {
             echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_attr($args['help']) . '"></span>';
         }
+
+	    if (!empty($args['after'])) echo $args['after'];
 
         if ($args['wrapper']) {
             echo '</div>';

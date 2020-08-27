@@ -10,4 +10,4 @@
        placeholder="<?php echo esc_html( $args['placeholder'] ) ?>"
        title="<?php echo esc_attr( $args['title'] ) ?>"
        step="<?php echo esc_attr( $args['step'] ) ?>"
-    <?php if($args['required']) echo 'required' ?>>
+    <?php if($args['required']) echo 'required' ?> <?php if ( $args['readonly'] ) echo 'readonly' ?>>
