@@ -242,7 +242,7 @@ jQuery(function ($) {
      * действие при нажатии на кнопку загрузки изображения
      * вы также можете привязать это действие к клику по самому изображению
      */
-    $('.upload-mft').live('click', function () {
+    $('.upload-mft').on('click', function () {
         var send_attachment_bkp = wp.media.editor.send.attachment;
         var button = $(this);
         wp.media.editor.send.attachment = function (props, attachment) {
