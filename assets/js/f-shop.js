@@ -1,10 +1,7 @@
-(function ($) {
-    window.fShop = {
-        ajaxurl: FastShopData.ajaxurl,
-        nonce: FastShopData.fs_nonce,
-        langs: FastShopData.lang,
+jQuery(document).ready(function ($) {
+    let fShop = Object.assign({
         getLang: function (string) {
-            return FastShopData.lang[string];
+            return this.langs[string];
         },
         // Выполняет поиск значения value в массиве array
         find:
@@ -29,10 +26,7 @@
             return string;
         },
         getSettings: function (settingName) {
-            return FastShopData[settingName];
-        },
-        sendOrder: function () {
-
+            return this[settingName];
         },
         updateCarts: function () {
             jQuery("[data-fs-element=\"cart-widget\"]").each(function () {
@@ -62,14 +56,12 @@
             }
         },
         setProductGallery: function (productId, variationId = null) {
-            let ajaxUrl = this.ajaxurl;
-
             $.ajax({
                 type: 'POST',
-                url: ajaxUrl,
+                url: this.ajaxurl,
                 beforeSend: function () {
                 },
-                data: fShop.ajaxData('fs_get_product_gallery_ids', {
+                data: this.ajaxData('fs_get_product_gallery_ids', {
                     "product_id": productId,
                     "variation_id": variationId
                 }),
@@ -90,21 +82,27 @@
             let step = Number(el.attr('step'));
             let min = Number(el.attr('min'));
 
+
+
             //если покупатель вбил неправильное к-во товаров
             if (productCount < min) {
                 el.val(min);
             } else {
+                let plugin = this;
                 $.ajax({
-                    url: fShop.ajaxurl,
+                    url: this.ajaxurl,
                     type: 'POST',
                     data: {
                         action: 'fs_change_cart_count',
                         item_id: cartItem,
                         count: productCount
                     },
-                    success: function (res) {
-                        if (res.success) {
-                            fShop.updateCarts();
+                    success: function (response) {
+                        if (response.success) {
+                            plugin.updateCarts();
+                            let cartPos = el.parents('[data-fs-element="cart-item"]');
+                            cartPos.find('[data-fs-element="cart-item-sum"]').text(response.data.cost)
+                            $('[data-fs-element="total-amount"]').text(response.data.total)
 
                             // создаём событие
                             let cart_change_count = new CustomEvent("fs_cart_change_count", {
@@ -142,7 +140,7 @@
             });
 
             // Подгружаем изображения в галерею аяксом
-            fShop.setProductGallery(productId, variation);
+            this.setProductGallery(productId, variation);
             // создаём событие
             var fs_select_variant = new CustomEvent("fs_select_variant", {
                 detail: {
@@ -154,7 +152,7 @@
 
 
         }
-    };
+    }, window.fShop);
 
     // Выбор вариации товара
     $(document).on('change', "[data-fs-element=\"select-variation\"]", fShop.selectVariation);
@@ -365,7 +363,7 @@
         if (variated) {
             jQuery.ajax({
                 type: 'POST',
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 data: {action: "fs_get_variated", product_id: productId, atts: attrObj},
                 beforeSend: function () {
                     parent.find("[data-fs-element=\"price\"]").addClass('blink');
@@ -499,6 +497,13 @@
 
     // Скрываем некоторые поля в форме отправки заказа при загрузке страницы
     function getCheckoutData() {
+        let el = jQuery('[name="fs_delivery_methods"]');
+        let val = el.val();
+
+        if (el.attr('type') == 'radio' || el.attr('type') == 'checkbox') {
+            val = jQuery('[name="fs_delivery_methods"]:checked').val();
+        }
+
         jQuery.ajax({
             type: 'POST',
             url: fShop.ajaxurl,
@@ -507,7 +512,7 @@
             },
             data: fShop.ajaxData('fs_show_shipping',
                 {
-                    delivery: jQuery('[name="fs_delivery_methods"]').val()
+                    delivery: val
                 }),
             success: function (result) {
                 if (!result.success) return;
@@ -518,10 +523,29 @@
                     jQuery("[data-fs-element=\"taxes-list\"]").replaceWith(result.data.taxes);
                 }
 
+                // Оключаем поля которые нужно скрыть
+                $('.fs-checkout-form input,.fs-checkout-form .fs-field-wrap').fadeIn(0);
                 if (result.data.disableFields.length) {
-                    $('.fs-checkout-form input').show(0);
                     for (let i in result.data.disableFields) {
-                        $('[name="' + result.data.disableFields[i] + '"]').hide(0);
+                        $('[name="' + result.data.disableFields[i] + '"]').parents('.fs-field-wrap').fadeOut(0)
+                        $('[name="' + result.data.disableFields[i] + '"]').fadeOut(0);
+                    }
+                }
+
+                // Устанавливаем обязательные поля
+                $('.fs-checkout-form [data-ajax-req="true"]').removeAttr('required');
+                if (result.data.requiredFields.length) {
+                    for (let i in result.data.requiredFields) {
+                        let field=$('[name="' + result.data.requiredFields[i] + '"]');
+                       // Добавляем звёздочку в placeholder  к обязательным полям
+                        if(!field.data('placeholder')){
+                            let placeholder=field.attr('placeholder');
+                            field.attr('data-placeholder', placeholder);
+                            if(placeholder.indexOf('*')===-1){
+                                field.attr('placeholder',field.attr('data-placeholder')+'*')
+                            }
+                        }
+                        field.attr('required', 'required').attr('data-ajax-req', true);
                     }
                 }
             }
@@ -557,7 +581,7 @@
 
         if (!el.data('confirm') || confirm(el.data("confirm"))) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: sendData
             }).success(function (result) {
@@ -593,7 +617,7 @@
         };
         if (confirm(el.data("confirm"))) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: sendData
             }).success(function (result) {
@@ -624,7 +648,7 @@
         event.preventDefault();
         var el = jQuery(this);
         jQuery.ajax({
-            url: FastShopData.ajaxurl,
+            url: fShop.ajaxurl,
             type: 'POST',
             beforeSend: function () {
                 el.find('.fs-atc-preloader').fadeIn();
@@ -695,10 +719,13 @@
     });
 
 // слайдер товара
-    var lightGallery = jQuery("#product_slider").lightGallery();
-    if (typeof fs_lightslider_options != "undefined") {
-        window.lightSlider = jQuery('#product_slider').lightSlider(fs_lightslider_options);
+    if (jQuery("#product_slider").length) {
+        jQuery("#product_slider").lightGallery();
+        if (typeof fs_lightslider_options != "undefined") {
+            window.lightSlider = jQuery('#product_slider').lightSlider(fs_lightslider_options);
+        }
     }
+
 // Квантификатор товара
     jQuery(document).ready(function (jQuery) {
         // уменьшение к-ва товара на единицу
@@ -739,53 +766,51 @@
 
 
 //слайдер диапазона цены
+    let catalogMinPrice = Number(fShop.catalogMinPrice);
+    let catalogMaxPrice = Number(fShop.catalogMaxPrice);
     var u = new Url;
-    var p_start = u.query.price_start == undefined ? 0 : u.query.price_start;
-    var p_end = u.query.price_end == undefined ? FastShopData.fs_slider_max : u.query.price_end;
-
+    var p_start = u.query.price_start == undefined ? catalogMinPrice : u.query.price_start;
+    var p_end = u.query.price_end == undefined ? catalogMaxPrice : u.query.price_end;
 
     jQuery('[data-fs-element="range-slider"]').each(function (index, value) {
         var rangeSLider = jQuery(this);
         var sliderWrapper = rangeSLider.parents("[data-fs-element=\"jquery-ui-slider\"]");
-        var sliderEnd = sliderWrapper.find('[data-fs-element="range-end"]');
-        var sliderStart = sliderWrapper.find('[data-fs-element="range-start"]');
+        var sliderEnd = $('[data-fs-element="range-end"]');
+        var sliderStart = $('[data-fs-element="range-start"]');
         rangeSLider.slider({
             range: true,
-            min: 0,
-            max: FastShopData.fs_slider_max,
+            min: catalogMinPrice,
+            max: catalogMaxPrice,
             values: [p_start, p_end],
             slide: function (event, ui) {
                 if (sliderStart.data("currency")) {
-                    sliderStart.html(ui.values[0] + ' <span>' + FastShopData.fs_currency + '</span>');
+                    sliderStart.html(ui.values[0] + ' <span>' + fShop.fs_currency + '</span>');
                 } else {
                     sliderStart.html(ui.values[0]);
                 }
                 if (sliderEnd.data("currency")) {
-                    sliderEnd.html(ui.values[1] + ' <span>' + FastShopData.fs_currency + '</span>');
+                    sliderEnd.html(ui.values[1] + ' <span>' + fShop.fs_currency + '</span>');
                 } else {
                     sliderEnd.html(ui.values[1]);
                 }
-                sliderWrapper.find('[data-fs-element="range-start-input"]').val(ui.values[0]);
-                sliderWrapper.find('[data-fs-element="range-end-input"]').val(ui.values[1]);
+                $('[data-fs-element="range-start-input"]').val(ui.values[0]);
+                $('[data-fs-element="range-end-input"]').val(ui.values[1]);
             },
             change: function (event, ui) {
-
-                u.query.fs_filter = FastShopData.fs_nonce;
+                u.query.fs_filter = fShop.nonce;
                 u.query.price_start = ui.values[0];
                 u.query.price_end = ui.values[1];
                 window.location.href = u.toString();
-
-
             }
         });
 
         if (sliderStart.data("currency")) {
-            sliderStart.html(p_start + ' <span>' + FastShopData.fs_currency + '</span>');
+            sliderStart.html(p_start + ' <span>' + fShop.fs_currency + '</span>');
         } else {
             sliderStart.html(p_start);
         }
         if (sliderEnd.data("currency")) {
-            sliderEnd.html(p_end + ' <span>' + FastShopData.fs_currency + '</span>');
+            sliderEnd.html(p_end + ' <span>' + fShop.fs_currency + '</span>');
         } else {
             sliderEnd.html(p_end);
         }
@@ -798,12 +823,12 @@
     function createFilterUrl(baseUrl) {
         let start = jQuery('[data-fs-element="range-start-input"]').val();
         let end = jQuery('[data-fs-element="range-end-input"]').val();
-        return baseUrl +'&price_start=' + start + '&price_end=' + end;
+        return baseUrl + '&price_start=' + start + '&price_end=' + end;
     }
 
     jQuery(document).on('input keyup', '[data-fs-element="range-start-input"],[data-fs-element="range-end-input"]', function (event) {
         let baseUrl = jQuery(this).data('url');
-        document.location.href =createFilterUrl(baseUrl) ;
+        document.location.href = createFilterUrl(baseUrl);
     });
 
 // валидация формы редактирования личных данных
@@ -827,7 +852,7 @@
         },
         submitHandler: function (form) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: userInfoEdit.serialize(),
                 beforeSend: function () {
@@ -904,7 +929,7 @@
     loginForm.validate({
         submitHandler: function (form) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 type: 'POST',
                 data: loginForm.serialize(),
                 beforeSend: function () {
@@ -1079,7 +1104,7 @@
 
                 jQuery.ajax({
                     type: 'POST',
-                    url: FastShopData.ajaxurl,
+                    url: fShop.ajaxurl,
                     data: {
                         action: "fs_set_rating",
                         value: ratingVal,
@@ -1165,7 +1190,7 @@
 
         if (confirm(fs_message.confirm_text.replace('%s', product_name))) {
             jQuery.ajax({
-                url: FastShopData.ajaxurl,
+                url: fShop.ajaxurl,
                 data: {
                     action: 'fs_del_wishlist_pos',
                     position: product_id
@@ -1225,6 +1250,387 @@
             .addClass('active')
     })
 
+    /**
+     * функция транслитерации
+     */
+    function fs_transliteration(text) {
+// Символ, на который будут заменяться все спецсимволы
+        var space = '-';
+// переводим в нижний регистр
+        text = text.toLowerCase();
 
-})(jQuery)
+// Массив для транслитерации
+        var transl = {
+            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh',
+            'з': 'z', 'и': 'i', 'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n',
+            'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h',
+            'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'sh', 'ъ': space, 'ы': 'y', 'ь': space, 'э': 'e', 'ю': 'yu', 'я': 'ya',
+            ' ': space, '_': space, '`': space, '~': space, '!': space, '@': space,
+            '#': space, '$': space, '%': space, '^': space, '&': space, '*': space,
+            '(': space, ')': space, '-': space, '\=': space, '+': space, '[': space,
+            ']': space, '\\': space, '|': space, '/': space, '.': space, ',': space,
+            '{': space, '}': space, '\'': space, '"': space, ';': space, ':': space,
+            '?': space, '<': space, '>': space, '№': space
+        };
+
+        var result = '';
+        var curent_sim = '';
+
+        for (var i = 0; i < text.length; i++) {
+            // Если символ найден в массиве то меняем его
+            if (transl[text[i]] != undefined) {
+                if (curent_sim != transl[text[i]] || curent_sim != space) {
+                    result += transl[text[i]];
+                    curent_sim = transl[text[i]];
+                }
+            }
+            // Если нет, то оставляем так как есть
+            else {
+                result += text[i];
+                curent_sim = text[i];
+            }
+        }
+
+        result = TrimStr(result);
+        return result;
+
+    }
+
+    function TrimStr(s) {
+        s = s.replace(/^-/, '');
+        return s.replace(/-$/, '');
+    }
+
+// проверяет является ли переменная числом
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+// проверяет является ли строка JSON объектом
+    function IsJsonString(str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            console.log(str);
+            return false;
+        }
+        return true;
+    }
+
+// очищает от пустых элементов массива
+    Array.prototype.clean = function (deleteValue) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] == deleteValue) {
+                this.splice(i, 1);
+                i--;
+            }
+        }
+        return this;
+    };
+
+// установка куки
+    function setCookie(name, value, options) {
+        options = options || {};
+
+        var expires = options.expires;
+
+        if (typeof expires == "number" && expires) {
+            var d = new Date();
+            d.setTime(d.getTime() + expires * 1000);
+            expires = options.expires = d;
+        }
+        if (expires && expires.toUTCString) {
+            options.expires = expires.toUTCString();
+        }
+
+        value = encodeURIComponent(value);
+
+        var updatedCookie = name + "=" + value;
+
+        for (var propName in options) {
+            updatedCookie += "; " + propName;
+            var propValue = options[propName];
+            if (propValue !== true) {
+                updatedCookie += "=" + propValue;
+            }
+        }
+
+        document.cookie = updatedCookie;
+    }
+
+// возвращает cookie с именем name, если есть, если нет, то undefined
+    function getCookie(name) {
+        var matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+// удаление куки
+    function deleteCookie(name) {
+        setCookie(name, "", {
+            expires: -1
+        })
+    }
+
+    /**
+     * Add a URL parameter (or changing it if it already exists)
+     * @param {search} string  this is typically document.location.search
+     * @param {key}    string  the key to set
+     * @param {val}    string  value
+     */
+    var addUrlParam = function (search, key, val) {
+        var newParam = key + '=' + val,
+            params = '&' + newParam;
+
+        // If the "search" string exists, then build params from it
+        if (search) {
+            // Try to replace an existance instance
+            params = search.replace(new RegExp('([?&])' + key + '[^&]*'), 'jQuery1' + newParam);
+
+            // If nothing was replaced, then add the new param to the end
+            if (params === search) {
+                params += '&' + newParam;
+            }
+        }
+
+        return params;
+    };
+
+// строковая фнкция, которая позволяет производить поиск и замену сразу по нескольким значениям переданным в виде объекта
+    String.prototype.allReplace = function (obj) {
+        var retStr = this;
+        for (var x in obj) {
+            retStr = retStr.replace(new RegExp(x, 'g'), obj[x]);
+        }
+        return retStr;
+    };
+
+// получает корзину через шаблон "cartTemplate"  и выводит её внутри "cartWrap"
+    function fs_get_cart(cartTemplate, cartWrap) {
+        let parameters = {
+            action: 'fs_get_cart',
+            template: cartTemplate
+        };
+        jQuery.ajax({
+            type: 'POST',
+            url: fShop.ajaxurl,
+            data: parameters,
+            dataType: 'html',
+            success: function (data) {
+                if (data) jQuery(cartWrap).html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            }
+        });
+    }
+
+    // Событие срабатывает перед добавлением товара в корзину
+    document.addEventListener("fs_before_add_product", function (event) {
+        // действие которое инициирует событие, здесь может быть любой ваш код
+        var button = event.detail.button;
+        button.find('.fs-atc-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader" width="16">');
+        event.preventDefault();
+    }, false);
+
+// Событие срабатывает когда товар добавлен в корзину
+    document.addEventListener("fs_add_to_cart", function (event) {
+
+        // действие которое инициирует событие
+
+        var button = event.detail.button;
+
+        // Show the basket as a modal window
+        if (fShop.getSettings('fs_cart_type') == 'modal') {
+            iziToast.show({
+                image: event.detail.image,
+                imageWidth: 150,
+                theme: 'light',
+                timeout: false,
+                maxWidth: 540,
+                closeOnEscape: true,
+                title: fShop.getLang('success'),
+                message: fShop.strReplace(fShop.getLang('addToCartButtons'), {
+                    '%product%': button.data('name'),
+                    '%price%': button.data('price'),
+                    '%currency%': button.data('currency')
+                }),
+                position: 'topCenter',
+
+            });
+        } else
+            // Show the cart as a sidebar
+        if (fShop.getSettings('fs_cart_type') == 'side') {
+
+            let cartWrap = $("[data-fs-action=\"showCart\"]");
+
+            cartWrap.fadeIn(200, function () {
+            });
+
+            $("[data-fs-action=\"showCart\"]").on('click', '.close-cart', function (event) {
+                event.preventDefault();
+                $("[data-fs-action=\"showCart\"]").fadeOut(800, function () {
+                    cartWrap.find('[data-fs-element="cart-widget"]').html('');
+                });
+            });
+
+        }
+
+        button.find('.fs-atc-preloader').fadeOut();
+        setTimeout(function () {
+            button.find('.fs-atc-info').fadeOut();
+        }, 4000);
+
+        event.preventDefault();
+    }, false);
+
+// Событие срабатывает перед добавлением товара в список желаний
+    document.addEventListener("fs_before_to_wishlist", function (event) {
+        // действие которое инициирует событие, здесь может быть любой ваш код
+        var button = event.detail.button;
+        button.find('.fs-wh-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
+        event.preventDefault();
+    }, false);
+
+
+// Событие срабатывает после добавления товара в список желаний
+    document.addEventListener("fs_add_to_wishlist", function (event) {
+        // действие которое инициирует событие, здесь может быть любой ваш код
+        let button = event.detail.button;
+        button.find('.fs-wh-preloader').fadeOut();
+        let afterText = fShop.getLang('addToWishlist');
+        iziToast.show({
+            image: event.detail.image,
+            theme: 'light',
+            title: fShop.getLang('success'),
+            message: fShop.strReplace(fShop.getLang('addToWishlist'), {
+                '%product%': button.data('name'),
+                '%wishlist_url%': fShop.getSettings('wishlistUrl')
+            }),
+            position: 'topCenter',
+
+        });
+        event.preventDefault();
+    }, false);
+
+// Срабатывает если покупатель пытается добавить отсуствующий товар в корзину
+    document.addEventListener("fsBuyNoAvailable", function (event) {
+        iziToast.show({
+            theme: 'light',
+            /*icon: 'fas fa-info-circle',*/
+            timeout: false,
+            maxWidth: 340,
+            overlay: true,
+            title: 'Сообщить о наличии',
+            message: 'Товара &laquo;' + event.detail.name + '&raquo; нет на складе.<br> Оставьте Ваш E-mail и мы сообщим когда товар будет в наличии. <br>',
+            position: 'topCenter',
+            id: 'report-availability',
+            buttons: [
+                ['<input type="email" name="userEmail" placeholder="Ваш E-mail">', function (instance, toast) {
+                    console.log(instance) // using the name of input to get the value
+                }, 'input'],
+                ['<button>Отправить</button>', function (instance, toast) {
+                    let userEmail = $(toast).find('[name="userEmail"]').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: fShop.ajaxurl,
+                        data: fShop.ajaxData('fs_report_availability', {
+                            "email": userEmail,
+                            "product_id": event.detail['product-id'],
+                            "product_name": event.detail.name,
+                            "product_url": event.detail.url,
+                            "variation": event.detail.variation,
+                            "count": event.detail.count
+                        }),
+                        success: function (result) {
+                            if (result.success) {
+                                $(toast).find('.iziToast-message').addClass('success').html(result.data.msg);
+                                $(toast).find('.iziToast-buttons').hide();
+                            } else {
+                                $(toast).find('.iziToast-message').addClass('error').html(result.data.msg);
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            console.log('error...', xhr);
+                            //error logging
+                        },
+                        complete: function () {
+                            //afer ajax call is completed
+                        }
+                    });
+
+                }]
+            ]
+
+        });
+    });
+
+    $(document).on('click', '#buyOneClickPopup input', function (event) {
+        $(this).focus();
+    });
+// Обработка кнопки "Покупка в клик"
+    document.addEventListener("fsBuyOneClick", function (event) {
+        iziToast.show({
+            theme: 'light',
+            timeout: false,
+            maxWidth: 540,
+            overlay: true,
+            onOpening: function (instance, toast) {
+                $(toast).on('submit', 'form', function (event) {
+                    event.preventDefault();
+                    let form = $(this);
+                    let productId = form.find('input[name="product-id"]').val();
+                    let cart = new Object;
+                    cart[productId] = {
+                        'ID': form.find('input[name="product-id"]').val(),
+                        'count': 1,
+                        'attr': [],
+                        'variation': null
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: fShop.ajaxurl,
+                        data: fShop.ajaxData('order_send', {
+                            'fs_first_name': form.find('input[name="buyer-name"]').val(),
+                            'fs_phone': form.find('input[name="buyer-phone"]').val(),
+                            'fs_email': form.find('input[name="buyer-email"]').val(),
+                            'cart': cart
+                        }),
+                        success: function (result) {
+                            if (result.success) {
+                                $(toast).find('.iziToast-message').text(result.data.msg)
+                            }
+                        }
+                    })
+                    ;
+                    return false;
+
+                });
+            },
+            title: 'Покупка товара &laquo;' + event.detail.name + '&raquo;',
+            message:
+                '<form method="post">' +
+                '<div class="row">' +
+                '<div class="col-md-5">' +
+                '<img src="' + event.detail.thumbnail + '" alt="' + event.detail.name + '">' +
+                '<div class="fs-price">' + event.detail.price + ' <span>' + event.detail.currency + '</span></div>' +
+                '</div>' +
+                '<div class="col-md-7">' +
+                '<input type="hidden" name="product-id" value="' + event.detail.id + '">' +
+                '<div class="form-group"><input type="text" name="buyer-name" placeholder="Ваше имя" class="form-control" required></div>' +
+                '<div class="form-group"><input type="tel" name="buyer-phone" placeholder="Номер телефона" class="form-control" required></div>' +
+                '<div class="form-group"><input type="email" name="buyer-email" placeholder="E-mail" class="form-control" required></div>' +
+                '<div class="form-group"><input type="submit" class="btn btn-primary" value="Купить" class="form-control" required></div>' +
+                '</div>' +
+                '</div>' +
+                '</form>',
+            position: 'topCenter',
+            id: 'buyOneClickPopup',
+
+
+        });
+    });
+})
 

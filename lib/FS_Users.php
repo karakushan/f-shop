@@ -9,6 +9,8 @@ namespace FS;
  */
 class FS_Users {
 
+	private $form;
+
 	/**
 	 * Password Verification Ruleset
 	 *
@@ -26,6 +28,8 @@ class FS_Users {
 	);
 
 	function __construct() {
+
+		$this->form = new FS_Form();
 
 		// User Authorization
 		add_action( 'wp_ajax_fs_login', array( $this, 'login_user' ) );
@@ -54,6 +58,82 @@ class FS_Users {
 		// Protection of personal account from unauthorized users
 		add_action( 'template_redirect', array( $this, 'cabinet_protect' ) );
 
+		// Add the field to user profile editing screen
+		add_action( 'show_user_profile', [ $this, 'admin_profile_edit_fields' ] );
+
+		// Add the save action to user's own profile editing screen update.
+		add_action( 'edit_user_profile', [ $this, 'admin_profile_edit_fields' ] );
+
+		// Add the save action to user's own profile editing screen update.
+		add_action( 'personal_options_update', [ $this, 'admin_profile_save_fields' ] );
+
+		// Add the save action to user profile editing screen update.
+		add_action( 'edit_user_profile_update', [ $this, 'admin_profile_save_fields' ] );
+
+	}
+
+	/**
+	 * Displays fields in user profile editing
+	 *
+	 * @param $user
+	 */
+	public function admin_profile_edit_fields( $user ) {
+		?>
+        <h2><?php esc_html_e( 'Delivery Settings', 'f-shop' ); ?></h2>
+        <table class="form-table">
+			<?php foreach ( self::get_user_fields( $user->ID ) as $name => $user_field ) {
+				if ( isset( $user_field['save_meta'] ) && $user_field['save_meta'] == false ) {
+					continue;
+				}
+				?>
+                <tr>
+                    <th>
+                        <label for="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>"><?php echo esc_html( $user_field['name'] ) ?></label>
+                    </th>
+                    <td>
+						<?php
+						$args = wp_parse_args( $user_field, [
+							'value' => get_user_meta( $user->ID, $name, 1 ),
+							'id'    => str_replace( '_', '-', $name ),
+							'class' => 'regular-text',
+						] );
+						unset( $args['name'] );
+						$this->form->render_field( $name, $user_field['type'], $args );
+						if ( ! empty( $user_field['description'] ) ): ?>
+                            <p class="description">
+								<?php echo $user_field['description']; ?>
+                            </p>
+						<?php endif ?>
+                    </td>
+                </tr>
+			<?php } ?>
+        </table>
+		<?php
+	}
+
+	/**
+	 * The save action.
+	 *
+	 * @param $user_id int the ID of the current user.
+	 *
+	 * @return bool Meta ID if the key didn't exist, true on successful update, false on failure.
+	 */
+	function admin_profile_save_fields( $user_id ) {
+		// check that the current user have the capability to edit the $user_id
+		if ( ! current_user_can( 'edit_user', $user_id ) ) {
+			return false;
+		}
+
+		foreach ( self::get_user_fields( $user_id ) as $meta_key => $user_field ) {
+			if ( isset( $user_field['save_meta'] ) && $user_field['save_meta'] == false ) {
+				continue;
+			}
+
+			$meta_value = sanitize_text_field( $_POST[ $meta_key ] );
+			update_user_meta( $user_id, $meta_key, $meta_value );
+		}
+
+		return true;
 	}
 
 	/**
@@ -275,11 +355,14 @@ class FS_Users {
 	 */
 	public static function get_user_fields( $user_id = 0 ) {
 
+		$user = $user_id == 0 ? wp_get_current_user() : get_user_by( 'ID', $user_id );
 
-		$user = ! $user_id ? wp_get_current_user() : get_user_by( 'ID', $user_id );
+		if ( isset( $user->ID ) ) {
+			$user_id = intval( $user->ID );
+		}
 
 		$fields = array(
-			'fs_email'             => array(
+			'fs_email'      => array(
 				'name'        => __( 'E-mail', 'f-shop' ),
 				'type'        => 'email',
 				'label'       => '',
@@ -290,7 +373,7 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => false
 			),
-			'fs_first_name'        => array(
+			'fs_first_name' => array(
 				'name'        => __( 'First name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -299,8 +382,9 @@ class FS_Users {
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'required'    => true,
 				'checkout'    => true,
+				'save_meta'   => false
 			),
-			'fs_last_name'         => array(
+			'fs_last_name'  => array(
 				'name'        => __( 'Last name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -309,6 +393,28 @@ class FS_Users {
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'required'    => true,
 				'checkout'    => true,
+				'save_meta'   => false
+			),
+
+			'fs_user_avatar'       => array(
+				'name'        => __( 'Avatar', 'f-shop' ),
+				'type'        => 'file',
+				'label'       => '',
+				'placeholder' => __( 'Gender', 'f-shop' ),
+				'title'       => '',
+				'required'    => false,
+				'save_meta'   => false
+			),
+			'fs_phone'             => array(
+				'name'        => __( 'Phone number', 'f-shop' ),
+				'type'        => 'tel',
+				'label'       => '',
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_phone', 1 ) : '',
+				'placeholder' => __( 'Phone number', 'f-shop' ),
+				'title'       => __( 'Keep the correct phone number', 'f-shop' ),
+				'required'    => true,
+				'checkout'    => true,
+
 			),
 			'fs_gender'            => array(
 				'name'        => __( 'Gender', 'f-shop' ),
@@ -318,27 +424,10 @@ class FS_Users {
 					'Male'   => __( 'Male', 'f-shop' ),
 					'Female' => __( 'Female', 'f-shop' )
 				),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_gender', 1 ) : '',
 				'placeholder' => __( 'Gender', 'f-shop' ),
 				'title'       => '',
 				'required'    => false
-			),
-			'fs_user_avatar'       => array(
-				'name'        => __( 'Avatar', 'f-shop' ),
-				'type'        => 'file',
-				'label'       => '',
-				'placeholder' => __( 'Gender', 'f-shop' ),
-				'title'       => '',
-				'required'    => false
-			),
-			'fs_phone'             => array(
-				'name'        => __( 'Phone number', 'f-shop' ),
-				'type'        => 'tel',
-				'label'       => '',
-				'placeholder' => __( 'Phone number', 'f-shop' ),
-				'title'       => __( 'Keep the correct phone number', 'f-shop' ),
-				'required'    => true,
-				'checkout'    => true,
-
 			),
 			'fs_city'              => array(
 				'name'        => __( 'City', 'f-shop' ),
@@ -347,7 +436,9 @@ class FS_Users {
 				'placeholder' => __( 'City', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'required'    => true,
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_city', 1 ) : '',
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_country'           => array(
@@ -356,8 +447,10 @@ class FS_Users {
 				'label'       => '',
 				'placeholder' => __( 'Country', 'f-shop' ),
 				'title'       => '',
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_country', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_zip_code'          => array(
@@ -365,8 +458,10 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Zip Code', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_zip_code', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_region'            => array(
@@ -375,8 +470,10 @@ class FS_Users {
 				'label'       => '',
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'placeholder' => __( 'State / province', 'f-shop' ),
-				'required'    => true,
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_region', 1 ) : '',
+				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_address'           => array(
@@ -384,8 +481,10 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Address', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_address', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_home_num'          => array(
@@ -393,8 +492,10 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'House number', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_home_num', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_apartment_num'     => array(
@@ -402,8 +503,10 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Apartment number', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_apartment_num', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_delivery_number'   => array(
@@ -411,8 +514,10 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Branch number', 'f-shop' ),
+				'value'       => $user_id ? get_user_meta( $user_id, 'fs_delivery_number', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
+				'save_meta'   => true
 
 			),
 			'fs_delivery_methods'  => array(
@@ -422,6 +527,7 @@ class FS_Users {
 				'taxonomy'     => FS_Config::get_data( 'product_del_taxonomy' ),
 				'icon'         => true,
 				'title'        => __( 'Choose shipping method', 'f-shop' ),
+				'value'        => $user_id ? get_user_meta( $user_id, 'fs_delivery_methods', 1 ) : '',
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -429,7 +535,8 @@ class FS_Users {
 					'parent'     => 0
 				) ),
 				'required'     => true,
-				'save_meta'    => false
+				'save_meta'    => true
+
 
 			),
 			'fs_payment_methods'   => array(
@@ -439,6 +546,7 @@ class FS_Users {
 				'taxonomy'     => FS_Config::get_data( 'product_pay_taxonomy' ),
 				'icon'         => true,
 				'title'        => __( 'Select a Payment Method', 'f-shop' ),
+				'value'        => $user_id ? get_user_meta( $user_id, 'fs_payment_methods', 1 ) : '',
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -446,7 +554,8 @@ class FS_Users {
 					'parent'     => 0
 				) ),
 				'required'     => true,
-				'save_meta'    => false
+				'save_meta'    => true
+
 
 			),
 			'fs_comment'           => array(
@@ -467,6 +576,7 @@ class FS_Users {
 				'value'          => 1,
 				'required'       => false,
 				'checkout'       => true,
+				'save_meta'      => false
 
 			),
 			'fs_subscribe_news'    => array(
@@ -476,6 +586,7 @@ class FS_Users {
 				'label_position' => 'after',
 				'required'       => false,
 				'checkout'       => true,
+				'value'          => get_user_meta( $user->ID, 'fs_subscribe_news', 1 )
 
 			),
 			'fs_subscribe_cart'    => array(
@@ -485,6 +596,7 @@ class FS_Users {
 				'label_position' => 'after',
 				'required'       => false,
 				'checkout'       => true,
+				'value'          => get_user_meta( $user->ID, 'fs_subscribe_cart', 1 )
 
 			),
 			'fs_login'             => array(
@@ -588,10 +700,19 @@ class FS_Users {
 
 		// Сохраняем данные пользователя
 		foreach ( $user_fields as $meta_key => $user_field ) {
-
-
-			if ( ( $user_field['type'] == 'file' && empty( $_FILES[ $meta_key ] ) ) ) {
+			if ( $user_field['type'] == 'file' && empty( $_FILES[ $meta_key ] ) ) {
 				continue;
+			}
+
+			// Выходим из цикла если поля не существует
+			if ( ! isset( $_POST[ $meta_key ] ) ) {
+				continue;
+			}
+
+			$meta_value = trim( $_POST[ $meta_key ] );
+
+			if ( $user_field['type'] == 'checkbox' && $meta_value != 1 ) {
+				$meta_value = 0;
 			}
 
 			// Сохраняем аватарку
@@ -599,32 +720,34 @@ class FS_Users {
 				if ( $_FILES[ $meta_key ]['error'] ) {
 					wp_send_json_error( array( 'msg' => $_FILES ) );
 				}
+
 				$attach_id = media_handle_upload( $meta_key, 0 );
+
 				if ( is_wp_error( $attach_id ) ) {
 					wp_send_json_error( array( 'msg' => $attach_id->get_error_message() ) );
 				}
+
 				update_user_meta( $user_id, $meta_key, intval( $attach_id ) );
 				continue;
-
 			}
 
-			// Сохраняем или удаляем поля
-			if ( ( $user_field['type'] != 'file' && ! empty( $_POST[ $meta_key ] ) ) ) {
-
-				if ( $meta_key == 'fs_first_name' ) {
-					wp_update_user( array(
-						'ID'         => $user_id,
-						'first_name' => sanitize_text_field( $_POST[ $meta_key ] )
-					) );
-				} elseif ( $meta_key == 'fs_last_name' ) {
-					wp_update_user( array(
-						'ID'        => $user_id,
-						'last_name' => sanitize_text_field( $_POST[ $meta_key ] )
-					) );
-				} else {
-					update_user_meta( $user_id, $meta_key, $_POST[ $meta_key ] );
-				}
+			// Сохраняем поля в данных ВП
+			if ( $meta_key == 'fs_first_name' ) {
+				wp_update_user( array(
+					'ID'         => $user_id,
+					'first_name' => $meta_value
+				) );
+				continue;
+			} elseif ( $meta_key == 'fs_last_name' ) {
+				wp_update_user( array(
+					'ID'        => $user_id,
+					'last_name' => $meta_value
+				) );
+				continue;
 			}
+
+			update_user_meta( $user_id, $meta_key, $meta_value );
+
 
 		}
 
@@ -1073,7 +1196,7 @@ class FS_Users {
 				'title'     => __( 'Current orders', 'f-shop' ),
 				'content'   => fs_frontend_template( 'dashboard/orders', [
 					'vars' => array(
-						'orders' => FS_Orders::get_user_orders()
+						'orders' => FS_Orders::get_user_orders( 0, 'new' )
 					)
 				] ),
 				'link'      => false,
@@ -1139,11 +1262,17 @@ class FS_Users {
 
 		$out .= '<div class="tab-content" id="fs-dashboard-content">';
 
+		$index = 0;
 		foreach ( $tabs as $tab_id => $tab ) {
 			if ( $tab['link'] ) {
 				continue;
 			}
-			$out .= '<div class="' . esc_attr( $tab['tab_class'] ) . '" id="fs-dashboard-' . esc_attr( $tab_id ) . '" role="tabpanel" aria-labelledby="fs-dashboard-' . esc_attr( $tab_id ) . '">' . $tab['content'] . '</div>';
+			$tab_class = $tab['tab_class'];
+			if ( $index === 0 ) {
+				$tab_class = $tab['tab_class'] . ' fade show in';
+			}
+			$out .= '<div class="' . esc_attr( $tab_class ) . '" id="fs-dashboard-' . esc_attr( $tab_id ) . '" role="tabpanel" aria-labelledby="fs-dashboard-' . esc_attr( $tab_id ) . '">' . $tab['content'] . '</div>';
+			$index ++;
 		}
 
 		$out .= '</div><!-- end #fs-dashboard-content -->';

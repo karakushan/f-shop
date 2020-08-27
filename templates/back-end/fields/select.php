@@ -9,8 +9,12 @@
 if ( ! empty( $args['multiple'] ) && ! is_array( $args['value'] ) ) {
 	$args['value'] = [];
 }
+if ( ! empty( $args['multiple'] )) {
+	$name= $name. '[]';
+}
+
 ?>
-<select name="<?php echo $args['multiple'] ? esc_attr( $name . '[]' ) : esc_attr( $name ) ?>"
+<select name="<?php echo  esc_attr( $name ) ?>"
         title="<?php echo esc_attr( $args['title'] ) ?>"
         id="<?php echo esc_attr( $args['id'] ) ?>"
         class="<?php echo esc_attr( $args['class'] ) ?> fs-select2" <?php if ( $args['required'] )

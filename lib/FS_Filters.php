@@ -7,8 +7,6 @@ namespace FS;
  */
 class FS_Filters {
 	function __construct() {
-
-
 		// Backend product filtering
 		add_action( 'pre_get_posts', array( $this, 'filter_products_admin' ), 10, 1 );
 
@@ -276,7 +274,8 @@ class FS_Filters {
 	 * @echo  string;
 	 */
 	public static function per_page_filter( $args ) {
-		$req   = isset( $_REQUEST['per_page'] ) ? $_REQUEST['per_page'] : get_option( "posts_per_page" );
+		$req   = isset( $_GET['per_page'] ) ? intval($_GET['per_page']) : get_option( "posts_per_page" );
+
 		$args  = wp_parse_args( $args,
 			array(
 				'interval' => array( 15, 30, 45, 90 ),

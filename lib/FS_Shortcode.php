@@ -181,7 +181,7 @@ class FS_Shortcode {
 	 *
 	 */
 	public function cart_shortcode() {
-		return fs_frontend_template( 'cart/list-products', array( 'vars' => array( 'cart' => FS_Cart_Class::get_cart() ) ) );
+		return fs_frontend_template( 'cart/list-products', array( 'vars' => array( 'cart' => FS_Cart::get_cart() ) ) );
 	}
 
 	/**
@@ -244,12 +244,12 @@ class FS_Shortcode {
 		$atts = shortcode_atts( array(
 			'class' => 'fs-checkout-form'
 		), $atts );
-		$cart = FS_Cart_Class::get_cart();
+		$cart = FS_Cart::get_cart();
 		if ( empty( $cart ) ) {
 			return fs_frontend_template( 'checkout/checkout-no-items' );
 		}
 		$template = fs_form_header( array( 'name' => 'fs-order-send', 'class' => $atts['class'] ), 'order_send' );
-		$template .= fs_frontend_template( 'checkout/checkout', array( 'vars' => array( 'cart' => FS_Cart_Class::get_cart() ) ) );
+		$template .= fs_frontend_template( 'checkout/checkout', array( 'vars' => array( 'cart' => FS_Cart::get_cart() ) ) );
 		$template .= fs_form_bottom( '' );
 
 		return $template;

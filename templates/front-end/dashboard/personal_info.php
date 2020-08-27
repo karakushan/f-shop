@@ -14,7 +14,7 @@
     </div>
     <div class="col">
         <div class="tab-content">
-            <div class="tab-pane fade active show" id="fs-dashboard-sub-tab-1" role="tabpanel">
+            <div class="tab-pane fade active show in" id="fs-dashboard-sub-tab-1" role="tabpanel">
                 <h4 class="tab-title"><?php esc_html_e( 'Edit profile', 'f-shop' ); ?></h4>
 				<?php echo FS\FS_Form::form_open( array(
 					'class'       => 'fs-dashboard-personal',
@@ -77,7 +77,7 @@
                     </div>
                     <div class="form-group row">
                         <label for="fs_adress" class="col-sm-2"><?php esc_html_e( 'Address', 'f-shop' ); ?></label>
-                        <div class="col-sm-10"><?php fs_form_field( 'fs_adress', [ 'class' => 'form-control col-sm-10' ] ) ?></div>
+                        <div class="col-sm-10"><?php fs_form_field( 'fs_address', [ 'class' => 'form-control col-sm-10' ] ) ?></div>
                     </div>
                     <div class="form-group row">
                         <label for="fs_phone" class="col-sm-2"><?php esc_html_e( 'Phone number', 'f-shop' ); ?> <span

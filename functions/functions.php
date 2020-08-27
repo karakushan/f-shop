@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
-use FS\FS_Cart_Class;
+use FS\FS_Cart;
 use \FS\FS_Config;
 use \FS\FS_Product;
 
@@ -190,7 +190,7 @@ function fs_total_amount( $wrap = '%s <span>%s</span>', $delivery_cost = false )
  * @return float|int
  */
 function fs_get_cart_cost() {
-	$products = \FS\FS_Cart_Class::get_cart();
+	$products = \FS\FS_Cart::get_cart();
 	$cost     = 0;
 	if ( is_array( $products ) && count( $products ) ) {
 		foreach ( $products as $key => $product ) {
@@ -266,7 +266,7 @@ function fs_get_total_amount( $delivery_cost = false ) {
  */
 function fs_total_amount_without_discount( $wrap = '%s <span>%s</span>' ) {
 
-	$cart_items = FS\FS_Cart_Class::get_cart();
+	$cart_items = FS\FS_Cart::get_cart();
 
 	$total = 0;
 
@@ -326,7 +326,7 @@ function fs_get_taxes_amount( $amount ) {
  */
 function fs_get_total_discount() {
 	$discount = 0;
-	$cart     = FS\FS_Cart_Class::get_cart();
+	$cart     = FS\FS_Cart::get_cart();
 
 	if ( $cart ) {
 		foreach ( $cart as $key => $product ) {
@@ -505,7 +505,7 @@ function fs_total_count( $products = array() ) {
  *         'all_price'-общая цена
  */
 function fs_get_cart( $args = array() ) {
-	$cart_items = FS\FS_Cart_Class::get_cart();
+	$cart_items = FS\FS_Cart::get_cart();
 	$args       = wp_parse_args( $args, array(
 		'price_format'   => '%s <span>%s</span>',
 		'thumbnail_size' => 'thumbnail'
@@ -518,20 +518,25 @@ function fs_get_cart( $args = array() ) {
 				continue;
 			}
 
+			$product_image_url = fs_get_product_thumbnail_url( $offer->id, $args['thumbnail_size'] );
+
 			$products[ $key ] = array(
-				'ID'         => $offer->id,
-				'id'         => $offer->id,
-				'name'       => $offer->title,
-				'count'      => $offer->count,
-				'thumb'      => get_the_post_thumbnail_url( $offer->id, $args['thumbnail_size'] ),
-				'thumbnail'  => get_the_post_thumbnail( $offer->id, $args['thumbnail_size'] ),
-				'attr'       => $offer->attributes,
-				'link'       => $offer->permalink,
-				'price'      => $offer->price_display,
-				'base_price' => $offer->base_price_display,
-				'all_price'  => $offer->cost_display,
-				'sku'        => $offer->sku,
-				'currency'   => $offer->currency
+				'ID'            => $offer->id,
+				'id'            => $offer->id,
+				'name'          => $offer->title,
+				'count'         => $offer->count,
+				'qty'           => $offer->count,
+				/* @deprecated */
+				'thumb'         => $product_image_url,
+				'thumbnail_url' => $product_image_url,
+				'thumbnail'     => '<img src="' . esc_attr( $product_image_url ) . '" alt="' . esc_attr( $offer->title ) . '" title="' . esc_attr( $offer->title ) . '">',
+				'attr'          => $offer->attributes,
+				'link'          => $offer->permalink,
+				'price'         => $offer->price_display,
+				'base_price'    => $offer->base_price_display,
+				'all_price'     => $offer->cost_display,
+				'sku'           => $offer->sku,
+				'currency'      => $offer->currency
 			);
 		}
 	}
@@ -550,7 +555,7 @@ function fs_get_cart( $args = array() ) {
  *        'class'- класс для кнопки, ссылки (по умолчанию класс 'fs-delete-position')
  */
 function fs_delete_position( $cart_item = 0, $args = array() ) {
-	$cart = FS\FS_Cart_Class::get_cart();
+	$cart = FS\FS_Cart::get_cart();
 	$name = ! empty( $cart[ $cart_item ] ) ? get_the_title( $cart[ $cart_item ]['ID'] ) : '';
 	$args = wp_parse_args( $args, array(
 		'content' => '&#10006;',
@@ -631,8 +636,8 @@ function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args 
  */
 function fs_product_count( $echo = true ) {
 
-	$count = FS_Cart_Class::get_cart() && is_array( FS_Cart_Class::get_cart() )
-		? count( FS_Cart_Class::get_cart() )
+	$count = FS_Cart::get_cart() && is_array( FS_Cart::get_cart() )
+		? count( FS_Cart::get_cart() )
 		: 0;
 
 	if ( $echo ) {
@@ -1008,9 +1013,9 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		'wrapper'       => 'div',
 		'wrapper_class' => 'fs-qty-wrap',
 		'pluss_class'   => 'fs-pluss',
-		'pluss_content' => '+',
+		'pluss_content' => '&plus;',
 		'minus_class'   => 'fs-minus',
-		'minus_content' => '-',
+		'minus_content' => '&ndash;',
 		'input_class'   => 'fs-quantity',
 		'step'          => 1
 
@@ -1126,13 +1131,11 @@ function fs_is_action( $product_id = 0 ) {
 	$product_id   = fs_get_product_id( $product_id );
 	$base_price   = get_post_meta( $product_id, FS_Config::get_meta( 'price' ), 1 );
 	$action_price = get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), 1 );
-	if ( empty( $action_price ) ) {
-		return false;
-	}
+
 	if ( floatval( $action_price ) > 0 && floatval( $action_price ) < floatval( $base_price ) ) {
 		return true;
-	} else {
-		return false;
+	} elseif ( get_post_meta( $product_id, FS_Config::get_product_field( 'label_promotion' )['key'], 1 ) ) {
+		return true;
 	}
 }
 
@@ -1218,7 +1221,11 @@ function fs_currency( $product_id = 0 ) {
  * @return string
  */
 function fs_option( $option_name, $default = '' ) {
-	$option = get_option( $option_name, $default );
+	$option = get_option( $option_name );
+
+	if ( empty( $option ) && ! empty( $default ) ) {
+		$option = $default;
+	}
 
 	return $option;
 }
@@ -1289,35 +1296,80 @@ function fs_attr_group_filter( $group, $type = 'option', $option_default = 'Вы
 	echo $fs_filter->attr_group_filter( $group, $type, $option_default );
 }
 
+/**
+ * Displays a price slider.
+ *
+ * - it is recommended to call only on the page of the archive of goods
+ *   and taxonomy of the category of goods
+ *
+ */
 function fs_range_slider() {
 	echo fs_frontend_template( 'widget/jquery-ui-slider/ui-slider', array(
-		'price_start' => isset( $_GET['price_start'] ) ? intval( $_GET['price_start'] ) : 0,
-		'price_max'   => isset( $_GET['price_end'] ) ? intval( $_GET['price_end'] ) : fs_price_max( false ),
+		'price_start' => ! empty( $_GET['price_start'] ) ? intval( $_GET['price_start'] ) : fs_price_min(),
+		'price_max'   => ! empty( $_GET['price_end'] ) ? intval( $_GET['price_end'] ) : fs_price_max(),
 		'currency'    => fs_currency()
-
 	) );
-
 }
 
 /**
  * Функция получает значение максимальной цены установленной на сайте
  *
+ * @return float|int|null|string
+ */
+function fs_price_max() {
+	global $wpdb;
+
+	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+		$term_id   = get_queried_object_id();
+		$post_type = FS_Config::get_data( 'post_type' );
+		$sql       = "SELECT max(cast({$wpdb->postmeta}.meta_value as unsigned)) FROM {$wpdb->posts} 
+LEFT JOIN {$wpdb->term_relationships} ON ({$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id) 
+LEFT JOIN {$wpdb->term_taxonomy} ON ({$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_taxonomy_id) 
+LEFT JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)  
+WHERE {$wpdb->term_taxonomy}.term_id IN ({$term_id}) 
+AND {$wpdb->posts}.post_type='{$post_type}' 
+AND {$wpdb->posts}.post_status='publish' 
+AND {$wpdb->postmeta}.meta_key='%s'";
+		$max       = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
+	} else {
+		$sql = "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
+		$max = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
+	}
+
+	return (float) $max;
+}
+
+
+/**
+ * Функция получает значение минимальной цены установленной на сайте
+ *
  * @param bool $filter
  *
  * @return float|int|null|string
  */
-function fs_price_max( $filter = true ) {
+function fs_price_min() {
 	global $wpdb;
-	$fs_config      = new FS_Config();
-	$meta_value_max = $wpdb->get_var( $wpdb->prepare( "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'", $fs_config->meta['price'] ) );
-	$meta_value_max = ! is_null( $meta_value_max ) ? (float) $meta_value_max : 20000;
-	if ( $filter ) {
-		$max = apply_filters( 'fs_price_format', $meta_value_max );
+
+	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+		$term_id   = get_queried_object_id();
+		$post_type = FS_Config::get_data( 'post_type' );
+		$sql       = "SELECT min(cast({$wpdb->postmeta}.meta_value as unsigned)) FROM {$wpdb->posts}  
+LEFT JOIN {$wpdb->term_relationships} ON ({$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id) 
+LEFT JOIN {$wpdb->term_taxonomy} ON ({$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_taxonomy_id) 
+LEFT JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)  
+WHERE {$wpdb->term_taxonomy}.term_id IN ({$term_id}) 
+AND {$wpdb->posts}.post_type='{$post_type}' 
+AND {$wpdb->posts}.post_status='publish' 
+AND {$wpdb->postmeta}.meta_key='%s'";
+		$min       = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
 	} else {
-		$max = $meta_value_max;
+		$sql = "SELECT min(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
+		$min = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
 	}
 
-	return $max;
+	$min = floatval( $min );
+
+	return max( 0, $min );
 }
 
 /**
@@ -1594,11 +1646,23 @@ function fs_gallery_images_url( $product_id = 0, $args = array() ) {
  * @return bool
  */
 function fs_is_bestseller( $product_id = 0 ) {
-	$fs_config  = new FS_Config();
 	$product_id = fs_get_product_id( $product_id );
 
-	return get_post_meta( $product_id, $fs_config->meta['label_bestseller'], 1 ) ? true : false;
+	return get_post_meta( $product_id, FS_Config::get_product_field( 'label_bestseller' )['key'], 1 ) ? true : false;
 
+}
+
+/**
+ * Проверяет установлена ли у товара настройка "новинка"
+ *
+ * @param int $product_id
+ *
+ * @return bool
+ */
+function fs_is_novelty( $product_id = 0 ) {
+	$product_id = fs_get_product_id( $product_id );
+
+	return get_post_meta( $product_id, FS_Config::get_product_field( 'label_novelty' )['key'], 1 ) ? true : false;
 }
 
 /**
@@ -1788,7 +1852,11 @@ function fs_wishlist_widget( $html_attr = array() ) {
 		'data-fs-element' => 'whishlist-widget'
 	);
 	$html_attr = fs_parse_attr( $html_attr, $attr_set );
-	printf( '<a href="%s" %s>%s</a>', esc_url( fs_wishlist_url() ), $html_attr, $template );
+	if ( $template ) {
+		echo $template;
+	} else {
+		printf( '<a href="%s" %s>%s</a>', esc_url( fs_wishlist_url() ), $html_attr, $template );
+	}
 }
 
 /**
@@ -2250,31 +2318,39 @@ function fs_get_product_id( $product = 0 ) {
  * Выводит метку об акции, популярном товаре, или недавно добавленом
  *
  * @param int $product_id -уникальный ID товара (записи ВП)
- * @param array $labels HTML код метки
- *              могут быть метки типа: 'action','popular','new'
+ * @param array $labels текст метки
+ *
+ * @return null
  */
-function fs_product_label( $product_id = 0, $labels = array() ) {
-	$product_id = fs_get_product_id( $product_id );
-	$args       = wp_parse_args( $labels, array(
-		'action'  => '',
-		'popular' => '',
-		'new'     => ''
-	) );
-	if ( ! empty( $_GET['order_type'] ) ) {
-		if ( $_GET['order_type'] == 'field_action' ) {
-			echo $args['action'];
-		} elseif ( $_GET['order_type'] == 'views_desc' ) {
-			echo $args['popular'];
-		} elseif ( $_GET['order_type'] == 'date_desc' ) {
-			echo $args['new'];
-		}
-	} else {
-		if ( fs_is_action( $product_id ) ) {
-			echo $args['action'];
-		}
+function fs_product_label( $product_id = 0, $labels = [] ) {
+	$product_id     = fs_get_product_id( $product_id );
+	$product_fields = FS_Config::get_product_field();
+
+	if ( ! $product_id || empty( $product_fields ) || ! is_array( $product_fields ) ) {
+		return;
 	}
 
+	$labels = wp_parse_args( $labels, [
+		$product_fields['label_bestseller']['key'] => $product_fields['label_bestseller']['text'],
+		$product_fields['label_promotion']['key']  => $product_fields['label_promotion']['text'],
+		$product_fields['label_novelty']['key']    => $product_fields['label_novelty']['text'],
+	] );
 
+	do_action( 'qm/debug', $labels );
+
+
+	$format = '<span class="fs-label %s">%s</span>';
+
+	if ( fs_is_action( $product_id ) ) {
+		$class = str_replace( '_', '-', $product_fields['label_promotion']['key'] );
+		printf( $format, esc_attr( $class ), esc_html( $labels[ $product_fields['label_promotion']['key'] ] ) );
+	} elseif ( fs_is_bestseller( $product_id ) ) {
+		$class = str_replace( '_', '-', $product_fields['label_bestseller']['key'] );
+		printf( $format, esc_attr( $class ), esc_html( $labels[ $product_fields['label_bestseller']['key'] ] ) );
+	} elseif ( fs_is_novelty( $product_id ) ) {
+		$class = str_replace( '_', '-', $product_fields['label_novelty']['key'] );
+		printf( $format, esc_attr( $class ), esc_html( $labels[ $product_fields['label_novelty']['key'] ] ) );
+	}
 }
 
 /**
@@ -2632,15 +2708,15 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 			// Если включено показывать цену
 			if ( $args['show_price'] ) {
 				if ( ! empty( $variation['action_price'] ) && $variation['price'] > $variation['action_price'] ) {
-					$price        = apply_filters( 'fs_price_format', $variation['price'] );
-					$price        = apply_filters( 'fs_price_filter', $product_id, $price );
-					$action_price = apply_filters( 'fs_price_format', $variation['action_price'] );
-					$action_price = apply_filters( 'fs_price_filter', $product_id, $action_price );
+					$price        = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
+					$price        = apply_filters( 'fs_price_format', $price );
+					$action_price = apply_filters( 'fs_price_filter', $product_id, $variation['action_price'] );
+					$action_price = apply_filters( 'fs_price_format', $action_price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $action_price ), esc_attr( fs_currency() ) ) . '</span>';
 					echo '<del class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</del>';
 				} else {
-					$price = apply_filters( 'fs_price_format', $variation['price'] );
-					$price = apply_filters( 'fs_price_filter', $product_id, $price );
+					$price = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
+					$price = apply_filters( 'fs_price_format', $price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</span>';
 				}
 			}
@@ -2909,7 +2985,7 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
 }
 
 /**
- * Получение поля таксономии
+ * Getting a taxonomy field
  *
  * @param string $meta_key
  * @param int $term_id
@@ -2917,12 +2993,14 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
  *
  * @return mixed
  */
-function fs_get_term_meta( $meta_key = '', $term_id = 0, $type = 1 ) {
+function fs_get_term_meta( string $meta_key, $term_id = 0, $type = 1 ) {
 	if ( ! $term_id ) {
 		$term_id = get_queried_object_id();
 	}
 
-	$meta_key = apply_filters( 'fs_term_meta_name', '_content' );
+	if ( ! FS_Config::is_default_locale() ) {
+		$meta_key = $meta_key . '__' . get_locale();
+	}
 
 	return get_term_meta( $term_id, $meta_key, $type );
 }
@@ -3010,7 +3088,7 @@ function fs_get_up_sells( $product_id = 0, $limit = - 1 ) {
 	$up_sells   = get_post_meta( $product_id, FS_Config::get_meta( 'up_sell', 0 ) );
 
 	if ( ! is_array( $up_sells ) || empty( $up_sells ) ) {
-		return null;
+		return new WP_Query();
 	}
 
 	$up_sells = array_shift( $up_sells );
@@ -3152,3 +3230,22 @@ if ( ! function_exists( 'fs_form_submit' ) ) {
 		echo '<button type="submit" ' . fs_parse_attr( $args ) . '>' . $text . '</button>';
 	}
 }
+
+if ( ! function_exists( 'fs_localize_meta_key' ) ) {
+	/**
+	 * Localizes the meta field key
+	 *
+	 * @param string $meta_key
+	 *
+	 * @return string
+	 */
+	function fs_localize_meta_key( $meta_key = '' ) {
+		if ( fs_option( 'fs_multi_language_support' ) && get_locale() != FS_Config::default_locale() ) {
+			$meta_key = $meta_key . '__' . get_locale();
+		}
+
+		return $meta_key;
+	}
+}
+
+

@@ -156,6 +156,43 @@
         margin: 0;
       }
 
+      .fs-childs-list {
+        margin: 0;
+
+        li {
+          display: inline-flex;
+          margin-right: 15px;
+        }
+      }
+
+      .remove-att {
+        cursor: pointer;
+        color: #007cba;
+        background-color: #f1f1f1;
+        padding: 0;
+        margin-left: 8px;
+
+        &:hover {
+          background-color: #e5e5e5;
+        }
+
+      }
+
+      .fs-add-attributes {
+        margin: 15px 0;
+
+        .wp-list-table {
+          tr {
+            td {
+              input {
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+
+
       .fs-deactive-variant {
         display: inline-block;
         width: auto;
@@ -1275,9 +1312,11 @@ progress {
 
 }
 
-.fast-shop-settings {
+.f-shop-settings {
   textarea {
-    width: 100%;
+    width: 351px;
+    max-width: 100%;
+    height: 105px;
   }
 }
 
@@ -1350,26 +1389,30 @@ td.fs_menu_order.column-fs_menu_order {
 
 .widget-content .fs-widget-wrapper {
   padding: 15px 0;
-  .form-group{
+
+  .form-group {
     display: flex;
     margin-bottom: 12px;
     align-items: center;
-    input{
+
+    input {
       border: 1px solid #ddd;
       height: 32px;
       padding: 0 10px;
       width: 100%;
     }
-    &__sub{
+
+    &__sub {
 
       padding: 0 10px;
       display: flex;
       align-items: center;
       margin: 0;
       border: 1px solid #ddd;
-      box-sizing:border-box;
+      box-sizing: border-box;
       height: 32px;
-      &:first-child{
+
+      &:first-child {
         text-transform: uppercase;
         border-right: 0;
         background-color: #ddd;
@@ -1377,6 +1420,7 @@ td.fs_menu_order.column-fs_menu_order {
       }
     }
   }
+
   label {
     font-weight: 500;
     margin-bottom: 6px;
@@ -1397,12 +1441,15 @@ td.fs_menu_order.column-fs_menu_order {
     display: flex;
     margin-bottom: 5px;
   }
+
   &__title {
     outline: none;
-    &:focus{
+
+    &:focus {
       outline: none;
-      box-shadow:none;
+      box-shadow: none;
     }
+
     &.nav-tab-active {
       background-color: #fff;
       color: #444;
@@ -1419,16 +1466,17 @@ td.fs_menu_order.column-fs_menu_order {
   }
 }
 
-#wpadminbar #wp-admin-bar-fs-top>.ab-item:before {
+#wpadminbar #wp-admin-bar-fs-top > .ab-item:before {
   content: "\f174";
   top: 2px
 }
 
-.fs-select-products-dialog{
-  >ul{
+.fs-select-products-dialog {
+  > ul {
     max-height: 400px;
     overflow: auto;
-    >li{
+
+    > li {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1436,34 +1484,39 @@ td.fs_menu_order.column-fs_menu_order {
       border-bottom: 1px solid #eee;
       font-size: 12px;
 
-      padding: 5px  5px 5px 0;
+      padding: 5px 5px 5px 0;
 
       margin: 0;
-      &.active{
+
+      &.active {
         opacity: 0.5;
       }
-      button.button{
+
+      button.button {
         height: 22px;
         line-height: 1;
       }
-      span{
+
+      span {
         margin-right: 10px;
       }
     }
   }
 }
 
-.fs-upsell-wrapper{
+.fs-upsell-wrapper {
   max-width: 600px;
-  >li{
+
+  > li {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #eee;
     align-items: center;
     padding: 5px 0;
     margin: 0;
-    .button-cancel{
-      &:hover{
+
+    .button-cancel {
+      &:hover {
         background: #ff5c5c;
         color: #fff;
         border: 1px solid #ff5c5c;
@@ -1476,3 +1529,9 @@ td.fs_menu_order.column-fs_menu_order {
   max-height: 200px;
   overflow: auto;
 }
+
+.fs-field-after {
+  margin: 11px 0 0 0;
+  font-size: 13px;
+}
+

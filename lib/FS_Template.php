@@ -9,6 +9,9 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Extension\StringLoaderExtension;
+use Twig\Extension\DebugExtension;
+use \Twig\TwigFilter;
+use Twig\TwigFunction;
 
 class FS_Template {
 	protected $environment;
@@ -28,12 +31,32 @@ class FS_Template {
 		] );
 		$this->environment->addExtension( new StringLoaderExtension() );
 
+		// Add function "__"
+		$function_localize = new TwigFunction( '__', function ( $string ) {
+			return __( $string, 'f-shop' );
+		} );
+		$this->environment->addFunction( $function_localize );
+
+		//  Add filter "clean_number"
+		$filter_clean_number = new TwigFilter( 'clean_number', function ( $string ) {
+			return preg_replace( "/[^0-9]/", '', $string );
+		} );
+		$this->environment->addFilter( $filter_clean_number );
+
+		//  Add filter "html_entity_decode"
+		$filter_html_entity_decode = new TwigFilter( 'html_entity_decode', function ( $string ) {
+			return html_entity_decode( $string );
+		} );
+		$this->environment->addFilter( $filter_html_entity_decode );
+
 		if ( current_user_can( 'administrator' ) ) {
 			$this->environment->addExtension( new DebugExtension() );
 		}
 	}
 
 	/**
+	 * Создание шаблона из переданной строки
+	 *
 	 * @param string $html
 	 * @param array $params
 	 *

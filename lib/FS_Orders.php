@@ -56,10 +56,7 @@ class FS_Orders {
 		$order_id   = $this->get_last_order_id();
 		$order      = new FS_Orders;
 		$order_info = $order->get_order( $order_id );
-		$amount     = floatval( $order_info->summa );
-		$amount     = apply_filters( 'fs_price_format', $amount );
-
-		return $amount;
+		return floatval( $order_info->summa );
 	}
 
 	/**
@@ -347,16 +344,7 @@ Good luck!', 'f-shop' );
 			'meta_value'  => $user_id,
 		) );
 
-		$orders = get_posts( $args );
-		$data   = [];
-		if ( $orders ) {
-			foreach ( $orders as $order ) {
-				$order->data = self::set_order_data( $order->ID );
-				$data[]      = $order;
-			}
-		}
-
-		return $orders;
+		return new \WP_Query($args);
 	}
 
 	/**
