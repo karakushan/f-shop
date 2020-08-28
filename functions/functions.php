@@ -1318,20 +1318,24 @@ function fs_range_slider() {
  * @return float|int|null|string
  */
 function fs_price_max() {
-	global $wpdb;
+	global $wpdb, $wp_query;
+	$tax = FS_Config::get_data( 'product_taxonomy' );
 
-	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-		$term_id   = get_queried_object_id();
-		$post_type = FS_Config::get_data( 'post_type' );
-		$sql       = "SELECT max(cast({$wpdb->postmeta}.meta_value as unsigned)) FROM {$wpdb->posts} 
-LEFT JOIN {$wpdb->term_relationships} ON ({$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id) 
-LEFT JOIN {$wpdb->term_taxonomy} ON ({$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_taxonomy_id) 
-LEFT JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)  
-WHERE {$wpdb->term_taxonomy}.term_id IN ({$term_id}) 
-AND {$wpdb->posts}.post_type='{$post_type}' 
-AND {$wpdb->posts}.post_status='publish' 
-AND {$wpdb->postmeta}.meta_key='%s'";
-		$max       = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
+	if ( is_tax( $tax ) ) {
+		$query  = new WP_Query( [ $tax => $wp_query->query_vars[ $tax ], 'posts_per_page' => - 1 ] );
+		$prices = [];
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			$price      = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 );
+			$price_sale = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'action_price' ), 1 );
+			if ( $price_sale && $price_sale < $price ) {
+				array_push( $prices, $price_sale );
+			} else {
+				array_push( $prices, $price );
+			}
+		}
+		wp_reset_query();
+		$max = max( $prices );
 	} else {
 		$sql = "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
 		$max = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
@@ -1349,28 +1353,31 @@ AND {$wpdb->postmeta}.meta_key='%s'";
  * @return float|int|null|string
  */
 function fs_price_min() {
-	global $wpdb;
+	global $wpdb, $wp_query;
+	$tax = FS_Config::get_data( 'product_taxonomy' );
 
-	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-		$term_id   = get_queried_object_id();
-		$post_type = FS_Config::get_data( 'post_type' );
-		$sql       = "SELECT min(cast({$wpdb->postmeta}.meta_value as unsigned)) FROM {$wpdb->posts}  
-LEFT JOIN {$wpdb->term_relationships} ON ({$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id) 
-LEFT JOIN {$wpdb->term_taxonomy} ON ({$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_taxonomy_id) 
-LEFT JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)  
-WHERE {$wpdb->term_taxonomy}.term_id IN ({$term_id}) 
-AND {$wpdb->posts}.post_type='{$post_type}' 
-AND {$wpdb->posts}.post_status='publish' 
-AND {$wpdb->postmeta}.meta_key='%s'";
-		$min       = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
+	if ( is_tax( $tax ) ) {
+		$query  = new WP_Query( [ $tax => $wp_query->query_vars[ $tax ], 'posts_per_page' => - 1 ] );
+		$prices = [];
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			array_push( $prices, get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 ) );
+			array_push( $prices, get_post_meta( get_the_ID(), FS_Config::get_meta( 'action_price' ), 1 ) );
+		}
+		wp_reset_query();
+
+		$min = count( $prices ) ? min( $prices ) : 0;
+
 	} else {
 		$sql = "SELECT min(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
-		$min = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
+		$min = (float) $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
 	}
 
-	$min = floatval( $min );
+	if ( $min < 0 ) {
+		$min = 0;
+	}
 
-	return max( 0, $min );
+	return (float) $min;
 }
 
 /**
@@ -1522,13 +1529,13 @@ function fs_frontend_template( $template, $args = array(), $extension = '.php' )
 function fs_get_current_user() {
 	$user = wp_get_current_user();
 	if ( $user->exists() ) {
-		$profile_update  = empty( $user->profile_update ) ? strtotime( $user->user_registered ) : $user->profile_update;
-		$user->email     = $user->user_email;
-		$user->phone     = get_user_meta( $user->ID, 'phone', 1 );
-		$user->city      = get_user_meta( $user->ID, 'city', 1 );
-		$user->adress    = get_user_meta( $user->ID, 'adress', 1 );
-		$user->delivery_addresses    = get_user_meta( $user->ID, 'delivery_addresses', 1 );  
-		$user->birth_day = get_user_meta( $user->ID, 'birth_day', 1 );
+		$profile_update           = empty( $user->profile_update ) ? strtotime( $user->user_registered ) : $user->profile_update;
+		$user->email              = $user->user_email;
+		$user->phone              = get_user_meta( $user->ID, 'phone', 1 );
+		$user->city               = get_user_meta( $user->ID, 'city', 1 );
+		$user->adress             = get_user_meta( $user->ID, 'adress', 1 );
+		$user->delivery_addresses = get_user_meta( $user->ID, 'delivery_addresses', 1 );
+		$user->birth_day          = get_user_meta( $user->ID, 'birth_day', 1 );
 		if ( ! empty( $user->birth_day ) ) {
 			$user->birth_day = $user->birth_day;
 		}

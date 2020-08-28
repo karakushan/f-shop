@@ -1,6 +1,8 @@
 <?php
 
 namespace FS;
+use function WP_CLI\Utils\esc_like;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
@@ -462,7 +464,8 @@ Good luck!', 'f-shop' );
 		}
 		global $wpdb;
 		$s       = $_GET['s'];
-		$results = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM %s WHERE meta_value LIKE '%%%s%%'", $wpdb->usermeta, $s ) );
+		$results = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_value LIKE %s", '%'.$s.'%' ) );
+		do_action( 'qm/debug', $results );
 		if ( $results ) {
 			$user_ids = [];
 			foreach ( $results as $result ) {
