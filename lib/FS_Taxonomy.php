@@ -67,51 +67,32 @@ class FS_Taxonomy {
 			$parent = 0;
 		}
 
+		$level ++;
+
 		$product_categories = get_terms( [
 			'taxonomy'     => $this->taxonomy_name,
 			'hide_empty'   => true,
 			'parent'       => $parent,
 			'hierarchical' => true,
 		] );
-		$arr_url            = urldecode( $_SERVER['QUERY_STRING'] );
-		$nonce              = wp_create_nonce( 'f-shop' );
-		parse_str( $arr_url, $url );
-		$url['categories'] = explode( ';', $url['categories'] );
-		$url['categories'] = array_map( 'intval', $url['categories'] );
-		if ( ( $key = array_search( 0, $url['categories'] ) ) !== false ) {
-			unset( $url['categories'][ $key ] );
-		}
+
+		$current_tax = get_queried_object_id();
+
 		echo '<ul class="' . esc_attr( $args['wrapper_class'] ) . '">';
+
 		foreach ( $product_categories as $product_category ) {
-			$checked = false;
-
-			if ( ! in_array( $product_category->term_id, $url['categories'] ) ) {
-				$categories = array_merge( $url["categories"], [ $product_category->term_id => $product_category->term_id ] );
-			} else {
-				$categories = $url['categories'];
-				$checked    = true;
+			if ( ! is_object( $product_category ) ) {
+				continue;
 			}
-
-			$value = add_query_arg( array(
-				'fs_filter'  => $nonce,
-				'categories' => implode( ';', $categories )
-			) );
-
-			if ( ( $key = array_search( $product_category->term_id, $categories ) ) !== false ) {
-				unset( $categories[ $key ] );
-			}
-
-			$redirect = add_query_arg( array(
-				'fs_filter'  => $nonce,
-				'categories' => implode( ';', $categories )
-			) );
 
 			$category_icon = fs_get_category_icon( $product_category->term_id, 'full', [ 'default' => false ] );
 
+			$parent_term_id = get_term_field( 'parent', $current_tax );
 
-			echo '<li>';
-			echo '<input type="checkbox" name="categories[' . esc_attr( $product_category->term_id ) . ']" id="fs-category-filter-' . esc_attr( $product_category->slug ) . '" data-fs-action="filter" data-fs-redirect="' . esc_url( $redirect ) . '" value="' . esc_url( $value ) . '" ' . checked( $checked, true, false ) . '>';
-			echo '<label for="fs-category-filter-' . $product_category->slug . '">' . $category_icon . esc_html( $product_category->name ) . '</label>';
+			$link_class = is_tax( 'catalog' ) && ( get_queried_object_id() == $product_category->term_id || $parent_term_id == $product_category->term_id  ) ? 'active' : '';
+
+			echo '<li class="level-' . esc_attr( $level ) . '">';
+			echo '<a href="' . esc_url( get_term_link( $product_category ) ) . '" class="level-' . esc_attr( $level ) . '-link ' . esc_attr( $link_class ) . '">' . $category_icon . esc_html( $product_category->name ) . '</a>';
 			$product_categories_child = get_terms( [
 				'taxonomy'     => $this->taxonomy_name,
 				'hide_empty'   => false,
@@ -119,7 +100,7 @@ class FS_Taxonomy {
 				'hierarchical' => true
 			] );
 			if ( $product_categories_child ) {
-				$level ++;
+
 				$this->product_category_filter( $product_category->term_id, [], $level );
 			}
 			echo '</li>';

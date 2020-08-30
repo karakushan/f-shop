@@ -641,9 +641,9 @@ class FS_Ajax_Class
             if (fs_option('fs_test_mode')) {
                 //Отсылаем письмо с данными заказа заказчику
                 $admin_email = get_bloginfo('admin_email');
-                $user_email_message = $fs_template->get('mail/user-create-order', $mail_data);
-                FS_Form::send_email($admin_email, $customer_mail_subject, $user_email_message);
+		        $user_email_message = $fs_template->get('mail/user-create-order', $mail_data);
 
+	            FS_Form::send_email($admin_email, $customer_mail_subject, $user_email_message);
 
                 //Отсылаем письмо с данными заказа на почту указанную в настроках для оповещения о заказах
                 $admin_mail_subject = fs_option('admin_mail_header', sprintf(__('Order goods on the site "%s"', 'f-shop'), get_bloginfo('name')));
