@@ -2345,9 +2345,6 @@ function fs_product_label( $product_id = 0, $labels = [] ) {
 		$product_fields['label_novelty']['key']    => $product_fields['label_novelty']['text'],
 	] );
 
-	do_action( 'qm/debug', $labels );
-
-
 	$format = '<span class="fs-label %s">%s</span>';
 
 	if ( fs_is_action( $product_id ) ) {

@@ -404,19 +404,29 @@ class FS_Product {
 	 */
 	public function product_rating( $product_id = 0, $args = array() ) {
 		$product_id = fs_get_product_id( $product_id );
-		$args       = wp_parse_args( $args, array(
-			'wrapper_class' => 'fs-rating',
-			'stars'         => 5,
-			'default_value' => self::get_average_rating( $product_id ),
-			'star_class'    => 'fa fa-star'
+
+		$args = wp_parse_args( $args, array(
+			'wrapper_class'     => 'fs-rating',
+			'before'            => '',
+			'after'             => '',
+			'stars'             => 5,
+			'default_value'     => self::get_average_rating( $product_id ),
+			'star_class'        => 'far fa-star',
+			'star_active_class' => 'fas fa-star',
+			'echo'              => true
 		) );
+		if ( ! $args['echo'] ) {
+			ob_start();
+		}
 		?>
         <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>">
+			<?php if ( $args['before'] )
+				echo $args['before'] ?>
             <div class="star-rating" data-fs-element="rating">
 				<?php if ( $args['stars'] ) {
 					for ( $count = 1; $count <= $args['stars']; $count ++ ) {
 						if ( $count <= $args['default_value'] ) {
-							$star_class = $args['star_class'] . ' active';
+							$star_class = $args['star_active_class'] . ' active';
 						} else {
 							$star_class = $args['star_class'];
 						}
@@ -427,8 +437,13 @@ class FS_Product {
                        class="rating-value"
                        value="<?php echo esc_attr( $args['default_value'] ) ?>">
             </div>
+			<?php if ( $args['after'] )
+				echo $args['after'] ?>
         </div>
 		<?php
+		if ( ! $args['echo'] ) {
+			return ob_get_clean();
+		}
 	}
 
 	/**
@@ -782,11 +797,6 @@ class FS_Product {
 
 		) );
 
-		// Get the comment template
-		ob_start();
-		comments_template();
-		$comments_template = ob_get_clean();
-
 		// Get the product attributes
 		ob_start();
 		fs_the_atts_list( $product_id, $args['attributes_args'] );
@@ -808,7 +818,7 @@ class FS_Product {
 			),
 			'reviews'     => array(
 				'title'   => __( 'Reviews', 'f-shop' ),
-				'content' => $comments_template
+				'content' => fs_frontend_template( 'product/tabs/comments' )
 			)
 
 		);
@@ -931,22 +941,21 @@ class FS_Product {
 
 
 		foreach ( $save_meta_keys as $key => $field_name ) {
-			$name = $key;
 			if ( is_array( $field_name ) && ! empty( $field_name['multilang'] ) ) {
-				$name = $key . '__' . get_locale();
+				$field_name = $field_name . '__' . get_locale();
 			}
 
 			// Skip fields that do not exist in the global variable $_POST
-			if ( ! isset( $_POST[ $name ] ) ) {
-				delete_post_meta( $post_id, $name );
+			if ( ! isset( $_POST[ $field_name ] ) ) {
+				delete_post_meta( $post_id, $field_name );
 				continue;
 			}
 
 			// Modify the saved field through the filter'fs_filter_meta_field'
-			$value = apply_filters( 'fs_filter_meta_field', $_POST[ $name ], $name, $post );
-			$value = apply_filters( 'fs_filter_meta_field__' . $field_name, $value, $name, $post );
+			$value = apply_filters( 'fs_filter_meta_field', $_POST[ $field_name ], $field_name, $post );
+			$value = apply_filters( 'fs_filter_meta_field__' . $field_name, $value, $field_name, $post );
 
-			update_post_meta( $post_id, $name, $value );
+			update_post_meta( $post_id, $field_name, $value );
 		}
 
 		do_action( 'fs_after_save_meta_fields', $post_id );
