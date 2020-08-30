@@ -107,8 +107,6 @@ class FS_Order {
 		$this->status = get_post_status_object( $order->post_status )->label;
 
 		$this->date = $order->post_date;
-		
-		do_action( 'qm/debug', get_post_meta( $order->ID ) );
 	}
 
 	/**
