@@ -636,15 +636,20 @@ function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args 
  * @return int
  */
 function fs_product_count( $echo = true ) {
+	$cart_items = FS_Cart::get_cart() && is_array( FS_Cart::get_cart() )
+		? FS_Cart::get_cart() : [];
+	$count      = 0;
 
-	$count = FS_Cart::get_cart() && is_array( FS_Cart::get_cart() )
-		? count( FS_Cart::get_cart() )
-		: 0;
+	foreach ( $cart_items as $cart_item ) {
+		if ( isset( $cart_item['count'] ) ) {
+			$count += (int) $cart_item['count'];
+		}
+	}
 
 	if ( $echo ) {
-		echo esc_attr( $count );
+		echo esc_html( $count );
 	} else {
-		return $count;
+		return (int) $count;
 	}
 }
 
