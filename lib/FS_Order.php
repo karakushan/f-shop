@@ -97,7 +97,7 @@ class FS_Order {
 			$this->delivery_method = get_term( $delivery_method['method'], FS_Config::get_data( 'product_del_taxonomy' ) );
 
 			if ( is_object( $this->delivery_method ) ) {
-				$this->delivery_method->cost = apply_filters( 'fs_price_format', (float)get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) );
+				$this->delivery_method->cost             = apply_filters( 'fs_price_format', (float) get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) );
 				$this->delivery_method->delivery_address = $delivery_method['secession'];
 			}
 		}

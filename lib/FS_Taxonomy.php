@@ -89,7 +89,7 @@ class FS_Taxonomy {
 
 			$parent_term_id = get_term_field( 'parent', $current_tax );
 
-			$link_class = is_tax( 'catalog' ) && ( get_queried_object_id() == $product_category->term_id || $parent_term_id == $product_category->term_id  ) ? 'active' : '';
+			$link_class = is_tax( 'catalog' ) && ( get_queried_object_id() == $product_category->term_id || $parent_term_id == $product_category->term_id ) ? 'active' : '';
 
 			echo '<li class="level-' . esc_attr( $level ) . '">';
 			echo '<a href="' . esc_url( get_term_link( $product_category ) ) . '" class="level-' . esc_attr( $level ) . '-link ' . esc_attr( $link_class ) . '">' . $category_icon . esc_html( $product_category->name ) . '</a>';
@@ -222,14 +222,14 @@ class FS_Taxonomy {
 				switch ( $url['order_type'] ) {
 					case 'price_asc': //sort by price in ascending order
 						$meta_query['price'] = array(
-							'key'  => FS_Config::get_meta( 'real_price' ),
+							'key'  => FS_Config::get_meta( 'price' ),
 							'type' => 'DECIMAL'
 						);
 						$orderby['price']    = 'ASC';
 						break;
 					case 'price_desc': //sort by price in a falling order
 						$meta_query['price'] = array(
-							'key'  => FS_Config::get_meta( 'real_price' ),
+							'key'  => FS_Config::get_meta( 'price' ),
 							'type' => 'DECIMAL'
 						);
 						$orderby['price']    = 'DESC';

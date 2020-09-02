@@ -958,6 +958,11 @@ class FS_Product {
 			update_post_meta( $post_id, $field_name, $value );
 		}
 
+		// Set the number of views for a new product 0
+		if ( ! get_post_meta( $post_id, 'views', 1 ) ) {
+			update_post_meta( $post_id, 'views', 0 );
+		}
+
 		do_action( 'fs_after_save_meta_fields', $post_id );
 	}
 
