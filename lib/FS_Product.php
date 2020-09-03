@@ -55,6 +55,15 @@ class FS_Product {
 
 	}
 
+	public static function product_comment_likes( $comment_id = 0 ) {
+		$comment_like_count = (int) get_comment_meta( $comment_id, 'fs_like_count', 1 ); ?>
+        <div class="comment-like" data-fs-element="comment-like"
+             data-comment-id="<?php echo esc_attr( $comment_id ); ?>">
+            <i class="icon icon-like"></i> <span class="comment-like__count"
+                                                 data-fs-element="comment-like-count"><?php echo esc_html( $comment_like_count ); ?></span>
+        </div>
+	<?php }
+
 	/**
 	 * Локализируем ссылки товаров
 	 *
@@ -189,7 +198,8 @@ class FS_Product {
 			}
 		}
 
-		echo ' <script type="application/ld+json">';
+		echo '
+        <script type="application/ld+json">';
 		echo json_encode( $schema );
 		echo ' </script>';
 
@@ -256,7 +266,8 @@ class FS_Product {
 
 	// Выводит скрытый прелоадер перед полями метабокса
 	function before_product_meta() {
-		echo '<div class="fs-mb-preloader"></div>';
+		echo '
+        <div class="fs-mb-preloader"></div>';
 	}
 
 	/**
