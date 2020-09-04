@@ -3310,5 +3310,5 @@ function fs_comment_single( $comment, $args, $depth ) {
             </div>
         </div><!-- .comment-content -->
     </article><!-- .comment-body -->
-	<?
+	<?php
 }
