@@ -1995,10 +1995,10 @@ function fs_the_atts_list( $post_id = 0, $args = array() ) {
 			$second_term  = [];
 			foreach ( $parent as $p ) {
 				$s             = get_term( $p, $fs_config->data['features_taxonomy'] );
-				$second_term[] = $s->name;
+				$second_term[] = apply_filters( 'the_title', $s->name );
 			}
 
-			$list .= '<li><span class="first">' . $primary_term->name . ': </span><span class="last">' . implode( ', ', $second_term ) . ' </span></li > ';
+			$list .= '<li><span class="first">' . apply_filters('the_title',$primary_term->name) . ': </span><span class="last">' . implode( ', ', $second_term ) . ' </span></li > ';
 
 
 		}
