@@ -71,6 +71,34 @@ function fs_get_attribute( $attr_id, $product_id = 0, $args = array() ) {
 	return $atts;
 }
 
+
+/**
+ * Remove the attributes from the wp_query query specified in the filter
+ *
+ * @param $arr
+ *
+ * @return mixed
+ */
+function fs_query_exclude_filter_attributes( $arr ) {
+
+	foreach ( $arr as $k => $a ) {
+		if ( $k == 'terms' ) {
+			foreach ( $a as $key => $term ) {
+				if ( in_array( $term, $_GET['attributes'] ) ) {
+					unset( $arr[ $k ][ $key ] );
+				}
+			}
+		}
+		if ( is_array( $a ) && is_numeric( $k ) ) {
+			foreach ( $a as $array ) {
+				fs_query_exclude_filter_attributes( $array );
+			}
+		}
+	}
+
+	return $arr;
+}
+
 /**
  * Получает термины постов выводимых на текущей странице, нужно указать айди родительского термина
  *
@@ -81,46 +109,68 @@ function fs_get_attribute( $attr_id, $product_id = 0, $args = array() ) {
  * @return array массив объектов поста
  */
 function fs_current_screen_attributes( $group_id = 0, $args = array() ) {
-	$fs_config=new FS_Config();
-	$atts = [];
-	$args = wp_parse_args( $args, array(
-		'taxonomy'   => $fs_config->data['features_taxonomy'],
+	$attributes = [];
+	$args       = wp_parse_args( $args, array(
+		'taxonomy'   => FS_Config::get_data( 'features_taxonomy' ),
 		'parent'     => $group_id,
 		'hide_empty' => false
 	) );
 	if ( is_tax() ) {
-		global $wp_query;
-		$post_args                    = $wp_query->query;
+		global $wp_query, $post;
+		$post_args                    = [];
 		$post_args ['posts_per_page'] = - 1;
 		$post_args ['post_type']      = 'product';
-		$posts                        = get_posts( $post_args );
-		if ( $posts ) {
-			foreach ( $posts as $post ) {
-				$post_terms = get_the_terms( $post, $fs_config->data['features_taxonomy'] );
+		$post_args ['tax_query']      = [
+			'relation' => 'AND',
+			[
+				'taxonomy'         => FS_Config::get_data( 'product_taxonomy' ),
+				'field'            => 'id',
+				'operator'         => 'IN',
+				'terms'            => get_queried_object_id(),
+				'include_children' => true
+			]
+		];
+
+		$post_args = apply_filters( 'fs_current_screen_attributes_args', $post_args );
+
+		$posts = new WP_Query( apply_filters( 'fs_current_screen_attributes_args', $post_args ) );
+
+		if ( $posts->have_posts() ) {
+			while ( $posts->have_posts() ) {
+				$posts->the_post();
+				$post_terms = get_the_terms( $post, FS_Config::get_data( 'features_taxonomy' ) );
 				if ( $post_terms ) {
 					foreach ( $post_terms as $post_term ) {
 						if ( $post_term->parent != $group_id ) {
 							continue;
 						}
-						$atts[] = $post_term->term_id;
+						$attributes[] = $post_term->term_id;
 					}
 				}
-//				fs_debug_data( $post_terms, '$post_terms', 'print_r' );
-			}
-			if ( count( $atts ) ) {
-				$atts            = array_unique( $atts );
-				$args['include'] = $atts;
-				$atts            = get_terms( $args );
 			}
 		}
+		wp_reset_query();
+		if ( count( $attributes ) ) {
+			$attributes      = array_unique( $attributes );
+			$args['include'] = $attributes;
+			$attributes      = get_terms( $args );
+		}
+
 	} else {
-		$atts = get_terms( $args );
+		$attributes = get_terms( $args );
 	}
 
-	return $atts;
+	return $attributes;
 }
 
-// select фильтр сортировки по таксономии
+/**
+ * Select filter sort by taxonomy
+ *
+ * @param string $taxonomy
+ * @param string $first_option
+ *
+ * @return string
+ */
 function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сделайте выбор' ) {
 	$manufacturers = get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => false ) );
 	$filter        = '';
@@ -145,8 +195,14 @@ function fs_taxonomy_select_filter( $taxonomy = 'catalog', $first_option = 'сд
 }
 
 
-// селект фильтр для фильтрования товаров по наличию
-function fs_aviable_select_filter( $first_option = 'сделайте выбор' ) {
+/**
+ * Filter for sorting by product availability
+ *
+ * @param string $first_option
+ *
+ * @return string
+ */
+function fs_available_select_filter( $first_option = 'сделайте выбор' ) {
 	$filter        = '';
 	$aviable_types = array(
 		'aviable'       => array( 'name' => __( 'in stock', 'f-shop' ) ),
@@ -174,21 +230,18 @@ function fs_aviable_select_filter( $first_option = 'сделайте выбор'
 
 
 /**
- * Функция выводит фильтр по атрибутам товара
+ * The function displays a filter by product attributes
  *
  * @param $group_id
  * @param array $args
  */
-
 function fs_attr_filter( $group_id, $args = array() ) {
-	$fs_config=new FS_Config();
-	$default = array(
+	$fs_config = new FS_Config();
+	$default   = array(
 		'redirect'            => true,
 		'container'           => 'ul',
 		'childs'              => false,
-		// выводить также подгруппы (по умолчанию нет)
 		'childs_class'        => 'child',
-		// css класс подгруппы
 		'container_class'     => 'fs-attr-filter',
 		'container_id'        => 'fs-attr-filter-' . $group_id,
 		'input_wrapper_class' => 'fs-checkbox-wrapper',
@@ -200,7 +253,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 		'current_screen'      => false
 		// тип отображения, по умолчанию normal - обычные чекбоксы (color - квадратики с цветом, image - изображения)
 	);
-	$args    = wp_parse_args( $args, $default );
+	$args      = wp_parse_args( $args, $default );
 
 	$terms_args = array(
 		'taxonomy'   => $args['taxonomy'],
@@ -283,7 +336,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 
 			$label_before_text = '';
 			if ( $args['type'] == 'color' ) {
-				$label_before_text = '<span class="fs-color-box" data-toggle="tooltip" title="' . $term->name . '" style="' . esc_attr( $color_box_style ) . '"></span>';
+				$label_before_text = '<span class="fs-color-box" data-toggle="tooltip" title="' . esc_attr( apply_filters( 'the_title', $term->name ) ) . '" style="' . esc_attr( $color_box_style ) . '"></span>';
 			}
 
 			echo '<label for="check-' . esc_attr( $term->slug ) . '"  class="' . esc_attr( $args['label_class'] ) . '">' . $label_before_text . ' ' . $term->name . '</label >';
@@ -345,8 +398,8 @@ function fs_attr_change( $required_atts = array() ) {
 }
 
 function fs_list_product_att_group( $product_id, $group_id ) {
-	$fs_config=new FS_Config();
-	$terms = get_the_terms( $product_id, $fs_config->data['features_taxonomy'] );
+	$fs_config = new FS_Config();
+	$terms     = get_the_terms( $product_id, $fs_config->data['features_taxonomy'] );
 	if ( $terms ) {
 		foreach ( $terms as $term ) {
 			if ( $term->parent == $group_id ) {

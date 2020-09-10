@@ -4,12 +4,9 @@ namespace FS;
 /**
  *  Класс для регистрации событий плагина
  */
-class FS_Action_Class {
-
-	protected $config;
+class FS_Action {
 
 	function __construct() {
-		$this->config = new FS_Config();
 		add_action( 'init', array( &$this, 'fs_catch_action' ), 2 );
 		add_action( 'init', array( &$this, 'register_plugin_action' ), 10 );
 		add_action( 'init', array( &$this, 'register_plugin_filters' ), 10 );
@@ -124,7 +121,7 @@ class FS_Action_Class {
 		add_action( 'fs_profile_edit', array( 'FS\FS_Users', 'profile_edit' ), 10, 1 );
 
 
-// Add the field to user profile editing screen.
+		// Add the field to user profile editing screen.
 		add_action(
 			'edit_user_profile',
 			'wporg_usermeta_form_field_birthday'

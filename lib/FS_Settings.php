@@ -5,7 +5,7 @@ namespace FS;
 /**
  * The class is responsible for the plugin's settings panel in the admin panel.
  */
-class FS_Settings_Class
+class FS_Settings
 {
 
     private $settings_page = 'f-shop-settings';

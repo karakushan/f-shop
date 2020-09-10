@@ -23,14 +23,13 @@ class FS_Taxonomy {
 	function __construct() {
 		$this->taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
 
-		add_action( 'init', array( $this, 'create_taxonomy' ) );
+		add_action( 'init', array( $this, 'create_taxonomy' ),10 );
 
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_edit-fs-currencies_columns', array( $this, 'add_fs_currencies_columns' ) );
 
-
-//		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
+		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
 
 		// Change SEO Title
 		add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
@@ -743,10 +742,9 @@ class FS_Taxonomy {
 	 * @return array
 	 */
 	function shop_taxonomies() {
-		$config     = FS_Config::get_data();
 		$taxonomies = array(
-			$config['product_taxonomy']       => array(
-				'object_type'        => 'product',
+			FS_Config::get_data('product_taxonomy')      => array(
+				'object_type'        => FS_Config::get_data('post_type'),
 				'label'              => __( 'Product categories', 'f-shop' ),
 				'labels'             => array(
 					'name'              => __( 'Product categories', 'f-shop' ),
@@ -770,8 +768,8 @@ class FS_Taxonomy {
 				'show_admin_column'  => true,
 				'rewrite'            => $this->product_category_rewrite_slug()
 			),
-			$config['product_pay_taxonomy']   => array(
-				'object_type'        => 'product',
+			FS_Config::get_data('product_pay_taxonomy')   => array(
+				'object_type'        => FS_Config::get_data('post_type'),
 				'label'              => __( 'Payment methods', 'f-shop' ),
 				'labels'             => array(
 					'name'          => __( 'Payment methods', 'f-shop' ),
@@ -786,17 +784,15 @@ class FS_Taxonomy {
 				'meta_box_cb'        => false,
 				'metabox'            => false,
 				'show_admin_column'  => false,
-
 			),
-			$config['product_del_taxonomy']   => array(
-				'object_type'        => 'product',
+			FS_Config::get_data('product_del_taxonomy')   => array(
+				'object_type'        => FS_Config::get_data('post_type'),
 				'label'              => __( 'Delivery methods', 'f-shop' ),
 				'labels'             => array(
 					'name'          => __( 'Delivery methods', 'f-shop' ),
 					'singular_name' => __( 'Delivery method', 'f-shop' ),
 					'add_new_item'  => __( 'Add a delivery method', 'f-shop' ),
 				),
-//					исключаем категории из лицевой части
 				"public"             => true,
 				"show_ui"            => true,
 				"publicly_queryable" => false,
@@ -806,8 +802,8 @@ class FS_Taxonomy {
 				'show_admin_column'  => false,
 				'show_in_quick_edit' => false
 			),
-			$config['features_taxonomy']      => array(
-				'object_type'        => 'product',
+			FS_Config::get_data('features_taxonomy')     => array(
+				'object_type'        => FS_Config::get_data('post_type'),
 				'label'              => __( 'Product attributes', 'f-shop' ),
 				'labels'             => array(
 					'name'          => __( 'Product attributes', 'f-shop' ),
@@ -825,8 +821,8 @@ class FS_Taxonomy {
 				'hierarchical'       => true,
 				'show_in_quick_edit' => true
 			),
-			$config['brand_taxonomy']         => array(
-				'object_type'        => 'product',
+			FS_Config::get_data('brand_taxonomy')         => array(
+				'object_type'        => FS_Config::get_data('post_type'),
 				'label'              => __( 'Manufacturers', 'f-shop' ),
 				'labels'             => array(
 					'name'          => __( 'Manufacturers', 'f-shop' ),
@@ -843,8 +839,8 @@ class FS_Taxonomy {
 				'hierarchical'       => true,
 				'show_in_quick_edit' => true
 			),
-			$config['product_taxes_taxonomy'] => array(
-				'object_type'        => $config['post_type'],
+			FS_Config::get_data('product_taxes_taxonomy') => array(
+				'object_type'        => FS_Config::get_data('post_type'),
 				'label'              => __( 'Taxes', 'f-shop' ),
 				'labels'             => array(
 					'name'          => __( 'Taxes', 'f-shop' ),

@@ -27,6 +27,8 @@ class FS_Init
     public $fs_widget;
     public $fs_product;
     public $fs_migrate;
+    public $fs_export;
+    public $fs_seo;
     protected static $instance = null;
 
 
@@ -41,7 +43,7 @@ class FS_Init
         // Инициализация классов Fast Shop
         $this->fs_config = $GLOBALS['fs_config'] = new FS_Config();
         $this->fs_option = get_option('fs_option');
-        $this->fs_settings = new FS_Settings_Class;
+        $this->fs_settings = new FS_Settings;
         $this->fs_ajax = new FS_Ajax_Class;
         $this->fs_shortcode = new FS_Shortcode;
         $this->fs_rating = new FS_Rating_Class;
@@ -51,7 +53,7 @@ class FS_Init
         $this->fs_orders = new FS_Orders;
         $this->fs_images = new FS_Images_Class;
         $this->fs_taxonomies = new FS_Taxonomy;
-        $this->fs_action = new FS_Action_Class;
+        $this->fs_action = new FS_Action;
         $this->fs_users = new FS_Users;
         $this->fs_api = new FS_Api_Class();
         $this->fs_payment = new FS_Payment_Class();
