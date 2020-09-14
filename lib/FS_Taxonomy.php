@@ -29,20 +29,13 @@ class FS_Taxonomy {
 		add_filter( 'manage_fs-currencies_custom_column', array( $this, 'currencies_column_content' ), 10, 3 );
 		add_filter( 'manage_edit-fs-currencies_columns', array( $this, 'add_fs_currencies_columns' ) );
 
-
 //		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
-
-		// Change SEO Title
-		add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
 
 		// Remove taxonomy slug from links
 		add_filter( 'term_link', array( $this, 'replace_taxonomy_slug_filter' ), 10, 3 );
 
 		// Generate rewrite rules
 		add_action( 'generate_rewrite_rules', array( $this, 'taxonomy_rewrite_rules' ) );
-
-		// Change wordpress seo canonical
-		add_filter( 'wpseo_canonical', array( $this, 'change_taxonomy_canonical' ), 10, 1 );
 
 		// Filtering products on the category page and in the product archives
 		add_action( 'pre_get_posts', array( $this, 'taxonomy_filter_products' ), 12, 1 );
@@ -331,23 +324,7 @@ class FS_Taxonomy {
 	}//end filter_curr_product()
 
 
-	/**
-	 * Change wordpress seo canonical
-	 *
-	 * @param $canonical
-	 *
-	 * @return string|string[]
-	 */
-	function change_taxonomy_canonical( $canonical ) {
-		if ( is_tax( $this->taxonomy_name ) && fs_option( 'fs_disable_taxonomy_slug' ) ) {
-			$canonical = get_term_link( get_queried_object_id(), $this->taxonomy_name );
-			if ( get_locale() != FS_Config::default_locale() ) {
-				$canonical = str_replace( [ '/ua', '/uk' ], [ '' ], $canonical );
-			}
-		}
 
-		return $canonical;
-	}
 
 	/**
 	 * Add rewrite rules for terms
@@ -706,17 +683,6 @@ class FS_Taxonomy {
 		);
 
 		return apply_filters( 'fs_taxonomy_fields', $fields );
-	}
-
-	function wpseo_title_filter( $title ) {
-		if ( ! is_tax( 'catalog' ) ) {
-			return $title;
-		}
-		$meta_key   = get_locale() == FS_Config::default_locale() ? '_seo_title' : '_seo_title__' . get_locale();
-		$meta_title = get_term_meta( get_queried_object_id(), $meta_key, 1 );
-		$title      = $meta_title ? $meta_title : $title;
-
-		return $title;
 	}
 
 

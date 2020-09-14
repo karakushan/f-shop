@@ -20,8 +20,46 @@ class FS_SEO
         // Изменяет meta title
         add_filter('document_title_parts', array($this, 'meta_title_filter'), 10, 1);
 
+        // Change SEO Title
+        add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
+        // Change wordpress seo canonical
+        add_filter( 'wpseo_canonical', array( $this, 'change_taxonomy_canonical' ), 10, 1 );
+
         add_action('wp_footer', [$this, 'scripts_in_footer']);
         add_action('wp_head', [$this, 'scripts_in_head']);
+
+
+    }
+
+    /**
+     * Change wordpress seo canonical
+     *
+     * @param $canonical
+     *
+     * @return string|string[]
+     */
+    function change_taxonomy_canonical( $canonical ) {
+        if ( is_tax( $this->taxonomy_name ) && fs_option( 'fs_disable_taxonomy_slug' ) ) {
+            $canonical = get_term_link( get_queried_object_id(), $this->taxonomy_name );
+            if ( get_locale() != FS_Config::default_locale() ) {
+                $canonical = str_replace( [ '/ua', '/uk' ], [ '' ], $canonical );
+            }
+        }
+
+        return $canonical;
+    }
+
+    function wpseo_title_filter( $title ) {
+        if ( ! is_tax( 'catalog' ) ) {
+            return $title;
+        }
+        $meta_key   = get_locale() == FS_Config::default_locale() ? '_seo_title' : '_seo_title__' . get_locale();
+        $meta_title = get_term_meta( get_queried_object_id(), $meta_key, 1 );
+        $title      = $meta_title ? $meta_title : $title;
+
+        $title=apply_filters('fs_meta_title',$title);
+
+        return $title;
     }
 
     /**
@@ -40,11 +78,13 @@ class FS_SEO
             $title['title'] = esc_attr($meta_title);
         }
 
+        $title['title'] = apply_filters('fs_meta_title', $title['title']);
+
         return $title;
     }
 
     /**
-     * Добавляет meta descriptio
+     * Добавляет meta description
      */
     public function meta_description_action()
     {
@@ -61,7 +101,7 @@ class FS_SEO
         $meta_description = apply_filters('fs_meta_description', $meta_description);
 
         if ($meta_description) {
-            echo PHP_EOL . '<meta name="description" content="' . esc_attr(apply_filters('the_title',$meta_description)) . '"/>' . PHP_EOL;
+            echo PHP_EOL . '<meta name="description" content="' . esc_attr(apply_filters('the_title', $meta_description)) . '"/>' . PHP_EOL;
         }
     }
 
