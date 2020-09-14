@@ -636,15 +636,20 @@ function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args 
  * @return int
  */
 function fs_product_count( $echo = true ) {
+	$cart_items = FS_Cart::get_cart() && is_array( FS_Cart::get_cart() )
+		? FS_Cart::get_cart() : [];
+	$count      = 0;
 
-	$count = FS_Cart::get_cart() && is_array( FS_Cart::get_cart() )
-		? count( FS_Cart::get_cart() )
-		: 0;
+	foreach ( $cart_items as $cart_item ) {
+		if ( isset( $cart_item['count'] ) ) {
+			$count += (int) $cart_item['count'];
+		}
+	}
 
 	if ( $echo ) {
-		echo esc_attr( $count );
+		echo esc_html( $count );
 	} else {
-		return $count;
+		return (int) $count;
 	}
 }
 
@@ -1990,10 +1995,10 @@ function fs_the_atts_list( $post_id = 0, $args = array() ) {
 			$second_term  = [];
 			foreach ( $parent as $p ) {
 				$s             = get_term( $p, $fs_config->data['features_taxonomy'] );
-				$second_term[] = $s->name;
+				$second_term[] = apply_filters( 'the_title', $s->name );
 			}
 
-			$list .= '<li><span class="first">' . $primary_term->name . ': </span><span class="last">' . implode( ', ', $second_term ) . ' </span></li > ';
+			$list .= '<li><span class="first">' . apply_filters('the_title',$primary_term->name) . ': </span><span class="last">' . implode( ', ', $second_term ) . ' </span></li > ';
 
 
 		}
@@ -3262,3 +3267,48 @@ if ( ! function_exists( 'fs_localize_meta_key' ) ) {
 }
 
 
+/**
+ * Колбек функция для вывода единчного комментария
+ *
+ * @param $comment
+ * @param $args
+ * @param $depth
+ */
+function fs_comment_single( $comment, $args, $depth ) {
+	$user = get_user_by( 'id', $comment->user_id );
+	?>
+<div id="comment-<?php echo $comment->comment_ID; ?>"
+     class="comment byuser comment-author-admin even thread-even depth-<?php echo $depth; ?> parent">
+    <article id="div-comment-<?php echo $comment->comment_ID; ?>" class="comment-body">
+        <footer class="comment-meta">
+            <div class="comment-author vcard">
+                <b class="fn">
+                    <a rel="external nofollow ugc"
+                       class="url" itemprop="name"><?php echo $user->data->display_name; ?></a>
+                </b>
+            </div><!-- .comment-author -->
+            <div class="comment-metadata">
+                <a>
+                    <time>
+						<?php echo date_i18n( 'd F Y в H:i', strtotime( $comment->comment_date ) ); ?>
+                    </time>
+                </a>
+            </div><!-- .comment-metadata -->
+        </footer><!-- .comment-meta -->
+
+        <div class="comment-content">
+            <div class="comment-text">
+				<?php echo apply_filters( 'the_content', $comment->comment_content ); ?>
+            </div>
+            <div class="comment-buttons">
+                <div class="comment-rating">
+					<?php esc_html_e( 'Product evaluation:', 'f-shop' ); ?> <span class="comment-rating__stars">
+						<?php fs_product_rating( $comment->comment_post_ID ); ?>
+					</span>
+                </div>
+				<?php do_action( 'fs_product_comment_likes', $comment->comment_ID ); ?>
+            </div>
+        </div><!-- .comment-content -->
+    </article><!-- .comment-body -->
+	<?php
+}

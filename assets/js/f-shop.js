@@ -83,7 +83,6 @@ jQuery(document).ready(function ($) {
             let min = Number(el.attr('min'));
 
 
-
             //если покупатель вбил неправильное к-во товаров
             if (productCount < min) {
                 el.val(min);
@@ -153,6 +152,44 @@ jQuery(document).ready(function ($) {
 
         }
     }, window.fShop);
+
+    $(document).on('click', '[data-fs-element="comment-like"]', function (event) {
+        let commentId = $(this).data('comment-id');
+        let countEl = $(this).find('[data-fs-element="comment-like-count"]')
+        $.ajax({
+            type: 'POST',
+            url: fShop.ajaxurl,
+            data: {
+                action: 'fs_like_comment',
+                comment_id: commentId
+            },
+            success: function (data) {
+                if (data.success && data.data.count) {
+                    countEl.text(data.data.count)
+                    iziToast.show({
+                        theme: 'light',
+                        color: 'green',
+                        message: data.data.msg,
+                        position: 'bottomRight',
+                    });
+                }else{
+                    iziToast.show({
+                        theme: 'light',
+                        color: 'red',
+                        message: data.data.msg,
+                        position: 'bottomRight',
+                    });
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('error...', xhr);
+                //error logging
+            },
+            complete: function () {
+                //afer ajax call is completed
+            }
+        });
+    });
 
     // Выбор вариации товара
     $(document).on('change', "[data-fs-element=\"select-variation\"]", fShop.selectVariation);
@@ -536,13 +573,13 @@ jQuery(document).ready(function ($) {
                 $('.fs-checkout-form [data-ajax-req="true"]').removeAttr('required');
                 if (result.data.requiredFields.length) {
                     for (let i in result.data.requiredFields) {
-                        let field=$('[name="' + result.data.requiredFields[i] + '"]');
-                       // Добавляем звёздочку в placeholder  к обязательным полям
-                        if(!field.data('placeholder')){
-                            let placeholder=field.attr('placeholder');
+                        let field = $('[name="' + result.data.requiredFields[i] + '"]');
+                        // Добавляем звёздочку в placeholder  к обязательным полям
+                        if (!field.data('placeholder')) {
+                            let placeholder = field.attr('placeholder');
                             field.attr('data-placeholder', placeholder);
-                            if(placeholder.indexOf('*')===-1){
-                                field.attr('placeholder',field.attr('data-placeholder')+'*')
+                            if (placeholder.indexOf('*') === -1) {
+                                field.attr('placeholder', field.attr('data-placeholder') + '*')
                             }
                         }
                         field.attr('required', 'required').attr('data-ajax-req', true);
