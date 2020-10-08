@@ -549,8 +549,19 @@ jQuery(document).ready(function ($) {
 });
 
 jQuery(document).ready(function ($) {
-    // Tabs in product editing
 
+    if (!$.cookie('fs_active_tab')){
+        let firstTab=$('#fs-metabox .tab-header li:first-child a');
+       let firstTabName= firstTab.data('tab')
+        firstTab.parent('li').addClass('fs-link-active'); 
+        $(firstTab.attr('href')).addClass('fs-tab-active');
+        $.cookie('fs_active_tab', firstTabName, {
+            expires: 10
+        });
+    }
+
+
+    // Переключение табов
     $('#fs-metabox .tab-header a').on('click', function (event) {
         event.preventDefault();
         var target = $(this).attr('href');
