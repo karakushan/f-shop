@@ -1340,8 +1340,8 @@ class FS_Taxonomy {
 	 * @return false|string
 	 */
 	public static function fs_get_admin_product_attributes_table( $post_id = 0 ) {
-		$post_id  = (int) $_POST['post_id'] ?: $post_id;
-		$is_ajax  = (int) $_POST['is_ajax'] === 1 ?: false;
+		$post_id  = isset($_POST['post_id']) ?  (int) $_POST['post_id'] : $post_id;
+		$is_ajax  = isset($_POST['is_ajax']) && (int) $_POST['is_ajax'] === 1 ?: false;
 		$taxonomy = FS_Config::get_data( 'features_taxonomy' );
 
 		$fs_config  = new FS_Config();
