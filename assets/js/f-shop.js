@@ -563,10 +563,15 @@ jQuery(document).ready(function ($) {
                 // Оключаем поля которые нужно скрыть
                 $('.fs-checkout-form input,.fs-checkout-form .fs-field-wrap').fadeIn(0);
                 if (result.data.disableFields.length) {
-                    for (let i in result.data.disableFields) {
-                        $('[name="' + result.data.disableFields[i] + '"]').parents('.fs-field-wrap').fadeOut(0)
-                        $('[name="' + result.data.disableFields[i] + '"]').fadeOut(0);
-                    }
+                    result.data.disableFields.forEach(function (field){
+                        $('[name="' + field + '"]')
+                            .parents('.fs-field-wrap')
+                            .fadeOut(0);
+
+                        $('[name="' + field + '"]')
+                            .prop('required', false)
+                            .fadeOut(0);
+                    })
                 }
 
                 // Устанавливаем обязательные поля
@@ -578,7 +583,7 @@ jQuery(document).ready(function ($) {
                         if (!field.data('placeholder')) {
                             let placeholder = field.attr('placeholder');
                             field.attr('data-placeholder', placeholder);
-                            if (placeholder.indexOf('*') === -1) {
+                            if (typeof placeholder!=='undefined' && placeholder.indexOf('*') === -1) {
                                 field.attr('placeholder', field.attr('data-placeholder') + '*')
                             }
                         }

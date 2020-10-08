@@ -139,7 +139,7 @@ function fs_current_screen_attributes($group_id = 0, $args = array())
 
         $post_args = apply_filters('fs_current_screen_attributes_args', $post_args);
 
-        $posts = new WP_Query(apply_filters('fs_current_screen_attributes_args', $post_args));
+        $posts = new WP_Query($post_args); 
 
         if ($posts->have_posts()) {
             while ($posts->have_posts()) {
