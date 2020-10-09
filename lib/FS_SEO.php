@@ -180,7 +180,6 @@ class FS_SEO {
 	 */
 	public function product_reviews_microdata() {
 		$comments = get_comments( [ 'post_id' => get_the_ID(), 'comment_parent' => 0 ] );
-		do_action( 'qm/debug', $comments );
 		foreach ( $comments as $comment ) {
 			echo '<script type=\'application/ld+json\'>';
 			echo json_encode( [
