@@ -845,9 +845,9 @@ class FS_Product {
 			// Display tab switches
 			$counter = 0;
 			foreach ( $default_tabs as $id => $tab ) {
-				$class = ! $counter ? 'active' : '';
-				$html  .= '<li class="nav-item">';
-				$html  .= '<a class="nav-link ' . esc_attr( $class ) . '" id="fs-product-tab-nav-' . esc_attr( $id ) . '" data-toggle="tab" href="#fs-product-tab-' . esc_attr( $id ) . '" role="tab" aria-controls="' . esc_attr( $id ) . '" aria-selected="true">' . esc_html( $tab['title'] ) . '</a>';
+				$class = ! $counter ? ' active' : '';
+				$html  .= '<li class="nav-item '.$class.'">';
+				$html  .= '<a class="nav-link' . esc_attr( $class ) . '" id="fs-product-tab-nav-' . esc_attr( $id ) . '" data-toggle="tab" href="#fs-product-tab-' . esc_attr( $id ) . '" role="tab" aria-controls="' . esc_attr( $id ) . '" aria-selected="true">' . esc_html( $tab['title'] ) . '</a>';
 				$html  .= '</li>';
 				$counter ++;
 			}
@@ -859,8 +859,8 @@ class FS_Product {
 			// Display the contents of the tabs
 			$counter = 0;
 			foreach ( $default_tabs as $id => $tab ) {
-				$class = ! $counter ? 'show active' : '';
-				$html  .= '<div class="tab-pane fade ' . esc_attr( $class ) . '" id="fs-product-tab-' . esc_attr( $id ) . '" role="tabpanel" aria-labelledby="' . esc_attr( $id ) . '-tab">';
+				$class = ! $counter ? ' active' : '';
+				$html  .= '<div class="tab-pane' . esc_attr( $class ) . '" id="fs-product-tab-' . esc_attr( $id ) . '" role="tabpanel" aria-labelledby="' . esc_attr( $id ) . '-tab">';
 				$html  .= $tab['content'];
 				$html  .= '</div>';
 				$counter ++;

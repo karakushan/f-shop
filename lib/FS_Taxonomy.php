@@ -1371,9 +1371,8 @@ class FS_Taxonomy {
 				<?php foreach ( $attributes_hierarchy as $k => $att_h ): ?>
 					<?php $parent = get_term( $k, $fs_config->data['features_taxonomy'] ) ?>
                     <tr>
-                        <td><?php echo esc_html( apply_filters( 'the_title', $parent->name ) ) ?></td>
+                        <td data-attribute-name="<?php echo esc_attr($parent->term_id); ?>"><?php echo esc_html( apply_filters( 'the_title', $parent->name ) ) ?></td>
                         <td>
-
                             <ul class="fs-childs-list">   <?php foreach ( $att_h as $child ): ?>
                                     <li><?php echo esc_html( apply_filters( 'the_title', $child->name ) ) ?> <a
                                                 class="remove-att"
