@@ -109,7 +109,7 @@ class FS_Taxonomy
      *
      * @param $query
      */
-    public function taxonomy_filter_products($query)
+    public static function taxonomy_filter_products($query)
     {
         global $wpdb;
 
