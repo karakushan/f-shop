@@ -1324,10 +1324,10 @@ function fs_range_slider() {
  */
 function fs_price_max() {
 	global $wpdb, $wp_query;
-	$tax = FS_Config::get_data( 'product_taxonomy' );
 
-	if ( is_tax( $tax ) ) {
-		$query  = new WP_Query( [ $tax => $wp_query->query_vars[ $tax ], 'posts_per_page' => - 1 ] );
+	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+		$term=get_queried_object();
+		$query  = new WP_Query( [ FS_Config::get_data( 'product_taxonomy' ) => $term->slug, 'posts_per_page' => - 1 ] );
 		$prices = [];
 		while ( $query->have_posts() ) {
 			$query->the_post();
@@ -1358,11 +1358,11 @@ function fs_price_max() {
  * @return float|int|null|string
  */
 function fs_price_min() {
-	global $wpdb, $wp_query;
-	$tax = FS_Config::get_data( 'product_taxonomy' );
+	global $wpdb;
 
-	if ( is_tax( $tax ) ) {
-		$query  = new WP_Query( [ $tax => $wp_query->query_vars[ $tax ], 'posts_per_page' => - 1 ] );
+	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+	    $term=get_queried_object();
+		$query  = new WP_Query( [ FS_Config::get_data( 'product_taxonomy' ) => $term->slug, 'posts_per_page' => - 1 ] );
 		$prices = [];
 		while ( $query->have_posts() ) {
 			$query->the_post();
