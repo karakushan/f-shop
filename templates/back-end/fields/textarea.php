@@ -14,4 +14,4 @@ if ( $args['required'] ){
           rows="<?php echo esc_attr( $args['textarea_rows'] ) ?>"
           title="<?php echo esc_attr( $args['title'] ) ?>"
           placeholder="<?php echo esc_html( $args['placeholder'] ) ?>" <?php if ( $args['required'] )
-	echo 'required' ?> <?php if ( $args['readonly'] ) echo 'readonly' ?>><?php echo esc_html( $args['value'] ) ?></textarea>
+	echo 'required' ?> <?php if ( !empty($args['readonly']) ) echo 'readonly' ?>><?php echo esc_html( $args['value'] ) ?></textarea>
