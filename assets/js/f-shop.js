@@ -1493,7 +1493,7 @@ jQuery(document).ready(function ($) {
                 timeout: false,
                 maxWidth: 540,
                 closeOnEscape: true,
-                title: fShop.getLang('success'),
+                title: fShop.getLang('added'),
                 message: fShop.strReplace(fShop.getLang('addToCartButtons'), {
                     '%product%': button.data('name'),
                     '%price%': button.data('price'),

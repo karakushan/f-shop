@@ -196,6 +196,7 @@ class FS_Init
             'preorderWindow' => fs_option('fs_preorder_services', 0),
             'langs' => array(
                 'success' => __('Success!', 'f-shop'),
+                'added' => __('Added!', 'f-shop'),
                 'error' => __('Error!', 'f-shop'),
                 'order_send_success' => __('Your order has been successfully created. We will contact you shortly.', 'f-shop'),
                 'limit_product' => __('You have selected all available items from stock.', 'f-shop'),
@@ -204,7 +205,7 @@ class FS_Init
                     __('Item &laquo;%product%&raquo; successfully added to cart.', 'f-shop'),
                     '<div class="fs-atc-price">%price% <span>%currency%</span></div>',
                     fs_get_catalog_link(),
-                    __('To catalog', 'f-shop'),
+                    __('Continue shopping', 'f-shop'),
                     fs_checkout_url(false), __('Checkout', 'f-shop')),
                 'addToWishlist' => __('Item &laquo;%product%&raquo; successfully added to wishlist. <a href="%wishlist_url%">Go to wishlist</a>', 'f-shop'),
             ),
