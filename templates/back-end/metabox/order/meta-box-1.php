@@ -5,6 +5,10 @@
         <td><?php echo esc_html($user['id']) ?></td>
     </tr>
     <tr>
+        <th><?php esc_html_e('IP', 'f-shop') ?></th>
+        <td><?php echo esc_html(get_post_meta($post->ID, '_customer_ip', 1)) ?></td>
+    </tr>
+    <tr>
         <th><?php esc_html_e('First name', 'f-shop') ?></th>
         <td><?php echo esc_html($user['first_name']) ?></td>
     </tr>
