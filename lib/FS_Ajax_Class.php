@@ -104,7 +104,7 @@ class FS_Ajax_Class {
 		$comment_id    = (int) $_POST['comment_id'];
 		$like_user_ips = get_comment_meta( $comment_id, 'fs_like_user' );
 
-		if ( in_array( $ip, $like_user_ips) ) {
+		if ( in_array( $ip, $like_user_ips ) ) {
 			wp_send_json_error( [
 				'msg' => __( 'You have already voted for this review!', 'f-shop' )
 			] );
@@ -497,6 +497,13 @@ class FS_Ajax_Class {
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
 		}
+
+		// IP адрес покупателя
+		$customer_ip=fs_get_user_ip();
+
+		// Ищем покупателя в черном списке
+		$search_blacklist=$wpdb->get_var("SELECT COUNT({$wpdb->posts}.ID) FROM $wpdb->postmeta LEFT JOIN $wpdb->posts ON {$wpdb->postmeta}.post_id={$wpdb->posts}.ID  WHERE post_status='black_list' AND {$wpdb->postmeta}.meta_key='_customer_ip' AND {$wpdb->postmeta}.meta_value='$customer_ip'");
+
 		$product_class = new FS_Product();
 		$fs_products   = FS_Cart::get_cart();
 
@@ -522,7 +529,6 @@ class FS_Ajax_Class {
 		if ( is_user_logged_in() ) {
 			$user    = wp_get_current_user();
 			$user_id = $user->ID;
-
 		} else {
 			if ( ! empty( $sanitize_field['fs_customer_register'] ) && $sanitize_field['fs_customer_register'] == 1 ) {
 				// Если пользователь не залогинен пробуем его зарегистрировать
@@ -562,13 +568,12 @@ class FS_Ajax_Class {
 			}
 		}
 
-
 		// Вставляем заказ в базу данных
 		$pay_method     = get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] );
 		$new_order_data = array(
 			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
 			'post_content' => '',
-			'post_status'  => $fs_config->data['default_order_status'],
+			'post_status'  => $search_blacklist ? 'black_list' : 'new',
 			'post_type'    => $fs_config->data['post_type_orders'],
 			'post_author'  => 1,
 			'ping_status'  => get_option( 'default_ping_status' ),
@@ -577,12 +582,15 @@ class FS_Ajax_Class {
 			'import_id'    => 0,
 			'meta_input'   => array(
 				'_user_id'         => $user_id,
+				'_customer_ip'     => $customer_ip,
+				'_customer_email'  => $sanitize_field['fs_email'],
+				'_customer_phone'  => preg_replace( "/[^0-9]/", '', $sanitize_field['fs_phone'] ),
 				'_user'            => array(
 					'id'         => $user_id,
 					'first_name' => $sanitize_field['fs_first_name'],
 					'last_name'  => $sanitize_field['fs_last_name'],
 					'email'      => $sanitize_field['fs_email'],
-					'phone'      => $sanitize_field['fs_phone'],
+					'phone'      => preg_replace( "/[^0-9]/", '', $sanitize_field['fs_phone'] ),
 					'city'       => $sanitize_field['fs_city']
 				),
 				'_products'        => $fs_products,

@@ -1073,8 +1073,24 @@ td.fs_photo.column-fs_photo {
   }
 }
 
-.order-user {
-  max-width: 480px;
+.status-black_list th, .status-black_list td {
+  background: rgb(255 247 122 / 53%);
+}
+
+#fast_shop_orders_user_metabox{
+  .inside{
+    margin: 0;
+    padding: 0;
+    table.widefat {
+      width: 100%;
+      border: none;
+      tr{
+        th{
+          width:260px;
+        }
+      }
+    }
+  }
 }
 
 .fs-admin-atts {
@@ -1533,5 +1549,15 @@ td.fs_menu_order.column-fs_menu_order {
 .fs-field-after {
   margin: 11px 0 0 0;
   font-size: 13px;
+}
+
+#fast_shop_orders_metabox{
+  .inside{
+    margin: 0;
+    padding: 0;
+    table.widefat{
+      border: none;
+    }
+  }
 }
 

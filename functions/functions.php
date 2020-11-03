@@ -982,27 +982,42 @@ function fs_checkout_url( $echo = true ) {
 /**
  * The function checks the availability of goods in stock
  *
+ * @deprecated  recommend using fs_in_stock()
+ *
  * @param int $product_id id записи
  *
- * @return bool  true - товар есть на складе, false - нет
+ * @return bool  true - the product is in stock, false - not
  */
 function fs_aviable_product( $product_id = 0 ) {
-	$fs_config     = new FS_Config();
-	$product_id    = fs_get_product_id( $product_id );
-	$product_class = new FS\FS_Product();
-	$variations    = $product_class->get_product_variations( $product_id );
-	$aviable       = false;
+	return fs_in_stock();
+}
 
-	if ( count( $variations ) ) {
-		$aviable = true;
-	} else {
-		$availability = get_post_meta( $product_id, $fs_config->meta['remaining_amount'], true );
-		if ( $availability == '' || $availability > 0 ) {
+if (!function_exists('fs_in_stock')){
+	/**
+	 * The function checks the availability of goods in stock
+	 *
+	 * @param int $product_id id записи
+	 *
+	 * @return bool  true - the product is in stock, false - not
+	 */
+	function fs_in_stock( $product_id = 0 ) {
+		$fs_config     = new FS_Config();
+		$product_id    = fs_get_product_id( $product_id );
+		$product_class = new FS\FS_Product();
+		$variations    = $product_class->get_product_variations( $product_id );
+		$aviable       = false;
+
+		if ( count( $variations ) ) {
 			$aviable = true;
+		} else {
+			$availability = get_post_meta( $product_id, $fs_config->meta['remaining_amount'], true );
+			if ( $availability == '' || $availability > 0 ) {
+				$aviable = true;
+			}
 		}
-	}
 
-	return $aviable;
+		return $aviable;
+	}
 }
 
 
@@ -1324,10 +1339,10 @@ function fs_range_slider() {
  */
 function fs_price_max() {
 	global $wpdb, $wp_query;
-	$tax = FS_Config::get_data( 'product_taxonomy' );
 
-	if ( is_tax( $tax ) ) {
-		$query  = new WP_Query( [ $tax => $wp_query->query_vars[ $tax ], 'posts_per_page' => - 1 ] );
+	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+		$term   = get_queried_object();
+		$query  = new WP_Query( [ FS_Config::get_data( 'product_taxonomy' ) => $term->slug, 'posts_per_page' => - 1 ] );
 		$prices = [];
 		while ( $query->have_posts() ) {
 			$query->the_post();
@@ -1358,11 +1373,11 @@ function fs_price_max() {
  * @return float|int|null|string
  */
 function fs_price_min() {
-	global $wpdb, $wp_query;
-	$tax = FS_Config::get_data( 'product_taxonomy' );
+	global $wpdb;
 
-	if ( is_tax( $tax ) ) {
-		$query  = new WP_Query( [ $tax => $wp_query->query_vars[ $tax ], 'posts_per_page' => - 1 ] );
+	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+		$term   = get_queried_object();
+		$query  = new WP_Query( [ FS_Config::get_data( 'product_taxonomy' ) => $term->slug, 'posts_per_page' => - 1 ] );
 		$prices = [];
 		while ( $query->have_posts() ) {
 			$query->the_post();
@@ -1998,7 +2013,7 @@ function fs_the_atts_list( $post_id = 0, $args = array() ) {
 				$second_term[] = apply_filters( 'the_title', $s->name );
 			}
 
-			$list .= '<li><span class="first">' . apply_filters('the_title',$primary_term->name) . ': </span><span class="last">' . implode( ', ', $second_term ) . ' </span></li > ';
+			$list .= '<li><span class="first">' . apply_filters( 'the_title', $primary_term->name ) . ': </span><span class="last">' . implode( ', ', $second_term ) . ' </span></li > ';
 
 
 		}
@@ -3311,4 +3326,24 @@ function fs_comment_single( $comment, $args, $depth ) {
         </div><!-- .comment-content -->
     </article><!-- .comment-body -->
 	<?php
+}
+
+if ( ! function_exists( 'fs_get_user_ip' ) ) {
+	/**
+	 * Returns the IP address of the current visitor
+	 *
+	 * @return mixed|string
+	 */
+	function fs_get_user_ip() {
+		$value = '';
+		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+			$value = $_SERVER['HTTP_CLIENT_IP'];
+		} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+			$value = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} elseif ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+			$value = $_SERVER['REMOTE_ADDR'];
+		}
+
+		return $value;
+	}
 }

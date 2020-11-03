@@ -13,5 +13,5 @@ if ( $args['required'] ){
        class="<?php echo esc_attr( $args['class'] ) ?>"
        value="<?php echo esc_html( $args['value'] ) ?>"
        placeholder="<?php echo esc_attr( $args['placeholder'] ) ?>"
-       title="<?php echo esc_attr( $args['title'] ) ?>" <?php if ( $args['required'] ) echo 'required' ?> <?php if ( $args['readonly'] ) echo 'readonly' ?>
+       title="<?php echo esc_attr( $args['title'] ) ?>" <?php if ( $args['required'] ) echo 'required' ?> <?php if ( !empty($args['readonly']) ) echo 'readonly' ?>
 >

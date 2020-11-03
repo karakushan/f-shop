@@ -141,6 +141,10 @@ class FS_Orders {
 				'name'        => __( 'Return', 'f-shop' ),
 				'description' => __( 'The administrator assigns the status to the order if the client for some reason returned the goods.', 'f-shop' )
 			),
+            'black_list'       => array(
+				'name'        => __( 'Black list', 'f-shop' ),
+				'description' => __( 'This status is assigned to an order if violations were detected on the part of the customer. On subsequent orders, all orders from this IP, e-mail, phone automatically receive this status.', 'f-shop' )
+			),
 		);
 
 		return apply_filters( 'fs_order_statuses', $order_statuses );
