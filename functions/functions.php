@@ -982,17 +982,17 @@ function fs_checkout_url( $echo = true ) {
 /**
  * The function checks the availability of goods in stock
  *
- * @deprecated  recommend using fs_in_stock()
- *
  * @param int $product_id id записи
  *
  * @return bool  true - the product is in stock, false - not
+ * @deprecated  recommend using fs_in_stock()
+ *
  */
 function fs_aviable_product( $product_id = 0 ) {
 	return fs_in_stock();
 }
 
-if (!function_exists('fs_in_stock')){
+if ( ! function_exists( 'fs_in_stock' ) ) {
 	/**
 	 * The function checks the availability of goods in stock
 	 *
@@ -1249,6 +1249,43 @@ function fs_option( $option_name, $default = '' ) {
 	}
 
 	return $option;
+}
+
+/**
+ * Возвращает настройку темы
+ *
+ * @param $option_name
+ * @param string $default
+ *
+ * @return mixed|string
+ */
+function fs_get_theme_option( $option_name, $default = '' ) {
+	$option = get_theme_mod( $option_name );
+
+	if ( empty( $option ) && ! empty( $default ) ) {
+		$option = $default;
+	}
+
+	return $option;
+}
+
+/**
+ * Выводит настройку темы
+ *
+ * @param $option_name
+ * @param string $default
+ * @param string $filter
+ *
+ * @return mixed|string
+ */
+function fs_theme_option( $option_name, $default = '', $filter = 'text' ) {
+	$option = fs_get_theme_option( $option_name, $default );
+
+	if ( $filter == 'number' ) {
+		$option = preg_replace( "/[^0-9]/", '', $option );
+	}
+
+	echo esc_html( $option );
 }
 
 /**
