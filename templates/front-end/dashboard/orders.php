@@ -29,7 +29,12 @@ global $post;
                                 </tr>
                                 </thead>
                                 <tbody>
-								<?php foreach ( $post->data->_products as $product ): ?>
+								<?php
+
+                                var_dump($post);
+                                exit();
+
+                                foreach ( $post->data->_products as $product ): ?>
 									<?php $cost = fs_get_price( $product['ID'] ) * $product['count']; ?>
                                     <tr>
                                         <td><a href="<?php the_permalink($product['ID']) ?>" target="_blank"><?php echo esc_html( get_the_title($product['ID']) ) ?></a></td>

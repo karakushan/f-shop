@@ -209,6 +209,8 @@ class FS_Taxonomy
             if (isset($url['per_page'])) {
                 $per_page = $url['per_page'];
                 $_SESSION['fs_user_settings']['per_page'] = $per_page;
+            }else{
+	            $per_page = fs_option( 'fs_catalog_show_items', 30 );
             }
 
             //Устанавливаем страницу пагинации

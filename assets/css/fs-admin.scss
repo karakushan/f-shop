@@ -236,10 +236,10 @@
         font-weight: bold;
 
         .tooltip {
-          font-size: 20px;
+          font-size: 17px;
           position: relative;
-          top: -12px;
-          left: -5px;
+          top: -2px;
+          left: 0px;
           margin: 0;
           width: auto;
           height: auto;
@@ -1405,6 +1405,19 @@ td.fs_menu_order.column-fs_menu_order {
 
 .widget-content .fs-widget-wrapper {
   padding: 15px 0;
+ .fs-custom-checkbox {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    label{
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .select2-container {
+    min-width: 100%;
+  }
 
   .form-group {
     display: flex;

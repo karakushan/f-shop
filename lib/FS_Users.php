@@ -535,6 +535,7 @@ class FS_Users {
 					'parent'     => 0
 				) ),
 				'required'     => true,
+				'checkout'     => true,
 				'save_meta'    => true
 
 
@@ -554,6 +555,7 @@ class FS_Users {
 					'parent'     => 0
 				) ),
 				'required'     => true,
+				'checkout'     => true,
 				'save_meta'    => true
 
 

@@ -260,18 +260,21 @@ function fs_attr_filter($group_id, $args = array())
         'taxonomy' => $fs_config->data['features_taxonomy'],
         'type' => 'normal',
         'current_screen' => false,
-        'include_query' => true
+        'include_query' => true,
+        'exclude'=>[]
         // тип отображения, по умолчанию normal - обычные чекбоксы (color - квадратики с цветом, image - изображения)
     );
     $args = wp_parse_args($args, $default);
 
     $terms_args = array(
         'taxonomy' => $args['taxonomy'],
-        'hide_empty' => false,
+        'hide_empty' => true,
         'parent' => $group_id,
         'orderby' => 'name',
         'order' => 'ASC',
-        'tax_query' => []
+        'tax_query' => [],
+        'exclude'=>$args['exclude']
+
     );
 
     $container_class = $args['container_class'] . ' fs-type-' . $args['type'];
@@ -359,7 +362,7 @@ function fs_attr_filter($group_id, $args = array())
                 $label_before_text = '<span class="fs-color-box" data-toggle="tooltip" title="' . esc_attr(apply_filters('the_title', $term->name)) . '" style="' . esc_attr($color_box_style) . '"></span>';
             }
 
-            echo '<label for="check-' . esc_attr($term->slug) . '"  class="' . esc_attr($args['label_class']) . '">' . $label_before_text . ' ' . $term->name . '</label >';
+            echo '<label for="check-' . esc_attr($term->slug) . '"  class="' . esc_attr($args['label_class']) . '">' . $label_before_text . ' ' . $term->name . ' <i>'.$term->count.'</i></label >';
             if ($args['childs']) {
                 fs_attr_filter($term->term_id, $args);
             }

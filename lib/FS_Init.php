@@ -44,7 +44,7 @@ class FS_Init
         $this->fs_config = $GLOBALS['fs_config'] = new FS_Config();
         $this->fs_option = get_option('fs_option');
         $this->fs_settings = new FS_Settings;
-        $this->fs_ajax = new FS_Ajax_Class;
+        $this->fs_ajax = new FS_Ajax;
         $this->fs_shortcode = new FS_Shortcode;
         $this->fs_rating = new FS_Rating_Class;
         $this->fs_post_types = new FS_Post_Types;
@@ -183,7 +183,7 @@ class FS_Init
 
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', array(
             'jquery'
-        ), FS_Config::get_data('plugin_ver'), true);
+        ), time(), true);
 
         $l10n = array(
             'ajaxurl' => admin_url("admin-ajax.php"),
@@ -246,11 +246,10 @@ class FS_Init
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'wp-content/plugins/f-shop/assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css', array('jquery'), null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'select2', FS_PLUGIN_URL . 'assets/plugins/bower_components/select2/dist/js/select2.min.js', array('jquery'), null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'admin', FS_PLUGIN_URL . 'assets/js/fs-admin.js', array(
-
             'jquery',
             'jquery-ui-dialog',
             FS_PLUGIN_PREFIX . 'js-cookie'
-        ), null, true);
+        ), time(), true);
 
         $l10n = array(
             'allowedImagesType' => fs_allowed_images_type('json'),

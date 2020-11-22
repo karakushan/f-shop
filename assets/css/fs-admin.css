@@ -227,10 +227,10 @@
   font-weight: bold;
 }
 .fs-metabox .fs-tabs > .fs-tab label .tooltip {
-  font-size: 20px;
+  font-size: 17px;
   position: relative;
-  top: -12px;
-  left: -5px;
+  top: -2px;
+  left: 0px;
   margin: 0;
   width: auto;
   height: auto;
@@ -1195,6 +1195,18 @@ td.fs_menu_order.column-fs_menu_order {
 }
 .widget-content .fs-widget-wrapper {
   padding: 15px 0;
+}
+.widget-content .fs-widget-wrapper .fs-custom-checkbox {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+.widget-content .fs-widget-wrapper .fs-custom-checkbox label {
+  margin: 0;
+  padding: 0;
+}
+.widget-content .fs-widget-wrapper .select2-container {
+  min-width: 100%;
 }
 .widget-content .fs-widget-wrapper .form-group {
   display: flex;

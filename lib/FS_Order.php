@@ -11,45 +11,45 @@ class FS_Order {
 	 *
 	 * @var array
 	 */
-	private $items = [];
+	public $items = [];
 
 	/**
 	 * @var \WP_Term
 	 */
-	private $delivery_method = null;
+	public $delivery_method = null;
 
 	/**
 	 * @var \WP_Term
 	 */
-	private $payment_method = null;
+	public $payment_method = null;
 
 	/**
 	 * Общая сумма заказа
 	 *
 	 * @var int
 	 */
-	private $total_amount = 0;
+	public $total_amount = 0;
 
 	/**
 	 * Комментарий к заказу
 	 *
 	 * @var string
 	 */
-	private $comment = '';
+	public $comment = '';
 
 	/**
 	 * Статус заказа
 	 *
 	 * @var string
 	 */
-	private $status = 'new';
+	public $status = 'new';
 
 	/**
 	 * Количество товаров в заказе
 	 *
 	 * @var int
 	 */
-	private $count = 0;
+	public $count = 0;
 
 	/**
 	 * Дата и время заказа
@@ -57,56 +57,84 @@ class FS_Order {
 	 * @var
 	 */
 
-	private $date;
+	public $date;
 
 	/**
 	 * Номер заказа
 	 *
 	 * @var int
 	 */
-	private $ID = 0;
+	public $ID = 0;
 
-	public function __construct( $order ) {
+	public $post = null;
 
-		if ( $order ) {
-			$this->set_order( $order );
-		}
+	public $user;
 
+	public $meta;
+
+
+	public function __construct( $order_id = 0 ) {
+		$this->set_order( $order_id );
 	}
+
 
 	/**
 	 * Устанавливает данные заказа
 	 *
-	 * @param $order \WP_Post
+	 * @param $order_id \WP_Post
 	 */
-	public function set_order( $order ) {
+	public function set_order( $order_id = 0 ) {
 
-		$this->ID = (int) $order->ID;
+		if ( $order_id ) {
+			$this->ID = $order_id;
+		}
 
-		$this->items        = (array) get_post_meta( $order->ID, '_products', 1 );
-		$this->total_amount = (float) get_post_meta( $order->ID, '_amount', 1 );
-		$this->comment      = (float) get_post_meta( $order->ID, '_comment', 1 );
+		if ( ! $order_id && $this->get_last_order_id() ) {
+			$this->ID = $this->get_last_order_id();
+		}
 
-		$payment_method_id = (int) get_post_meta( $order->ID, '_payment', 1 );
+		$this->post = get_post( $this->ID );
+
+
+		$order_id = $order_id ? $order_id : $this->get_last_order_id();
+
+		if ( ! is_numeric( $order_id ) || $order_id == 0 ) {
+			return null;
+		}
+
+		$products = get_post_meta( $order_id, '_products', 0 );
+		if ( is_array( $products ) ) {
+			$products = array_shift( $products );
+		}
+		$this->meta = get_post_meta( $order_id );
+
+		$this->items        = $products;
+		$this->total_amount = (float) get_post_meta( $order_id, '_amount', 1 );
+		$this->comment      = get_post_meta( $order_id, '_comment', 1 );
+		$this->user         = (array) get_post_meta( $order_id, '_user', 1 );
+		$this->user['ip']   = get_post_meta( $order_id, '_customer_ip', 1 );
+
+		$payment_method_id = (int) get_post_meta( $order_id, '_payment', 1 );
 		if ( $payment_method_id ) {
 			$this->payment_method = get_term( $payment_method_id, FS_Config::get_data( 'product_pay_taxonomy' ) );
 		}
 
-		$delivery_method = get_post_meta( $order->ID, '_delivery', 1 );
+		$delivery_method = get_post_meta( $order_id, '_delivery', 1 );
 		if ( isset( $delivery_method['method'] ) ) {
 			$this->delivery_method = get_term( $delivery_method['method'], FS_Config::get_data( 'product_del_taxonomy' ) );
 
 			if ( is_object( $this->delivery_method ) ) {
 				$this->delivery_method->cost             = apply_filters( 'fs_price_format', (float) get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) );
+				$this->delivery_method->city             = get_post_meta( $order_id, 'city', 1 );
 				$this->delivery_method->delivery_address = $delivery_method['secession'];
 			}
 		}
 
 		$this->count = count( $this->items );
 
-		$this->status = get_post_status_object( $order->post_status )->label;
+		$this->status = get_post_status_object( $this->post->post_status )->label;
 
-		$this->date = $order->post_date;
+		$this->date = $this->post->post_date;
 	}
 
 	/**
@@ -239,5 +267,14 @@ class FS_Order {
 	 */
 	public function setID( int $ID ): void {
 		$this->ID = $ID;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function get_last_order_id() {
+
+		return isset( $_SESSION['fs_last_order_id'] ) && is_numeric( $_SESSION['fs_last_order_id'] )
+			? intval( $_SESSION['fs_last_order_id'] ) : 0;
 	}
 }

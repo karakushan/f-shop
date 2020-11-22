@@ -136,9 +136,7 @@ class FS_Shortcode {
 	 * @return mixed
 	 */
 	function last_order_info( $atts ) {
-		$orders_cl = new FS_Orders;
-		$order     = $orders_cl->get_order( $orders_cl->last_order_id );
-
+		$order     = new FS_Order();
 
 		return fs_frontend_template( 'order/last-order-info', array(
 			'vars' => [

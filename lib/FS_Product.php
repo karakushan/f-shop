@@ -1241,7 +1241,7 @@ class FS_Product {
 						echo '<div class="fs-field-row clearfix">';
 
 						$key            = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
-						$field['value'] = get_post_meta( $post->ID, $key, true );
+						$field['value'] =isset($field['value']) ? $field['value'] : get_post_meta( $post->ID, $key, true );
 						$form_class->render_field( $key, $field['type'], $field );
 						echo '</div>';
 					}
@@ -1292,16 +1292,15 @@ class FS_Product {
 		$products = ! empty( $products[0] ) ? $products[0] : [];
 		$amount   = get_post_meta( $post->ID, '_amount', 1 );
 		$amount   = apply_filters( 'fs_price_format', $amount ) . ' ' . fs_currency();
+
+
+
 		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-0.php';
 	}
 
 	/* метабокс данных пользователя в редактировании заказа */
 	public function add_order_user_meta_boxes( $post ) {
-		$user     = get_post_meta( $post->ID, '_user', 0 );
-		$user     = $user[0];
-		$payment  = get_post_meta( $post->ID, '_payment', 1 );
-		$delivery = get_post_meta( $post->ID, '_delivery', 0 );
-		$delivery = $delivery[0];
+		$order=new FS_Order($post->ID);
 
 		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-1.php';
 	}

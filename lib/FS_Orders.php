@@ -11,10 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Класс заказов
  */
 class FS_Orders {
-	public $post_type = 'orders';
 
+    public $post_type = 'orders';
 	public $last_order_id = null;
-
 
 	function __construct() {
 
@@ -311,23 +310,24 @@ Good luck!', 'f-shop' );
 	 *
 	 * @return \stdClass
 	 */
-	function set_order_data( $order_id ) {
+	private static function set_order_data( $order_id ) {
 		$order_meta = get_post_meta( $order_id );
-		$meta       = new \stdClass();
+		$data       = new self();
+		$data->_products=self::get_order_items( $order_id );
 		if ( $order_meta ) {
 			foreach ( $order_meta as $key => $item ) {
 
 				$unserialize = @unserialize( array_shift( $item ) );
 
 				if ( count( $item ) == 1 && $unserialize === false ) {
-					$meta->{$key} = get_post_meta( $order_id, $key, 1 );
+					$data->{$key} = get_post_meta( $order_id, $key, 1 );
 				} else {
-					$meta->{$key} = get_post_meta( $order_id, $key, 0 )[0];
+					$data->{$key} = get_post_meta( $order_id, $key, 0 )[0];
 				}
 			}
 		}
 
-		return $meta;
+		return $data;
 	}
 
 	/**
@@ -372,7 +372,7 @@ Good luck!', 'f-shop' );
 		return $status;
 	}
 
-	public function get_order_items( $order_id ) {
+	public static function get_order_items( $order_id ) {
 		$order_id = (int) $order_id;
 		$products = get_post_meta( $order_id, '_products', 0 );
 		$products = $products[0];

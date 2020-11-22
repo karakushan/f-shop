@@ -1081,6 +1081,8 @@ jQuery(document).ready(function ($) {
                 url: fShop.ajaxurl,
                 type: 'POST',
                 data: order_send.serialize(),
+                dataType: 'json',
+                async: false,
                 beforeSend: function () {
                     orderSendBtn.html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
                 },

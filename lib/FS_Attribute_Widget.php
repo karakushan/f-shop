@@ -2,6 +2,8 @@
 
 namespace FS;
 
+use WP_Widget;
+
 /**
  * Class FS_Attribute_Widget
  *
@@ -9,7 +11,7 @@ namespace FS;
  *
  * @package FS
  */
-class FS_Attribute_Widget extends \WP_Widget {
+class FS_Attribute_Widget extends WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'fs_attribute_widget',
@@ -26,13 +28,17 @@ class FS_Attribute_Widget extends \WP_Widget {
 	 * @return string|void
 	 */
 	public function form( $instance ) {
+
+
 		$fs_config = new FS_Config();
 
-		$title          = ! empty( $instance['title'] ) ? $instance['title'] : '';
-		$fs_att_group   = ! empty( $instance['fs_att_group'] ) ? $instance['fs_att_group'] : '';
-		$fs_att_types   = ! empty( $instance['fs_att_types'] ) ? $instance['fs_att_types'] : '';
-		$fs_screen_atts = ! empty( $instance['fs_screen_atts'] ) ? $instance['fs_screen_atts'] : 0;
-		$fs_only_cats   = ! empty( $instance['fs_only_cats'] ) ? $instance['fs_only_cats'] : '';
+		$title                 = ! empty( $instance['title'] ) ? $instance['title'] : '';
+		$fs_att_group          = ! empty( $instance['fs_att_group'] ) ? $instance['fs_att_group'] : '';
+		$fs_att_types          = ! empty( $instance['fs_att_types'] ) ? $instance['fs_att_types'] : '';
+		$fs_screen_atts        = ! empty( $instance['fs_screen_atts'] ) ? $instance['fs_screen_atts'] : 0;
+		$fs_only_cats          = ! empty( $instance['fs_only_cats'] ) ? $instance['fs_only_cats'] : '';
+		$fs_hide_in_catalog    = isset( $instance['fs_hide_in_catalog'] ) ? $instance['fs_hide_in_catalog'] : 0;
+		$fs_hide_custom_values = isset( $instance['fs_hide_custom_values'] ) ? $instance['fs_hide_custom_values'] : 0;
 
 
 		$args      = array(
@@ -55,6 +61,7 @@ class FS_Attribute_Widget extends \WP_Widget {
 			'taxonomy'         => $fs_config->data['features_taxonomy'],
 			'hide_if_empty'    => false,
 			'value_field'      => 'term_id',
+			'class'            => 'fs-select-field',
 			'required'         => false,
 		);
 		$languages = FS_Config::get_languages();
@@ -97,20 +104,34 @@ class FS_Attribute_Widget extends \WP_Widget {
             </div>
             <p>
                 <label
-                        for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>"><?php esc_html_e( 'Feature Group', 'f-shop' ) ?></label>
+                        for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>">
+					<?php esc_html_e( 'Feature Group', 'f-shop' ) ?>
+                </label>
 				<?php wp_dropdown_categories( $args ); ?>
             </p>
             <p>
-                <input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'fs_screen_atts' ) ); ?>"
-                       value="1"
-                       id="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>" <?php checked( 1, $fs_screen_atts ) ?>>
+                <span class="fs-custom-checkbox">
+                    <input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'fs_screen_atts' ) ); ?>"
+                           value="1"
+                           id="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>" <?php checked( 1, $fs_screen_atts ) ?>>
                 <label for="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>"><?php esc_html_e( 'Attributes for category only', 'f-shop' ) ?></label>
+                </span>
+            </p>
+            <p>
+                <span class="fs-custom-checkbox">
+                       <input type="checkbox"
+                              name="<?php echo esc_attr( $this->get_field_name( 'fs_hide_in_catalog' ) ); ?>"
+                              value="1"
+                              id="<?php echo esc_attr( $this->get_field_id( 'fs_hide_in_catalog' ) ); ?>" <?php checked( 1, $fs_hide_in_catalog ) ?>>
+                <label for="<?php echo esc_attr( $this->get_field_id( 'fs_hide_in_catalog' ) ); ?>"><?php esc_html_e( 'Don\'t show on catalog page', 'f-shop' ) ?></label>
+                </span>
+
             </p>
             <p>
                 <label
                         for="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>"><?php esc_html_e( 'Type', 'f-shop' ) ?></label>
                 <select name="<?php echo esc_attr( $this->get_field_name( 'fs_att_types' ) ); ?>"
-                        id="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>">
+                        id="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>" class="fs-select-field">
                     <option value="normal"><?php esc_html_e( 'Normal', 'f-shop' ) ?></option>
                     <option
                             value="color" <?php selected( 'color', $fs_att_types ) ?>><?php esc_html_e( 'Color', 'f-shop' ) ?></option>
@@ -119,7 +140,9 @@ class FS_Attribute_Widget extends \WP_Widget {
                 </select>
             </p>
             <p>
-                <label for=""><?php esc_html_e( 'Show only in categories', 'f-shop' ); ?></label>
+                <label for="<?php echo esc_attr( $this->get_field_id( 'fs_only_cats' ) ) ?>">
+					<?php esc_html_e( 'Show only in categories', 'f-shop' ); ?>
+                </label>
 				<?php $args = array(
 					'show_option_all'   => '',
 					'show_option_none'  => '',
@@ -137,10 +160,42 @@ class FS_Attribute_Widget extends \WP_Widget {
 					'multiple'          => 1,
 					'name'              => $this->get_field_name( 'fs_only_cats' ),
 					'id'                => $this->get_field_id( 'fs_only_cats' ),
-					'class'             => 'postform',
+					'class'             => 'fs-select-field',
 					'depth'             => 0,
 					'tab_index'         => 0,
 					'taxonomy'          => FS_Config::get_data( 'product_taxonomy' ),
+					'hide_if_empty'     => false,
+					'value_field'       => 'term_id',
+					'required'          => false,
+				);
+
+				wp_dropdown_categories( $args ); ?>
+            </p>
+            <p>
+                <label for="<?php echo esc_attr( $this->get_field_id( 'fs_hide_custom_values' ) ) ?>">
+					<?php esc_html_e( 'Скрыть значения из фильтра', 'f-shop' ); ?>
+                </label>
+				<?php $args = array(
+					'show_option_all'   => '',
+					'show_option_none'  => '',
+					'option_none_value' => - 1,
+					'orderby'           => 'name',
+					'order'             => 'ASC',
+					'show_last_update'  => 0,
+					'show_count'        => 0,
+					'hide_empty'        => 1,
+					'child_of'          => $fs_att_group,
+					'exclude'           => '',
+					'echo'              => 1,
+					'selected'          => $fs_hide_custom_values,
+					'hierarchical'      => 1,
+					'multiple'          => 1,
+					'name'              => $this->get_field_name( 'fs_hide_custom_values' ),
+					'id'                => $this->get_field_id( 'fs_hide_custom_values' ),
+					'class'             => 'fs-select-field',
+					'depth'             => 0,
+					'tab_index'         => 0,
+					'taxonomy'          => FS_Config::get_data( 'features_taxonomy' ),
 					'hide_if_empty'     => false,
 					'value_field'       => 'term_id',
 					'required'          => false,
@@ -166,12 +221,25 @@ class FS_Attribute_Widget extends \WP_Widget {
 			$title_name = 'title';
 		}
 
-		$title        = apply_filters( 'widget_title', $instance[ $title_name ] );
-		$type         = ! empty( $instance['fs_att_types'] ) ? $instance['fs_att_types'] : 'text';
-		$fs_only_cats = ! empty( $instance['fs_only_cats'] ) ? explode( ',', $instance['fs_only_cats'] ) : [];
+		$title                 = apply_filters( 'widget_title', $instance[ $title_name ] );
+		$type                  = ! empty( $instance['fs_att_types'] ) ? $instance['fs_att_types'] : 'text';
+		$fs_only_cats          = ! empty( $instance['fs_only_cats'] ) ? explode( ',', $instance['fs_only_cats'] ) : [];
+		$fs_hide_in_catalog    = ! empty( $instance['fs_hide_in_catalog'] ) ? $instance['fs_hide_in_catalog'] : 0;
+
+		$widget_attributes     = apply_filters( 'fs_widget_attributes',
+			[
+				'type'           => $type,
+				'current_screen' => intval($instance['fs_screen_atts']),
+				'exclude'        => isset( $instance['fs_hide_custom_values'] ) ? $instance['fs_hide_custom_values'] : []
+			], $instance );
 
 		//We exit if we are on the page of the term taxonomy and the term is not found in the settings
 		if ( is_tax() && count( $fs_only_cats ) && ! in_array( get_queried_object_id(), $fs_only_cats ) ) {
+			return;
+		}
+
+		// Скрываем виджет на странице архива товаров
+		if ( $fs_hide_in_catalog && is_archive() && ! is_tax() ) {
 			return;
 		}
 
@@ -179,10 +247,7 @@ class FS_Attribute_Widget extends \WP_Widget {
 		if ( ! empty( $title ) ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
-		do_action( 'fs_attr_filter', $instance['fs_att_group'], array(
-			'type'           => $type,
-			'current_screen' => ! empty( $instance['fs_screen_atts'] ) ? true : false
-		) );
+		do_action( 'fs_attr_filter', $instance['fs_att_group'], $widget_attributes );
 		echo $args['after_widget'];
 	}
 
@@ -209,11 +274,13 @@ class FS_Attribute_Widget extends \WP_Widget {
 			}
 		}
 
-		$instance['title']          = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-		$instance['fs_att_group']   = intval( $new_instance['fs_att_group'] );
-		$instance['fs_att_types']   = ! empty( $new_instance['fs_att_types'] ) ? strip_tags( $new_instance['fs_att_types'] ) : '';
-		$instance['fs_screen_atts'] = ! empty( $new_instance['fs_screen_atts'] ) ? strip_tags( $new_instance['fs_screen_atts'] ) : 0;
-		$instance['fs_only_cats']   = ! empty( $new_instance['fs_only_cats'] ) ? implode( ',', $new_instance['fs_only_cats'] ) : '';
+		$instance['title']                 = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['fs_att_group']          = intval( $new_instance['fs_att_group'] );
+		$instance['fs_att_types']          = ! empty( $new_instance['fs_att_types'] ) ? strip_tags( $new_instance['fs_att_types'] ) : '';
+		$instance['fs_screen_atts']        = ! empty( $new_instance['fs_screen_atts'] ) ? strip_tags( $new_instance['fs_screen_atts'] ) : 0;
+		$instance['fs_only_cats']          = ! empty( $new_instance['fs_only_cats'] ) ? implode( ',', $new_instance['fs_only_cats'] ) : '';
+		$instance['fs_hide_in_catalog']    = isset( $new_instance['fs_hide_in_catalog'] ) ? $new_instance['fs_hide_in_catalog'] : 0;
+		$instance['fs_hide_custom_values'] = isset( $new_instance['fs_hide_custom_values'] ) ? $new_instance['fs_hide_custom_values'] : [];
 
 		return $instance;
 	}
