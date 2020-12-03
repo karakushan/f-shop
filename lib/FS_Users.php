@@ -1247,10 +1247,10 @@ class FS_Users {
 		}
 
 
-		$out = '<div class="fs-dashboard">';
-		$out .= apply_filters( 'fs_dashboard_tabs_before', '' );
-		$out .= '<div class="nav nav-tabs" id="fs-dashboard-nav" role="tablist">';
-		$out .= apply_filters( 'fs_dashboard_nav_before', '' );
+		echo '<div class="fs-dashboard">';
+		do_action( 'fs_dashboard_tabs_before' );
+		echo '<div class="nav nav-tabs" id="fs-dashboard-nav" role="tablist">';
+		do_action( 'fs_dashboard_nav_before' );
 
 		foreach ( $tabs as $tab_id => $tab ) {
 			$href   = '#fs-dashboard-' . $tab_id;
@@ -1259,15 +1259,13 @@ class FS_Users {
 				$href   = $tab['link_href'];
 				$toggle = 'no-tab';
 			}
-			$out .= '<a class="' . esc_attr( $tab['nav_class'] ) . '" data-toggle="' . esc_attr( $toggle ) . '" href="' . esc_attr( $href ) . '" role="tab" aria-controls="' . esc_attr( $tab_id ) . '">' . $tab['title'] . '</a>';
+			echo '<a class="' . esc_attr( $tab['nav_class'] ) . '" data-toggle="' . esc_attr( $toggle ) . '" href="' . esc_attr( $href ) . '" role="tab" aria-controls="' . esc_attr( $tab_id ) . '">' . $tab['title'] . '</a>';
 		}
 
-		$out .= apply_filters( 'fs_dashboard_nav_after', '' );
-
-		$out .= '</div><!-- end #fs-dashboard-nav -->';
-
-		$out .= '<div class="tab-content" id="fs-dashboard-content">';
-
+		do_action( 'fs_dashboard_nav_after' );
+		echo '</div><!-- end #fs-dashboard-nav -->';
+		do_action( 'fs_dashboard_tabs_content_before' );
+		echo '<div class="tab-content" id="fs-dashboard-content">';
 		$index = 0;
 		foreach ( $tabs as $tab_id => $tab ) {
 			if ( $tab['link'] ) {
@@ -1277,15 +1275,14 @@ class FS_Users {
 			if ( $index === 0 ) {
 				$tab_class = $tab['tab_class'] . ' fade show in';
 			}
-			$out .= '<div class="' . esc_attr( $tab_class ) . '" id="fs-dashboard-' . esc_attr( $tab_id ) . '" role="tabpanel" aria-labelledby="fs-dashboard-' . esc_attr( $tab_id ) . '">' . $tab['content'] . '</div>';
+			echo '<div class="' . esc_attr( $tab_class ) . '" id="fs-dashboard-' . esc_attr( $tab_id ) . '" role="tabpanel" aria-labelledby="fs-dashboard-' . esc_attr( $tab_id ) . '">' . $tab['content'] . '</div>';
 			$index ++;
 		}
 
-		$out .= '</div><!-- end #fs-dashboard-content -->';
-		$out .= apply_filters( 'fs_dashboard_tabs_after', '' );
-		$out .= '</div><!-- end #fs-dashboard -->';
+		echo '</div><!-- end #fs-dashboard-content -->';
+		do_action( 'fs_dashboard_tabs_after' );
+		echo '</div><!-- end #fs-dashboard -->';
 
-		return $out;
 
 	}
 

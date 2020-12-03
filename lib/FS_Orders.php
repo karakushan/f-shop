@@ -350,7 +350,7 @@ Good luck!', 'f-shop' );
 			'meta_value'  => $user_id,
 		) );
 
-		return new \WP_Query($args);
+		return get_posts($args);
 	}
 
 	/**

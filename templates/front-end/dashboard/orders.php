@@ -1,21 +1,18 @@
-<?php
-global $post;
-?>
 <?php if ( $orders ): ?>
     <div class="fs-dashboard-orders">
 		<?php foreach ( $orders as $post ): ?>
-			<?php setup_postdata( $post ) ?>
+			<?php $order = fs_set_order( $post ) ?>
             <div <?php post_class( 'fs-dashboard-order' ) ?>>
                 <div class="fs-dashboard-order__header">
-                    <span class="badge badge-primary"> <i><?php echo get_post_status() ?></i></span>
+                    <span class="badge badge-primary"> <i><?php echo $order->status ?></i></span>
                     <span class="datetime"><?php the_time( 'd.m.Y H:i' ) ?></span>
-                    <span><?php esc_html_e( 'Items', 'f-shop' ); ?>: <i><?php echo count( $post->data->_products ) ?></i></span>
-                    <span><?php esc_html_e( 'Total cost', 'f-shop' ); ?>: <i><?php echo apply_filters( 'fs_price_format', $post->data->_amount ) ?>&nbsp;<?php echo fs_currency() ?></i></span>
+                    <span><?php esc_html_e( 'Items', 'f-shop' ); ?>: <i><?php echo $order->count ?></i></span>
+                    <span><?php esc_html_e( 'Total cost', 'f-shop' ); ?>: <i><?php echo apply_filters( 'fs_price_format', $order ) ?>&nbsp;<?php echo fs_currency() ?></i></span>
                     <button type="button"
                             class="btn btn-primary btn-sm" data-toggle="collapse"
-                            data-target="#fs-dashboard-order-<?php the_ID() ?>"><?php esc_html_e( 'Order details', 'f-shop' ); ?></button>
+                            data-target="#fs-dashboard-order-<?php $order->ID ?>"><?php esc_html_e( 'Order details', 'f-shop' ); ?></button>
                 </div>
-                <div class="fs-dashboard-order__hide collapse" id="fs-dashboard-order-<?php the_ID() ?>">
+                <div class="fs-dashboard-order__hide collapse" id="fs-dashboard-order-<?php $order->ID ?>">
                     <div class="row">
                         <div class="col-lg-12">
                             <table class="table">
@@ -30,18 +27,16 @@ global $post;
                                 </thead>
                                 <tbody>
 								<?php
-
-                                var_dump($post);
-                                exit();
-
-                                foreach ( $post->data->_products as $product ): ?>
-									<?php $cost = fs_get_price( $product['ID'] ) * $product['count']; ?>
+								foreach ( $order->items as $key => $product ): ?>
+									<?php  $product = fs_set_product( $product, $key ); ?>
                                     <tr>
-                                        <td><a href="<?php the_permalink($product['ID']) ?>" target="_blank"><?php echo esc_html( get_the_title($product['ID']) ) ?></a></td>
-                                        <td><?php fs_product_thumbnail( $product['ID'] ) ?></td>
-                                        <td><?php fs_the_price( $product['ID'] ) ?></td>
-                                        <td><?php echo esc_html( $product['count'] ) ?></td>
-                                        <td><?php echo apply_filters( 'fs_price_format', $cost ) ?>&nbsp;<?php echo fs_currency() ?></td>
+                                        <td><a href="<?php the_permalink( $product['ID'] ) ?>"
+                                               target="_blank"><?php $product->the_title(); ?></a>
+                                        </td>
+                                        <td><?php $product->the_thumbnail(); ?></td>
+                                        <td><?php $product->the_price(); ?></td>
+                                        <td><?php echo esc_html( $product->count ) ?></td>
+                                        <td><?php echo esc_html($product->cost_display) ?></td>
                                     </tr>
 								<?php endforeach; ?>
 
@@ -54,7 +49,7 @@ global $post;
                             <div class="label"><?php esc_html_e( 'Delivery', 'f-shop' ) ?></div>
                         </div>
                         <div class="col-lg-9">
-                            <p><?php echo get_term_field( 'name', $post->data->_delivery['method'] ) ?></p>
+                            <p><?php echo esc_html(  $order->delivery_method ) ?></p>
                         </div>
                     </div>
                     <div class="row">
@@ -62,7 +57,7 @@ global $post;
                             <div class="label"><?php esc_html_e( 'Payment', 'f-shop' ) ?></div>
                         </div>
                         <div class="col-lg-9">
-                            <p><?php echo get_term_field( 'name', $post->data->_payment ) ?></p>
+                            <p><?php echo esc_html(  $order->payment_method ) ?></p>
                         </div>
                     </div>
                 </div>
