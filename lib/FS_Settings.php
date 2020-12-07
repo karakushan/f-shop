@@ -660,28 +660,22 @@ class FS_Settings {
 
 
 			),
-			'debug'            => array(
-				'name'        => __( 'Debugging', 'f-shop' ),
-				'description' => __( 'The debug data is displayed here as text.', 'f-shop' ),
+			'marketing'        => array(
+				'name'        => __( 'Marketing', 'f-shop' ),
+				'description' => __( 'Allows you to set analytics and marketing codes', 'f-shop' ),
 				'fields'      => array(
 					array(
-						'type'  => 'html',
-						'name'  => FS_PLUGIN_PREFIX . 'debug_session',
-						'label' => __( 'Sessions', 'f-shop' ),
-						'value' => $session
+						'type'  => 'textarea',
+						'name'  => 'fs_marketing_code_header',
+						'label' => __( 'Коды аналитики в шапке', 'f-shop' ),
+						'value' => fs_option( 'fs_marketing_code_header' )
 					),
 					array(
-						'type'  => 'html',
-						'name'  => FS_PLUGIN_PREFIX . 'debug_cookie',
-						'label' => 'Cookie',
-						'value' => $cookie
+						'type'  => 'textarea',
+						'name'  => 'fs_marketing_code_footer',
+						'label' => __( 'Коды аналитики в футере', 'f-shop' ),
+						'value' => fs_option( 'fs_marketing_code_footer' )
 					),
-					array(
-						'type'  => 'html',
-						'name'  => FS_PLUGIN_PREFIX . 'debug_php',
-						'label' => 'PHP',
-						'value' => $phpinfo
-					)
 				)
 
 
