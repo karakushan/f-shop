@@ -1150,14 +1150,12 @@ function fs_parse_url( $url = '' ) {
  */
 function fs_is_action( $product_id = 0 ) {
 	$product_id   = fs_get_product_id( $product_id );
-	$base_price   = get_post_meta( $product_id, FS_Config::get_meta( 'price' ), 1 );
-	$action_price = get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), 1 );
 
-	if ( floatval( $action_price ) > 0 && floatval( $action_price ) < floatval( $base_price ) ) {
-		return true;
-	} elseif ( get_post_meta( $product_id, FS_Config::get_product_field( 'label_promotion' )['key'], 1 ) ) {
+	if ( get_post_meta( $product_id, FS_Config::get_product_field( 'label_promotion' )['key'], 1 ) ) {
 		return true;
 	}
+
+	return false;
 }
 
 
