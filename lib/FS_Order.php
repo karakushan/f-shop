@@ -3,6 +3,8 @@
 
 namespace FS;
 
+use WP_Post;
+
 
 class FS_Order {
 
@@ -73,21 +75,21 @@ class FS_Order {
 	public $meta;
 
 
-	public function __construct( $order_id = 0 ) {
-		$this->set_order( $order_id );
+	public function __construct( WP_Post $order ) {
+		$this->set_order( $order );
 	}
 
 
 	/**
 	 * Устанавливает данные заказа
 	 *
-	 * @param $order_id \WP_Post
+	 * @param \WP_Post $order
+	 *
+	 * @return null
 	 */
-	public function set_order( $order_id = 0 ) {
+	public function set_order( \WP_Post $order ) {
 
-		if ( $order_id ) {
-			$this->ID = $order_id;
-		}
+		$this->ID = $order_id = $order->ID;
 
 		if ( ! $order_id && $this->get_last_order_id() ) {
 			$this->ID = $this->get_last_order_id();

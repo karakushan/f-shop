@@ -755,6 +755,15 @@ class FS_Product {
 	}
 
 	/**
+	 * Выводит ссылку на странцу товара
+	 *
+	 * @param int $product_id
+	 */
+	public function the_permalink( $product_id = 0 ) {
+		echo esc_url( $this->get_permalink( $product_id ) );
+	}
+
+	/**
 	 * Returns the base price of the item.
 	 *
 	 * @param int $product_id
@@ -846,7 +855,7 @@ class FS_Product {
 			$counter = 0;
 			foreach ( $default_tabs as $id => $tab ) {
 				$class = ! $counter ? ' active' : '';
-				$html  .= '<li class="nav-item '.$class.'">';
+				$html  .= '<li class="nav-item ' . $class . '">';
 				$html  .= '<a class="nav-link' . esc_attr( $class ) . '" id="fs-product-tab-nav-' . esc_attr( $id ) . '" data-toggle="tab" href="#fs-product-tab-' . esc_attr( $id ) . '" role="tab" aria-controls="' . esc_attr( $id ) . '" aria-selected="true">' . esc_html( $tab['title'] ) . '</a>';
 				$html  .= '</li>';
 				$counter ++;
@@ -1241,7 +1250,7 @@ class FS_Product {
 						echo '<div class="fs-field-row clearfix">';
 
 						$key            = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
-						$field['value'] =isset($field['value']) ? $field['value'] : get_post_meta( $post->ID, $key, true );
+						$field['value'] = isset( $field['value'] ) ? $field['value'] : get_post_meta( $post->ID, $key, true );
 						$form_class->render_field( $key, $field['type'], $field );
 						echo '</div>';
 					}
@@ -1294,13 +1303,12 @@ class FS_Product {
 		$amount   = apply_filters( 'fs_price_format', $amount ) . ' ' . fs_currency();
 
 
-
 		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-0.php';
 	}
 
 	/* метабокс данных пользователя в редактировании заказа */
 	public function add_order_user_meta_boxes( $post ) {
-		$order=new FS_Order($post->ID);
+		$order = new FS_Order( $post->ID );
 
 		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-1.php';
 	}
