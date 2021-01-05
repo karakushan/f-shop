@@ -490,6 +490,7 @@ class FS_Ajax {
 		exit();
 	}
 
+
 	/**
 	 *Отправка заказа в базу, на почту админа и заказчика
 	 */
@@ -501,8 +502,21 @@ class FS_Ajax {
 		$order_create_date_display = date_i18n( 'd F Y H:i', $order_create_time );
 		$form_data                 = array_map( 'trim', $_POST );
 
+		// Валидация данных запроса
+		// Проверяем происходит ли запрос от нашего сайта
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
+		}
+
+		// Проверяем минимальную сумму заказа, если указано
+		if ( fs_option( 'fs_minimum_order_amount', 0 )
+		     && fs_get_total_amount( false ) < fs_option( 'fs_minimum_order_amount', 0 ) ) {
+			wp_send_json_error( array(
+				'msg' => sprintf( __( 'Минимальная сумма заказа %s %s', 'f-shop' ),
+					fs_option( 'fs_minimum_order_amount', 0 ),
+					fs_currency()
+				)
+			) );
 		}
 
 		// IP адрес покупателя
@@ -542,7 +556,7 @@ class FS_Ajax {
 				continue;
 			}
 
-			$sanitize_field[ $field_name ] =isset($form_data[ $field_name ]) ?  $form_data[ $field_name ] : '';
+			$sanitize_field[ $field_name ] = isset( $form_data[ $field_name ] ) ? $form_data[ $field_name ] : '';
 		}
 
 		// проверяем существование пользователя
@@ -571,7 +585,7 @@ class FS_Ajax {
 		// обновляем мета поля пользователя
 		if ( $user_id ) {
 			$user_data = [
-				'ID'   => $user_id,
+				'ID' => $user_id,
 			];
 			if ( ! empty( $sanitize_field['fs_first_name'] ) ) {
 				$user_data['first_name'] = $sanitize_field['fs_first_name'];
@@ -592,28 +606,28 @@ class FS_Ajax {
 		// Вставляем заказ в базу данных
 		$pay_method     = get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] );
 		$new_order_data = array(
-			'post_title'       => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
-			'post_content'     => '',
-			'post_status'      => $search_blacklist ? 'black_list' : 'new',
-			'post_type'        => $fs_config->data['post_type_orders'],
-			'post_author'      => 1,
-			'ping_status'      => get_option( 'default_ping_status' ),
-			'post_parent'      => 0,
-			'menu_order'       => 0,
-			'import_id'        => 0,
-			'meta_input'       => array(
-				'_user_id'        => $user_id,
-				'_customer_ip'    => $customer_ip,
-				'_customer_email' => $sanitize_field['fs_email'],
-				'_customer_phone' => $sanitize_field['fs_phone'],
-				'_user'           => array(
+			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
+			'post_content' => '',
+			'post_status'  => $search_blacklist ? 'black_list' : 'new',
+			'post_type'    => $fs_config->data['post_type_orders'],
+			'post_author'  => 1,
+			'ping_status'  => get_option( 'default_ping_status' ),
+			'post_parent'  => 0,
+			'menu_order'   => 0,
+			'import_id'    => 0,
+			'meta_input'   => array(
+				'_user_id'         => $user_id,
+				'_customer_ip'     => $customer_ip,
+				'_customer_email'  => $sanitize_field['fs_email'],
+				'_customer_phone'  => $sanitize_field['fs_phone'],
+				'_user'            => array(
 					'id'         => $user_id,
 					'first_name' => $sanitize_field['fs_first_name'],
 					'last_name'  => $sanitize_field['fs_last_name'],
 					'email'      => $sanitize_field['fs_email'],
 					'phone'      => $sanitize_field['fs_phone']
 				),
-				'city'            => $sanitize_field['fs_city'],
+				'city'             => $sanitize_field['fs_city'],
 				'_products'        => $fs_products,
 				'_custom_products' => $fs_custom_products,
 				'_delivery'        => array(

@@ -467,6 +467,15 @@ class FS_Settings {
 						'value'     => fs_option( 'create_order_mail_template' ),
 						'post_type' => 'fs-mail-template'
 					),
+					array(
+						'type'       => 'number',
+						'name'       => 'fs_minimum_order_amount',
+						'label'      => sprintf(__( 'Минимальная сумма заказа (%s)', 'f-shop' ),fs_currency()),
+						'value'      => fs_option( 'fs_minimum_order_amount', 0 ),
+						'attributes' => [
+							'min' => 0
+						]
+					),
 				)
 
 
