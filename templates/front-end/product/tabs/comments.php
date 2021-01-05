@@ -62,10 +62,10 @@ $product   = new FS_Product();
 				'title_reply_after'  => '</div>',
 				'fields'             => array(
 					'author' => '<p class="comment-form-author">
-		<input id="author" placeholder="' . __( 'Ваше имя', 'ecoveles' ) . '" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '"/>
+		<input id="author" placeholder="' . __( 'Name', 'f-shop' ) . '" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '"/>
 	</p>',
 					'email'  => '<p class="comment-form-email">
-		<input id="email" name="email" placeholder="' . __( 'Email' ) . '"  value="' . esc_attr( $commenter['comment_author_email'] ) . '" aria-describedby="email-notes" />
+		<input id="email" name="email" placeholder="' . __( 'Email','f-shop' ) . '"  value="' . esc_attr( $commenter['comment_author_email'] ) . '" aria-describedby="email-notes" />
 	</p>',
 
 				),
@@ -74,7 +74,7 @@ $product   = new FS_Product();
 				'comment_notes_after'  => null,
 				'comment_field'        => '<p class="comment-form-comment"><textarea id="comment" placeholder="' . _x( 'Comment', 'noun' ) . '" name="comment" cols="45" rows="8" aria-required="true"></textarea></p>' . $product->product_rating( 0, [
 						'echo'   => false,
-						'before' => '<div class="rating-before">' . __( 'Оценка товара:', 'ecoveles' ) . '</div>'
+						'before' => '<div class="rating-before">' . __( 'Rating:', 'f-shop' ) . '</div>'
 					] ),
 				'label_submit'         => __( 'Give feedback', 'f-shop' ),
 				'class_submit'         => 'btn btn-lg btn-outline btn-orange'
