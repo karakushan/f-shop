@@ -830,7 +830,7 @@ class FS_Product {
 			),
 			'description' => array(
 				'title'   => __( 'Description', 'f-shop' ),
-				'content' => get_the_content()
+				'content' => apply_filters( 'the_content', get_the_content() )
 			),
 			'delivery'    => array(
 				'title'   => __( 'Shipping and payment', 'f-shop' ),
