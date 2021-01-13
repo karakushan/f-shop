@@ -501,6 +501,7 @@ class FS_Ajax {
 		$order_create_time         = time();
 		$order_create_date_display = date_i18n( 'd F Y H:i', $order_create_time );
 		$form_data                 = array_map( 'trim', $_POST );
+		$update_user_meta          = isset( $_POST['fs_update_user_meta'] ) ? boolval( $_POST['fs_update_user_meta'] ) : true;
 
 		// Валидация данных запроса
 		// Проверяем происходит ли запрос от нашего сайта
@@ -583,7 +584,7 @@ class FS_Ajax {
 		}
 
 		// обновляем мета поля пользователя
-		if ( $user_id ) {
+		if ( $user_id  && $update_user_meta) {
 			$user_data = [
 				'ID' => $user_id,
 			];

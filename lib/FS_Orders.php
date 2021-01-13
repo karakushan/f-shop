@@ -1,6 +1,7 @@
 <?php
 
 namespace FS;
+
 use function WP_CLI\Utils\esc_like;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class FS_Orders {
 
-    public $post_type = 'orders';
+	public $post_type = 'orders';
 	public $last_order_id = null;
 
 	function __construct() {
@@ -21,7 +22,7 @@ class FS_Orders {
 		add_filter( 'pre_get_posts', array( $this, 'filter_orders_by_search' ) );
 
 		//===== ORDER STATUSES ====
-		add_action( 'init', array( $this, 'order_status_custom' ) );
+		add_action( 'admin_init', array( $this, 'order_status_custom' ) );
 		add_action( 'admin_footer-post-new.php', array( $this, 'true_append_post_status_list' ) );
 		add_action( 'admin_footer-post.php', array( $this, 'true_append_post_status_list' ) );
 		add_filter( 'display_post_states', array( $this, 'true_status_display' ) );
@@ -57,6 +58,7 @@ class FS_Orders {
 		$order_id   = $this->get_last_order_id();
 		$order      = new FS_Orders;
 		$order_info = $order->get_order( $order_id );
+
 		return floatval( $order_info->summa );
 	}
 
@@ -140,11 +142,28 @@ class FS_Orders {
 				'name'        => __( 'Return', 'f-shop' ),
 				'description' => __( 'The administrator assigns the status to the order if the client for some reason returned the goods.', 'f-shop' )
 			),
-            'black_list'       => array(
+			'black_list'   => array(
 				'name'        => __( 'Black list', 'f-shop' ),
 				'description' => __( 'This status is assigned to an order if violations were detected on the part of the customer. On subsequent orders, all orders from this IP, e-mail, phone automatically receive this status.', 'f-shop' )
 			),
 		);
+
+		$user_post_statuses = get_terms( [
+			'taxonomy'   => FS_Config::get_data( 'order_statuses_taxonomy' ),
+			'hide_empty' => false
+		] );
+
+		// Если есть статусы добавленные пользователем
+		if ( $user_post_statuses ) {
+			$order_statuses = [];
+			foreach ( $user_post_statuses as $status ) {
+				$order_statuses[ $status->slug ] = [
+					'name'        => $status->name,
+					'description' => $status->description
+				];
+			}
+		}
+
 
 		return apply_filters( 'fs_order_statuses', $order_statuses );
 	}
@@ -189,7 +208,8 @@ class FS_Orders {
 		) );
 	}
 
-	/**Отображает заказы текущего пользователя в виде таблицы
+	/**
+	 * Отображает заказы текущего пользователя в виде таблицы
 	 *
 	 * @return string
 	 */
@@ -268,9 +288,10 @@ Good luck!', 'f-shop' );
 	 * метод регистрирует статусы заказов в системе
 	 */
 	function order_status_custom() {
+	    $statuses=self::default_order_statuses();
 
-		if ( self::default_order_statuses() ) {
-			foreach ( self::default_order_statuses() as $key => $status ) {
+		if (count($statuses) ) {
+			foreach ( $statuses as $key => $status ) {
 				register_post_status( $key, array(
 					'label'                     => $status['name'],
 					'label_count'               => _n_noop( $status['name'] . ' <span class="count">(%s)</span>', $status['name'] . ' <span
@@ -311,9 +332,9 @@ Good luck!', 'f-shop' );
 	 * @return \stdClass
 	 */
 	private static function set_order_data( $order_id ) {
-		$order_meta = get_post_meta( $order_id );
-		$data       = new self();
-		$data->_products=self::get_order_items( $order_id );
+		$order_meta      = get_post_meta( $order_id );
+		$data            = new self();
+		$data->_products = self::get_order_items( $order_id );
 		if ( $order_meta ) {
 			foreach ( $order_meta as $key => $item ) {
 
@@ -350,7 +371,7 @@ Good luck!', 'f-shop' );
 			'meta_value'  => $user_id,
 		) );
 
-		return get_posts($args);
+		return get_posts( $args );
 	}
 
 	/**
@@ -468,7 +489,7 @@ Good luck!', 'f-shop' );
 		}
 		global $wpdb;
 		$s       = $_GET['s'];
-		$results = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_value LIKE %s", '%'.$s.'%' ) );
+		$results = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_value LIKE %s", '%' . $s . '%' ) );
 		if ( $results ) {
 			$user_ids = [];
 			foreach ( $results as $result ) {

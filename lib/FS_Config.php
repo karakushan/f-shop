@@ -717,25 +717,26 @@ class FS_Config {
 		$key = ''
 	) {
 		$data = array(
-			'plugin_path'            => FS_PLUGIN_PATH,
-			'plugin_url'             => FS_PLUGIN_URL,
-			'plugin_ver'             => '1.3',
-			'plugin_name'            => 'f-shop',
-			'plugin_user_template'   => get_template_directory() . '/f-shop/',
-			'plugin_template'        => FS_PLUGIN_PATH . 'templates/front-end/',
-			'plugin_settings'        => 'f-shop-settings',
-			'post_type'              => 'product',
-			'post_type_orders'       => 'orders',
-			'product_taxonomy'       => 'catalog',
-			'features_taxonomy'      => 'product-attributes',
-			'product_pay_taxonomy'   => 'fs-payment-methods',
-			'brand_taxonomy'         => 'fs-brands',
-			'product_del_taxonomy'   => 'fs-delivery-methods',
-			'product_taxes_taxonomy' => 'fs-taxes',
-			'discount_taxonomy'      => 'fs-discounts',
-			'currencies_taxonomy'    => 'fs-currencies',
-			'preloader'              => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif',
-			'default_order_status'   => 'new'
+			'plugin_path'             => FS_PLUGIN_PATH,
+			'plugin_url'              => FS_PLUGIN_URL,
+			'plugin_ver'              => '1.3',
+			'plugin_name'             => 'f-shop',
+			'plugin_user_template'    => get_template_directory() . '/f-shop/',
+			'plugin_template'         => FS_PLUGIN_PATH . 'templates/front-end/',
+			'plugin_settings'         => 'f-shop-settings',
+			'post_type'               => 'product',
+			'post_type_orders'        => 'orders',
+			'order_statuses_taxonomy' => 'fs-order-status',
+			'product_taxonomy'        => 'catalog',
+			'features_taxonomy'       => 'product-attributes',
+			'product_pay_taxonomy'    => 'fs-payment-methods',
+			'brand_taxonomy'          => 'fs-brands',
+			'product_del_taxonomy'    => 'fs-delivery-methods',
+			'product_taxes_taxonomy'  => 'fs-taxes',
+			'discount_taxonomy'       => 'fs-discounts',
+			'currencies_taxonomy'     => 'fs-currencies',
+			'preloader'               => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif',
+			'default_order_status'    => 'new'
 
 		);
 		$data = apply_filters( 'fs_data', $data );

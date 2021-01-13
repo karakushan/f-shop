@@ -861,6 +861,24 @@ class FS_Taxonomy
                 'show_admin_column' => false,
                 'hierarchical' => false,
                 'show_in_quick_edit' => false
+            ),
+            FS_Config::get_data('order_statuses_taxonomy') => array(
+                'object_type' => FS_Config::get_data('post_type_orders'),
+                'label' => __('Order statuses', 'f-shop'),
+                'labels' => array(
+                    'name' => __('Order statuses', 'f-shop'),
+                    'singular_name' => __('Order status', 'f-shop'),
+                    'add_new_item' => __('Add Order Status', 'f-shop'),
+                ),
+                //					исключаем категории из лицевой части
+                "public" => false,
+                "show_ui" => true,
+                'show_in_nav_menus' => false,
+                "publicly_queryable" => false,
+                'meta_box_cb' => false,
+                'show_admin_column' => false,
+                'hierarchical' => false,
+                'show_in_quick_edit' => true
             )
         );
         if (fs_option('discounts_on') == 1) {
@@ -1056,7 +1074,7 @@ class FS_Taxonomy
         }
 
 
-        if (count($fields[$taxonomy])) {
+        if (is_array($fields[$taxonomy]) && count($fields[$taxonomy])) {
             foreach ($fields[$taxonomy] as $name => $field) {
 
                 if ($multi_lang) {

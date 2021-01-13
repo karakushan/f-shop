@@ -75,7 +75,7 @@ class FS_Order {
 	public $meta;
 
 
-	public function __construct( WP_Post $order ) {
+	public function __construct(  $order ) {
 		$this->set_order( $order );
 	}
 
@@ -83,13 +83,13 @@ class FS_Order {
 	/**
 	 * Устанавливает данные заказа
 	 *
-	 * @param \WP_Post $order
+	 * @param int $order_id
 	 *
 	 * @return null
 	 */
-	public function set_order( \WP_Post $order ) {
+	public function set_order( int $order_id ) {
 
-		$this->ID = $order_id = $order->ID;
+		$this->ID = $order_id;
 
 		if ( ! $order_id && $this->get_last_order_id() ) {
 			$this->ID = $this->get_last_order_id();
