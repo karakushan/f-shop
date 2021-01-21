@@ -357,13 +357,12 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td class="header-lg">
-                            {{ __('Thank you for your order!') }}
+                            {{ __('Thank you for your order!','f-shop') }}
                         </td>
                     </tr>
                     <tr>
                         <td class="free-text">
-                            Ваш заказ №{{ order_id  }} успешно создан. Мы свяжемся с Вами в ближайшее время. Если этого не произошло в течении 1-2 дней, то свяжитесь с нами за этими контактными
-                            данными: <br/>
+                           {{  __('Your order #%d has been successfully created. We will contact you shortly. If this did not happen within 1-2 days, then contact us for these contact details:','f-shop')|format(order_id)}} <br/>
                             {% if contact_phone %}<a href="tel:{{ contact_phone|clean_number }}">{{ contact_phone }}</a>
                                 <br/>{% endif %}
                             {% if contact_email %} <a
@@ -379,11 +378,11 @@
                                              strokecolor="#ffffff" fillcolor="#ff6f6f">
                                     <w:anchorlock/>
                                     <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">
-                                        {{ __('Personal Area') }}
+                                        {{ __('Personal Area','f-shop') }}
                                     </center>
                                 </v:roundrect>
                                 <![endif]--><a href="{{ dashboard_url }}"
-                                               style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">{{ __('Personal Area') }}</a>
+                                               style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">{{ __('Personal Area','f-shop') }}</a>
                             </div>
                         </td>
                     </tr>
@@ -399,16 +398,16 @@
                                                            style="border-collapse:separate !important;">
                                                         <tr>
                                                             <td class="mini-block">
-                                                                <span class="header-sm">{{ __('Delivery') }}</span><br/>
-                                                                {% if delivery_method %} {{ __("Delivery method") }}:  {{ delivery_method }}{% endif %}
+                                                                <span class="header-sm">{{ __('Delivery','f-shop') }}</span><br/>
+                                                                {% if delivery_method %} {{ __("Delivery method",'f-shop') }}:  {{ delivery_method }}{% endif %}
                                                                 {% if delivery_number %} №{{ delivery_number }}{% endif %}<br/>
-                                                                {% if client_city %} {{ __('City') }}: {{ client_city }}
+                                                                {% if client_city %} {{ __('City','f-shop') }}: {{ client_city }}
                                                                     <br/>{% endif %}
-                                                                {% if client_address %} {{ __("Address") }}: {{ client_address }}
+                                                                {% if client_address %} {{ __("Address",'f-shop') }}: {{ client_address }}
                                                                     <br/>{% endif %}
-                                                                {% if client_first_name %} {{ __("First Name") }} {{ __("Last name") }}: {{ client_first_name }} {{ client_last_name }}
+                                                                {% if client_first_name %} {{ __("First Name",'f-shop') }} {{ __("Last name",'f-shop') }}: {{ client_first_name }} {{ client_last_name }}
                                                                     <br/>{% endif %}
-                                                                {% if client_phone %} {{ __("Phone number") }}: {{ client_phone }} {% endif %}
+                                                                {% if client_phone %} {{ __("Phone number",'f-shop') }}: {{ client_phone }} {% endif %}
                                                                 <br/>
 
                                                             </td>
@@ -426,9 +425,9 @@
                                                            style="border-collapse:separate !important;">
                                                         <tr>
                                                             <td class="mini-block">
-                                                                <span class="header-sm">{{ __('Payment') }}</span><br/>
+                                                                <span class="header-sm">{{ __('Payment','f-shop') }}</span><br/>
                                                                 {{ payment_method }} <br/> <br/>
-                                                                <span class="header-sm">{{ __('Date Ordered') }}</span><br/>
+                                                                <span class="header-sm">{{ __('Date Ordered','f-shop') }}</span><br/>
                                                                 {{ order_date }}
                                                             </td>
                                                         </tr>
@@ -455,13 +454,13 @@
                             <table cellspacing="0" cellpadding="0" width="100%">
                                 <tr>
                                     <td class="title-dark" width="300">
-                                        {{ __('Item') }}
+                                        {{ __('Item','f-shop') }}
                                     </td>
                                     <td class="title-dark" width="163">
-                                        {{ __('Qty') }}
+                                        {{ __('Qty','f-shop') }}
                                     </td>
                                     <td class="title-dark" width="97">
-                                        {{ __('Total') }}
+                                        {{ __('Total','f-shop') }}
                                     </td>
                                 </tr>
                                 {% for item in cart_items %}
@@ -506,11 +505,11 @@
                                     </td>
                                     <td class="item-col quantity"
                                         style="text-align:right; padding-right: 10px; border-top: 1px solid #cccccc;">
-                                        <span class="total-space">{{ __('Cost of goods') }}</span> <br/>
-                                        <span class="total-space">{{ __('Cost of delivery') }}</span> <br/>
-                                        <span class="total-space">{{ __('Discount') }}</span> <br/>
+                                        <span class="total-space">{{ __('Cost of goods','f-shop') }}</span> <br/>
+                                        <span class="total-space">{{ __('Cost of delivery','f-shop') }}</span> <br/>
+                                        <span class="total-space">{{ __('Discount','f-shop') }}</span> <br/>
                                         <span class="total-space"
-                                              style="font-weight: bold; color: #4d4d4d">{{ __('Total') }}</span>
+                                              style="font-weight: bold; color: #4d4d4d">{{ __('Total','f-shop') }}</span>
                                     </td>
                                     <td class="item-col price" style="text-align: left; border-top: 1px solid #cccccc;">
                                         <span class="total-space">{{ products_cost }}</span> <br/>
@@ -533,8 +532,9 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td style="padding: 25px 0 25px">
-                            Интернет магазин работает на <strong><a href="https://f-shop.top/"
-                                                                    target="_blank">F-SHOP</a></strong>
+                            {{ __('The online store works for','f-shop') }} <strong><a href="https://f-shop.top/"
+                                                                    target="_blank">F-SHOP</a>
+                            </strong>
                         </td>
                     </tr>
                 </table>

@@ -548,12 +548,24 @@ class FS_Users {
 				'icon'         => true,
 				'title'        => __( 'Select a Payment Method', 'f-shop' ),
 				'value'        => $user_id ? get_user_meta( $user_id, 'fs_payment_methods', 1 ) : '',
-				'values'       => get_terms( array(
+				'query_params' => [
 					'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
-					'fields'     => 'id=>name',
+					'meta_query' => [
+						'relation' => 'OR',
+						[
+							'key'     => '_fs_pay_inactive',
+							'value'   => 1,
+							'compare' => '!=',
+							'type'    => 'NUMERIC'
+						],
+						[
+							'key'     => '_fs_pay_inactive',
+							'compare' => 'NOT EXISTS'
+						]
+					],
 					'hide_empty' => 0,
 					'parent'     => 0
-				) ),
+				],
 				'required'     => true,
 				'checkout'     => true,
 				'save_meta'    => true

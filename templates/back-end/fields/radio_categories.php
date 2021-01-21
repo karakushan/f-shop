@@ -5,7 +5,12 @@
  * Date: 01.07.2018
  * Time: 16:13
  */
-$terms = get_terms( array( 'taxonomy' => $args['taxonomy'], 'hide_empty' => false ) );
+$args['query_params'] = isset( $args['query_params'] ) ? (array) $args['query_params'] : [];
+$query_params         = wp_parse_args( $args['query_params'],
+	[ 'taxonomy' => $args['taxonomy'], 'hide_empty' => false ]
+);
+
+$terms                = get_terms( $query_params );
 if ( $terms ) {
 	foreach ( $terms as $key => $term ) {
 		echo '<div class="radio">';

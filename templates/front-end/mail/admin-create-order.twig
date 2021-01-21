@@ -357,13 +357,12 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td class="header-lg">
-                            {{ __('Congratulations! A new order has appeared on your site.') }}
+                            {{ __('Congratulations! A new order has appeared on your site.','f-shop') }}
                         </td>
                     </tr>
                     <tr>
                         <td class="free-text">
-                            На вашем сайте "{{ site_name }}" пользователь {{ client_first_name }} сделал новый заказ - №{{ order_id  }}.
-                            Пожалуйста свяжитесь с заказчиком за этими данными : <br/>
+                            {{ __('On your site "%s" user %s created a new order #%d. Please contact the customer for this data:','f-shop')|format(site_name,client_first_name,order_id) }} <br/>
                             {% if client_phone %}<a href="tel:{{ client_phone|clean_number }}">{{ client_phone }}</a>
                                 <br/>{% endif %}
                             {% if client_email %} <a href="mailto:{{ client_email }}">{{ client_email }}</a>{% endif %}
@@ -378,7 +377,7 @@
                                              strokecolor="#ffffff" fillcolor="#ff6f6f">
                                     <w:anchorlock/>
                                     <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">
-                                        {{ __('View order') }}
+                                        {{ __('View order','f-shop') }}
                                     </center>
                                 </v:roundrect>
                                 <![endif]--><a href="{{ order_edit_url }}"
@@ -533,7 +532,7 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td style="padding: 25px 0 25px">
-                            Интернет магазин работает на <strong><a href="https://f-shop.top/"
+                            {{ __('The online store works for','f-shop') }} <strong><a href="https://f-shop.top/"
                                                                     target="_blank">F-SHOP</a></strong>
                         </td>
                     </tr>

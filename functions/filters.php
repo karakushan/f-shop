@@ -1,4 +1,5 @@
 <?php
+
 use FS\FS_Config;
 
 //фильтр преобразует необработанную цену в формат денег
@@ -138,25 +139,33 @@ function fs_edit_orders_columns( $columns ) {
 
 add_filter( 'manage_orders_posts_custom_column', 'fs_orders_posts_custom_column', 5, 2 );
 function fs_orders_posts_custom_column( $colname, $post_id ) {
+	$order = new FS\FS_Order( $post_id );
 	switch ( $colname ) {
-		/*	case 'fs_order_id':
-				echo $post_id;
-				break;*/
 		case 'fs_order_amount':
 			$amount = get_post_meta( $post_id, '_amount', 1 );
 			$amount = apply_filters( 'fs_price_format', $amount );
 			echo esc_html( $amount . ' ' . fs_currency() );
 			break;
 		case 'fs_user':
-			$user = get_post_meta( $post_id, '_user', 0 );
-			$user = $user[0];
+
 			echo '<ul>';
 			echo '<li><b>';
-			echo esc_html( $user['first_name'] . ' ' . $user['last_name'] );
+			if (isset($order->user['first_name']) && $order->user['first_name']!=''){
+				echo esc_html( $order->user['first_name'] ).' ';
+			}
+			if (isset($order->user['last_name']) && $order->user['last_name']!=''){
+				echo esc_html( $order->user['last_name'] );
+			}
 			echo '</b></li>';
-			printf( '<li><span>%s:</span> %s</li>', esc_html__( 'phone', 'f-shop' ), esc_html( $user['phone'] ) );
-			printf( '<li><span>%s:</span> %s</li>', esc_html__( 'email', 'f-shop' ), esc_html( $user['email'] ) );
-			printf( '<li><span>%s:</span> %s</li>', esc_html__( 'city', 'f-shop' ), esc_html( $user['city'] ) );
+			if ( isset( $order->user['phone'] ) && $order->user['phone'] != '' ) {
+				printf( '<li><span>%s:</span> %s</li>', esc_html__( 'phone', 'f-shop' ), esc_html( $order->user['phone'] ) );
+			}
+			if ( isset( $order->user['email'] ) && $order->user['email'] != '' ) {
+				printf( '<li><span>%s:</span> %s</li>', esc_html__( 'email', 'f-shop' ), esc_html( $order->user['email'] ) );
+			}
+			if ( isset( $order->delivery_method->city ) && $order->delivery_method->city != '' ) {
+				printf( '<li><span>%s:</span> %s</li>', esc_html__( 'city', 'f-shop' ), esc_html( $order->delivery_method->city ) );
+			}
 			echo '</ul>';
 			break;
 	}
@@ -266,8 +275,8 @@ function fs_price_filter_callback( $post_id, $price ) {
 	if ( fs_option( 'multi_currency_on' ) != 1 ) {
 		return $price;
 	}
-	global  $wpdb;
-	$fs_config=new FS_Config();
+	global $wpdb;
+	$fs_config           = new FS_Config();
 	$default_currency_id = fs_option( 'default_currency' ); // id валюты установленной в настройках
 	$product_currency_id = get_post_meta( $post_id, $fs_config->meta['currency'], true );// id валюты товара
 	// default_currency_cost = get_term_meta( $default_currency_id, '_fs_currency_cost', true ); // стоимость валюты установленной в настройках
