@@ -784,7 +784,6 @@ class FS_Users {
 			} else {
 				wp_redirect( get_permalink( (int) $login_page ) );
 			}
-			exit();
 		}
 	}
 
