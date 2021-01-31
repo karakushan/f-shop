@@ -468,9 +468,22 @@ class FS_Settings {
 						'post_type' => 'fs-mail-template'
 					),
 					array(
+						'type'      => 'select',
+						'name'      => 'fs_default_order_status',
+						'label'     => __( 'The status that is assigned to a new order', 'f-shop' ),
+						'value'     => fs_option( 'fs_default_order_status', 'new' ),
+						'values'    => get_terms( array(
+							'taxonomy'   => FS_Config::get_data( 'order_statuses_taxonomy' ),
+							'fields'     => 'id=>name',
+							'hide_empty' => 0,
+							'parent'     => 0
+						) ),
+						'post_type' => 'fs-mail-template'
+					),
+					array(
 						'type'       => 'number',
 						'name'       => 'fs_minimum_order_amount',
-						'label'      => sprintf(__( 'Минимальная сумма заказа (%s)', 'f-shop' ),fs_currency()),
+						'label'      => sprintf( __( 'Минимальная сумма заказа (%s)', 'f-shop' ), fs_currency() ),
 						'value'      => fs_option( 'fs_minimum_order_amount', 0 ),
 						'attributes' => [
 							'min' => 0

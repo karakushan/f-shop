@@ -71,6 +71,10 @@ class FS_Ajax {
 			add_action( 'wp_ajax_fs_livesearch', array( $this, 'livesearch_callback' ) );
 			add_action( 'wp_ajax_fs_livesearch', array( $this, 'livesearch_callback' ) );
 
+			// Live product search in admin
+			add_action( 'wp_ajax_fs_search_product_admin', array( $this, 'search_product_admin' ) );
+			add_action( 'wp_ajax_fs_search_product_admin', array( $this, 'search_product_admin' ) );
+
 			// Add new order and send e-mail
 			add_action( 'wp_ajax_order_send', array( $this, 'order_send_ajax' ) );
 			add_action( 'wp_ajax_nopriv_order_send', array( $this, 'order_send_ajax' ) );
@@ -228,6 +232,36 @@ class FS_Ajax {
 			$out .= '</ul>';
 			wp_send_json_success( array( 'html' => $out ) );
 		}
+		wp_send_json_error();
+	}
+
+	/**
+	 * Live product search callback function
+	 */
+	function search_product_admin() {
+
+		$find_posts = get_posts( array(
+			's'              => sanitize_text_field( $_POST['search'] ),
+			'posts_per_page' => - 1,
+			'post_type'      => FS_Config::get_data( 'post_type' )
+		) );
+
+		if ( $find_posts ) {
+			$find_posts = array_map( function ( $item ) {
+				return [
+					'ID'    => $item->ID,
+					'title' => apply_filters( 'the_title', $item->post_title ),
+					'photo' => get_the_post_thumbnail_url( $item->ID ),
+					'link' => get_the_permalink( $item->ID ),
+					'price' => fs_get_price( $item->ID ),
+					'sku' => fs_get_product_code( $item->ID ),
+					'currency' => fs_currency($item->ID),
+
+				];
+			}, $find_posts );
+			wp_send_json_success( $find_posts );
+		}
+
 		wp_send_json_error();
 	}
 
@@ -502,6 +536,18 @@ class FS_Ajax {
 		$order_create_date_display = date_i18n( 'd F Y H:i', $order_create_time );
 		$form_data                 = array_map( 'trim', $_POST );
 		$update_user_meta          = isset( $_POST['fs_update_user_meta'] ) ? boolval( $_POST['fs_update_user_meta'] ) : true;
+		$order_status_id           = intval( fs_option( 'fs_default_order_status' ) );
+
+
+		// Set new order status
+		$order_status = 'new';
+		if ( $order_status_id ) {
+			$order_status_term = get_term_field( 'slug', $order_status_id, FS_Config::get_data( 'order_statuses_taxonomy' ) );
+
+			if ( ! is_wp_error( $order_status_term ) ) {
+				$order_status = $order_status_term;
+			}
+		}
 
 		// Валидация данных запроса
 		// Проверяем происходит ли запрос от нашего сайта
@@ -584,7 +630,7 @@ class FS_Ajax {
 		}
 
 		// обновляем мета поля пользователя
-		if ( $user_id  && $update_user_meta) {
+		if ( $user_id && $update_user_meta ) {
 			$user_data = [
 				'ID' => $user_id,
 			];
@@ -605,12 +651,12 @@ class FS_Ajax {
 		}
 
 		// Вставляем заказ в базу данных
-		$pay_method     = get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] );
+		$pay_method     = $sanitize_field['fs_payment_methods'] ? get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] ) : null;
 		$new_order_data = array(
 			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
 			'post_content' => '',
-			'post_status'  => $search_blacklist ? 'black_list' : 'new',
-			'post_type'    => $fs_config->data['post_type_orders'],
+			'post_status'  => $search_blacklist ? 'black_list' : $order_status,
+			'post_type'    => FS_Config::get_data( 'post_type_orders' ),
 			'post_author'  => 1,
 			'ping_status'  => get_option( 'default_ping_status' ),
 			'post_parent'  => 0,
@@ -636,7 +682,7 @@ class FS_Ajax {
 					'secession' => $sanitize_field['fs_delivery_number'],
 					'address'   => $sanitize_field['fs_address']
 				),
-				'_payment'         => $pay_method ? $pay_method->term_id : 0,
+				'_payment'         => $pay_method && isset( $pay_method->term_id ) ? $pay_method->term_id : 0,
 				'_amount'          => $sum,
 				'_comment'         => $sanitize_field['fs_comment']
 			),
@@ -673,9 +719,9 @@ class FS_Ajax {
 				'cart_amount'       => $sum . ' ' . fs_currency(),
 				'delivery_cost'     => $delivery_cost . ' ' . fs_currency(),
 				'products_cost'     => fs_get_cart_cost() . ' ' . fs_currency(),
-				'delivery_method'   => fs_get_delivery( $sanitize_field['fs_delivery_methods'] ),
+				'delivery_method'   => $sanitize_field['fs_delivery_methods'] ? fs_get_delivery( $sanitize_field['fs_delivery_methods'] ) : '',
 				'delivery_number'   => $sanitize_field['fs_delivery_number'],
-				'payment_method'    => $pay_method->name,
+				'payment_method'    => $pay_method && isset( $pay_method->name ) ? $pay_method->name : '',
 				'cart_items'        => fs_get_cart(),
 				'order_title'       => $customer_mail_subject,
 				'order_edit_url'    => admin_url( 'post.php?post=' . $order_id . '&action=edit' ),
@@ -716,9 +762,11 @@ class FS_Ajax {
 				$admin_message      = $fs_template->get( 'mail/admin-create-order', $mail_data );
 				FS_Form::send_email( $admin_email, $admin_mail_subject, $admin_message );
 			} else {
-				//Отсылаем письмо с данными заказа заказчику
-				$user_email_message = $fs_template->get( 'mail/user-create-order', $mail_data );
-				FS_Form::send_email( $sanitize_field['fs_email'], $customer_mail_subject, $user_email_message );
+				if ( $sanitize_field['fs_email'] ) {
+					//Отсылаем письмо с данными заказа заказчику
+					$user_email_message = $fs_template->get( 'mail/user-create-order', $mail_data );
+					FS_Form::send_email( $sanitize_field['fs_email'], $customer_mail_subject, $user_email_message );
+				}
 
 				//Отсылаем письмо с данными заказа на почту указанную в настроках для оповещения о заказах
 				$admin_mail_subject = fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );

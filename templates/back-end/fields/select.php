@@ -6,13 +6,14 @@
  * Time: 14:12
  */ ?>
 <?php
-if ( ! empty( $args['multiple'] ) && ! is_array( $args['value'] ) ) {
+$args=wp_parse_args($args,[
+	'multiple'=>false
+]);
+
+if ( $args['multiple']  && ! is_array( $args['value'] ) ) {
 	$args['value'] = [];
-}
-if ( ! empty( $args['multiple'] )) {
 	$name= $name. '[]';
 }
-
 ?>
 <select name="<?php echo  esc_attr( $name ) ?>"
         title="<?php echo esc_attr( $args['title'] ) ?>"

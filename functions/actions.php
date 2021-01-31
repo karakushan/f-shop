@@ -74,16 +74,6 @@ function fs_add_sheensay_quicktags() {
 	<?php
 }
 
-// Скрываем кнопку "добавить заказ"
-add_action( 'admin_head', function () {
-	$current_screen = get_current_screen();
-	if ( in_array( $current_screen->id, array( 'edit-orders', 'orders' ) ) ) {
-		echo '<style>';
-		echo '.page-title-action{display:none}';
-		echo '</style>';
-	}
-} );
-
 /**
  * The function is triggered when the plugin is activated.
  */

@@ -30,13 +30,93 @@ class FS_Orders {
 		// Срабатывает в момент изменения статуса заказа
 		add_action( 'transition_post_status', array( $this, 'fs_change_order_status' ) );
 
-
 		// операции с метабоксами - удаление стандартных, добавление новых
 		add_action( 'admin_menu', array( $this, 'remove_submit_order_metabox' ) );
 
+		// Сохранение заказа в админке
+		add_action( 'save_post', [ $this, 'save_order' ], 10, 3 );
 
 		$this->last_order_id = $this->get_last_order_id();
 
+		add_action( 'init', function () {
+			add_filter( '_wp_post_revision_fields', [ $this, 'order_revision_fields' ], 10, 2 );
+			add_filter( '_wp_post_revision_field_my_meta', [ $this, 'my_plugin_revision_field' ], 10, 2 );
+		} );
+
+
+	}
+
+	function my_plugin_revision_field( $value, $field ) {
+
+		global $revision;
+
+		return get_metadata( 'post', $revision->ID, $field, true );
+
+	}
+
+	function order_revision_fields( $fields, $post ) {
+		$fields['_customer_email'] = __( 'E-mail', 'f-shop' );
+		$fields['_customer_phone'] = __( 'Phone number', 'f-shop' );
+		$fields['post_status']     = __( 'Order status', 'f-shop' );
+
+		return $fields;
+	}
+
+	/**
+	 * Сохраняет данные заказа в админке
+	 *
+	 * @param $post_id
+	 * @param $post
+	 * @param $update
+	 */
+	function save_order( $post_id, $post, $update ) {
+		if ( $post->post_type != FS_Config::get_data( 'post_type_orders' ) || ! isset( $_POST['fs_is_admin'] ) ) {
+			return;
+		}
+
+		$fs_products = ! empty( $_POST['fs_products'] ) && is_array( $_POST['fs_products'] ) ? $_POST['fs_products'] : [];
+		$user        = array_map( 'trim', $_POST['user'] );
+
+		$sum = 0;
+		foreach ( $fs_products as $index => $product ) {
+			$price = fs_get_price( $product['ID'] );
+			$qty   = intval( max( $product['count'], 1 ) );
+			$sum += floatval( $price * $qty );
+		}
+
+		$order_meta = [
+			'_user_id'         => $user['fs_user_id'],
+			'_customer_ip'     => fs_get_user_ip(),
+			'_customer_email'  => $user['fs_email'],
+			'_customer_phone'  => $user['fs_phone'],
+			'_user'            => [
+				'id'         => $user['fs_user_id'],
+				'first_name' => $user['fs_first_name'],
+				'last_name'  => $user['fs_last_name'],
+				'email'      => $user['fs_email'],
+				'phone'      => $user['fs_phone']
+			],
+			'city'             => $user['fs_city'],
+			'_products'        => $fs_products,
+			'_custom_products' => [],
+			'_delivery'        => [
+				'method'    => $user['fs_delivery_methods'],
+				'secession' => $user['fs_delivery_number'],
+				'address'   => $user['fs_address']
+			],
+			'_payment'         => $user['fs_payment_methods'],
+			'_amount'          => $sum,
+			'_comment'         => $user['fs_comment']
+		];
+
+		$parent_id = wp_is_post_revision( $post_id );
+
+		foreach ( $order_meta as $meta_key => $item ) {
+			update_post_meta( $post_id, $meta_key, $item );
+			if ( $parent_id ) {
+				update_post_meta( $parent_id, $meta_key, $item );
+			}
+		}
 	}
 
 	/**
@@ -83,17 +163,24 @@ class FS_Orders {
 	 */
 	function orders_bubble() {
 		global $menu;
-		$fs_config                 = new FS_Config();
-		$custom_post_count         = wp_count_posts( $this->post_type );
-		$custom_post_pending_count = $custom_post_count->{$fs_config->data['default_order_status']};
+		$custom_post_count = wp_count_posts( FS_Config::get_data( 'post_type_orders' ) );
+		$order_status_id   = fs_option( 'fs_default_order_status' );
+		$order_status      = get_term_field( 'slug', $order_status_id, FS_Config::get_data( 'order_statuses_taxonomy' ) );
+
+		$custom_post_pending_count = ! is_wp_error( $order_status ) && isset( $custom_post_count->{$order_status} )
+			? $custom_post_count->{$order_status} : 0;
+
 		if ( ! $custom_post_pending_count ) {
 			return;
 		}
-		foreach ( $menu as $key => $value ) {
-			if ( $menu[ $key ][2] == 'edit.php?post_type=' . esc_attr( $fs_config->data['post_type_orders'] ) ) {
-				$menu[ $key ][0] .= ' <span class="update-plugins count-' . esc_attr( $custom_post_pending_count ) . '"><span class="plugin-count" aria-hidden="true"> ' . esc_html( $custom_post_pending_count ) . '</span><span class="screen-reader-text"> ' . esc_html( $custom_post_pending_count ) . '</span></span>';
 
-				return;
+		if ( $menu ) {
+			foreach ( $menu as $key => $value ) {
+				if ( $menu[ $key ][2] == 'edit.php?post_type=' . esc_attr( FS_Config::get_data( 'post_type_orders' ) ) ) {
+					$menu[ $key ][0] .= ' <span class="update-plugins count-' . esc_attr( $custom_post_pending_count ) . '"><span class="plugin-count" aria-hidden="true"> ' . esc_html( $custom_post_pending_count ) . '</span><span class="screen-reader-text"> ' . esc_html( $custom_post_pending_count ) . '</span></span>';
+
+					return;
+				}
 			}
 		}
 
@@ -183,6 +270,7 @@ class FS_Orders {
 			}
 			echo '</select></p>';
 		}
+
 		echo '<p><input type="submit" name="save" id="save-post" value="' . esc_attr__( 'Save' ) . '" class="button button-primary button-large"></p>';
 		echo '<div class="clear"></div>';
 		echo '<p><a class="submitdelete deletion" href="' . esc_url( get_delete_post_link( $post->ID ) ) . '">' . esc_html__( 'Delete' ) . '</a></p>';
@@ -288,9 +376,9 @@ Good luck!', 'f-shop' );
 	 * метод регистрирует статусы заказов в системе
 	 */
 	function order_status_custom() {
-	    $statuses=self::default_order_statuses();
+		$statuses = self::default_order_statuses();
 
-		if (count($statuses) ) {
+		if ( count( $statuses ) ) {
 			foreach ( $statuses as $key => $status ) {
 				register_post_status( $key, array(
 					'label'                     => $status['name'],
@@ -511,4 +599,6 @@ Good luck!', 'f-shop' );
 		return $query;
 
 	}
+
+
 }

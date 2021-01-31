@@ -1010,20 +1010,10 @@ class FS_Product {
 			'high'
 		);
 
-		// добавляем метабокс списка товаров в заказе
-		add_meta_box(
-			sprintf( 'fast_shop_%s_metabox', 'orders' ),
-			__( 'List of products', 'f-shop' ),
-			array( &$this, 'add_order_products_meta_boxes' ),
-			'orders',
-			'normal',
-			'high'
-		);
-
-		// добавляем метабокс списка товаров в заказе
+		// добавляем метабокс к заказам
 		add_meta_box(
 			sprintf( 'fast_shop_%s_user_metabox', 'orders' ),
-			__( 'Customer data', 'f-shop' ),
+			__( 'Order data', 'f-shop' ),
 			array( &$this, 'add_order_user_meta_boxes' ),
 			'orders',
 			'normal',
@@ -1295,22 +1285,28 @@ class FS_Product {
 		echo '</div>';
 	}
 
-	/* метабокс списка товаров в редактировании заказа */
-	public function add_order_products_meta_boxes( $post ) {
-		$products = get_post_meta( $post->ID, '_products', 0 );
-		$products = ! empty( $products[0] ) ? $products[0] : [];
-		$amount   = get_post_meta( $post->ID, '_amount', 1 );
-		$amount   = apply_filters( 'fs_price_format', $amount ) . ' ' . fs_currency();
-
-
-		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-0.php';
-	}
-
 	/* метабокс данных пользователя в редактировании заказа */
 	public function add_order_user_meta_boxes( $post ) {
-		$order = new FS_Order( $post->ID );
+		$screen = get_current_screen();
+		if ( $screen->id != 'orders' ) {
+			return;
+		}
+		$order            = new FS_Order( $post->ID );
+		$action           = $screen->action ? $screen->action : ( isset( $_GET['action'] ) ? $_GET['action'] : 'edit' );
+		$shipping_methods = get_terms( [
+			'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
+			'hide_empty' => false
+		] );
+		$payment_methods  = get_terms( [
+			'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
+			'hide_empty' => false
+		] );
+		$clients          = get_users( [ 'role' => 'client' ] );
+		
+		do_action( 'qm/debug', $order );
 
-		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/meta-box-1.php';
+		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/'.$action.'.php';
+
 	}
 
 	public function set_real_product_price( $product_id = 0 ) {

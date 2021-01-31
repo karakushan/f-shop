@@ -75,7 +75,7 @@ class FS_Order {
 	public $meta;
 
 
-	public function __construct(  $order ) {
+	public function __construct( $order ) {
 		$this->set_order( $order );
 	}
 
@@ -125,14 +125,15 @@ class FS_Order {
 		if ( isset( $delivery_method['method'] ) ) {
 			$this->delivery_method = get_term( $delivery_method['method'], FS_Config::get_data( 'product_del_taxonomy' ) );
 
-			if ( is_object( $this->delivery_method ) ) {
-				$this->delivery_method->cost             = apply_filters( 'fs_price_format', (float) get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) );
-				$this->delivery_method->city             = get_post_meta( $order_id, 'city', 1 );
-				$this->delivery_method->delivery_address = $delivery_method['secession'];
+			if ( !is_wp_error( $this->delivery_method ) ) {
+				$this->delivery_method->cost                    = apply_filters( 'fs_price_format', (float) get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) );
+				$this->delivery_method->city                    = get_post_meta( $order_id, 'city', 1 );
+				$this->delivery_method->delivery_address        = $delivery_method['address'];
+				$this->delivery_method->delivery_service_number = $delivery_method['secession'];
 			}
 		}
 
-		$this->count = count( $this->items );
+		$this->count = is_array( $this->items ) ? count( $this->items ) : 0;
 
 		$this->status = get_post_status_object( $this->post->post_status )->label;
 

@@ -123,8 +123,9 @@ class FS_Post_Types {
 				'query_var'          => true,
 				'description'        => __( "Orders from your site are placed here.", 'f-shop' ),
 				'supports'           => array(
-					'title'
-				)
+					'title','revisions','comments','gutenburg'
+				),
+				'_builtin'=>false
 			)
 		);
 

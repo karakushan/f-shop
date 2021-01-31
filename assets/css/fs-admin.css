@@ -919,16 +919,118 @@ td.fs_photo.column-fs_photo img {
   background: rgba(255, 247, 122, 0.53);
 }
 
-#fast_shop_orders_user_metabox .inside {
+.fs-search-product {
+  padding: 10px 0;
+  max-height: 100%;
+  position: relative;
+}
+.fs-search-product .selected {
+  display: none;
+  border-bottom: 2px solid #dddddd;
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+}
+.fs-search-product .selected li {
+  display: inline-flex;
+  border: 1px solid #c2bcbc;
+  height: 26px;
+  align-items: center;
+  padding: 0px 8px;
+  background: #dddddd;
+  margin-right: 10px;
+  border-radius: 13px;
+}
+.fs-search-product .selected li .delete-item {
+  width: 17px;
+  height: 17px;
+  font-size: 9px;
+  padding: 0;
+  line-height: 1;
+  margin-left: 8px;
+  border-radius: 50%;
+  border: 1px solid #ff0000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ff0000;
+  color: #fff;
+}
+.fs-search-product .selected li .delete-item:hover {
+  cursor: pointer;
+  background: transparent;
+  color: #ff0000;
+}
+.fs-search-product .fs-livesearch-data {
+  max-height: 100%;
+  overflow: auto;
   margin: 0;
   padding: 0;
 }
-#fast_shop_orders_user_metabox .inside table.widefat {
+.fs-search-product .fs-livesearch-data > li {
+  border-bottom: 1px solid #ddd;
+  line-height: 1;
+  display: flex;
+  margin: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 0;
+}
+.fs-search-product .results {
+  overflow: hidden;
+}
+.fs-search-product .search-input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#fast_shop_orders_user_metabox .inside {
+  margin: 0;
+  padding: 16px;
+}
+#fast_shop_orders_user_metabox .inside .widefat td {
+  vertical-align: middle;
+}
+#fast_shop_orders_user_metabox .inside .order-items .remove-from-cart {
+  color: #cc1818;
+  border: 1px solid #cc1818;
+  padding: 6px 6px;
+  border-radius: 50%;
+}
+#fast_shop_orders_user_metabox .inside .order-items .remove-from-cart:hover {
+  color: #fff;
+  background: #cc1818;
+  cursor: pointer;
+}
+#fast_shop_orders_user_metabox .inside .order-items__image img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+#fast_shop_orders_user_metabox .inside .section {
+  margin-bottom: 16px;
+}
+#fast_shop_orders_user_metabox .inside h2.order-title {
+  font-size: 14px;
+  font-weight: 500;
+  background: #0073aa;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#fast_shop_orders_user_metabox .inside table.order-userdata {
   width: 100%;
   border: none;
 }
-#fast_shop_orders_user_metabox .inside table.widefat tr th {
-  width: 260px;
+#fast_shop_orders_user_metabox .inside table.order-userdata input, #fast_shop_orders_user_metabox .inside table.order-userdata textarea, #fast_shop_orders_user_metabox .inside table.order-userdata select {
+  width: 100%;
+}
+#fast_shop_orders_user_metabox .inside table.order-userdata select {
+  width: 300px;
+  min-height: 30px;
+}
+#fast_shop_orders_user_metabox .inside table.order-userdata tr th {
+  width: 360px;
 }
 
 .fs-admin-atts {
