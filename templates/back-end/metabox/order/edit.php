@@ -175,7 +175,7 @@
     </table>
 </section>
 
-
+<!-- Modal product selection window -->
 <div id="fs-search-product-modal" style="display:none;">
     <div class="fs-search-product" id="fs-search-product">
         <input type="text" class="search-input" id="fs-search-input"
