@@ -665,53 +665,70 @@ class FS_Taxonomy {
 			// Дополнительные поля скидок
 			FS_Config::get_data( 'discount_taxonomy' )      =>
 				array(
-					'discount_type' => array(
-						'name' => __( 'DiscountType', 'f-shop' ),
+					'fs_discount_type'       => array(
+						'name' => __( 'Discount type', 'f-shop' ),
 						'type' => 'select',
 						'args' => array(
 							'values' => array(
-								'product' => __( 'Скидка применяется только к товарам', 'f-shop' )
-
-
+								'product'      => __( 'The discount applies only to products of the product categories, brands or characteristics selected below', 'f-shop' ),
+								'repeat_order' => __( 'Discount applies to reorders', 'f-shop' ),
+								'cart_amount'  => __( 'Discount on the amount of items in the cart', 'f-shop' )
 							)
 						)
 					),
-
-					'discount_categories' => array(
-						'name' => __( 'Категории на которые распространяется скидка', 'f-shop' ),
+					'fs_min_order_amount'    => array(
+						'name' => __( 'Minimum order amount', 'f-shop' ),
+						'type' => 'number',
+						'help' => __( 'It is applied if the order amount has exceeded the value specified in this field' ),
+						'args' => array(
+							'min' => 1
+						)
+					),
+					'fs_discount_categories' => array(
+						'name' => __( 'Categories for which the discount applies', 'f-shop' ),
 						'type' => 'dropdown_categories',
 						'rule' => [ 'discount_where_is', '=', 'category' ],
 						'args' => array(
 							'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
 							'multiple' => true,
-
 						)
 					),
-					'discount_brands'     => array(
-						'name' => __( 'Бренды на которые распространяется скидка', 'f-shop' ),
+					'fs_discount_brands'     => array(
+						'name' => __( 'Discount brands', 'f-shop' ),
 						'type' => 'dropdown_categories',
 						'rule' => [ 'discount_where_is', '=', 'category' ],
 						'args' => array(
 							'taxonomy' => FS_Config::get_data( 'brand_taxonomy' ),
 							'multiple' => true,
-
 						)
 					),
-					'discount_features'   => array(
-						'name' => __( 'Свойства товаров на которые распространяется скидка', 'f-shop' ),
+					'fs_discount_features'   => array(
+						'name' => __( 'Properties of products to which the discount applies', 'f-shop' ),
 						'type' => 'dropdown_categories',
 						'args' => array(
 							'taxonomy' => FS_Config::get_data( 'features_taxonomy' ),
 							'multiple' => true,
-
 						)
 					),
-					'discount_amount'     => array(
-						'name'     => __( 'Discount amount', 'f-shop' ),
-						'type'     => 'text',
-						'args'     => array(),
+					'fs_discount_value'      => array(
+						'name'     => __( 'Discount value', 'f-shop' ),
+						'type'     => 'number',
+						'args'     => [ 'min' => 0 ],
 						'required' => true,
-						'help'     => 'Мужно указать фиксированную сумму, например "20" или в процентах "10%"'
+						'help'     => ''
+					),
+					'fs_discount_value_type' => array(
+						'name'     => __( 'This is a fixed amount or a percentage discount?', 'f-shop' ),
+						'type'     => 'select',
+						'value'    => 'discount_fixed',
+						'args'     => array(
+							'values' => [
+								'discount_fixed'   => __( 'Fixed discount', 'f-shop' ),
+								'discount_percent' => __( 'Percentage discount', 'f-shop' ),
+							]
+						),
+						'required' => true,
+						'help'     => ''
 					)
 				)
 
@@ -1414,9 +1431,9 @@ class FS_Taxonomy {
 	public function pay_taxonomy_column_content( $content, $column_name, $term_id ) {
 		switch ( $column_name ) {
 			case 'icon':
-				$attachment_id=get_term_meta( $term_id, '_thumbnail_id', 1 );
-				if ($attachment_id){
-					$content = wp_get_attachment_image($attachment_id,'thumbnail',true);
+				$attachment_id = get_term_meta( $term_id, '_thumbnail_id', 1 );
+				if ( $attachment_id ) {
+					$content = wp_get_attachment_image( $attachment_id, 'thumbnail', true );
 				}
 
 				break;

@@ -1301,9 +1301,7 @@ class FS_Product {
 			'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
 			'hide_empty' => false
 		] );
-		$clients          = get_users( [ 'role' => 'client' ] );
-		
-		do_action( 'qm/debug', $order );
+		$clients          = get_users( );
 
 		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/'.$action.'.php';
 

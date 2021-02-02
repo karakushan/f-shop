@@ -249,13 +249,13 @@ class FS_Ajax {
 		if ( $find_posts ) {
 			$find_posts = array_map( function ( $item ) {
 				return [
-					'ID'    => $item->ID,
-					'title' => apply_filters( 'the_title', $item->post_title ),
-					'photo' => get_the_post_thumbnail_url( $item->ID ),
-					'link' => get_the_permalink( $item->ID ),
-					'price' => fs_get_price( $item->ID ),
-					'sku' => fs_get_product_code( $item->ID ),
-					'currency' => fs_currency($item->ID),
+					'ID'       => $item->ID,
+					'title'    => apply_filters( 'the_title', $item->post_title ),
+					'photo'    => get_the_post_thumbnail_url( $item->ID ),
+					'link'     => get_the_permalink( $item->ID ),
+					'price'    => fs_get_price( $item->ID ),
+					'sku'      => fs_get_product_code( $item->ID ),
+					'currency' => fs_currency( $item->ID ),
 
 				];
 			}, $find_posts );
@@ -667,6 +667,7 @@ class FS_Ajax {
 				'_customer_ip'     => $customer_ip,
 				'_customer_email'  => $sanitize_field['fs_email'],
 				'_customer_phone'  => $sanitize_field['fs_phone'],
+				'_order_discount'  => fs_get_total_discount(),
 				'_user'            => array(
 					'id'         => $user_id,
 					'first_name' => $sanitize_field['fs_first_name'],
@@ -715,10 +716,10 @@ class FS_Ajax {
 				// Cart data
 				'order_date'        => $order_create_date_display,
 				'order_id'          => $order_id,
-				'cart_discount'     => '0 ' . fs_currency(),
-				'cart_amount'       => $sum . ' ' . fs_currency(),
-				'delivery_cost'     => $delivery_cost . ' ' . fs_currency(),
-				'products_cost'     => fs_get_cart_cost() . ' ' . fs_currency(),
+				'cart_discount'     => sprintf( '%s %s', fs_get_total_discount(), fs_currency() ),
+				'cart_amount'       => sprintf( '%s %s', apply_filters( 'fs_price_format', $sum ), fs_currency() ),
+				'delivery_cost'     => sprintf( '%s %s', apply_filters( 'fs_price_format', $delivery_cost ), fs_currency() ),
+				'products_cost'     => sprintf( '%s %s', apply_filters( 'fs_price_format', fs_get_cart_cost() ), fs_currency() ),
 				'delivery_method'   => $sanitize_field['fs_delivery_methods'] ? fs_get_delivery( $sanitize_field['fs_delivery_methods'] ) : '',
 				'delivery_number'   => $sanitize_field['fs_delivery_number'],
 				'payment_method'    => $pay_method && isset( $pay_method->name ) ? $pay_method->name : '',

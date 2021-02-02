@@ -244,13 +244,18 @@ function fs_get_total_amount( $delivery_cost = false ) {
 	}
 
 	// Отнимаем скидку на общую сумму товаров в корзине
-	$amount = $amount - fs_get_full_cart_discount();
+	$amount = $amount - fs_get_total_discount();
 
 	// Добавляем стоимость доставки
 	if ( ! is_numeric( $delivery_cost ) ) {
 		$delivery_cost = fs_get_delivery_cost();
 	}
 	$amount = $amount + $delivery_cost;
+
+	// Добавляем стоимость упаковки если нужно
+	if ( fs_option( 'fs_include_packing_cost' ) ) {
+		$amount  += fs_get_packing_cost();
+	}
 
 	// Вычисляем налоги
 	$taxes_amount = fs_get_taxes_amount( $amount );
@@ -319,29 +324,64 @@ function fs_get_taxes_amount( $amount ) {
 /**
  * Returns the total discount amount of all items in the cart.
  *
- * Сумируется скидка на каждый товар
- * потом к этой скидке добавлется скидка
- * на общую сумму товаров в корзине
- *
  * @return float|int
  */
 function fs_get_total_discount() {
 	$discount = 0;
-	$cart     = FS\FS_Cart::get_cart();
+	$amount   = fs_get_cart_cost();
 
-	if ( $cart ) {
-		foreach ( $cart as $key => $product ) {
-			$item = fs_set_product( $product, $key );
-			if ( $item->price > $item->base_price ) {
-				continue;
-			}
-			$discount += ( $item->base_price - $item->price ) * $item->count;
-		}
+	$discounts = get_terms( [
+		'taxonomy'   => FS_Config::get_data( 'discount_taxonomy' ),
+		'hide_empty' => 0
+	] );
+	if ( ! $discounts ) {
+		return $discount;
 	}
 
-	$discount += fs_get_full_cart_discount();
+	foreach ( $discounts as $d ) {
+		$discount_type       = get_term_meta( $d->term_id, 'fs_discount_type', 1 );
+		$discount_value      = (float) get_term_meta( $d->term_id, 'fs_discount_value', 1 );
+		$discount_value_type = get_term_meta( $d->term_id, 'fs_discount_value_type', 1 );
+
+		if ( $discount_value <= 0 ) {
+			continue;
+		}
+
+		// Скидка на повторный заказ
+		if ( $discount_type == 'repeat_order' && is_user_logged_in() ) {
+			$user_orders = get_posts( [
+				'post_type'   => FS_Config::get_data( 'post_type_orders' ),
+				'post_status' => 'any',
+				'meta_query'  => [
+					[
+						'key'     => '_user_id',
+						'value'   => get_current_user_id(),
+						'compare' => '=',
+						'type'    => 'NUMERIC'
+					]
+				]
+			] );
+			if ( count( $user_orders ) && $discount_value_type == 'discount_percent' ) {
+				$discount += $amount * $discount_value / 100;
+			} elseif ( count( $user_orders ) && $discount_value_type == 'discount_fixed' ) {
+				$discount += $discount_value;
+			}
+		}
+
+
+	}
+
 
 	return floatval( $discount );
+}
+
+/**
+ * Выводит сумму скидки
+ *
+ * @param string $format
+ */
+function fs_cart_discount( $format = '%s <span>%s</span>' ) {
+	printf( $format, apply_filters( 'fs_price_format', fs_get_total_discount() ), fs_currency() );
 }
 
 /**
@@ -411,6 +451,42 @@ function fs_get_full_cart_discount() {
 	}
 
 	return floatval( $discount );
+}
+
+/**
+ * Возвращает стоимость упаковки
+ *
+ *
+ * @param float $products_cost
+ *
+ * @return float|int|string|string[]|null
+ */
+function fs_get_packing_cost() {
+	$cost          = 0;
+	$parse_value   = preg_replace( "/[^0-9]/", '', fs_option( 'fs_packing_cost_value' ) );
+	$products_cost = fs_get_cart_cost();
+	if ( ! fs_option( 'fs_include_packing_cost' ) || ! $parse_value ) {
+		return $cost;
+	}
+
+	if ( strpos( fs_option( 'fs_packing_cost_value' ), '%' ) !== false ) {
+		$cost = $products_cost * $parse_value / 100;
+	} else {
+		$cost = $parse_value;
+	}
+
+	return $cost;
+}
+
+/**
+ * Выводит стоимость упаковки
+ *
+ * @param string $format
+ */
+function fs_packing_cost( $format = '%s <span>%s</span>' ) {
+	if ( fs_option( 'fs_include_packing_cost' ) ) {
+		printf( $format, fs_get_packing_cost(), fs_currency() );
+	}
 }
 
 /**
@@ -1149,7 +1225,7 @@ function fs_parse_url( $url = '' ) {
  * @return bool|mixed
  */
 function fs_is_action( $product_id = 0 ) {
-	$product_id   = fs_get_product_id( $product_id );
+	$product_id = fs_get_product_id( $product_id );
 
 	if ( get_post_meta( $product_id, FS_Config::get_product_field( 'label_promotion' )['key'], 1 ) ) {
 		return true;

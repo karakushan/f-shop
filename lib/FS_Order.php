@@ -32,6 +32,14 @@ class FS_Order {
 	 */
 	public $total_amount = 0;
 
+
+	/**
+	 * Скидка
+	 *
+	 * @var int
+	 */
+	public $discount = 0;
+
 	/**
 	 * Комментарий к заказу
 	 *
@@ -112,6 +120,7 @@ class FS_Order {
 
 		$this->items        = $products;
 		$this->total_amount = (float) get_post_meta( $order_id, '_amount', 1 );
+		$this->discount     = (float) get_post_meta( $order_id, '_order_discount', 1 );
 		$this->comment      = get_post_meta( $order_id, '_comment', 1 );
 		$this->user         = (array) get_post_meta( $order_id, '_user', 1 );
 		$this->user['ip']   = get_post_meta( $order_id, '_customer_ip', 1 );
@@ -125,7 +134,7 @@ class FS_Order {
 		if ( isset( $delivery_method['method'] ) ) {
 			$this->delivery_method = get_term( $delivery_method['method'], FS_Config::get_data( 'product_del_taxonomy' ) );
 
-			if ( !is_wp_error( $this->delivery_method ) ) {
+			if ( ! is_wp_error( $this->delivery_method ) ) {
 				$this->delivery_method->cost                    = apply_filters( 'fs_price_format', (float) get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) );
 				$this->delivery_method->city                    = get_post_meta( $order_id, 'city', 1 );
 				$this->delivery_method->delivery_address        = $delivery_method['address'];

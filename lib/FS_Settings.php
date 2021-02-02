@@ -9,6 +9,12 @@ class FS_Settings {
 
 	private $settings_page = 'f-shop-settings';
 
+	// class instance
+	static $instance;
+
+	// customer WP_List_Table object
+	public $customers_obj;
+
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
 		add_action( 'admin_init', array( $this, 'init_settings' ) );
@@ -16,6 +22,7 @@ class FS_Settings {
 		add_action( 'admin_bar_menu', array( $this, 'modify_admin_bar' ) );
 		add_action( 'admin_init', array( $this, 'permalink_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_plugin_settings' ) );
+		add_filter( 'set-screen-option', [ $this, 'set_screen' ], 10, 3 );
 	}
 
 	/**
@@ -321,8 +328,8 @@ class FS_Settings {
 
 
 			),
-			'shoppers'         => array(
-				'name'   => __( 'Buyers', 'f-shop' ),
+			'cart'             => array(
+				'name'   => __( 'Basket', 'f-shop' ),
 				'fields' => array(
 					array(
 						'type'  => 'checkbox',
@@ -337,7 +344,21 @@ class FS_Settings {
 						'label' => __( 'The amount of goods in the basket at which free shipping is activated', 'f-shop' ),
 						'help'  => null,
 						'value' => fs_option( 'fs_free_delivery_cost' )
-					)
+					),
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'fs_include_packing_cost',
+						'label' => __( 'Add packaging cost to order', 'f-shop' ),
+						'help'  => __( 'When choosing this option, the cost of packaging will also be added to the order value.', 'f-shop' ),
+						'value' => fs_option( 'fs_include_packing_cost' )
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'fs_packing_cost_value',
+						'label' => __( 'Packing cost', 'f-shop' ),
+						'help'  => __( 'You can enter a fixed cost or as a percentage, for example "5%"', 'f-shop' ),
+						'value' => fs_option( 'fs_packing_cost_value' )
+					),
 				)
 
 
@@ -739,15 +760,77 @@ class FS_Settings {
 			array( &$this, 'settings_page' )
 		);
 		// Регистрация страницы API
-		add_submenu_page(
-			'edit.php?post_type=product',
-			__( 'F-SHOP API', 'f-shop' ),
-			__( 'API', 'f-shop' ),
+		$hook = add_submenu_page(
+			'edit.php?post_type=orders',
+			__( 'Customers', 'f-shop' ),
+			__( 'Customers', 'f-shop' ),
 			'manage_options',
-			'fs-api',
-			array( &$this, 'api_page' )
+			'fs-customers',
+			array( &$this, 'customers_settings_page' )
 		);
+		add_action( "load-$hook", [ $this, 'screen_option' ] );
 	} // END public function add_menu()
+
+	public static function set_screen( $status, $option, $value ) {
+		return $value;
+	}
+
+
+	/**
+	 * Screen options
+	 */
+	public function screen_option() {
+
+		$option = 'per_page';
+		$args   = [
+			'label'   => __( 'Customers', 'f-shop' ),
+			'default' => 30,
+			'option'  => 'customers_per_page'
+		];
+
+		add_screen_option( $option, $args );
+
+		$this->customers_obj = new FS_Customers_List();
+	}
+
+	/**
+	 * Plugin settings page
+	 */
+	public function customers_settings_page() {
+		?>
+        <div class="wrap">
+            <h2><?php esc_html_e( 'Customers', 'f-shop' ); ?></h2>
+
+            <div id="poststuff">
+                <div id="post-body" class="metabox-holder columns-1">
+                    <div id="post-body-content">
+                        <div class="meta-box-sortables ui-sortable">
+                            <form method="post">
+                                <p class="search-box">
+                                    <label class="screen-reader-text" for="post-search-input">:</label>
+                                    <input type="search" id="post-search-input" name="s" value=""
+                                           placeholder="Поиск клиента">
+                                    <select name="field">
+                                        <option value="">Телефон</option>
+                                        <option value="">E-mail</option>
+                                        <option value="">Фамилия</option>
+                                        <option value="">Имя</option>
+                                    </select>
+                                    <input type="submit" id="search-submit" class="button button-primary" value="Найти">
+                                </p>
+								<?php
+								$this->customers_obj->prepare_items();
+								$this->customers_obj->display(); ?>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <br class="clear">
+            </div>
+        </div>
+		<?php
+	}
+
 
 	/**
 	 * Displays API settings page

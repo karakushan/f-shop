@@ -31,10 +31,10 @@ defined( 'ABSPATH' ) || exit;
 
 require 'plugin_update_check.php';
 $KernlUpdater = new PluginUpdateChecker_2_0 (
-    'https://kernl.us/api/v1/updates/5f380fe4ee498b6b47063e0a/',
-    __FILE__,
-    'f-shop',
-    1
+	'https://kernl.us/api/v1/updates/5f380fe4ee498b6b47063e0a/',
+	__FILE__,
+	'f-shop',
+	1
 );
 
 /*
@@ -52,9 +52,9 @@ define( 'FS_PLUGIN_URL', plugin_dir_url( __FILE__ ) ); // absolute path with htt
 
 // Sometimes you need complete debugging, just do not forget to turn it off in combat mode
 if ( defined( 'FS_DEBUG' ) && FS_DEBUG == true ) {
-	ini_set('error_reporting', E_ALL);
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
+	ini_set( 'error_reporting', E_ALL );
+	ini_set( 'display_errors', 1 );
+	ini_set( 'display_startup_errors', 1 );
 }
 
 require_once 'vendor/autoload.php';
@@ -89,3 +89,73 @@ function fs_wp_cli_init() {
 // hooks are triggered when the plugin is activated or deactivated
 register_activation_hook( __FILE__, 'fs_activate' );
 register_deactivation_hook( __FILE__, 'fs_deactivate' );
+/**
+ * The function is triggered when the plugin is activated.
+ */
+function fs_activate() {
+	global $wpdb;
+	require_once dirname( FS_PLUGIN_FILE ) . '/lib/FS_Config.php';
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+	// Создаем таблицу покупателей
+	$table_customers = $wpdb->prefix . "fs_customers";
+	$customers_ddl   = "create table {$table_customers}
+(
+    `id`             int auto_increment
+        primary key, 
+    `email`          varchar(64) null,
+    `first_name`     varchar(32) null,
+    `last_name`      varchar(32) null,
+    `subscribe_news` int         null,
+    `group`        int         null,
+    `address`        int         null,
+    `user_id`        int         null,
+    `city`           varchar(50) null,
+    `phone`          varchar(30) null
+)
+    charset = utf8;";
+
+	maybe_create_table( $table_customers, $customers_ddl );
+
+	// Регистрируем роли пользователей
+	add_role(
+		\FS\FS_Config::$users['new_user_role'],
+		\FS\FS_Config::$users['new_user_name'],
+		array(
+			'read'    => true,
+			'level_0' => true
+		) );
+	if ( ! get_option( 'fs_has_activated', 0 ) ) {
+		// Добавляем страницы
+		if ( \FS\FS_Config::$pages ) {
+			foreach ( \FS\FS_Config::get_pages() as $key => $page ) {
+				$post_id = wp_insert_post( array(
+					'post_title'   => wp_strip_all_tags( $page['title'] ),
+					'post_content' => $page['content'],
+					'post_type'    => 'page',
+					'post_status'  => 'publish',
+					'post_name'    => $key
+				) );
+				if ( $post_id ) {
+					update_option( $page['option'], intval( $post_id ) );
+					update_option( 'fs_has_activated', 1 );
+				}
+			}
+		}
+	}
+	// копируем шаблоны плагина в директорию текущей темы
+	if ( ! get_option( 'fs_copy_templates' ) ) {
+		fs_copy_all( FS_PLUGIN_PATH . 'templates/front-end/', TEMPLATEPATH . DIRECTORY_SEPARATOR . FS_PLUGIN_NAME, true );
+		update_option( 'fs_copy_templates', 1 );
+	}
+
+
+	flush_rewrite_rules();
+}
+
+
+/**
+ * The function is triggered when the plugin is deactivated.
+ */
+function fs_deactivate() {
+}

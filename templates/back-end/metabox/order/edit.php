@@ -31,7 +31,8 @@
                 <tr>
                     <td>
 						<?php echo esc_html( $offer->id ) ?>
-                        <input type="hidden" name="fs_products[<?php echo $variation_id ?>][ID]" value="<?php echo esc_attr( $offer->id ) ?>">
+                        <input type="hidden" name="fs_products[<?php echo $variation_id ?>][ID]"
+                               value="<?php echo esc_attr( $offer->id ) ?>">
                     </td>
                     <td class="order-items__image">
                         <a href="<?php echo esc_url( $offer->permalink ) ?>" target="_blank"
@@ -63,7 +64,8 @@
                     <td><?php echo esc_attr( $offer->cost_display ) ?>
                         &nbsp;<?php echo esc_attr( $offer->currency ) ?></td>
                     <td>
-                        <button type="button" class="remove-from-cart" title="<?php echo esc_attr_e('Remove from order','f-shop'); ?>">
+                        <button type="button" class="remove-from-cart"
+                                title="<?php echo esc_attr_e( 'Remove from order', 'f-shop' ); ?>">
                             <span class="dashicons dashicons-trash"></span>
                         </button>
                     </td>
@@ -73,6 +75,15 @@
         </tbody>
         <tfoot>
 
+		<?php if ( $order->discount > 0 ): ?>
+            <tr>
+                <td colspan="9">
+                    <h4 style="margin: 0;">
+						<?php printf( __( 'Discount', 'f-shop' ) . ': %s <span>%s</span>', apply_filters( 'fs_price_format', $order->discount ), fs_currency() ) ?>
+                    </h4>
+                </td>
+            </tr>
+		<?php endif ?>
         <tr>
             <td colspan="9">
                 <h4 style="margin: 0;">
@@ -95,7 +106,8 @@
             <th><?php esc_html_e( 'ID', 'f-shop' ) ?></th>
             <td>
                 <select name="user[fs_user_id]" class="fs-select-field">
-                    <option value="0"><?php esc_attr_e( 'Choose from buyers' ) ?></option>
+                    <option value="0"><?php esc_attr_e( 'Choose from buyers', 'f-shop' ) ?></option>
+
 					<?php foreach ( $clients as $client ): ?>
                         <option value="<?php echo esc_attr( $client->ID ); ?>" <?php selected( $order->user['id'], $client->ID ) ?>><?php echo apply_filters( 'the_title', '[' . $client->ID . '] ' . get_user_meta( $client->ID, 'first_name', true ) . ' ' . get_user_meta( $client->ID, 'last_name', true ) ) ?></option>
 					<?php endforeach; ?>

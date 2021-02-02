@@ -18,44 +18,15 @@ function fs_price_format( $price, $delimiter = '' ) {
  *
  * @param $price - цена без скидки
  *
- * @return mixed
+ * @return float
  */
 function fs_discount_filter__callback( $price ) {
 
-	$fs_config      = new FS_Config();
-	$discounts      = get_terms( array( 'taxonomy' => $fs_config->data['discount_taxonomy'], 'hide_empty' => 0 ) );
-	$discounts_cart = [];
-	if ( $discounts ) {
-		foreach ( $discounts as $discount ) {
-			$discount_type   = get_term_meta( $discount->term_id, 'discount_where_is', 1 );
-			$discount_where  = get_term_meta( $discount->term_id, 'discount_where', 1 );
-			$discount_value  = get_term_meta( $discount->term_id, 'discount_value', 1 );
-			$discount_amount = get_term_meta( $discount->term_id, 'discount_amount', 1 );
-			// если скидка указана в процентах
-			if ( strpos( $discount_amount, '%' ) !== false ) {
-				$discount_amount = floatval( str_replace( '%', '', $discount_amount ) );
-				$discount_amount = $price * $discount_amount / 100;
-			}
+	$price = $price - fs_get_total_discount();
 
-			if ( $discount_type == 'sum' && $discount_where == '>=' && $price >= $discount_value ) {
-				$discounts_cart[] = $discount_amount;
-			} elseif ( $discount_type == 'sum' && $discount_where == '>' && $price > $discount_value ) {
-				$discounts_cart[] = $discount_amount;
-			} elseif ( $discount_type == 'sum' && $discount_where == '<=' && $price <= $discount_value ) {
-				$discounts_cart[] = $discount_amount;
-			} elseif ( $discount_type == 'sum' && $discount_where == '<' && $price < $discount_value ) {
-				$discounts_cart[] = $discount_amount;
-			}
-		}
-	}
-	if ( ! empty( $discounts_cart ) && $price > max( $discounts_cart ) ) {
-		$price = $price - max( $discounts_cart );
-	}
-
-	return $price;
+	return (float) $price;
 
 }
-
 add_filter( 'fs_discount_filter', 'fs_discount_filter__callback', 10, 1 );
 
 // создаем новую колонку
@@ -150,10 +121,10 @@ function fs_orders_posts_custom_column( $colname, $post_id ) {
 
 			echo '<ul>';
 			echo '<li><b>';
-			if (isset($order->user['first_name']) && $order->user['first_name']!=''){
-				echo esc_html( $order->user['first_name'] ).' ';
+			if ( isset( $order->user['first_name'] ) && $order->user['first_name'] != '' ) {
+				echo esc_html( $order->user['first_name'] ) . ' ';
 			}
-			if (isset($order->user['last_name']) && $order->user['last_name']!=''){
+			if ( isset( $order->user['last_name'] ) && $order->user['last_name'] != '' ) {
 				echo esc_html( $order->user['last_name'] );
 			}
 			echo '</b></li>';

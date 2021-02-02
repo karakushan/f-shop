@@ -97,7 +97,7 @@
             <th><?php esc_html_e( 'ID', 'f-shop' ) ?></th>
             <td>
                 <select name="user[fs_user_id]" class="fs-select-field">
-                    <option value="0"><?php esc_attr_e( 'Choose from buyers' ) ?></option>
+                    <option value="0"><?php esc_attr_e( 'Choose from buyers', 'f-shop'  ) ?></option>
 					<?php foreach ( $clients as $client ): ?>
                         <option value="<?php echo esc_attr( $client->ID ); ?>"><?php echo apply_filters( 'the_title', '[' . $client->ID . '] ' . get_user_meta( $client->ID, 'first_name', true ) . ' ' . get_user_meta( $client->ID, 'last_name', true ) ) ?></option>
 					<?php endforeach; ?>
