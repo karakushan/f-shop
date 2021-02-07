@@ -580,13 +580,13 @@ jQuery(document).ready(function ($) {
                     for (let i in result.data.requiredFields) {
                         let field = $('[name="' + result.data.requiredFields[i] + '"]');
                         // Добавляем звёздочку в placeholder  к обязательным полям
-                        if (!field.data('placeholder')) {
-                            let placeholder = field.attr('placeholder');
-                            field.attr('data-placeholder', placeholder);
-                            if (typeof placeholder!=='undefined' && placeholder.indexOf('*') === -1) {
-                                field.attr('placeholder', field.attr('data-placeholder') + '*')
-                            }
-                        }
+                        // if (!field.data('placeholder')) {
+                        //     let placeholder = field.attr('placeholder');
+                        //     field.attr('data-placeholder', placeholder);
+                        //     if (typeof placeholder!=='undefined' && placeholder.indexOf('*') === -1) {
+                        //         field.attr('placeholder', field.attr('data-placeholder') + '*')
+                        //     }
+                        // }
                         field.attr('required', 'required').attr('data-ajax-req', true);
                     }
                 }

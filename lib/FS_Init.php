@@ -84,7 +84,6 @@ class FS_Init {
 		add_action( 'wp_head', array( $this, 'marketing_code_header' ) );
 
 
-
 	} // END public function __construct
 
 
@@ -229,18 +228,24 @@ class FS_Init {
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'fs-tooltipster-theme', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css' );
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'select2', FS_PLUGIN_URL . 'assets/plugins/bower_components/select2/dist/css/select2.min.css' );
+		wp_enqueue_style( FS_PLUGIN_PREFIX . 'fs-material-fonts', '//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons' );
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'fs-admin', FS_PLUGIN_URL . 'assets/css/fs-admin.css' );
 
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'spectrum', FS_PLUGIN_URL . 'assets/js/spectrum.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'js-cookie', FS_PLUGIN_URL . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
 		$screen = get_current_screen();
+//		do_action( 'qm/debug', $screen );
 		if ( $screen->id == 'edit-product' ) {
 			wp_enqueue_script( FS_PLUGIN_PREFIX . 'quick-edit', FS_PLUGIN_URL . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
+		} elseif ( in_array( $screen->id, [ 'orders' ] ) ) {
+			wp_enqueue_style( FS_PLUGIN_PREFIX . 'fs-vue-css', FS_PLUGIN_URL . 'assets/js/vue/main.css' );
+			wp_enqueue_script( FS_PLUGIN_PREFIX . 'vue-main', FS_PLUGIN_URL . 'assets/js/vue/main.js', array( 'jquery' ), null, true );
 		}
 
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/js/tooltipster.bundle.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'wp-content/plugins/f-shop/assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'select2', FS_PLUGIN_URL . 'assets/plugins/bower_components/select2/dist/js/select2.min.js', array( 'jquery' ), null, true );
+
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'admin', FS_PLUGIN_URL . 'assets/js/fs-admin.js', array(
 			'jquery',
 			'jquery-ui-dialog',
@@ -293,8 +298,8 @@ class FS_Init {
 	/**
 	 * Displays js analytics codes in the site header
 	 */
-	public function marketing_code_header(){
-	    echo fs_option( 'fs_marketing_code_header' );
+	public function marketing_code_header() {
+		echo fs_option( 'fs_marketing_code_header' );
 	}
 
 }

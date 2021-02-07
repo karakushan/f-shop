@@ -15,6 +15,8 @@ class FS_Orders {
 
 	public $post_type = 'orders';
 	public $last_order_id = null;
+	public $order_fields = [];
+
 
 	function __construct() {
 
@@ -35,16 +37,49 @@ class FS_Orders {
 
 		// Сохранение заказа в админке
 		add_action( 'save_post', [ $this, 'save_order' ], 10, 3 );
-
+		add_action( 'save_post', [ $this, 'save_order_revision' ], 10, 2 );
 		$this->last_order_id = $this->get_last_order_id();
 
+		$this->set_order_fields( [
+			'_user_id'             => __( 'User ID', 'f-shop' ),
+			'_customer_id'         => __( 'Customer ID', 'f-shop' ),
+			'_customer_ip'         => __( 'Customer IP', 'f-shop' ),
+			'_customer_email'      => __( 'E-mail', 'f-shop' ),
+			'_customer_phone'      => __( 'Phone', 'f-shop' ),
+			'_customer_first_name' => __( 'First name', 'f-shop' ),
+			'_customer_last_name'  => __( 'Last name', 'f-shop' ),
+			'_shipping_method'     => __( 'Shipping method', 'f-shop' ),
+			'_shipping_address'    => __( 'Shipping address', 'f-shop' ),
+			'city'                 => __( 'City', 'f-shop' ),
+			'_user'                => [
+				'id'         => __( 'User ID', 'f-shop' ),
+				'first_name' => __( 'First name', 'f-shop' ),
+				'last_name'  => __( 'Last name', 'f-shop' ),
+				'email'      => __( 'E-mail', 'f-shop' ),
+				'phone'      => __( 'Phone', 'f-shop' )
+			],
+			'_products'            => __( 'Products', 'f-shop' ),
+			'_delivery'            => [
+				'method'    => __( 'Shipping method', 'f-shop' ),
+				'secession' => __( 'User ID', 'f-shop' )['fs_delivery_number'],
+				'address'   => __( 'Shipping address', 'f-shop' )
+			],
+			'_payment'             => __( 'Payment method', 'f-shop' ),
+			'_amount'              => __( 'Total amount', 'f-shop' ),
+			'_comment'             => __( 'Comment', 'f-shop' )
+		] );
+
+		add_filter( '_wp_post_revision_fields', [ $this, 'order_revision_fields' ], 99, 2 );
+
 		add_action( 'init', function () {
-			add_filter( '_wp_post_revision_fields', [ $this, 'order_revision_fields' ], 10, 2 );
-			add_filter( '_wp_post_revision_field_my_meta', [ $this, 'my_plugin_revision_field' ], 10, 2 );
+
+			foreach ( $this->get_order_fields() as $meta_key => $order_field ) {
+				add_filter( '_wp_post_revision_field_' . $meta_key, [ $this, 'my_plugin_revision_field' ], 10, 2 );
+			}
+
 		} );
-
-
 	}
+
 
 	function my_plugin_revision_field( $value, $field ) {
 
@@ -55,11 +90,19 @@ class FS_Orders {
 	}
 
 	function order_revision_fields( $fields, $post ) {
-		$fields['_customer_email'] = __( 'E-mail', 'f-shop' );
-		$fields['_customer_phone'] = __( 'Phone number', 'f-shop' );
-		$fields['post_status']     = __( 'Order status', 'f-shop' );
+		$order_meta = [
+			'_customer_email' => __( 'E-mail', 'f-shop' ),
+			'_customer_phone' => __( 'Phone', 'f-shop' ),
+			'city'            => __( 'City', 'f-shop' ),
+			'_products'       => __( 'Products', 'f-shop' ),
+			'_delivery'       => __( 'Shipping', 'f-shop' ),
+			'_payment'        => __( 'Payment method', 'f-shop' ),
+			'_amount'         => __( 'Amount', 'f-shop' ),
+			'_comment'        => __( 'Comment', 'f-shop' )
+		];
 
-		return $fields;
+
+		return array_merge( $fields, $order_meta );
 	}
 
 	/**
@@ -81,7 +124,7 @@ class FS_Orders {
 		foreach ( $fs_products as $index => $product ) {
 			$price = fs_get_price( $product['ID'] );
 			$qty   = intval( max( $product['count'], 1 ) );
-			$sum += floatval( $price * $qty );
+			$sum   += floatval( $price * $qty );
 		}
 
 		$order_meta = [
@@ -109,13 +152,23 @@ class FS_Orders {
 			'_comment'         => $user['fs_comment']
 		];
 
-		$parent_id = wp_is_post_revision( $post_id );
 
 		foreach ( $order_meta as $meta_key => $item ) {
 			update_post_meta( $post_id, $meta_key, $item );
-			if ( $parent_id ) {
-				update_post_meta( $parent_id, $meta_key, $item );
+		}
+	}
+
+	function save_order_revision( $post_id, $post ) {
+		if ( $parent_id = wp_is_post_revision( $post_id ) ) {
+			$parent = get_post( $parent_id );
+			foreach ( $this->get_order_fields() as $meta_key => $order_field ) {
+				$meta = get_post_meta( $parent->ID, $meta_key, true );
+
+				if ( false !== $meta ) {
+					add_metadata( 'post', $post_id, $meta_key, $meta );
+				}
 			}
+
 		}
 	}
 
@@ -598,6 +651,20 @@ Good luck!', 'f-shop' );
 
 		return $query;
 
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_order_fields(): array {
+		return $this->order_fields;
+	}
+
+	/**
+	 * @param array $order_fields
+	 */
+	public function set_order_fields( array $order_fields ): void {
+		$this->order_fields = $order_fields;
 	}
 
 

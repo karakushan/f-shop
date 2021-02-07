@@ -366,7 +366,7 @@ class FS_Users {
 				'name'        => __( 'E-mail', 'f-shop' ),
 				'type'        => 'email',
 				'label'       => '',
-				'value'       => ! empty( $user->user_email ) ? $user->user_email : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && ! empty( $user->user_email ) ? $user->user_email : '',
 				'placeholder' => __( 'Your email', 'f-shop' ),
 				'title'       => __( 'Keep the correct email', 'f-shop' ),
 				'required'    => true,
@@ -377,7 +377,7 @@ class FS_Users {
 				'name'        => __( 'First name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
-				'value'       => ! empty( $user->first_name ) ? $user->first_name : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && ! empty( $user->first_name ) ? $user->first_name : '',
 				'placeholder' => __( 'First name', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'required'    => true,
@@ -388,7 +388,7 @@ class FS_Users {
 				'name'        => __( 'Last name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
-				'value'       => ! empty( $user->last_name ) ? $user->last_name : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && ! empty( $user->last_name ) ? $user->last_name : '',
 				'placeholder' => __( 'Last name', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'required'    => true,
@@ -409,7 +409,7 @@ class FS_Users {
 				'name'        => __( 'Phone number', 'f-shop' ),
 				'type'        => 'tel',
 				'label'       => '',
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_phone', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_phone', 1 ) : '',
 				'placeholder' => __( 'Phone number', 'f-shop' ),
 				'title'       => __( 'Keep the correct phone number', 'f-shop' ),
 				'required'    => true,
@@ -424,7 +424,7 @@ class FS_Users {
 					'Male'   => __( 'Male', 'f-shop' ),
 					'Female' => __( 'Female', 'f-shop' )
 				),
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_gender', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_gender', 1 ) : '',
 				'placeholder' => __( 'Gender', 'f-shop' ),
 				'title'       => '',
 				'required'    => false
@@ -436,7 +436,7 @@ class FS_Users {
 				'placeholder' => __( 'City', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'required'    => true,
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_city', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_city', 1 ) : '',
 				'checkout'    => true,
 				'save_meta'   => true
 
@@ -447,7 +447,7 @@ class FS_Users {
 				'label'       => '',
 				'placeholder' => __( 'Country', 'f-shop' ),
 				'title'       => '',
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_country', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_country', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => true
@@ -458,7 +458,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Zip Code', 'f-shop' ),
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_zip_code', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_zip_code', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => true
@@ -470,7 +470,7 @@ class FS_Users {
 				'label'       => '',
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'placeholder' => __( 'State / province', 'f-shop' ),
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_region', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_region', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => true
@@ -481,7 +481,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Address', 'f-shop' ),
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_address', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_address', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => true
@@ -492,7 +492,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'House number', 'f-shop' ),
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_home_num', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_home_num', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => true
@@ -503,7 +503,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Apartment number', 'f-shop' ),
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_apartment_num', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_apartment_num', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => true
@@ -514,7 +514,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Branch number', 'f-shop' ),
-				'value'       => $user_id ? get_user_meta( $user_id, 'fs_delivery_number', 1 ) : '',
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_delivery_number', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => true
@@ -527,7 +527,7 @@ class FS_Users {
 				'taxonomy'     => FS_Config::get_data( 'product_del_taxonomy' ),
 				'icon'         => true,
 				'title'        => __( 'Choose shipping method', 'f-shop' ),
-				'value'        => $user_id ? get_user_meta( $user_id, 'fs_delivery_methods', 1 ) : '',
+				'value'        => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_delivery_methods', 1 ) : '',
 				'values'       => get_terms( array(
 					'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
 					'fields'     => 'id=>name',
@@ -547,7 +547,7 @@ class FS_Users {
 				'taxonomy'     => FS_Config::get_data( 'product_pay_taxonomy' ),
 				'icon'         => true,
 				'title'        => __( 'Select a Payment Method', 'f-shop' ),
-				'value'        => $user_id ? get_user_meta( $user_id, 'fs_payment_methods', 1 ) : '',
+				'value'        => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_payment_methods', 1 ) : '',
 				'query_params' => [
 					'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
 					'meta_query' => [
@@ -600,7 +600,7 @@ class FS_Users {
 				'label_position' => 'after',
 				'required'       => false,
 				'checkout'       => true,
-				'value'          => get_user_meta( $user->ID, 'fs_subscribe_news', 1 )
+				'value'          => fs_option( 'fs_autofill_form' ) && get_user_meta( $user->ID, 'fs_subscribe_news', 1 ) ? get_user_meta( $user->ID, 'fs_subscribe_news', 1 ) : 0
 
 			),
 			'fs_subscribe_cart'    => array(
@@ -610,7 +610,7 @@ class FS_Users {
 				'label_position' => 'after',
 				'required'       => false,
 				'checkout'       => true,
-				'value'          => get_user_meta( $user->ID, 'fs_subscribe_cart', 1 )
+				'value'          => fs_option( 'fs_autofill_form' ) && get_user_meta( $user->ID, 'fs_subscribe_cart', 1 ) ? get_user_meta( $user->ID, 'fs_subscribe_cart', 1 ) : ''
 
 			),
 			'fs_login'             => array(
@@ -618,7 +618,7 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Login', 'f-shop' ),
-				'value'       => $user->user_login,
+				'value'       => fs_option( 'fs_autofill_form' ) ? $user->user_login : '',
 				'required'    => true,
 				'save_meta'   => false
 			),

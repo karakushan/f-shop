@@ -118,7 +118,11 @@ class FS_Order {
 		}
 		$this->meta = get_post_meta( $order_id );
 
-		$this->items        = $products;
+
+		$this->items = array_values( array_map( function ( $item ) {
+			return fs_set_product( $item );
+		}, $products ) );
+
 		$this->total_amount = (float) get_post_meta( $order_id, '_amount', 1 );
 		$this->discount     = (float) get_post_meta( $order_id, '_order_discount', 1 );
 		$this->comment      = get_post_meta( $order_id, '_comment', 1 );

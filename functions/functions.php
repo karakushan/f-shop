@@ -254,7 +254,7 @@ function fs_get_total_amount( $delivery_cost = false ) {
 
 	// Добавляем стоимость упаковки если нужно
 	if ( fs_option( 'fs_include_packing_cost' ) ) {
-		$amount  += fs_get_packing_cost();
+		$amount += fs_get_packing_cost();
 	}
 
 	// Вычисляем налоги
@@ -485,7 +485,7 @@ function fs_get_packing_cost() {
  */
 function fs_packing_cost( $format = '%s <span>%s</span>' ) {
 	if ( fs_option( 'fs_include_packing_cost' ) ) {
-		printf( $format, fs_get_packing_cost(), fs_currency() );
+		printf( $format, apply_filters( 'fs_price_format', fs_get_packing_cost() ), fs_currency() );
 	}
 }
 
@@ -2870,12 +2870,11 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
  *  остальные тоже передаются по возможности
  *
  * @param array $product
- *
  * @param int $item_id
  *
  * @return \FS\FS_Product
  */
-function fs_set_product( $product, $item_id = 0 ) {
+function fs_set_product( $product= [], $item_id = 0 ) {
 	$product_class = new FS\FS_Product();
 	$product_class->set_product( $product, $item_id );
 

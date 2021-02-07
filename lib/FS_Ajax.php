@@ -73,7 +73,7 @@ class FS_Ajax {
 
 			// Live product search in admin
 			add_action( 'wp_ajax_fs_search_product_admin', array( $this, 'search_product_admin' ) );
-			add_action( 'wp_ajax_fs_search_product_admin', array( $this, 'search_product_admin' ) );
+			add_action( 'wp_ajax_nopriv_fs_search_product_admin', array( $this, 'search_product_admin' ) );
 
 			// Add new order and send e-mail
 			add_action( 'wp_ajax_order_send', array( $this, 'order_send_ajax' ) );
@@ -239,27 +239,16 @@ class FS_Ajax {
 	 * Live product search callback function
 	 */
 	function search_product_admin() {
-
 		$find_posts = get_posts( array(
 			's'              => sanitize_text_field( $_POST['search'] ),
-			'posts_per_page' => - 1,
+			'posts_per_page' => 12,
 			'post_type'      => FS_Config::get_data( 'post_type' )
 		) );
 
 		if ( $find_posts ) {
-			$find_posts = array_map( function ( $item ) {
-				return [
-					'ID'       => $item->ID,
-					'title'    => apply_filters( 'the_title', $item->post_title ),
-					'photo'    => get_the_post_thumbnail_url( $item->ID ),
-					'link'     => get_the_permalink( $item->ID ),
-					'price'    => fs_get_price( $item->ID ),
-					'sku'      => fs_get_product_code( $item->ID ),
-					'currency' => fs_currency( $item->ID ),
-
-				];
-			}, $find_posts );
-			wp_send_json_success( $find_posts );
+			wp_send_json_success( array_map( function ( $item ) {
+				return fs_set_product(['ID'=>$item->ID,'count'=>1,'attr'=>[]]);
+			}, $find_posts ));
 		}
 
 		wp_send_json_error();
@@ -650,6 +639,19 @@ class FS_Ajax {
 			}
 		}
 
+		// Добавляем покупателя в базу
+		$wpdb->insert( $wpdb->prefix . 'fs_customers', [
+			'user_id'    => $user_id,
+			'first_name' => $sanitize_field['fs_first_name'],
+			'last_name'  => $sanitize_field['fs_last_name'],
+			'email'      => $sanitize_field['fs_email'],
+			'phone'      => $sanitize_field['fs_phone'],
+			'address'    => $sanitize_field['fs_address'],
+			'ip'         => $customer_ip,
+			'group'      => 1,
+		] );
+		$customer_id = $wpdb->insert_id;
+
 		// Вставляем заказ в базу данных
 		$pay_method     = $sanitize_field['fs_payment_methods'] ? get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] ) : null;
 		$new_order_data = array(
@@ -668,6 +670,8 @@ class FS_Ajax {
 				'_customer_email'  => $sanitize_field['fs_email'],
 				'_customer_phone'  => $sanitize_field['fs_phone'],
 				'_order_discount'  => fs_get_total_discount(),
+				'_packing_cost'    => fs_get_packing_cost(),
+				'_customer_id'     => $customer_id,
 				'_user'            => array(
 					'id'         => $user_id,
 					'first_name' => $sanitize_field['fs_first_name'],
@@ -716,10 +720,11 @@ class FS_Ajax {
 				// Cart data
 				'order_date'        => $order_create_date_display,
 				'order_id'          => $order_id,
-				'cart_discount'     => sprintf( '%s %s', fs_get_total_discount(), fs_currency() ),
+				'cart_discount'     => sprintf( '%s %s', apply_filters( 'fs_price_format', fs_get_total_discount() ), fs_currency() ),
 				'cart_amount'       => sprintf( '%s %s', apply_filters( 'fs_price_format', $sum ), fs_currency() ),
 				'delivery_cost'     => sprintf( '%s %s', apply_filters( 'fs_price_format', $delivery_cost ), fs_currency() ),
 				'products_cost'     => sprintf( '%s %s', apply_filters( 'fs_price_format', fs_get_cart_cost() ), fs_currency() ),
+				'packing_cost'      => sprintf( '%s %s', apply_filters( 'fs_price_format', fs_get_packing_cost() ), fs_currency() ),
 				'delivery_method'   => $sanitize_field['fs_delivery_methods'] ? fs_get_delivery( $sanitize_field['fs_delivery_methods'] ) : '',
 				'delivery_number'   => $sanitize_field['fs_delivery_number'],
 				'payment_method'    => $pay_method && isset( $pay_method->name ) ? $pay_method->name : '',

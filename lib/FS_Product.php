@@ -22,7 +22,6 @@ class FS_Product {
 	public $currency;
 	public $sku;
 	public $permalink;
-	public $thumbnail;
 	public $thumbnail_url;
 	public $cost;
 	public $cost_display;
@@ -678,6 +677,8 @@ class FS_Product {
 		$this->cost_display       = apply_filters( 'fs_price_format', $this->cost );
 		$this->currency           = fs_currency( $this->id );
 		$this->attributes         = [];
+		$this->thumbnail_url      = has_post_thumbnail( $this->id ) ? get_the_post_thumbnail_url( $this->id ) : null;
+
 
 		// Если указаны свойства товара
 		if ( ! empty( $product['attr'] ) ) {
@@ -1301,9 +1302,9 @@ class FS_Product {
 			'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
 			'hide_empty' => false
 		] );
-		$clients          = get_users( );
+		$clients          = get_users();
 
-		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/'.$action.'.php';
+		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/' . $action . '.php';
 
 	}
 

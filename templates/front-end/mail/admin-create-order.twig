@@ -399,7 +399,7 @@
                                                             <td class="mini-block">
                                                                 <span class="header-sm">{{ __('Delivery') }}</span><br/>
                                                                 {% if delivery_method %} {{ __("Delivery method") }}:  {{ delivery_method }}{% endif %}
-                                                                {% if delivery_number %} №{{ delivery_number }}{% endif %}<br/>
+                                                                {% if delivery_number %}, {{ delivery_number }}{% endif %}<br/>
                                                                 {% if client_city %} {{ __('City') }}: {{ client_city }}
                                                                     <br/>{% endif %}
                                                                 {% if client_address %} {{ __("Address") }}: {{ client_address }}
@@ -508,6 +508,7 @@
                                         <span class="total-space">{{ __('Cost of goods') }}</span> <br/>
                                         <span class="total-space">{{ __('Cost of delivery') }}</span> <br/>
                                         <span class="total-space">{{ __('Discount') }}</span> <br/>
+                                        <span class="total-space">{{ __('Packing') }}</span> <br/>
                                         <span class="total-space"
                                               style="font-weight: bold; color: #4d4d4d">{{ __('Total') }}</span>
                                     </td>
@@ -515,6 +516,7 @@
                                         <span class="total-space">{{ products_cost }}</span> <br/>
                                         <span class="total-space">{{ delivery_cost }}</span> <br/>
                                         <span class="total-space">{{ cart_discount }}</span> <br/>
+                                        <span class="total-space">{{ packing_cost }}</span> <br/>
                                         <span class="total-space"
                                               style="font-weight:bold; color: #4d4d4d">{{ cart_amount }}</span>
                                     </td>
