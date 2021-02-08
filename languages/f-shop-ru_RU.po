@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-07 12:44+0000\n"
-"PO-Revision-Date: 2021-02-08 14:29+0000\n"
+"PO-Revision-Date: 2021-02-08 19:11+0000\n"
 "Last-Translator: Виталий Каракушан\n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -40,7 +40,7 @@ msgstr ""
 "top/\">F-Shop</a>.  <a href=\"https://f-shop.top/dokumentacija/\">"
 "Документация</a>. <a href=\"https://f-shop.top/novosti/\">Новости</a>.</p>"
 
-#: lib/FS_Orders.php:212
+#: lib/FS_Orders.php:238
 msgid ""
 "About all orders with the status of “New” administrator receives "
 "notification by mail, which allows him to immediately contact the buyer. For "
@@ -149,6 +149,10 @@ msgstr "добавить вариант"
 #: lib/FS_Init.php:195
 msgid "Added!"
 msgstr "Добавлено!"
+
+#: lib/FS_Order.php:244
+msgid "Adding a comment"
+msgstr "Добавление комментария"
 
 #: templates/back-end/metabox/other.php:1
 msgid "Additional data"
@@ -293,7 +297,7 @@ msgstr "Начало диапазона"
 msgid "Best-seller"
 msgstr "Бестселлер"
 
-#: lib/FS_Orders.php:247
+#: lib/FS_Orders.php:273
 msgid "Black list"
 msgstr "Черный список"
 
@@ -350,7 +354,7 @@ msgstr "По названию от А до Я"
 msgid "by title Z to A"
 msgstr "по названию от Я до А"
 
-#: lib/FS_Orders.php:239
+#: lib/FS_Orders.php:265
 msgid "Canceled"
 msgstr "Отменен"
 
@@ -390,7 +394,7 @@ msgstr "Текст категории"
 msgid "change image"
 msgstr "изменить изображение"
 
-#: lib/FS_Orders.php:378
+#: lib/FS_Order.php:242
 msgid "Change order status"
 msgstr "Изменение статуса заказа"
 
@@ -443,7 +447,7 @@ msgid "Choose shipping method"
 msgstr "Выберите способ доставки"
 
 #: actions.php:69 lib/FS_Config.php:79 lib/FS_Customers_List.php:151
-#: lib/FS_Orders.php:53 lib/FS_Users.php:433 lib/FS_Users.php:436
+#: lib/FS_Orders.php:56 lib/FS_Users.php:433 lib/FS_Users.php:436
 #: functions/actions.php:69 functions/actions.php:69
 #: templates/front-end/order/last-order-info.php:27
 #: templates/front-end/shortcode/fs-order-info.php:59
@@ -478,7 +482,7 @@ msgstr "цвет"
 msgid "Color value"
 msgstr "Значение цвета"
 
-#: lib/FS_Orders.php:69
+#: lib/FS_Orders.php:72
 msgid "Comment"
 msgstr "Комментарий"
 
@@ -546,7 +550,7 @@ msgstr "Стоимость товаров"
 msgid "Country"
 msgstr "Страна"
 
-#: lib/FS_Order.php:216
+#: lib/FS_Order.php:243
 msgid "Create order"
 msgstr "Создание заказа"
 
@@ -591,11 +595,11 @@ msgstr "Текущий пароль"
 msgid "Customer"
 msgstr "Покупатель"
 
-#: lib/FS_Orders.php:45
+#: lib/FS_Orders.php:48
 msgid "Customer ID"
 msgstr "ID покупателя"
 
-#: lib/FS_Orders.php:46
+#: lib/FS_Orders.php:49
 msgid "Customer IP"
 msgstr "IP адрес покупателя"
 
@@ -616,7 +620,7 @@ msgstr "Дата"
 msgid "Date of Birth"
 msgstr "Дата родждения"
 
-#: lib/FS_Orders.php:277
+#: lib/FS_Orders.php:303
 msgid "Date of purchase"
 msgstr "Дата покупки"
 
@@ -652,7 +656,7 @@ msgstr "удалить изображение"
 msgid "Deleting an account"
 msgstr "Удалить аккаунт"
 
-#: lib/FS_Orders.php:231
+#: lib/FS_Orders.php:257
 msgid "Delivered"
 msgstr "Доставлен"
 
@@ -698,7 +702,7 @@ msgstr "Настройки доставки"
 msgid "Delivery type"
 msgstr "Способ доставки"
 
-#: lib/FS_Orders.php:235
+#: lib/FS_Orders.php:261
 msgid "Denied"
 msgstr "Отказан"
 
@@ -781,7 +785,7 @@ msgid "Don't show on catalog page"
 msgstr "Не показывать на странице каталога"
 
 #: actions.php:65 lib/FS_Config.php:73 lib/FS_Customers_List.php:149
-#: lib/FS_Orders.php:47 lib/FS_Orders.php:58 lib/FS_Users.php:366
+#: lib/FS_Orders.php:50 lib/FS_Orders.php:61 lib/FS_Users.php:366
 #: functions/actions.php:65 templates/front-end/auth/lostpassword.php:2
 #: templates/front-end/shortcode/fs-order-info.php:51
 #: templates/back-end/metabox/order/edit.php:45
@@ -953,8 +957,8 @@ msgstr "Фильтрует товары по диапазону цены"
 msgid "First Name"
 msgstr "Имя"
 
-#: actions.php:63 lib/FS_Customers_List.php:146 lib/FS_Orders.php:49
-#: lib/FS_Orders.php:56 lib/FS_Users.php:377 lib/FS_Users.php:381
+#: actions.php:63 lib/FS_Customers_List.php:146 lib/FS_Orders.php:52
+#: lib/FS_Orders.php:59 lib/FS_Users.php:377 lib/FS_Users.php:381
 #: functions/actions.php:63 functions/actions.php:63
 #: templates/front-end/dashboard/personal_info.php:28
 #: templates/back-end/metabox/order/edit.php:26
@@ -1130,7 +1134,7 @@ msgstr "Изображение"
 msgid "image"
 msgstr "изображение"
 
-#: lib/FS_Orders.php:227
+#: lib/FS_Orders.php:253
 msgid "In delivery"
 msgstr "Передан в доставку"
 
@@ -1142,7 +1146,7 @@ msgstr "в наличии"
 msgid "In test mode, orders come only to the administrator's mail"
 msgstr "В тестовом режиме заказы будут отправляться только администратору"
 
-#: lib/FS_Orders.php:219
+#: lib/FS_Orders.php:245
 msgid "In the process of payment"
 msgstr "В оплате"
 
@@ -1228,12 +1232,12 @@ msgstr "Введите корректный e-mail"
 msgid "Keep the correct phone number"
 msgstr "Введите корректный номер телефона"
 
-#: lib/FS_Orders.php:278
+#: lib/FS_Orders.php:304
 msgid "Last modified"
 msgstr "Последнее изменение"
 
-#: actions.php:64 lib/FS_Customers_List.php:147 lib/FS_Orders.php:50
-#: lib/FS_Orders.php:57 lib/FS_Users.php:388 lib/FS_Users.php:392
+#: actions.php:64 lib/FS_Customers_List.php:147 lib/FS_Orders.php:53
+#: lib/FS_Orders.php:60 lib/FS_Users.php:388 lib/FS_Users.php:392
 #: functions/actions.php:64 functions/actions.php:64
 #: templates/front-end/shortcode/fs-order-info.php:47
 #: templates/front-end/dashboard/personal_info.php:35
@@ -1360,7 +1364,7 @@ msgstr "Поле имя не может быть пустым"
 msgid "Name of the sender of letters"
 msgstr "Имя отправителя писем"
 
-#: lib/FS_Orders.php:211
+#: lib/FS_Orders.php:237
 msgid "New"
 msgstr "Новый"
 
@@ -1499,15 +1503,15 @@ msgstr "Заказ не найден"
 msgid "Order number"
 msgstr "Номер заказа"
 
-#: lib/FS_Orders.php:302
+#: lib/FS_Orders.php:328
 msgid "Order number is not specified"
 msgstr "Номер заказа не указан"
 
-#: lib/FS_Order.php:201
+#: lib/FS_Order.php:200
 msgid "Order number not specified"
 msgstr "Номер заказа не указан"
 
-#: lib/FS_Taxonomy.php:884 lib/FS_Orders.php:165
+#: lib/FS_Taxonomy.php:884 lib/FS_Orders.php:191
 msgid "Order status"
 msgstr "Статус заказа"
 
@@ -1533,7 +1537,7 @@ msgstr "Упаковка"
 msgid "Packing cost"
 msgstr "Стоимость упаковки"
 
-#: lib/FS_Orders.php:223
+#: lib/FS_Orders.php:249
 msgid "Paid"
 msgstr "Оплачен"
 
@@ -1566,7 +1570,7 @@ msgstr "заплатить сейчас"
 msgid "Payment"
 msgstr "Оплата"
 
-#: lib/FS_Taxonomy.php:795 lib/FS_Orders.php:67
+#: lib/FS_Taxonomy.php:795 lib/FS_Orders.php:70
 #: templates/back-end/metabox/order/edit.php:78
 #: templates/back-end/metabox/order/show.php:44
 #: templates/back-end/metabox/order/meta-order-add.php:44
@@ -1608,8 +1612,8 @@ msgstr "Личный кабинет"
 msgid "Personal information"
 msgstr "Персональная информация"
 
-#: actions.php:68 lib/FS_Customers_List.php:148 lib/FS_Orders.php:48
-#: lib/FS_Orders.php:59 functions/actions.php:68 functions/actions.php:68
+#: actions.php:68 lib/FS_Customers_List.php:148 lib/FS_Orders.php:51
+#: lib/FS_Orders.php:62 functions/actions.php:68 functions/actions.php:68
 msgid "Phone"
 msgstr "Телефон"
 
@@ -1673,7 +1677,7 @@ msgstr "Цена"
 msgid "Price separator (default \".\")"
 msgstr "Разделитель копеек (по умолчанию \".\")"
 
-#: lib/FS_Orders.php:215
+#: lib/FS_Orders.php:241
 msgid "Processed"
 msgstr "Обработан"
 
@@ -1736,7 +1740,7 @@ msgid "Product slug"
 msgstr "Слаг для товаров"
 
 #: lib/FS_Settings_Class.php:232 lib/FS_Product.php:897 lib/FS_Product.php:908
-#: lib/FS_Settings.php:231 lib/FS_Orders.php:61
+#: lib/FS_Settings.php:231 lib/FS_Orders.php:64
 msgid "Products"
 msgstr "Товары"
 
@@ -1880,7 +1884,7 @@ msgstr "обязательно"
 msgid "Required fields when choosing this delivery method"
 msgstr "Обязательные поля при выборе этого способа доставки"
 
-#: lib/FS_Orders.php:243
+#: lib/FS_Orders.php:269
 msgid "Return"
 msgstr "Возврат"
 
@@ -1971,7 +1975,7 @@ msgstr "Сессии"
 msgid "Settings"
 msgstr "Настройки"
 
-#: lib/FS_Orders.php:52 lib/FS_Orders.php:65
+#: lib/FS_Orders.php:55 lib/FS_Orders.php:68
 msgid "Shipping address"
 msgstr "Адрес доставки"
 
@@ -1987,7 +1991,7 @@ msgstr "Детали доставки и оплаты"
 msgid "Shipping Cost in Base Currency"
 msgstr "Стоимость доставки в базовой валюте"
 
-#: lib/FS_Orders.php:51 lib/FS_Orders.php:63
+#: lib/FS_Orders.php:54 lib/FS_Orders.php:66
 msgid "Shipping method"
 msgstr "Способ доставки"
 
@@ -2110,7 +2114,7 @@ msgstr "Благодарим за заказ!"
 msgid "Thank you for your purchase."
 msgstr "Благодарим за покупку."
 
-#: lib/FS_Orders.php:240
+#: lib/FS_Orders.php:266
 msgid ""
 "The administrator assigns the status to the order if the client for some "
 "reason refused the order;"
@@ -2118,7 +2122,7 @@ msgstr ""
 "Администратор присваивает статус заказу, если клиент по какой-то причине "
 "отказался от заказа;"
 
-#: lib/FS_Orders.php:244
+#: lib/FS_Orders.php:270
 msgid ""
 "The administrator assigns the status to the order if the client for some "
 "reason returned the goods."
@@ -2126,7 +2130,7 @@ msgstr ""
 "Администратор присваивает статус заказу, если клиент по какой-то причине "
 "вернул товар."
 
-#: lib/FS_Orders.php:228
+#: lib/FS_Orders.php:254
 msgid ""
 "The administrator assigns this status to orders when drawing up the delivery "
 "list. The sheet is transferred to the courier along with the goods."
@@ -2168,7 +2172,7 @@ msgstr "Форма не прошла проверку безопасности!"
 msgid "The online store works for"
 msgstr "Интернет магазин работает на"
 
-#: lib/FS_Orders.php:216
+#: lib/FS_Orders.php:242
 msgid ""
 "The order is accepted and can be paid. The status is introduced mainly for "
 "the convenience of internal order management, not “New”, but not yet paid or "
@@ -2178,7 +2182,7 @@ msgstr ""
 "внутреннего управления заказами, а не «Новый», но еще не оплачен или не "
 "отправлен для доставки;"
 
-#: lib/FS_Orders.php:514
+#: lib/FS_Orders.php:536
 msgid "The order status is not defined"
 msgstr "Статус заказа не определен"
 
@@ -2192,7 +2196,7 @@ msgid ""
 "filter"
 msgstr "Товар должен обладать одним из выбранных свойств в фильтре"
 
-#: lib/FS_Orders.php:220
+#: lib/FS_Orders.php:246
 msgid ""
 "The status can be assigned by the administrator after sending an invoice to "
 "the client for payment."
@@ -2200,7 +2204,7 @@ msgstr ""
 "Статус может быть назначен администратором после отправки клиенту счета на "
 "оплату."
 
-#: lib/FS_Orders.php:236
+#: lib/FS_Orders.php:262
 msgid ""
 "The status is assigned to orders that cannot be satisfied (for example, the "
 "product is not in stock). Later, at any time you can change the status of "
@@ -2210,7 +2214,7 @@ msgstr ""
 "товара нет на складе). Позже в любой момент вы можете изменить статус заказа "
 "(например, если товар есть в наличии);"
 
-#: lib/FS_Orders.php:232
+#: lib/FS_Orders.php:258
 msgid ""
 "The status is assigned to orders transferred to the courier. An order can "
 "maintain this status for a long time, depending on how far the customer is "
@@ -2220,7 +2224,7 @@ msgstr ""
 "этот статус в течение длительного времени, в зависимости от того, как далеко "
 "находится клиент;"
 
-#: lib/FS_Orders.php:224
+#: lib/FS_Orders.php:250
 msgid ""
 "The status is assigned to the order automatically if the settlement is made "
 "through the Money Online payment system. If the goods were delivered by "
@@ -2318,7 +2322,7 @@ msgstr ""
 "Этот параметр устанавливает количество товаров которые будут показаны на "
 "странице каталога и категории товаров"
 
-#: lib/FS_Orders.php:248
+#: lib/FS_Orders.php:274
 msgid ""
 "This status is assigned to an order if violations were detected on the part "
 "of the customer. On subsequent orders, all orders from this IP, e-mail, "
@@ -2405,7 +2409,7 @@ msgstr "В список желаний"
 msgid "Total"
 msgstr "Всего"
 
-#: lib/FS_Orders.php:68
+#: lib/FS_Orders.php:71
 msgid "Total amount"
 msgstr "Общая сумма"
 
@@ -2482,7 +2486,21 @@ msgstr ""
 msgid "Used when placing the order, if the user is authorized"
 msgstr "Используется при оформлении заказа, если пользователь авторизован"
 
-#: lib/FS_Order.php:217
+#: lib/FS_Order.php:270
+#, php-format
+msgid ""
+"User \"%s\" added a comment. <a href=\"%s\" target=\"_blank\"> Go to comment "
+"<a>"
+msgstr ""
+"Пользовательr \"%s\" добавил комментарий. <a href=\"%s\" target=\"_blank\"> "
+"К комментарию <a>"
+
+#: lib/FS_Order.php:267
+#, php-format
+msgid "User \"%s\" changed order status to \"%s\""
+msgstr "Пользователь \"%s\" изменил статус заказа на \"%s\""
+
+#: lib/FS_Order.php:277
 #, php-format
 msgid "User \"%s\" created an order"
 msgstr "Пользователь \"%s\" создал заказ"
@@ -2496,7 +2514,7 @@ msgstr ""
 "Пользователь %s просит уведомить его о наличии товара \"%s\". Ссылка на "
 "товар: %s"
 
-#: lib/FS_Orders.php:44 lib/FS_Orders.php:55 lib/FS_Orders.php:64
+#: lib/FS_Orders.php:47 lib/FS_Orders.php:58 lib/FS_Orders.php:67
 msgid "User ID"
 msgstr "ID пользователя"
 
@@ -2690,7 +2708,7 @@ msgstr ""
 "это не случилось на протяжении 1-2 дней, то свяжитесь с нами по следующим "
 "контактам:"
 
-#: lib/FS_Orders.php:345
+#: lib/FS_Orders.php:374
 msgid ""
 "Your order #%order_id% has been successfully approved. The next stage is "
 "payment of the order. You can pay for the purchase by <a href=\"%pay_url%\">"
@@ -2708,7 +2726,7 @@ msgstr ""
 "Ваш заказ успешно создан! Мы свяжемся с вами в ближайшее время для "
 "обсуждения деталей."
 
-#: lib/FS_Orders.php:369
+#: lib/FS_Orders.php:398
 msgid "Your order is approved"
 msgstr "Ваш заказ принят"
 
