@@ -37,8 +37,11 @@ class FS_Orders {
 
 		// Сохранение заказа в админке
 		add_action( 'save_post', [ $this, 'save_order' ], 10, 3 );
-		add_action( 'save_post', [ $this, 'save_order_revision' ], 10, 2 );
+
 		$this->last_order_id = $this->get_last_order_id();
+
+		// Срабатывает после добавления комментария к заказу
+		add_action( 'comment_post', [ $this, 'after_comment_inserted' ], 10, 3 );
 
 		$this->set_order_fields( [
 			'_user_id'             => __( 'User ID', 'f-shop' ),
@@ -61,7 +64,7 @@ class FS_Orders {
 			'_products'            => __( 'Products', 'f-shop' ),
 			'_delivery'            => [
 				'method'    => __( 'Shipping method', 'f-shop' ),
-				'secession' => __( 'User ID', 'f-shop' )['fs_delivery_number'],
+				'secession' => __( 'Delivery service branch number', 'f-shop' ),
 				'address'   => __( 'Shipping address', 'f-shop' )
 			],
 			'_payment'             => __( 'Payment method', 'f-shop' ),
@@ -69,7 +72,6 @@ class FS_Orders {
 			'_comment'             => __( 'Comment', 'f-shop' )
 		] );
 
-		add_filter( '_wp_post_revision_fields', [ $this, 'order_revision_fields' ], 99, 2 );
 
 		add_action( 'init', function () {
 
@@ -80,29 +82,28 @@ class FS_Orders {
 		} );
 	}
 
+	/**
+	 * Коллбек хука "comment_post"
+	 * @see https://developer.wordpress.org/reference/hooks/comment_post/
+	 *
+	 * @param $comment_ID
+	 * @param $comment_approved
+	 * @param $commentdata
+	 */
+	public function after_comment_inserted( $comment_ID, $comment_approved, $commentdata ) {
+		if ( get_post_type( $commentdata['comment_post_ID'] ) !== FS_Config::get_data( 'post_type_orders' ) ) {
+			return;
+		}
 
-	function my_plugin_revision_field( $value, $field ) {
-
-		global $revision;
-
-		return get_metadata( 'post', $revision->ID, $field, true );
-
-	}
-
-	function order_revision_fields( $fields, $post ) {
-		$order_meta = [
-			'_customer_email' => __( 'E-mail', 'f-shop' ),
-			'_customer_phone' => __( 'Phone', 'f-shop' ),
-			'city'            => __( 'City', 'f-shop' ),
-			'_products'       => __( 'Products', 'f-shop' ),
-			'_delivery'       => __( 'Shipping', 'f-shop' ),
-			'_payment'        => __( 'Payment method', 'f-shop' ),
-			'_amount'         => __( 'Amount', 'f-shop' ),
-			'_comment'        => __( 'Comment', 'f-shop' )
-		];
-
-
-		return array_merge( $fields, $order_meta );
+		$order = new FS_Order( $commentdata['comment_post_ID'] );
+		$order->add_history_event( $commentdata['comment_post_ID'], [
+			'id'             => 'adding_a_comment',
+			'initiator_id'   => $commentdata['user_id'],
+			'initiator_name' => $commentdata['comment_author'],
+			'data'           => [
+				'comment_id' => $comment_ID
+			]
+		] );
 	}
 
 	/**
@@ -119,7 +120,6 @@ class FS_Orders {
 
 		$fs_products = ! empty( $_POST['fs_products'] ) && is_array( $_POST['fs_products'] ) ? $_POST['fs_products'] : [];
 		$user        = array_map( 'trim', $_POST['user'] );
-
 		$sum = 0;
 		foreach ( $fs_products as $index => $product ) {
 			$price = fs_get_price( $product['ID'] );
@@ -155,20 +155,6 @@ class FS_Orders {
 
 		foreach ( $order_meta as $meta_key => $item ) {
 			update_post_meta( $post_id, $meta_key, $item );
-		}
-	}
-
-	function save_order_revision( $post_id, $post ) {
-		if ( $parent_id = wp_is_post_revision( $post_id ) ) {
-			$parent = get_post( $parent_id );
-			foreach ( $this->get_order_fields() as $meta_key => $order_field ) {
-				$meta = get_post_meta( $parent->ID, $meta_key, true );
-
-				if ( false !== $meta ) {
-					add_metadata( 'post', $post_id, $meta_key, $meta );
-				}
-			}
-
 		}
 	}
 
@@ -371,6 +357,9 @@ class FS_Orders {
 	 */
 	function fs_change_order_status( $new_status ) {
 		global $post;
+		if ( ! $post ) {
+			return;
+		}
 		$fs_config = new FS_Config();
 
 		// Если новый статус заказа "обработан" (processed)
@@ -407,6 +396,21 @@ Good luck!', 'f-shop' );
 			if ( is_email( $user_data['email'] ) && ! empty( $message ) ) {
 				wp_mail( $user_data['email'], __( 'Your order is approved', 'f-shop' ), $message_decode, $fs_config->email_headers() );
 			}
+		}
+
+		if ( $post->post_status != $new_status ) {
+			$order        = new FS_Order( $post->ID );
+			$current_user = wp_get_current_user();
+
+			$order->add_history_event( $post->ID, [
+				'id'             => 'change_order_status',
+				'initiator_id'   => $current_user->ID,
+				'initiator_name' => $current_user->display_name,
+				'time'           => current_time( 'timestamp' ),
+				'data'           => [
+					'status' => $new_status
+				]
+			] );
 		}
 	}
 

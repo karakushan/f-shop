@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-12 17:47+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
-"PO-Revision-Date: 2021-01-31 22:03+0000\n"
+"PO-Revision-Date: 2021-02-01 20:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -65,6 +65,7 @@ msgid "Activate multicurrency"
 msgstr "Активувати режим мультиваютності"
 
 #: templates/back-end/metabox/order/edit.php:186
+#: templates/back-end/metabox/order/add.php:173
 msgid "Add"
 msgstr "Додати"
 
@@ -76,19 +77,19 @@ msgstr "додати"
 msgid "Add / Replace"
 msgstr "Додати / Замінити"
 
-#: lib/FS_Taxonomy.php:796
+#: lib/FS_Taxonomy.php:812
 msgid "Add a delivery method"
 msgstr "Додати спосіб доставки"
 
-#: lib/FS_Taxonomy.php:779
+#: lib/FS_Taxonomy.php:795
 msgid "Add a payment method"
 msgstr "Додати спосіб оплати"
 
-#: lib/FS_Taxonomy.php:1516 templates/back-end/metabox/attributes.php:13
+#: lib/FS_Taxonomy.php:1532 templates/back-end/metabox/attributes.php:13
 msgid "add attribute"
 msgstr "додати характеристику"
 
-#: lib/FS_Taxonomy.php:760
+#: lib/FS_Taxonomy.php:776
 msgid "Add category"
 msgstr "Додати категорію"
 
@@ -96,11 +97,11 @@ msgstr "Додати категорію"
 msgid "Add cross-sell products"
 msgstr "Додати кросс-сейл товар"
 
-#: lib/FS_Taxonomy.php:910
+#: lib/FS_Taxonomy.php:926
 msgid "Add Currency"
 msgstr "Додати валюту"
 
-#: lib/FS_Taxonomy.php:888
+#: lib/FS_Taxonomy.php:904
 msgid "Add Discount"
 msgstr "Додати знижку"
 
@@ -108,7 +109,7 @@ msgstr "Додати знижку"
 msgid "Add Email Template"
 msgstr "Додати E-mail шаблон"
 
-#: lib/FS_Taxonomy.php:832
+#: lib/FS_Taxonomy.php:848
 msgid "Add Manufacturer"
 msgstr "Додати виробника"
 
@@ -116,7 +117,7 @@ msgstr "Додати виробника"
 msgid "Add Order"
 msgstr "Створити замовлення"
 
-#: lib/FS_Taxonomy.php:868
+#: lib/FS_Taxonomy.php:884
 msgid "Add Order Status"
 msgstr "Створити новий статус замовлення"
 
@@ -128,11 +129,11 @@ msgstr "Додати товар"
 msgid "add property"
 msgstr "додати властивість"
 
-#: lib/FS_Taxonomy.php:813
+#: lib/FS_Taxonomy.php:829
 msgid "Add property / group of properties"
 msgstr "Додати характеристику/групу характеристик"
 
-#: lib/FS_Taxonomy.php:850
+#: lib/FS_Taxonomy.php:866
 msgid "Add tax"
 msgstr "Додати податок"
 
@@ -229,7 +230,7 @@ msgstr "Ви точно хочете видалити це зображення?
 msgid "Associated"
 msgstr "Схоже"
 
-#: lib/FS_Taxonomy.php:1466 templates/back-end/metabox/attributes.php:9
+#: lib/FS_Taxonomy.php:1482 templates/back-end/metabox/attributes.php:9
 msgid "Attribute"
 msgstr "Характеристика"
 
@@ -237,12 +238,13 @@ msgstr "Характеристика"
 msgid "Attribute successfully attached to product"
 msgstr "Атрибут успішно додано до товару"
 
-#: lib/FS_Taxonomy.php:1132 lib/FS_Taxonomy.php:1227
+#: lib/FS_Taxonomy.php:1148 lib/FS_Taxonomy.php:1243
 msgid "Attribute type"
 msgstr "Тип атрибуту"
 
 #: lib/FS_Product.php:1103 templates/back-end/metabox/order/edit.php:20
 #: templates/back-end/metabox/order/meta-box-0.php:12
+#: templates/back-end/metabox/order/add.php:21
 msgid "Attributes"
 msgstr "Атрибути"
 
@@ -283,7 +285,7 @@ msgstr "Основні налаштування"
 msgid "Basket"
 msgstr "Кошик"
 
-#: lib/FS_Taxonomy.php:1161
+#: lib/FS_Taxonomy.php:1177
 msgid "Beginning of range"
 msgstr "Початкове значення діапазону"
 
@@ -300,6 +302,7 @@ msgid "Branch number"
 msgstr "Номер відділення"
 
 #: templates/back-end/metabox/order/edit.php:91
+#: templates/back-end/metabox/order/add.php:93
 msgid "Buyer details"
 msgstr "Дані покупця"
 
@@ -371,7 +374,11 @@ msgstr "Віджет кошика"
 msgid "Catalog"
 msgstr "Каталог"
 
-#: lib/FS_Taxonomy.php:758
+#: lib/FS_Taxonomy.php:687
+msgid "Categories for which the discount applies"
+msgstr "Категории, на которые распространяется скидка"
+
+#: lib/FS_Taxonomy.php:774
 msgid "Category editing"
 msgstr "Редагування категорії"
 
@@ -379,7 +386,7 @@ msgstr "Редагування категорії"
 msgid "Category text"
 msgstr "Текст категорії"
 
-#: lib/FS_Taxonomy.php:1194
+#: lib/FS_Taxonomy.php:1210
 msgid "change image"
 msgstr "змінити зображення"
 
@@ -434,7 +441,7 @@ msgstr "Виберіть спосіб доставки"
 #: templates/back-end/metabox/order/edit.php:129
 #: templates/back-end/metabox/order/show.php:28
 #: templates/back-end/metabox/order/meta-order-add.php:28
-#: templates/back-end/metabox/order/add.php:32
+#: templates/back-end/metabox/order/add.php:124
 #: templates/back-end/metabox/order/meta-box-1.php:28
 #: templates/front-end/mail/user-create-order.twig:404
 msgid "City"
@@ -453,11 +460,11 @@ msgstr "Клієнт"
 msgid "Color"
 msgstr "Колір"
 
-#: lib/FS_Taxonomy.php:1126 lib/FS_Taxonomy.php:1230
+#: lib/FS_Taxonomy.php:1142 lib/FS_Taxonomy.php:1246
 msgid "color"
 msgstr "колір"
 
-#: lib/FS_Taxonomy.php:1149 lib/FS_Taxonomy.php:1238
+#: lib/FS_Taxonomy.php:1165 lib/FS_Taxonomy.php:1254
 msgid "Color value"
 msgstr "Значення кольору"
 
@@ -468,7 +475,7 @@ msgstr "Коментар до замовлення"
 #: templates/back-end/metabox/order/edit.php:167
 #: templates/back-end/metabox/order/show.php:48
 #: templates/back-end/metabox/order/meta-order-add.php:48
-#: templates/back-end/metabox/order/add.php:64
+#: templates/back-end/metabox/order/add.php:156
 #: templates/back-end/metabox/order/meta-box-1.php:48
 msgid "Comment to the order"
 msgstr "Коментар до замовлення"
@@ -499,13 +506,14 @@ msgstr "Продовжити покупки"
 msgid "Conversion of the cost of goods depending on the language"
 msgstr "Конвертувати ціну в залежності від локації"
 
-#: lib/FS_Taxonomy.php:1365 templates/front-end/checkout/checkout.php:23
+#: lib/FS_Taxonomy.php:1381 templates/front-end/checkout/checkout.php:23
 #: templates/front-end/shortcode/order-detail.php:19
 #: templates/front-end/shortcode/fs-order-info.php:13
 #: templates/front-end/cart/list-products.php:27
 #: templates/front-end/dashboard/orders.php:30
 #: templates/back-end/metabox/order/edit.php:21
 #: templates/back-end/metabox/order/meta-box-0.php:13
+#: templates/back-end/metabox/order/add.php:22
 msgid "Cost"
 msgstr "Вартість"
 
@@ -535,15 +543,15 @@ msgid "Cross-sell"
 msgstr "Кросс-сейл"
 
 #: lib/FS_Settings_Class.php:347 lib/FS_Settings.php:346
-#: lib/FS_Taxonomy.php:906 lib/FS_Taxonomy.php:908
+#: lib/FS_Taxonomy.php:922 lib/FS_Taxonomy.php:924
 msgid "Currencies"
 msgstr "Валюти"
 
-#: lib/FS_Taxonomy.php:909
+#: lib/FS_Taxonomy.php:925
 msgid "Currency"
 msgstr "Валюта"
 
-#: lib/FS_Taxonomy.php:1364
+#: lib/FS_Taxonomy.php:1380
 msgid "Currency code"
 msgstr "Код валюти"
 
@@ -607,7 +615,7 @@ msgstr "За замовчуванням: product"
 msgid "Delete"
 msgstr "Видалити"
 
-#: lib/FS_Taxonomy.php:1215 lib/FS_Taxonomy.php:1249
+#: lib/FS_Taxonomy.php:1231 lib/FS_Taxonomy.php:1265
 msgid "delete image"
 msgstr "видалити зображення"
 
@@ -628,27 +636,27 @@ msgstr "Доставка"
 #: templates/back-end/metabox/order/edit.php:152
 #: templates/back-end/metabox/order/show.php:40
 #: templates/back-end/metabox/order/meta-order-add.php:40
-#: templates/back-end/metabox/order/add.php:50
+#: templates/back-end/metabox/order/add.php:142
 #: templates/back-end/metabox/order/meta-box-1.php:40
 msgid "Delivery address"
 msgstr "Адреса доставки"
 
-#: lib/FS_Taxonomy.php:795 templates/back-end/metabox/order/edit.php:135
+#: lib/FS_Taxonomy.php:811 templates/back-end/metabox/order/edit.php:135
 #: templates/back-end/metabox/order/show.php:32
 #: templates/back-end/metabox/order/meta-order-add.php:32
-#: templates/back-end/metabox/order/add.php:36
+#: templates/back-end/metabox/order/add.php:128
 #: templates/back-end/metabox/order/meta-box-1.php:32
 #: templates/front-end/mail/user-create-order.twig:402
 msgid "Delivery method"
 msgstr "Спосіб доставки"
 
-#: lib/FS_Taxonomy.php:792 lib/FS_Taxonomy.php:794 lib/FS_Users.php:524
+#: lib/FS_Taxonomy.php:808 lib/FS_Taxonomy.php:810 lib/FS_Users.php:524
 msgid "Delivery methods"
 msgstr "Способи доставки"
 
 #: templates/back-end/metabox/order/show.php:36
 #: templates/back-end/metabox/order/meta-order-add.php:36
-#: templates/back-end/metabox/order/add.php:46
+#: templates/back-end/metabox/order/add.php:138
 #: templates/back-end/metabox/order/meta-box-1.php:36
 msgid "Delivery service address"
 msgstr "Адрес служби доставки"
@@ -685,25 +693,35 @@ msgstr "Вимкнути обробку javascript подій плагіну"
 msgid "Disable taxonomy slug in permalink"
 msgstr "Відключити слаг терміна в посиланнях"
 
-#: lib/FS_Taxonomy.php:1426
+#: lib/FS_Taxonomy.php:1442
 msgid "Disabled"
 msgstr "Вимкнено"
 
-#: lib/FS_Taxonomy.php:887 templates/front-end/mail/user-create-order.twig:510
+#: lib/FS_Taxonomy.php:903 templates/front-end/mail/user-create-order.twig:510
 msgid "Discount"
 msgstr "Знижка"
 
-#: lib/FS_Taxonomy.php:710
-msgid "Discount amount"
-msgstr "Сума зижки"
+#: lib/FS_Taxonomy.php:674
+msgid "Discount applies to reorders"
+msgstr "Скидка распространяется на повторные заказы"
 
-#: lib/FS_Taxonomy.php:884 lib/FS_Taxonomy.php:886
-msgid "Discounts"
-msgstr "Знижки"
+#: lib/FS_Taxonomy.php:696
+msgid "Discount brands"
+msgstr "Бренды на которые распространяется скидка"
 
 #: lib/FS_Taxonomy.php:669
-msgid "DiscountType"
+#, fuzzy
+#| msgid "DiscountType"
+msgid "Discount type"
 msgstr "Тип знижки"
+
+#: lib/FS_Taxonomy.php:713
+msgid "Discount value"
+msgstr "Значение скидки"
+
+#: lib/FS_Taxonomy.php:900 lib/FS_Taxonomy.php:902
+msgid "Discounts"
+msgstr "Знижки"
 
 #: lib/FS_Config.php:72
 msgid "Display Name"
@@ -713,7 +731,7 @@ msgstr "Показувати на сайті"
 msgid "Display on the site"
 msgstr "Відобаження на сайті"
 
-#: lib/FS_Taxonomy.php:1480
+#: lib/FS_Taxonomy.php:1496
 msgid "do I delete a property?"
 msgstr "ви хочете видалити властивість товару?"
 
@@ -736,7 +754,7 @@ msgstr "Не показувати на сторінці каталогу"
 #: templates/back-end/metabox/order/edit.php:125
 #: templates/back-end/metabox/order/show.php:24
 #: templates/back-end/metabox/order/meta-order-add.php:24
-#: templates/back-end/metabox/order/add.php:28
+#: templates/back-end/metabox/order/add.php:120
 #: templates/back-end/metabox/order/meta-box-1.php:24
 msgid "E-mail"
 msgstr ""
@@ -810,11 +828,11 @@ msgstr "Активувати сортування товарів методом 
 msgid "Enable the service of notification of receipt of goods to the warehouse"
 msgstr "Ввімкнути службу повідомлень про появу товарів на складі"
 
-#: lib/FS_Taxonomy.php:1426
+#: lib/FS_Taxonomy.php:1442
 msgid "Enabled"
 msgstr "Ввімкнено"
 
-#: lib/FS_Taxonomy.php:1171
+#: lib/FS_Taxonomy.php:1187
 msgid "End of range"
 msgstr "Кінцеве значення діапазону"
 
@@ -836,6 +854,7 @@ msgstr ""
 "управління запасами для цього товару вимкнено!"
 
 #: templates/back-end/metabox/order/edit.php:182
+#: templates/back-end/metabox/order/add.php:169
 msgid "Enter product name or ID"
 msgstr "Введіть назву товару або ID"
 
@@ -913,10 +932,14 @@ msgstr "Ім'я"
 #: templates/back-end/metabox/order/edit.php:106
 #: templates/back-end/metabox/order/show.php:12
 #: templates/back-end/metabox/order/meta-order-add.php:12
-#: templates/back-end/metabox/order/add.php:16
+#: templates/back-end/metabox/order/add.php:108
 #: templates/back-end/metabox/order/meta-box-1.php:12
 msgid "First name"
 msgstr "Ім'я"
+
+#: lib/FS_Taxonomy.php:725
+msgid "Fixed discount"
+msgstr "Фиксированная скидка"
 
 #: templates/front-end/dashboard/wishlist.php:62
 msgid "Follow the price"
@@ -1027,7 +1050,8 @@ msgstr "Іконка"
 #: templates/back-end/metabox/order/show.php:4
 #: templates/back-end/metabox/order/meta-order-add.php:4
 #: templates/back-end/metabox/order/meta-box-0.php:6
-#: templates/back-end/metabox/order/add.php:5
+#: templates/back-end/metabox/order/add.php:15
+#: templates/back-end/metabox/order/add.php:97
 #: templates/back-end/metabox/order/meta-box-1.php:4
 msgid "ID"
 msgstr ""
@@ -1066,13 +1090,13 @@ msgstr ""
 "Якщо відмітити, даний метод оплати буде сховано на сайті, тільки в адмін "
 "панелі."
 
-#: lib/FS_Taxonomy.php:1205 lib/FS_Taxonomy.php:1243
+#: lib/FS_Taxonomy.php:1221 lib/FS_Taxonomy.php:1259
 #: lib/FS_Attribute_Widget.php:139 lib/widgets/FS_Attribute_Widget.php:118
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:28
 msgid "Image"
 msgstr "Зображення"
 
-#: lib/FS_Taxonomy.php:1127 lib/FS_Taxonomy.php:1231
+#: lib/FS_Taxonomy.php:1143 lib/FS_Taxonomy.php:1247
 msgid "image"
 msgstr "зображення"
 
@@ -1185,7 +1209,7 @@ msgstr "Останні зміни"
 #: templates/back-end/metabox/order/edit.php:113
 #: templates/back-end/metabox/order/show.php:16
 #: templates/back-end/metabox/order/meta-order-add.php:16
-#: templates/back-end/metabox/order/add.php:20
+#: templates/back-end/metabox/order/add.php:112
 #: templates/back-end/metabox/order/meta-box-1.php:16
 #: templates/front-end/mail/user-create-order.twig:408
 msgid "Last name"
@@ -1239,11 +1263,11 @@ msgstr "Вихід"
 msgid "Male"
 msgstr "Чоловік"
 
-#: lib/FS_Taxonomy.php:831
+#: lib/FS_Taxonomy.php:847
 msgid "Manufacturer"
 msgstr "Виробник"
 
-#: lib/FS_Taxonomy.php:828 lib/FS_Taxonomy.php:830
+#: lib/FS_Taxonomy.php:844 lib/FS_Taxonomy.php:846
 msgid "Manufacturers"
 msgstr "Виробники"
 
@@ -1271,6 +1295,10 @@ msgstr "Метазаголовок для архіву товару"
 #: lib/FS_Settings_Class.php:287 lib/FS_Settings.php:286
 msgid "Method of applying filters in the catalog"
 msgstr "Спосіб застосування фільтра у каталозі товарів"
+
+#: lib/FS_Taxonomy.php:679
+msgid "Minimum order amount"
+msgstr "Минимальная сумма заказа"
 
 #: lib/FS_Settings_Class.php:405 lib/FS_Settings.php:404
 msgid "Modal window"
@@ -1432,11 +1460,11 @@ msgstr "Номер замовлення"
 msgid "Order number is not specified"
 msgstr "Номер замовлення не знайдено"
 
-#: lib/FS_Taxonomy.php:867 lib/FS_Orders.php:60 lib/FS_Orders.php:151
+#: lib/FS_Taxonomy.php:883 lib/FS_Orders.php:60 lib/FS_Orders.php:151
 msgid "Order status"
 msgstr "Статус замовлення"
 
-#: lib/FS_Taxonomy.php:864 lib/FS_Taxonomy.php:866
+#: lib/FS_Taxonomy.php:880 lib/FS_Taxonomy.php:882
 msgid "Order statuses"
 msgstr "Статуси замовлень"
 
@@ -1483,15 +1511,15 @@ msgstr "оплатити зараз"
 msgid "Payment"
 msgstr "Оплата"
 
-#: lib/FS_Taxonomy.php:778 templates/back-end/metabox/order/edit.php:157
+#: lib/FS_Taxonomy.php:794 templates/back-end/metabox/order/edit.php:157
 #: templates/back-end/metabox/order/show.php:44
 #: templates/back-end/metabox/order/meta-order-add.php:44
-#: templates/back-end/metabox/order/add.php:54
+#: templates/back-end/metabox/order/add.php:146
 #: templates/back-end/metabox/order/meta-box-1.php:44
 msgid "Payment method"
 msgstr "Спосіб оплати"
 
-#: lib/FS_Taxonomy.php:775 lib/FS_Taxonomy.php:777 lib/FS_Users.php:544
+#: lib/FS_Taxonomy.php:791 lib/FS_Taxonomy.php:793 lib/FS_Users.php:544
 msgid "Payment methods"
 msgstr "Способи оплати"
 
@@ -1506,6 +1534,10 @@ msgstr "Сторінка оплати"
 #: templates/front-end/order/last-order-info.php:35
 msgid "Payment type"
 msgstr "Тип оплати"
+
+#: lib/FS_Taxonomy.php:726
+msgid "Percentage discount"
+msgstr "Скидка в процентах"
 
 #: lib/FS_Settings_Class.php:577 lib/FS_Settings.php:598
 msgid "Personal account page"
@@ -1535,7 +1567,7 @@ msgstr "телефон"
 #: templates/back-end/metabox/order/edit.php:119
 #: templates/back-end/metabox/order/show.php:20
 #: templates/back-end/metabox/order/meta-order-add.php:20
-#: templates/back-end/metabox/order/add.php:24
+#: templates/back-end/metabox/order/add.php:116
 #: templates/back-end/metabox/order/meta-box-1.php:20
 #: templates/front-end/mail/user-create-order.twig:410
 msgid "Phone number"
@@ -1550,6 +1582,7 @@ msgstr "Номер телефону"
 #: templates/front-end/dashboard/personal_info.php:42
 #: templates/back-end/metabox/order/edit.php:15
 #: templates/back-end/metabox/order/meta-box-0.php:7
+#: templates/back-end/metabox/order/add.php:16
 msgid "Photo"
 msgstr "Фото"
 
@@ -1578,6 +1611,7 @@ msgstr "Позиція успішно видалена із кошика"
 #: templates/front-end/dashboard/wishlist.php:19
 #: templates/back-end/metabox/order/edit.php:18
 #: templates/back-end/metabox/order/meta-box-0.php:10
+#: templates/back-end/metabox/order/add.php:19
 #: templates/back-end/metabox/product-variations/add-variation.php:56
 msgid "Price"
 msgstr "Ціна"
@@ -1604,7 +1638,7 @@ msgstr "Заголовок сторінки архіву товару"
 msgid "Product attribute filter"
 msgstr "Фільтр характеристик товару"
 
-#: lib/FS_Taxonomy.php:809 lib/FS_Taxonomy.php:811 lib/FS_Taxonomy.php:812
+#: lib/FS_Taxonomy.php:825 lib/FS_Taxonomy.php:827 lib/FS_Taxonomy.php:828
 #: templates/back-end/metabox/attributes.php:1
 msgid "Product attributes"
 msgstr "Характеристики товару"
@@ -1614,13 +1648,13 @@ msgstr "Характеристики товару"
 msgid "Product Categories"
 msgstr "Категоріі товарів"
 
-#: lib/FS_Taxonomy.php:750 lib/FS_Taxonomy.php:752 lib/FS_Taxonomy.php:754
-#: lib/FS_Taxonomy.php:755 lib/FS_Taxonomy.php:756 lib/FS_Taxonomy.php:757
-#: lib/FS_Taxonomy.php:759 lib/FS_Taxonomy.php:761 lib/FS_Taxonomy.php:762
+#: lib/FS_Taxonomy.php:766 lib/FS_Taxonomy.php:768 lib/FS_Taxonomy.php:770
+#: lib/FS_Taxonomy.php:771 lib/FS_Taxonomy.php:772 lib/FS_Taxonomy.php:773
+#: lib/FS_Taxonomy.php:775 lib/FS_Taxonomy.php:777 lib/FS_Taxonomy.php:778
 msgid "Product categories"
 msgstr "Категорії товару"
 
-#: lib/FS_Taxonomy.php:753 lib/FS_Filters.php:213
+#: lib/FS_Taxonomy.php:769 lib/FS_Filters.php:213
 msgid "Product category"
 msgstr "Категорія товару"
 
@@ -1653,7 +1687,7 @@ msgstr "Слаг товару"
 msgid "Products"
 msgstr "Товари"
 
-#: lib/FS_Taxonomy.php:1141 lib/FS_Taxonomy.php:1233
+#: lib/FS_Taxonomy.php:1157 lib/FS_Taxonomy.php:1249
 msgid ""
 "Products may have different properties. Here you can choose which type of "
 "property you need."
@@ -1674,6 +1708,10 @@ msgstr "Акційна ціна"
 msgid "Properties"
 msgstr "Властивості"
 
+#: lib/FS_Taxonomy.php:705
+msgid "Properties of products to which the discount applies"
+msgstr "Характеристики товаров на которые распространяется скидка"
+
 #: lib/FS_Settings_Class.php:497 lib/FS_Settings.php:518
 msgid "Published on the website so that buyers can contact you"
 msgstr "Відображається на веб-сайті, щоб покупці могли з вами зв’язатися"
@@ -1691,6 +1729,7 @@ msgid "Purchased goods"
 msgstr "Куплені товари"
 
 #: templates/back-end/metabox/order/edit.php:4
+#: templates/back-end/metabox/order/add.php:5
 msgid "Purchased items"
 msgstr "Куплені товари"
 
@@ -1706,10 +1745,11 @@ msgstr "К-сть"
 #: templates/front-end/cart/list-products.php:24
 #: templates/back-end/metabox/order/edit.php:19
 #: templates/back-end/metabox/order/meta-box-0.php:11
+#: templates/back-end/metabox/order/add.php:20
 msgid "Quantity"
 msgstr "Кількість"
 
-#: lib/FS_Taxonomy.php:1128
+#: lib/FS_Taxonomy.php:1144
 msgid "range"
 msgstr "діапазон"
 
@@ -1779,6 +1819,7 @@ msgid "Remove from gallery"
 msgstr "Видалити із галереї"
 
 #: templates/back-end/metabox/order/edit.php:66
+#: templates/back-end/metabox/order/add.php:69
 msgid "Remove from order"
 msgstr "Видалити із замовлення"
 
@@ -1844,7 +1885,7 @@ msgstr "Виберіть категорію"
 msgid "Select a Payment Method"
 msgstr "Виберіть спосіб оплати"
 
-#: lib/FS_Taxonomy.php:1194 lib/FS_Taxonomy.php:1246
+#: lib/FS_Taxonomy.php:1210 lib/FS_Taxonomy.php:1262
 msgid "select image"
 msgstr "вибрати зображення"
 
@@ -1925,6 +1966,7 @@ msgstr "Назва сайту"
 #: lib/FS_Config.php:599 templates/back-end/metabox/other.php:4
 #: templates/back-end/metabox/order/edit.php:17
 #: templates/back-end/metabox/order/meta-box-0.php:9
+#: templates/back-end/metabox/order/add.php:18
 #: templates/back-end/metabox/product-variations/add-variation.php:32
 msgid "SKU"
 msgstr "Артикул"
@@ -1949,7 +1991,7 @@ msgstr "Область"
 msgid "State / province"
 msgstr "Область / регіон"
 
-#: lib/FS_Taxonomy.php:1381 templates/front-end/shortcode/list-orders.php:10
+#: lib/FS_Taxonomy.php:1397 templates/front-end/shortcode/list-orders.php:10
 msgid "Status"
 msgstr "Статус"
 
@@ -1993,7 +2035,7 @@ msgstr "Підтримка подій ремаркетингу Google Adwords"
 msgid "Surname"
 msgstr "Прізвище"
 
-#: lib/FS_Taxonomy.php:846 lib/FS_Taxonomy.php:848 lib/FS_Taxonomy.php:849
+#: lib/FS_Taxonomy.php:862 lib/FS_Taxonomy.php:864 lib/FS_Taxonomy.php:865
 msgid "Taxes"
 msgstr "Податки"
 
@@ -2009,7 +2051,7 @@ msgstr "Шаблони"
 msgid "Test mode"
 msgstr "Тестовий режим"
 
-#: lib/FS_Taxonomy.php:1125 lib/FS_Taxonomy.php:1229
+#: lib/FS_Taxonomy.php:1141 lib/FS_Taxonomy.php:1245
 msgid "text"
 msgstr "текст"
 
@@ -2056,6 +2098,14 @@ msgstr "Значення суми податку в фіксованій цін�
 #: lib/FS_Settings_Class.php:666
 msgid "The debug data is displayed here as text."
 msgstr "Дані налагодження відображаються тут в вигляді тексту"
+
+#: lib/FS_Taxonomy.php:673
+msgid ""
+"The discount applies only to products of the product categories, brands or "
+"characteristics selected below"
+msgstr ""
+"Скидка будет распространяться та товары купленные в категориях, брендах и "
+"характеристиках которые нужно выбрать ниже"
 
 #: lib/FS_Product.php:1091
 msgid "The field is active if you have enabled multicurrency in settings."
@@ -2177,6 +2227,10 @@ msgstr "це поле є обов'язковим"
 msgid "This field is required."
 msgstr "Це поле обов'язкове."
 
+#: lib/FS_Taxonomy.php:720
+msgid "This is a fixed amount or a percentage discount?"
+msgstr "Это фиксированная сумма или скидка в процентах?"
+
 #: lib/FS_Taxonomy.php:590
 msgid ""
 "This is convenient in some cases, but it is better to leave this option off"
@@ -2259,6 +2313,7 @@ msgstr "Мініатюра"
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:4
 #: templates/back-end/metabox/order/edit.php:16
 #: templates/back-end/metabox/order/meta-box-0.php:8
+#: templates/back-end/metabox/order/add.php:17
 msgid "Title"
 msgstr "Заголовок"
 
@@ -2313,6 +2368,7 @@ msgstr "Загальна вартість"
 #: templates/front-end/dashboard/orders.php:14
 #: templates/back-end/metabox/order/edit.php:79
 #: templates/back-end/metabox/order/meta-box-0.php:48
+#: templates/back-end/metabox/order/add.php:82
 msgid "Total cost"
 msgstr "Загальна сума"
 
@@ -2369,7 +2425,7 @@ msgstr "Долар США"
 msgid "Use a penny?"
 msgstr "Використовувати копійки?"
 
-#: lib/FS_Taxonomy.php:1182
+#: lib/FS_Taxonomy.php:1198
 msgid "Use the number of purchased goods to compare with this attribute."
 msgstr ""
 "Використовувати кількість товарів у кошику для порівняння з цією "
@@ -2407,7 +2463,7 @@ msgstr ""
 msgid "Username"
 msgstr "Ім'я користувача"
 
-#: lib/FS_Taxonomy.php:1467 templates/back-end/metabox/attributes.php:10
+#: lib/FS_Taxonomy.php:1483 templates/back-end/metabox/attributes.php:10
 msgid "Value"
 msgstr "Значення"
 
@@ -2603,10 +2659,6 @@ msgstr "Поштовий індекс"
 msgid "Атрибуты успешно добавленны!"
 msgstr ""
 
-#: lib/FS_Taxonomy.php:691
-msgid "Бренды на которые распространяется скидка"
-msgstr ""
-
 #: lib/FS_Payment_Class.php:88
 #, php-format
 msgid "В случае успешной оплаты с вас будет снято %s %s. "
@@ -2625,10 +2677,11 @@ msgid "Город"
 msgstr ""
 
 #: templates/back-end/metabox/order/edit.php:7
+#: templates/back-end/metabox/order/add.php:8
 msgid "Добавить товар"
 msgstr ""
 
-#: lib/FS_Taxonomy.php:1380
+#: lib/FS_Taxonomy.php:1396
 msgid "Иконка"
 msgstr ""
 
@@ -2643,10 +2696,6 @@ msgstr ""
 #: lib/FS_Settings.php:532 lib/FS_Settings.php:539 lib/FS_Settings.php:546
 #: lib/FS_Settings.php:553
 msgid "Используется для микроразметки, и в других целях"
-msgstr ""
-
-#: lib/FS_Taxonomy.php:681
-msgid "Категории на которые распространяется скидка"
 msgstr ""
 
 #: lib/FS_Settings.php:698
@@ -2679,7 +2728,7 @@ msgstr ""
 msgid "Номер отделения службы доставки"
 msgstr ""
 
-#: lib/FS_Taxonomy.php:1382
+#: lib/FS_Taxonomy.php:1398
 msgid "Описание"
 msgstr ""
 
@@ -2689,6 +2738,7 @@ msgid "Оплата заказа #%d с помощью &laquo;%s&raquo;"
 msgstr ""
 
 #: templates/back-end/metabox/order/edit.php:7
+#: templates/back-end/metabox/order/add.php:8
 msgid "Поиск товара"
 msgstr ""
 
@@ -2702,14 +2752,6 @@ msgstr "Прохання повідомити про наявність това
 
 #: lib/FS_Settings_Class.php:652 lib/FS_Settings.php:673
 msgid "Розетка"
-msgstr ""
-
-#: lib/FS_Taxonomy.php:701
-msgid "Свойства товаров на которые распространяется скидка"
-msgstr ""
-
-#: lib/FS_Taxonomy.php:673
-msgid "Скидка применяется только к товарам"
 msgstr ""
 
 #: lib/FS_Attribute_Widget.php:176

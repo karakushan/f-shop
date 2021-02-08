@@ -1703,3 +1703,27 @@ td.fs_menu_order.column-fs_menu_order {
   }
 }
 
+.fs-order-history{
+  .md-list-item-text :nth-child(2), .md-list-item-text :nth-child(3){
+    font-size: 16px;
+    width: auto;
+  }
+  &__date{
+    width: auto!important;
+    margin-right: 12px!important;
+    font-size: 14px;
+    background: #acf;
+    display: block;
+    padding: 3px 9px;
+  }
+  &__event{
+    width: auto;
+    font-size: 18px;
+  }
+  .md-list-item-text{
+    display: flex;
+    flex-direction:row;
+    align-items: flex-end;
+  }
+}
+

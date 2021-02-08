@@ -2,11 +2,9 @@
   <div class="fs-order-items">
     <md-table v-model="products" md-card @md-selected="onSelect">
       <md-table-toolbar>
-        <h1 class="md-title">Купленные товары</h1>
+        <h1 class="md-title"><md-icon>shopping_cart</md-icon> Купленные товары</h1>
         <md-button class="md-raised md-primary" @click="showDialog = true">Добавить товар</md-button>
       </md-table-toolbar>
-
-
       <md-table-row slot="md-table-row" slot-scope="{ item,index }">
         <md-table-cell md-label="ID">
           {{ item.id }}

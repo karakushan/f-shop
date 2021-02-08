@@ -6,7 +6,7 @@
     <!--Buyer details-->
     <section class="section">
         <md-toolbar :md-elevation="1">
-            <span class="md-title"><?php esc_html_e( 'Buyer details', 'f-shop' ); ?></span>
+            <span class="md-title"><md-icon>person</md-icon> <?php esc_html_e( 'Buyer details', 'f-shop' ); ?></span>
         </md-toolbar>
         <table class="wp-list-table widefat fixed striped order-userdata">
             <tbody>

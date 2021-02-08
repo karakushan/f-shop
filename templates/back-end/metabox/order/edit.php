@@ -1,11 +1,12 @@
 <input type="hidden" name="fs_is_admin" value="1">
 <div class="app">
-    <vue-order-items :items='<?php  echo json_encode(isset($order->items) ? $order->items : []) ?>'></vue-order-items>
+    <vue-order-items
+            :items='<?php echo json_encode( isset( $order->items ) ? $order->items : [] ) ?>'></vue-order-items>
 
     <!--Buyer details-->
     <section class="section">
         <md-toolbar :md-elevation="1">
-            <span class="md-title"><?php esc_html_e( 'Buyer details', 'f-shop' ); ?></span>
+            <span class="md-title"><md-icon>person</md-icon> <?php esc_html_e( 'Buyer details', 'f-shop' ); ?></span>
         </md-toolbar>
         <table class="wp-list-table widefat fixed striped order-userdata">
             <tbody>
@@ -42,7 +43,8 @@
             </tr>
             <tr>
                 <th><?php esc_html_e( 'E-mail', 'f-shop' ) ?></th>
-                <td><input type="email" name="user[fs_email]" value="<?php echo esc_attr( $order->user['email'] ); ?>"></td>
+                <td><input type="email" name="user[fs_email]" value="<?php echo esc_attr( $order->user['email'] ); ?>">
+                </td>
             </tr>
             <tr>
                 <th><?php esc_html_e( 'City', 'f-shop' ) ?></th>
@@ -92,6 +94,36 @@
             </tr>
             </tbody>
         </table>
+    </section>
+
+    <!--История заказа -->
+	<?php // do_action( 'qm/debug', $order ); ?>
+	<?php do_action( 'qm/debug', $order->get_order_history() ); ?>
+    <section class="section fs-order-history">
+        <md-toolbar :md-elevation="1">
+            <span class="md-title"><md-icon>insights</md-icon> <?php esc_html_e( 'Order history', 'f-shop' ); ?></span>
+        </md-toolbar>
+        <md-list>
+
+			<?php foreach ( $order->get_order_history() as $event ): ?>
+                <md-list-item md-expand>
+                    <div class="md-list-item-text">
+                        <span class="fs-order-history__date"><?php echo date_i18n( 'd F Y H:i', $event['time'] ) ?></span>
+                        <span class="fs-order-history__event"><?php echo esc_html( $event['name'] ); ?></span>
+                    </div>
+
+                    <md-list slot="md-expand">
+                        <md-list-item class="md-inset">
+							<?php echo $event['description']; ?>
+                        </md-list-item>
+                    </md-list>
+                </md-list-item>
+                <md-divider></md-divider>
+			<?php endforeach; ?>
+
+
+        </md-list>
+
     </section>
 </div>
 

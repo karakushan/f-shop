@@ -85,6 +85,7 @@ class FS_Order {
 
 	public function __construct( $order ) {
 		$this->set_order( $order );
+
 	}
 
 
@@ -95,7 +96,7 @@ class FS_Order {
 	 *
 	 * @return null
 	 */
-	public function set_order( int $order_id ) {
+	public function set_order( $order_id = 0 ) {
 
 		$this->ID = $order_id;
 
@@ -112,10 +113,7 @@ class FS_Order {
 			return null;
 		}
 
-		$products = get_post_meta( $order_id, '_products', 0 );
-		if ( is_array( $products ) ) {
-			$products = array_shift( $products );
-		}
+		$products = get_post_meta( $order_id, '_products', 1 ) ? get_post_meta( $order_id, '_products', 1 ) :[];
 		$this->meta = get_post_meta( $order_id );
 
 
@@ -151,6 +149,132 @@ class FS_Order {
 		$this->status = get_post_status_object( $this->post->post_status )->label;
 
 		$this->date = $this->post->post_date;
+	}
+
+	/**
+	 * Добавляет событие в историю  заказа
+	 *
+	 * @param int $order_id ID заказа
+	 * @param array $event должно содержать поля :
+	 *
+	 *  'name'           => Название события ,
+	 *  'description'    => Описание события,
+	 *  'initiator_id'   => ID пользотателя инициировашего событие,
+	 *  'initiator_name' => Имя пользотателя инициировашего событие,
+	 *  'time'           => время события,
+	 *  'changed'        => измененные поля
+	 *
+	 * @return bool|int|\WP_Error
+	 */
+	public function add_history_event( $order_id = 0, $event = [] ) {
+		$history = $this->get_order_history( $order_id, false, [ 'sort' => 'asc' ] );
+
+		if ( ! isset( $event['id'] ) ) {
+			return new \WP_Error( 'fs_no_event_field_isset', __( 'Не заполненны все объязательные поля события!' ) );
+		}
+
+		array_push( $history, $event );
+
+		return update_post_meta( $order_id, 'fs_order_history', $history );
+	}
+
+	/**
+	 * Возвращает историю заказа в виде массива
+	 *
+	 * @param int $order_id идентификатор заказа
+	 * @param bool $creation_date включать ли дату создания в историю
+	 * @param array $args дополнительные параметры
+	 *
+	 * @return mixed|\WP_Error
+	 */
+	public function get_order_history( int $order_id = 0, $creation_date = true, $args = [] ) {
+		$order_id = $order_id ? $order_id : $this->ID;
+		$args     = wp_parse_args( $args, [
+			'order' => 'desc'
+		] );
+
+		if ( ! $order_id ) {
+			return new \WP_Error( 'no-order-id', __( 'Order number not specified', 'f-shop' ) );
+		}
+
+		$history = get_post_meta( $order_id, 'fs_order_history', 1 ) ? get_post_meta( $order_id, 'fs_order_history', 1 ) : [];
+
+		// Сортируем историю в обратном порядке
+		if ( is_array( $history ) && count( $history ) && $args['order'] == 'desc' ) {
+			krsort( $history );
+		}
+
+		// Добавляем дату создания заказа в историю
+		if ( $creation_date ) {
+			array_push( $history, [
+				'id'             => 'create_order',
+				'initiator_id'   => 0,
+				'initiator_name' => implode( ' ', [ $this->user['first_name'], $this->user['last_name'] ] ),
+				'time'           => strtotime( $this->post->post_date ),
+				'data'           => [
+					'order_id' => $order_id
+				]
+			] );
+		}
+
+		$history = array_map( function ( $item ) {
+			$item['name']        = $this->get_history_event_name( $item );
+			$item['description'] = $this->get_history_event_detail( $item );
+
+			return $item;
+		}, $history );
+
+		return apply_filters( 'fs_order_history', $history );
+	}
+
+	/**
+	 * Возвращает название события в истории заказа
+	 *
+	 * @param $item
+	 *
+	 * @return mixed|string
+	 */
+	public function get_history_event_name( $item ) {
+		$names = [
+			'change_order_status' => __( 'Change order status', 'f-shop' ),
+			'create_order'        => __( 'Create order', 'f-shop' ),
+			'adding_a_comment'    => __( 'Adding a comment', 'f-shop' ),
+		];
+
+		$names = apply_filters( 'fs_order_history_names', $names );
+
+		return isset( $names[ $item['id'] ] ) ? $names[ $item['id'] ] : '';
+	}
+
+
+	/**
+	 * Возвращает описание события в истории заказа
+	 *
+	 * @param $item
+	 *
+	 * @return mixed|string
+	 */
+	public function get_history_event_detail( $item ) {
+		$detail = '';
+
+		if ( $item['id'] == 'change_order_status' ) {
+			$user           = get_user_by( 'ID', $item['initiator_id'] );
+			$order_statuses = FS_Orders::default_order_statuses();
+			$order_status   = isset( $order_statuses[ $item['data']['status'] ]['name'] ) ? $order_statuses[ $item['data']['status'] ]['name'] : $item['data']['status'];
+			$detail         = sprintf( __( 'User "%s" changed order status to "%s"', 'f-shop' ), $user->display_name, $order_status );
+		} elseif ( $item['id'] == 'adding_a_comment' ) {
+			$user   = get_user_by( 'ID', $item['initiator_id'] );
+			$detail = sprintf( __( 'User "%s" added a comment. <a href="%s" target="_blank"> Go to comment <a>', 'f-shop' ),
+				$user->display_name,
+				esc_url( add_query_arg( [
+					'action' => 'editcomment',
+					'c'      => $item['data']['comment_id']
+				], admin_url( '/comment.php' ) ) ) );
+		} elseif ( $item['id'] == 'create_order' ) {
+			$detail = sprintf( __( 'User "%s" created an order', 'f-shop' ), $item['initiator_name'] );
+		}
+
+		return apply_filters( 'fs_order_history_detail', $detail );
 	}
 
 	/**
