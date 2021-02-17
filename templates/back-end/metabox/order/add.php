@@ -1,5 +1,6 @@
 <div class="app">
     <input type="hidden" name="fs_is_admin" value="1">
+    <input type="hidden" name="fs_create_form" value="1">
 
     <vue-order-items :items='<?php  echo json_encode(isset($order->items) ? $order->items : []) ?>'></vue-order-items>
 

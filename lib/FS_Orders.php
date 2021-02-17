@@ -120,7 +120,7 @@ class FS_Orders {
 
 		$fs_products = ! empty( $_POST['fs_products'] ) && is_array( $_POST['fs_products'] ) ? $_POST['fs_products'] : [];
 		$user        = array_map( 'trim', $_POST['user'] );
-		$sum = 0;
+		$sum         = 0;
 		foreach ( $fs_products as $index => $product ) {
 			$price = fs_get_price( $product['ID'] );
 			$qty   = intval( max( $product['count'], 1 ) );
@@ -155,6 +155,16 @@ class FS_Orders {
 
 		foreach ( $order_meta as $meta_key => $item ) {
 			update_post_meta( $post_id, $meta_key, $item );
+		}
+
+		// Генерируем название заказа
+		if ( ! empty( $_POST['fs_create_form'] ) && ! $post->post_title ) {
+			wp_update_post( [
+				'ID'         => $post_id,
+				'post_title' => sprintf(
+					__( 'Order #%d from %s %s (%s)', 'f-shop' ),
+					$post_id, $user['fs_first_name'], $user['fs_last_name'], date( 'd.m.y H:i', time() ) )
+			] );
 		}
 	}
 

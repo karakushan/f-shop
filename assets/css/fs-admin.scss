@@ -1727,3 +1727,14 @@ td.fs_menu_order.column-fs_menu_order {
   }
 }
 
+.fs-order-items{
+  .md-toolbar-row {
+    min-height: 45px;
+    border-bottom: 1px solid #e2e4e7;
+  }
+  .md-toolbar .md-title{
+    margin-left: 0;
+  }
+}
+
+

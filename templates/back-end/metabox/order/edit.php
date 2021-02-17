@@ -1,7 +1,30 @@
+<?php do_action( 'qm/debug', $order ); ?>
 <input type="hidden" name="fs_is_admin" value="1">
 <div class="app">
     <vue-order-items
-            :items='<?php echo json_encode( isset( $order->items ) ? $order->items : [] ) ?>'></vue-order-items>
+            :items='<?php echo json_encode( isset( $order->items ) ? $order->items : [] ) ?>'>
+        <template v-slot:tfooter>
+            <md-toolbar md-elevation="1">
+                <div class="md-toolbar-row md-body-2">
+                    <div style="flex: 1"><?php esc_html_e( 'Packing', 'f-shop' ); ?>:</div>
+                    <span><?php echo esc_html( apply_filters( 'fs_price_format', $order->packing_cost ) . ' ' . fs_currency() ); ?></span>
+                </div>
+                <div class="md-toolbar-row md-body-2">
+                    <div style="flex: 1"><?php esc_html_e( 'Delivery', 'f-shop' ); ?>:</div>
+                    <span><?php echo esc_html( apply_filters( 'fs_price_format', $order->shipping_cost ) . ' ' . fs_currency() ); ?></span>
+                </div>
+                <div class="md-toolbar-row md-body-2">
+                    <div style="flex: 1"><?php esc_html_e( 'Discount', 'f-shop' ); ?>:</div>
+                    <span><?php echo esc_html( apply_filters( 'fs_price_format', $order->discount ) . ' ' . fs_currency() ); ?></span>
+                </div>
+                <div class="md-toolbar-row md-title">
+                    <div style="flex: 1"><?php esc_html_e( 'Total', 'f-shop' ); ?>:</div>
+                    <div><?php echo esc_html( apply_filters( 'fs_price_format', $order->total_amount ) . ' ' . fs_currency() ); ?></div>
+                </div>
+
+            </md-toolbar>
+        </template>
+    </vue-order-items>
 
     <!--Buyer details-->
     <section class="section">

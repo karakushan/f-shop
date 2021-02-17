@@ -52,6 +52,59 @@ jQuery(function ($) {
         }
     }
 
+    if (typeof inlineEditPost!=='undefined'){
+        // we create a copy of the WP inline edit post function
+        var $wp_inline_edit = inlineEditPost.edit;
+
+        // and then we overwrite the function with our own code
+        inlineEditPost.edit = function (id) {
+
+            // "call" the original WP edit function
+            // we don't want to leave WordPress hanging
+            $wp_inline_edit.apply(this, arguments);
+
+            // now we take care of our business
+
+            // get the post ID
+            let $post_id = 0;
+            if (typeof (id) == 'object') {
+                $post_id = parseInt(this.getId(id));
+            }
+
+            if ($post_id > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    //data: JSON.stringify(parameters),
+                    data: {
+                        action: 'fs_quick_edit_values',
+                        post_id: $post_id,
+                        fields: [
+                            'fs_price',
+                            'fs_articul',
+                            'fs_remaining_amount'
+                        ]
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            for (const dataKey in data.data.fields) {
+                                $('#edit-' + $post_id + ' [name="' + dataKey + '"]').val(data.data.fields[dataKey])
+                            }
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        console.log('error...', xhr);
+                        //error logging
+                    },
+                    complete: function () {
+                        //afer ajax call is completed
+                    }
+                });
+            }
+        };
+    }
+
+
     $('.fs-select-field').select2({
         placeholder: "Выбрать"
     });

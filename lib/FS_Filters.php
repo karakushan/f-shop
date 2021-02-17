@@ -103,7 +103,6 @@ class FS_Filters {
 	 * @param $post_type
 	 */
 	function product_quick_edit_fields( $column_name, $post_type ) {
-
 		if ( $column_name == 'fs_price' && $post_type == 'product' ) {
 			?>
             <fieldset class="inline-edit-col-left inline-edit-fast-shop">
@@ -114,7 +113,7 @@ class FS_Filters {
                         <span class="input-text-wrap">
                         <input type="number" name="<?php echo esc_attr( FS_Config::get_meta( 'price' ) ) ?>"
                                class="fs_price"
-                               value="<?php echo esc_attr( get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 ) ) ?>"
+                               value=""
                                required step="0.01" min="0">
                     </span>
                     </label>
@@ -123,7 +122,7 @@ class FS_Filters {
                         <span class="input-text-wrap">
                         <input type="text" name="<?php echo esc_attr( FS_Config::get_meta( 'sku' ) ) ?>"
                                class="fs_vendor_code"
-                               value="<?php echo esc_attr( get_post_meta( get_the_ID(), FS_Config::get_meta( 'sku' ), 1 ) ) ?>">
+                               value="">
                     </span>
                     </label>
                     <label>
@@ -132,7 +131,7 @@ class FS_Filters {
                         <span class="input-text-wrap">
                         <input type="number" name="<?php echo esc_attr( FS_Config::get_meta( 'remaining_amount' ) ) ?>"
                                class="fs_stock" min="0" step="1"
-                               value="<?php echo esc_attr( get_post_meta( get_the_ID(), FS_Config::get_meta( 'remaining_amount' ), 1 ) ) ?>"></span>
+                               value=""></span>
                     </label>
                 </div>
             </fieldset>

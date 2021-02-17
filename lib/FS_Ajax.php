@@ -105,7 +105,27 @@ class FS_Ajax {
 
 			add_action( 'wp_ajax_fs_like_comment', array( $this, 'fs_like_comment_callback' ) );
 			add_action( 'wp_ajax_nopriv_fs_like_comment', array( $this, 'fs_like_comment_callback' ) );
+
+			// Заполняет поля данными в режиме quick edit
+			add_action( 'wp_ajax_fs_quick_edit_values', array( $this, 'fs_quick_edit_values_callback' ) );
+			add_action( 'wp_ajax_nopriv_fs_quick_edit_values', array( $this, 'fs_quick_edit_values_callback' ) );
 		}
+	}
+
+	/**
+	 * Заполняет поля данными в режиме quick edit
+	 */
+	public function fs_quick_edit_values_callback() {
+		if ( empty( $_POST['fields'] ) ) {
+			wp_send_json_error( [ 'message' => __( 'Fields not specified!', 'f-shop' ) ] );
+		}
+
+		$fields = [];
+		foreach ( $_POST['fields'] as $field ) {
+			$fields[ $field ] = get_post_meta( intval( $_POST['post_id'] ), $field, 1 );
+		}
+
+		wp_send_json_success( [ 'fields' => $fields ] );
 	}
 
 	public function fs_like_comment_callback() {
@@ -247,8 +267,8 @@ class FS_Ajax {
 
 		if ( $find_posts ) {
 			wp_send_json_success( array_map( function ( $item ) {
-				return fs_set_product(['ID'=>$item->ID,'count'=>1,'attr'=>[]]);
-			}, $find_posts ));
+				return fs_set_product( [ 'ID' => $item->ID, 'count' => 1, 'attr' => [] ] );
+			}, $find_posts ) );
 		}
 
 		wp_send_json_error();

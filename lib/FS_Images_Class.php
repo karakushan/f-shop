@@ -46,7 +46,7 @@ class FS_Images_Class {
 			"thumbItem"   => 3,
 			"prevHtml"    => '',
 			"nextHtml"    => '',
-			"attachments" => false,
+			"attachments" => true,
 			"thumbnail"   => true
 		);
 		$args    = wp_parse_args( $args, $default );
