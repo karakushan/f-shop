@@ -107,6 +107,7 @@ class FS_Order {
 	public $payment_method_id;
 	public $packing_cost = 0.0;
 	public $shipping_cost = 0.0;
+	public $cart_cost = 0.0;
 
 
 	/**
@@ -188,7 +189,8 @@ class FS_Order {
 
 		$order_id = wp_insert_post( [
 			'post_title'  => $this->title,
-			'post_status' => $this->status,
+			'post_status' => fs_option( 'fs_default_order_status' )
+				? get_term_field( 'slug', fs_option( 'fs_default_order_status' ), FS_Config::get_data( 'order_statuses_taxonomy' ) ) : $this->status,
 			'post_author' => $this->user_id ? $this->user_id : 1,
 			'post_type'   => FS_Config::get_data( 'post_type_orders' ),
 			'meta_input'  => $data,
@@ -247,12 +249,20 @@ class FS_Order {
 			return fs_set_product( $item );
 		}, $products ) );
 
-		$this->total_amount = (float) get_post_meta( $order_id, '_amount', 1 );
-		$this->packing_cost = (float) get_post_meta( $order_id, '_packing_cost', 1 );
-		$this->discount     = (float) get_post_meta( $order_id, '_order_discount', 1 );
-		$this->comment      = get_post_meta( $order_id, '_comment', 1 );
-		$this->user         = (array) get_post_meta( $order_id, '_user', 1 );
-		$this->user['ip']   = get_post_meta( $order_id, '_customer_ip', 1 );
+		$this->total_amount  = (float) get_post_meta( $order_id, '_amount', 1 );
+		$this->packing_cost  = (float) get_post_meta( $order_id, '_packing_cost', 1 );
+		$this->cart_cost     = (float) get_post_meta( $order_id, '_cart_cost', 1 );
+		$this->discount      = (float) get_post_meta( $order_id, '_order_discount', 1 );
+		$this->shipping_cost = (float) get_post_meta( $order_id, '_shipping_cost', 1 );
+		$this->comment       = get_post_meta( $order_id, '_comment', 1 );
+		$this->user          = (array) get_post_meta( $order_id, '_user', 1 );
+		$this->user['ip']    = get_post_meta( $order_id, '_customer_ip', 1 );
+
+		if ( ! $this->cart_cost ) {
+			foreach ( $this->items as $item ) {
+				$this->cart_cost += $item->cost;
+			}
+		}
 
 		if ( get_post_meta( $order_id, '_customer_id', 1 ) ) {
 			global $wpdb;

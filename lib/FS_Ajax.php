@@ -709,6 +709,7 @@ class FS_Ajax {
 				),
 				'_payment'         => $pay_method && isset( $pay_method->term_id ) ? $pay_method->term_id : 0,
 				'_amount'          => $sum,
+				'_cart_cost'       => fs_get_cart_cost(),
 				'_comment'         => $sanitize_field['fs_comment']
 			),
 

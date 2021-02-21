@@ -157,6 +157,12 @@ class FS_Orders {
 			update_post_meta( $post_id, $meta_key, $item );
 		}
 
+		if ( ! empty( $_POST['order'] ) ) {
+			foreach ( $_POST['order'] as $meta_key => $meta_value ) {
+				update_post_meta( $post_id, $meta_key, $meta_value );
+			}
+		}
+
 		// Генерируем название заказа
 		if ( ! empty( $_POST['fs_create_form'] ) && ! $post->post_title ) {
 			wp_update_post( [

@@ -2,7 +2,9 @@
 <input type="hidden" name="fs_is_admin" value="1">
 <div class="app">
     <vue-order-items
-            :items='<?php echo json_encode( isset( $order->items ) ? $order->items : [] ) ?>'>
+            :items='<?php echo json_encode( isset( $order->items ) ? $order->items : [] ) ?>'
+            :order='<?php echo json_encode( $order ) ?>'
+    >
         <template v-slot:tfooter>
             <md-toolbar md-elevation="1">
                 <div class="md-toolbar-row md-body-2">

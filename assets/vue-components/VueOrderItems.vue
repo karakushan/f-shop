@@ -41,7 +41,71 @@
       </md-table-row>
 
     </md-table>
-    <slot name="tfooter"></slot>
+    <md-toolbar md-elevation="1" class="fs-order-items__footer">
+      <md-list>
+        <md-list-item md-expand>
+          <h4 class="md-list-item-text"> Стоимость товаров: {{ totalAmount }} UAH</h4>
+          <md-list slot="md-expand">
+            <md-list-item>
+              <h5>Стоимость товаров:</h5>
+              <div class="md-field__wrap">
+                <md-field>
+                  <md-input type="number" name="order[_cart_cost]"
+                            v-model.number="orderData.cart_cost"
+                            :step=".01"
+                            :min="0" disabled="disabled">
+                  </md-input>
+                  <span class="md-suffix">UAH</span>
+                </md-field>
+              </div>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-list-item>
+              <h5>Упаковка:</h5>
+              <div class="md-field__wrap">
+                <md-field>
+                  <md-input type="number" name="order[_packing_cost]"
+                            v-model.number="orderData.packing_cost"
+                            :step=".01"
+                            :min="0">
+                  </md-input>
+                  <span class="md-suffix">UAH</span>
+                </md-field>
+              </div>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-list-item>
+              <h5>Доставка:</h5>
+              <div class="md-field__wrap">
+                <md-field>
+                  <md-input type="number" name="order[_shipping_cost]"
+                            v-model.number="orderData.shipping_cost"
+                            :step=".01"
+                            :min="0">
+                  </md-input>
+                  <span class="md-suffix">UAH</span>
+                </md-field>
+              </div>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-list-item>
+              <h5>Скидка:</h5>
+              <div class="md-field__wrap">
+                <md-field>
+                  <md-input type="number"
+                            name="order[_order_discount]"
+                            v-model.number="orderData.discount"
+                            :step=".01"
+                            :min="0">
+                  </md-input>
+                  <span class="md-suffix">UAH</span>
+                </md-field>
+              </div>
+            </md-list-item>
+          </md-list>
+        </md-list-item>
+      </md-list>
+    </md-toolbar>
 
     <md-dialog :md-active.sync="showDialog">
       <md-progress-bar md-mode="indeterminate" v-show="inProcess"></md-progress-bar>
@@ -111,7 +175,8 @@ export default {
       search: '',
       searchItems: [],
       delayTimer: null,
-      inProcess: false
+      inProcess: false,
+      orderData: this.order
     }
   },
   props: {
@@ -120,6 +185,10 @@ export default {
       default() {
         return []
       }
+    },
+    order: {
+      type: Object,
+      default: () => ({})
     },
   },
   methods: {
@@ -183,12 +252,36 @@ export default {
       }, 800);
     }
   },
+  computed: {
+    totalAmount() {
+      let amount = this.orderData.cart_cost;
+      amount += this.orderData.packing_cost
+      amount += this.orderData.shipping_cost
+      amount -= this.orderData.discount
+
+      return amount.toFixed(2);
+    }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .fs-order-items {
   margin-bottom: 30px;
+
+  &__footer {
+    padding: 0;
+
+    .md-list {
+      background: #f5f5f5;
+      width: 100%;
+      padding: 0;
+    }
+
+    .md-list-item {
+      margin-bottom: 0;
+    }
+  }
 
 }
 
