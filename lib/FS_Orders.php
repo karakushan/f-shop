@@ -43,43 +43,37 @@ class FS_Orders {
 		// Срабатывает после добавления комментария к заказу
 		add_action( 'comment_post', [ $this, 'after_comment_inserted' ], 10, 3 );
 
-		$this->set_order_fields( [
-			'_user_id'             => __( 'User ID', 'f-shop' ),
-			'_customer_id'         => __( 'Customer ID', 'f-shop' ),
-			'_customer_ip'         => __( 'Customer IP', 'f-shop' ),
-			'_customer_email'      => __( 'E-mail', 'f-shop' ),
-			'_customer_phone'      => __( 'Phone', 'f-shop' ),
-			'_customer_first_name' => __( 'First name', 'f-shop' ),
-			'_customer_last_name'  => __( 'Last name', 'f-shop' ),
-			'_shipping_method'     => __( 'Shipping method', 'f-shop' ),
-			'_shipping_address'    => __( 'Shipping address', 'f-shop' ),
-			'city'                 => __( 'City', 'f-shop' ),
-			'_user'                => [
-				'id'         => __( 'User ID', 'f-shop' ),
-				'first_name' => __( 'First name', 'f-shop' ),
-				'last_name'  => __( 'Last name', 'f-shop' ),
-				'email'      => __( 'E-mail', 'f-shop' ),
-				'phone'      => __( 'Phone', 'f-shop' )
-			],
-			'_products'            => __( 'Products', 'f-shop' ),
-			'_delivery'            => [
-				'method'    => __( 'Shipping method', 'f-shop' ),
-				'secession' => __( 'Delivery service branch number', 'f-shop' ),
-				'address'   => __( 'Shipping address', 'f-shop' )
-			],
-			'_payment'             => __( 'Payment method', 'f-shop' ),
-			'_amount'              => __( 'Total amount', 'f-shop' ),
-			'_comment'             => __( 'Comment', 'f-shop' )
-		] );
-
-
-		add_action( 'init', function () {
-
-			foreach ( $this->get_order_fields() as $meta_key => $order_field ) {
-				add_filter( '_wp_post_revision_field_' . $meta_key, [ $this, 'my_plugin_revision_field' ], 10, 2 );
-			}
-
+		add_action( 'admin_init', function () {
+			add_action( 'add_meta_boxes', array( $this, 'register_order_meta_box' ) );
 		} );
+
+		add_filter( 'manage_orders_posts_custom_column', [ $this, 'admin_order_custom_column' ], 5, 2 );
+
+	}
+
+	function admin_order_custom_column( $colname, $post_id ) {
+		$order = new FS_Order( $post_id );
+		switch ( $colname ) {
+			case 'fs_order_amount':
+				$amount = get_post_meta( $post_id, '_amount', 1 );
+				$amount = apply_filters( 'fs_price_format', $amount );
+				echo esc_html( $amount . ' ' . fs_currency() );
+				break;
+			case 'fs_user':
+				echo '<ul>';
+				if ( $order->customer->first_name ) {
+					printf( '<li><b><a href="%s" target="_blank">%s %s</a></b></li>', esc_url( admin_url( 'edit.php?page=fs-customers&field=id&s=' . $order->customer->id . '&post_type=orders' ) ), esc_html( $order->customer->first_name ), esc_html( $order->customer->last_name ) );
+				}
+				if ( $order->customer->phone ) {
+					printf( '<li><a href="tel:%1$s">%1$s</a></li>', esc_html( $order->customer->phone ) );
+				}
+				if ( $order->customer->email ) {
+					printf( '<li><a href="mailto:%1$s">%1$s</a></li>', esc_html( $order->customer->email ) );
+				}
+				echo '</ul>';
+				break;
+		}
+
 	}
 
 	/**
@@ -118,60 +112,11 @@ class FS_Orders {
 			return;
 		}
 
-		$fs_products = ! empty( $_POST['fs_products'] ) && is_array( $_POST['fs_products'] ) ? $_POST['fs_products'] : [];
-		$user        = array_map( 'trim', $_POST['user'] );
-		$sum         = 0;
-		foreach ( $fs_products as $index => $product ) {
-			$price = fs_get_price( $product['ID'] );
-			$qty   = intval( max( $product['count'], 1 ) );
-			$sum   += floatval( $price * $qty );
-		}
-
-		$order_meta = [
-			'_user_id'         => $user['fs_user_id'],
-			'_customer_ip'     => fs_get_user_ip(),
-			'_customer_email'  => $user['fs_email'],
-			'_customer_phone'  => $user['fs_phone'],
-			'_user'            => [
-				'id'         => $user['fs_user_id'],
-				'first_name' => $user['fs_first_name'],
-				'last_name'  => $user['fs_last_name'],
-				'email'      => $user['fs_email'],
-				'phone'      => $user['fs_phone']
-			],
-			'city'             => $user['fs_city'],
-			'_products'        => $fs_products,
-			'_custom_products' => [],
-			'_delivery'        => [
-				'method'    => $user['fs_delivery_methods'],
-				'secession' => $user['fs_delivery_number'],
-				'address'   => $user['fs_address']
-			],
-			'_payment'         => $user['fs_payment_methods'],
-			'_amount'          => $sum,
-			'_comment'         => $user['fs_comment']
-		];
-
-
-		foreach ( $order_meta as $meta_key => $item ) {
-			update_post_meta( $post_id, $meta_key, $item );
-		}
-
-		if ( ! empty( $_POST['order'] ) ) {
-			foreach ( $_POST['order'] as $meta_key => $meta_value ) {
-				update_post_meta( $post_id, $meta_key, $meta_value );
-			}
-		}
-
-		// Генерируем название заказа
-		if ( ! empty( $_POST['fs_create_form'] ) && ! $post->post_title ) {
-			wp_update_post( [
-				'ID'         => $post_id,
-				'post_title' => sprintf(
-					__( 'Order #%d from %s %s (%s)', 'f-shop' ),
-					$post_id, $user['fs_first_name'], $user['fs_last_name'], date( 'd.m.y H:i', time() ) )
-			] );
-		}
+		$order              = new FS_Order( $post_id );
+		$order->customer_ID = absint( $_REQUEST['user']['customer_ID'] );
+		$order->set_customer_data( array_map( 'trim', $_POST['user'] ) );
+		$order->set_order_data( $_POST['order'] );
+		$order->save();
 	}
 
 	/**
@@ -471,17 +416,15 @@ Good luck!', 'f-shop' );
 	 */
 	function true_append_post_status_list() {
 		global $post;
-		if ( $post->post_type == $this->post_type ) {
-			if ( $this->order_statuses ) : ?>
-                <script> jQuery(function ($) {
-						<?php foreach ( $this->order_statuses as $key => $status ): ?>
-                        $('select#post_status').append("<option value=\"<?php echo esc_attr( $key )?>\" <?php selected( $post->post_status, $key ) ?>><?php echo esc_attr( $status['name'] )?></option>");
-						<?php if ( $post->post_status == $key ): ?>
-                        $('#post-status-display').text('<?php echo esc_attr( $status['name'] )?>');
-						<?php endif; endforeach;  ?>
-                    });</script>";
+		if ( $post->post_type == $this->post_type && ! empty( $this->order_statuses ) ) { ?>
+            <script> jQuery(function ($) {
+					<?php foreach ( $this->order_statuses as $key => $status ): ?>
+                    $('select#post_status').append("<option value=\"<?php echo esc_attr( $key )?>\" <?php selected( $post->post_status, $key ) ?>><?php echo esc_attr( $status['name'] )?></option>");
+					<?php if ( $post->post_status == $key ): ?>
+                    $('#post-status-display').text('<?php echo esc_attr( $status['name'] )?>');
+					<?php endif; endforeach;  ?>
+                });</script>";
 			<?php
-			endif;
 		}
 	}
 
@@ -492,7 +435,10 @@ Good luck!', 'f-shop' );
 	 *
 	 * @return \stdClass
 	 */
-	private static function set_order_data( $order_id ) {
+	private
+	static function set_order_data(
+		$order_id
+	) {
 		$order_meta      = get_post_meta( $order_id );
 		$data            = new self();
 		$data->_products = self::get_order_items( $order_id );
@@ -521,7 +467,10 @@ Good luck!', 'f-shop' );
 	 *
 	 * @return array|null|object object with orders
 	 */
-	public static function get_user_orders( $user_id = 0, $status = 'any', $args = array() ) {
+	public
+	static function get_user_orders(
+		$user_id = 0, $status = 'any', $args = array()
+	) {
 
 		$user_id = $user_id ? $user_id : get_current_user_id();
 
@@ -542,7 +491,10 @@ Good luck!', 'f-shop' );
 	 *
 	 * @return string
 	 */
-	public function get_order_status( $order_id ) {
+	public
+	function get_order_status(
+		$order_id
+	) {
 		$post_status_id = get_post_status( $order_id );
 
 		if ( ! empty( $this->order_statuses[ $post_status_id ]['name'] ) ) {
@@ -554,7 +506,10 @@ Good luck!', 'f-shop' );
 		return $status;
 	}
 
-	public static function get_order_items( $order_id ) {
+	public
+	static function get_order_items(
+		$order_id
+	) {
 		$order_id = (int) $order_id;
 		$products = get_post_meta( $order_id, '_products', 0 );
 		$products = $products[0];
@@ -685,6 +640,44 @@ Good luck!', 'f-shop' );
 	 */
 	public function set_order_fields( array $order_fields ): void {
 		$this->order_fields = $order_fields;
+	}
+
+	/**
+	 * Добавляем метабокс к заказам
+	 */
+	public function register_order_meta_box() {
+		remove_meta_box( 'order-statusesdiv', 'orders', 'side' );
+
+		add_meta_box(
+			sprintf( 'fast_shop_%s_user_metabox', 'orders' ),
+			__( 'Order data', 'f-shop' ),
+			array( &$this, 'edit_add_order_meta_box' ),
+			'orders',
+			'normal',
+			'default'
+		);
+	}
+
+	/* метабокс данных пользователя в редактировании заказа */
+	public function edit_add_order_meta_box( $post ) {
+		$screen = get_current_screen();
+		if ( $screen->id != 'orders' ) {
+			return;
+		}
+		global $wpdb;
+		$order            = new FS_Order( $post->ID );
+		$action           = $screen->action ? $screen->action : ( isset( $_GET['action'] ) ? $_GET['action'] : 'edit' );
+		$shipping_methods = get_terms( [
+			'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
+			'hide_empty' => false
+		] );
+		$payment_methods  = get_terms( [
+			'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
+			'hide_empty' => false
+		] );
+
+		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/' . $action . '.php';
+
 	}
 
 

@@ -1022,6 +1022,12 @@ td.fs_photo.column-fs_photo img {
   width: 100%;
   border: none;
 }
+#fast_shop_orders_user_metabox .inside table.order-userdata sup {
+  position: relative;
+  top: 4px;
+  margin-left: 5px;
+  color: red;
+}
 #fast_shop_orders_user_metabox .inside table.order-userdata input, #fast_shop_orders_user_metabox .inside table.order-userdata textarea, #fast_shop_orders_user_metabox .inside table.order-userdata select {
   width: 100%;
 }

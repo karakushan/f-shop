@@ -5,17 +5,18 @@ namespace FS;
 
 
 class FS_Customers_List extends \WP_List_Table {
+
 	/** Class constructor */
 	public function __construct() {
 
 		parent::__construct( [
 			'singular' => __( 'Customer', 'f-shop' ), //singular name of the listed records
 			'plural'   => __( 'Customers', 'f-shop' ), //plural name of the listed records
-			'ajax'     => false //should this table support ajax?
+			'ajax'     => true //should this table support ajax?
 
 		] );
-
 	}
+
 
 	/**
 	 * Retrieve customer’s data from the database
@@ -31,19 +32,30 @@ class FS_Customers_List extends \WP_List_Table {
 
 		$sql = "SELECT * FROM {$wpdb->prefix}fs_customers";
 
+		if ( ! empty( $_REQUEST['s'] ) && ! empty( $_REQUEST['field'] ) && in_array( $_REQUEST['field'],
+				[ 'email', 'phone', 'first_name', 'last_name', 'city', 'id' ]
+			) ) {
+			$field = $_REQUEST['field'];
+			$s     = esc_sql( $_REQUEST['s'] );
+			if ( $field == 'phone' ) {
+				$s = preg_replace( "/[^0-9]/", '', $s );
+			}
+			if ( $field == 'id' ) {
+				$sql .= " WHERE $field = " . absint( $s );
+			} else {
+				$sql .= " WHERE $field LIKE '%$s%'";
+			}
+
+		}
+
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
 			$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
 		}
 
-		$sql .= " LIMIT $per_page";
+		$sql .= " LIMIT %d  OFFSET %d";
 
-		$sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
-
-
-		$result = $wpdb->get_results( $sql, 'ARRAY_A' );
-
-		return $result;
+		return $wpdb->get_results( $wpdb->prepare( $sql, $per_page, ( $page_number - 1 ) * $per_page ), 'ARRAY_A' );
 	}
 
 	/**
@@ -187,11 +199,65 @@ class FS_Customers_List extends \WP_List_Table {
 	}
 
 	/**
+	 * Displays the search box.
+	 *
+	 * @param string $text The 'submit' button label.
+	 * @param string $input_id ID attribute value for the search input field.
+	 *
+	 * @since 3.1.0
+	 *
+	 */
+	public function search_box( $text, $input_id ) {
+//		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+//			return;
+//		}
+
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['order'] ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['detached'] ) ) {
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		}
+		?>
+        <p class="search-box">
+            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
+            <select name="field">
+                <option value="id" <?php if ( isset( $_REQUEST['field'] ) )
+					selected( 'id', $_REQUEST['field'] ) ?>><?php esc_html_e( 'ID', 'f-shop' ); ?></option>
+                <option value="phone" <?php if ( isset( $_REQUEST['field'] ) )
+					selected( 'phone', $_REQUEST['field'] ) ?>><?php esc_html_e( 'Phone number', 'f-shop' ); ?></option>
+                <option value="email" <?php if ( isset( $_REQUEST['field'] ) )
+					selected( 'email', $_REQUEST['field'] ) ?>><?php esc_html_e( 'E-mail', 'f-shop' ); ?></option>
+                <option value="city" <?php if ( isset( $_REQUEST['field'] ) )
+					selected( 'city', $_REQUEST['field'] ) ?>><?php esc_html_e( 'City', 'f-shop' ); ?></option>
+                <option value="first_name" <?php if ( isset( $_REQUEST['field'] ) )
+					selected( 'first_name', $_REQUEST['field'] ) ?>><?php esc_html_e( 'First Name', '' ); ?></option>
+                <option value="last_name" <?php if ( isset( $_REQUEST['field'] ) )
+					selected( 'last_name', $_REQUEST['field'] ) ?>><?php esc_html_e( 'Last Name', '' ); ?></option>
+            </select>
+            <input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
+                   value="<?php _admin_search_query(); ?>"
+                   placeholder="<?php esc_attr_e( 'Contains', 'f-shop' ); ?>"/>
+			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
+        </p>
+        <input type="hidden" name="post_type" value="orders">
+		<?php
+	}
+
+	/**
 	 * Handles data query and filter, sorting, and pagination.
 	 */
 	public function prepare_items() {
 
-		$this->_column_headers = $this->get_column_info();
+		$this->_column_headers = parent::get_column_info();
 
 		/** Process bulk action */
 		$this->process_bulk_action();
@@ -205,8 +271,7 @@ class FS_Customers_List extends \WP_List_Table {
 			'per_page'    => $per_page //WE have to determine how many items to show on a page
 		] );
 
-
-		$this->items = self::get_customers( $per_page, $current_page );
+		$this->items = $this->get_customers( $per_page, $current_page );
 	}
 
 	public function process_bulk_action() {

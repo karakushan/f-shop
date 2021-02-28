@@ -233,4 +233,14 @@ class FS_Cart {
 	}
 
 
+	/**
+	 * Устанавливает корзину
+	 *
+	 * @param $cart
+	 */
+	public static function set_cart( $cart ) {
+		$_SESSION['cart'] = $cart;
+	}
+
+
 }

@@ -12,9 +12,6 @@ class FS_Settings {
 	// class instance
 	static $instance;
 
-	// customer WP_List_Table object
-	public $customers_obj;
-
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
 		add_action( 'admin_init', array( $this, 'init_settings' ) );
@@ -759,78 +756,11 @@ class FS_Settings {
 			$this->settings_page,
 			array( &$this, 'settings_page' )
 		);
-		// Регистрация страницы API
-		$hook = add_submenu_page(
-			'edit.php?post_type=orders',
-			__( 'Customers', 'f-shop' ),
-			__( 'Customers', 'f-shop' ),
-			'manage_options',
-			'fs-customers',
-			array( &$this, 'customers_settings_page' )
-		);
-		add_action( "load-$hook", [ $this, 'screen_option' ] );
 	} // END public function add_menu()
 
 	public static function set_screen( $status, $option, $value ) {
 		return $value;
 	}
-
-
-	/**
-	 * Screen options
-	 */
-	public function screen_option() {
-
-		$option = 'per_page';
-		$args   = [
-			'label'   => __( 'Customers', 'f-shop' ),
-			'default' => 30,
-			'option'  => 'customers_per_page'
-		];
-
-		add_screen_option( $option, $args );
-
-		$this->customers_obj = new FS_Customers_List();
-	}
-
-	/**
-	 * Plugin settings page
-	 */
-	public function customers_settings_page() {
-		?>
-        <div class="wrap">
-            <h2><?php esc_html_e( 'Customers', 'f-shop' ); ?></h2>
-
-            <div id="poststuff">
-                <div id="post-body" class="metabox-holder columns-1">
-                    <div id="post-body-content">
-                        <div class="meta-box-sortables ui-sortable">
-                            <form method="post">
-                                <p class="search-box">
-                                    <label class="screen-reader-text" for="post-search-input">:</label>
-                                    <input type="search" id="post-search-input" name="s" value=""
-                                           placeholder="Поиск клиента">
-                                    <select name="field">
-                                        <option value="">Телефон</option>
-                                        <option value="">E-mail</option>
-                                        <option value="">Фамилия</option>
-                                        <option value="">Имя</option>
-                                    </select>
-                                    <input type="submit" id="search-submit" class="button button-primary" value="Найти">
-                                </p>
-								<?php
-								$this->customers_obj->prepare_items();
-								$this->customers_obj->display(); ?>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <br class="clear">
-            </div>
-        </div>
-		<?php
-	}
-
 
 	/**
 	 * Displays API settings page

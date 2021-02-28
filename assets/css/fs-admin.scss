@@ -1201,6 +1201,13 @@ td.fs_photo.column-fs_photo {
       width: 100%;
       border: none;
 
+      sup {
+        position: relative;
+        top: 4px;
+        margin-left: 5px;
+        color: red;
+      }
+
       input, textarea, select {
         width: 100%;
       }

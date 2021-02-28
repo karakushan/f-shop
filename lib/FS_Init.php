@@ -28,6 +28,30 @@ class FS_Init {
 	public $fs_migrate;
 	public $fs_export;
 	public $fs_seo;
+	public $fs_customers;
+	protected $init_classes = [
+		'fs_config'     => FS_Config::class,
+		'fs_settings'   => FS_Settings::class,
+		'fs_ajax'       => FS_Ajax::class,
+		'fs_shortcode'  => FS_Shortcode::class,
+		'fs_rating'     => FS_Rating_Class::class,
+		'fs_post_types' => FS_Post_Types::class,
+		'fs_filters'    => FS_Filters::class,
+		'fs_cart'       => FS_Cart::class,
+		'fs_orders'     => FS_Orders::class,
+		'fs_images'     => FS_Images_Class::class,
+		'fs_taxonomies' => FS_Taxonomy::class,
+		'fs_action'     => FS_Action::class,
+		'fs_users'      => FS_Users::class,
+		'fs_api'        => FS_Api_Class::class,
+		'fs_payment'    => FS_Payment_Class::class,
+		'fs_widget'     => FS_Widget_Class::class,
+		'fs_product'    => FS_Product::class,
+		'fs_migrate'    => FS_Migrate_Class::class,
+		'fs_export'     => FS_Export_Class::class,
+		'fs_seo'        => FS_SEO::class,
+		'fs_customers'  => FS_Customers::class,
+	];
 	protected static $instance = null;
 
 
@@ -35,32 +59,16 @@ class FS_Init {
 	 * FS_Init constructor.
 	 */
 	public function __construct() {
+		// Получаем опции плагина
+		$this->fs_option = get_option( 'fs_option' );
+
+		// Инициализация классов
+		foreach ( $this->init_classes as $var => $init_class ) {
+			$this->{$var} = new $init_class;
+		}
+
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts_and_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts_and_styles' ) );
-
-		// Инициализация классов Fast Shop
-		$this->fs_config     = $GLOBALS['fs_config'] = new FS_Config();
-		$this->fs_option     = get_option( 'fs_option' );
-		$this->fs_settings   = new FS_Settings;
-		$this->fs_ajax       = new FS_Ajax;
-		$this->fs_shortcode  = new FS_Shortcode;
-		$this->fs_rating     = new FS_Rating_Class;
-		$this->fs_post_types = new FS_Post_Types;
-		$this->fs_filters    = new FS_Filters;
-		$this->fs_cart       = new FS_Cart;
-		$this->fs_orders     = new FS_Orders;
-		$this->fs_images     = new FS_Images_Class;
-		$this->fs_taxonomies = new FS_Taxonomy;
-		$this->fs_action     = new FS_Action;
-		$this->fs_users      = new FS_Users;
-		$this->fs_api        = new FS_Api_Class();
-		$this->fs_payment    = new FS_Payment_Class();
-		$this->fs_widget     = new FS_Widget_Class();
-		$this->fs_product    = new FS_Product();
-		$this->fs_migrate    = new FS_Migrate_Class();
-		$this->fs_export     = new FS_Export_Class();
-		$this->fs_seo        = new FS_SEO();
-
 		add_filter( "plugin_action_links_" . plugin_basename( FS_PLUGIN_FILE ), array(
 			$this,
 			'plugin_settings_link'
@@ -83,9 +91,7 @@ class FS_Init {
 		// Displays js analytics codes in the site header
 		add_action( 'wp_head', array( $this, 'marketing_code_header' ) );
 
-
 	} // END public function __construct
-
 
 	/**
 	 * The single instance of the class.
@@ -100,7 +106,6 @@ class FS_Init {
 
 		return self::$instance;
 	}
-
 
 	/**
 	 * инициализируем сессии
@@ -117,7 +122,6 @@ class FS_Init {
 	function true_load_plugin_textdomain() {
 		load_plugin_textdomain( 'f-shop', false, dirname( plugin_basename( FS_PLUGIN_FILE ) ) . '/languages' );
 	}
-
 
 	/**
 	 * На странице плагинов добавляет ссылку "настроить" напротив нашего плагина
@@ -233,8 +237,8 @@ class FS_Init {
 
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'spectrum', FS_PLUGIN_URL . 'assets/js/spectrum.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'js-cookie', FS_PLUGIN_URL . 'assets/js/js.cookie.js', array( 'jquery' ), null, true );
+
 		$screen = get_current_screen();
-//		do_action( 'qm/debug', $screen );
 		if ( $screen->id == 'edit-product' ) {
 			wp_enqueue_script( FS_PLUGIN_PREFIX . 'quick-edit', FS_PLUGIN_URL . 'assets/js/quick-edit.js', array( 'jquery' ), null, true );
 		} elseif ( in_array( $screen->id, [ 'orders' ] ) ) {
@@ -301,5 +305,4 @@ class FS_Init {
 	public function marketing_code_header() {
 		echo fs_option( 'fs_marketing_code_header' );
 	}
-
 }

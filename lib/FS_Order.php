@@ -77,6 +77,8 @@ class FS_Order {
 
 	public $user;
 
+	protected $customer_table = 'fs_customers';
+
 	/**
 	 * ID текущего пользователя
 	 *
@@ -109,6 +111,24 @@ class FS_Order {
 	public $shipping_cost = 0.0;
 	public $cart_cost = 0.0;
 
+	/**
+	 * @var null
+	 */
+	public $customer = null;
+
+	/**
+	 * @var int
+	 */
+	public $customer_ID = 0;
+	/**
+	 * @var array
+	 */
+	protected $customer_data = [];
+	/**
+	 * @var FS_Order
+	 */
+	protected $order_data;
+
 
 	/**
 	 * FS_Order constructor.
@@ -116,11 +136,16 @@ class FS_Order {
 	 * @param int $order_id
 	 */
 	public function __construct( $order_id = 0 ) {
+		global $wpdb;
+
+		$this->customer_ip    = fs_get_user_ip();
+		$this->customer_table = $wpdb->prefix . $this->customer_table;
+
 		if ( $order_id ) {
 			$this->set_order( $order_id );
 		}
 
-		$this->customer_ip = fs_get_user_ip();
+
 	}
 
 
@@ -130,15 +155,13 @@ class FS_Order {
 	 */
 	public function create() {
 		global $wpdb;
-		$customer_id     = 0;
-		$customers_table = $wpdb->prefix . 'fs_customers';
-		$products        = FS_Cart::get_cart();
+		$products = FS_Cart::get_cart();
 
 		if ( $this->user_id ) {
-			$logged_customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$customers_table} WHERE user_id=%d", $this->user_id ) );
+			$logged_customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->customer_table} WHERE user_id=%d", $this->user_id ) );
 			if ( $logged_customer && isset( $logged_customer->user_id ) ) {
-				$customer_id = $logged_customer->id;
-				$wpdb->update( $customers_table, [
+				$this->customer_ID = $logged_customer->id;
+				$wpdb->update( $this->customer_table, [
 					'email'          => $this->customer_email ? $this->customer_email : $logged_customer->email,
 					'first_name'     => $this->customer_first_name ? $this->customer_first_name : $logged_customer->first_name,
 					'last_name'      => $this->customer_last_name ? $this->customer_last_name : $logged_customer->last_name,
@@ -152,8 +175,8 @@ class FS_Order {
 			}
 		}
 
-		if ( ! $customer_id ) {
-			$wpdb->insert( $customers_table, [
+		if ( ! $this->customer_ID ) {
+			$wpdb->insert( $this->customer_table, [
 				'email'          => $this->customer_email,
 				'first_name'     => $this->customer_first_name,
 				'last_name'      => $this->customer_last_name,
@@ -165,17 +188,17 @@ class FS_Order {
 				'phone'          => preg_replace( "/[^0-9]/", '', $this->customer_phone ),
 				'ip'             => $this->customer_ip
 			] );
-			$customer_id = $wpdb->insert_id;
+			$this->customer_ID = $wpdb->insert_id;
 		}
 
-		if ( ! $customer_id ) {
+		if ( ! $this->customer_ID ) {
 			return new \WP_Error( 'fs_no_customer_id', __( 'Failed to get or create customer data', 'f-shop' ) );
 		}
 
 		$data = [
 			'_order_discount' => fs_get_total_discount(),
 			'_packing_cost'   => fs_get_packing_cost(),
-			'_customer_id'    => $customer_id,
+			'_customer_id'    => $this->customer_ID,
 			'_products'       => $products,
 			'_delivery'       => array(
 				'method'    => $this->delivery_method_id,
@@ -198,7 +221,7 @@ class FS_Order {
 
 		if ( $order_id ) {
 			$order_data = get_post( $order_id );
-			$customer   = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$customers_table} WHERE id=%d", $customer_id ) );
+			$customer   = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->customer_table} WHERE id=%d", $this->customer_ID ) );
 			wp_update_post( [
 				'ID'         => $order_id,
 				'post_title' => sprintf(
@@ -216,6 +239,99 @@ class FS_Order {
 		return $order_id;
 	}
 
+	/**
+	 * Проверяет входные данные пользователя
+	 */
+	private function check_customer_data() {
+		$allowed_customer_fields = apply_filters( 'fs_allowed_customer_fields', [
+			'email',
+			'first_name',
+			'last_name',
+			'subscribe_news',
+			'group',
+			'address',
+			'user_id',
+			'city',
+			'phone',
+			'ip'
+		] );
+
+		foreach ( $this->customer_data as $key => $user_datum ) {
+			if ( ! in_array( $key, $allowed_customer_fields ) ) {
+				unset( $this->customer_data[ $key ] );
+			}
+		}
+	}
+
+	/**
+	 * Обновляет или создает заказ
+	 *
+	 * @param array $user_data
+	 */
+	public function save() {
+		global $wpdb;
+
+		$this->check_customer_data();
+		if ( empty( $this->customer_data ) || ! is_array( $this->customer_data ) ) {
+			return new \WP_Error( 'fs_not_valid_customer_data', __( 'User data is not filled in or not valid!', 'f-shop' ) );
+		}
+
+		if ( $this->customer_ID ) {
+			$wpdb->update( $this->customer_table, $this->customer_data, [ 'id' => $this->customer_ID ] );
+		} else {
+			$wpdb->insert( $this->customer_table, array_merge(
+				[
+					'subscribe_news' => $this->customer_subscribe_news,
+					'group'          => $this->customer_group,
+					'user_id'        => get_current_user_id(),
+					'ip'             => $this->customer_ip
+				]
+				, $this->customer_data ) );
+
+			$this->customer_ID = $wpdb->insert_id;
+		}
+
+		if ( empty( $this->order_data ) || ! is_array( $this->order_data ) ) {
+			return new \WP_Error( 'fs_not_valid_order_data', __( 'Order data is not complete or not valid!', 'f-shop' ) );
+		}
+
+		$this->order_data['_customer_id'] = $this->customer_ID;
+
+		if ( $this->ID ) {
+			foreach ( $this->order_data as $meta_key => $order_datum ) {
+				update_post_meta( $this->ID, $meta_key, $order_datum );
+			}
+		} else {
+			$this->ID = wp_insert_post( [
+				'post_title'  => $this->title,
+				'post_status' => fs_option( 'fs_default_order_status' )
+					? get_term_field( 'slug', fs_option( 'fs_default_order_status' ), FS_Config::get_data( 'order_statuses_taxonomy' ) ) : $this->status,
+				'post_author' => $this->user_id ? $this->user_id : 1,
+				'post_type'   => FS_Config::get_data( 'post_type_orders' ),
+				'meta_input'  => $this->order_data,
+			] );
+		}
+
+		if ( $this->ID ) {
+			$order_data = get_post( $this->ID );
+			if ( ! $order_data->post_title ) {
+				$customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->customer_table} WHERE id=%d", $this->customer_ID ) );
+				wp_update_post( [
+					'ID'         => $this->ID,
+					'post_title' => sprintf(
+						$this->title ? __( $this->title, 'f-shop' ) : __( 'Order #%d from %s %s (%s)', 'f-shop' ),
+						$this->ID,
+						$customer->first_name,
+						$customer->last_name,
+						date( 'd.m.y H:i', strtotime( $order_data->post_date ) )
+					)
+				] );
+			}
+
+		}
+
+	}
+
 
 	/**
 	 * Устанавливает данные заказа
@@ -225,6 +341,7 @@ class FS_Order {
 	 * @return null
 	 */
 	public function set_order( $order_id = 0 ) {
+		global $wpdb;
 
 		$this->ID = $order_id;
 
@@ -258,18 +375,14 @@ class FS_Order {
 		$this->user          = (array) get_post_meta( $order_id, '_user', 1 );
 		$this->user['ip']    = get_post_meta( $order_id, '_customer_ip', 1 );
 
+		$this->customer_ID = absint( get_post_meta( $order_id, '_customer_id', 1 ) );
+		$this->customer    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->customer_table} WHERE id = %d", $this->customer_ID ) );
+
 		if ( ! $this->cart_cost ) {
 			foreach ( $this->items as $item ) {
 				$this->cart_cost += $item->cost;
 			}
 		}
-
-		if ( get_post_meta( $order_id, '_customer_id', 1 ) ) {
-			global $wpdb;
-			$customers_table = $wpdb->prefix . 'fs_customers';
-			$this->user      = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$customers_table} WHERE id=%d", intval( get_post_meta( $order_id, '_customer_id', 1 ) ) ), ARRAY_A );
-		}
-
 
 		$payment_method_id = (int) get_post_meta( $order_id, '_payment', 1 );
 		if ( $payment_method_id ) {
@@ -283,8 +396,8 @@ class FS_Order {
 			if ( ! is_wp_error( $this->delivery_method ) ) {
 				$this->delivery_method->cost                    = apply_filters( 'fs_price_format', (float) get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) );
 				$this->delivery_method->city                    = get_post_meta( $order_id, 'city', 1 );
-				$this->delivery_method->delivery_address        = $delivery_method['address'];
-				$this->delivery_method->delivery_service_number = $delivery_method['secession'];
+				$this->delivery_method->delivery_address        = ! empty( $delivery_method['address'] ) ? $delivery_method['address'] : '';
+				$this->delivery_method->delivery_service_number = ! empty( $delivery_method['secession'] ) ? $delivery_method['secession'] : '';
 			}
 		}
 
@@ -353,7 +466,7 @@ class FS_Order {
 			array_push( $history, [
 				'id'             => 'create_order',
 				'initiator_id'   => 0,
-				'initiator_name' => implode( ' ', [ $this->user['first_name'], $this->user['last_name'] ] ),
+				'initiator_name' => implode( ' ', [ $this->customer->first_name, $this->customer->last_name ] ),
 				'time'           => strtotime( $this->post->post_date ),
 				'data'           => [
 					'order_id' => $order_id
@@ -560,5 +673,40 @@ class FS_Order {
 
 		return isset( $_SESSION['fs_last_order_id'] ) && is_numeric( $_SESSION['fs_last_order_id'] )
 			? intval( $_SESSION['fs_last_order_id'] ) : 0;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_customer_table(): string {
+		return $this->customer_table;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_customer_data(): array {
+		return $this->customer_data;
+	}
+
+	/**
+	 * @param array $customer_data
+	 */
+	public function set_customer_data( array $customer_data ): void {
+		$this->customer_data = $customer_data;
+	}
+
+	/**
+	 * @return FS_Order
+	 */
+	public function get_order_data() {
+		return $this->order_data;
+	}
+
+	/**
+	 * @param FS_Order $order_data
+	 */
+	public function set_order_data( $order_data ): void {
+		$this->order_data = $order_data;
 	}
 }

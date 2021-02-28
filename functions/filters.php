@@ -108,42 +108,6 @@ function fs_edit_orders_columns( $columns ) {
 	return array_slice( $columns, 0, $num ) + $new_columns + array_slice( $columns, $num );
 }
 
-add_filter( 'manage_orders_posts_custom_column', 'fs_orders_posts_custom_column', 5, 2 );
-function fs_orders_posts_custom_column( $colname, $post_id ) {
-	$order = new FS\FS_Order( $post_id );
-	switch ( $colname ) {
-		case 'fs_order_amount':
-			$amount = get_post_meta( $post_id, '_amount', 1 );
-			$amount = apply_filters( 'fs_price_format', $amount );
-			echo esc_html( $amount . ' ' . fs_currency() );
-			break;
-		case 'fs_user':
-
-			echo '<ul>';
-			echo '<li><b>';
-			if ( isset( $order->user['first_name'] ) && $order->user['first_name'] != '' ) {
-				echo esc_html( $order->user['first_name'] ) . ' ';
-			}
-			if ( isset( $order->user['last_name'] ) && $order->user['last_name'] != '' ) {
-				echo esc_html( $order->user['last_name'] );
-			}
-			echo '</b></li>';
-			if ( isset( $order->user['phone'] ) && $order->user['phone'] != '' ) {
-				printf( '<li><span>%s:</span> %s</li>', esc_html__( 'phone', 'f-shop' ), esc_html( $order->user['phone'] ) );
-			}
-			if ( isset( $order->user['email'] ) && $order->user['email'] != '' ) {
-				printf( '<li><span>%s:</span> %s</li>', esc_html__( 'email', 'f-shop' ), esc_html( $order->user['email'] ) );
-			}
-			if ( isset( $order->delivery_method->city ) && $order->delivery_method->city != '' ) {
-				printf( '<li><span>%s:</span> %s</li>', esc_html__( 'city', 'f-shop' ), esc_html( $order->delivery_method->city ) );
-			}
-			echo '</ul>';
-			break;
-	}
-
-}
-
-
 // добавляем возможность сортировать колонку
 add_filter( 'manage_edit-product_sortable_columns', 'add_views_sortable_column' );
 function add_views_sortable_column( $sortable_columns ) {

@@ -999,8 +999,6 @@ class FS_Product {
 	 * hook into WP's add_meta_boxes action hook
 	 */
 	public function add_meta_boxes() {
-
-		remove_meta_box( 'order-statusesdiv', 'orders', 'side' );
 		// Add this metabox to every selected post
 		add_meta_box(
 			sprintf( 'fast_shop_%s_metabox', FS_Config::get_data( 'post_type' ) ),
@@ -1011,15 +1009,6 @@ class FS_Product {
 			'high'
 		);
 
-		// добавляем метабокс к заказам
-		add_meta_box(
-			sprintf( 'fast_shop_%s_user_metabox', 'orders' ),
-			__( 'Order data', 'f-shop' ),
-			array( &$this, 'add_order_user_meta_boxes' ),
-			'orders',
-			'normal',
-			'default'
-		);
 		// Add this metabox to every selected post
 
 	} // END public function add_meta_boxes()
@@ -1286,27 +1275,7 @@ class FS_Product {
 		echo '</div>';
 	}
 
-	/* метабокс данных пользователя в редактировании заказа */
-	public function add_order_user_meta_boxes( $post ) {
-		$screen = get_current_screen();
-		if ( $screen->id != 'orders' ) {
-			return;
-		}
-		$order            = new FS_Order( $post->ID );
-		$action           = $screen->action ? $screen->action : ( isset( $_GET['action'] ) ? $_GET['action'] : 'edit' );
-		$shipping_methods = get_terms( [
-			'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
-			'hide_empty' => false
-		] );
-		$payment_methods  = get_terms( [
-			'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
-			'hide_empty' => false
-		] );
-		$clients          = get_users();
 
-		require FS_PLUGIN_PATH . 'templates/back-end/metabox/order/' . $action . '.php';
-
-	}
 
 	public function set_real_product_price( $product_id = 0 ) {
 		update_post_meta( $product_id, '_fs_real_price', fs_get_price( $product_id ) );

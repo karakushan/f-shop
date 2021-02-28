@@ -11,7 +11,7 @@
       <md-table-row slot="md-table-row" slot-scope="{ item,index }">
         <md-table-cell md-label="ID">
           {{ item.id }}
-          <input type="hidden" :name="'fs_products['+index+'][ID]'"
+          <input type="hidden" :name="'order[_products]['+index+'][ID]'"
                  :value="item.id">
         </md-table-cell>
         <md-table-cell md-label="Фото">
@@ -23,15 +23,16 @@
         <md-table-cell md-label="Название">
           <a :href="item.permalink" target="_blank">{{ item.title }}</a>
         </md-table-cell>
-        <md-table-cell md-label="Цена">{{ item.price }} {{ item.currency }}</md-table-cell>
+        <md-table-cell md-label="Цена">{{ itemPrice(item) }}</md-table-cell>
         <md-table-cell md-label="К-во">
           <md-field>
             <md-input style="width: 20px;" type="number" min="1" step="1" size="3"
-                      :name="'fs_products['+index+'][count]'"
+                      v-model="item.count"
+                      :name="'order[_products]['+index+'][count]'"
                       :value="item.count"></md-input>
           </md-field>
         </md-table-cell>
-        <md-table-cell md-label="Стоимость">{{ item.cost }} {{ item.currency }}</md-table-cell>
+        <md-table-cell md-label="Стоимость">{{ itemCost(item) }}</md-table-cell>
         <md-table-cell md-label="Действие">
           <md-button class="md-fab md-mini md-plain" @click="deleteItem(index)">
             <md-tooltip>Удалить</md-tooltip>
@@ -44,14 +45,16 @@
     <md-toolbar md-elevation="1" class="fs-order-items__footer">
       <md-list>
         <md-list-item md-expand>
-          <h4 class="md-list-item-text"> Стоимость товаров: {{ totalAmount }} UAH</h4>
+          <h4 class="md-list-item-text"> Сумма заказа: {{ totalAmount }} UAH
+            <input type="hidden" name="order[_amount]" v-model.number="totalAmount">
+          </h4>
           <md-list slot="md-expand">
             <md-list-item>
               <h5>Стоимость товаров:</h5>
               <div class="md-field__wrap">
                 <md-field>
                   <md-input type="number" name="order[_cart_cost]"
-                            v-model.number="orderData.cart_cost"
+                            :value="cartCost"
                             :step=".01"
                             :min="0" disabled="disabled">
                   </md-input>
@@ -192,6 +195,13 @@ export default {
     },
   },
   methods: {
+    itemPrice(item) {
+      return Number(item.price).toFixed(2) + ' ' + item.currency
+    },
+    itemCost(item) {
+      let cost = Number(item.price * item.count)
+      return cost.toFixed(2) + ' ' + item.currency
+    },
     deleteItem(index) {
       this.products.splice(index, 1)
     },
@@ -253,13 +263,22 @@ export default {
     }
   },
   computed: {
+    cartCost() {
+      let cost = 0;
+      this.products.forEach((item) => {
+        cost += Number(item.price * item.count)
+      })
+      return Number(cost);
+    },
     totalAmount() {
-      let amount = this.orderData.cart_cost;
-      amount += this.orderData.packing_cost
-      amount += this.orderData.shipping_cost
-      amount -= this.orderData.discount
+      let amount = 0
 
-      return amount.toFixed(2);
+      amount += this.cartCost;
+      if (Number(this.orderData.packing_cost) > 0) amount += Number(this.orderData.packing_cost)
+      if (Number(this.orderData.shipping_cost) > 0) amount += Number(this.orderData.shipping_cost)
+      if (Number(this.orderData.discount) > 0) amount -= Number(this.orderData.discount)
+
+      return Number(amount).toFixed(2);
     }
   },
 }
