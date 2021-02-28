@@ -7,7 +7,7 @@ add_filter( 'fs_price_format', 'fs_price_format', 10, 2 );
 function fs_price_format( $price, $delimiter = '' ) {
 	$cents     = fs_option( 'price_cents' ) == 1 ? 2 : 0;
 	$delimiter = ! empty( $delimiter ) ? $delimiter : fs_option( 'currency_delimiter', '.' );
-	$price     = number_format( $price, $cents, $delimiter, ' ' );
+	$price     = number_format( floatval($price), $cents, $delimiter, ' ' );
 
 	return $price;
 }
