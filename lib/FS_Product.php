@@ -665,9 +665,9 @@ class FS_Product {
 			$this->attributes = ! empty( $variation['attr'] ) ? $variation['attr'] : [];
 		}
 
-		$this->title              = $this->get_title();
+		$this->title              = ! empty( $product['name'] ) ? apply_filters( 'the_title', $product['name'] ) : $this->get_title();
 		$this->sku                = $this->get_sku();
-		$this->price              = $this->get_price();
+		$this->price              = ! empty( $product['price'] ) ? floatval($product['price']) : $this->get_price();
 		$this->base_price         = $this->get_base_price();
 		$this->base_price_display = apply_filters( 'fs_price_format', $this->base_price );
 		$this->price_display      = apply_filters( 'fs_price_format', $this->price );
@@ -1274,7 +1274,6 @@ class FS_Product {
 		<?php
 		echo '</div>';
 	}
-
 
 
 	public function set_real_product_price( $product_id = 0 ) {

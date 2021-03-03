@@ -271,7 +271,7 @@ class FS_Orders {
 			echo '</select></p>';
 		}
 
-		echo '<p><input type="submit" name="save" id="save-post" value="' . esc_attr__( 'Save' ) . '" class="button button-primary button-large"></p>';
+		echo '<p><input type="submit" name="save" id="save-order" value="' . esc_attr__( 'Save' ) . '" class="button button-primary button-large"></p>';
 		echo '<div class="clear"></div>';
 		echo '<p><a class="submitdelete deletion" href="' . esc_url( get_delete_post_link( $post->ID ) ) . '">' . esc_html__( 'Delete' ) . '</a></p>';
 		echo '<div class="clear"></div>';
@@ -635,14 +635,14 @@ Good luck!', 'f-shop' );
 	/**
 	 * @return array
 	 */
-	public function get_order_fields(): array {
+	public function get_order_fields() {
 		return $this->order_fields;
 	}
 
 	/**
 	 * @param array $order_fields
 	 */
-	public function set_order_fields( array $order_fields ): void {
+	public function set_order_fields( array $order_fields ) {
 		$this->order_fields = $order_fields;
 	}
 

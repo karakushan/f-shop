@@ -268,8 +268,8 @@ class FS_Order {
 			return null;
 		}
 
-		$products   = get_post_meta( $order_id, '_products', 1 ) ? get_post_meta( $order_id, '_products', 1 ) : [];
-		$this->meta = get_post_meta( $order_id );
+		$products = get_post_meta( $order_id, '_products', 1 ) ? get_post_meta( $order_id, '_products', 1 ) : [];
+//		$this->meta = get_post_meta( $order_id );
 
 
 		$this->items = array_values( array_map( function ( $item ) {
@@ -287,6 +287,15 @@ class FS_Order {
 
 		$this->customer_ID = absint( get_post_meta( $order_id, '_customer_id', 1 ) );
 		$this->customer    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->customer_table} WHERE id = %d", $this->customer_ID ) );
+
+		if ( ! $this->customer && ! empty( $this->user ) ) {
+			$this->customer             = new \stdClass();
+			$this->customer->first_name = $this->user['first_name'];
+			$this->customer->last_name  = $this->user['last_name'];
+			$this->customer->email      = $this->user['email'];
+			$this->customer->phone      = $this->user['phone'];
+		}
+
 
 		if ( ! $this->cart_cost ) {
 			foreach ( $this->items as $item ) {
@@ -355,7 +364,7 @@ class FS_Order {
 	 * @return mixed|\WP_Error
 	 */
 	public function get_order_history( int $order_id = 0, $creation_date = true, $args = [] ) {
-		$order_id = $order_id ? $order_id : $this->ID;
+		$order_id = $order_id ? $order_id : $this->ID ? $this->ID : 0;
 		$args     = wp_parse_args( $args, [
 			'order' => 'desc'
 		] );

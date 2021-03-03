@@ -7,6 +7,8 @@
 
 
 jQuery(function ($) {
+    $( window ).off( 'beforeunload' );
+
     window.fShop = {
         // запускает прогресс бар в самом верху сайта
         showMetaboxPreloader: function () {

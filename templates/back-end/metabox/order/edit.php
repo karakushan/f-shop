@@ -1,3 +1,4 @@
+<?php do_action( 'qm/debug', $order );  ?>
 <input type="hidden" name="fs_is_admin" value="1">
 <div class="app">
     <vue-order-items
