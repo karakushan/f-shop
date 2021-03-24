@@ -259,11 +259,38 @@ class FS_Ajax {
 	 * Live product search callback function
 	 */
 	function search_product_admin() {
+		$s = trim( $_POST['search'] );
+
+		// Поиск по названию
 		$find_posts = get_posts( array(
-			's'              => sanitize_text_field( $_POST['search'] ),
+			's'              => sanitize_text_field( $s ),
 			'posts_per_page' => 12,
-			'post_type'      => FS_Config::get_data( 'post_type' )
+			'post_type'      => FS_Config::get_data( 'post_type' ),
 		) );
+
+		// Поиск по ID
+		if ( ! $find_posts && is_numeric( $s ) ) {
+			$find_posts = get_posts( array(
+				'p'              => absint( $s ),
+				'posts_per_page' => 1,
+				'post_type'      => FS_Config::get_data( 'post_type' ),
+			) );
+		}
+
+		// Поиск по артикулу
+		if ( ! $find_posts ) {
+			$find_posts = get_posts( array(
+				'posts_per_page' => 12,
+				'post_type'      => FS_Config::get_data( 'post_type' ),
+				'meta_query'     => [
+					[
+						'key'     => 'fs_articul',
+						'value'   => $s,
+						'compare' => '='
+					]
+				]
+			) );
+		}
 
 		if ( $find_posts ) {
 			wp_send_json_success( array_map( function ( $item ) {

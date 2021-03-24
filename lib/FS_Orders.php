@@ -30,7 +30,7 @@ class FS_Orders {
 		add_filter( 'display_post_states', array( $this, 'true_status_display' ) );
 
 		// Срабатывает в момент изменения статуса заказа
-		add_action( 'transition_post_status', array( $this, 'fs_change_order_status' ) );
+		add_action( 'transition_post_status', array( $this, 'fs_change_order_status' ), 10, 3 );
 
 		// операции с метабоксами - удаление стандартных, добавление новых
 		add_action( 'admin_menu', array( $this, 'remove_submit_order_metabox' ) );
@@ -108,7 +108,13 @@ class FS_Orders {
 	 * @param $update
 	 */
 	function save_order( $post_id, $post, $update ) {
-		if ( $post->post_type != FS_Config::get_data( 'post_type_orders' ) || ! isset( $_POST['fs_is_admin'] ) ) {
+		// Если это не заказы, выходим
+		if ( $post->post_type != FS_Config::get_data( 'post_type_orders' ) ) {
+			return;
+		}
+
+		// Если это ревизия, выходим
+		if ( wp_is_post_revision( $post_id ) || (defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )) {
 			return;
 		}
 
@@ -316,20 +322,20 @@ class FS_Orders {
 	 *
 	 * @param $new_status
 	 */
-	function fs_change_order_status( $new_status ) {
-		global $post;
-		if ( ! $post ) {
+	function fs_change_order_status( $new_status, $old_status, $post ) {
+		if ( $new_status == $old_status || $post->post_type != FS_Config::get_data( 'post_type_orders' ) ) {
 			return;
 		}
+
 		$fs_config = new FS_Config();
 
 		// Если новый статус заказа "обработан" (processed)
-		if ( $post && $post->post_type == $this->post_type && $new_status == 'processed' ) {
+		if ( $new_status == 'processed' ) {
 			// Получаем ID выбраного способа оплаты
 			$pay_method_id = get_post_meta( $post->ID, '_payment', 1 );
 			// Получаем кастомное сообшение пользователю, извещение об возможности оплаты
 			$message_no_filter = get_term_meta( $pay_method_id, '_fs_pay_message', 1 );
-			$pay_term          = get_term( $pay_method_id, $fs_config->data['product_pay_taxonomy'] );
+			$pay_term          = get_term( $pay_method_id, FS_Config::get_data( 'product_pay_taxonomy' ) );
 			if ( empty( $message_no_filter ) ) {
 				$message_no_filter = __( 'Your order #%order_id% has been successfully approved. The next stage is payment of the order. You can pay for the purchase by <a href="%pay_url%">link</a>. You have chosen the payment method: %pay_name%.
 Good luck!', 'f-shop' );

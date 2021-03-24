@@ -4,9 +4,9 @@
   "description": "",
   "main": "vue-admin.js",
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "webpack --mode production --watch",
     "start": "webpack-dev-server --mode development",
-    "dev": "webpack --mode development"
+    "dev": "webpack --mode development "
   },
   "keywords": [],
   "author": "",

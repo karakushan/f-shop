@@ -116,7 +116,7 @@
       <md-dialog-content>
         <md-field>
           <md-icon>search</md-icon>
-          <label>Введите название товара</label>
+          <label>Название товара, ID или артикул</label>
           <md-input v-model="search"></md-input>
         </md-field>
 
@@ -249,6 +249,8 @@ export default {
           success: function (data) {
             if (data.success && comp.showDialog) {
               comp.searchItems = typeof data.data !== 'array' ? data.data : []
+            } else {
+              comp.searchItems = []
             }
           },
           error: function (xhr, ajaxOptions, thrownError) {
