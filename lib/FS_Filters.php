@@ -155,36 +155,44 @@ class FS_Filters {
 	 * @param $query
 	 */
 	function filter_products_admin( $query ) {
+		global $pagenow, $wpdb;
+
+		// Если это не админка
 		if ( ! is_admin() ) {
 			return;
 		}
-		global $pagenow, $wpdb;
-		$fs_config = new FS_Config();
 
-		$post_type_product = $query->get( 'post_type' ) == $fs_config->data['post_type'] ? true : false;
+		if ( $query->get( 'post_type' ) != FS_Config::get_data( 'post_type' ) ) {
+			return;
+		}
 
-		if ( ! empty( $_GET['s'] ) && $post_type_product && $pagenow == 'edit.php' ) {
+		if ( $pagenow != 'edit.php' ) {
+			return;
+		}
+
+		// Поиск товаров по артикулу
+		if ( ! empty( $_GET['s'] ) ) {
 			// Search by sku
-			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s'", $fs_config->meta['sku'], esc_sql( $_GET['s'] ) ) );
+			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value='%s'", FS_Config::get_meta( 'sku' ), esc_sql( $_GET['s'] ) ) );
 			if ( ! empty( $sku_products ) ) {
 				$query->set( 's', '' );
 				$query->set( 'post__in', $sku_products );
 			}
-
-
-			$query->set( 'post_type', 'product' );
 		}
-		if ( ! empty( $_GET['orderby'] ) && $post_type_product && $pagenow == 'edit.php' ) {
+
+		// Сортировка найденных результатов
+		if ( ! empty( $_GET['orderby'] ) ) {
 			switch ( $_GET['orderby'] ) {
 				//	сортируем по цене
 				case "fs_price":
 					$query->set( 'orderby', 'meta_value_num' );
-					$query->set( 'meta_key', $fs_config->meta['price'] );
+					$query->set( 'meta_key', FS_Config::get_meta( 'price' ) );
 					$query->set( 'order', (string) $_GET['order'] );
 					break;
 			}
 
 		}
+		$query->set( 'post_type', 'product' );
 		$query->query['action']      = '';
 		$query->query_vars['action'] = '';
 	}
@@ -219,9 +227,6 @@ class FS_Filters {
 			'name'            => 'catalog'
 		) );
 	}
-
-
-
 
 
 	/**
@@ -273,7 +278,7 @@ class FS_Filters {
 	 * @echo  string;
 	 */
 	public static function per_page_filter( $args ) {
-		$req   = isset( $_GET['per_page'] ) ? intval($_GET['per_page']) : get_option( "posts_per_page" );
+		$req = isset( $_GET['per_page'] ) ? intval( $_GET['per_page'] ) : get_option( "posts_per_page" );
 
 		$args  = wp_parse_args( $args,
 			array(

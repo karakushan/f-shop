@@ -694,6 +694,7 @@ class FS_Ajax {
 			'email'      => $sanitize_field['fs_email'],
 			'phone'      => $sanitize_field['fs_phone'],
 			'address'    => $sanitize_field['fs_address'],
+			'city'       => $sanitize_field['fs_city'],
 			'ip'         => $customer_ip,
 			'group'      => 1,
 		] );
@@ -717,7 +718,7 @@ class FS_Ajax {
 				'_customer_email'  => $sanitize_field['fs_email'],
 				'_customer_phone'  => $sanitize_field['fs_phone'],
 				'_order_discount'  => fs_get_total_discount(),
-				'_packing_cost'    => fs_get_packing_cost(),
+				'_packing_cost'    => fs_get_packing_cost( absint( $sanitize_field['fs_delivery_methods'] ) ),
 				'_customer_id'     => $customer_id,
 				'_user'            => array(
 					'id'         => $user_id,
@@ -743,7 +744,6 @@ class FS_Ajax {
 		);
 		$order_id       = wp_insert_post( $new_order_data );
 
-
 		/* Если есть ошибки выводим их*/
 		if ( is_wp_error( $order_id ) ) {
 			wp_send_json_error( [ 'msg' => $order_id->get_error_message() ] );
@@ -755,6 +755,7 @@ class FS_Ajax {
 					$product_class->fs_change_stock_count( $fs_product['ID'], $fs_product['count'], $variation );
 				}
 			}
+
 			// Здесь уже можно навешивать сторонние обработчики
 			do_action( 'fs_create_order', $order_id );
 
@@ -816,6 +817,7 @@ class FS_Ajax {
 				$admin_message      = $fs_template->get( 'mail/admin-create-order', $mail_data );
 				FS_Form::send_email( $admin_email, $admin_mail_subject, $admin_message );
 			} else {
+
 				if ( $sanitize_field['fs_email'] ) {
 					//Отсылаем письмо с данными заказа заказчику
 					$user_email_message = $fs_template->get( 'mail/user-create-order', $mail_data );
@@ -944,8 +946,8 @@ class FS_Ajax {
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
 		}
-		$term_id             = intval( $_POST['delivery'] );
-		$delivery_cost_clean = floatval( get_term_meta( $term_id, '_fs_delivery_cost', 1 ) );
+		$shipping_method     = absint( $_POST['fs_delivery_methods'] );
+		$delivery_cost_clean = floatval( get_term_meta( $shipping_method, '_fs_delivery_cost', 1 ) );
 		$delivery_cost       = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $delivery_cost_clean ), fs_currency() );
 		$total_amount        = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', fs_get_total_amount( $delivery_cost_clean ) ), fs_currency() );
 		$total               = $delivery_cost_clean + fs_get_cart_cost();
@@ -954,17 +956,21 @@ class FS_Ajax {
 		fs_taxes_list( array( 'wrapper' => false ), $total );
 		$taxes_out = ob_get_clean();
 
-		$disable_fields = get_term_meta( $term_id, '_fs_disable_fields', 0 );
-		$disable_fields = ! empty( $disable_fields ) ? array_shift( $disable_fields ) : [];
+		$disable_fields = get_term_meta( $shipping_method, '_fs_disable_fields', 0 );
+		$disable_fields = ! empty( $disable_fields ) ? $disable_fields : [];
 
-		$required_fields = get_term_meta( $term_id, '_fs_required_fields', 0 );
+		$required_fields = get_term_meta( $shipping_method, '_fs_required_fields', 0 );
 		$required_fields = ! empty( $required_fields ) ? array_shift( $required_fields ) : [];
+
+		$packing_cost = fs_option( 'fs_include_packing_cost' ) && $shipping_method ? fs_get_packing_cost( $shipping_method ) : 0;
+		$packing_cost = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $packing_cost ), fs_currency() );
 
 		wp_send_json_success( array(
 			'disableFields'  => $disable_fields,
 			'requiredFields' => $required_fields,
 			'taxes'          => $taxes_out,
 			'price'          => $delivery_cost,
+			'packing_cost'   => $packing_cost,
 			'total'          => $total_amount,
 		) );
 	}

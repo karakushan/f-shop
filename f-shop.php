@@ -108,7 +108,7 @@ function fs_activate() {
     `last_name`      varchar(32) null,
     `subscribe_news` int         null,
     `group`        int         null,
-    `address`        varchar(255) null,  
+    `address`        varchar(100) null,    
     `user_id`        int         null,
     `city`           varchar(50) null,
     `phone`          varchar(30) null

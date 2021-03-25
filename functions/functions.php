@@ -253,8 +253,8 @@ function fs_get_total_amount( $delivery_cost = false ) {
 	$amount = $amount + $delivery_cost;
 
 	// Добавляем стоимость упаковки если нужно
-	if ( fs_option( 'fs_include_packing_cost' ) ) {
-		$amount += fs_get_packing_cost();
+	if ( fs_option( 'fs_include_packing_cost' ) && ! empty( $_POST['fs_delivery_methods'] ) ) {
+		$amount += fs_get_packing_cost( absint( $_POST['fs_delivery_methods'] ) );
 	}
 
 	// Вычисляем налоги
@@ -457,14 +457,20 @@ function fs_get_full_cart_discount() {
  * Возвращает стоимость упаковки
  *
  *
- * @param float $products_cost
+ * @param int $shipping_method id способа доставки
  *
  * @return float|int|string|string[]|null
  */
-function fs_get_packing_cost() {
-	$cost          = 0;
-	$parse_value   = preg_replace( "/[^0-9]/", '', fs_option( 'fs_packing_cost_value' ) );
-	$products_cost = fs_get_cart_cost();
+function fs_get_packing_cost( $shipping_method = 0 ) {
+	$cost                 = 0;
+	$parse_value          = preg_replace( "/[^0-9]/", '', fs_option( 'fs_packing_cost_value' ) );
+	$products_cost        = fs_get_cart_cost();
+	$include_packing_cost = get_term_meta( $shipping_method, '_fs_add_packing_cost', 1 );
+
+	if ( ! $include_packing_cost ) {
+		return 0;
+	}
+
 	if ( ! fs_option( 'fs_include_packing_cost' ) || ! $parse_value ) {
 		return $cost;
 	}
@@ -482,10 +488,20 @@ function fs_get_packing_cost() {
  * Выводит стоимость упаковки
  *
  * @param string $format
+ * @param array $args
  */
-function fs_packing_cost( $format = '%s <span>%s</span>' ) {
+function fs_packing_cost( $format = '%s <span>%s</span>', $args = [] ) {
+	$args = wp_parse_args( $args, [
+		'class' => 'fs-packing-cost'
+	] );
+
 	if ( fs_option( 'fs_include_packing_cost' ) ) {
-		printf( $format, apply_filters( 'fs_price_format', fs_get_packing_cost() ), fs_currency() );
+		printf(
+			'<div class="%s" data-fs-element="packing-cost">' . $format . '</div>',
+			esc_attr( $args['class'] ),
+			apply_filters( 'fs_price_format', fs_get_packing_cost() ),
+			fs_currency()
+		);
 	}
 }
 
@@ -2874,7 +2890,7 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
  *
  * @return \FS\FS_Product
  */
-function fs_set_product( $product= [], $item_id = 0 ) {
+function fs_set_product( $product = [], $item_id = 0 ) {
 	$product_class = new FS\FS_Product();
 	$product_class->set_product( $product, $item_id );
 

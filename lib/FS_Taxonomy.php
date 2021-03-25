@@ -594,17 +594,17 @@ class FS_Taxonomy {
 				),
 			'fs-delivery-methods'                           =>
 				array(
-					'_thumbnail_id'       => array(
+					'_thumbnail_id'        => array(
 						'name' => __( 'Thumbnail', 'f-shop' ),
 						'type' => 'image',
 						'args' => array()
 					),
-					'_fs_delivery_cost'   => array(
+					'_fs_delivery_cost'    => array(
 						'name' => __( 'Shipping Cost in Base Currency', 'f-shop' ),
 						'type' => 'number',
 						'args' => array( 'style' => 'width:72px;', 'step' => 0.01 )
 					),
-					'_fs_disable_fields'  => array(
+					'_fs_disable_fields'   => array(
 						'name' => __( 'Fields to disable when choosing this delivery method', 'f-shop' ),
 						'type' => 'select',
 						'args' => array(
@@ -612,13 +612,17 @@ class FS_Taxonomy {
 							'multiple' => true
 						)
 					),
-					'_fs_required_fields' => array(
+					'_fs_required_fields'  => array(
 						'name' => __( 'Required fields when choosing this delivery method', 'f-shop' ),
 						'type' => 'select',
 						'args' => array(
 							'values'   => $checkout_fields,
 							'multiple' => true
 						)
+					),
+					'_fs_add_packing_cost' => array(
+						'name' => __( 'Consider the cost of packaging', 'f-shop' ),
+						'type' => 'checkbox'
 					)
 				),
 			'fs-currencies'                                 =>

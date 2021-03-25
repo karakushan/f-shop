@@ -108,13 +108,15 @@ class FS_Orders {
 	 * @param $update
 	 */
 	function save_order( $post_id, $post, $update ) {
-		// Если это не заказы, выходим
-		if ( $post->post_type != FS_Config::get_data( 'post_type_orders' ) ) {
-			return;
-		}
+		global $pagenow, $typenow;
 
-		// Если это ревизия, выходим
-		if ( wp_is_post_revision( $post_id ) || (defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )) {
+		if ( ! is_admin()
+		     || $pagenow !== 'post.php'
+		     || $typenow !== FS_Config::get_data( 'post_type_orders' )
+		     || $post->post_type != FS_Config::get_data( 'post_type_orders' )
+		     || wp_is_post_revision( $post_id )
+		     || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		) {
 			return;
 		}
 
@@ -606,16 +608,26 @@ Good luck!', 'f-shop' );
 	 * @param $query
 	 */
 	function filter_orders_by_search( $query ) {
-		if ( ! is_admin() || empty( $_GET['s'] ) ) {
+		global $wpdb, $pagenow, $typenow;
+		// Если это не админка
+		if ( ! is_admin() ) {
 			return;
 		}
-		global $wpdb;
+
+		if ( $query->get( 'post_type' ) != FS_Config::get_data( 'post_type_orders' ) ) {
+			return;
+		}
+
+		if ( ! isset( $_GET['s'] ) ) {
+			return;
+		}
+
 		$order          = new FS_Order();
 		$customer_table = $order->get_customer_table();
 		$s              = $_GET['s'];
 		$q              = $wpdb->prepare( "SELECT id FROM $customer_table WHERE phone ='%s' OR email = '%s'  OR first_name LIKE '%s' OR last_name LIKE '%s'", $s, $s, '%' . $s . '%', '%' . $s . '%' );
 		$results        = $wpdb->get_results( $q );
-		do_action( 'qm/debug', $q );
+
 		if ( $results ) {
 			$user_ids = [];
 			foreach ( $results as $result ) {

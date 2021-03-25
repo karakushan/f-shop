@@ -172,7 +172,7 @@ jQuery(document).ready(function ($) {
                         message: data.data.msg,
                         position: 'bottomRight',
                     });
-                }else{
+                } else {
                     iziToast.show({
                         theme: 'light',
                         color: 'red',
@@ -549,7 +549,7 @@ jQuery(document).ready(function ($) {
             },
             data: fShop.ajaxData('fs_show_shipping',
                 {
-                    delivery: val
+                    fs_delivery_methods: val
                 }),
             success: function (result) {
                 if (!result.success) return;
@@ -558,12 +558,13 @@ jQuery(document).ready(function ($) {
                     jQuery("[data-fs-element=\"delivery-cost\"]").html(result.data.price);
                     jQuery("[data-fs-element=\"total-amount\"]").html(result.data.total);
                     jQuery("[data-fs-element=\"taxes-list\"]").replaceWith(result.data.taxes);
+                    jQuery("[data-fs-element=\"packing-cost\"]").html(result.data.packing_cost);
                 }
 
                 // Оключаем поля которые нужно скрыть
                 $('.fs-checkout-form input,.fs-checkout-form .fs-field-wrap').fadeIn(0);
-                if (result.data.disableFields.length) {
-                    result.data.disableFields.forEach(function (field){
+                if (typeof result.data.disableFields !== 'undefined' && result.data.disableFields.length > 0) {
+                    result.data.disableFields.forEach(function (field) {
                         $('[name="' + field + '"]')
                             .parents('.fs-field-wrap')
                             .fadeOut(0);

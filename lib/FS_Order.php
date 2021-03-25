@@ -228,8 +228,8 @@ class FS_Order {
 			if ( ! $order_data->post_title ) {
 				$customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->customer_table} WHERE id=%d", $this->customer_ID ) );
 				wp_update_post( [
-					'ID'          => $this->ID,
-					'post_title'  => sprintf(
+					'ID'         => $this->ID,
+					'post_title' => sprintf(
 						$this->title ? __( $this->title, 'f-shop' ) : __( 'Order #%d from %s %s (%s)', 'f-shop' ),
 						$this->ID,
 						$customer->first_name,
@@ -283,6 +283,7 @@ class FS_Order {
 		$this->discount      = (float) get_post_meta( $order_id, '_order_discount', 1 );
 		$this->shipping_cost = (float) get_post_meta( $order_id, '_shipping_cost', 1 );
 		$this->comment       = get_post_meta( $order_id, '_comment', 1 );
+		$this->customer_city = get_post_meta( $order_id, 'city', 1 );
 		$this->user          = (array) get_post_meta( $order_id, '_user', 1 );
 		$this->user['ip']    = get_post_meta( $order_id, '_customer_ip', 1 );
 
@@ -297,6 +298,9 @@ class FS_Order {
 			$this->customer->phone      = $this->user['phone'];
 		}
 
+		if ( ! isset( $this->customer->city ) && get_post_meta( $order_id, 'city', 1 ) ) {
+			$this->customer->city = get_post_meta( $order_id, 'city', 1 );
+		}
 
 		if ( ! $this->cart_cost ) {
 			foreach ( $this->items as $item ) {
