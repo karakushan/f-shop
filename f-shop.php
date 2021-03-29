@@ -111,7 +111,8 @@ function fs_activate() {
     `address`        varchar(100) null,    
     `user_id`        int         null,
     `city`           varchar(50) null,
-    `phone`          varchar(30) null
+    `phone`          varchar(30) null,
+    creation_date  datetime default CURRENT_TIMESTAMP null
 )
     charset = utf8;";
 

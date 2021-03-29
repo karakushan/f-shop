@@ -5,10 +5,7 @@
     <button type="button" class="button button-secondary"
             id="fs-add-gallery"><?php esc_html_e( 'Choose from the library', 'f-shop' ); ?></button>
 </div>
-<?php
-$gallery_class = new \FS\FS_Images_Class();
-$gallery       = $gallery_class->get_gallery( 0, false, true );
-?>
+
 <div class="fs-field-row fs-gallery clearfix">
 	<?php if ( $gallery ): ?>
         <p><?php esc_html_e( 'You can drag images to change positions in the gallery.', 'f-shop' ); ?>.</p>
@@ -20,15 +17,10 @@ $gallery       = $gallery_class->get_gallery( 0, false, true );
 				continue;
 			}
 			?>
-			<?php $image_attributes = wp_get_attachment_image_src( $img, 'medium' );
-			if ( ! empty( $image_attributes ) ) {
-				$src = $image_attributes[0];
-			} else {
-				$src = '';
-			} ?>
-            <div class="fs-col-4" draggable="true" style="background-image: url(<?php echo esc_attr( $src ) ?>);">
+            <div class="fs-col-4" draggable="true">
                 <div class="fs-remove-img" title="<?php esc_attr_e( 'Remove from gallery', 'f-shop' ) ?>"></div>
                 <input type="hidden" name="fs_galery[]" value="<?php echo esc_attr( $img ) ?>">
+				<?php echo wp_get_attachment_image( $img, 'medium' ) ?>
             </div>
 		<?php endforeach ?>
     </div>

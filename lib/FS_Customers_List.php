@@ -17,7 +17,6 @@ class FS_Customers_List extends \WP_List_Table {
 		] );
 	}
 
-
 	/**
 	 * Retrieve customer’s data from the database
 	 *
@@ -51,6 +50,8 @@ class FS_Customers_List extends \WP_List_Table {
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
 			$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
+		} else {
+			$sql .= ' ORDER BY id DESC';
 		}
 
 		$sql .= " LIMIT %d  OFFSET %d";
@@ -67,7 +68,7 @@ class FS_Customers_List extends \WP_List_Table {
 		global $wpdb;
 
 		$wpdb->delete(
-			"{$wpdb->prefix}customers",
+			"{$wpdb->prefix}fs_customers",
 			[ 'id' => $id ],
 			[ '%d' ]
 		);
@@ -122,10 +123,14 @@ class FS_Customers_List extends \WP_List_Table {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-//			case 'first_name':
-//				return $item[ $column_name ];
-//			case 'last_name':
-//				return $item[ $column_name ];
+			case 'first_name':
+				$customer_orders_url = add_query_arg( [
+					'post_type'   => 'orders',
+					's'   => '',
+					'customer_id' => $item['id']
+				], admin_url( 'edit.php' ) );
+
+				return $item[ $column_name ] . '<br><a href="' . esc_url( $customer_orders_url ) . '">' . __( 'Go to orders','f-shop' ) . '</a>';
 			case 'subscribe_news':
 				return $item[ $column_name ] == 1 ? __( 'Yes', 'f-shop' ) : __( 'No', 'f-shop' );
 			default:
@@ -142,7 +147,7 @@ class FS_Customers_List extends \WP_List_Table {
 	 */
 	function column_cb( $item ) {
 		return sprintf(
-			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['id']
+			'<input type="checkbox" name="bulk-delete[]" value="%d" />', $item['id']
 		);
 	}
 
@@ -163,6 +168,7 @@ class FS_Customers_List extends \WP_List_Table {
 			'city'           => __( 'City', 'f-shop' ),
 			'address'        => __( 'Address', 'f-shop' ),
 			'subscribe_news' => __( 'Subscribe', 'f-shop' ),
+			'creation_date'  => __( 'Registration date', 'f-shop' ),
 		];
 
 		return $columns;
@@ -181,7 +187,8 @@ class FS_Customers_List extends \WP_List_Table {
 			'city'           => array( 'city', true ),
 			'subscribe_news' => array( 'subscribe_news', true ),
 			'last_name'      => array( 'last_name', true ),
-			'first_name'     => array( 'first_name', true )
+			'first_name'     => array( 'first_name', true ),
+			'creation_date'  => array( 'creation_date', true )
 		];
 	}
 
@@ -239,9 +246,9 @@ class FS_Customers_List extends \WP_List_Table {
                 <option value="city" <?php if ( isset( $_REQUEST['field'] ) )
 					selected( 'city', $_REQUEST['field'] ) ?>><?php esc_html_e( 'City', 'f-shop' ); ?></option>
                 <option value="first_name" <?php if ( isset( $_REQUEST['field'] ) )
-					selected( 'first_name', $_REQUEST['field'] ) ?>><?php esc_html_e( 'First Name', '' ); ?></option>
+					selected( 'first_name', $_REQUEST['field'] ) ?>><?php esc_html_e( 'First Name', 'f-shop' ); ?></option>
                 <option value="last_name" <?php if ( isset( $_REQUEST['field'] ) )
-					selected( 'last_name', $_REQUEST['field'] ) ?>><?php esc_html_e( 'Last Name', '' ); ?></option>
+					selected( 'last_name', $_REQUEST['field'] ) ?>><?php esc_html_e( 'Last Name', 'f-shop' ); ?></option>
             </select>
             <input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
                    value="<?php _admin_search_query(); ?>"
@@ -285,7 +292,7 @@ class FS_Customers_List extends \WP_List_Table {
 			if ( ! wp_verify_nonce( $nonce, 'sp_delete_customer' ) ) {
 				die( 'Go get a life script kiddies' );
 			} else {
-				self::delete_customer( absint( $_GET['customer'] ) );
+				self::delete_customer( absint( $_REQUEST['customer'] ) );
 
 				wp_redirect( esc_url( add_query_arg() ) );
 				exit;
@@ -294,20 +301,17 @@ class FS_Customers_List extends \WP_List_Table {
 		}
 
 		// If the delete bulk action is triggered
-		if ( ( isset( $_POST['action'] ) && $_POST['action'] == 'bulk-delete' )
-		     || ( isset( $_POST['action2'] ) && $_POST['action2'] == 'bulk-delete' )
+		if ( ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'bulk-delete' )
+		     || ( isset( $_REQUEST['action2'] ) && $_REQUEST['action2'] == 'bulk-delete' )
 		) {
 
-			$delete_ids = esc_sql( $_POST['bulk-delete'] );
+			$delete_ids = esc_sql( $_REQUEST['bulk-delete'] );
 
 			// loop over the array of record IDs and delete them
 			foreach ( $delete_ids as $id ) {
 				self::delete_customer( $id );
 
 			}
-
-			wp_redirect( esc_url( add_query_arg() ) );
-			exit;
 		}
 	}
 }

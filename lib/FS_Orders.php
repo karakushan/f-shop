@@ -61,7 +61,7 @@ class FS_Orders {
 				break;
 			case 'fs_user':
 				echo '<ul>';
-				if ( isset( $order->customer->first_name ) ) {
+				if ( isset( $order->customer->first_name ) && isset( $order->customer->id ) ) {
 					printf( '<li><b><a href="%s" target="_blank">%s %s</a></b></li>', esc_url( admin_url( 'edit.php?page=fs-customers&field=id&s=' . $order->customer->id . '&post_type=orders' ) ), esc_html( $order->customer->first_name ), esc_html( $order->customer->last_name ) );
 				}
 				if ( isset( $order->customer->phone ) ) {
@@ -618,23 +618,31 @@ Good luck!', 'f-shop' );
 			return;
 		}
 
-		if ( ! isset( $_GET['s'] ) ) {
-			return;
+		$user_ids = [];
+
+		if ( ! empty( $_GET['s'] ) ) {
+			$order          = new FS_Order();
+			$customer_table = $order->get_customer_table();
+			$s              = $_GET['s'];
+			$q              = $wpdb->prepare( "SELECT id FROM $customer_table WHERE phone ='%s' OR email = '%s'  OR first_name LIKE '%s' OR last_name LIKE '%s'", $s, $s, '%' . $s . '%', '%' . $s . '%' );
+			$results        = $wpdb->get_results( $q );
+
+
+			if ( $results ) {
+				foreach ( $results as $result ) {
+					$user_ids[] = $result->id;
+				}
+				$user_ids = array_unique( $user_ids );
+				$query->set( 's', false );
+			}
 		}
 
-		$order          = new FS_Order();
-		$customer_table = $order->get_customer_table();
-		$s              = $_GET['s'];
-		$q              = $wpdb->prepare( "SELECT id FROM $customer_table WHERE phone ='%s' OR email = '%s'  OR first_name LIKE '%s' OR last_name LIKE '%s'", $s, $s, '%' . $s . '%', '%' . $s . '%' );
-		$results        = $wpdb->get_results( $q );
-
-		if ( $results ) {
-			$user_ids = [];
-			foreach ( $results as $result ) {
-				$user_ids[] = $result->id;
-			}
-			$user_ids = array_unique( $user_ids );
+		if ( ! empty( $_GET['customer_id'] ) ) {
+			array_push( $user_ids, absint( $_GET['customer_id'] ) );
 			$query->set( 's', false );
+		}
+
+		if ( ! empty( $user_ids ) ) {
 			$meta_query [] = array(
 				'key'     => '_customer_id',
 				'value'   => $user_ids,
@@ -642,9 +650,9 @@ Good luck!', 'f-shop' );
 				'type'    => 'CHAR'
 			);
 			$query->set( 'meta_query', $meta_query );
-			$query->set( 'post_type', 'orders' );
-
 		}
+
+		$query->set( 'post_type', 'orders' );
 
 		return $query;
 

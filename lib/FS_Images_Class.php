@@ -39,22 +39,30 @@ class FS_Images_Class {
 	 * @param array $args - массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
 	 */
 	public function lightslider( $product_id = 0, $args = array() ) {
+		$product_id = fs_get_product_id( $product_id );
+
 		$default = array(
-			"gallery"     => true,
-			"item"        => 1,
-			"vertical"    => false,
-			"thumbItem"   => 3,
-			"prevHtml"    => '',
-			"nextHtml"    => '',
-			"attachments" => true,
-			"thumbnail"   => true
+			"gallery"        => true,
+			"item"           => 1,
+			"vertical"       => false,
+			"thumbItem"      => 3,
+			"prevHtml"       => '',
+			"nextHtml"       => '',
+			"attachments"    => false,
+			"thumbnail"      => false,
+			"plug_thumbnail" => true
 		);
 		$args    = wp_parse_args( $args, $default );
 
-		$gallery_images = $this->get_gallery( $product_id, $args['thumbnail'], $args['attachments'] );
+		$gallery_images = self::get_gallery( $product_id, $args['thumbnail'], $args['attachments'] );
 
+		// Добавляем миниатюру в галерею если не загружены фото
+		if ( $args['plug_thumbnail'] && empty( $gallery_images ) && has_post_thumbnail( $product_id ) ) {
+			array_push( $gallery_images, get_post_thumbnail_id( $product_id ) );
+		}
 
-		if ( ! is_array( $gallery_images ) && ! count( $gallery_images ) ) {
+		if ( empty($gallery_images) ) {
+			echo '<img src="' . FS_PLUGIN_URL . '/assets/img/no-photos.svg" alt="No Photo" class="fs-product-image-plug">';
 			return;
 		}
 
@@ -83,14 +91,13 @@ class FS_Images_Class {
 	 *
 	 * @return array $gallery
 	 */
-	public function get_gallery( $product_id = 0, $thumbnail = true, $attachments = false ) {
-		$product_id   = fs_get_product_id( $product_id );
-		$thumbnail_id = has_post_thumbnail( $product_id ) ? get_post_thumbnail_id( $product_id ) : null;
-
-		$gallery = array();
+	public static function get_gallery( $product_id = 0, $thumbnail = true, $attachments = false ) {
+		$product_id = fs_get_product_id( $product_id );
+		$gallery    = array();
 
 		// Добавляем миниатюру первым фото в галерее при условии что $thumbnail == TRUE и прикреплена сама миниатюра
-		if ( $thumbnail && $thumbnail_id ) {
+		if ( $thumbnail && has_post_thumbnail( $product_id ) ) {
+			$thumbnail_id = has_post_thumbnail( $product_id ) ? get_post_thumbnail_id( $product_id ) : null;
 			array_push( $gallery, $thumbnail_id );
 		}
 
@@ -109,12 +116,10 @@ class FS_Images_Class {
 				'fields'         => 'ids'
 			) );
 
-
 			if ( is_array( $attachments_ids ) && count( $attachments_ids ) ) {
 				$gallery = array_merge( $gallery, $attachments_ids );
 			}
 		}
-
 
 		// Получаем изображения первой вариации товара
 		$product_variations = FS_Product::get_product_variations( $product_id );
@@ -124,12 +129,6 @@ class FS_Images_Class {
 			if ( ! empty( $product_variations_first['gallery'] ) ) {
 				$gallery = array_merge( $gallery, $product_variations_first['gallery'] );
 			}
-		}
-
-
-		// Извлекаем миниатюру поста если $thumbnail == FALSE
-		if ( ! $thumbnail && $thumbnail_id ) {
-			array_unshift( $gallery, $thumbnail_id );
 		}
 
 		return apply_filters( 'fs_custom_gallery', array_unique( $gallery ), $product_id );

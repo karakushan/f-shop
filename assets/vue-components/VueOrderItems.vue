@@ -15,15 +15,23 @@
                  :value="item.id">
         </md-table-cell>
         <md-table-cell md-label="Фото">
-          <md-avatar class="md-large">
-            <img :src="item.thumbnail_url" :alt="item.title" width="100" v-if="item.thumbnail_url">
+          <md-avatar class="md-large" v-if="item.thumbnail_url">
+            <img :src="item.thumbnail_url" :alt="item.title" width="100">
           </md-avatar>
+          <md-avatar v-else class="md-large md-avatar-icon"><md-icon>visibility_off</md-icon></md-avatar>
 
         </md-table-cell>
         <md-table-cell md-label="Название">
-          <a :href="item.permalink" target="_blank">{{ item.title }}</a>
+          <a :href="item.permalink" target="_blank" v-if="item.id">{{ item.title }}</a>
+          <span v-else>{{ item.title }}</span>
+          <input type="hidden" :name="'order[_products]['+index+'][name]'" :value="item.title">
         </md-table-cell>
-        <md-table-cell md-label="Цена">{{ itemPrice(item) }}</md-table-cell>
+        <md-table-cell md-label="Цена">
+          {{ itemPrice(item) }}
+          <input type="hidden"
+                 :name="'order[_products]['+index+'][price]'"
+                 :value="item.price">
+        </md-table-cell>
         <md-table-cell md-label="К-во">
           <md-field>
             <md-input style="width: 20px;" type="number" min="1" step="1" size="3"

@@ -314,11 +314,10 @@ class FS_Order {
 		}
 
 		$delivery_method = get_post_meta( $order_id, '_delivery', 1 );
-		if ( isset( $delivery_method['method'] ) ) {
-			$this->delivery_method = get_term( $delivery_method['method'], FS_Config::get_data( 'product_del_taxonomy' ) );
-
-			if ( ! is_wp_error( $this->delivery_method ) ) {
-				$this->delivery_method->cost                    = apply_filters( 'fs_price_format', (float) get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) );
+		if ( $delivery_method['method']) {
+			$this->delivery_method = get_term( absint($delivery_method['method']), FS_Config::get_data( 'product_del_taxonomy' ) );
+			if ($this->delivery_method && ! is_wp_error( $this->delivery_method ) ) {
+				$this->delivery_method->cost                    =get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) ? apply_filters( 'fs_price_format', (float) get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) ) : 0;
 				$this->delivery_method->city                    = get_post_meta( $order_id, 'city', 1 );
 				$this->delivery_method->delivery_address        = ! empty( $delivery_method['address'] ) ? $delivery_method['address'] : '';
 				$this->delivery_method->delivery_service_number = ! empty( $delivery_method['secession'] ) ? $delivery_method['secession'] : '';

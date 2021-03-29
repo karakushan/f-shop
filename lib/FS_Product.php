@@ -35,10 +35,8 @@ class FS_Product {
 	 */
 	public function __construct() {
 		add_action( 'save_post', array( $this, 'save_product_fields' ), 10, 3 );
-
 		add_action( 'init', array( $this, 'init' ), 12 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
-
 		add_action( 'fs_before_product_meta', array( $this, 'before_product_meta' ) );
 
 		/* We set the real price with the discount and currency */
@@ -50,8 +48,6 @@ class FS_Product {
 		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
 
 		add_filter( 'post_type_link', [ $this, 'product_link_localize' ], 99, 4 );
-
-
 	}
 
 	public static function product_comment_likes( $comment_id = 0 ) {
@@ -1173,6 +1169,7 @@ class FS_Product {
 		$product_tabs     = self::get_product_tabs();
 		$this->product_id = $post->ID;
 		$cookie           = isset( $_COOKIE['fs_active_tab'] ) ? $_COOKIE['fs_active_tab'] : 'prices';
+		$gallery = \FS\FS_Images_Class::get_gallery( 0, false, false );
 		echo '<div class="fs-metabox" id="fs-metabox">';
 		do_action( 'fs_before_product_meta' );
 		if ( count( $product_tabs ) ) {
@@ -1204,7 +1201,6 @@ class FS_Product {
 				} else {
 					$class_tab = '';
 				}
-
 
 				echo '<div class="fs-tab ' . esc_attr( $class_tab ) . '" id="tab-' . esc_attr( $key_body ) . '">';
 				if ( ! empty( $tab_body['fields'] ) ) {
