@@ -228,13 +228,18 @@ function fs_cart_cost( $args = [] ) {
  * Returns the total amount of all products in the cart
  *
  * @param bool $delivery_cost
+ * @param array $args дополнительные аргументы
  *
  * @return float|int
  * @internal param int $delivery_term_id
  *
  * @internal param int $shipping_cost
  */
-function fs_get_total_amount( $delivery_cost = false ) {
+function fs_get_total_amount( $delivery_cost = false, $args = [] ) {
+	$args = wp_parse_args( $args, [
+		'customer_phone'  => ! empty( $_POST['fs_phone'] ) ? $_POST['fs_phone'] : '',
+		'shipping_method' => ! empty( ! empty( $_POST['fs_delivery_methods'] ) ) ? absint( $_POST['fs_delivery_methods'] ) : 0,
+	] );
 	// Получаем чистую стоимость товаров (c учетом акционной цены)
 	$amount = fs_get_cart_cost();
 
@@ -244,7 +249,7 @@ function fs_get_total_amount( $delivery_cost = false ) {
 	}
 
 	// Отнимаем скидку на общую сумму товаров в корзине
-	$amount = $amount - fs_get_total_discount();
+	$amount = $amount - fs_get_total_discount( $args['customer_phone'] );
 
 	// Добавляем стоимость доставки
 	if ( ! is_numeric( $delivery_cost ) ) {
@@ -253,8 +258,8 @@ function fs_get_total_amount( $delivery_cost = false ) {
 	$amount = $amount + $delivery_cost;
 
 	// Добавляем стоимость упаковки если нужно
-	if ( fs_option( 'fs_include_packing_cost' ) && ! empty( $_POST['fs_delivery_methods'] ) ) {
-		$amount += fs_get_packing_cost( absint( $_POST['fs_delivery_methods'] ) );
+	if ( fs_option( 'fs_include_packing_cost' ) && $args['shipping_method'] ) {
+		$amount += fs_get_packing_cost( $args['shipping_method'] );
 	}
 
 	// Вычисляем налоги
@@ -324,9 +329,12 @@ function fs_get_taxes_amount( $amount ) {
 /**
  * Returns the total discount amount of all items in the cart.
  *
+ * @param string $phone_number
+ *
  * @return float|int
  */
-function fs_get_total_discount() {
+function fs_get_total_discount( $phone_number = '' ) {
+	global $wpdb;
 	$discount = 0;
 	$amount   = fs_get_cart_cost();
 
@@ -348,29 +356,17 @@ function fs_get_total_discount() {
 		}
 
 		// Скидка на повторный заказ
-		if ( $discount_type == 'repeat_order' && is_user_logged_in() ) {
-			$user_orders = get_posts( [
-				'post_type'   => FS_Config::get_data( 'post_type_orders' ),
-				'post_status' => 'any',
-				'meta_query'  => [
-					[
-						'key'     => '_user_id',
-						'value'   => get_current_user_id(),
-						'compare' => '=',
-						'type'    => 'NUMERIC'
-					]
-				]
-			] );
-			if ( count( $user_orders ) && $discount_value_type == 'discount_percent' ) {
+		if ( $discount_type == 'repeat_order' && $phone_number ) {
+			$search_customer =(int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}fs_customers WHERE phone = '%s'", preg_replace( "/[^0-9]/", '', $phone_number ) ) );
+
+			if ( $search_customer && $discount_value_type == 'discount_percent' ) {
 				$discount += $amount * $discount_value / 100;
-			} elseif ( count( $user_orders ) && $discount_value_type == 'discount_fixed' ) {
+			} elseif ( $search_customer && $discount_value_type == 'discount_fixed' ) {
 				$discount += $discount_value;
 			}
 		}
 
-
 	}
-
 
 	return floatval( $discount );
 }

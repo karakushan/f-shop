@@ -566,6 +566,7 @@ class FS_Ajax {
 	 */
 	function order_send_ajax() {
 		global $wpdb;
+		$wpdb->show_errors();
 		$fs_config                 = new FS_Config();
 		$fs_template               = new FS_Template();
 		$order_create_time         = time();
@@ -615,7 +616,10 @@ class FS_Ajax {
 		$user_id            = 0;
 		$delivery_cost      = floatval( get_term_meta( intval( $_POST['fs_delivery_methods'] ), '_fs_delivery_cost', 1 ) );
 		$sum                = fs_get_total_amount( $delivery_cost );
-		$wpdb->show_errors(); // включаем показывать ошибки при работе с базой
+		$discount           = fs_get_total_discount( ! empty( $_POST['fs_phone'] ) ? $_POST['fs_phone'] : '' );
+		$packing_cost       = fs_get_packing_cost( absint( $_POST['fs_delivery_methods'] ) );
+		$cart_cost          = fs_get_cart_cost();
+
 
 		//Производим очистку полученных данных с формы заказа
 		$form_fields    = FS_Users::get_user_fields();
@@ -717,8 +721,8 @@ class FS_Ajax {
 				'_customer_ip'     => $customer_ip,
 				'_customer_email'  => $sanitize_field['fs_email'],
 				'_customer_phone'  => $sanitize_field['fs_phone'],
-				'_order_discount'  => fs_get_total_discount(),
-				'_packing_cost'    => fs_get_packing_cost( absint( $sanitize_field['fs_delivery_methods'] ) ),
+				'_order_discount'  => $discount,
+				'_packing_cost'    => $packing_cost,
 				'_customer_id'     => $customer_id,
 				'_user'            => array(
 					'id'         => $user_id,
@@ -737,7 +741,7 @@ class FS_Ajax {
 				),
 				'_payment'         => $pay_method && isset( $pay_method->term_id ) ? $pay_method->term_id : 0,
 				'_amount'          => $sum,
-				'_cart_cost'       => fs_get_cart_cost(),
+				'_cart_cost'       => $cart_cost,
 				'_comment'         => $sanitize_field['fs_comment']
 			),
 
@@ -769,11 +773,11 @@ class FS_Ajax {
 				// Cart data
 				'order_date'        => $order_create_date_display,
 				'order_id'          => $order_id,
-				'cart_discount'     => sprintf( '%s %s', apply_filters( 'fs_price_format', fs_get_total_discount() ), fs_currency() ),
+				'cart_discount'     => sprintf( '%s %s', apply_filters( 'fs_price_format', $discount ), fs_currency() ),
 				'cart_amount'       => sprintf( '%s %s', apply_filters( 'fs_price_format', $sum ), fs_currency() ),
 				'delivery_cost'     => sprintf( '%s %s', apply_filters( 'fs_price_format', $delivery_cost ), fs_currency() ),
-				'products_cost'     => sprintf( '%s %s', apply_filters( 'fs_price_format', fs_get_cart_cost() ), fs_currency() ),
-				'packing_cost'      => sprintf( '%s %s', apply_filters( 'fs_price_format', fs_get_packing_cost() ), fs_currency() ),
+				'products_cost'     => sprintf( '%s %s', apply_filters( 'fs_price_format', $cart_cost ), fs_currency() ),
+				'packing_cost'      => sprintf( '%s %s', apply_filters( 'fs_price_format', $packing_cost ), fs_currency() ),
 				'delivery_method'   => $sanitize_field['fs_delivery_methods'] ? fs_get_delivery( $sanitize_field['fs_delivery_methods'] ) : '',
 				'delivery_number'   => $sanitize_field['fs_delivery_number'],
 				'payment_method'    => $pay_method && isset( $pay_method->name ) ? $pay_method->name : '',
