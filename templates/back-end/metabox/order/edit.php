@@ -1,9 +1,8 @@
-<?php do_action( 'qm/debug', $order );  ?>
 <input type="hidden" name="fs_is_admin" value="1">
 <div class="app">
     <vue-order-items
-            :items='<?php echo json_encode( isset( $order->items ) ? $order->items : [] ) ?>'
-            :order='<?php echo json_encode( $order ) ?>'
+            :items='<?php echo json_encode( isset( $order->items ) ? $order->items : [], JSON_UNESCAPED_SLASHES | JSON_HEX_APOS|JSON_HEX_QUOT  ) ?>'
+            :order='<?php echo json_encode( $order, JSON_UNESCAPED_SLASHES | JSON_HEX_APOS|JSON_HEX_QUOT ) ?>'
     >
         <template v-slot:tfooter>
             <md-toolbar md-elevation="1">

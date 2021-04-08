@@ -277,7 +277,7 @@ class FS_Order {
 			return fs_set_product( $item );
 		}, $products ) );
 
-		$this->total_amount  = (float) get_post_meta( $order_id, '_amount', 1 );
+		$this->total_amount  = round((float) get_post_meta( $order_id, '_amount', 1 ),2);
 		$this->packing_cost  = (float) get_post_meta( $order_id, '_packing_cost', 1 );
 		$this->cart_cost     = (float) get_post_meta( $order_id, '_cart_cost', 1 );
 		$this->discount      = (float) get_post_meta( $order_id, '_order_discount', 1 );
@@ -368,7 +368,7 @@ class FS_Order {
 	 * @return mixed|\WP_Error
 	 */
 	public function get_order_history( int $order_id = 0, $creation_date = true, $args = [] ) {
-		$order_id = $order_id ? $order_id : $this->ID ? $this->ID : 0;
+		$order_id = $order_id ? $order_id : ($this->ID ? $this->ID : 0);
 		$args     = wp_parse_args( $args, [
 			'order' => 'desc'
 		] );
