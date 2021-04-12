@@ -9,6 +9,7 @@ class ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'bda24f59d7a3a75993aec917eda2b203' => __DIR__ . '/..' . '/kernl/kernl-update-checker/load-v4p10.php',
         '262dfb309eeb17797f26e9aa2145f429' => __DIR__ . '/../..' . '/functions/functions.php',
         'e7ee756b06787634c3c8050a73f76899' => __DIR__ . '/../..' . '/functions/actions.php',
         '9d8f97ca267a9d7b9c63427f2e90c602' => __DIR__ . '/../..' . '/functions/attributes.php',

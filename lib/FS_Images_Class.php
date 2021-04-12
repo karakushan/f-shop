@@ -50,7 +50,8 @@ class FS_Images_Class {
 			"nextHtml"       => '',
 			"attachments"    => false,
 			"thumbnail"      => false,
-			"plug_thumbnail" => true
+			"plug_thumbnail" => true,
+			"verticalHeight" => 500
 		);
 		$args    = wp_parse_args( $args, $default );
 
