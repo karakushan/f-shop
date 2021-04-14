@@ -28,15 +28,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 defined( 'ABSPATH' ) || exit;
 
-
-require 'plugin_update_check.php';
-$KernlUpdater = new PluginUpdateChecker_2_0 (
-	'https://kernl.us/api/v1/updates/5f380fe4ee498b6b47063e0a/',
-	__FILE__,
-	'f-shop',
-	1
-);
-
 /*
 *  The main constants to simplify the development mode,
 *  reduce the writing of paths, etc.
@@ -107,13 +98,14 @@ function fs_activate() {
     `first_name`     varchar(32) null,
     `last_name`      varchar(32) null,
     `subscribe_news` int         null,
-    `group`        int         null,
+    `group`        	 int         null,
     `address`        varchar(100) null,    
+    `ip`             varchar(100) null,    
     `user_id`        int         null,
     `city`           varchar(50) null,
     `phone`          varchar(30) null,
-    creation_date  datetime default CURRENT_TIMESTAMP null
-)
+    creation_date    datetime default CURRENT_TIMESTAMP null
+)  
     charset = utf8;";
 
 	maybe_create_table( $table_customers, $customers_ddl );
