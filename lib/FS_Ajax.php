@@ -594,7 +594,7 @@ class FS_Ajax {
 
 		// Проверяем минимальную сумму заказа, если указано
 		if ( fs_option( 'fs_minimum_order_amount', 0 )
-		     && fs_get_total_amount( false ) < fs_option( 'fs_minimum_order_amount', 0 ) ) {
+		     && fs_get_cart_cost() < fs_option( 'fs_minimum_order_amount', 0 ) ) {
 			wp_send_json_error( array(
 				'msg' => sprintf( __( 'Минимальная сумма заказа %s %s', 'f-shop' ),
 					fs_option( 'fs_minimum_order_amount', 0 ),
@@ -614,18 +614,21 @@ class FS_Ajax {
 
 		$fs_custom_products = ! empty( $_POST['fs_custom_product'] ) ? serialize( $_POST['fs_custom_product'] ) : '';
 		$user_id            = 0;
-		$delivery_cost      = floatval( get_term_meta( intval( $_POST['fs_delivery_methods'] ), '_fs_delivery_cost', 1 ) );
+		$delivery_cost      = isset( $_POST['fs_delivery_methods'] ) ? floatval( get_term_meta( intval( $_POST['fs_delivery_methods'] ), '_fs_delivery_cost', 1 ) ) : 0;
 		$sum                = fs_get_total_amount( $delivery_cost );
 		$discount           = fs_get_total_discount( ! empty( $_POST['fs_phone'] ) ? $_POST['fs_phone'] : '' );
 		$packing_cost       = fs_get_packing_cost( absint( $_POST['fs_delivery_methods'] ) );
 		$cart_cost          = fs_get_cart_cost();
-
 
 		//Производим очистку полученных данных с формы заказа
 		$form_fields    = FS_Users::get_user_fields();
 		$sanitize_field = array();
 
 		foreach ( $form_fields as $field_name => $form_field ) {
+			if ( ! isset( $_POST[ $field_name ] ) ) {
+				$sanitize_field[ $field_name ] = null;
+				continue;
+			}
 			// Пропускаем поля которые не должны быть в оформлении заказа
 			if ( ! isset( $form_field['checkout'] ) || ( isset( $form_field['checkout'] ) && $form_field['checkout'] == false ) ) {
 				continue;

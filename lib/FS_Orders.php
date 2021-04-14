@@ -116,6 +116,7 @@ class FS_Orders {
 		     || $post->post_type != FS_Config::get_data( 'post_type_orders' )
 		     || wp_is_post_revision( $post_id )
 		     || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		     || ! isset( $_POST['fs_is_admin'] )
 		) {
 			return;
 		}
