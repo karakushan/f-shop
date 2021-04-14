@@ -4,54 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80c4d3f0c9e8f973488723caeb663746",
+    "content-hash": "2b2a8146ac93b21cda88ef9cf605fc12",
     "packages": [
-        {
-            "name": "kernl/kernl-update-checker",
-            "version": "2.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vital101/plugin-update-checker.git",
-                "reference": "84e4ec84f351bd766ae72cc1d9b27cf109382e95"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vital101/plugin-update-checker/zipball/84e4ec84f351bd766ae72cc1d9b27cf109382e95",
-                "reference": "84e4ec84f351bd766ae72cc1d9b27cf109382e95",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=5.2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "load-v4p10.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jack Slingerland",
-                    "email": "jack@kernl.us",
-                    "homepage": "https://kernl.us",
-                    "role": "Developer"
-                }
-            ],
-            "description": "The WordPress plugin and theme update checker for https://kernl.us",
-            "homepage": "https://github.com/vital101/plugin-update-checker",
-            "keywords": [
-                "automatic updates",
-                "plugin updates",
-                "theme updates",
-                "wordpress"
-            ],
-            "time": "2021-03-11T12:05:27+00:00"
-        },
         {
             "name": "symfony/polyfill-ctype",
             "version": "v1.18.0",
