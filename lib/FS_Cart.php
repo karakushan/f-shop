@@ -50,9 +50,10 @@ class FS_Cart {
 		if ( ! empty( $_SESSION['cart'] ) ) {
 			$_SESSION['cart'][ $item_id ]['count'] = $product_count;
 			$product_id                            = (int) $_SESSION['cart'][ $item_id ]['ID'];
-			$cost                                  = fs_get_price( $product_id ) * $product_count;
+			$sum                                 = fs_get_price( $product_id ) * $product_count;
 			wp_send_json_success( [
-				'cost'  => apply_filters( 'fs_price_format', $cost ) . ' ' . fs_currency(),
+				'sum'   => apply_filters( 'fs_price_format', $sum ) . ' ' . fs_currency(),
+				'cost'  => apply_filters( 'fs_price_format', fs_get_cart_cost() ) . ' ' . fs_currency(),
 				'total' => fs_get_total_amount() . ' ' . fs_currency()
 			] );
 		}
