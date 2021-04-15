@@ -99,8 +99,7 @@ jQuery(document).ready(function ($) {
                     success: function (response) {
                         if (response.success) {
                             plugin.updateCarts();
-                            let cartPos = el.parents('[data-fs-element="cart-item"]');
-                            cartPos.find('[data-fs-element="cart-item-sum"]').text(response.data.cost)
+                            $('[data-fs-element="cart-cost"]').text(response.data.cost)
                             $('[data-fs-element="total-amount"]').text(response.data.total)
 
                             // создаём событие
