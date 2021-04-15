@@ -44,8 +44,9 @@ class FS_SEO
      */
     function change_taxonomy_canonical($canonical)
     {
-        if (is_tax(FS_Config::get_data('product_taxonomy')) && fs_option('fs_disable_taxonomy_slug')) {
-            $canonical = get_term_link(get_queried_object_id(), $this->taxonomy_name);
+        $taxonomy_name=FS_Config::get_data('product_taxonomy');
+        if (is_tax($taxonomy_name) && fs_option('fs_disable_taxonomy_slug')) {
+            $canonical = get_term_link(get_queried_object_id(), $taxonomy_name);
             if (get_locale() != FS_Config::default_locale()) {
                 $canonical = str_replace(['/ua', '/uk'], [''], $canonical);
             }

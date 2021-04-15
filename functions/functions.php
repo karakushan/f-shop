@@ -357,7 +357,7 @@ function fs_get_total_discount( $phone_number = '' ) {
 
 		// Скидка на повторный заказ
 		if ( $discount_type == 'repeat_order' && $phone_number ) {
-			$search_customer =(int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}fs_customers WHERE phone = '%s'", preg_replace( "/[^0-9]/", '', $phone_number ) ) );
+			$search_customer = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}fs_customers WHERE phone = '%s'", preg_replace( "/[^0-9]/", '', $phone_number ) ) );
 
 			if ( $search_customer && $discount_value_type == 'discount_percent' ) {
 				$discount += $amount * $discount_value / 100;
@@ -1462,26 +1462,37 @@ function fs_range_slider() {
  */
 function fs_price_max() {
 	global $wpdb, $wp_query;
-
-	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-		$term   = get_queried_object();
-		$query  = new WP_Query( [ FS_Config::get_data( 'product_taxonomy' ) => $term->slug, 'posts_per_page' => - 1 ] );
-		$prices = [];
-		while ( $query->have_posts() ) {
-			$query->the_post();
-			$price      = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 );
-			$price_sale = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'action_price' ), 1 );
-			if ( $price_sale && $price_sale < $price ) {
-				array_push( $prices, $price_sale );
-			} else {
-				array_push( $prices, $price );
+	$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
+	if ( is_tax( $taxonomy_name ) ) {
+		$term = get_queried_object();
+		$max  = wp_cache_get( 'fs_max_price_term_' . $term->term_id );
+		if ( ! $max ) {
+			$query  = new WP_Query( [
+				$taxonomy_name   => $term->slug,
+				'posts_per_page' => - 1
+			] );
+			$prices = [];
+			while ( $query->have_posts() ) {
+				$query->the_post();
+				$price      = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 );
+				$price_sale = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'action_price' ), 1 );
+				if ( $price_sale && $price_sale < $price ) {
+					array_push( $prices, $price_sale );
+				} else {
+					array_push( $prices, $price );
+				}
 			}
+			wp_reset_query();
+			$max = max( $prices );
+			wp_cache_add( 'fs_max_price_term_' . $term->term_id, $max );
 		}
-		wp_reset_query();
-		$max = max( $prices );
 	} else {
-		$sql = "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
-		$max = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
+		$max = wp_cache_get( 'fs_max_price_archive' );
+		if ( ! $max ) {
+			$sql = "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
+			$max = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
+			wp_cache_add( 'fs_max_price_archive', $max );
+		}
 	}
 
 	return (float) $max;
@@ -1499,21 +1510,43 @@ function fs_price_min() {
 	global $wpdb;
 
 	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-		$term   = get_queried_object();
-		$query  = new WP_Query( [ FS_Config::get_data( 'product_taxonomy' ) => $term->slug, 'posts_per_page' => - 1 ] );
-		$prices = [];
-		while ( $query->have_posts() ) {
-			$query->the_post();
-			array_push( $prices, get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 ) );
-			array_push( $prices, get_post_meta( get_the_ID(), FS_Config::get_meta( 'action_price' ), 1 ) );
+		$term = get_queried_object();
+		$min  = wp_cache_get( 'fs_min_price_term_' . $term->term_id );
+		if ( ! $min ) {
+			$query  = new WP_Query( [
+				FS_Config::get_data( 'product_taxonomy' ) => $term->slug,
+				'posts_per_page'                          => - 1
+			] );
+			$prices = [];
+			while ( $query->have_posts() ) {
+				$query->the_post();
+				if ( ! get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ) ) ) {
+					continue;
+				}
+
+				$price       = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 );
+				$promo_price = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'action_price' ), 1 );
+
+				if ( $promo_price > 0 && $promo_price < $price ) {
+					array_push( $prices, $promo_price );
+					continue;
+				} else {
+					array_push( $prices, $price );
+				}
+			}
+			wp_reset_query();
+
+			$min = count( $prices ) ? min( $prices ) : 0;
+
+			wp_cache_add( 'fs_min_price_term_' . $term->term_id, $min );
 		}
-		wp_reset_query();
-
-		$min = count( $prices ) ? min( $prices ) : 0;
-
 	} else {
-		$sql = "SELECT min(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
-		$min = (float) $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
+		$min = wp_cache_get( 'fs_min_price_archive' );
+		if ( ! $min ) {
+			$sql = "SELECT min(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
+			$min = (float) $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
+			wp_cache_add( 'fs_min_price_archive', $min );
+		}
 	}
 
 	if ( $min < 0 ) {
