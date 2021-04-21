@@ -1,6 +1,6 @@
 <?php
 
-namespace FS;
+namespace FS\Widget;
 
 /**
  * Class FS_Attribute_Widget
@@ -9,7 +9,7 @@ namespace FS;
  *
  * @package FS
  */
-class FS_Category_Widget extends \WP_Widget {
+class Category_Widget extends \WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'fs_category_widget',

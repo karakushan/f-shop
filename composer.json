@@ -5,7 +5,8 @@
   },
   "autoload": {
     "psr-4": {
-      "FS\\": ["lib","lib/widgets"]
+      "FS\\": ["lib"],
+      "FS\\Widget\\": ["lib/widgets"]
     },
     "files": [
       "functions/functions.php",

@@ -6,13 +6,13 @@
  * Time: 19:07
  */
 
-namespace FS;
+namespace FS\Widget;
 
 /*
  * Слайдер цены
  */
 
-class FS_Price_Widget extends \WP_Widget {
+class Price_Widget extends \WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'fs_price_widget',

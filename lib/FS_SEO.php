@@ -8,6 +8,8 @@ class FS_SEO
 {
     function __construct()
     {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
         // Добавляет микроразметку типа Organization
         add_action('fs_organization_microdata', [$this, 'schema_organization_microdata']);
         add_action('fs_product_reviews_microdata', [$this, 'product_reviews_microdata']);

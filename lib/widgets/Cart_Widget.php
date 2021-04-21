@@ -6,13 +6,13 @@
  * Time: 19:07
  */
 
-namespace FS;
+namespace FS\Widget;
 
 /*
  * Виджет корзины
  */
 
-class FS_Cart_Widget extends \WP_Widget {
+class Cart_Widget extends \WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'fs_cart_widget',

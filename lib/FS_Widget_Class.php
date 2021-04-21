@@ -8,17 +8,20 @@
 
 namespace FS;
 
+class FS_Widget_Class
+{
 
-class FS_Widget_Class {
+    public function __construct()
+    {
+        add_action('widgets_init', array($this, 'register_widgets'));
+    }
 
-	public function __construct() {
-		add_action( 'widgets_init', array( $this, 'register_widgets' ) );
-	}
-
-	function register_widgets() {
-		register_widget( '\FS\FS_Cart_Widget' );
-		register_widget( '\FS\FS_Attribute_Widget' );
-		register_widget( '\FS\FS_Price_Widget' );
-		register_widget( '\FS\FS_Category_Widget' );
-	}
+    function register_widgets()
+    {
+        register_widget(\FS\Widget\Cart_Widget::class);
+        register_widget(\FS\Widget\Attribute_Widget::class);
+        register_widget(\FS\Widget\Reset_Filter_Widget::class);
+        register_widget(\FS\Widget\Category_Widget::class);
+        register_widget(\FS\Widget\Price_Widget::class);
+    }
 }
