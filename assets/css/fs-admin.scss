@@ -1747,4 +1747,24 @@ td.fs_menu_order.column-fs_menu_order {
   }
 }
 
+#fs-mail-template-metabox {
+  .inside{
+    padding: 10px;
+  }
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  textarea{
+    height: 250px;
+  }
+  label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+}
+
+
 

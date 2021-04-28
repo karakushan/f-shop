@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-21 08:36+0000\n"
+"POT-Creation-Date: 2021-04-28 09:30+0000\n"
 "POT-Revision-Date: Sat Dec 31 2016 19:32:37 GMT+0200 (Финляндия (зима))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -91,7 +91,7 @@ msgstr ""
 msgid "Add Discount"
 msgstr ""
 
-#: lib/FS_Post_Types.php:84
+#: lib/FS_Post_Types.php:93
 msgid "Add Email Template"
 msgstr ""
 
@@ -99,7 +99,7 @@ msgstr ""
 msgid "Add Manufacturer"
 msgstr ""
 
-#: lib/FS_Post_Types.php:100
+#: lib/FS_Post_Types.php:107
 msgid "Add Order"
 msgstr ""
 
@@ -135,7 +135,7 @@ msgstr ""
 msgid "add variant"
 msgstr ""
 
-#: lib/FS_Init.php:199
+#: lib/FS_Init.php:206
 msgid "Added!"
 msgstr ""
 
@@ -163,6 +163,7 @@ msgstr ""
 msgid "All items have been successfully removed from the cart."
 msgstr ""
 
+#: lib/widgets/Reset_Filter_Widget.php:21 lib/widgets/ResetFilterWidget.php:21
 #: lib/widgets/ResetFilter.php:23
 msgid "Allows you to clear selected filters on the product catalog page"
 msgstr ""
@@ -173,11 +174,11 @@ msgid ""
 "will decrease"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:19
+#: lib/FS_Attribute_Widget.php:19 lib/widgets/Attribute_Widget.php:19
 msgid "Allows you to display a filter to filter products by attributes"
 msgstr ""
 
-#: lib/FS_Category_Widget.php:17
+#: lib/FS_Category_Widget.php:17 lib/widgets/Category_Widget.php:17
 msgid "Allows you to filter products by category"
 msgstr ""
 
@@ -202,7 +203,7 @@ msgstr ""
 msgid "An error occurred while removing position from the cart"
 msgstr ""
 
-#: lib/FS_Ajax.php:444 lib/FS_Ajax.php:452 lib/FS_Ajax_Class.php:277
+#: lib/FS_Ajax.php:458 lib/FS_Ajax.php:466 lib/FS_Ajax_Class.php:277
 msgid ""
 "An unexpected error occurred while attaching the attribute to the product."
 msgstr ""
@@ -231,7 +232,7 @@ msgstr ""
 msgid "Attribute"
 msgstr ""
 
-#: lib/FS_Ajax.php:448 lib/FS_Ajax_Class.php:283
+#: lib/FS_Ajax.php:462 lib/FS_Ajax_Class.php:283
 msgid "Attribute successfully attached to product"
 msgstr ""
 
@@ -243,7 +244,7 @@ msgstr ""
 msgid "Attributes"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:117
+#: lib/FS_Attribute_Widget.php:117 lib/widgets/Attribute_Widget.php:118
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:18
 msgid "Attributes for category only"
 msgstr ""
@@ -350,7 +351,7 @@ msgstr ""
 msgid "Canceled"
 msgstr ""
 
-#: lib/FS_Cart_Widget.php:19
+#: lib/FS_Cart_Widget.php:19 lib/widgets/Cart_Widget.php:19
 msgid "Cart"
 msgstr ""
 
@@ -362,7 +363,7 @@ msgstr ""
 msgid "Cart page"
 msgstr ""
 
-#: lib/FS_Cart_Widget.php:20
+#: lib/FS_Cart_Widget.php:20 lib/widgets/Cart_Widget.php:20
 msgid "Cart widget"
 msgstr ""
 
@@ -399,7 +400,7 @@ msgstr ""
 msgid "Characteristic groups %d not on site in function %s"
 msgstr ""
 
-#: lib/FS_Config.php:114 lib/FS_Init.php:209
+#: lib/FS_Config.php:114 lib/FS_Init.php:216
 #: templates/front-end/cart-widget/side-cart.php:36
 #: templates/front-end/cart/list-products.php:85
 msgid "Checkout"
@@ -452,7 +453,7 @@ msgstr ""
 msgid "Client"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:137
+#: lib/FS_Attribute_Widget.php:137 lib/widgets/Attribute_Widget.php:138
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:26
 msgid "Color"
 msgstr ""
@@ -506,7 +507,7 @@ msgstr ""
 msgid "Contains"
 msgstr ""
 
-#: lib/FS_Init.php:208
+#: lib/FS_Init.php:215
 msgid "Continue shopping"
 msgstr ""
 
@@ -764,7 +765,7 @@ msgstr ""
 msgid "Documentation F-Shop"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:126
+#: lib/FS_Attribute_Widget.php:126 lib/widgets/Attribute_Widget.php:127
 msgid "Don't show on catalog page"
 msgstr ""
 
@@ -783,11 +784,11 @@ msgstr ""
 msgid "E-mail message to the buyer if the order is confirmed by the manager"
 msgstr ""
 
-#: lib/FS_Post_Types.php:85
+#: lib/FS_Post_Types.php:94
 msgid "Edit Email Template"
 msgstr ""
 
-#: lib/FS_Post_Types.php:102
+#: lib/FS_Post_Types.php:109
 msgid "Edit order"
 msgstr ""
 
@@ -818,7 +819,7 @@ msgstr ""
 msgid "Email sender"
 msgstr ""
 
-#: lib/FS_Post_Types.php:83
+#: lib/FS_Post_Types.php:92
 msgid "Email Template"
 msgstr ""
 
@@ -826,7 +827,7 @@ msgstr ""
 msgid "Email template for user when creating an account"
 msgstr ""
 
-#: lib/FS_Post_Types.php:82 lib/FS_Post_Types.php:86
+#: lib/FS_Post_Types.php:91 lib/FS_Post_Types.php:95
 msgid "Email Templates"
 msgstr ""
 
@@ -863,11 +864,11 @@ msgid ""
 "for the item. disabled, and the goods are always in the presence!"
 msgstr ""
 
-#: lib/FS_Init.php:200
+#: lib/FS_Init.php:207
 msgid "Error!"
 msgstr ""
 
-#: lib/FS_Ajax.php:862 lib/FS_Ajax_Class.php:591
+#: lib/FS_Ajax.php:885 lib/FS_Ajax_Class.php:591
 msgid "Errors occurred while creating an order"
 msgstr ""
 
@@ -895,13 +896,13 @@ msgstr ""
 msgid "F-SHOP API"
 msgstr ""
 
-#: lib/FS_Ajax.php:310 lib/FS_Ajax.php:592 lib/FS_Users.php:314
+#: lib/FS_Ajax.php:319 lib/FS_Ajax.php:611 lib/FS_Users.php:314
 #: lib/FS_Users.php:654 lib/FS_Users.php:694 lib/FS_Users.php:855
 #: lib/FS_Ajax_Class.php:143 lib/FS_Ajax_Class.php:409
 msgid "Failed verification of nonce form"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:108
+#: lib/FS_Attribute_Widget.php:108 lib/widgets/Attribute_Widget.php:109
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:11
 msgid "Feature Group"
 msgstr ""
@@ -910,7 +911,7 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: lib/FS_Ajax.php:120
+#: lib/FS_Ajax.php:123
 msgid "Fields not specified!"
 msgstr ""
 
@@ -922,15 +923,18 @@ msgstr ""
 msgid "Fill in the data of the authorized user automatically"
 msgstr ""
 
-#: lib/FS_Price_Widget.php:19
+#: lib/FS_Price_Widget.php:19 lib/widgets/PriceWidget.php:19
+#: lib/widgets/Price_Widget.php:19 lib/widgets/FS_Price_Widget.php:19
 msgid "Filter by price range (F-SHOP)"
 msgstr ""
 
+#: lib/widgets/Reset_Filter_Widget.php:19 lib/widgets/ResetFilterWidget.php:19
 #: lib/widgets/ResetFilter.php:21
 msgid "Filter reset (F-SHOP)"
 msgstr ""
 
-#: lib/FS_Price_Widget.php:20
+#: lib/FS_Price_Widget.php:20 lib/widgets/PriceWidget.php:20
+#: lib/widgets/Price_Widget.php:20 lib/widgets/FS_Price_Widget.php:20
 msgid "Filtering products by price range"
 msgstr ""
 
@@ -1017,7 +1021,7 @@ msgid ""
 "products are available by direct link.."
 msgstr ""
 
-#: lib/FS_Ajax.php:469 lib/FS_Ajax.php:506 lib/FS_Ajax_Class.php:303
+#: lib/FS_Ajax.php:484 lib/FS_Ajax.php:521 lib/FS_Ajax_Class.php:303
 #: lib/FS_Ajax_Class.php:340
 msgid ""
 "Goods with such a set of characteristics are not in stock. Try changing "
@@ -1108,7 +1112,7 @@ msgid ""
 msgstr ""
 
 #: lib/FS_Attribute_Widget.php:139 lib/FS_Taxonomy.php:1226
-#: lib/FS_Taxonomy.php:1264
+#: lib/FS_Taxonomy.php:1264 lib/widgets/Attribute_Widget.php:140
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:28
 msgid "Image"
 msgstr ""
@@ -1180,11 +1184,11 @@ msgstr ""
 msgid "Item"
 msgstr ""
 
-#: lib/FS_Init.php:203 lib/FS_Init.php:205
+#: lib/FS_Init.php:210 lib/FS_Init.php:212
 msgid "Item &laquo;%product%&raquo; successfully added to cart."
 msgstr ""
 
-#: lib/FS_Init.php:210
+#: lib/FS_Init.php:217
 msgid ""
 "Item &laquo;%product%&raquo; successfully added to wishlist. <a "
 "href=\"%wishlist_url%\">Go to wishlist</a>"
@@ -1241,6 +1245,15 @@ msgstr ""
 
 #: lib/FS_Settings.php:443 lib/FS_Settings_Class.php:354
 msgid "Letter Logo"
+msgstr ""
+
+#. $id
+#: lib/FS_Post_Types.php:149
+msgid "Letter settings"
+msgstr ""
+
+#: lib/FS_Post_Types.php:165
+msgid "Letter template"
 msgstr ""
 
 #: lib/FS_Settings.php:484 lib/FS_Settings_Class.php:380
@@ -1383,7 +1396,7 @@ msgstr ""
 msgid "No product found in wish list"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:135
+#: lib/FS_Attribute_Widget.php:135 lib/widgets/Attribute_Widget.php:136
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24
 msgid "Normal"
 msgstr ""
@@ -1419,11 +1432,11 @@ msgid ""
 "customer for this data:"
 msgstr ""
 
-#: lib/FS_Post_Types.php:99
+#: lib/FS_Post_Types.php:106
 msgid "Order"
 msgstr ""
 
-#: lib/FS_Ajax.php:844 lib/FS_Order.php:233
+#: lib/FS_Ajax.php:867 lib/FS_Order.php:233
 #, php-format
 msgid "Order #%d from %s %s (%s)"
 msgstr ""
@@ -1433,7 +1446,7 @@ msgstr ""
 msgid "Order #%d paid successfully"
 msgstr ""
 
-#: lib/FS_Ajax.php:852 lib/FS_Ajax_Class.php:581
+#: lib/FS_Ajax.php:875 lib/FS_Ajax_Class.php:581
 #, php-format
 msgid "Order #%d successfully added"
 msgstr ""
@@ -1466,8 +1479,8 @@ msgstr ""
 msgid "Order details #%d"
 msgstr ""
 
-#: lib/FS_Settings.php:463 lib/FS_Settings.php:470 lib/FS_Ajax.php:772
-#: lib/FS_Ajax.php:823 lib/FS_Ajax.php:835 lib/FS_Ajax_Class.php:560
+#: lib/FS_Settings.php:463 lib/FS_Settings.php:470 lib/FS_Ajax.php:791
+#: lib/FS_Ajax.php:848 lib/FS_Ajax.php:858 lib/FS_Ajax_Class.php:560
 #: lib/FS_Ajax_Class.php:567
 #, php-format
 msgid "Order goods on the site \"%s\""
@@ -1515,11 +1528,11 @@ msgid "Order statuses"
 msgstr ""
 
 #: lib/FS_Settings.php:89 lib/FS_Settings.php:431 lib/FS_Settings_Class.php:43
-#: lib/FS_Post_Types.php:98 lib/FS_Post_Types.php:109
+#: lib/FS_Post_Types.php:105 lib/FS_Post_Types.php:116
 msgid "Orders"
 msgstr ""
 
-#: lib/FS_Post_Types.php:124
+#: lib/FS_Post_Types.php:131
 msgid "Orders from your site are placed here."
 msgstr ""
 
@@ -1636,7 +1649,7 @@ msgstr ""
 msgid "Photo"
 msgstr ""
 
-#: lib/FS_Ajax.php:314 lib/FS_Ajax_Class.php:147
+#: lib/FS_Ajax.php:323 lib/FS_Ajax_Class.php:147
 msgid "Please enter a valid email address"
 msgstr ""
 
@@ -1683,7 +1696,7 @@ msgstr ""
 msgid "Product archive title"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:18
+#: lib/FS_Attribute_Widget.php:18 lib/widgets/Attribute_Widget.php:18
 msgid "Product attribute filter"
 msgstr ""
 
@@ -1707,8 +1720,12 @@ msgstr ""
 msgid "Product category"
 msgstr ""
 
-#: lib/FS_Category_Widget.php:16
+#: lib/FS_Category_Widget.php:16 lib/widgets/Category_Widget.php:16
 msgid "Product category filter"
+msgstr ""
+
+#: templates/front-end/product/tabs/comment-list-item.php:27
+msgid "Product evaluation:"
 msgstr ""
 
 #: templates/back-end/metabox/gallery.php:1
@@ -1879,7 +1896,7 @@ msgstr ""
 msgid "Required fields when choosing this delivery method"
 msgstr ""
 
-#: templates/front-end/widget/reset-filter/reset-filter.php:7
+#: templates/front-end/widget/reset-filter/reset-filter.php:8
 msgid "Reset all"
 msgstr ""
 
@@ -1887,11 +1904,11 @@ msgstr ""
 msgid "Return"
 msgstr ""
 
-#: lib/FS_Post_Types.php:74
+#: lib/FS_Post_Types.php:83
 msgid "Review"
 msgstr ""
 
-#: lib/FS_Users.php:1238 lib/FS_Product.php:837 lib/FS_Post_Types.php:73
+#: lib/FS_Users.php:1238 lib/FS_Product.php:837 lib/FS_Post_Types.php:82
 msgid "Reviews"
 msgstr ""
 
@@ -1907,7 +1924,7 @@ msgstr ""
 msgid "Sale"
 msgstr ""
 
-#: lib/FS_Cart_Class.php:86 lib/FS_Ajax.php:870 lib/FS_Ajax.php:954
+#: lib/FS_Cart_Class.php:86 lib/FS_Ajax.php:894 lib/FS_Ajax.php:981
 #: lib/FS_Ajax_Class.php:599 lib/FS_Ajax_Class.php:683 lib/FS_Cart.php:121
 msgid "Security check failed"
 msgstr ""
@@ -1995,7 +2012,7 @@ msgstr ""
 msgid "Shop"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:144
+#: lib/FS_Attribute_Widget.php:144 lib/widgets/Attribute_Widget.php:145
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:32
 msgid "Show only in categories"
 msgstr ""
@@ -2066,7 +2083,7 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
-#: lib/FS_Init.php:198
+#: lib/FS_Init.php:205
 msgid "Success!"
 msgstr ""
 
@@ -2215,7 +2232,7 @@ msgstr ""
 msgid "The status that is assigned to a new order"
 msgstr ""
 
-#: lib/FS_Ajax.php:333 lib/FS_Ajax_Class.php:166
+#: lib/FS_Ajax.php:342 lib/FS_Ajax_Class.php:166
 msgid "There was an error sending a letter to the site administrator!"
 msgstr ""
 
@@ -2314,7 +2331,11 @@ msgstr ""
 
 #: functions/filters.php:38 lib/FS_Attribute_Widget.php:72
 #: lib/FS_Category_Widget.php:35 lib/FS_Price_Widget.php:33
-#: lib/widgets/ResetFilter.php:39 templates/front-end/dashboard/orders.php:26
+#: lib/widgets/Attribute_Widget.php:73 lib/widgets/Reset_Filter_Widget.php:37
+#: lib/widgets/ResetFilterWidget.php:37 lib/widgets/Category_Widget.php:35
+#: lib/widgets/PriceWidget.php:33 lib/widgets/Price_Widget.php:33
+#: lib/widgets/ResetFilter.php:39 lib/widgets/FS_Price_Widget.php:33
+#: templates/front-end/dashboard/orders.php:26
 #: templates/front-end/shortcode/fs-order-info.php:10
 #: templates/front-end/shortcode/order-detail.php:16
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:4
@@ -2384,7 +2405,7 @@ msgstr ""
 msgid "Turn off the appearance of the basket"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:132
+#: lib/FS_Attribute_Widget.php:132 lib/widgets/Attribute_Widget.php:133
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:21
 msgid "Type"
 msgstr ""
@@ -2454,7 +2475,7 @@ msgstr ""
 msgid "User \"%s\" created an order"
 msgstr ""
 
-#: lib/FS_Ajax.php:317 lib/FS_Ajax_Class.php:150
+#: lib/FS_Ajax.php:326 lib/FS_Ajax_Class.php:150
 #, php-format
 msgid ""
 "User %s requests to be notified of the availability of the product \"%s\". "
@@ -2469,7 +2490,7 @@ msgstr ""
 msgid "User is not found"
 msgstr ""
 
-#: lib/FS_Ajax.php:664 lib/FS_Ajax_Class.php:456
+#: lib/FS_Ajax.php:683 lib/FS_Ajax_Class.php:456
 #, php-format
 msgid ""
 "User with such E-mail or Login is registered on the site. <a href=\"#fs-"
@@ -2585,11 +2606,11 @@ msgstr ""
 msgid "You currently have no orders."
 msgstr ""
 
-#: lib/FS_Ajax.php:139
+#: lib/FS_Ajax.php:143
 msgid "You have already voted for this review!"
 msgstr ""
 
-#: lib/FS_Init.php:202
+#: lib/FS_Init.php:209
 msgid "You have selected all available items from stock."
 msgstr ""
 
@@ -2626,7 +2647,7 @@ msgstr ""
 msgid "Your email"
 msgstr ""
 
-#: lib/FS_Ajax.php:151
+#: lib/FS_Ajax.php:155
 msgid "Your like has been added to the review!"
 msgstr ""
 
@@ -2650,7 +2671,7 @@ msgid ""
 "Good luck!"
 msgstr ""
 
-#: lib/FS_Init.php:201
+#: lib/FS_Init.php:208
 msgid "Your order has been successfully created. We will contact you shortly."
 msgstr ""
 
@@ -2663,7 +2684,7 @@ msgid ""
 "Your password has been successfully reset. Password sent to your e-mail."
 msgstr ""
 
-#: lib/FS_Ajax.php:327 lib/FS_Ajax_Class.php:160
+#: lib/FS_Ajax.php:336 lib/FS_Ajax_Class.php:160
 msgid "Your request has been sent successfully!"
 msgstr ""
 
@@ -2675,7 +2696,7 @@ msgstr ""
 msgid "Zip code"
 msgstr ""
 
-#: lib/FS_Ajax.php:200
+#: lib/FS_Ajax.php:205
 msgid "Атрибуты успешно добавленны!"
 msgstr ""
 
@@ -2684,7 +2705,7 @@ msgstr ""
 msgid "В случае успешной оплаты с вас будет снято %s %s. "
 msgstr ""
 
-#: lib/FS_Ajax.php:204
+#: lib/FS_Ajax.php:209
 msgid "Возникла ошибка при добавлении атрибута к товару"
 msgstr ""
 
@@ -2721,7 +2742,7 @@ msgstr ""
 msgid "Контакты"
 msgstr ""
 
-#: lib/FS_Ajax.php:599
+#: lib/FS_Ajax.php:618
 #, php-format
 msgid "Минимальная сумма заказа %s %s"
 msgstr ""
@@ -2748,7 +2769,7 @@ msgstr ""
 msgid "Почтовый индекс"
 msgstr ""
 
-#: lib/FS_Ajax.php:316 lib/FS_Ajax_Class.php:149
+#: lib/FS_Ajax.php:325 lib/FS_Ajax_Class.php:149
 msgid "Просьба уведомить о наличии товара"
 msgstr ""
 
@@ -2756,7 +2777,7 @@ msgstr ""
 msgid "Розетка"
 msgstr ""
 
-#: lib/FS_Attribute_Widget.php:176
+#: lib/FS_Attribute_Widget.php:176 lib/widgets/Attribute_Widget.php:177
 msgid "Скрыть значения из фильтра"
 msgstr ""
 
