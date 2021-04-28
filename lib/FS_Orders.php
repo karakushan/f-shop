@@ -445,12 +445,13 @@ Good luck!', 'f-shop' );
 	 * @return \stdClass
 	 */
 	private
-	static function set_order_data(
-		$order_id
-	) {
+	static function set_order_data($order_id) {
+
 		$order_meta      = get_post_meta( $order_id );
 		$data            = new self();
+
 		$data->_products = self::get_order_items( $order_id );
+
 		if ( $order_meta ) {
 			foreach ( $order_meta as $key => $item ) {
 
@@ -463,6 +464,8 @@ Good luck!', 'f-shop' );
 				}
 			}
 		}
+
+
 
 		return $data;
 	}
@@ -515,14 +518,12 @@ Good luck!', 'f-shop' );
 		return $status;
 	}
 
-	public
-	static function get_order_items(
-		$order_id
-	) {
+	public static function get_order_items($order_id) {
 		$order_id = (int) $order_id;
 		$products = get_post_meta( $order_id, '_products', 0 );
 		$products = $products[0];
 		$item     = array();
+
 		if ( $products ) {
 			foreach ( $products as $id => $product ) {
 				$price       = fs_get_price( $id );
@@ -532,7 +533,7 @@ Good luck!', 'f-shop' );
 					'price' => $price,
 					'name'  => get_the_title( $id ),
 					'count' => $count,
-					'code'  => fs_product_code( $id ),
+					'code'  => fs_get_product_code( $id ),
 					'sum'   => get_post_meta( $id, '_amount', 1 ),
 					'image' => get_the_post_thumbnail_url( $id, 'large' ),
 					'link'  => get_the_permalink( $id )
