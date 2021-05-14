@@ -2,6 +2,8 @@
 
 namespace FS\Widget;
 
+use FS\FS_Config;
+
 /**
  * Class FS_Attribute_Widget
  *
