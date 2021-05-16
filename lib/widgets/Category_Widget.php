@@ -2,6 +2,8 @@
 
 namespace FS\Widget;
 
+use FS\FS_Config;
+
 /**
  * Class FS_Attribute_Widget
  *
@@ -26,7 +28,6 @@ class Category_Widget extends \WP_Widget {
 	 * @return string|void
 	 */
 	public function form( $instance ) {
-		$fs_config = new FS_Config();
 		$title          = ! empty( $instance['title'] ) ? $instance['title'] : '';
 		?>
         <div class="fs-widget-wrapper">
