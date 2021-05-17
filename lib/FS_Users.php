@@ -1050,9 +1050,11 @@ class FS_Users {
 			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">В личный кабинет</a></p>';
 		} else {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_login' );
-			$template .= fs_frontend_template( 'auth/login', array( 'field' => array() ) );
+			$template .= fs_frontend_template( 'auth/login' );
 			$template .= apply_filters( 'fs_form_bottom', '' );
+			
 		}
+		do_action( 'qm/debug',  $template);
 
 		return $template;
 	}

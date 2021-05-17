@@ -1089,22 +1089,22 @@ if ( ! function_exists( 'fs_in_stock' ) ) {
 	 * @return bool  true - the product is in stock, false - not
 	 */
 	function fs_in_stock( $product_id = 0 ) {
-		$fs_config     = new FS_Config();
+
 		$product_id    = fs_get_product_id( $product_id );
 		$product_class = new FS\FS_Product();
 		$variations    = $product_class->get_product_variations( $product_id );
-		$aviable       = false;
+		$available       = false;
 
 		if ( count( $variations ) ) {
-			$aviable = true;
+			$available = true;
 		} else {
-			$availability = get_post_meta( $product_id, $fs_config->meta['remaining_amount'], true );
+			$availability = get_post_meta( $product_id, FS_Config::get_meta('remaining_amount'), true );
 			if ( $availability == '' || $availability > 0 ) {
-				$aviable = true;
+				$available = true;
 			}
 		}
 
-		return $aviable;
+		return $available;
 	}
 }
 
