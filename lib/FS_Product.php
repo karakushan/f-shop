@@ -831,7 +831,7 @@ class FS_Product {
 			),
 			'delivery'    => array(
 				'title'   => __( 'Shipping and payment', 'f-shop' ),
-				'content' => apply_filters( 'the_content', get_post_meta( $product_id, '_fs_delivery_description', 1 ) )
+				'content' => fs_frontend_template('product/tabs/delivery')
 			),
 			'reviews'     => array(
 				'title'   => __( 'Reviews', 'f-shop' ),
