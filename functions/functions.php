@@ -1093,12 +1093,12 @@ if ( ! function_exists( 'fs_in_stock' ) ) {
 		$product_id    = fs_get_product_id( $product_id );
 		$product_class = new FS\FS_Product();
 		$variations    = $product_class->get_product_variations( $product_id );
-		$available       = false;
+		$available     = false;
 
 		if ( count( $variations ) ) {
 			$available = true;
 		} else {
-			$availability = get_post_meta( $product_id, FS_Config::get_meta('remaining_amount'), true );
+			$availability = get_post_meta( $product_id, FS_Config::get_meta( 'remaining_amount' ), true );
 			if ( $availability == '' || $availability > 0 ) {
 				$available = true;
 			}
@@ -1902,8 +1902,7 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
  * @return float|int|string
  */
 function fs_change_price_percent( $product_id = 0 ) {
-	global $post;
-	$product_id   = empty( $product_id ) ? $post->ID : $product_id;
+	$product_id   = fs_get_product_id($product_id);
 	$change_price = 0;
 	$config       = new FS\FS_Config;
 	// получаем возможные типы цен
@@ -2520,6 +2519,7 @@ function fs_product_label( $product_id = 0, $labels = [] ) {
 		$product_fields['label_promotion']['key']  => $product_fields['label_promotion']['text'],
 		$product_fields['label_novelty']['key']    => $product_fields['label_novelty']['text'],
 	] );
+
 
 	$format = '<span class="fs-label %s">%s</span>';
 
@@ -3446,9 +3446,9 @@ if ( ! function_exists( 'fs_localize_meta_key' ) ) {
  */
 function fs_comment_single( $comment, $args, $depth ) {
 	$user = get_user_by( 'id', $comment->user_id );
-	echo fs_frontend_template('product/tabs/comment-list-item',[
-	        'vars'=>compact('comment','args','depth','user')
-    ]);
+	echo fs_frontend_template( 'product/tabs/comment-list-item', [
+		'vars' => compact( 'comment', 'args', 'depth', 'user' )
+	] );
 }
 
 if ( ! function_exists( 'fs_get_user_ip' ) ) {
