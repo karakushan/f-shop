@@ -261,8 +261,6 @@ class FS_Order {
 		}
 
 		$this->post = get_post( $this->ID );
-
-
 		$order_id = $order_id ? $order_id : $this->get_last_order_id();
 
 		if ( ! is_numeric( $order_id ) || $order_id == 0 ) {
@@ -270,14 +268,12 @@ class FS_Order {
 		}
 
 		$products = get_post_meta( $order_id, '_products', 1 ) ? get_post_meta( $order_id, '_products', 1 ) : [];
-//		$this->meta = get_post_meta( $order_id );
-
 
 		$this->items = array_values( array_map( function ( $item ) {
 			return fs_set_product( $item );
 		}, $products ) );
 
-		$this->total_amount  = round((float) get_post_meta( $order_id, '_amount', 1 ),2);
+		$this->total_amount  = round( (float) get_post_meta( $order_id, '_amount', 1 ), 2 );
 		$this->packing_cost  = (float) get_post_meta( $order_id, '_packing_cost', 1 );
 		$this->cart_cost     = (float) get_post_meta( $order_id, '_cart_cost', 1 );
 		$this->discount      = (float) get_post_meta( $order_id, '_order_discount', 1 );
@@ -313,16 +309,7 @@ class FS_Order {
 			$this->payment_method = get_term( $payment_method_id, FS_Config::get_data( 'product_pay_taxonomy' ) );
 		}
 
-		$delivery_method = get_post_meta( $order_id, '_delivery', 1 );
-		if ( $delivery_method['method']) {
-			$this->delivery_method = get_term( absint($delivery_method['method']), FS_Config::get_data( 'product_del_taxonomy' ) );
-			if ($this->delivery_method && ! is_wp_error( $this->delivery_method ) ) {
-				$this->delivery_method->cost                    =get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) ? apply_filters( 'fs_price_format', (float) get_term_meta( $this->delivery_method->term_id, '_fs_delivery_cost', 1 ) ) : 0;
-				$this->delivery_method->city                    = get_post_meta( $order_id, 'city', 1 );
-				$this->delivery_method->delivery_address        = ! empty( $delivery_method['address'] ) ? $delivery_method['address'] : '';
-				$this->delivery_method->delivery_service_number = ! empty( $delivery_method['secession'] ) ? $delivery_method['secession'] : '';
-			}
-		}
+		$this->delivery_method=new FS_Delivery($order_id);
 
 		$this->count = is_array( $this->items ) ? count( $this->items ) : 0;
 
@@ -368,7 +355,7 @@ class FS_Order {
 	 * @return mixed|\WP_Error
 	 */
 	public function get_order_history( int $order_id = 0, $creation_date = true, $args = [] ) {
-		$order_id = $order_id ? $order_id : ($this->ID ? $this->ID : 0);
+		$order_id = $order_id ? $order_id : ( $this->ID ? $this->ID : 0 );
 		$args     = wp_parse_args( $args, [
 			'order' => 'desc'
 		] );
@@ -478,29 +465,15 @@ class FS_Order {
 	/**
 	 * @return \WP_Term
 	 */
-	public function getDeliveryMethod(): \WP_Term {
+	public function getDeliveryMethod(){
 		return $this->delivery_method;
-	}
-
-	/**
-	 * @param \WP_Term $delivery_method
-	 */
-	public function setDeliveryMethod( \WP_Term $delivery_method ): void {
-		$this->delivery_method = $delivery_method;
 	}
 
 	/**
 	 * @return \WP_Term
 	 */
-	public function getPaymentMethod(): \WP_Term {
+	public function getPaymentMethod() {
 		return $this->payment_method;
-	}
-
-	/**
-	 * @param \WP_Term $payment_method
-	 */
-	public function setPaymentMethod( \WP_Term $payment_method ): void {
-		$this->payment_method = $payment_method;
 	}
 
 	/**
@@ -542,7 +515,7 @@ class FS_Order {
 	/**
 	 * @return string
 	 */
-	public function getStatus(): string {
+	public function getStatus() {
 		return $this->status;
 	}
 
