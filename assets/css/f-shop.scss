@@ -1360,11 +1360,11 @@ td.fs_photo.column-fs_photo img {
   min-height: 127px;
   margin-bottom: 30px;
 
-  @media (max-width:768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
   }
 
-  .fs-btn{
+  .fs-btn {
     margin: 0;
   }
 
@@ -1990,20 +1990,28 @@ td.fs_photo.column-fs_photo img {
   top: 2px
 }
 
-.fs-category-filter{
+.fs-category-filter {
   list-style: none;
   margin: 0;
   padding: 0;
-  li{
-    input[type=checkbox]{
+
+  li {
+    input[type=checkbox] {
       margin-right: 12px;
     }
-    ul{
+
+    ul {
       margin-left: 12px;
     }
 
   }
 }
+
+.fs-login-form {
+  max-width: 300px;
+}
+
+@import "../scss/dashboard"; 
 
 
 

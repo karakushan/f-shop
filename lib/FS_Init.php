@@ -84,12 +84,6 @@ class FS_Init
 
         add_action('wp_footer', array($this, 'footer_plugin_code'));
 
-        // Micro-marking of product card
-        add_action('wp_head', array($this->fs_product, 'product_microdata'));
-
-        // Micro-marking of product category
-        add_action('wp_head', array($this->fs_taxonomies, 'product_category_microdata'));
-
         // Displays js analytics codes in the site header
         add_action('wp_head', array($this, 'marketing_code_header'));
 

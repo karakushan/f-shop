@@ -9,6 +9,7 @@ Author URI: https://f-shop.top/
 License: GPL2
 Domain: f-shop
 */
+
 /*
 Copyright 2016 Vitaliy Karakushan  (email : karakushan@gmail.com)
 
@@ -25,6 +26,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+use FS\FS_Config;
+use FS\FS_Orders;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -87,6 +91,7 @@ function fs_activate() {
 	global $wpdb;
 	require_once dirname( FS_PLUGIN_FILE ) . '/lib/FS_Config.php';
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	load_plugin_textdomain('f-shop', false, dirname(plugin_basename(FS_PLUGIN_FILE)) . '/languages');
 
 	// Создаем таблицу покупателей
 	$table_customers = $wpdb->prefix . "fs_customers";
@@ -136,6 +141,41 @@ function fs_activate() {
 			}
 		}
 	}
+
+	// Регистрируем статусы заказов по умолчанию
+	$order_statuses = FS_Orders::default_order_statuses();
+	if ( $order_statuses ) {
+		register_taxonomy( FS_Config::get_data( 'order_statuses_taxonomy' ), array(
+				'object_type'        => FS_Config::get_data( 'post_type_orders' ),
+				'label'              => __( 'Order statuses', 'f-shop' ),
+				'labels'             => array(
+					'name'          => __( 'Order statuses', 'f-shop' ),
+					'singular_name' => __( 'Order status', 'f-shop' ),
+					'add_new_item'  => __( 'Add Order Status', 'f-shop' ),
+				),
+				//					исключаем категории из лицевой части
+				"public"             => false,
+				"show_ui"            => true,
+				'show_in_nav_menus'  => false,
+				"publicly_queryable" => false,
+				'meta_box_cb'        => false,
+				'show_admin_column'  => false,
+				'hierarchical'       => false,
+				'show_in_quick_edit' => true
+			)
+		);
+
+		foreach ( $order_statuses as $slug => $order_status ) {
+			if ( ! term_exists( $slug, FS_Config::get_data( 'order_statuses_taxonomy' ) ) ) {
+				wp_insert_term( $order_status['name'], FS_Config::get_data( 'order_statuses_taxonomy' ), [
+					'slug'        => $slug,
+					'description' => $order_status['description']
+				] );
+			}
+		}
+	}
+
+
 	// копируем шаблоны плагина в директорию текущей темы
 	if ( ! get_option( 'fs_copy_templates' ) ) {
 		fs_copy_all( FS_PLUGIN_PATH . 'templates/front-end/', TEMPLATEPATH . DIRECTORY_SEPARATOR . FS_PLUGIN_NAME, true );

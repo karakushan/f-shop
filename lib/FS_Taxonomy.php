@@ -466,53 +466,6 @@ class FS_Taxonomy {
 	}
 
 	/**
-	 * Micro-marking of product category
-	 */
-	function product_category_microdata() {
-		if ( is_admin() || ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-			return;
-		}
-
-		global $wp_query, $wpdb;
-
-		// Get the current product category term object
-		$term = get_queried_object();
-
-		$price_field = FS_Config::get_meta( 'price' );
-
-		# Get ALL related products prices related to a specific product category
-		$results = $wpdb->get_col( " SELECT pm.meta_value FROM {$wpdb->prefix}term_relationships as tr INNER JOIN {$wpdb->prefix}term_taxonomy as tt ON tr.term_taxonomy_id = tt.term_taxonomy_id INNER JOIN {$wpdb->prefix}terms as t ON tr.term_taxonomy_id = t.term_id INNER JOIN {$wpdb->prefix}postmeta as pm ON tr.object_id = pm.post_id WHERE tt.taxonomy LIKE 'catalog' AND t.term_id = {$term->term_id} AND pm.meta_key = '$price_field' " );
-
-		// Sorting prices numerically
-		sort( $results, SORT_NUMERIC );
-
-		// Get the min and max prices
-		$min = current( $results );
-		$max = end( $results );
-
-		$schema = array(
-			"@context" => "https://schema.org",
-			"@type"    => "Product",
-			"name"     => single_term_title( '', 0 ),
-			"offers"   => [
-				"@type"         => "AggregateOffer",
-				"lowPrice"      => floatval( $min ),
-				"highPrice"     => floatval( $max ),
-				"offerCount"    => intval( $wp_query->found_posts ),
-				"priceCurrency" => "UAH"
-
-			],
-			"url"      => get_term_link( get_queried_object_id() )
-		);
-
-		if ( ! empty( $schema ) ) {
-			echo ' <script type="application/ld+json">';
-			echo json_encode( $schema );
-			echo ' </script>';
-		}
-	}
-
-	/**
 	 * Registration of additional taxonomy fields
 	 *
 	 * @param null $term объект текущего термина таксономии
