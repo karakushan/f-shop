@@ -363,7 +363,7 @@ class FS_SEO
 			$schema["aggregateRating"] = [
 				"@type"       => "AggregateRating",
 				"ratingCount" => count( $total_vote ),
-				"ratingValue" => self::get_average_rating( $product_id )
+				"ratingValue" => FS_Product::get_average_rating( $product_id )
 			];
 		}
 
