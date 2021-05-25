@@ -96,22 +96,21 @@ function fs_activate() {
 	// Создаем таблицу покупателей
 	$table_customers = $wpdb->prefix . "fs_customers";
 	$customers_ddl   = "create table {$table_customers}
-(
-    `id`             int auto_increment
-        primary key, 
-    `email`          varchar(64) null,
-    `first_name`     varchar(32) null,
-    `last_name`      varchar(32) null,
-    `subscribe_news` int         null,
-    `group`        	 int         null,
-    `address`        varchar(100) null,    
-    `ip`             varchar(100) null,    
-    `user_id`        int         null,
-    `city`           varchar(50) null,
-    `phone`          varchar(30) null,
-    creation_date    datetime default CURRENT_TIMESTAMP null
-)  
-    charset = utf8;";
+						(
+						    `id`             int auto_increment primary key,  
+						    `email`          varchar(64) null,
+						    `first_name`     varchar(32) null,
+						    `last_name`      varchar(32) null,
+						    `subscribe_news` int         null,
+						    `group`        	 int         null,
+						    `address`        varchar(100) null,    
+						    `ip`             varchar(100) null,    
+						    `user_id`        int         null,
+						    `city`           varchar(50) null,
+						    `phone`          varchar(30) null,
+						    `creation_date`  timestamp not null default current_timestamp 
+						)  
+						charset = utf8;";
 
 	maybe_create_table( $table_customers, $customers_ddl );
 
