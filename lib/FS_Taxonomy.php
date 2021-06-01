@@ -410,7 +410,9 @@ class FS_Taxonomy {
 	 * @return string|string[]
 	 */
 	function replace_taxonomy_slug_filter( $term_link, $term, $taxonomy ) {
-		if ( $taxonomy != $this->taxonomy_name ) {
+
+
+	    if ( $taxonomy != $this->taxonomy_name ) {
 			return $term_link;
 		}
 
