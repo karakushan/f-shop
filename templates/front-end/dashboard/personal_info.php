@@ -50,7 +50,7 @@
 
 			<?php fs_form_field( 'fs_address', [ 'value' => $user->address ] ) ?>
 
-            <button type="submit"><?php esc_html_e( 'Save' ) ?></button>
+            <button type="submit"><?php esc_html_e( 'Save', 'f-shop' ) ?></button>
 
 			<?= FS\FS_Form::form_close(); ?>
 
@@ -65,25 +65,27 @@
 				'ajax_action' => 'fs_save_user_data'
 			) ); ?>
 
+            <?php  do_action( 'qm/debug', get_user_meta($user->ID,'fs_subscribe_news',1) );  ?>
+
             <div class="fs-dashboard__tab-title"><?php esc_html_e( 'Message Setup', 'f-shop' ); ?></div>
 
             <div class="fs-dashboard__checkbox">
                 <label class="switch" for="fs_subscribe_news">
-                    <input type="checkbox" name="fs_subscribe_news" id="fs_subscribe_news"/>
+                    <input type="checkbox" name="fs_subscribe_news" id="fs_subscribe_news" <?php checked(get_user_meta($user->ID,'fs_subscribe_news',1) ==1) ; ?>/>
                     <div class="slider round"></div>
                 </label>
-                <label for="fs_subscribe_news">Получать новости сайта и предложения</label>
+                <label for="fs_subscribe_news"><?php esc_html_e( 'Receive website news and offers', 'f-shop' ); ?></label>
             </div>
 
             <div class="fs-dashboard__checkbox">
-                <label class="switch" for="fs_notify_availability">
-                    <input type="checkbox" name="fs_notify_availability" id="fs_notify_availability"/>
+                <label class="switch" for="fs_subscribe_cart">
+                    <input type="checkbox" name="fs_subscribe_cart" id="fs_subscribe_cart" <?php checked(get_user_meta($user->ID,'fs_subscribe_cart',1) ==1) ; ?>/>
                     <div class="slider round"></div>
                 </label>
-                <label for="fs_notify_availability">Уведомлять о появившемся товаре</label>
+                <label for="fs_subscribe_cart"><?php esc_html_e( 'Notify about the appeared product', 'f-shop' ); ?></label>
             </div>
 
-            <button type="submit"><?php esc_html_e( 'Save' ) ?></button>
+            <button type="submit"><?php esc_html_e( 'Save', 'f-shop' ) ?></button>
 
 			<?php echo FS\FS_Form::form_close(); ?>
 
@@ -104,7 +106,7 @@
 
 			<?php fs_form_field( 'fs_password' ) ?>
 
-            <button type="submit"><?php esc_html_e( 'Save' ) ?></button>
+            <button type="submit"><?php esc_html_e( 'Save', 'f-shop' ) ?></button>
 
 			<?php echo FS\FS_Form::form_close(); ?>
 
@@ -123,7 +125,7 @@
 
 			<?php fs_form_field( 'fs_password' ) ?>
 
-            <button type="submit"><?php esc_html_e( 'Save' ) ?></button>
+            <button type="submit"><?php esc_html_e( 'Save', 'f-shop' ) ?></button>
 
 			<?php echo FS\FS_Form::form_close(); ?>
         </div>
