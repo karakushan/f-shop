@@ -1676,5 +1676,16 @@ jQuery(document).ready(function ($) {
 
         });
     });
+
+    // Табы личного кабинента
+    $('.fs-dashboard__nav').on('click', ' a', function (event) {
+        event.preventDefault();
+        let parent = $(this).parents('.fs-dashboard__tabs:first')
+        let target = $(this).attr('href')
+        parent.find('.fs-dashboard__nav:first li').removeClass('active');
+        $(this).parents('li').addClass('active');
+        parent.find('.fs-dashboard__tab').removeClass('active')
+        parent.find(target).addClass('active')
+    });
 })
 

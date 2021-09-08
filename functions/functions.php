@@ -2670,7 +2670,7 @@ function fs_get_category_image( $term_id = 0, $size = 'thumbnail', $args = array
 	$args     = wp_parse_args( $args, array(
 		'return'  => 'image',
 		'attr'    => array(),
-		'default' => FS_PLUGIN_URL . 'assets/img/no-image.png'
+		'default' => FS_PLUGIN_URL . 'assets/img/no-image.jpg'
 	) );
 	$image_id = get_term_meta( $term_id, '_thumbnail_id', 1 );
 	$image_id = intval( $image_id );

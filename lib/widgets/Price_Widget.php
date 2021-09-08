@@ -8,6 +8,8 @@
 
 namespace FS\Widget;
 
+use FS\FS_Config;
+
 /*
  * Слайдер цены
  */

@@ -2,10 +2,13 @@
 
 if ( $orders ): ?>
     <div class="fs-dashboard-orders">
-		<?php foreach ( $orders as $order ): ?>
-			<?php $order = new FS_Order( $order ) ?>
+		<?php foreach ( $orders as $post ): ?>
+        
+			<?php 
 
-            <div class="fs-dashboard-order fs-dashboard-order-<?php echo $order->ID ?>">
+            $order = new FS_Order( $post->ID ) ?>
+
+            <div class="fs-dashboard-order fs-dashboard-order-<?php echo $order->getID() ?>">
 
                 <div class="fs-dashboard-order__header">
                     <span class="badge badge-primary"> <i><?php echo $order->status ?></i></span>
@@ -33,7 +36,6 @@ if ( $orders ): ?>
                                 <tbody>
 								<?php
 								foreach ( $order->items as $key => $product ): ?>
-									<?php $product = fs_set_product( $product, $key ); ?>
                                     <tr>
                                         <td><a href="<?php $product->the_permalink(); ?>"
                                                target="_blank"><?php $product->the_title(); ?></a>

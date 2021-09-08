@@ -250,15 +250,15 @@ class FS_Orders {
 		] );
 
 		// Если есть статусы добавленные пользователем
-		if ( $user_post_statuses ) {
-			$order_statuses = [];
-			foreach ( $user_post_statuses as $status ) {
-				$order_statuses[ $status->slug ] = [
-					'name'        => $status->name,
-					'description' => $status->description
-				];
-			}
-		}
+//		if ( $user_post_statuses ) {
+//			$order_statuses = [];
+//			foreach ( $user_post_statuses as $status ) {
+//				$order_statuses[ $status->slug ] = [
+//					'name'        => $status->name,
+//					'description' => $status->description
+//				];
+//			}
+//		}
 
 
 		return apply_filters( 'fs_order_statuses', $order_statuses );
