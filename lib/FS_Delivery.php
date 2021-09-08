@@ -15,6 +15,7 @@ class FS_Delivery {
 	public $cost = 0;
 	public $delivery_address = '';
 	public $delivery_service_number = 0;
+	public $term_id = 0;
 
 
 	/**
@@ -33,8 +34,14 @@ class FS_Delivery {
 			return;
 		}
 
+
 		$term = get_term( $delivery_method['method'], FS_Config::get_data( 'product_del_taxonomy' ) );
 
+		if ( ! $term || is_wp_error( $term ) ) {
+			return;
+		}
+
+		$this->term_id                 = absint( $term->term_id );
 		$this->cost                    = get_term_meta( $term->term_id, '_fs_delivery_cost', 1 ) ? apply_filters( 'fs_price_format', (float) get_term_meta( $term->term_id, '_fs_delivery_cost', 1 ) ) : 0;
 		$this->city                    = get_post_meta( $order_id, 'city', 1 );
 		$this->delivery_address        = ! empty( $delivery_method['address'] ) ? $delivery_method['address'] : '';
