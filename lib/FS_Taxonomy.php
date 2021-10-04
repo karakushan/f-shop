@@ -91,9 +91,10 @@ class FS_Taxonomy {
 			$parent_term_id = get_term_field( 'parent', $current_tax );
 
 			$link_class = is_tax( 'catalog' ) && ( get_queried_object_id() == $product_category->term_id || $parent_term_id == $product_category->term_id ) ? 'active' : '';
+			$href       = !is_tax( $product_category->taxonomy, $product_category->term_id ) ? 'href="' . esc_url(get_term_link( $product_category )) . '"' : '';
 
 			echo '<li class="level-' . esc_attr( $level ) . '">';
-			echo '<a href="' . esc_url( get_term_link( $product_category ) ) . '" class="level-' . esc_attr( $level ) . '-link ' . esc_attr( $link_class ) . '">' . $category_icon . esc_html( $product_category->name ) . '</a>';
+			echo '<a '. $href.' class="level-' . esc_attr( $level ) . '-link ' . esc_attr( $link_class ) . '">' . $category_icon . esc_html( $product_category->name ) . '</a>';
 			$product_categories_child = get_terms( [
 				'taxonomy'     => $this->taxonomy_name,
 				'hide_empty'   => false,
@@ -412,7 +413,7 @@ class FS_Taxonomy {
 	function replace_taxonomy_slug_filter( $term_link, $term, $taxonomy ) {
 
 
-	    if ( $taxonomy != $this->taxonomy_name ) {
+		if ( $taxonomy != $this->taxonomy_name ) {
 			return $term_link;
 		}
 
