@@ -842,62 +842,55 @@ function fs_get_product_category_name( $product_id = 0 ) {
  *
  * @return mixed|void
  */
-function fs_add_to_cart( $product_id = 0, $label = null, $args = array() ) {
+function fs_add_to_cart( $product_id = 0, $label = 'Add to cart', $args = array() ) {
 	$product_id = fs_get_product_id( $product_id );
-	$label      = is_null( $label ) ? __( 'Add to cart', 'f-shop' ) : $label;
+	$label      = $label ? $label : __( 'Add to cart', 'f-shop' );
 
-	// Параметры по умолчанию
-	$args_default = array(
-		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader" width="16">',
-		'class'     => 'fs-add-to-cart',
-		'type'      => 'button'
-	);
+	// Параметры доступные для переопределения
+	$args = wp_parse_args( $args, array(
+		'type'       => 'button',
+		'title'      => __( 'Add to cart', 'f-shop' ),
+		'id'         => 'fs-atc-' . $product_id,
+		'data-count' => 1,
+		'class'      => 'fs-add-to-cart',
+	) );
 
-
-	// Default HTML attributes
-	$default_data = array(
-		'title'           => __( 'Add to cart', 'f-shop' ),
+	// Смешиваем параметры  для вывода текскот в качестве атрибутов кнопки
+	$args = array_merge( $args, [
+		'data-category'   => fs_get_product_category_name( $product_id ),
+		'data-url'        => get_the_permalink( $product_id ),
+		'data-sku'        => fs_get_product_code( $product_id ),
 		'data-action'     => 'add-to-cart',
 		'data-product-id' => $product_id,
-		'data-available'  => fs_aviable_product( $product_id ) ? 'true' : 'false',
+		'data-available'  => fs_in_stock( $product_id ),
 		'data-name'       => get_the_title( $product_id ),
 		'data-price'      => apply_filters( 'fs_price_format', fs_get_price( $product_id ) ),
 		'data-currency'   => fs_currency(),
-		'data-url'        => get_the_permalink( $product_id ),
-		'data-sku'        => fs_get_product_code( $product_id ),
-		'href'            => add_query_arg( array( 'fs-api' => 'add_to_cart', 'product_id' => $product_id ) ),
-		'id'              => 'fs-atc-' . $product_id,
-		'data-count'      => 1,
-		'data-attr'       => json_encode( new stdClass() ),
-		'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) ),
-		'data-variated'   => fs_is_variated( $product_id ) ? 1 : 0,
-		'class'           => ! empty( $args['class'] ) ? $args['class'] : 'fs-atc-' . $product_id,
-		'data-category'   => fs_get_product_category_name( $product_id ),
-		'data-variation'  => fs_get_first_variation( $product_id, 'key' )
-	);
+		'data-image' => esc_url( get_the_post_thumbnail_url( $product_id ) ),
+		'data-attr'  => json_encode( new stdClass() ),
+	] );
 
-	// Add Attributes Added by Developer
-	if ( ! empty( $args['data'] ) ) {
-		$args['data'] = array_merge( $default_data, $args['data'] );
-	} else {
-		$args['data'] = $default_data;
+
+	$atc_after = '<span class="fs-atc-preloader" style="display:none"></span>';
+
+	if ( fs_is_variated( $product_id ) ) {
+		$args['data-variated']  = 1;
+		$args['data-variation'] = fs_get_first_variation( $product_id, 'key' );
 	}
 
-	$args = wp_parse_args( $args, $args_default );
-
-	// Parsing html tag attributes
-	$html_atts = fs_parse_attr( array(), $args['data'] );
-
-	// additional hidden info-blocks inside the button (preloader, message successfully added to the basket)
-	$atc_after = '<span class="fs-atc-preloader" style="display:none"></span>';
+	if ( $args['type'] == 'link' ) {
+		$args['href'] = add_query_arg( array( 'fs-api' => 'add_to_cart', 'product_id' => $product_id ) );
+	}
 
 	/* allow you to set different html elements as a button */
 	switch ( $args['type'] ) {
 		case 'link':
-			$atc_button = sprintf( '<a %s>%s %s</a>', $html_atts, $label, $atc_after );
+			$html_attributes = fs_parse_attr( [], $args );
+			$atc_button      = sprintf( '<a %s>%s %s</a>', $html_attributes, $label, $atc_after );
 			break;
 		default:
-			$atc_button = sprintf( '<button type="button" %s>%s %s</button>', $html_atts, $label, $atc_after );
+			$html_attributes = fs_parse_attr( [], $args );
+			$atc_button      = sprintf( '<button type="button" %s>%s %s</button>', $html_attributes, $label, $atc_after );
 			break;
 	}
 
@@ -1902,7 +1895,7 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
  * @return float|int|string
  */
 function fs_change_price_percent( $product_id = 0 ) {
-	$product_id   = fs_get_product_id($product_id);
+	$product_id   = fs_get_product_id( $product_id );
 	$change_price = 0;
 	$config       = new FS\FS_Config;
 	// получаем возможные типы цен

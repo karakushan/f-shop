@@ -1490,7 +1490,7 @@ jQuery(document).ready(function ($) {
         if (fShop.getSettings('fs_cart_type') == 'modal') {
             iziToast.show({
                 image: event.detail.image,
-                imageWidth: 150,
+                imageWidth: $(window).width() > 768 ? 150 : 90,
                 theme: 'light',
                 timeout: false,
                 maxWidth: 540,

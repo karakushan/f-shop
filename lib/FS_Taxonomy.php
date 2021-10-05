@@ -154,8 +154,6 @@ class FS_Taxonomy {
 				]
 			] );
 
-			do_action( 'qm/debug', $query );
-
 			return $query;
 
 		}
