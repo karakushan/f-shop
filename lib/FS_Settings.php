@@ -275,6 +275,7 @@ class FS_Settings {
 							'name_desc'  => __( 'By name from Z to A', 'f-shop' ),
 							'date_desc'  => __( 'recently added', 'f-shop' ),
 							'date_asc'   => __( 'later added', 'f-shop' ),
+							'stock_desc' => __( 'In stock', 'f-shop' ),
 						),
 						'label'  => __( 'Sort items in the catalog by', 'f-shop' ),
 						'help'   => __( 'This determines the order in which products are displayed on the site. By default, Wordpress sorts by ID.', 'f-shop' ),

@@ -46,9 +46,15 @@ class FS_Taxonomy {
 		add_action( 'generate_rewrite_rules', array( $this, 'taxonomy_rewrite_rules' ) );
 
 		// Filtering products on the category page and in the product archives
-		add_action( 'pre_get_posts', array( FS_Taxonomy::class, 'taxonomy_filter_products' ), 12, 1 );
+		add_action( 'pre_get_posts', array( $this, 'taxonomy_filter_products' ), 12, 1 );
+
+		// Adding the ability to sort by availability
+		if ( fs_option( 'fs_product_sort_by' ) == 'stock_desc' || ( isset( $_GET['order_type'] ) && $_GET['order_type'] == 'stock_desc' ) ) {
+			add_filter( 'posts_clauses', array( $this, 'order_by_stock_status' ), 10 );
+		}
 
 		add_action( 'fs_product_category_filter', [ $this, 'product_category_filter' ] );
+
 	}
 
 	/**
@@ -91,10 +97,10 @@ class FS_Taxonomy {
 			$parent_term_id = get_term_field( 'parent', $current_tax );
 
 			$link_class = is_tax( 'catalog' ) && ( get_queried_object_id() == $product_category->term_id || $parent_term_id == $product_category->term_id ) ? 'active' : '';
-			$href       = !is_tax( $product_category->taxonomy, $product_category->term_id ) ? 'href="' . esc_url(get_term_link( $product_category )) . '"' : '';
+			$href       = ! is_tax( $product_category->taxonomy, $product_category->term_id ) ? 'href="' . esc_url( get_term_link( $product_category ) ) . '"' : '';
 
 			echo '<li class="level-' . esc_attr( $level ) . '">';
-			echo '<a '. $href.' class="level-' . esc_attr( $level ) . '-link ' . esc_attr( $link_class ) . '">' . $category_icon . esc_html( $product_category->name ) . '</a>';
+			echo '<a ' . $href . ' class="level-' . esc_attr( $level ) . '-link ' . esc_attr( $link_class ) . '">' . $category_icon . esc_html( $product_category->name ) . '</a>';
 			$product_categories_child = get_terms( [
 				'taxonomy'     => $this->taxonomy_name,
 				'hide_empty'   => false,
@@ -108,6 +114,25 @@ class FS_Taxonomy {
 			echo '</li>';
 		}
 		echo '</ul>';
+	}
+
+	/**
+	 * Добавляет сортировку по наличию
+	 *
+	 * @param $posts_clauses
+	 *
+	 * @return mixed
+	 */
+	public function order_by_stock_status( $posts_clauses ) {
+		global $wpdb;
+		if ( ! is_admin() && is_main_query() && is_archive( FS_Config::get_data( 'post_type' ) ) || is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+			$posts_clauses['join']    .= " INNER JOIN $wpdb->postmeta postmeta ON ($wpdb->posts.ID = postmeta.post_id) ";
+			$order_by                 = "if(postmeta.meta_value='0','0','1') DESC";
+			$posts_clauses['orderby'] = $posts_clauses['orderby'] ? $posts_clauses['orderby'] . ", $order_by" : " $order_by";
+			$posts_clauses['where']   = $posts_clauses['where'] . " AND postmeta.meta_key = 'fs_remaining_amount'";
+		}
+
+		return $posts_clauses;
 	}
 
 	/**
@@ -186,10 +211,9 @@ class FS_Taxonomy {
 					'value'   => "0"
 				);
 			}
-			$orderby   = array();
+			$orderby   = [];
 			$order     = '';
-			$tax_query = array();
-			$per_page  = get_option( "posts_per_page" );
+			$tax_query = [];
 			$arr_url   = urldecode( $_SERVER['QUERY_STRING'] );
 			parse_str( $arr_url, $url );
 
@@ -347,14 +371,13 @@ class FS_Taxonomy {
 				$tax_query = array_merge( $query->tax_query->queries, $tax_query );
 				$query->set( 'tax_query', $tax_query );
 			}
-			if ( ! empty( $orderby ) ) {
-				$query->set( 'orderby', $orderby );
-			}
+
+
+			$query->set( 'orderby', $orderby );
+
 			if ( ! empty( $order ) ) {
 				$query->set( 'order', $order );
 			}
-
-			return $query;
 		}
 
 	}//end filter_curr_product()
