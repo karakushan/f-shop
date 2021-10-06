@@ -50,7 +50,7 @@ class FS_Taxonomy {
 
 		// Adding the ability to sort by availability
 		if ( fs_option( 'fs_product_sort_by' ) == 'stock_desc' || ( isset( $_GET['order_type'] ) && $_GET['order_type'] == 'stock_desc' ) ) {
-			add_filter( 'posts_clauses', array( $this, 'order_by_stock_status' ), 10 );
+			add_filter( 'posts_clauses', array( $this, 'order_by_stock_status' ), 10, 2 );
 		}
 
 		add_action( 'fs_product_category_filter', [ $this, 'product_category_filter' ] );
@@ -123,9 +123,15 @@ class FS_Taxonomy {
 	 *
 	 * @return mixed
 	 */
-	public function order_by_stock_status( $posts_clauses ) {
-		global $wpdb;
-		if ( ! is_admin() && is_main_query() && is_archive( FS_Config::get_data( 'post_type' ) ) || is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+	public function order_by_stock_status( $posts_clauses, $query ) {
+		if ( is_admin() || ! $query->is_main_query() ) {
+			return $posts_clauses;
+		}
+
+		if ( ( $query->is_archive && isset( $query->query['post_type'] ) && $query->query['post_type'] == FS_Config::get_data( 'post_type' ) )
+		     || ( $query->is_tax && isset( $query->query['catalog'] ) ) ) {
+
+			global $wpdb;
 			$posts_clauses['join']    .= " INNER JOIN $wpdb->postmeta postmeta ON ($wpdb->posts.ID = postmeta.post_id) ";
 			$order_by                 = "if(postmeta.meta_value='0','0','1') DESC";
 			$posts_clauses['orderby'] = $posts_clauses['orderby'] ? $posts_clauses['orderby'] . ", $order_by" : " $order_by";
