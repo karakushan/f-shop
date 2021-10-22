@@ -28,6 +28,7 @@ class ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c
         'F' => 
         array (
             'FS\\Widget\\' => 10,
+            'FS\\Integrations\\' => 16,
             'FS\\' => 3,
         ),
     );
@@ -49,10 +50,18 @@ class ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c
         array (
             0 => __DIR__ . '/../..' . '/lib/widgets',
         ),
+        'FS\\Integrations\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/lib/integrations',
+        ),
         'FS\\' => 
         array (
             0 => __DIR__ . '/../..' . '/lib',
         ),
+    );
+
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -60,6 +69,7 @@ class ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit2f61c7c93ca907f081fc4f0b984db97c::$classMap;
 
         }, null, ClassLoader::class);
     }

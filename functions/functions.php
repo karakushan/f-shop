@@ -342,7 +342,8 @@ function fs_get_total_discount( $phone_number = '' ) {
 		'taxonomy'   => FS_Config::get_data( 'discount_taxonomy' ),
 		'hide_empty' => 0
 	] );
-	if ( ! $discounts ) {
+
+	if ( is_wp_error($discounts) ) {
 		return $discount;
 	}
 
@@ -866,8 +867,8 @@ function fs_add_to_cart( $product_id = 0, $label = 'Add to cart', $args = array(
 		'data-name'       => get_the_title( $product_id ),
 		'data-price'      => apply_filters( 'fs_price_format', fs_get_price( $product_id ) ),
 		'data-currency'   => fs_currency(),
-		'data-image' => esc_url( get_the_post_thumbnail_url( $product_id ) ),
-		'data-attr'  => json_encode( new stdClass() ),
+		'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) ),
+		'data-attr'       => json_encode( new stdClass() ),
 	] );
 
 
@@ -3171,17 +3172,13 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
  * @param string $meta_key
  * @param int $term_id
  * @param int $type
+ * @param bool $multilang
  *
  * @return mixed
  */
-function fs_get_term_meta( string $meta_key, $term_id = 0, $type = 1 ) {
-	if ( ! $term_id ) {
-		$term_id = get_queried_object_id();
-	}
-
-	if ( ! FS_Config::is_default_locale() ) {
-		$meta_key = $meta_key . '__' . get_locale();
-	}
+function fs_get_term_meta( string $meta_key, $term_id = 0, $type = 1, $multilang = true ) {
+	$term_id  = $term_id ? $term_id : get_queried_object_id();
+	$meta_key = $multilang && ! FS_Config::is_default_locale() ? $meta_key . '__' . get_locale() : $meta_key;
 
 	return get_term_meta( $term_id, $meta_key, $type );
 }
@@ -3461,5 +3458,45 @@ if ( ! function_exists( 'fs_get_user_ip' ) ) {
 		}
 
 		return $value;
+	}
+}
+
+if ( ! function_exists( 'fs_localize_category_url' ) ) {
+	/**
+	 * Локализирует урл категории товара с учетом настроек
+	 * если не указан параметр $locale то используется текущая локаль сайта
+	 *
+	 * @param $term_id
+	 * @param string $locale
+	 * @param array $args
+	 *
+	 * @return string|void
+	 */
+	function fs_localize_category_url( $term_id, $locale = '', $args = [] ) {
+		if ( ! $locale ) {
+			$locale = get_locale();
+		}
+		$taxonomy     = FS_Config::get_data( 'product_taxonomy' );
+		$term         = get_term( $term_id, $taxonomy );
+		$disable_slug = fs_option( 'fs_disable_taxonomy_slug' );
+		$args         = wp_parse_args( $args, [
+			'prefixes' => [
+				'uk'    => 'ua',
+				'ru_RU' => '',
+				'en_US' => 'en'
+			]
+		] );
+		$prefix       = isset( $args['prefixes'][ $locale ] ) ? $args['prefixes'][ $locale ] : '';
+		$slug         = get_term_meta( $term_id, '_seo_slug__' . $locale, 1 )
+			? get_term_meta( $term_id, '_seo_slug__' . $locale, 1 ) : $term->slug;
+
+		$url_components = [ $prefix ];
+
+		if ( ! $disable_slug ) {
+			array_push( $url_components, $taxonomy );
+		}
+		array_push( $url_components, $slug );
+
+		return site_url( implode( '/', $url_components ) . '/' );
 	}
 }

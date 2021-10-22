@@ -6,7 +6,8 @@
   "autoload": {
     "psr-4": {
       "FS\\": ["lib"],
-      "FS\\Widget\\": ["lib/widgets"]
+      "FS\\Widget\\": ["lib/widgets"],
+      "FS\\Integrations\\": ["lib/integrations"]
     },
     "files": [
       "functions/functions.php",

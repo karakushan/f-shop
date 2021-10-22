@@ -3,6 +3,8 @@
 namespace FS;
 
 
+use FS\Integrations\WP_Globus;
+
 /**
  * Инициализирует функции и классы плагина
  */
@@ -69,24 +71,25 @@ class FS_Init
             $this->{$var} = new $init_class;
         }
 
-        add_action('wp_enqueue_scripts', array($this, 'frontend_scripts_and_styles'));
-        add_action('admin_enqueue_scripts', array($this, 'admin_scripts_and_styles'));
+        add_action('wp_enqueue_scripts', [ $this, 'frontend_scripts_and_styles' ] );
+        add_action('admin_enqueue_scripts', [ $this, 'admin_scripts_and_styles' ] );
         add_filter("plugin_action_links_" . plugin_basename(FS_PLUGIN_FILE), array(
             $this,
             'plugin_settings_link'
         ));
-        add_action('plugins_loaded', array($this, 'true_load_plugin_textdomain'));
+        add_action('plugins_loaded', [ $this, 'true_load_plugin_textdomain' ] );
 
-        add_action('init', array($this, 'session_init'));
+        add_action('init', [ $this, 'session_init' ] );
 
         // Подключает свои шаблоны вместо стандартных темы
-        add_filter('template_include', array($this, 'custom_plugin_templates'));
+        add_filter('template_include', [ $this, 'custom_plugin_templates' ] );
 
-        add_action('wp_footer', array($this, 'footer_plugin_code'));
+        add_action('wp_footer', [ $this, 'footer_plugin_code' ] );
 
         // Displays js analytics codes in the site header
-        add_action('wp_head', array($this, 'marketing_code_header'));
+        add_action('wp_head', [ $this, 'marketing_code_header' ] );
 
+        add_action('init', [$this, 'plugin_integration']);
     } // END public function __construct
 
     /**
@@ -250,9 +253,9 @@ class FS_Init
             wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/lib/codemirror.js', array('jquery'), null, true);
             wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-xml', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/mode/xml/xml.js', array('jquery'), null, true);
             wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-xml-fold', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/addon/fold/xml-fold.js', array('jquery'), null, true);
-            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-matchtags', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/addon/edit/matchtags.js', array('jquery',FS_PLUGIN_PREFIX . 'codemirror-xml-fold'), null, true);
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-matchtags', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/addon/edit/matchtags.js', array('jquery', FS_PLUGIN_PREFIX . 'codemirror-xml-fold'), null, true);
             wp_enqueue_style(FS_PLUGIN_PREFIX . 'codemirror', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/lib/codemirror.css');
-            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-init', FS_PLUGIN_URL . 'assets/js/codemirror.js', array('jquery', FS_PLUGIN_PREFIX . 'codemirror',FS_PLUGIN_PREFIX . 'codemirror-xml',FS_PLUGIN_PREFIX . 'codemirror-matchtags'), null, true);
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-init', FS_PLUGIN_URL . 'assets/js/codemirror.js', array('jquery', FS_PLUGIN_PREFIX . 'codemirror', FS_PLUGIN_PREFIX . 'codemirror-xml', FS_PLUGIN_PREFIX . 'codemirror-matchtags'), null, true);
         }
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/js/tooltipster.bundle.min.js', array('jquery'), null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'wp-content/plugins/f-shop/assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css', array('jquery'), null, true);
@@ -315,5 +318,12 @@ class FS_Init
     public function marketing_code_header()
     {
         echo fs_option('fs_marketing_code_header');
+    }
+
+    function plugin_integration()
+    {
+        if (defined('WPGLOBUS_VERSION')){
+           new WP_Globus();
+        }
     }
 }

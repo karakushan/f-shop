@@ -51,7 +51,9 @@ class FS_Images_Class {
 			"attachments"    => false,
 			"thumbnail"      => false,
 			"plug_thumbnail" => true,
-			"verticalHeight" => 500
+			"verticalHeight" => 500,
+			"alt"            => get_the_title( $product_id ),
+			"title"          => get_the_title( $product_id )
 		);
 		$args    = wp_parse_args( $args, $default );
 
@@ -62,8 +64,9 @@ class FS_Images_Class {
 			array_push( $gallery_images, get_post_thumbnail_id( $product_id ) );
 		}
 
-		if ( empty($gallery_images) ) {
+		if ( empty( $gallery_images ) ) {
 			echo '<img src="' . FS_PLUGIN_URL . '/assets/img/no-photos.svg" alt="No Photo" class="fs-product-image-plug">';
+
 			return;
 		}
 
@@ -73,11 +76,18 @@ class FS_Images_Class {
 		echo "<div id=\"fs-product-slider-wrapper\">";
 		echo "<ul id=\"product_slider\">";
 		foreach ( $gallery_images as $gallery_image ) {
-			$image = wp_get_attachment_image_url( $gallery_image, 'full' );
-			$title = get_the_title( $product_id );
-			echo "<li data-thumb=\"$image\"  data-src=\"$image\" style=\"background_image( $image )\">";
-			echo "<a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"$title\">";
-			echo "<img src=\"$image\" alt=\"$title\" itemprop=\"image\" data-zoom-image=\"$image\"></a></li>";
+			$image_url = wp_get_attachment_image_url( $gallery_image, 'full' );
+			$title     = get_the_title( $product_id );
+			echo "<li data-thumb=\"$image_url\"  data-src=\"$image_url\" style=\"background_image( $image_url )\">";
+			echo "<a href=\"$image_url\" data-lightbox=\"roadtrip\" data-title=\"$title\">";
+			echo wp_get_attachment_image( $gallery_image, 'full', false,[
+				'itemprop'        => 'image',
+				'data-zoom-image' => $image_url,
+				'alt'             => $args['alt'],
+				'title'           => $args['title']
+			] );
+			echo '</a></li>';
+
 		}
 		echo "</ul>";
 		echo "</div>";

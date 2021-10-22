@@ -350,7 +350,7 @@ class FS_Taxonomy {
 						'taxonomy' => 'product-attributes',
 						'field'    => 'id',
 						'terms'    => array_values( $_REQUEST['attributes'] ),
-						'operator' => 'IN'
+						'operator' => fs_option( 'fs_product_filter_type', 'AND' )
 					)
 				);
 			}
@@ -374,10 +374,9 @@ class FS_Taxonomy {
 				$query->set( 'meta_query', $meta_query );
 			}
 			if ( ! empty( $tax_query ) ) {
-				$tax_query = array_merge( $query->tax_query->queries, $tax_query );
+				$tax_query             = array_merge( $query->tax_query->queries, $tax_query );
 				$query->set( 'tax_query', $tax_query );
 			}
-
 
 			$query->set( 'orderby', $orderby );
 
@@ -397,10 +396,6 @@ class FS_Taxonomy {
 	 * @return array
 	 */
 	function taxonomy_rewrite_rules( $wp_rewrite ) {
-		if ( ! fs_option( 'fs_disable_taxonomy_slug' ) ) {
-			return;
-		}
-
 		$rules = array();
 		$terms = get_terms( [ 'taxonomy' => $this->taxonomy_name, 'hide_empty' => false ] );
 
@@ -413,6 +408,8 @@ class FS_Taxonomy {
 						$rules[ $term->slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
 						$rules[ $term->slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
 						$rules[ $term->slug . '/page-(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+
+
 					} elseif ( $localize_slug ) {
 						$rules[ $localize_slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
 						$rules[ $localize_slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
@@ -421,6 +418,18 @@ class FS_Taxonomy {
 				}
 			}
 
+		} else {
+			foreach ( FS_Config::get_languages() as $key => $language ) {
+				foreach ( $terms as $term ) {
+					$meta_key      = $language['locale'] != FS_Config::default_locale() ? '_seo_slug__' . $language['locale'] : '_seo_slug';
+					$localize_slug = get_term_meta( $term->term_id, $meta_key, 1 );
+					if ( $localize_slug ) {
+						$rules[ $term->taxonomy . '/' . $localize_slug . '/?$' ]            = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+						$rules[ $term->taxonomy . '/' . $localize_slug . '/page/(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+						$rules[ $term->taxonomy . '/' . $localize_slug . '/page-(\d+)/?$' ] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+					}
+				}
+			}
 		}
 
 		$wp_rewrite->rules = $rules + $wp_rewrite->rules;
