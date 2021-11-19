@@ -404,6 +404,7 @@ Good luck!', 'f-shop' );
 	function order_status_custom() {
 		$statuses = self::default_order_statuses();
 
+
 		if ( count( $statuses ) ) {
 			foreach ( $statuses as $key => $status ) {
 				register_post_status( $key, array(
@@ -444,10 +445,12 @@ Good luck!', 'f-shop' );
 	 * @return \stdClass
 	 */
 	private
-	static function set_order_data($order_id) {
+	static function set_order_data(
+		$order_id
+	) {
 
-		$order_meta      = get_post_meta( $order_id );
-		$data            = new self();
+		$order_meta = get_post_meta( $order_id );
+		$data       = new self();
 
 		$data->_products = self::get_order_items( $order_id );
 
@@ -463,7 +466,6 @@ Good luck!', 'f-shop' );
 				}
 			}
 		}
-
 
 
 		return $data;
@@ -492,7 +494,11 @@ Good luck!', 'f-shop' );
 			'meta_value'  => $user_id,
 		) );
 
-		return get_posts( $args );
+		$orders = get_posts( $args );
+
+		return array_filter( $orders, function ( $item ) {
+			return $item->post_status != 'trash';
+		} );
 	}
 
 	/**
@@ -507,9 +513,10 @@ Good luck!', 'f-shop' );
 		$order_id
 	) {
 		$post_status_id = get_post_status( $order_id );
+		$statuses = self::default_order_statuses();
 
-		if ( ! empty( $this->order_statuses[ $post_status_id ]['name'] ) ) {
-			$status = $this->order_statuses[ $post_status_id ]['name'];
+		if ( ! empty( $statuses[ $post_status_id ]['name'] ) ) {
+			$status = $statuses[ $post_status_id ]['name'];
 		} else {
 			$status = __( 'The order status is not defined', 'f-shop' );
 		}
@@ -517,7 +524,7 @@ Good luck!', 'f-shop' );
 		return $status;
 	}
 
-	public static function get_order_items($order_id) {
+	public static function get_order_items( $order_id ) {
 		$order_id = (int) $order_id;
 		$products = get_post_meta( $order_id, '_products', 0 );
 		$products = $products[0];

@@ -316,6 +316,7 @@ class FS_Form {
 		$out .= ' id="' . esc_attr( $args['id'] ) . '">';
 		$out .= FS_Config::nonce_field();
 		$out .= '<input type="hidden" name="action" value="' . esc_attr( $args['ajax_action'] ) . '">';
+		$out .= '<div class="meter"><span style="width:100%;"><span class="progress"></span></span></div>';
 
 		return $out;
 	}
@@ -327,6 +328,24 @@ class FS_Form {
 	 */
 	public static function form_close() {
 		return '</form>';
+	}
+
+	/**
+	 * Возвращает кнопку для отправки формы
+	 *
+	 * @param string $label
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	public static function form_submit( $label = '', $args = [] ) {
+
+		if ( $label == '' ) {
+			$label = __( 'Save', 'f-shop' );
+		}
+		$inline_attributes = fs_parse_attr( $args, [ 'class' => 'fs-submit', 'type' => 'submit' ] );
+
+		return '<button ' . $inline_attributes . '>' . esc_html( $label ) . '</button>';
 	}
 
 }

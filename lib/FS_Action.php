@@ -119,6 +119,8 @@ class FS_Action {
 		add_action( 'fs_user_info', array( 'FS\FS_Users', 'user_info_show' ), 10 );
 		/* Выводит форму редактирования профиля */
 		add_action( 'fs_profile_edit', array( 'FS\FS_Users', 'profile_edit' ), 10, 1 );
+		/* Выводит иконку или аватар пользователя с линком на форму редактирования профиля*/
+		add_action( 'fs_profile_widget', array( 'FS\FS_Users', 'profile_widget' ), 10, 1 );
 
 
 		// Add the field to user profile editing screen.

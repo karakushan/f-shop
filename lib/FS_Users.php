@@ -645,6 +645,25 @@ class FS_Users {
 		return apply_filters( 'fs_user_fields', $fields );
 	}
 
+	/**
+	 * Возвращает поле пользователя
+	 *
+	 * @param $key
+	 * @param int $user_id
+	 * @param string $default
+	 *
+	 * @return mixed|string
+	 */
+	public static function get_user_field( $key, $user_id = 0, $default = '' ) {
+		if ( ! $user_id ) {
+			$user_id = get_current_user_id();
+		}
+
+		return get_user_meta( $user_id, $key, 1 ) != ''
+			? get_user_meta( $user_id, $key, 1 )
+			: $default;
+	}
+
 
 	/**
 	 * Password reset
@@ -1052,9 +1071,9 @@ class FS_Users {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_login' );
 			$template .= fs_frontend_template( 'auth/login' );
 			$template .= apply_filters( 'fs_form_bottom', '' );
-			
+
 		}
-		do_action( 'qm/debug',  $template);
+		do_action( 'qm/debug', $template );
 
 		return $template;
 	}
@@ -1194,10 +1213,11 @@ class FS_Users {
 	 * Отвечает за создание вкладок личного кабинета и их содержимого
 	 */
 	static function user_cabinet_tabs() {
-	    $user= fs_get_current_user();
-	    return fs_frontend_template( 'dashboard/index', array(
-		    'vars' => compact('user')
-	    ) );
+		$user = fs_get_current_user();
+
+		return fs_frontend_template( 'dashboard/index', array(
+			'vars' => compact( 'user' )
+		) );
 	}
 
 	/**
@@ -1216,6 +1236,13 @@ class FS_Users {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Выводит виджет с аватаром текущего пользователя
+	 */
+	public function profile_widget() {
+		echo fs_frontend_template( 'widget/profile/widget' );
 	}
 
 

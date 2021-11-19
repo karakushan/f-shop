@@ -248,6 +248,9 @@ jQuery(document).ready(function ($) {
             data: formData,
             contentType: false,
             processData: false,
+            beforeSend:function(){
+                $('.fs-form .meter').fadeIn(100);
+            },
             success: function (data) {
                 if (data.success) {
                     iziToast.show({
@@ -264,6 +267,8 @@ jQuery(document).ready(function ($) {
                         position: 'topCenter',
                     });
                 }
+
+                $('.fs-form .meter').fadeOut(100);
             }
         });
         return false;

@@ -7,6 +7,7 @@ use FS\FS_Cart;
 use \FS\FS_Config;
 use FS\FS_Order;
 use \FS\FS_Product;
+use FS\FS_Users;
 
 /**
  * Recursively get taxonomy and its children
@@ -1701,16 +1702,18 @@ function fs_get_current_user() {
 	if ( $user->exists() ) {
 		$profile_update           = empty( $user->profile_update ) ? strtotime( $user->user_registered ) : $user->profile_update;
 		$user->email              = $user->user_email;
-		$user->phone              = get_user_meta( $user->ID, 'phone', 1 );
-		$user->city               = get_user_meta( $user->ID, 'city', 1 );
-		$user->adress             = get_user_meta( $user->ID, 'adress', 1 );
-		$user->delivery_addresses = get_user_meta( $user->ID, 'delivery_addresses', 1 );
-		$user->birth_day          = get_user_meta( $user->ID, 'birth_day', 1 );
-		if ( ! empty( $user->birth_day ) ) {
-			$user->birth_day = $user->birth_day;
-		}
+		$user->phone              = FS_Users::get_user_field('fs_phone');
+		$user->city               = FS_Users::get_user_field('fs_city');
+		$user->address             = FS_Users::get_user_field('fs_address');
+		$user->gender         = FS_Users::get_user_field('fs_gender');
+		$user->country         = FS_Users::get_user_field('fs_country');
+		$user->region         = FS_Users::get_user_field('fs_region');
+//		$user->birth_day          = FS_Users::get_user_field('fs_address');
+//		if ( ! empty( $user->birth_day ) ) {
+//			$user->birth_day = $user->birth_day;
+//		}
 		$user->profile_update = $profile_update;
-		$user->gender         = get_user_meta( $user->ID, 'gender', 1 );
+
 	}
 
 	return $user;
