@@ -227,7 +227,7 @@ class FS_Form {
 			'wrapper_class'  => 'fs-field-wrap form-group ' . str_replace( '_', '-', $field_name ) . '-wrap',
 			'label_class'    => 'fs-form-label',
 			'taxonomy'       => ! empty( $field['taxonomy'] ) ? $field['taxonomy'] : 'category',
-			'query_params'   => $field['query_params'],
+			'query_params'   => ! empty( $field['query_params'] ) ? $field['query_params'] : null,
 			'id'             => str_replace( array(
 				'[',
 				']'

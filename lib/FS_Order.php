@@ -310,12 +310,8 @@ class FS_Order {
 		}
 
 		$this->delivery_method=new FS_Delivery($order_id);
-
 		$this->count = is_array( $this->items ) ? count( $this->items ) : 0;
-
-		$fs_orders=new FS_Orders();
-		$this->status = $fs_orders->get_order_status($order_id);
-
+		$this->status = $this->get_order_status($order_id);
 		$this->date = $this->post->post_date;
 	}
 
@@ -605,5 +601,28 @@ class FS_Order {
 	 */
 	public function set_order_data( $order_data ) {
 		$this->order_data = $order_data;
+	}
+
+	/**
+	 * Возвращает статус заказа в текстовой, читабельной форме
+	 *
+	 * @param $order_id - ID заказа
+	 *
+	 * @return string
+	 */
+	public
+	function get_order_status(
+		$order_id
+	) {
+		$post_status_id = get_post_status( $order_id );
+		$statuses = FS_Orders::default_order_statuses();
+
+		if ( ! empty( $statuses[ $post_status_id ]['name'] ) ) {
+			$status = $statuses[ $post_status_id ]['name'];
+		} else {
+			$status = __( 'The order status is not defined', 'f-shop' );
+		}
+
+		return $status;
 	}
 }

@@ -47,7 +47,7 @@ class FS_Orders {
 			add_action( 'add_meta_boxes', array( $this, 'register_order_meta_box' ) );
 		} );
 
-		add_filter( 'manage_orders_posts_custom_column', [ $this, 'admin_order_custom_column' ], 5, 2 );
+		 add_filter( 'manage_orders_posts_custom_column', [ $this, 'admin_order_custom_column' ], 5, 2 );
 
 	}
 
@@ -501,28 +501,6 @@ Good luck!', 'f-shop' );
 		} );
 	}
 
-	/**
-	 * Возвращает статус заказа в текстовой, читабельной форме
-	 *
-	 * @param $order_id - ID заказа
-	 *
-	 * @return string
-	 */
-	public
-	function get_order_status(
-		$order_id
-	) {
-		$post_status_id = get_post_status( $order_id );
-		$statuses = self::default_order_statuses();
-
-		if ( ! empty( $statuses[ $post_status_id ]['name'] ) ) {
-			$status = $statuses[ $post_status_id ]['name'];
-		} else {
-			$status = __( 'The order status is not defined', 'f-shop' );
-		}
-
-		return $status;
-	}
 
 	public static function get_order_items( $order_id ) {
 		$order_id = (int) $order_id;
