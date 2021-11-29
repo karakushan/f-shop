@@ -299,7 +299,7 @@ class FS_Orders {
 		return fs_frontend_template( 'shortcode/order-detail', array(
 			'vars' => array(
 				'order'   => FS_Orders::get_order( $order_id ),
-				'payment' => new FS_Payment_Class()
+				'payment' => new FS_Payment()
 			)
 		) );
 	}

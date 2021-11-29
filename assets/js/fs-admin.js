@@ -4,11 +4,8 @@
 * в соответствии с этим видением
 *
 */
-
-
 jQuery(function ($) {
-    $( window ).off( 'beforeunload' );
-
+    $(window).off('beforeunload');
     window.fShop = {
         // запускает прогресс бар в самом верху сайта
         showMetaboxPreloader: function () {
@@ -54,7 +51,7 @@ jQuery(function ($) {
         }
     }
 
-    if (typeof inlineEditPost!=='undefined'){
+    if (typeof inlineEditPost !== 'undefined') {
         // we create a copy of the WP inline edit post function
         var $wp_inline_edit = inlineEditPost.edit;
 
@@ -192,7 +189,6 @@ jQuery(function ($) {
     });
 
     // Добавление кастомных атрибутов
-
     $(document).on('click', '[data-fs-element="add-custom-attribute"]', function (event) {
         event.preventDefault();
         let el = $(this);

@@ -11,7 +11,6 @@ jQuery(document).ready(function ($) {
     document.addEventListener("fs_add_to_cart", function (event) {
 
         // действие которое инициирует событие
-
         var button = event.detail.button;
 
         // Show the basket as a modal window

@@ -47,7 +47,7 @@ class FS_Init
         'fs_action' => FS_Action::class,
         'fs_users' => FS_Users::class,
         'fs_api' => FS_Api_Class::class,
-        'fs_payment' => FS_Payment_Class::class,
+        'fs_payment' => FS_Payment::class,
         'fs_widget' => FS_Widget_Class::class,
         'fs_product' => FS_Product::class,
         'fs_migrate' => FS_Migrate_Class::class,
