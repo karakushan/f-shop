@@ -64,9 +64,8 @@ class FS_SEO {
 			return $title;
 		}
 		$meta_title = get_term_meta( get_queried_object_id(), fs_localize_meta_key( '_seo_title' ), 1 );
-		$title      = $meta_title ? $meta_title : $title;
 
-		return apply_filters( 'fs_meta_title', $title );
+		return apply_filters( 'fs_meta_title', $meta_title != '' ? $meta_title : $title );
 	}
 
 	/**
