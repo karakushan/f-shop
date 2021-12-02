@@ -27,6 +27,8 @@ class WP_Globus {
 	function wpglobus_hreflang_tag_filter( $hreflangs ) {
 		$product_taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
 		$post_type             = FS_Config::get_data( 'post_type' );
+        
+
 		// Меняем hreflang для категорий товара
 		if ( is_archive( $post_type ) && is_tax( $product_taxonomy_name ) ) {
 			$queried_object = get_queried_object();
@@ -43,10 +45,9 @@ class WP_Globus {
 			global $post;
 			$slug_ua         = get_post_meta( $post->ID, 'fs_seo_slug__uk', 1 );
 			$hreflangs['ua'] = sprintf( '<link rel="alternate" hreflang="ua" href="%s"/>', $slug_ua ? site_url( sprintf( '%s/%s/%s/', 'ua', $post_type, $slug_ua ) )
-				: get_the_permalink( $post->ID ) );
-			$hreflangs['ru'] = sprintf( '<link rel="alternate" hreflang="ru" href="%s"/>', site_url( sprintf( '%s/%s/', $post_type, $post->post_name ) ) );
+				: WPGlobus_Utils::localize_current_url( 'ua' ) );
+			$hreflangs['ru'] = sprintf( '<link rel="alternate" hreflang="ru" href="%s"/>', WPGlobus_Utils::localize_current_url( 'ru' ) );
 		}
-
 		return $hreflangs;
 	}
 

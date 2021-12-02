@@ -26,7 +26,7 @@ class FS_SEO {
 			// Change SEO Title
 			add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
 			// Change wordpress seo canonical
-			add_filter( 'wpseo_canonical', array( $this, 'change_taxonomy_canonical' ), 10, 1 );
+			add_filter( 'wpseo_canonical', array( $this, 'replace_products_canonical' ), 10, 1 );
 		}
 
 		add_action( 'wp_footer', [ $this, 'scripts_in_footer' ] );
@@ -43,10 +43,16 @@ class FS_SEO {
 	 *
 	 * @return string|string[]
 	 */
-	function change_taxonomy_canonical( $canonical ) {
+	function replace_products_canonical( $canonical ) {
 		$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
 		if ( is_tax( $taxonomy_name ) && fs_option( 'fs_disable_taxonomy_slug' ) ) {
 			$canonical = get_term_link( get_queried_object_id(), $taxonomy_name );
+		} elseif ( is_singular( FS_Config::get_data( 'post_type' ) ) && get_locale() == 'uk' ) {
+			global $post;
+			$slug = get_post_meta( $post->ID, 'fs_seo_slug__' . get_locale(), 1 );
+			if ( $slug ) {
+				$canonical = site_url( sprintf( '%s/%s/%s', 'ua', FS_Config::get_data( 'post_type' ), $slug ) );
+			}
 		}
 
 		return $canonical;
