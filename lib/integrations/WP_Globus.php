@@ -44,7 +44,7 @@ class WP_Globus {
 		} elseif ( is_singular( $post_type ) ) {
 			global $post;
 			$slug_ua         = get_post_meta( $post->ID, 'fs_seo_slug__uk', 1 );
-			$hreflangs['ua'] = sprintf( '<link rel="alternate" hreflang="ua" href="%s"/>', $slug_ua ? site_url( sprintf( '%s/%s/%s/', 'ua', $post_type, $slug_ua ) )
+			$hreflangs['ua'] = sprintf( '<link rel="alternate" hreflang="uk" href="%s"/>', $slug_ua ? site_url( sprintf( '%s/%s/%s/', 'ua', $post_type, $slug_ua ) )
 				: WPGlobus_Utils::localize_current_url( 'ua' ) );
 			$hreflangs['ru'] = sprintf( '<link rel="alternate" hreflang="ru" href="%s"/>', WPGlobus_Utils::localize_current_url( 'ru' ) );
 		}
