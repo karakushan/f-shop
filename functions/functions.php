@@ -343,7 +343,7 @@ function fs_get_total_discount( $phone_number = '' ) {
 		'hide_empty' => 0
 	] );
 
-	if ( is_wp_error($discounts) ) {
+	if ( is_wp_error( $discounts ) ) {
 		return $discount;
 	}
 
@@ -1858,7 +1858,8 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
 	$product_id = empty( $product_id ) ? $post->ID : $product_id;
 	$products   = get_post_meta( $product_id, $fs_config->meta['related_products'], false );
 	$args       = wp_parse_args( $args, array(
-		'limit' => 4
+		'limit'    => 4,
+		'post__in' => []
 	) );
 
 	// ищем товары привязанные вручную
@@ -1866,7 +1867,7 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
 		$products = array_unique( $products[0] );
 		$args     = array(
 			'post_type'      => 'product',
-			'post__in'       => $products,
+			'post__in'       => array_merge( $products, $args['post__in'] ),
 			'post__not_in'   => array( $product_id ),
 			'posts_per_page' => $args['limit']
 		);
@@ -1875,6 +1876,7 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
 		$args     = array(
 			'post_type'      => 'product',
 			'posts_per_page' => $args['limit'],
+			'post__in'       => array_merge( $products, $args['post__in'] ),
 			'post__not_in'   => array( $product_id ),
 			'tax_query'      => array(
 				array(
