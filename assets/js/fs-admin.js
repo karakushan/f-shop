@@ -1,14 +1,42 @@
-/*
-* В дальнейшем разработка должна вестись в пространстве имён fShop
-* также это подразумевает, что существующие функции будут перезаписаны
-* в соответствии с этим видением
-*
-*/
+/* todo: перписать все функции используя контекст класса FS */
+class FS {
+    constructor(jq) {
+        this.$ = jq;
+        this.activateTab()
+    }
+
+    activateTab() {
+        let activeTab = window.localStorage.getItem('fs_active_tab')
+        let context = this;
+
+        if (!activeTab) {
+            activeTab = this.$('#fs-metabox .tab-header li:first-child a').attr('href');
+            window.localStorage.setItem('fs_active_tab', activeTab)
+        }
+        this.$('#fs-metabox .tab-header li.fs-link-active').removeClass('fs-link-active')
+        this.$('#fs-metabox .tab-header a[href="' + activeTab + '"]')
+            .parent('li')
+            .addClass('fs-link-active');
+        context.$('#fs-metabox .fs-tab').removeClass('fs-tab-active')
+        context.$(activeTab).addClass('fs-tab-active')
+
+        this.$('#fs-metabox .tab-header').on('click', 'a', function (event) {
+            event.preventDefault();
+            let href = context.$(this).attr('href');
+            window.localStorage.setItem('fs_active_tab', href)
+            context.$('#fs-metabox .tab-header li').removeClass('fs-link-active')
+            context.$(this).parent('li').addClass('fs-link-active')
+            context.$('#fs-metabox .fs-tab').removeClass('fs-tab-active')
+            context.$(href).addClass('fs-tab-active')
+        });
+    }
+}
+
+window.FS = new FS(jQuery);
 
 
 jQuery(function ($) {
-    $( window ).off( 'beforeunload' );
-
+    $(window).off('beforeunload');
     window.fShop = {
         // запускает прогресс бар в самом верху сайта
         showMetaboxPreloader: function () {
@@ -54,7 +82,7 @@ jQuery(function ($) {
         }
     }
 
-    if (typeof inlineEditPost!=='undefined'){
+    if (typeof inlineEditPost !== 'undefined') {
         // we create a copy of the WP inline edit post function
         var $wp_inline_edit = inlineEditPost.edit;
 
@@ -192,7 +220,6 @@ jQuery(function ($) {
     });
 
     // Добавление кастомных атрибутов
-
     $(document).on('click', '[data-fs-element="add-custom-attribute"]', function (event) {
         event.preventDefault();
         let el = $(this);
@@ -604,38 +631,6 @@ jQuery(document).ready(function ($) {
 });
 
 jQuery(document).ready(function ($) {
-
-    if (!$.cookie('fs_active_tab')) {
-        let firstTab = $('#fs-metabox .tab-header li:first-child a');
-        let firstTabName = firstTab.data('tab')
-        firstTab.parent('li').addClass('fs-link-active');
-        $(firstTab.attr('href')).addClass('fs-tab-active');
-        $.cookie('fs_active_tab', firstTabName, {
-            expires: 10
-        });
-    }
-
-
-    // Переключение табов
-    $('#fs-metabox .tab-header a').on('click', function (event) {
-        event.preventDefault();
-        var target = $(this).attr('href');
-        $.cookie('fs_active_tab', $(this).data('tab'), {
-            expires: 10
-        });
-        $('.fs-tabs .fs-tab').each(function (index, el) {
-            $(this).removeClass('fs-tab-active');
-        });
-        $(target).addClass('fs-tab-active');
-        $(this)
-            .parents('.tab-header')
-            .find('li')
-            .each(function (index, el) {
-                $(this).removeClass('fs-link-active');
-            });
-        $(this).parent('li').addClass('fs-link-active');
-    });
-
     // Up sell dialog window
     $('#fs-upsell-dialog').dialog({
         title: 'Список товаров',

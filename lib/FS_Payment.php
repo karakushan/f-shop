@@ -9,15 +9,8 @@
 namespace FS;
 
 
-class FS_Payment_Class
+class FS_Payment
 {
-
-
-    function __construct()
-    {
-        add_shortcode('fs_order_pay', array($this, 'order_pay'));
-    }
-
     /**
      * Возвращает все зарегистрированные способы оплаты в виде масссива
      * @return mixed|void
@@ -66,7 +59,7 @@ class FS_Payment_Class
         $html = '';
         $order_amount = floatval($order->data->_amount);
 
-        $payment_methods = $this->payment_methods();
+        $payment_methods = self::payment_methods();
 
         do_action('fs_order_pay_before');
 

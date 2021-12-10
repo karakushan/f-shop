@@ -37,8 +37,6 @@ class FS_Taxonomy {
 			'pay_taxonomy_column_content'
 		), 10, 3 );
 
-		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
-
 		// Remove taxonomy slug from links
 		add_filter( 'term_link', array( $this, 'replace_taxonomy_slug_filter' ), 10, 3 );
 
@@ -469,40 +467,6 @@ class FS_Taxonomy {
 		return $term_link;
 	}
 
-
-	/**
-	 * Redirect to a localized url
-	 */
-	function redirect_to_localize_url() {
-		// Leave if the request came not from the product category
-		if ( ! is_tax( $this->taxonomy_name ) ) {
-			return;
-		}
-
-		// Exit if slug localization is disabled in the admin panel.
-		if ( fs_option( 'fs_localize_slug' ) !== '1' ) {
-			return;
-		}
-
-		$current_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-		$term_id      = get_queried_object_id();
-		$term_link    = get_term_link( $term_id );
-		if ( get_query_var( 'paged' ) && get_query_var( 'paged' ) > 1 ) {
-			$taxonomy_pagination_structure = apply_filters( 'fs_taxonomy_pagination_structure', $this->taxonomy_pagination_structure );
-			$term_link                     = $term_link . sprintf( $taxonomy_pagination_structure, get_query_var( 'paged' ) ) . '/';
-
-
-		}
-		if ( $_SERVER['QUERY_STRING'] && ! isset( $_GET['q'] ) ) {
-			$term_link .= '?' . $_SERVER['QUERY_STRING'];
-		}
-		if ( $current_link != $term_link ) {
-			wp_safe_redirect( $term_link );
-			exit;
-		}
-
-		return;
-	}
 
 	/**
 	 * Registration of additional taxonomy fields

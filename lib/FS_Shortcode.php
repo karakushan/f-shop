@@ -7,53 +7,44 @@ if ( ! defined( 'ABSPATH' ) ) {
 } // Exit if accessed directly
 
 /**
- * Класс шорткодов магазина
+ * The class registers shortcodes for display on store pages
  */
 class FS_Shortcode {
-
-
 	function __construct() {
+		# USER
+		add_shortcode( 'fs_user_info', array( 'FS\FS_Users', 'user_info' ) );
+		add_shortcode( 'fs_profile_edit', array( $this, 'profile_edit' ) );
+		add_shortcode( 'fs_user_cabinet', array( 'FS\FS_Users', 'user_cabinet' ) ); // Шорткод личного кабинета
+		add_shortcode( 'fs_login', array( 'FS\FS_Users', 'login_form' ) ); // Шорткод формы входа
+		add_shortcode( 'fs_register', array( 'FS\FS_Users', 'register_form' ) ); // Шорткод формы регистрации
+		add_shortcode( 'fs_lostpassword', array( 'FS\FS_Users', 'lostpassword_form' ) ); // Шорткод формы сброса пароля
 
+		# WIDGETS
+		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
 
-		// Шорткод формы входа
-		add_shortcode( 'fs_login', array( 'FS\FS_Users', 'login_form' ) );
+		# WISHLIST
+		add_shortcode( 'fs_wishlist', array( $this, 'wishlist_shortcode' ) );
 
-		// Шорткод формы регистрации
-		add_shortcode( 'fs_register', array( 'FS\FS_Users', 'register_form' ) );
+		# CART
+		add_shortcode( 'fs_cart_widget', array( $this, 'cart_widget' ) ); // Шорткод виджета корзины
+		add_shortcode( 'fs_have_cart_items', array( $this, 'have_cart_items' ) );
+		add_shortcode( 'fs_cart', array( $this, 'cart_shortcode' ) ); // Шорткод страницы корзины
 
-		// Шорткод формы сброса пароля
-		add_shortcode( 'fs_lostpassword', array( 'FS\FS_Users', 'lostpassword_form' ) );
+		# CHECKOUT
+		add_shortcode( 'fs_checkout_success', array( $this, 'fs_checkout_success' ) );
+		add_shortcode( 'fs_checkout', array( $this, 'order_send' ) );
 
-		// Шорткод личного кабинета
-		add_shortcode( 'fs_user_cabinet', array( 'FS\FS_Users', 'user_cabinet' ) );
-
-		// Шорткод страницы корзины
-		add_shortcode( 'fs_cart', array( $this, 'cart_shortcode' ) );
-
-		// Шорткод виджета корзины
-		add_shortcode( 'fs_cart_widget', array( $this, 'cart_widget' ) );
-
+		# ORDERS
+		add_shortcode( 'fs_single_order', array( $this, 'single_order' ) );
+		add_shortcode( 'fs_user_orders', array( $this, 'user_orders' ) );
+		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );
+		add_shortcode( 'fs_list_orders', array( 'FS\FS_Orders', 'list_orders' ) );
+		add_shortcode( 'fs_order_detail', array( 'FS\FS_Orders', 'order_detail' ) );
+		add_shortcode( 'fs_order_pay', array( 'FS\FS_Payment', 'order_pay' ) );
 		add_shortcode( 'fs_order_info', array( $this, 'single_order_info' ) );
 		add_shortcode( 'fs_last_order_info', array( $this, 'last_order_info' ) );
 		add_shortcode( 'fs_last_order_id', array( 'FS\FS_Orders', 'get_last_order_id' ) );
 		add_shortcode( 'fs_last_order_amount', array( 'FS\FS_Orders', 'get_last_order_amount' ) );
-		add_shortcode( 'fs_have_cart_items', array( $this, 'have_cart_items' ) );
-
-		add_shortcode( 'fs_checkout_success', array( $this, 'fs_checkout_success' ) );
-		add_shortcode( 'fs_checkout', array( $this, 'order_send' ) );
-
-		add_shortcode( 'fs_single_order', array( $this, 'single_order' ) );
-
-		add_shortcode( 'fs_user_info', array( 'FS\FS_Users', 'user_info' ) );
-		add_shortcode( 'fs_user_orders', array( $this, 'user_orders' ) );
-		add_shortcode( 'fs_profile_edit', array( $this, 'profile_edit' ) );
-		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );
-		add_shortcode( 'fs_wishlist', array( $this, 'wishlist_shortcode' ) );
-		add_shortcode( 'fs_range_slider', array( $this, 'range_slider' ) );
-		add_shortcode( 'fs_order_detail', array( 'FS\FS_Orders', 'order_detail' ) );
-		add_shortcode( 'fs_list_orders', array( 'FS\FS_Orders', 'list_orders' ) );
-
-
 	}
 
 	/**
@@ -136,7 +127,7 @@ class FS_Shortcode {
 	 * @return mixed
 	 */
 	function last_order_info( $atts ) {
-		$order     = new FS_Order();
+		$order = new FS_Order();
 
 		return fs_frontend_template( 'order/last-order-info', array(
 			'vars' => [
@@ -198,7 +189,7 @@ class FS_Shortcode {
 			'class'    => 'fs-order-info',
 			'order_id' => $order_id,
 			'order'    => $orders_cl->get_order( $order_id ),
-			'payment'  => new FS_Payment_Class()
+			'payment'  => new FS_Payment()
 
 		), $atts );
 

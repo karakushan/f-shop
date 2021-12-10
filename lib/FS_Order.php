@@ -310,11 +310,8 @@ class FS_Order {
 		}
 
 		$this->delivery_method=new FS_Delivery($order_id);
-
 		$this->count = is_array( $this->items ) ? count( $this->items ) : 0;
-
-		$this->status = get_post_status_object( $this->post->post_status )->label;
-
+		$this->status = $this->get_order_status($order_id);
 		$this->date = $this->post->post_date;
 	}
 
@@ -354,7 +351,7 @@ class FS_Order {
 	 *
 	 * @return mixed|\WP_Error
 	 */
-	public function get_order_history( int $order_id = 0, $creation_date = true, $args = [] ) {
+	public function get_order_history( $order_id = 0, $creation_date = true, $args = [] ) {
 		$order_id = $order_id ? $order_id : ( $this->ID ? $this->ID : 0 );
 		$args     = wp_parse_args( $args, [
 			'order' => 'desc'
@@ -449,7 +446,7 @@ class FS_Order {
 	 *
 	 * @return array
 	 */
-	public function getItems(): array {
+	public function getItems() {
 		return $this->items;
 	}
 
@@ -458,7 +455,7 @@ class FS_Order {
 	 *
 	 * @return int
 	 */
-	public function getTotalAmount(): int {
+	public function getTotalAmount() {
 		return apply_filters( 'fs_price_format', $this->total_amount );
 	}
 
@@ -479,14 +476,14 @@ class FS_Order {
 	/**
 	 * @return string
 	 */
-	public function getComment(): string {
+	public function getComment(){
 		return $this->comment;
 	}
 
 	/**
 	 * @param string $comment
 	 */
-	public function setComment( string $comment ): void {
+	public function setComment( string $comment ) {
 		$this->comment = $comment;
 	}
 
@@ -494,21 +491,21 @@ class FS_Order {
 	 *
 	 * @param array $items
 	 */
-	public function setItems( array $items ): void {
+	public function setItems( array $items ) {
 		$this->items = $items;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getCount(): int {
+	public function getCount() {
 		return $this->count;
 	}
 
 	/**
 	 * @param int $count
 	 */
-	public function setCount( int $count ): void {
+	public function setCount( int $count ) {
 		$this->count = $count;
 	}
 
@@ -522,7 +519,7 @@ class FS_Order {
 	/**
 	 * @param string $status
 	 */
-	public function setStatus( string $status ): void {
+	public function setStatus( string $status ) {
 		$this->status = $status;
 	}
 
@@ -544,21 +541,21 @@ class FS_Order {
 	/**
 	 * @param mixed $date
 	 */
-	public function setDate( $date ): void {
+	public function setDate( $date ) {
 		$this->date = $date;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getID(): int {
+	public function getID() {
 		return $this->ID;
 	}
 
 	/**
 	 * @param int $ID
 	 */
-	public function setID( int $ID ): void {
+	public function setID( int $ID ) {
 		$this->ID = $ID;
 	}
 
@@ -574,21 +571,21 @@ class FS_Order {
 	/**
 	 * @return string
 	 */
-	public function get_customer_table(): string {
+	public function get_customer_table(){
 		return $this->customer_table;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function get_customer_data(): array {
+	public function get_customer_data() {
 		return $this->customer_data;
 	}
 
 	/**
 	 * @param array $customer_data
 	 */
-	public function set_customer_data( array $customer_data ): void {
+	public function set_customer_data( array $customer_data ) {
 		$this->customer_data = $customer_data;
 	}
 
@@ -602,7 +599,30 @@ class FS_Order {
 	/**
 	 * @param FS_Order $order_data
 	 */
-	public function set_order_data( $order_data ): void {
+	public function set_order_data( $order_data ) {
 		$this->order_data = $order_data;
+	}
+
+	/**
+	 * Возвращает статус заказа в текстовой, читабельной форме
+	 *
+	 * @param $order_id - ID заказа
+	 *
+	 * @return string
+	 */
+	public
+	function get_order_status(
+		$order_id
+	) {
+		$post_status_id = get_post_status( $order_id );
+		$statuses = FS_Orders::default_order_statuses();
+
+		if ( ! empty( $statuses[ $post_status_id ]['name'] ) ) {
+			$status = $statuses[ $post_status_id ]['name'];
+		} else {
+			$status = __( 'The order status is not defined', 'f-shop' );
+		}
+
+		return $status;
 	}
 }

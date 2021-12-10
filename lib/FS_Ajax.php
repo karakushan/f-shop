@@ -566,7 +566,7 @@ class FS_Ajax {
 	 */
 	function order_send_ajax() {
 		global $wpdb;
-		$wpdb->show_errors(false);
+		$wpdb->show_errors( false );
 		$fs_config                 = new FS_Config();
 		$fs_template               = new FS_Template();
 		$order_create_time         = time();
@@ -696,20 +696,20 @@ class FS_Ajax {
 
 		// Добавляем покупателя в базу
 		try {
-				$wpdb->insert( $wpdb->prefix . 'fs_customers', [
-					'user_id'    => $user_id,
-					'first_name' => $sanitize_field['fs_first_name'],
-					'last_name'  => $sanitize_field['fs_last_name'],
-					'email'      => $sanitize_field['fs_email'],
-					'phone'      => $sanitize_field['fs_phone'],
-					'address'    => $sanitize_field['fs_address'],
-					'city'       => $sanitize_field['fs_city'],
-					'ip'         => $customer_ip,
-					'group'      => 1,
-				] );
-				$customer_id = $wpdb->insert_id;
+			$wpdb->insert( $wpdb->prefix . 'fs_customers', [
+				'user_id'    => $user_id,
+				'first_name' => $sanitize_field['fs_first_name'],
+				'last_name'  => $sanitize_field['fs_last_name'],
+				'email'      => $sanitize_field['fs_email'],
+				'phone'      => $sanitize_field['fs_phone'],
+				'address'    => $sanitize_field['fs_address'],
+				'city'       => $sanitize_field['fs_city'],
+				'ip'         => $customer_ip,
+				'group'      => 1,
+			] );
+			$customer_id = $wpdb->insert_id;
 
-		}catch (\Exception $e){
+		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() );
 		}
 
@@ -856,9 +856,15 @@ class FS_Ajax {
 				)
 			);
 
+
+			// Создаем ссылку для оплаты
 			$redirect_to   = $pay_method && get_term_meta( $pay_method->term_id, '_fs_checkout_redirect', 1 ) ? 'page_payment' : 'page_success';
-			$redirect_link = get_permalink( fs_option( $redirect_to ) );
-			$result        = array(
+			$redirect_link = fs_option( $redirect_to ) ? add_query_arg( [
+				'pay_method' => $pay_method->term_id,
+				'order_id'   => $order_id
+			], get_permalink( fs_option( $redirect_to ) ) ) : '';
+
+			$result = array(
 				'msg'      => sprintf( __( 'Order #%d successfully added', 'f-shop' ), $order_id ),
 				'products' => $fs_products,
 				'order_id' => $order_id,

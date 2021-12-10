@@ -47,7 +47,7 @@ class FS_Orders {
 			add_action( 'add_meta_boxes', array( $this, 'register_order_meta_box' ) );
 		} );
 
-		add_filter( 'manage_orders_posts_custom_column', [ $this, 'admin_order_custom_column' ], 5, 2 );
+		 add_filter( 'manage_orders_posts_custom_column', [ $this, 'admin_order_custom_column' ], 5, 2 );
 
 	}
 
@@ -299,7 +299,7 @@ class FS_Orders {
 		return fs_frontend_template( 'shortcode/order-detail', array(
 			'vars' => array(
 				'order'   => FS_Orders::get_order( $order_id ),
-				'payment' => new FS_Payment_Class()
+				'payment' => new FS_Payment()
 			)
 		) );
 	}
@@ -404,6 +404,7 @@ Good luck!', 'f-shop' );
 	function order_status_custom() {
 		$statuses = self::default_order_statuses();
 
+
 		if ( count( $statuses ) ) {
 			foreach ( $statuses as $key => $status ) {
 				register_post_status( $key, array(
@@ -444,10 +445,12 @@ Good luck!', 'f-shop' );
 	 * @return \stdClass
 	 */
 	private
-	static function set_order_data($order_id) {
+	static function set_order_data(
+		$order_id
+	) {
 
-		$order_meta      = get_post_meta( $order_id );
-		$data            = new self();
+		$order_meta = get_post_meta( $order_id );
+		$data       = new self();
 
 		$data->_products = self::get_order_items( $order_id );
 
@@ -463,7 +466,6 @@ Good luck!', 'f-shop' );
 				}
 			}
 		}
-
 
 
 		return $data;
@@ -492,32 +494,15 @@ Good luck!', 'f-shop' );
 			'meta_value'  => $user_id,
 		) );
 
-		return get_posts( $args );
+		$orders = get_posts( $args );
+
+		return array_filter( $orders, function ( $item ) {
+			return $item->post_status != 'trash';
+		} );
 	}
 
-	/**
-	 * Возвращает статус заказа в текстовой, читабельной форме
-	 *
-	 * @param $order_id - ID заказа
-	 *
-	 * @return string
-	 */
-	public
-	function get_order_status(
-		$order_id
-	) {
-		$post_status_id = get_post_status( $order_id );
 
-		if ( ! empty( $this->order_statuses[ $post_status_id ]['name'] ) ) {
-			$status = $this->order_statuses[ $post_status_id ]['name'];
-		} else {
-			$status = __( 'The order status is not defined', 'f-shop' );
-		}
-
-		return $status;
-	}
-
-	public static function get_order_items($order_id) {
+	public static function get_order_items( $order_id ) {
 		$order_id = (int) $order_id;
 		$products = get_post_meta( $order_id, '_products', 0 );
 		$products = $products[0];

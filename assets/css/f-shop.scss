@@ -1754,10 +1754,12 @@ td.fs_photo.column-fs_photo img {
   &__header {
     border: 1px solid rgba(0, 0, 0, .125);
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding: 10px 20px;
     align-items: center;
     border-radius: 4px;
+
 
     span {
       font-weight: 300;
@@ -2009,6 +2011,12 @@ td.fs_photo.column-fs_photo img {
 
 .fs-login-form {
   max-width: 300px;
+}
+@media (max-width:768px) {
+  .fs-dashboard-order__header span {
+    display: block;
+    margin: 0 0 12px;
+  }
 }
 
 @import "../scss/dashboard"; 

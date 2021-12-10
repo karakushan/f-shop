@@ -1,5 +1,44 @@
 // файл со стилями для всех форм плагина
 .fs-form{
+    position: relative;
+    .meter {
+        height: 5px;
+        position: fixed;
+        background: #f3efe6;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: none;
+        z-index: 9999999;
+    }
+
+    .meter span {
+        display: block;
+        height: 100%;
+    }
+
+    .progress {
+        background-color: #fbb962;
+        animation: progressBar 3s ease-in-out;
+        animation-fill-mode:both;
+    }
+
+    @keyframes progressBar {
+        0% { width: 0; }
+        100% { width: 100%; }
+    }
+    .fs-form-loader {
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: rgb(255 255 255 / 49%);
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     input.error {
         border: 1px solid $c-red;
     }

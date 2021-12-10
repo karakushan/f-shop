@@ -26,9 +26,7 @@
 				'id'          => 'fs-save-user-data',
 				'name'        => 'fs-save-user-data',
 				'ajax_action' => 'fs_save_user_data'
-			) );
-			do_action( 'qm/debug', $user );
-			?>
+			) ); ?>
 
 			<?php fs_form_field( 'fs_first_name', [ 'value' => $user->first_name ] ) ?>
 
@@ -50,8 +48,7 @@
 
 			<?php fs_form_field( 'fs_address', [ 'value' => $user->address ] ) ?>
 
-            <button type="submit"><?php esc_html_e( 'Save', 'f-shop' ) ?></button>
-
+	        <?= FS\FS_Form::form_submit(); ?>
 			<?= FS\FS_Form::form_close(); ?>
 
         </div><!--.fs-dashboard__tab-->
