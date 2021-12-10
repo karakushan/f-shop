@@ -116,8 +116,8 @@ function fs_get_price( $product_id = 0 ) {
 	}
 
 
-	$price = apply_filters( 'fs_price_discount_filter', $product_id, $price );
-	$price = apply_filters( 'fs_price_filter', $product_id, $price );
+	$price = apply_filters( 'fs_price_discount_filter', $price, $product_id );
+	$price = apply_filters( 'fs_price_filter', $price, $product_id, );
 
 	return floatval( $price );
 }
@@ -761,7 +761,7 @@ function fs_get_base_price( $product_id = 0 ) {
 
 	}
 
-	$price     = apply_filters( 'fs_price_filter', $product_id, $price );
+	$price     = apply_filters( 'fs_price_filter', $price, $product_id );
 	$buy_price = fs_get_price( $product_id );
 
 	if ( $buy_price < $price ) {
@@ -1700,14 +1700,14 @@ function fs_frontend_template( $template, $args = array(), $extension = '.php' )
 function fs_get_current_user() {
 	$user = wp_get_current_user();
 	if ( $user->exists() ) {
-		$profile_update           = empty( $user->profile_update ) ? strtotime( $user->user_registered ) : $user->profile_update;
-		$user->email              = $user->user_email;
-		$user->phone              = FS_Users::get_user_field('fs_phone');
-		$user->city               = FS_Users::get_user_field('fs_city');
-		$user->address             = FS_Users::get_user_field('fs_address');
-		$user->gender         = FS_Users::get_user_field('fs_gender');
-		$user->country         = FS_Users::get_user_field('fs_country');
-		$user->region         = FS_Users::get_user_field('fs_region');
+		$profile_update = empty( $user->profile_update ) ? strtotime( $user->user_registered ) : $user->profile_update;
+		$user->email    = $user->user_email;
+		$user->phone    = FS_Users::get_user_field( 'fs_phone' );
+		$user->city     = FS_Users::get_user_field( 'fs_city' );
+		$user->address  = FS_Users::get_user_field( 'fs_address' );
+		$user->gender   = FS_Users::get_user_field( 'fs_gender' );
+		$user->country  = FS_Users::get_user_field( 'fs_country' );
+		$user->region   = FS_Users::get_user_field( 'fs_region' );
 //		$user->birth_day          = FS_Users::get_user_field('fs_address');
 //		if ( ! empty( $user->birth_day ) ) {
 //			$user->birth_day = $user->birth_day;
@@ -2885,14 +2885,14 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 			// Если включено показывать цену
 			if ( $args['show_price'] ) {
 				if ( ! empty( $variation['action_price'] ) && $variation['price'] > $variation['action_price'] ) {
-					$price        = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
+					$price        = apply_filters( 'fs_price_filter', $variation['price'],$product_id );
 					$price        = apply_filters( 'fs_price_format', $price );
-					$action_price = apply_filters( 'fs_price_filter', $product_id, $variation['action_price'] );
+					$action_price = apply_filters( 'fs_price_filter',  $variation['action_price'],$product_id );
 					$action_price = apply_filters( 'fs_price_format', $action_price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $action_price ), esc_attr( fs_currency() ) ) . '</span>';
 					echo '<del class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</del>';
 				} else {
-					$price = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
+					$price = apply_filters( 'fs_price_filter',$variation['price'],$product_id );
 					$price = apply_filters( 'fs_price_format', $price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</span>';
 				}

@@ -487,8 +487,8 @@ class FS_Ajax {
 		// TODO: В дальнейшем если есть несколько совпавших вариантов выводить доп. окно с уточнением
 		if ( count( $matched_options ) && is_array( $matched_options ) ) {
 			$matched_options = array_shift( $matched_options );
-			$price           = apply_filters( 'fs_price_filter', $product_id, $matched_options['price'] );
-			$action_price    = apply_filters( 'fs_price_filter', $product_id, $matched_options['action_price'] );
+			$price           = apply_filters( 'fs_price_filter',  $matched_options['price'],$product_id );
+			$action_price    = apply_filters( 'fs_price_filter',  $matched_options['action_price'],$product_id );
 			$base_price      = null;
 
 			if ( $action_price > 0 && $action_price < $price ) {

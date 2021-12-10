@@ -205,7 +205,7 @@ function fs_dropdown_cats_multiple( $output, $r ) {
 
 // вносит коррективы в цену с учётом настроек валюты
 add_filter( 'fs_price_filter', 'fs_price_filter_callback', 10, 2 );
-function fs_price_filter_callback( $post_id, $price ) {
+function fs_price_filter_callback($price, $post_id ) {
 	$price = floatval( $price );
 	if ( fs_option( 'multi_currency_on' ) != 1 ) {
 		return $price;
@@ -263,7 +263,7 @@ add_filter( 'fs_price_discount_filter', 'fs_price_discount_filter', 10, 2 );
  *
  * @return mixed
  */
-function fs_price_discount_filter( $product_id, $price ) {
+function fs_price_discount_filter(  $price, $product_id ) {
 	$discount_terms_conf = array(
 		'taxonomy'   => FS_Config::get_data( 'discount_taxonomy' ),
 		'hide_empty' => false,

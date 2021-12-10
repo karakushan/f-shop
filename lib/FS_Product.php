@@ -423,7 +423,7 @@ class FS_Product {
 			$price = floatval( $variation['action_price'] );
 		}
 
-		return apply_filters( 'fs_price_filter', $product_id, $price );
+		return apply_filters( 'fs_price_filter',  $price, $product_id );
 	}
 
 	/**
@@ -504,7 +504,7 @@ class FS_Product {
 			if ( ! empty( $variation['action_price'] ) && $action_price < $price ) {
 				$price = $action_price;
 			}
-			$price = apply_filters( 'fs_price_filter', $product_id, $price );
+			$price = apply_filters( 'fs_price_filter', $price , $product_id);
 		}
 
 		return $price;
@@ -703,13 +703,13 @@ class FS_Product {
 		if ( count( $variations ) && ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
 			$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
 			$variation    = $this->get_variation( $product_id, $variation_id );
-			$base_price   = apply_filters( 'fs_price_filter', $product_id, $variation['price'] );
+			$base_price   = apply_filters( 'fs_price_filter',$variation['price'], $product_id );
 
 			return floatval( $base_price );
 		} else {
 			$price = get_post_meta( $product_id, $fs_config->meta['price'], 1 );
 
-			return apply_filters( 'fs_price_filter', $product_id, $price );
+			return apply_filters( 'fs_price_filter',  $price,$product_id );
 		}
 	}
 
