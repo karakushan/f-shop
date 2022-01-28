@@ -238,6 +238,8 @@ function fs_available_select_filter( $first_option = 'сделайте выбо�
  * @param array $args
  */
 function fs_attr_filter( $group_id, $args = array() ) {
+
+
 	$default = array(
 		'redirect'            => true,
 		'container'           => 'ul',
@@ -251,7 +253,7 @@ function fs_attr_filter( $group_id, $args = array() ) {
 		'label_class'         => 'checkLabel',
 		'taxonomy'            => FS_Config::get_data( 'features_taxonomy' ),
 		'type'                => 'normal',
-		'current_screen'      => false,
+		'current_screen'      => true,
 		'include_query'       => true,
 		'exclude'             => []
 		// тип отображения, по умолчанию normal - обычные чекбоксы (color - квадратики с цветом, image - изображения)
@@ -285,38 +287,36 @@ function fs_attr_filter( $group_id, $args = array() ) {
 	$arr_url = urldecode( $_SERVER['QUERY_STRING'] );
 	parse_str( $arr_url, $url );
 
+	global $wp_query;
+
 	if ( $terms ) {
 		if ( ! empty( $args['container'] ) ) {
 			echo '<' . esc_html( $args['container'] ) . ' class="' . esc_attr( $container_class ) . '"  id="' . sanitize_html_class( $args['container_id'] ) . '">';
 		}
 		foreach ( $terms as $key => $term ) {
-			if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-				$current_term = get_queried_object();
-				$the_query    = new WP_Query( array(
-					'post_type' => FS_Config::get_data( 'post_type' ),
-					'tax_query' => [
-						'relation' => 'AND',
-						[
-							'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
-							'field'    => 'term_id',
-							'terms'    => $current_term->term_id,
-						],
-						[
-							'taxonomy' => $term->taxonomy,
-							'field'    => 'term_id',
-							'terms'    =>   $term->term_id,
-						]
-					]
-				) );
-				$count        = $the_query->found_posts;
+//			do_action( 'qm/debug', $wp_query->query_vars );
+			$term_query = $wp_query->query_vars;
+			if ( empty( $wp_query->query_vars['tax_query'] ) ) {
+				$term_query['tax_query'] [] = [
+					'taxonomy' => $term->taxonomy,
+					'field'    => 'term_id',
+					'terms'    => $term->term_id
+				];
 			} else {
-				$count = $term->count;
+				$term_query['tax_query'] = array_merge( $wp_query->query_vars['tax_query'], [
+					[
+						'taxonomy' => $term->taxonomy,
+						'field'    => 'term_id',
+						'terms'    => $term->term_id
+					]
+				] );
 			}
 
+			$the_query = new WP_Query( apply_filters( 'fs_attr_filter_query_args', $term_query, $term ) );
+			$count     = $the_query->found_posts;
 			if ( ! $count ) {
 				continue;
 			}
-
 
 			$product_attributes = isset( $_GET['attributes'][ $term->slug ] ) ? $_GET['attributes'][ $term->slug ] : '';
 			if ( $term->term_id == $product_attributes ) {
