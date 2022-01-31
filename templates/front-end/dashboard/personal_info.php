@@ -62,8 +62,6 @@
 				'ajax_action' => 'fs_save_user_data'
 			) ); ?>
 
-            <?php  do_action( 'qm/debug', get_user_meta($user->ID,'fs_subscribe_news',1) );  ?>
-
             <div class="fs-dashboard__tab-title"><?php esc_html_e( 'Message Setup', 'f-shop' ); ?></div>
 
             <div class="fs-dashboard__checkbox">

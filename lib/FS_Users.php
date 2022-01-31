@@ -1073,7 +1073,6 @@ class FS_Users {
 			$template .= apply_filters( 'fs_form_bottom', '' );
 
 		}
-		do_action( 'qm/debug', $template );
 
 		return $template;
 	}

@@ -1460,7 +1460,6 @@ function fs_price_max() {
 	$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
 	if ( is_tax( $taxonomy_name ) ) {
 		$term = get_queried_object();
-		do_action( 'qm/debug', $term );
 		$max  = wp_cache_get( 'fs_max_price_term_' . $term->term_id );
 		if ( ! $max ) {
 			$query  = new WP_Query( [

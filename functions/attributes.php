@@ -294,7 +294,6 @@ function fs_attr_filter( $group_id, $args = array() ) {
 			echo '<' . esc_html( $args['container'] ) . ' class="' . esc_attr( $container_class ) . '"  id="' . sanitize_html_class( $args['container_id'] ) . '">';
 		}
 		foreach ( $terms as $key => $term ) {
-//			do_action( 'qm/debug', $wp_query->query_vars );
 			$term_query = $wp_query->query_vars;
 			if ( empty( $wp_query->query_vars['tax_query'] ) ) {
 				$term_query['tax_query'] [] = [

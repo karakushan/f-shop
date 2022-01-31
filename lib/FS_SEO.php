@@ -18,16 +18,16 @@ class FS_SEO {
 		// Позволяет регистрировать события для ремаркетинга Google Adwords
 		add_action( 'fs_adwords_remarketing', [ $this, 'adwords_remarketing' ] );
 
-		// Изменяет meta title
-		add_filter( 'document_title_parts', array( $this, 'meta_title_filter' ), 10, 1 );
-
-		// TODO: лучше создать специальную папку с интеграциями с другими плагинами и подключать классы с случае если плагин активен
+        // TODO: лучше создать специальную папку с интеграциями с другими плагинами и подключать классы с случае если плагин активен
 		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
 			// Change SEO Title
 			add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
 			// Change wordpress seo canonical
 			add_filter( 'wpseo_canonical', array( $this, 'replace_products_canonical' ), 10, 1 );
-		}
+		}else{
+			// Изменяет meta title
+			add_filter( 'document_title_parts', array( $this, 'meta_title_filter' ), 10, 1 );
+        }
 
 		add_action( 'wp_footer', [ $this, 'scripts_in_footer' ] );
 		add_action( 'wp_head', [ $this, 'scripts_in_head' ] );

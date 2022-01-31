@@ -505,6 +505,11 @@ class FS_Taxonomy {
 						'type' => 'textarea',
 						'args' => array()
 					),
+					'_seo_canonical'       => array(
+						'name' => __( 'SEO canonical', 'f-shop' ),
+						'type' => 'text',
+						'args' => array()
+					),
 					'_thumbnail_id'    => array(
 						'name' => __( 'Thumbnail', 'f-shop' ),
 						'type' => 'image',

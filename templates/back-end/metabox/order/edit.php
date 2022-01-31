@@ -87,7 +87,6 @@
                 <th><?php esc_html_e( 'Delivery method', 'f-shop' ) ?></th>
                 <td>
                     <select name="order[_delivery][method]" class="fs-select-field">
-                        <?php  do_action( 'qm/debug', $order);  ?>
 						<?php foreach ( $shipping_methods as $shipping_method ): ?>
                             <option value="<?php echo esc_attr( $shipping_method->term_id ); ?>" <?php selected( $order->delivery_method->term_id, $shipping_method->term_id ) ?>><?php echo apply_filters( 'the_title', $shipping_method->name ) ?></option>
 						<?php endforeach; ?>
