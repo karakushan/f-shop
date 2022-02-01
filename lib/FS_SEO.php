@@ -18,16 +18,16 @@ class FS_SEO {
 		// Позволяет регистрировать события для ремаркетинга Google Adwords
 		add_action( 'fs_adwords_remarketing', [ $this, 'adwords_remarketing' ] );
 
-        // TODO: лучше создать специальную папку с интеграциями с другими плагинами и подключать классы с случае если плагин активен
+		// TODO: лучше создать специальную папку с интеграциями с другими плагинами и подключать классы с случае если плагин активен
 		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
 			// Change SEO Title
 			add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
 			// Change wordpress seo canonical
 			add_filter( 'wpseo_canonical', array( $this, 'replace_products_canonical' ), 10, 1 );
-		}else{
+		} else {
 			// Изменяет meta title
 			add_filter( 'document_title_parts', array( $this, 'meta_title_filter' ), 10, 1 );
-        }
+		}
 
 		add_action( 'wp_footer', [ $this, 'scripts_in_footer' ] );
 		add_action( 'wp_head', [ $this, 'scripts_in_head' ] );
@@ -47,11 +47,11 @@ class FS_SEO {
 		$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
 		if ( is_tax( $taxonomy_name ) && fs_option( 'fs_disable_taxonomy_slug' ) ) {
 			$canonical = get_term_link( get_queried_object_id(), $taxonomy_name );
-		} elseif ( is_singular( FS_Config::get_data( 'post_type' ) ) && get_locale() == 'uk' ) {
+		} elseif ( is_singular( FS_Config::get_data( 'post_type' ) ) && get_locale() != FS_Config::default_locale() ) {
 			global $post;
 			$slug = get_post_meta( $post->ID, 'fs_seo_slug__' . get_locale(), 1 );
 			if ( $slug ) {
-				$canonical = site_url( sprintf( '%s/%s/%s', 'ua', FS_Config::get_data( 'post_type' ), $slug ) );
+				$canonical = site_url( sprintf( '%s/%s/%s/', 'ua', FS_Config::get_data( 'post_type' ), $slug ) );
 			}
 		}
 
@@ -69,7 +69,7 @@ class FS_SEO {
 		if ( ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
 			return $title;
 		}
-		$meta_title = get_term_meta( get_queried_object_id(), fs_localize_meta_key( '_seo_title' ), 1 );
+		$meta_title = fs_get_term_meta( '_seo_title' );
 
 		return apply_filters( 'fs_meta_title', $meta_title != '' ? $meta_title : $title );
 	}
