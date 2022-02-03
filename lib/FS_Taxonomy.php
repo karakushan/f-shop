@@ -215,16 +215,14 @@ class FS_Taxonomy {
 					'value'   => "0"
 				);
 			}
-			$orderby   = [];
-			$order     = '';
+
+			$order_by  = [ 'post_date' => 'DESC' ]; // Устанавливаем изначально сортировку по дате публикации
 			$tax_query = [];
 			$arr_url   = urldecode( $_SERVER['QUERY_STRING'] );
 			parse_str( $arr_url, $url );
 
-
 			//Фильтрируем по значениям диапазона цен
 			if ( isset( $url['price_start'] ) && isset( $url['price_end'] ) ) {
-
 				$price_start                  = ! empty( $url['price_start'] ) ? (int) $url['price_start'] : 0;
 				$price_end                    = ! empty( $url['price_end'] ) ? (int) $url['price_end'] : PHP_INT_MAX;
 				$meta_query['price_interval'] =
@@ -250,75 +248,79 @@ class FS_Taxonomy {
 			}
 
 			// фильтр товаров по признакам
-			if ( ! empty( $url['filter_by'] ) ) {
+			if ( ! empty( $url['filter_by'] ) && $url['filter_by'] == 'action_price' ) {
+				$meta_query['action_price'] = array(
+					'key'     => FS_Config::get_meta( 'action_price' ),
+					'compare' => '>',
+					'value'   => 0
+				);
+				$order_by['action_price']   = 'DESC';
+			}
 
-				switch ( $url['filter_by'] ) {
-					case 'action_price' :
-						$meta_query['action_price'] = array(
-							'key'     => FS_Config::get_meta( 'action_price' ),
-							'compare' => '>',
-							'value'   => 0
-						);
-						$orderby['action_price']    = 'DESC';
-						break;
-				}
+			$url['order_type'] = ! empty( $url['order_type'] )
+				? $url['order_type']
+				: fs_option( 'fs_product_sort_by', [ 'ID' => 'DESC' ] );
+
+			switch ( $url['order_type'] ) {
+
+				//sort by price in ascending order
+				case 'price_asc':
+					$meta_query['price'] = array(
+						'key'  => FS_Config::get_meta( 'price' ),
+						'type' => 'DECIMAL'
+					);
+					$order_by['price']   = 'ASC';
+					break;
+
+				// Сортировка по наличию, товары которых нет в наличии будут в конце
+				case 'stock_desc':
+					$meta_query['in_stock'] = [
+						'relation' => 'OR',
+						[
+							'key'     => FS_Config::get_meta( 'remaining_amount' ),
+							'type'    => 'NUMERIC',
+							'compare' => 'EXISTS',
+						]
+					];
+					$order_by               = [ 'in_stock' => 'ASC' ];
+					break;
+
+				case 'price_desc': //sort by price in a falling order
+					$meta_query['price'] = array(
+						'key'  => FS_Config::get_meta( 'price' ),
+						'type' => 'DECIMAL'
+					);
+					$order_by['price']   = 'DESC';
+					break;
+				case 'views_desc': //сортируем по просмотрам в спадающем порядке
+					$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
+					$order_by['views']   = 'DESC';
+					break;
+				case 'views_asc': //сортируем по просмотрам в спадающем порядке
+					$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
+					$order_by['views']   = 'ASC';
+					break;
+				case 'name_asc': //сортируем по названию по алфавиту
+					$order_by['title'] = 'ASC';
+					break;
+				case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
+					$order_by['title'] = 'DESC';
+					break;
+				case 'date_desc':
+					$order_by['date'] = 'DESC';
+					break;
+				case 'date_asc':
+					$order_by['date'] = 'ASC';
+					break;
+				case 'action_price' :
+					$order_by['action_price'] = 'DESC';
+					break;
+				case 'menu_order' :
+					$order_by['menu_order'] = 'ASC';
+					break;
 
 			}
 
-
-			// Set the sort order in the default directory.
-			if ( empty( $url['order_type'] ) && fs_option( 'fs_product_sort_by' ) ) {
-				$url['order_type'] = fs_option( 'fs_product_sort_by' );
-			}
-
-			// Specify sorting rules
-			if ( ! empty( $url['order_type'] ) ) {
-
-				switch ( $url['order_type'] ) {
-					case 'price_asc': //sort by price in ascending order
-						$meta_query['price'] = array(
-							'key'  => FS_Config::get_meta( 'price' ),
-							'type' => 'DECIMAL'
-						);
-						$orderby['price']    = 'ASC';
-						break;
-					case 'price_desc': //sort by price in a falling order
-						$meta_query['price'] = array(
-							'key'  => FS_Config::get_meta( 'price' ),
-							'type' => 'DECIMAL'
-						);
-						$orderby['price']    = 'DESC';
-						break;
-					case 'views_desc': //сортируем по просмотрам в спадающем порядке
-						$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
-						$orderby['views']    = 'DESC';
-						break;
-					case 'views_asc': //сортируем по просмотрам в спадающем порядке
-						$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
-						$orderby['views']    = 'ASC';
-						break;
-					case 'name_asc': //сортируем по названию по алфавиту
-						$orderby['title'] = 'ASC';
-						break;
-					case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
-						$orderby['title'] = 'DESC';
-						break;
-					case 'date_desc':
-						$orderby['date'] = 'DESC';
-						break;
-					case 'date_asc':
-						$orderby['date'] = 'ASC';
-						break;
-					case 'action_price' :
-						$orderby['action_price'] = 'DESC';
-						break;
-
-				}
-			} else {
-				if ( fs_option( 'fs_product_sort_by' ) == 'menu_order' ) {
-					$orderby['menu_order'] = 'ASC';
-				}
-			}
 
 			if ( ! empty( $_REQUEST['aviable'] ) ) {
 				switch ( $_REQUEST['aviable'] ) {
@@ -366,21 +368,17 @@ class FS_Taxonomy {
 				);
 			}
 
-
-			$query->set( 'posts_per_page', $per_page );
 			if ( ! empty( $meta_query ) ) {
 				$query->set( 'meta_query', $meta_query );
 			}
+
 			if ( ! empty( $tax_query ) ) {
-				$tax_query             = array_merge( $query->tax_query->queries, $tax_query );
+				$tax_query = array_merge( $query->tax_query->queries, $tax_query );
 				$query->set( 'tax_query', $tax_query );
 			}
 
-			$query->set( 'orderby', $orderby );
-
-			if ( ! empty( $order ) ) {
-				$query->set( 'order', $order );
-			}
+			$query->set( 'posts_per_page', $per_page );
+			$query->set( 'orderby', $order_by );
 		}
 
 	}//end filter_curr_product()
@@ -505,7 +503,7 @@ class FS_Taxonomy {
 						'type' => 'textarea',
 						'args' => array()
 					),
-					'_seo_canonical'       => array(
+					'_seo_canonical'   => array(
 						'name' => __( 'SEO canonical', 'f-shop' ),
 						'type' => 'text',
 						'args' => array()
