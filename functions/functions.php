@@ -1478,7 +1478,7 @@ function fs_price_max() {
 				}
 			}
 			wp_reset_query();
-			$max =!is_array($prices) ? max( $prices ) : 10000;
+			$max = ! is_array( $prices ) ? max( $prices ) : 10000;
 			wp_cache_add( 'fs_max_price_term_' . $term->term_id, $max );
 		}
 	} else {
@@ -2261,12 +2261,17 @@ function fs_gallery_images_ids( $post_id = 0, $thumbnail = true ) {
  *
  * @return false|string
  */
-function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $args = array() ) {
+function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $args = [] ) {
+	$args      = wp_parse_args( $args, [
+		'ignore_thumbnail' => false,
+		'class'            => ''
+	] );
+
 	$img_class = new FS\FS_Images_Class();
-	$gallery   = $img_class->get_gallery( $product_id );
-	if ( has_post_thumbnail( $product_id ) ) {
+	$gallery   = $img_class->get_gallery( $product_id ,!$args['ignore_thumbnail']);
+	if ( has_post_thumbnail( $product_id ) && !$args['ignore_thumbnail']) {
 		echo get_the_post_thumbnail( $product_id, $size, $args );
-	} elseif ( count( $gallery ) ) {
+	} elseif ( count( $gallery ) ) { 
 		$attach_id = array_shift( $gallery );
 		echo wp_get_attachment_image( $attach_id, $size, false, $args );
 	} else {
@@ -2885,14 +2890,14 @@ function fs_list_variations( $product_id = 0, $args = array() ) {
 			// Если включено показывать цену
 			if ( $args['show_price'] ) {
 				if ( ! empty( $variation['action_price'] ) && $variation['price'] > $variation['action_price'] ) {
-					$price        = apply_filters( 'fs_price_filter', $variation['price'],$product_id );
+					$price        = apply_filters( 'fs_price_filter', $variation['price'], $product_id );
 					$price        = apply_filters( 'fs_price_format', $price );
-					$action_price = apply_filters( 'fs_price_filter',  $variation['action_price'],$product_id );
+					$action_price = apply_filters( 'fs_price_filter', $variation['action_price'], $product_id );
 					$action_price = apply_filters( 'fs_price_format', $action_price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $action_price ), esc_attr( fs_currency() ) ) . '</span>';
 					echo '<del class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</del>';
 				} else {
-					$price = apply_filters( 'fs_price_filter',$variation['price'],$product_id );
+					$price = apply_filters( 'fs_price_filter', $variation['price'], $product_id );
 					$price = apply_filters( 'fs_price_format', $price );
 					echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf( '%s <span>%s</span>', esc_attr( $price ), esc_attr( fs_currency() ) ) . '</span>';
 				}
