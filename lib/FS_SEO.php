@@ -20,14 +20,11 @@ class FS_SEO {
 
 		// TODO: лучше создать специальную папку с интеграциями с другими плагинами и подключать классы с случае если плагин активен
 		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
-			// Change SEO Title
-			add_filter( 'wpseo_title', array( $this, 'wpseo_title_filter' ), 10, 1 );
 			// Change wordpress seo canonical
 			add_filter( 'wpseo_canonical', array( $this, 'replace_products_canonical' ), 10, 1 );
-		} else {
-			// Изменяет meta title
-			add_filter( 'document_title_parts', array( $this, 'meta_title_filter' ), 10, 1 );
 		}
+
+		add_filter( 'document_title_parts', array( $this, 'meta_title_filter' ), 10, 1 );
 
 		add_action( 'wp_footer', [ $this, 'scripts_in_footer' ] );
 		add_action( 'wp_head', [ $this, 'scripts_in_head' ] );
@@ -83,7 +80,7 @@ class FS_SEO {
 	 */
 	public function meta_title_filter( $title ) {
 
-		if ( is_archive( FS_Config::get_data( 'post_type' ) ) && ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+		if ( is_post_type_archive( FS_Config::get_data( 'post_type' ) ) && ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
 			$meta_title     = fs_option( '_fs_catalog_meta_title' ) ?: __( 'Catalog', 'f-shop' );
 			$title['title'] = esc_attr( $meta_title );
 			$title['site']  = '';

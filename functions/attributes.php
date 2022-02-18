@@ -283,7 +283,6 @@ function fs_attr_filter( $group_id, $args = array() ) {
 			$terms = fs_get_taxonomy_hierarchy( $terms_args );
 		}
 	}
-
 	$arr_url = urldecode( $_SERVER['QUERY_STRING'] );
 	parse_str( $arr_url, $url );
 
@@ -310,9 +309,9 @@ function fs_attr_filter( $group_id, $args = array() ) {
 					]
 				] );
 			}
-
-			$the_query = new WP_Query( apply_filters( 'fs_attr_filter_query_args', $term_query, $term ) );
-			$count     = $the_query->found_posts;
+			$term_query = apply_filters( 'fs_attr_filter_query_args', $term_query, $term );
+			$the_query  = new WP_Query( $term_query );
+			$count      = $the_query->found_posts;
 			if ( ! $count ) {
 				continue;
 			}

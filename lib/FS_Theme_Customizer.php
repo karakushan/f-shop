@@ -2,15 +2,15 @@
 
 
 namespace FS;
-include_once ABSPATH . 'wp-includes/class-wp-customize-control.php';
-
 
 class FS_Theme_Customizer {
 	public $options = [];
 
 	public function __construct( $options = array() ) {
+		include_once ABSPATH . 'wp-includes/class-wp-customize-control.php';
 		$this->setOptions( $options );
 		add_action( 'customize_register', array( $this, 'fs_customize_register' ) );
+
 	}
 
 
@@ -34,7 +34,7 @@ class FS_Theme_Customizer {
 		if ( $settings ) {
 			foreach ( $settings as $key => $setting ) {
 				$wp_customize->add_section( $key, array( 'title' => $setting['title'] ) );
-				if ( !empty($setting['fields'] )) {
+				if ( ! empty( $setting['fields'] ) ) {
 					foreach ( $setting['fields'] as $sek => $setting ) {
 						$wp_customize->add_setting( $sek, array(
 							'default'     => $setting['default'],
