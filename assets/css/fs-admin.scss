@@ -1,6 +1,8 @@
 @import "scss/base";
 @import "scss/mixins";
 
+$tablet_width : 991px;
+
 .fs-preloader {
   display: none;
 }
@@ -1223,6 +1225,10 @@ td.fs_photo.column-fs_photo {
       tr {
         th {
           width: 360px;
+          @media (max-width: $tablet_width) {
+            width: auto;
+          }
+
         }
       }
     }

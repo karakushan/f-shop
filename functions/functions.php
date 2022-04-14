@@ -3510,3 +3510,26 @@ if ( ! function_exists( 'fs_localize_category_url' ) ) {
 		return site_url( implode( '/', $url_components ) . '/' );
 	}
 }
+
+add_filter( 'wp_update_term_data', function ( $data, $term_id, $taxonomy, $args ) {
+	$data['name'] = preg_replace( [ '/(^[\{:ru\}]*)/ix', '/(\{:\}){2,}/ixu' ], [ '{:ru}', '{:}' ], $data['name'] );
+
+	$_SESSION['term_data'] = $data;
+	return $data;
+}, 99, 4 );
+
+add_action( 'admin_init', function () {
+	do_action( 'qm/debug', $_SESSION['term_data'] );
+
+	if ( ! isset( $_GET['replace_terms'] ) || ! is_admin() ) {
+		return;
+	}
+
+	global $wpdb;
+	$terms = $wpdb->get_results( "SELECT * FROM $wpdb->terms" );
+	foreach ( $terms as $term ) {
+		$name = preg_replace( [ '/(^[\{:ru\}]*)/ixu', '/(\{:\}){2,}/ixu' ], [ '{:ru}', '{:}' ], $term->name );
+		$wpdb->update( $wpdb->terms, [ 'name' => $name ], [ 'term_id' => $term->term_id ] );
+		echo $term->term_id;
+	}
+} );

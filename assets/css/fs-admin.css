@@ -1041,6 +1041,11 @@ td.fs_photo.column-fs_photo img {
 #fast_shop_orders_user_metabox .inside table.order-userdata tr th {
   width: 360px;
 }
+@media (max-width: 991px) {
+  #fast_shop_orders_user_metabox .inside table.order-userdata tr th {
+    width: auto;
+  }
+}
 
 .fs-admin-atts {
   width: 530px;
@@ -1176,7 +1181,7 @@ progress:after {
   margin-left: 5px;
 }
 .tooltip:before {
-  content: "";
+  content: "\f223";
   color: #00a0d2;
 }
 
@@ -1378,7 +1383,7 @@ td.fs_menu_order.column-fs_menu_order {
 }
 
 #wpadminbar #wp-admin-bar-fs-top > .ab-item:before {
-  content: "";
+  content: "\f174";
   top: 2px;
 }
 
