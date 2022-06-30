@@ -1,0 +1,1 @@
+<span><?php fs_product_count() ?></span>

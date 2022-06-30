@@ -1,0 +1,30 @@
+/*==========  Non-Mobile First  ==========*/
+
+/* Широкоформатный экран — 1200px */
+@media (max-width : 75.063em) {}
+
+/* Десктоп — 992px */
+@media (max-width : 62.063em) {}
+
+/* Планшеты — 768px */
+@media (max-width : 48.063em) {}
+
+/* Телефоны —  544px */
+@media (max-width : 34.063em) {}
+
+/* Айфон в портретном режиме — 320px */
+@media (max-width : 20.063em) {}
+
+/*==========  Mobile First  ==========*/
+
+/* Телефоны —  544px */
+@media (min-width : 34em) {}
+
+/* Планшеты — 768px */
+@media (min-width : 48em) {}
+
+/* Десктоп — 992px */
+@media (min-width : 62em) {}
+
+/* Широкоформатный экран — 1200px */
+@media (min-width : 75em) {}

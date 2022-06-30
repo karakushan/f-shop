@@ -1,0 +1,182 @@
+html[lang="ru-RU"] .site {
+  i.fa,
+  i.far,
+  i.fas {
+    font-family: "Font Awesome 5 Free" !important;
+  }
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+// товар на странице архива
+article {
+  &.product {
+    .fs-atc-row > * {
+      margin-bottom: 10px;
+    }
+
+    .fs-price-row {
+      margin-bottom: 1rem;
+
+      .fs-price {
+        font-weight: 700;
+        font-size: 1.4rem;
+        margin-right: 10px;
+
+        > span {
+          font-weight: 400;
+          font-size: 1.2rem;
+          letter-spacing: 0.05em;
+        }
+      }
+
+      .fs-base-price {
+        @extend .fs-price;
+        color: #999;
+        position: relative;
+
+        &:after {
+          content: '';
+          height: 1px;
+          width: 100%;
+          position: absolute;
+          left: 0;
+          top: 50%;
+          background: #999999;
+        }
+      }
+    }
+
+    .fs-thumbnail-meta {
+      margin: 0 auto;
+
+      .fs-meta {
+        width: calc(100% - 330px);
+        float: right;
+        @media (max-width: 768px) {
+          width: 100%;
+          padding: calc(2 * 1rem) 1rem;
+        }
+
+        .fs-qty-wrap {
+
+          .fs-pluss,
+          .fs-minus {
+            padding: 0;
+            background: #0073aa;
+            border-radius: 0;
+
+          }
+
+          input {
+            height: auto;
+          }
+        }
+
+        h3 {
+          margin-top: 0;
+          line-height: 1;
+        }
+      }
+
+      figure {
+        width: 300px;
+        max-width: 100%;
+        float: left;
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+      }
+
+      @media only screen and (min-width: 768px) {
+        margin: 1rem calc(10% + 60px);
+      }
+    }
+  }
+}
+
+.fs-cart-listing {
+  max-width: 100%;
+  width: 100% !important;
+
+  .fs-products-after {
+    .btn {
+      background: #0073aa;
+
+      &.btn-success {
+        background: #26aa00;
+      }
+
+      transition: background 150ms ease-in-out;
+
+      border: none;
+      border-radius: 5px;
+      box-sizing: border-box;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+      font-size: 0.88889em;
+      font-weight: 700;
+      line-height: 1.2;
+      outline: none;
+      padding: 0.76rem 1rem;
+      text-decoration: none;
+      vertical-align: bottom;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+
+      .col {
+        margin-bottom: 30px;
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+
+    td, th {
+      padding: 0.5em;
+      border: 1px solid #eee;
+      word-break: break-all;
+
+      img {
+        width: 150px;
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  }
+}
+
+.entry .entry-content >.fs-checkout-form {
+  max-width: 100%;
+  .form-group {
+    margin-bottom: 20px;
+  }
+  input {
+    width: 100%;
+    border: 1px solid #eeeeee;
+  }
+  textarea {
+    height: 150px;
+  }
+  select {
+    width: 100%;
+    border: 1px solid #eeeeee;
+    padding: 0.36rem 0.66rem;
+    font-weight: 400;
+    line-height: 1.8;
+  }
+}
+
+@media only screen and (min-width: 1168px) {
+  .entry .entry-content > .fs-cart-listing {
+    max-width: 100%;
+  }
+}
