@@ -1507,4 +1507,12 @@ td.fs_menu_order.column-fs_menu_order {
   font-weight: 700;
 }
 
+.fs-tabs #tab-seo .fs-tabs {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  float: left;
+  box-sizing: border-box;
+}
+
 /*# sourceMappingURL=fs-admin.css.map */

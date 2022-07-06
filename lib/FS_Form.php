@@ -92,6 +92,7 @@ class FS_Form {
 			'size'           => '',
 			'style'          => '',
 			'step'           => 1,
+			'multilang'      => false,
 			'first_option'   => __( 'Select' ),
 			'class'          => str_replace( '_', '-', sanitize_title( 'fs-' . $type . '-field' ) ),
 			'id'             => str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $type ) ),
@@ -101,21 +102,15 @@ class FS_Form {
 			'editor_args'    => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $name
-			)
+			),
+			'source'         => 'post_meta',
+			'post_id'        => 0,
+			'term_id'        => 0,
 		) );
 
 		$label_after = $args['required'] ? ' <i>*</i>' : '';
-
-		$multi_lang = false;
-		$screen     = is_admin() && get_current_screen() ? get_current_screen() : null;
-
-		if ( fs_option( 'fs_multi_language_support' )
-		     && ( is_array( FS_Config::get_languages() ) && count( FS_Config::get_languages() ) )
-		     && ( ! in_array( $type, [ 'image' ] ) )
-		     && ( isset( $screen->id ) && $screen->id == 'edit-catalog' )
-		) {
-			$multi_lang = true;
-		}
+		$screen      = is_admin() && get_current_screen() ? get_current_screen() : null;
+		$multi_lang  = $args['multilang'] && fs_option( 'fs_multi_language_support' );
 
 		if ( $multi_lang ) {
 			echo '<div class="fs-tabs nav-tab-wrapper">';
@@ -126,10 +121,7 @@ class FS_Form {
 				echo '<a href="#fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '" class="fs-tabs__title nav-tab ' . esc_attr( $tab_class ) . '">' . esc_html( $language['name'] ) . '</a>';
 				$count ++;
 			}
-			echo '</div><!! end .fs-tabs__header !!>';
-		}
-
-		if ( $multi_lang ) {
+			echo '</div>';
 			$count = 0;
 			foreach ( FS_Config::get_languages() as $key => $item ) {
 				$tab_class  = ! $count ? 'fs-tabs__body fs-tab-active' : 'fs-tabs__body';
@@ -138,9 +130,14 @@ class FS_Form {
 				$args['id'] = $args['id'] . '-' . $key;
 
 				echo '<div class="' . esc_attr( $tab_class ) . '" id="fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '">';
-				$name          = $item['locale'] != FS_Config::default_locale() ? $name . '__' . $item['locale'] : $name;
-				$args['value'] = ! empty( $_GET['tag_ID'] ) ? FS_Taxonomy::fs_get_term_meta( intval( $_GET['tag_ID'] ), $name ) : null;
-				if ( ! $args['value'] && $args['default'] ) {
+				$name          =  $name . '__' . $item['locale'] ;
+				if($args['source']=='post_meta' && $args['post_id'] ){
+					$args['value'] = get_post_meta( $args['post_id'], $name, true );
+				}elseif($args['source']=='term_meta' && $args['term_id']){
+					$args['value'] = get_term_meta( $args['term_id'], $name, true );
+				}
+
+				if ($args['value']=='' && $args['default']!=''){
 					$args['value'] = $args['default'];
 				}
 
@@ -172,6 +169,11 @@ class FS_Form {
 			}
 
 		} else {
+			if($args['source']=='post_meta' && $args['post_id'] ){
+				$args['value'] = get_post_meta( $args['post_id'], $name, true );
+			}elseif($args['source']=='term_meta' && $args['term_id']){
+				$args['value'] = get_term_meta( $args['term_id'], $name, true );
+			}
 
 			if ( ( $args['label'] || $args['help'] ) && $args['label_position'] == 'before' ) {
 				echo '<label for="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['label_class'] ) . '">' . esc_html( $args['label'] ) . $label_after;

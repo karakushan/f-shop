@@ -16,7 +16,7 @@ $attributes = array_merge(
 		'type'        => $args['type'],
 		'name' => $name,
 	],
-	is_array( $args['attributes'] ) ? $args['attributes'] : []
+	 $args['attributes'] ?? []
 );
 
 ?>

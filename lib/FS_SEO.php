@@ -31,6 +31,8 @@ class FS_SEO {
 
 		// Micro-marking of product card
 		add_action( 'wp_head', array( $this, 'product_microdata' ) );
+
+		add_filter( 'fs_transform_meta_value', [ $this, 'transform_meta_value' ], 10, 3 );
 	}
 
 	/**
@@ -380,6 +382,29 @@ class FS_SEO {
 		echo json_encode( $schema );
 		echo ' </script>';
 
+	}
+
+	/**
+	 * Creates a slug based on the title of a post
+	 *
+	 * @param $value
+	 * @param $key
+	 * @param $code
+	 * @param $post_id
+	 *
+	 * @return mixed|string
+	 */
+	public function transform_meta_value( $value, $key, $code ) {
+		if ( ( $key == 'fs_seo_slug' || $key == '_seo_slug' )
+		     && $value == '' && $code
+		     && ( $_POST[ 'post_title_' . $code ] != '' || $_POST['name'] != '' ) ) {
+			$value = $_POST[ 'post_title_' . $code ] ?? $_POST[ 'name_' . $code ];
+			if ( $value != '' ) {
+				$value = fs_convert_cyr_name( $value );
+			}
+		}
+
+		return $value;
 	}
 
 }

@@ -16,10 +16,10 @@
  */
 
 namespace FS;
+
 use function WP_CLI\Utils\glob_brace;
 
 class FS_Taxonomy {
-	public $taxonomy_pagination_structure = 'page/%d';
 	public $taxonomy_name;
 
 	function __construct() {
@@ -502,38 +502,52 @@ class FS_Taxonomy {
 					'_content'         => array(
 						'name' => __( 'Category text', 'f-shop' ),
 						'type' => 'editor',
-						'args' => array()
+						'args' => [
+							'multilang' => true
+						]
 					),
 					'_seo_slug'        => array(
 						'name' => __( 'SEO slug', 'f-shop' ),
 						'type' => 'text',
-						'args' => array()
+						'args' => [
+							'multilang' => true,
+						]
 					),
 					'_seo_title'       => array(
 						'name' => __( 'SEO title', 'f-shop' ),
 						'type' => 'text',
-						'args' => array()
+						'args' => [
+							'multilang' => true,
+						]
 					),
 					'_seo_description' => array(
 						'name' => __( 'SEO description', 'f-shop' ),
 						'type' => 'textarea',
-						'args' => array()
+						'args' => [
+							'multilang' => true,
+						]
 					),
 					'_seo_canonical'   => array(
 						'name' => __( 'SEO canonical', 'f-shop' ),
 						'type' => 'text',
-						'args' => array()
+						'args' => [
+							'multilang' => true,
+						]
 					),
-					'_thumbnail_id'    => array(
+					'_thumbnail_id'    => [
 						'name' => __( 'Thumbnail', 'f-shop' ),
 						'type' => 'image',
-						'args' => array()
-					),
-					'_icon_id'         => array(
+						'args' => [
+							'multilang' => false,
+						]
+					],
+					'_icon_id'         => [
 						'name' => __( 'Icon', 'f-shop' ),
 						'type' => 'image',
-						'args' => array()
-					)
+						'args' => [
+							'multilang' => false,
+						]
+					]
 				),
 			'fs-payment-methods'                            =>
 				array(
@@ -1005,7 +1019,13 @@ class FS_Taxonomy {
 				echo '<th scope="row"><label for="taxonomy-thumbnail">' . esc_attr( $field['name'] ) . '</label></th>';
 
 				echo '<td>';
-				$form->render_field( $name, $field['type'], $field['args'] );
+
+				$form->render_field( $name,
+					$field['type'], array_merge( $field['args'], [
+						'source'  => 'term_meta',
+						'term_id' => $term->term_id,
+						'default' => get_term_meta( $term->term_id, $name, 1 )
+					] ) );
 				if ( ! empty( $field['help'] ) ) {
 					printf( '<p class="description">%s</p>', $field['help'] );
 				}
@@ -1048,48 +1068,31 @@ class FS_Taxonomy {
 	 * @return void|null
 	 */
 	function save_taxonomy_fields( $term_id ) {
-		$fields = self::get_taxonomy_fields();
-
-		if ( empty( $fields ) || get_current_screen()->id != 'edit-catalog' ) {
-			return null;
-		}
-
+		$fields    = self::get_taxonomy_fields();
 		$languages = FS_Config::get_languages();
 		$term      = get_term( $term_id );
 
-		foreach ( $fields[ $term->taxonomy ] as $name => $field ) {
-			if ( fs_option( 'fs_multi_language_support' ) && is_array( $languages ) && count( $languages ) ) {
-				foreach ( FS_Config::get_languages() as $key => $language ) {
-					$meta_key =$language['locale'] == FS_Config::default_locale() ? $name : $name . '__' . $language['locale'];
-
-					// Создание слага на каждом языке
-					if ( fs_option( 'fs_localize_slug' )
-					     && $name == '_seo_slug' && !empty($_POST[ 'name_' . $key ])
-					     && get_term_meta( $term_id, $meta_key, 1 ) == '' ) {
-						$_POST[ $meta_key ] = fs_convert_cyr_name( $_POST[ 'name_' . $key ] );
+		if ( ! empty( $fields[ $term->taxonomy ] ) ) {
+			foreach ( $fields[ $term->taxonomy ] as $name => $field ) {
+				if ( fs_option( 'fs_multi_language_support' ) && ! empty( $languages ) &&  ! empty( $field['multilang'] ) ) {
+					foreach ( $languages as $code => $language ) {
+						$meta_key = $name . '__' . $language['locale'];
+						if ( ( isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != '' ) || $name == '_seo_slug' ) {
+							$value = apply_filters( 'fs_transform_meta_value', $_POST[ $meta_key ], $name, $code, $term_id );
+							update_term_meta( $term_id, $meta_key, $value );
+						} else {
+							delete_term_meta( $term_id, $meta_key );
+						}
 					}
-
-					if ( !empty( $_POST[ $meta_key ] ) ) {
-						update_term_meta( $term_id, $meta_key, $_POST[ $meta_key ] );
-					} else {
-						delete_term_meta( $term_id, $meta_key );
-					}
-				}
-			} else {
-				if ( isset( $_POST[ $name ] ) && $_POST[ $name ] != '' ) {
-					update_term_meta( $term_id, $name, $_POST[ $name ] );
 				} else {
-					delete_term_meta( $term_id, $name );
+					if ( isset( $_POST[ $name ] ) && $_POST[ $name ] != '' ) {
+						update_term_meta( $term_id, $name, $_POST[ $name ] );
+					} else {
+						delete_term_meta( $term_id, $name );
+					}
 				}
 			}
-
 		}
-
-        global $wpdb;
-
-        $wpdb->update($wpdb->terms,[
-	        'name'=>$_POST['name']
-        ],['term_id'=>$term_id]);
 
 		// Обновляем правила ЧПУ
 		flush_rewrite_rules();

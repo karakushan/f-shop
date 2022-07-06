@@ -887,26 +887,31 @@ class FS_Product {
 
 		do_action( 'fs_before_save_meta_fields', $post_id );
 
+		$save_meta_keys = self::get_product_tabs();
 
-		$save_meta_keys = $this->get_save_fields();
-
-
-		foreach ( $save_meta_keys as $key => $field_name ) {
-			if ( is_array( $field_name ) && ! empty( $field_name['multilang'] ) ) {
-				$field_name = $field_name . '__' . get_locale();
+		if ( ! empty( $save_meta_keys ) ) {
+			foreach ( $save_meta_keys as $fields ) {
+				foreach ( $fields['fields'] as $key => $field ) {
+					if ( isset( $field['multilang'] ) && $field['multilang'] && fs_option( 'fs_multi_language_support' ) ) {
+						foreach ( FS_Config::get_languages() as $code=>$language ) {
+							$meta_key=$key . '__' . $language['locale'];
+							if ( (isset( $_POST[ $meta_key] ) && $_POST[ $meta_key ] != '') || $key=='fs_seo_slug') {
+                                $value = apply_filters('fs_transform_meta_value', $_POST[ $meta_key ], $key, $code ,$post_id);
+								update_post_meta( $post_id, $key . '__' . $language['locale'],$value);
+							} else {
+								delete_post_meta( $post_id, $key . '__' . $language['locale'] );
+							}
+						}
+					} else {
+						if ( isset( $_POST[ $key ] ) && $_POST[ $key ] != '' ) {
+							$value = apply_filters('fs_transform_meta_value', $_POST[ $key ], $key, null,$post_id);
+							update_post_meta( $post_id, $key, $value );
+						} else {
+							delete_post_meta( $post_id, $key );
+						}
+					}
+				}
 			}
-
-			// Skip fields that do not exist in the global variable $_POST
-			if ( ! isset( $_POST[ $field_name ] ) ) {
-				delete_post_meta( $post_id, $field_name );
-				continue;
-			}
-
-			// Modify the saved field through the filter'fs_filter_meta_field'
-			$value = apply_filters( 'fs_filter_meta_field', $_POST[ $field_name ], $field_name, $post );
-			$value = apply_filters( 'fs_filter_meta_field__' . $field_name, $value, $field_name, $post );
-
-			update_post_meta( $post_id, $field_name, $value );
 		}
 
 		// Set the number of views for a new product 0
@@ -943,36 +948,6 @@ class FS_Product {
 
 	} // END public function add_meta_boxes()
 
-
-	/**
-	 *  Registers new metafields dynamically from tabs
-	 *
-	 * @param bool $data если поставить true до будут добавлены дополнительные данные к полю
-	 *
-	 * @return array
-	 */
-	function get_save_fields( $data = false ) {
-		$product_tabs = $this->get_product_tabs();
-		$meta_fields  = [];
-
-		foreach ( $product_tabs as $product_tab ) {
-			if ( empty( $product_tab['fields'] ) ) {
-				continue;
-			}
-			foreach ( $product_tab['fields'] as $key => $field ) {
-				$key = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
-				if ( $data ) {
-					$meta_fields[ $key ] = $key;
-				} else {
-					$meta_fields[ $key ] = $key;
-				}
-
-
-			}
-		}
-
-		return array_merge( FS_Config::get_meta(), $meta_fields );
-	}
 
 	/**
 	 * Gets the array that contains the list of product settings tabs.
@@ -1149,6 +1124,7 @@ class FS_Product {
 						$filter_meta[ $key ] = $key;
 					}
 
+
 					foreach ( $tab_body['fields'] as $key => $field ) {
 						// если у поля есть атрибут "on" и он выключён то выходим из цикла
 						if ( isset( $field['on'] ) && $field['on'] != true ) {
@@ -1160,8 +1136,9 @@ class FS_Product {
 						}
 						echo '<div class="fs-field-row clearfix">';
 
-						$key            = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
-						$field['value'] = isset( $field['value'] ) ? $field['value'] : get_post_meta( $post->ID, $key, true );
+						$key              = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
+						$field['source']  = 'post_meta';
+						$field['post_id'] = $post->ID;
 						$form_class->render_field( $key, $field['type'], $field );
 						echo '</div>';
 					}
@@ -1225,7 +1202,7 @@ class FS_Product {
 
 	/**
 	 * Выводит форму отзывов, комментариев на странице товара
-     *
+	 *
 	 * @return void
 	 */
 	public static function product_comments_form(): void {
