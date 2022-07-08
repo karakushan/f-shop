@@ -891,20 +891,25 @@ class FS_Product {
 
 		if ( ! empty( $save_meta_keys ) ) {
 			foreach ( $save_meta_keys as $fields ) {
+				if ( empty( $fields['fields'] ) ) {
+					continue;
+				}
+
 				foreach ( $fields['fields'] as $key => $field ) {
 					if ( isset( $field['multilang'] ) && $field['multilang'] && fs_option( 'fs_multi_language_support' ) ) {
-						foreach ( FS_Config::get_languages() as $code=>$language ) {
-							$meta_key=$key . '__' . $language['locale'];
-							if ( (isset( $_POST[ $meta_key] ) && $_POST[ $meta_key ] != '') || $key=='fs_seo_slug') {
-                                $value = apply_filters('fs_transform_meta_value', $_POST[ $meta_key ], $key, $code ,$post_id);
-								update_post_meta( $post_id, $key . '__' . $language['locale'],$value);
+						foreach ( FS_Config::get_languages() as $code => $language ) {
+							$meta_key = $key . '__' . $language['locale'];
+							if ( ( isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != '' )
+							     || ( $key == 'fs_seo_slug' && isset( $_POST[ $meta_key ] ) ) ) {
+								$value = apply_filters( 'fs_transform_meta_value', $_POST[ $meta_key ], $key, $code, $post_id );
+								update_post_meta( $post_id, $key . '__' . $language['locale'], $value );
 							} else {
 								delete_post_meta( $post_id, $key . '__' . $language['locale'] );
 							}
 						}
 					} else {
 						if ( isset( $_POST[ $key ] ) && $_POST[ $key ] != '' ) {
-							$value = apply_filters('fs_transform_meta_value', $_POST[ $key ], $key, null,$post_id);
+							$value = apply_filters( 'fs_transform_meta_value', $_POST[ $key ], $key, null, $post_id );
 							update_post_meta( $post_id, $key, $value );
 						} else {
 							delete_post_meta( $post_id, $key );
@@ -987,13 +992,22 @@ class FS_Product {
 						'help'     => __( 'The field is active if you have enabled multicurrency in settings.', 'f-shop' ),
 						'taxonomy' => FS_Config::get_data( 'currencies_taxonomy' )
 					),
+
 				)
 			),
 			'gallery'      => array(
-				'title'    => __( 'Gallery', 'f-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'gallery'
+				'title'  => __( 'Gallery', 'f-shop' ),
+				'on'     => true,
+				'body'   => '',
+//				'template' => 'gallery',
+				'fields' => [
+					'fs_galery' => [
+						'label'     => __( 'Gallery', 'f-shop' ),
+						'type'      => 'gallery',
+						'help'      => __( 'Add images to the gallery.', 'f-shop' ),
+						'multilang' => false
+					]
+				]
 			),
 			'attributes'   => array(
 				'title'    => __( 'Attributes', 'f-shop' ),

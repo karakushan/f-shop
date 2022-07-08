@@ -117,6 +117,9 @@ class FS_Form {
 			echo '<div class="fs-tabs__header">';
 			$count = 0;
 			foreach ( FS_Config::get_languages() as $key => $language ) {
+				if ( ! empty( $args['disable_default_locale'] )  && $language['locale'] == FS_Config::default_locale() ) {
+					continue;
+				}
 				$tab_class = ! $count ? 'nav-tab-active' : '';
 				echo '<a href="#fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '" class="fs-tabs__title nav-tab ' . esc_attr( $tab_class ) . '">' . esc_html( $language['name'] ) . '</a>';
 				$count ++;
@@ -124,20 +127,23 @@ class FS_Form {
 			echo '</div>';
 			$count = 0;
 			foreach ( FS_Config::get_languages() as $key => $item ) {
+				if ( ! empty( $args['disable_default_locale'] )  && $item['locale'] == FS_Config::default_locale() ) {
+					continue;
+				}
 				$tab_class  = ! $count ? 'fs-tabs__body fs-tab-active' : 'fs-tabs__body';
 				$base_name  = $name;
 				$base_id    = $args['id'];
 				$args['id'] = $args['id'] . '-' . $key;
 
 				echo '<div class="' . esc_attr( $tab_class ) . '" id="fs_' . esc_attr( $name ) . '-' . esc_attr( $key ) . '">';
-				$name          =  $name . '__' . $item['locale'] ;
-				if($args['source']=='post_meta' && $args['post_id'] ){
+				$name = $name . '__' . $item['locale'];
+				if ( $args['source'] == 'post_meta' && $args['post_id'] ) {
 					$args['value'] = get_post_meta( $args['post_id'], $name, true );
-				}elseif($args['source']=='term_meta' && $args['term_id']){
+				} elseif ( $args['source'] == 'term_meta' && $args['term_id'] ) {
 					$args['value'] = get_term_meta( $args['term_id'], $name, true );
 				}
 
-				if ($args['value']=='' && $args['default']!=''){
+				if ( $args['value'] == '' && $args['default'] != '' ) {
 					$args['value'] = $args['default'];
 				}
 
@@ -169,9 +175,9 @@ class FS_Form {
 			}
 
 		} else {
-			if($args['source']=='post_meta' && $args['post_id'] ){
+			if ( $args['source'] == 'post_meta' && $args['post_id'] ) {
 				$args['value'] = get_post_meta( $args['post_id'], $name, true );
-			}elseif($args['source']=='term_meta' && $args['term_id']){
+			} elseif ( $args['source'] == 'term_meta' && $args['term_id'] ) {
 				$args['value'] = get_term_meta( $args['term_id'], $name, true );
 			}
 

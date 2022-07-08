@@ -511,6 +511,7 @@ class FS_Taxonomy {
 						'type' => 'text',
 						'args' => [
 							'multilang' => true,
+                            'disable_default_locale' => true
 						]
 					),
 					'_seo_title'       => array(
@@ -1071,10 +1072,11 @@ class FS_Taxonomy {
 		$fields    = self::get_taxonomy_fields();
 		$languages = FS_Config::get_languages();
 		$term      = get_term( $term_id );
+        $multilang_support = fs_option( 'fs_multi_language_support' )=='1' && !empty($languages);
 
 		if ( ! empty( $fields[ $term->taxonomy ] ) ) {
 			foreach ( $fields[ $term->taxonomy ] as $name => $field ) {
-				if ( fs_option( 'fs_multi_language_support' ) && ! empty( $languages ) &&  ! empty( $field['multilang'] ) ) {
+				if ( $multilang_support  &&  ! empty( $field['args']['multilang'] ) ) {
 					foreach ( $languages as $code => $language ) {
 						$meta_key = $name . '__' . $language['locale'];
 						if ( ( isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != '' ) || $name == '_seo_slug' ) {
