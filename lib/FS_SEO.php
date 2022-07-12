@@ -418,10 +418,11 @@ class FS_SEO {
 		if ( ! fs_is_product_category() ) {
 			return;
 		}
-		// get transient
-		$schema = get_transient( 'fs_product_category_microdata' );
+		$term   = get_queried_object();
+        // get from cache
+		$schema = get_transient( 'fs_product_category_microdata_' . $term->term_id );
 		if ( $schema === false ) {
-			$term   = get_queried_object();
+
 			$schema = array(
 				"@context"        => "https://schema.org",
 				"@type"           => "Product",
@@ -444,7 +445,7 @@ class FS_SEO {
 					"bestRating"  => "5"
 				]
 			);
-			set_transient( 'fs_product_category_microdata', $schema, DAY_IN_SECONDS );
+			set_transient( 'fs_product_category_microdata_' . $term->term_id, $schema, DAY_IN_SECONDS );
 		}
 
 		echo '<script type="application/ld+json">';
