@@ -9,6 +9,7 @@ class FS_SEO {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 		// Adds microdata
+		// todo: Проверить и добавить кеширование в хуках ниже
 		add_action( 'fs_organization_microdata', [ $this, 'schema_organization_microdata' ] );
 		add_action( 'fs_product_reviews_microdata', [ $this, 'product_reviews_microdata' ] );
 		add_action( 'fs_product_category_microdata', [ $this, 'product_category_microdata' ] );
@@ -418,8 +419,8 @@ class FS_SEO {
 		if ( ! fs_is_product_category() ) {
 			return;
 		}
-		$term   = get_queried_object();
-        // get from cache
+		$term = get_queried_object();
+		// get from cache
 		$schema = get_transient( 'fs_product_category_microdata_' . $term->term_id );
 		if ( $schema === false ) {
 
