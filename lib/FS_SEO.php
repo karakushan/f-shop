@@ -8,14 +8,16 @@ class FS_SEO {
 	function __construct() {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-		// Добавляет микроразметку типа Organization
+		// Adds microdata
+		// todo: Проверить и добавить кеширование в хуках ниже
 		add_action( 'fs_organization_microdata', [ $this, 'schema_organization_microdata' ] );
 		add_action( 'fs_product_reviews_microdata', [ $this, 'product_reviews_microdata' ] );
+		add_action( 'fs_product_category_microdata', [ $this, 'product_category_microdata' ] );
 
-		// Выводит микроразмету типа LocalBusiness
+		// Outputs microdata of type LocalBusiness
 		add_action( 'fs_local_business_microdata', [ $this, 'schema_local_business_microdata' ] );
 
-		// Позволяет регистрировать события для ремаркетинга Google Adwords
+		// Allows you to register events for Google Adwords remarketing
 		add_action( 'fs_adwords_remarketing', [ $this, 'adwords_remarketing' ] );
 
 		// TODO: лучше создать специальную папку с интеграциями с другими плагинами и подключать классы с случае если плагин активен
@@ -128,6 +130,7 @@ class FS_SEO {
 
 		do_action( 'fs_local_business_microdata' );
 		do_action( 'fs_organization_microdata' );
+		do_action( 'fs_product_category_microdata' );
 		if ( is_singular( FS_Config::get_data( 'post_type' ) ) ) {
 			do_action( 'fs_product_reviews_microdata' );
 		}
@@ -407,4 +410,47 @@ class FS_SEO {
 		return $value;
 	}
 
+	/**
+	 * Displays microdata for the category page
+	 *
+	 * @return void
+	 */
+	function product_category_microdata() {
+		if ( ! fs_is_product_category() ) {
+			return;
+		}
+		$term = get_queried_object();
+		// get from cache
+		$schema = get_transient( 'fs_product_category_microdata_' . $term->term_id );
+		if ( $schema === false ) {
+
+			$schema = array(
+				"@context"        => "https://schema.org",
+				"@type"           => "Product",
+				"name"            => $term->name,
+				"image"           => esc_url( fs_get_category_image( $term->term_id, 'full' ) ),
+				"description"     => strip_tags( $term->description ) != ''
+					? strip_tags( $term->description )
+					: '',
+				"offers"          => [
+					"@type"         => "AggregateOffer",
+					"lowPrice"      => FS_Product::get_min_price_in_category(),
+					"highPrice"     => FS_Product::get_max_price_in_category(),
+					"offerCount"    => FS_Product::get_count_products_in_category(),
+					"priceCurrency" => fs_option( 'fs_currency_code', 'UAH' ),
+				],
+				"aggregateRating" => [
+					"@type"       => "AggregateRating",
+					"ratingCount" => FS_Rating_Class::get_count_ratings_in_category(),
+					"ratingValue" => round( FS_Rating_Class::get_average_rating_in_category(), 1 ),
+					"bestRating"  => "5"
+				]
+			);
+			set_transient( 'fs_product_category_microdata_' . $term->term_id, $schema, DAY_IN_SECONDS );
+		}
+
+		echo '<script type="application/ld+json">';
+		echo json_encode( $schema );
+		echo '</script>';
+	}
 }

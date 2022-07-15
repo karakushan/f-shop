@@ -570,7 +570,8 @@ class FS_Config {
 			'label_promotion'   => 'fs_on_promotion',
 			'label_novelty'     => 'fs_on_novelty',
 			'up_sell'           => 'fs_up_sell',
-			'cross_sell'        => 'fs_cross_sell'
+			'cross_sell'        => 'fs_cross_sell',
+			'product_rating'    => 'fs_product_rating'
 		);
 
 		$meta = apply_filters( 'fs_meta', $meta );

@@ -1222,4 +1222,97 @@ class FS_Product {
 	public static function product_comments_form(): void {
 		echo fs_frontend_template( 'product/tabs/comments' );
 	}
+
+	// get minimal price of all products in the category
+	public static function get_min_price_in_category() {
+		$min_price = 0;
+		if ( fs_is_product_category() ) {
+			$taxonomy = \FS\FS_Config::get_data( 'product_taxonomy' );
+			$term     = get_queried_object();
+			$args     = [
+				'post_type'      => \FS\FS_Config::get_data( 'post_type' ),
+				'posts_per_page' => - 1,
+				'tax_query'      => [
+					[
+						'taxonomy' => $taxonomy,
+						'field'    => 'term_id',
+						'terms'    => $term->term_id,
+					]
+				]
+			];
+			$query    = new \WP_Query( $args );
+			if ( $query->have_posts() ) {
+				while ( $query->have_posts() ) {
+					$query->the_post();
+					$price = fs_get_price();
+					if ( $price > 0 && $price < $min_price  || $min_price == 0 ) {
+						$min_price = $price;
+					}
+				}
+			}
+			wp_reset_postdata();
+		}
+
+		return floatval( $min_price );
+	}
+
+// get max price of all products in the category
+	public static function get_max_price_in_category() {
+		$max_price = 0;
+		if ( fs_is_product_category() ) {
+			$taxonomy = \FS\FS_Config::get_data( 'product_taxonomy' );
+			$term     = get_queried_object();
+			$args     = [
+				'post_type'      => \FS\FS_Config::get_data( 'post_type' ),
+				'posts_per_page' => - 1,
+				'tax_query'      => [
+					[
+						'taxonomy' => $taxonomy,
+						'field'    => 'term_id',
+						'terms'    => $term->term_id,
+					]
+				]
+			];
+			$query    = new \WP_Query( $args );
+			if ( $query->have_posts() ) {
+				while ( $query->have_posts() ) {
+					$query->the_post();
+					$price = fs_get_price();
+					if ( $price && $price > $max_price ) {
+						$max_price = $price;
+					}
+				}
+			}
+			wp_reset_postdata();
+		}
+
+		return floatval( $max_price );
+	}
+
+// count all products in the category
+	public static function get_count_products_in_category() {
+		$count = 0;
+		if ( fs_is_product_category() ) {
+			$taxonomy = \FS\FS_Config::get_data( 'product_taxonomy' );
+			$term     = get_queried_object();
+			$args     = [
+				'post_type'      => \FS\FS_Config::get_data( 'post_type' ),
+				'posts_per_page' => - 1,
+				'tax_query'      => [
+					[
+						'taxonomy' => $taxonomy,
+						'field'    => 'term_id',
+						'terms'    => $term->term_id,
+					]
+				]
+			];
+			$query    = new \WP_Query( $args );
+			if ( $query->have_posts() ) {
+				$count = $query->post_count;
+			}
+			wp_reset_postdata();
+		}
+
+		return intval( $count );
+	}
 }
