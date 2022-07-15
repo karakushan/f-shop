@@ -510,8 +510,8 @@ class FS_Taxonomy {
 						'name' => __( 'SEO slug', 'f-shop' ),
 						'type' => 'text',
 						'args' => [
-							'multilang' => true,
-                            'disable_default_locale' => true
+							'multilang'              => true,
+							'disable_default_locale' => true
 						]
 					),
 					'_seo_title'       => array(
@@ -1069,14 +1069,14 @@ class FS_Taxonomy {
 	 * @return void|null
 	 */
 	function save_taxonomy_fields( $term_id ) {
-		$fields    = self::get_taxonomy_fields();
-		$languages = FS_Config::get_languages();
-		$term      = get_term( $term_id );
-        $multilang_support = fs_option( 'fs_multi_language_support' )=='1' && !empty($languages);
+		$fields            = self::get_taxonomy_fields();
+		$languages         = FS_Config::get_languages();
+		$term              = get_term( $term_id );
+		$multilang_support = fs_option( 'fs_multi_language_support' ) == '1' && ! empty( $languages );
 
 		if ( ! empty( $fields[ $term->taxonomy ] ) ) {
 			foreach ( $fields[ $term->taxonomy ] as $name => $field ) {
-				if ( $multilang_support  &&  ! empty( $field['args']['multilang'] ) ) {
+				if ( $multilang_support && ! empty( $field['args']['multilang'] ) ) {
 					foreach ( $languages as $code => $language ) {
 						$meta_key = $name . '__' . $language['locale'];
 						if ( ( isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != '' ) || $name == '_seo_slug' ) {
@@ -1517,6 +1517,32 @@ class FS_Taxonomy {
 		}
 
 		return $output;
+	}
+
+	// count all posts in category and subcategories
+	public static function fs_count_posts_in_term( $cat_id, $taxonomy = null ) {
+		$count = get_transient( 'fs_count_posts_in_term_' . $cat_id );
+		if ( false === $count ) {
+			$count    = 0;
+			$taxonomy = $taxonomy ?: FS_Config::get_data( 'product_taxonomy' );
+			$args     = array(
+				'tax_query' => array(
+					array(
+						'taxonomy' => $taxonomy,
+						'field'    => 'id',
+						'terms'    => $cat_id,
+					),
+				),
+			);
+			$query    = new \WP_Query( $args );
+			if ( $query->have_posts() ) {
+				$count = $query->found_posts;
+			}
+			wp_reset_postdata();
+            set_transient( 'fs_count_posts_in_term_' . $cat_id, $count, HOUR_IN_SECONDS );
+		}
+
+		return $count;
 	}
 
 }
