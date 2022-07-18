@@ -60,22 +60,6 @@ class FS_SEO {
 	}
 
 	/**
-	 * Преобразовывает мета тайтл для плагина WPSEO
-	 *
-	 * @param $title
-	 *
-	 * @return mixed
-	 */
-	function wpseo_title_filter( $title ) {
-		if ( ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-			return $title;
-		}
-		$meta_title = fs_get_term_meta( '_seo_title' );
-
-		return apply_filters( 'fs_meta_title', $meta_title != '' ? $meta_title : $title );
-	}
-
-	/**
 	 * Изменяет meta title
 	 *
 	 * @param $title
@@ -83,20 +67,17 @@ class FS_SEO {
 	 * @return mixed
 	 */
 	public function meta_title_filter( $title ) {
-
-		if ( is_post_type_archive( FS_Config::get_data( 'post_type' ) ) && ! is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-			$meta_title     = fs_option( '_fs_catalog_meta_title' ) ?: __( 'Catalog', 'f-shop' );
-			$title['title'] = esc_attr( $meta_title );
+		if ( fs_is_catalog() && fs_option( '_fs_catalog_meta_title' ) != '' ) {
+			$title['title'] = esc_attr( apply_filters('the_title',fs_option( '_fs_catalog_meta_title' )) );
 			$title['site']  = '';
-
-		} elseif ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
-			$meta_title     = get_term_meta( get_queried_object_id(), fs_localize_meta_key( '_seo_title' ), 1 );
-			$meta_title     = $meta_title ? $meta_title : $title['title'];
-			$title['title'] = esc_attr( $meta_title );
+		} elseif ( fs_is_product_category()) {
+            $term_id = get_queried_object_id();
+            $meta_title =get_term_meta( $term_id, fs_localize_meta_key( '_seo_title' ), 1 ) ?: get_term_meta( $term_id, '_seo_title', 1 );
+			$title['title'] = esc_attr(apply_filters('the_title',$meta_title) );
 			$title['site']  = '';
 		}
 
-		$title['title'] = apply_filters( 'fs_meta_title', apply_filters( 'the_title', $title['title'] ) );
+		$title['title'] = apply_filters('fs_meta_title',$title['title']);
 
 		return $title;
 	}
@@ -108,10 +89,9 @@ class FS_SEO {
 		$meta_description = '';
 
 		// Если посетитель находится на странице архива товаров
-		if ( is_archive( FS_Config::get_data( 'post_type' ) ) && ! is_tax( 'catalog' ) ) {
-			$meta_description = fs_option( '_fs_catalog_meta_description' ) ?: '';
-
-		} elseif ( is_archive( FS_Config::get_data( 'post_type' ) ) && is_tax( 'catalog' ) ) { // Если посетитель находится на странице таксономии товаров
+		if ( fs_is_catalog() && fs_option( '_fs_catalog_meta_description' ) != '' ) {
+			$meta_description = fs_option( '_fs_catalog_meta_description' );
+		} elseif ( fs_is_product_category() ) { // Если посетитель находится на странице таксономии товаров
 			$meta_description = get_term_meta( get_queried_object_id(), fs_localize_meta_key( '_seo_description' ), 1 );
 		}
 

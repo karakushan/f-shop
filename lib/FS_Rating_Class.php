@@ -11,12 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class FS_Rating_Class {
 
 	function __construct() {
-		add_action( 'wp_head', array( &$this, 'kama_postviews' ) );
+		add_action( 'wp_head', array( &$this, 'post_views_counter' ) );
 		add_action( 'wp_head', array( &$this, 'viewed_posts' ) );
 	}
 
-
-	function kama_postviews() {
+	function post_views_counter() {
 
 		/* ------------ Настройки -------------- */
 		$meta_key     = 'views';  // Ключ мета поля, куда будет записываться количество просмотров.
@@ -116,7 +115,7 @@ class FS_Rating_Class {
 						$count ++;
 					}
 				}
-				$average_rating = $sum / $count;
+				$average_rating = $count > 0 ? $sum / $count : 0;
 			}
 			wp_reset_postdata();
 		}
@@ -150,7 +149,7 @@ class FS_Rating_Class {
 			if ( $query->have_posts() ) {
 				while ( $query->have_posts() ) {
 					$query->the_post();
-					$rating        = FS_Product::get_average_rating( get_the_ID() );
+					$rating = FS_Product::get_average_rating( get_the_ID() );
 					if ( $rating > 0 ) {
 						$count_ratings ++;
 					}

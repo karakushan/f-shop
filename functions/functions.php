@@ -3452,7 +3452,7 @@ if ( ! function_exists( 'fs_localize_meta_key' ) ) {
 	 * @return string
 	 */
 	function fs_localize_meta_key( $meta_key = '' ) {
-		if ( fs_option( 'fs_multi_language_support' ) && get_locale() != FS_Config::default_locale() ) {
+		if ( fs_option( 'fs_multi_language_support' ) ) {
 			$meta_key = $meta_key . '__' . get_locale();
 		}
 
@@ -3595,4 +3595,13 @@ function fs_remove_url_param( $param, $group = '', $url = '' ) {
 function fs_is_product_category() {
 	return ! is_post_type_archive( \FS\FS_Config::get_data( 'post_type' ) )
 	       && is_tax( \FS\FS_Config::get_data( 'product_taxonomy' ) );
+}
+
+/**
+ * Checks if we are currently on the page of the archive (catalog) of products
+ *
+ * @return bool
+ */
+function fs_is_catalog() {
+	return is_post_type_archive( \FS\FS_Config::get_data( 'post_type' ) ) && ! is_tax( \FS\FS_Config::get_data( 'product_taxonomy' ) );
 }
