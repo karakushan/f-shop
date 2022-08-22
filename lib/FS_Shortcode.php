@@ -187,7 +187,7 @@ class FS_Shortcode {
 	 * @return mixed
 	 */
 	public function single_order_info( $atts ) {
-		$order_id = isset( $_GET['order_detail'] ) && is_numeric( $_GET['order_detail'] ) ? intval( $_REQUEST['order_detail'] ) : FS_Orders::get_last_order_id();
+		$order_id = isset( $_GET['order_detail'] ) && is_numeric( $_GET['order_detail'] ) ? intval( $_REQUEST['order_detail'] ) : 0;
 
 		if ( ! fs_order_exist( $order_id ) ) {
 			return '<p class="fs-info-block fs-has-warning">' . __( 'Details of this order are unknown or unavailable.', 'f-shop' ) . '</p>';
@@ -196,7 +196,7 @@ class FS_Shortcode {
 		$current_user = wp_get_current_user();
 		$orders_cl    = new FS_Orders;
 
-// белый список параметров и значения по умолчанию
+		// белый список параметров и значения по умолчанию
 		$atts = shortcode_atts( array(
 			'class'    => 'fs-order-info',
 			'order_id' => $order_id,
