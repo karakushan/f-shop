@@ -148,7 +148,13 @@ class FS_Shortcode {
 	 * @return mixed
 	 */
 	function fs_checkout_success() {
-		return fs_frontend_template( 'checkout/checkout-success' );
+		$template = FS_Orders::get_last_order_id() ? 'order/order-success' : 'order/order-fail';
+
+		return fs_frontend_template( $template, array(
+			'vars' => array(
+				'order' => FS_Orders::get_order()
+			)
+		) );
 	}
 
 	/**

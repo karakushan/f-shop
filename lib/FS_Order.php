@@ -261,7 +261,7 @@ class FS_Order {
 		}
 
 		$this->post = get_post( $this->ID );
-		$order_id = $order_id ? $order_id : $this->get_last_order_id();
+		$order_id   = $order_id ? $order_id : $this->get_last_order_id();
 
 		if ( ! is_numeric( $order_id ) || $order_id == 0 ) {
 			return null;
@@ -309,10 +309,10 @@ class FS_Order {
 			$this->payment_method = get_term( $payment_method_id, FS_Config::get_data( 'product_pay_taxonomy' ) );
 		}
 
-		$this->delivery_method=new FS_Delivery($order_id);
-		$this->count = is_array( $this->items ) ? count( $this->items ) : 0;
-		$this->status = $this->get_order_status($order_id);
-		$this->date = $this->post->post_date;
+		$this->delivery_method = new FS_Delivery( $order_id );
+		$this->count           = is_array( $this->items ) ? count( $this->items ) : 0;
+		$this->status          = $this->get_order_status( $order_id );
+		$this->date            = $this->post->post_date;
 	}
 
 	/**
@@ -462,7 +462,7 @@ class FS_Order {
 	/**
 	 * @return \WP_Term
 	 */
-	public function getDeliveryMethod(){
+	public function getDeliveryMethod() {
 		return $this->delivery_method;
 	}
 
@@ -476,7 +476,7 @@ class FS_Order {
 	/**
 	 * @return string
 	 */
-	public function getComment(){
+	public function getComment() {
 		return $this->comment;
 	}
 
@@ -562,16 +562,17 @@ class FS_Order {
 	/**
 	 * @return int
 	 */
-	public function get_last_order_id() {
+	public static function get_last_order_id() {
 
 		return isset( $_SESSION['fs_last_order_id'] ) && is_numeric( $_SESSION['fs_last_order_id'] )
 			? intval( $_SESSION['fs_last_order_id'] ) : 0;
 	}
 
+
 	/**
 	 * @return string
 	 */
-	public function get_customer_table(){
+	public function get_customer_table() {
 		return $this->customer_table;
 	}
 
@@ -615,7 +616,7 @@ class FS_Order {
 		$order_id
 	) {
 		$post_status_id = get_post_status( $order_id );
-		$statuses = FS_Orders::default_order_statuses();
+		$statuses       = FS_Orders::default_order_statuses();
 
 		if ( ! empty( $statuses[ $post_status_id ]['name'] ) ) {
 			$status = $statuses[ $post_status_id ]['name'];

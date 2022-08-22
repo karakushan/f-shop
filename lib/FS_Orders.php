@@ -47,7 +47,7 @@ class FS_Orders {
 			add_action( 'add_meta_boxes', array( $this, 'register_order_meta_box' ) );
 		} );
 
-		 add_filter( 'manage_orders_posts_custom_column', [ $this, 'admin_order_custom_column' ], 5, 2 );
+		add_filter( 'manage_orders_posts_custom_column', [ $this, 'admin_order_custom_column' ], 5, 2 );
 
 	}
 
@@ -537,7 +537,13 @@ Good luck!', 'f-shop' );
 	 * @return \stdClass
 	 */
 	static public function get_order( $order_id = 0 ) {
+		if ( ! $order_id && self::get_last_order_id() ) {
+			$order_id = self::get_last_order_id();
+		}
 
+		if ( ! $order_id ) {
+			return null;
+		}
 		$order = get_post( $order_id );
 		if ( $order ) {
 			$order->data = self::set_order_data( $order_id );
