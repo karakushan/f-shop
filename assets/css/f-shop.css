@@ -1184,10 +1184,16 @@ td.fs_photo.column-fs_photo img {
 
 .fs-info-block {
   padding: 15px;
-  border-left: 4px solid #00aaff;
+  border-left: 4px solid #17a2b8;
   display: flex;
   align-items: center;
   background-color: #fafafa;
+}
+.fs-info-block.fs-has-error {
+  border-left: 4px solid #dc3545;
+}
+.fs-info-block.fs-has-warning {
+  border-left: 4px solid #ffc107;
 }
 .fs-info-block i {
   color: #00aaff;
@@ -1943,7 +1949,7 @@ td.fs_photo.column-fs_photo img {
 }
 
 #wpadminbar #wp-admin-bar-fs-top > .ab-item:before {
-  content: "";
+  content: "\f174";
   top: 2px;
 }
 

@@ -1043,10 +1043,18 @@ td.fs_photo.column-fs_photo img {
 // Классы предупреждений, информации и ошибок
 .fs-info-block {
   padding: 15px;
-  border-left: 4px solid #00aaff;
+  border-left: 4px solid $color_info;
   display: flex;
   align-items: center;
   background-color: #fafafa;
+
+  &.fs-has-error{
+    border-left: 4px solid $color_error;
+  }
+
+  &.fs-has-warning{
+    border-left: 4px solid $color_warning;
+  }
 
   i {
     color: #00aaff;

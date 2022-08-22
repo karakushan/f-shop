@@ -460,6 +460,14 @@ class FS_Order {
 	}
 
 	/**
+	 *  total amount display
+	 * @return string
+	 */
+	public function totalAmount( $format = '%s <span>%s</span>' ) {
+		return printf( $format, $this->getTotalAmount(), fs_currency() );
+	}
+
+	/**
 	 * @return \WP_Term
 	 */
 	public function getDeliveryMethod() {

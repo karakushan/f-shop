@@ -2934,12 +2934,12 @@ function fs_set_product( $product = [], $item_id = 0 ) {
 /**
  * Устанавливает данные заказа
  *
- * @param WP_Post $order
+ * @param WP_Post $post
  *
  * @return FS_Order
  */
-function fs_set_order( WP_Post $order ) {
-	return new FS_Order( $order );
+function fs_set_order( WP_Post $post ) {
+	return new FS_Order( $post->ID );
 }
 
 /**
@@ -3604,4 +3604,15 @@ function fs_is_product_category() {
  */
 function fs_is_catalog() {
 	return is_post_type_archive( \FS\FS_Config::get_data( 'post_type' ) ) && ! is_tax( \FS\FS_Config::get_data( 'product_taxonomy' ) );
+}
+
+/**
+ * Checks the presence of an order in the database by ID
+ *
+ * @param $order_id
+ *
+ * @return bool
+ */
+function fs_order_exist( $order_id ) {
+	return get_post( $order_id ) && get_post_type( $order_id ) == \FS\FS_Config::get_data( 'post_type_orders' );
 }

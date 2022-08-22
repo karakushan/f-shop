@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \FS\FS_Order $order
+ */
+?>
 <div class="<?php echo esc_attr($class) ?>">
     <h2><?php esc_html(sprintf('Detailed information about the order number %d', 'f-shop'), $order_id) ?></h2>
     <h3><?php esc_html_e('Purchased goods', 'f-shop') ?>:</h3>

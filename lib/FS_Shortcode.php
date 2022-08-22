@@ -148,11 +148,11 @@ class FS_Shortcode {
 	 * @return mixed
 	 */
 	function fs_checkout_success() {
-		$template = FS_Orders::get_last_order_id() ? 'order/order-success' : 'order/order-fail';
+		$template = FS_Orders::get_last_order_id() ? 'checkout/checkout-success' : 'order/order-fail';
 
 		return fs_frontend_template( $template, array(
 			'vars' => array(
-				'order' => FS_Orders::get_order()
+				'order' => new FS_Order( FS_Orders::get_last_order_id() )
 			)
 		) );
 	}
@@ -187,9 +187,15 @@ class FS_Shortcode {
 	 * @return mixed
 	 */
 	public function single_order_info( $atts ) {
-		$curent_user = wp_get_current_user();
-		$orders_cl   = new FS_Orders;
-		$order_id    = ! empty( $_REQUEST['order_detail'] ) ? intval( $_REQUEST['order_detail'] ) : $orders_cl->last_order_id;
+		$order_id = isset( $_GET['order_detail'] ) && is_numeric( $_GET['order_detail'] ) ? intval( $_REQUEST['order_detail'] ) : FS_Orders::get_last_order_id();
+
+		if ( ! fs_order_exist( $order_id ) ) {
+			return '<p class="fs-info-block fs-has-warning">' . __( 'Details of this order are unknown or unavailable.', 'f-shop' ) . '</p>';
+		}
+
+		$current_user = wp_get_current_user();
+		$orders_cl    = new FS_Orders;
+
 // белый список параметров и значения по умолчанию
 		$atts = shortcode_atts( array(
 			'class'    => 'fs-order-info',
@@ -210,13 +216,13 @@ class FS_Shortcode {
 			$errors->add( 'fs-no-order', __( 'Order not found', 'f-shop' ) );
 		}
 
-		if ( $curent_user->user_login != $atts['order']->user_name ) {
+		if ( $current_user->user_login != $atts['order']->user_name ) {
 			$errors->add( 'fs-no-access-order', __( 'Details of this order are not available for you', 'f-shop' ) );
 		}
 
 		if ( $errors->get_error_code() ) {
 			foreach ( $errors->get_error_messages() as $error ) {
-				$html .= '<p class="fs - order - detail">' . $error . '</p>';
+				$html .= '<p class="fs-order-detail">' . $error . '</p>';
 			}
 		} else {
 			$html = fs_frontend_template( 'shortcode/fs-order-info', $atts );
