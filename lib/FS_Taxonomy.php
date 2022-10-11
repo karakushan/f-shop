@@ -193,21 +193,21 @@ class FS_Taxonomy {
 		     || $query->is_post_type_archive( FS_Config::get_data( 'post_type' ) ) ) {
 
 			// отфильтровываем выключенные для показа товары в админке
-			$meta_query [] = array(
-				'relation' => 'AND',
-				'exclude'  => array(
-					'relation' => 'OR',
-					array(
-						'key'     => FS_Config::get_meta( 'exclude_archive' ),
-						'compare' => 'NOT EXISTS'
-					),
-					array(
-						'key'     => FS_Config::get_meta( 'exclude_archive' ),
-						'compare' => '!=',
-						'value'   => "1"
-					)
-				)
-			);
+//			$meta_query [] = array(
+//				'relation' => 'AND',
+//				'exclude'  => array(
+//					'relation' => 'OR',
+//					array(
+//						'key'     => FS_Config::get_meta( 'exclude_archive' ),
+//						'compare' => 'NOT EXISTS'
+//					),
+//					array(
+//						'key'     => FS_Config::get_meta( 'exclude_archive' ),
+//						'compare' => '!=',
+//						'value'   => "1"
+//					)
+//				)
+//			);
 
 			// Скрывать товары которых нет в наличии
 			if ( fs_option( 'fs_not_aviable_hidden' ) ) {

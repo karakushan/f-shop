@@ -58,7 +58,7 @@ $product   = new FS_Product();
 
         <div class="remodal xs" data-remodal-id="fs-comment-form"
              data-remodal-options="hashTracking: false, closeOnOutsideClick: false">
-            <button data-remodal-action="close"><?php adtools_icon( 'modal-close' ); ?></button>
+            <button data-remodal-action="close"></button>
             <div class="fs-comments__form">
 				<?php
 				if ( ! comments_open() ) :

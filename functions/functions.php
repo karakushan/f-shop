@@ -1457,37 +1457,36 @@ function fs_range_slider() {
  * @return float|int|null|string
  */
 function fs_price_max() {
-	global $wpdb, $wp_query;
-	$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
-	if ( is_tax( $taxonomy_name ) ) {
-		$term = get_queried_object();
-		$max  = wp_cache_get( 'fs_max_price_term_' . $term->term_id );
+	global $wpdb;
+	$max = 0;
+
+	if ( fs_is_product_category() ) {
+		$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
+		$term          = get_queried_object();
+		$max           = wp_cache_get( 'fs_max_price_term_' . $term->term_id );
 		if ( ! $max ) {
-			$query  = new WP_Query( [
-				$taxonomy_name   => $term->slug,
-				'posts_per_page' => - 1
-			] );
-			$prices = [];
-			while ( $query->have_posts() ) {
-				$query->the_post();
-				$price      = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 );
-				$price_sale = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'action_price' ), 1 );
-				if ( $price_sale && $price_sale < $price ) {
-					array_push( $prices, $price_sale );
-				} else {
-					array_push( $prices, $price );
-				}
-			}
-			wp_reset_query();
-			$max = ! is_array( $prices ) ? max( $prices ) : 10000;
-			wp_cache_add( 'fs_max_price_term_' . $term->term_id, $max );
+			// get max price form meta value price in product category
+			$max = $wpdb->get_var( $wpdb->prepare( "
+				SELECT MAX( CAST( pm.meta_value AS DECIMAL(10,2) ) )
+				FROM {$wpdb->posts} AS p
+				INNER JOIN {$wpdb->term_relationships} AS tr ON p.ID = tr.object_id
+				INNER JOIN {$wpdb->term_taxonomy} AS tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+				INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+				WHERE p.post_type = %s
+				AND p.post_status = 'publish'
+				AND tt.taxonomy = %s
+				AND tt.term_id = %d
+				AND pm.meta_key = %s
+			", FS_Config::get_data( 'post_type' ), $taxonomy_name, $term->term_id, FS_Config::get_meta( 'price' ) ) );
+			wp_cache_set( 'fs_max_price_term_' . $term->term_id, $max );
+
 		}
-	} else {
+	} elseif ( fs_is_catalog() ) {
 		$max = wp_cache_get( 'fs_max_price_archive' );
 		if ( ! $max ) {
 			$sql = "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
 			$max = $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
-			wp_cache_add( 'fs_max_price_archive', $max );
+			wp_cache_set( 'fs_max_price_archive', $max );
 		}
 	}
 
@@ -1504,52 +1503,38 @@ function fs_price_max() {
  */
 function fs_price_min() {
 	global $wpdb;
+	$min = 0;
 
-	if ( is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
+	if ( fs_is_product_category() ) {
 		$term = get_queried_object();
 		$min  = wp_cache_get( 'fs_min_price_term_' . $term->term_id );
+		$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
 		if ( ! $min ) {
-			$query  = new WP_Query( [
-				FS_Config::get_data( 'product_taxonomy' ) => $term->slug,
-				'posts_per_page'                          => - 1
-			] );
-			$prices = [];
-			while ( $query->have_posts() ) {
-				$query->the_post();
-				if ( ! get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ) ) ) {
-					continue;
-				}
-
-				$price       = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'price' ), 1 );
-				$promo_price = (float) get_post_meta( get_the_ID(), FS_Config::get_meta( 'action_price' ), 1 );
-
-				if ( $promo_price > 0 && $promo_price < $price ) {
-					array_push( $prices, $promo_price );
-					continue;
-				} else {
-					array_push( $prices, $price );
-				}
-			}
-			wp_reset_query();
-
-			$min = count( $prices ) ? min( $prices ) : 0;
-
-			wp_cache_add( 'fs_min_price_term_' . $term->term_id, $min );
+			// get min price form meta value price in product category
+			$min = $wpdb->get_var( $wpdb->prepare( "
+				SELECT MIN( CAST( pm.meta_value AS DECIMAL(10,2) ) )
+				FROM {$wpdb->posts} AS p
+				INNER JOIN {$wpdb->term_relationships} AS tr ON p.ID = tr.object_id
+				INNER JOIN {$wpdb->term_taxonomy} AS tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+				INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+				WHERE p.post_type = %s
+				AND p.post_status = 'publish'
+				AND tt.taxonomy = %s
+				AND tt.term_id = %d
+				AND pm.meta_key = %s
+			", FS_Config::get_data( 'post_type' ), $taxonomy_name, $term->term_id, FS_Config::get_meta( 'price' ) ) );
+			wp_cache_set( 'fs_min_price_term_' . $term->term_id, $min );
 		}
-	} else {
+	} elseif ( fs_is_catalog() ) {
 		$min = wp_cache_get( 'fs_min_price_archive' );
 		if ( ! $min ) {
 			$sql = "SELECT min(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";
 			$min = (float) $wpdb->get_var( $wpdb->prepare( $sql, FS_Config::get_meta( 'price' ) ) );
-			wp_cache_add( 'fs_min_price_archive', $min );
+			wp_cache_set( 'fs_min_price_archive', $min );
 		}
 	}
 
-	if ( $min < 0 ) {
-		$min = 0;
-	}
-
-	return (float) $min;
+	return $min;
 }
 
 /**
@@ -2133,6 +2118,7 @@ function fs_attr_list( $attr_group = 0 ) {
  * @param array $args -дополнительные аргументы вывода
  */
 function fs_the_atts_list( $post_id = 0, $args = array() ) {
+	return '';
 	global $post;
 	$fs_config  = new FS_Config();
 	$list       = '';
