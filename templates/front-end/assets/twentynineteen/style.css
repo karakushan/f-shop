@@ -49,7 +49,7 @@ article.product .fs-thumbnail-meta .fs-meta {
 @media (max-width: 768px) {
   article.product .fs-thumbnail-meta .fs-meta {
     width: 100%;
-    padding: calc(2 * 1rem) 1rem;
+    padding: 2rem 1rem;
   }
 }
 article.product .fs-thumbnail-meta .fs-meta .fs-qty-wrap .fs-pluss,
