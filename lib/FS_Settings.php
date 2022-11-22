@@ -298,8 +298,14 @@ class FS_Settings {
 						'label' => __( 'Total discount on products as a percentage', 'f-shop' ),
 						'help'  => null,
 						'value' => fs_option( 'fs_total_discount_percent' )
+					),
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'fs_localize_product_url',
+						'label' => __( 'Product link localization', 'f-shop' ),
+						'help'  => __('Adds a field for entering a slug in other languages','f-shop'),
+						'value' => fs_option( 'fs_localize_product_url' )
 					)
-
 				)
 
 

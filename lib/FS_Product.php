@@ -45,9 +45,10 @@ class FS_Product {
 		add_filter( 'pre_get_posts', array( $this, 'pre_get_posts_product' ), 10, 1 );
 
 		// Redirect to a localized url
-		add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
-
-		add_filter( 'post_type_link', [ $this, 'product_link_localize' ], 99, 4 );
+		if ( fs_option( 'fs_localize_product_url' ) ) {
+			add_action( 'template_redirect', array( $this, 'redirect_to_localize_url' ) );
+			add_filter( 'post_type_link', [ $this, 'product_link_localize' ], 99, 4 );
+		}
 
 		add_filter( 'use_block_editor_for_post_type', [ $this, 'prefix_disable_gutenberg' ], 10, 2 );
 
@@ -1245,7 +1246,7 @@ class FS_Product {
 				while ( $query->have_posts() ) {
 					$query->the_post();
 					$price = fs_get_price();
-					if ( $price > 0 && $price < $min_price  || $min_price == 0 ) {
+					if ( $price > 0 && $price < $min_price || $min_price == 0 ) {
 						$min_price = $price;
 					}
 				}
