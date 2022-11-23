@@ -92,7 +92,7 @@ class FS_SEO {
 		if ( fs_is_catalog() && fs_option( '_fs_catalog_meta_description' ) != '' ) {
 			$meta_description = fs_option( '_fs_catalog_meta_description' );
 		} elseif ( fs_is_product_category() ) { // Если посетитель находится на странице таксономии товаров
-			$meta_description = get_term_meta( get_queried_object_id(), fs_localize_meta_key( '_seo_description' ), 1 );
+			$meta_description =fs_get_term_meta('_seo_description');
 		}
 
 		$meta_description = apply_filters( 'fs_meta_description', $meta_description );
