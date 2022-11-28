@@ -946,7 +946,7 @@ class FS_Users {
 		} else {
 			// A letter if the template is not found
 			$post_template_title   = __( 'Registration on the website «{{ site_name }}»', 'f-shop' );
-			$post_template_content = fs_frontend_template( 'mail/templates/' . get_locale() . '/user-registration', [], '.twig' );
+			$post_template_content = fs_frontend_template( 'mail/templates/user-registration', [], '.twig' );
 		}
 
 		// Connect a template engine
@@ -959,7 +959,7 @@ class FS_Users {
 
 		// Send a letter to the admin
 		$admin_mail_header = $template->get_from_string( __( 'Registration on the website «{{ site_name }}»', 'f-shop' ), $replace_keys );
-		$admin_message     = $template->get( 'mail/templates/' . get_locale() . '/user-registration-admin', $replace_keys );
+		$admin_message     = $template->get( 'mail/user-registration-admin', $replace_keys );
 
 		FS_Form::send_email( get_bloginfo( 'admin_email' ), $admin_mail_header, $admin_message );
 
