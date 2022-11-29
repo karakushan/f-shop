@@ -218,7 +218,7 @@ class FS_Taxonomy {
 				);
 			}
 
-			$order_by  = [ 'post_date' => 'DESC' ]; // Устанавливаем изначально сортировку по дате публикации
+			$order_by  = [];
 			$tax_query = [];
 			$arr_url   = urldecode( $_SERVER['QUERY_STRING'] );
 			parse_str( $arr_url, $url );
@@ -394,11 +394,10 @@ class FS_Taxonomy {
 			}
 
 			$query->set( 'posts_per_page', $per_page );
-			$query->set( 'orderby', $order_by );
+			$query->set( 'orderby', $order_by ?: [ 'post_date' => 'DESC' ] );
 		}
 
-	}//end filter_curr_product()
-
+	}
 
 	/**
 	 * Add rewrite rules for terms
@@ -1539,7 +1538,7 @@ class FS_Taxonomy {
 				$count = $query->found_posts;
 			}
 			wp_reset_postdata();
-            set_transient( 'fs_count_posts_in_term_' . $cat_id, $count, HOUR_IN_SECONDS );
+			set_transient( 'fs_count_posts_in_term_' . $cat_id, $count, HOUR_IN_SECONDS );
 		}
 
 		return $count;

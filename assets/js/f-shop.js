@@ -248,7 +248,7 @@ jQuery(document).ready(function ($) {
             data: formData,
             contentType: false,
             processData: false,
-            beforeSend:function(){
+            beforeSend: function () {
                 $('.fs-form .meter').fadeIn(100);
             },
             success: function (data) {
@@ -1283,7 +1283,7 @@ jQuery(document).ready(function ($) {
     });
 
     // Активирует радио кнопки на странице оформления покупки
-    $(".fs-field-wrap").each(function (){
+    $(".fs-field-wrap").each(function () {
         $(this).find('.radio').first().addClass('active').find('input').prop('checked', true)
     })
 

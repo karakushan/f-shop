@@ -117,7 +117,7 @@ class FS_Form {
 			echo '<div class="fs-tabs__header">';
 			$count = 0;
 			foreach ( FS_Config::get_languages() as $key => $language ) {
-				if ( ! empty( $args['disable_default_locale'] )  && $language['locale'] == FS_Config::default_locale() ) {
+				if ( ! empty( $args['disable_default_locale'] ) && $language['locale'] == FS_Config::default_locale() ) {
 					continue;
 				}
 				$tab_class = ! $count ? 'nav-tab-active' : '';
@@ -127,7 +127,7 @@ class FS_Form {
 			echo '</div>';
 			$count = 0;
 			foreach ( FS_Config::get_languages() as $key => $item ) {
-				if ( ! empty( $args['disable_default_locale'] )  && $item['locale'] == FS_Config::default_locale() ) {
+				if ( ! empty( $args['disable_default_locale'] ) && $item['locale'] == FS_Config::default_locale() ) {
 					continue;
 				}
 				$tab_class  = ! $count ? 'fs-tabs__body fs-tab-active' : 'fs-tabs__body';
@@ -244,7 +244,7 @@ class FS_Form {
 			'required'       => ! empty( $field['required'] ) ? $field['required'] : false,
 			'title'          => ! empty( $field['title'] ) ? $field['title'] : __( 'this field is required', 'f-shop' ),
 			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
-			'value'          => ! empty( $field['value'] ) ? $field['value'] : null,
+			'value'          => $field['value'] ?? null,
 			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
 			'icon'           => ! empty( $field['icon'] ) ? $field['icon'] : '',
 			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',

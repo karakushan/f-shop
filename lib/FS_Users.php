@@ -591,11 +591,10 @@ class FS_Users {
 				'type'           => 'checkbox',
 				'label'          => __( 'Register on the site', 'f-shop' ),
 				'label_position' => 'after',
-				'value'          => 1,
+				'value'          => 0,
 				'required'       => false,
 				'checkout'       => true,
 				'save_meta'      => false
-
 			),
 			'fs_subscribe_news'    => array(
 				'name'           => __( 'Subscribe', 'f-shop' ),

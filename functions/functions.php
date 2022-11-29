@@ -1133,6 +1133,9 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		$total_count = get_post_meta( $product_id, FS_Config::get_meta( 'remaining_amount' ), true );
 	}
 
+	do_action( 'qm/debug', fs_option( 'fs_in_stock_manage', 0 ) );
+
+
 	// Set attributes for a tag of type input text
 	$data_atts = fs_parse_attr( array(
 		'step'               => $args['step'],
@@ -1143,8 +1146,7 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		'type'               => 'text',
 		'data-fs-product-id' => $product_id,
 		'min'                => $args['step'],
-		'max'                => $total_count ? intval( $total_count ) : ''
-
+		'max'                => fs_option( 'fs_in_stock_manage', 0 ) && $total_count ? intval( $total_count ) : ''
 	) );
 
 
@@ -1506,8 +1508,8 @@ function fs_price_min() {
 	$min = 0;
 
 	if ( fs_is_product_category() ) {
-		$term = get_queried_object();
-		$min  = wp_cache_get( 'fs_min_price_term_' . $term->term_id );
+		$term          = get_queried_object();
+		$min           = wp_cache_get( 'fs_min_price_term_' . $term->term_id );
 		$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
 		if ( ! $min ) {
 			// get min price form meta value price in product category
