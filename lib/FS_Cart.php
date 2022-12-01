@@ -50,7 +50,7 @@ class FS_Cart {
 		if ( ! empty( $_SESSION['cart'] ) ) {
 			$_SESSION['cart'][ $item_id ]['count'] = $product_count;
 			$product_id                            = (int) $_SESSION['cart'][ $item_id ]['ID'];
-			$sum                                 = fs_get_price( $product_id ) * $product_count;
+			$sum                                   = fs_get_price( $product_id ) * $product_count;
 			wp_send_json_success( [
 				'sum'   => apply_filters( 'fs_price_format', $sum ) . ' ' . fs_currency(),
 				'cost'  => apply_filters( 'fs_price_format', fs_get_cart_cost() ) . ' ' . fs_currency(),
@@ -225,12 +225,23 @@ class FS_Cart {
 	}
 
 	/**
-	 * Возвращает корзину
+	 * Returns the cart
 	 *
 	 * @return array
 	 */
 	public static function get_cart() {
-		return isset( $_SESSION['cart'] ) ? $_SESSION['cart'] : [];
+		return !empty( $_POST['cart'] ) ? (array) $_POST['cart'] : ( isset( $_SESSION['cart'] ) ? (array) $_SESSION['cart'] : [] );
+	}
+
+	/**
+	 * Checks if the cart is empty
+	 *
+	 * @return bool
+	 */
+	public static function has_empty() {
+		$cart = self::get_cart();
+
+		return count( $cart ) == 0;
 	}
 
 

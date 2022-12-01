@@ -372,7 +372,7 @@ class FS_Users {
 				'value'       => fs_option( 'fs_autofill_form' ) && ! empty( $user->user_email ) ? $user->user_email : '',
 				'placeholder' => __( 'Your email', 'f-shop' ),
 				'title'       => __( 'Keep the correct email', 'f-shop' ),
-				'required'    => true,
+				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
 			),
@@ -394,7 +394,7 @@ class FS_Users {
 				'value'       => fs_option( 'fs_autofill_form' ) && ! empty( $user->last_name ) ? $user->last_name : '',
 				'placeholder' => __( 'Last name', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true,
+				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
 			),
@@ -438,7 +438,7 @@ class FS_Users {
 				'label'       => '',
 				'placeholder' => __( 'City', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true,
+				'required'    => false,
 				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_city', 1 ) : '',
 				'checkout'    => true,
 				'save_meta'   => true
@@ -537,7 +537,7 @@ class FS_Users {
 					'hide_empty' => 0,
 					'parent'     => 0
 				) ),
-				'required'     => true,
+				'required'     => false,
 				'checkout'     => true,
 				'save_meta'    => true
 
@@ -570,7 +570,7 @@ class FS_Users {
 						]
 					],
 				) ),
-				'required'     => true,
+				'required'     => false,
 				'checkout'     => true,
 				'save_meta'    => true
 

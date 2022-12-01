@@ -35,7 +35,8 @@ class FS_Shortcode {
 		add_shortcode( 'fs_checkout', array( $this, 'order_send' ) );
 
 		# ORDERS
-		add_shortcode( 'fs_single_order', array( $this, 'single_order' ) );
+		// Quick order form shortcode
+		add_shortcode( 'fs_quick_order_form', array( $this, 'quick_order_form_shortcode' ) );
 		add_shortcode( 'fs_user_orders', array( $this, 'user_orders' ) );
 		add_shortcode( 'fs_pay_methods', array( $this, 'pay_methods' ) );
 		add_shortcode( 'fs_list_orders', array( 'FS\FS_Orders', 'list_orders' ) );
@@ -257,20 +258,27 @@ class FS_Shortcode {
 	}
 
 
-	public function single_order( $args ) {
-		$args     = shortcode_atts( array(
-			'product_id' => 0,
-			'class'      => ''
+	/**
+	 * Displays the quick order form code
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	public function quick_order_form_shortcode( $args ) {
+		$args = shortcode_atts( array(
+			'product_id' => get_the_ID(),
+			'class'      => 'fs-quick-order'
 		), $args );
-		$template = '
-<form action="#" name="fs-order-send" class="' . $args['class'] . '" method="POST">
-             < div class="products_wrapper" ></div >
-  <input type = "hidden" id = "_wpnonce" name = "_wpnonce" value = "' . wp_create_nonce( 'f-shop' ) . '" >
-  <input type = "hidden" name = "action" value = "order_send" >
-  <input type = "hidden" name = "order_type" value = "single" > ';
-		$template .= fs_frontend_template( 'order / single - order', $args );
-		$template .= '
-                                                                  </form > ';
+
+		$template = '<form action="#" name="fs-order-send" class="' . esc_attr( $args['class'] ) . '" method="POST">
+            <div class="products_wrapper" ></div>
+			<input type = "hidden" id = "_wpnonce" name = "fs_secret" value = "' . wp_create_nonce( 'f-shop' ) . '">
+			<input type = "hidden" name = "action" value = "order_send">
+			<input type = "hidden" name = "cart[0][ID]" value="' . esc_attr( $args['product_id'] ) . '">
+			<input type = "hidden" name = "cart[0][count]" value="1">';
+		$template .= fs_frontend_template( 'order/quick-order', $args );
+		$template .= '</form>';
 
 		return $template;
 	}

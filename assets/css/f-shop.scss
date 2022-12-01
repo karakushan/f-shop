@@ -1048,11 +1048,11 @@ td.fs_photo.column-fs_photo img {
   align-items: center;
   background-color: #fafafa;
 
-  &.fs-has-error{
+  &.fs-has-error {
     border-left: 4px solid $color_error;
   }
 
-  &.fs-has-warning{
+  &.fs-has-warning {
     border-left: 4px solid $color_warning;
   }
 
@@ -2020,7 +2020,29 @@ td.fs_photo.column-fs_photo img {
 .fs-login-form {
   max-width: 300px;
 }
-@media (max-width:768px) {
+
+.fs-quick-order {
+  line-height: 1.2;
+
+  label {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  &__row {
+    margin-bottom: 1rem;
+  }
+
+  &__control {
+    width: 100%;
+    height: 40px;
+    outline: none;
+    border-radius: 3px;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 768px) {
   .fs-dashboard-order__header span {
     display: block;
     margin: 0 0 12px;

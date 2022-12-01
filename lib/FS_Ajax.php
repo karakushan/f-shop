@@ -487,8 +487,8 @@ class FS_Ajax {
 		// TODO: В дальнейшем если есть несколько совпавших вариантов выводить доп. окно с уточнением
 		if ( count( $matched_options ) && is_array( $matched_options ) ) {
 			$matched_options = array_shift( $matched_options );
-			$price           = apply_filters( 'fs_price_filter',  $matched_options['price'],$product_id );
-			$action_price    = apply_filters( 'fs_price_filter',  $matched_options['action_price'],$product_id );
+			$price           = apply_filters( 'fs_price_filter', $matched_options['price'], $product_id );
+			$action_price    = apply_filters( 'fs_price_filter', $matched_options['action_price'], $product_id );
 			$base_price      = null;
 
 			if ( $action_price > 0 && $action_price < $price ) {
@@ -560,37 +560,71 @@ class FS_Ajax {
 		exit();
 	}
 
+	/**
+	 * Performs validation of the fields sent from the order form
+	 *
+	 * @return array
+	 */
+	public static function validate_checkout_fields() {
+		if ( FS_Cart::has_empty() ) {
+			wp_send_json_error( [ 'msg' => __( 'Корзина пуста!', 'f-shop' ) ] );
+		}
+
+		$form_fields = array_filter( FS_Users::get_user_fields(), function ( $item ) {
+			return isset( $item['checkout'] ) && $item['checkout'] === true;
+		} );
+
+		foreach ( $form_fields as $key => $form_field ) {
+			if ( isset( $form_field['required'] ) && $form_field['required'] && trim( $_POST[ $key ] ) == '' ) {
+				wp_send_json_error( [ 'msg' => sprintf( __( 'Поле "%s" является обязательным!' ), $form_field['name'] ) ] );
+				break;
+			}
+		}
+
+		array_walk( $form_fields, function ( &$fields, $key ) use ( $form_fields ) {
+			$item = $form_fields[ $key ];
+			if ( $item['type'] == 'tel' || $item['type'] == 'number' ) {
+				$fields = preg_replace( "/[^0-9]/", '', $_POST[ $key ] );
+			} elseif ( $item['type'] == 'email' ) {
+				$fields = sanitize_email( $_POST[ $key ] );
+			} else {
+				$fields = trim( $_POST[ $key ] );
+			}
+		} );
+
+		return $form_fields;
+	}
+
 
 	/**
-	 *Отправка заказа в базу, на почту админа и заказчика
+	 * Ajax order creation
 	 */
 	function order_send_ajax() {
+		// Checking if the request comes from our site
+		if ( ! FS_Config::verify_nonce() ) {
+			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
+		}
+
+		// Validation of order submission form data
+		$sanitize_field = self::validate_checkout_fields();
+
 		global $wpdb;
 		$wpdb->show_errors( false );
 		$fs_config                 = new FS_Config();
 		$fs_template               = new FS_Template();
 		$order_create_time         = time();
 		$order_create_date_display = date_i18n( 'd F Y H:i', $order_create_time );
-		$form_data                 = array_map( 'trim', $_POST );
-		$update_user_meta          = isset( $_POST['fs_update_user_meta'] ) ? boolval( $_POST['fs_update_user_meta'] ) : true;
+		$update_user_meta          = ! isset( $_POST['fs_update_user_meta'] ) || boolval( $_POST['fs_update_user_meta'] );
 		$order_status_id           = intval( fs_option( 'fs_default_order_status' ) );
 		$customer_id               = 0;
-
 
 		// Set new order status
 		$order_status = 'new';
 		if ( $order_status_id ) {
 			$order_status_term = get_term_field( 'slug', $order_status_id, FS_Config::get_data( 'order_statuses_taxonomy' ) );
-
 			if ( ! is_wp_error( $order_status_term ) ) {
 				$order_status = $order_status_term;
 			}
-		}
-
-		// Валидация данных запроса
-		// Проверяем происходит ли запрос от нашего сайта
-		if ( ! FS_Config::verify_nonce() ) {
-			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
 		}
 
 		// Проверяем минимальную сумму заказа, если указано
@@ -620,35 +654,6 @@ class FS_Ajax {
 		$discount           = fs_get_total_discount( ! empty( $_POST['fs_phone'] ) ? $_POST['fs_phone'] : '' );
 		$packing_cost       = fs_get_packing_cost( absint( $_POST['fs_delivery_methods'] ) );
 		$cart_cost          = fs_get_cart_cost();
-
-		//Производим очистку полученных данных с формы заказа
-		$form_fields    = FS_Users::get_user_fields();
-		$sanitize_field = array();
-
-		foreach ( $form_fields as $field_name => $form_field ) {
-			if ( ! isset( $_POST[ $field_name ] ) ) {
-				$sanitize_field[ $field_name ] = null;
-				continue;
-			}
-			// Пропускаем поля которые не должны быть в оформлении заказа
-			if ( ! isset( $form_field['checkout'] ) || ( isset( $form_field['checkout'] ) && $form_field['checkout'] == false ) ) {
-				continue;
-			}
-
-			// Очищаем номер телефона от ненужных символов
-			if ( $field_name == 'fs_phone' ) {
-				$sanitize_field[ $field_name ] = preg_replace( "/[^0-9]/", '', $form_data[ $field_name ] );
-				continue;
-			}
-
-			// Если  тип поля email, то очищаем его от ненужных символов
-			if ( $form_field['type'] == 'email' ) {
-				$sanitize_field[ $field_name ] = sanitize_email( $form_data[ $field_name ] );
-				continue;
-			}
-
-			$sanitize_field[ $field_name ] = isset( $form_data[ $field_name ] ) ? $form_data[ $field_name ] : '';
-		}
 
 		// проверяем существование пользователя
 		if ( is_user_logged_in() ) {
