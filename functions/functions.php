@@ -3073,10 +3073,10 @@ function fs_product_average_rating( $product_id = 0 ) {
  */
 function fs_comments_count( $product_id = 0 ): void {
 	$product_id     = fs_get_product_id( $product_id );
-	$comments_count = wp_count_comments( $product_id );
-	$count          = (int) $comments_count->approved;
+	$count = (int) wp_count_comments( $product_id )->approved;
+
 	if ( $count > 0 ) {
-		printf( _noun( '%s review', '%s reviews', $count, 'f-shop' ), $count );
+		printf( _n( '%s review', '%s reviews', $count, 'f-shop' ), number_format_i18n( $count ) );
 	} else {
 		_e( 'No reviews', 'f-shop' );
 	}
