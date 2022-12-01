@@ -5,7 +5,7 @@
             <div class="comment-author vcard">
                 <b class="fn">
                     <a rel="external nofollow ugc"
-                       class="url" itemprop="name"><?php echo $user->data->display_name; ?></a>
+                       class="url" itemprop="name"><?php echo $user->data->display_name ?? $comment->comment_author; ?></a>
                 </b>
             </div><!-- .comment-author -->
             <div class="comment-metadata">
