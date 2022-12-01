@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2022-12-01 15:43+0000\n"
+"POT-Creation-Date: 2022-12-01 20:25+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -2745,4 +2745,7 @@ msgid "%s review"
 msgstr ""
 
 msgid "%s reviews"
+msgstr ""
+
+msgid "Remove all items"
 msgstr ""
