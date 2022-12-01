@@ -2120,7 +2120,6 @@ function fs_attr_list( $attr_group = 0 ) {
  * @param array $args -дополнительные аргументы вывода
  */
 function fs_the_atts_list( $post_id = 0, $args = array() ) {
-	return '';
 	global $post;
 	$fs_config  = new FS_Config();
 	$list       = '';
