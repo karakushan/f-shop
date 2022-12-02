@@ -34,18 +34,22 @@ class WP_Globus {
 
 		$this->switcher_name = $args['name'];
 
-		$locales               = [ 'ua' => 'uk', 'ru' => 'ru_RU' ];
-		$post_type             = FS_Config::get_data( 'post_type' );
-		$languages             = WPGlobus::Config()->enabled_languages;
-		$product_taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
+		$locales   = [ 'ua' => 'uk', 'ru' => 'ru_RU' ];
+		$post_type = FS_Config::get_data( 'post_type' );
+		$languages = WPGlobus::Config()->enabled_languages;
+
 
 		if ( $args['type'] == 'ul' ) {
 			echo '<ul class="' . esc_attr( $args['class'] ) . '">';
 		} elseif ( $args['type'] == 'select' ) {
 			echo '<select name="' . esc_attr( $args['name'] ) . '" class="' . esc_attr( $args['class'] ) . '" >';
+		} elseif ( $args['type'] == 'link' ) {
+			echo '<div class="' . esc_attr( $args['class'] ) . '">';
 		}
+
 		foreach ( $languages as $lang ) {
-			$class = $lang == WPGlobus::Config()->language ? 'class="active"' : '';
+			$class     = $lang == WPGlobus::Config()->language ? 'class="active"' : '';
+			$lang_name = apply_filters( 'fs_language_display_name', $lang );
 
 			if ( is_singular( $post_type ) ) {
 				global $post;
@@ -53,7 +57,7 @@ class WP_Globus {
 				$slug   = get_post_meta( $post->ID, 'fs_seo_slug__' . $locales[ $lang ], 1 );
 				$link   = $slug ? site_url( sprintf( '%s/%s/%s', $prefix, $post_type, $slug ) )
 					: site_url( sprintf( '%s/%s/%s', $prefix, $post_type, $post->post_name ) );
-			} elseif ( is_archive( $post_type ) && is_tax( $product_taxonomy_name ) ) {
+			} elseif ( fs_is_product_category() ) {
 				$link = fs_localize_category_url( get_queried_object_id(), $locales[ $lang ] );
 			} else {
 				$link = WPGlobus_Utils::localize_current_url( $lang );
@@ -62,9 +66,15 @@ class WP_Globus {
 			$link = apply_filters( 'fs_wpglobus_language_switcher_link', $link, $lang );
 
 			if ( $args['type'] == 'ul' ) {
-				echo ' <li ' . $class . '><a href="' . esc_url( $link ) . '" ' . $class . '>' . $lang . '</a></li>';
+				echo ' <li ' . $class . '><a href="' . esc_url( $link ) . '" ' . $class . '>' . esc_html( $lang_name ) . '</a></li>';
 			} elseif ( $args['type'] == 'select' ) {
-				echo ' <option ' . $class . ' value="' . esc_url( $link ) . '" ' . selected( $lang, WPGlobus::Config()->language, false ) . '>' . esc_html( $lang ) . '</option>';
+				echo ' <option ' . $class . ' value="' . esc_url( $link ) . '" ' . selected( $lang, WPGlobus::Config()->language, false ) . '>' . esc_html( $lang_name ) . '</option>';
+			} elseif ( $args['type'] == 'link' ) {
+				if ( WPGlobus::Config()->language != $lang ) {
+					echo '<a href="' . esc_attr( $link ) . '">' . esc_html( $lang_name ) . '</a>';
+				} else {
+					echo '<span>' . esc_html( $lang_name ) . '</span>';
+				}
 			}
 		}
 
@@ -72,6 +82,8 @@ class WP_Globus {
 			echo '</ul>';
 		} elseif ( $args['type'] == 'select' ) {
 			echo '</select>';
+		} elseif ( $args['type'] == 'link' ) {
+			echo '</div>';
 		}
 	}
 

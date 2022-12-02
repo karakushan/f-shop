@@ -3072,8 +3072,8 @@ function fs_product_average_rating( $product_id = 0 ) {
  * @return void
  */
 function fs_comments_count( $product_id = 0 ): void {
-	$product_id     = fs_get_product_id( $product_id );
-	$count = (int) wp_count_comments( $product_id )->approved;
+	$product_id = fs_get_product_id( $product_id );
+	$count      = (int) wp_count_comments( $product_id )->approved;
 
 	if ( $count > 0 ) {
 		printf( _n( '%s review', '%s reviews', $count, 'f-shop' ), number_format_i18n( $count ) );
@@ -3204,7 +3204,7 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
  * @return mixed
  */
 function fs_get_term_meta( string $meta_key, $term_id = 0, $type = 1, $multilang = true ) {
-	$term_id  = $term_id ? $term_id : get_queried_object_id();
+	$term_id  = $term_id ?  : get_queried_object_id();
 	$meta_key = $multilang && ! FS_Config::is_default_locale() ? $meta_key . '__' . get_locale() : $meta_key;
 
 	return get_term_meta( $term_id, $meta_key, $type );
@@ -3503,12 +3503,13 @@ if ( ! function_exists( 'fs_localize_category_url' ) ) {
 		$args         = wp_parse_args( $args, [
 			'prefixes' => [
 				'uk'    => 'ua',
-				'ru_RU' => '',
+				'ru_RU' => 'ru',
 				'en_US' => 'en'
 			]
 		] );
-		$prefix       = isset( $args['prefixes'][ $locale ] ) ? $args['prefixes'][ $locale ] : '';
-		$slug         = get_term_meta( $term_id, '_seo_slug__' . $locale, 1 )
+
+		$prefix       = FS_Config::default_locale() != $locale ? $args['prefixes'][ $locale ] : '';
+		$slug         = FS_Config::default_locale() != $locale  && get_term_meta( $term_id, '_seo_slug__' . $locale, 1 )
 			? get_term_meta( $term_id, '_seo_slug__' . $locale, 1 ) : $term->slug;
 
 		$url_components = [ $prefix ];
