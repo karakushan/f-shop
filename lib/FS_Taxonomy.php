@@ -547,7 +547,15 @@ class FS_Taxonomy {
 						'args' => [
 							'multilang' => false,
 						]
-					]
+					],
+					'_min_qty'       => array(
+						'name' => __( 'Minimum quantity of goods for order', 'f-shop' ),
+						'type' => 'number',
+						'args' => [
+							'multilang' => false,
+						],
+                        'help'=>__('Distributed to goods belonging to this category','f-shop')
+					),
 				),
 			'fs-payment-methods'                            =>
 				array(

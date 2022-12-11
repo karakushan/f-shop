@@ -2,33 +2,27 @@ jQuery(document).ready(function ($) {
     let fShop = Object.assign({
         getLang: function (string) {
             return this.langs[string];
-        },
-        // Выполняет поиск значения value в массиве array
-        find:
-            function find(array, value) {
-                if (array.indexOf) { // если метод существует
-                    return array.indexOf(value);
-                }
-                for (var i = 0; i < array.length; i++) {
-                    if (array[i] === value) return i;
-                }
-                return -1;
-            },
-        ajaxData: function (action, data) {
+        }, // Выполняет поиск значения value в массиве array
+        find: function find(array, value) {
+            if (array.indexOf) { // если метод существует
+                return array.indexOf(value);
+            }
+            for (var i = 0; i < array.length; i++) {
+                if (array[i] === value) return i;
+            }
+            return -1;
+        }, ajaxData: function (action, data) {
             data.action = action;
             data.fs_secret = this.nonce
             return data;
-        },
-        strReplace: function (string, obj) {
+        }, strReplace: function (string, obj) {
             for (var x in obj) {
                 string = string.replace(new RegExp(x, 'g'), obj[x]);
             }
             return string;
-        },
-        getSettings: function (settingName) {
+        }, getSettings: function (settingName) {
             return this[settingName];
-        },
-        updateCarts: function () {
+        }, updateCarts: function () {
             jQuery("[data-fs-element=\"cart-widget\"]").each(function () {
                 let templatePath = "cart-widget/widget";
                 if (jQuery(this).data("template") != "") {
@@ -36,8 +30,7 @@ jQuery(document).ready(function ($) {
                 }
                 fs_get_cart(templatePath, this);
             });
-        },
-        productQuantityPluss: function (el) {
+        }, productQuantityPluss: function (el) {
             let parent = el.parents('[data-fs-element="fs-quantity"]');
             let input = parent.find('input');
             let step = Number(input.attr('step'));
@@ -46,26 +39,18 @@ jQuery(document).ready(function ($) {
 
             if (max != '' && value > Number(max)) {
                 iziToast.show({
-                    theme: 'light',
-                    message: this.getLang('limit_product'),
-                    position: 'topCenter',
+                    theme: 'light', message: this.getLang('limit_product'), position: 'topCenter',
                 });
             } else {
                 input.val(value);
                 input.change();
             }
-        },
-        setProductGallery: function (productId, variationId = null) {
+        }, setProductGallery: function (productId, variationId = null) {
             $.ajax({
-                type: 'POST',
-                url: this.ajaxurl,
-                beforeSend: function () {
-                },
-                data: this.ajaxData('fs_get_product_gallery_ids', {
-                    "product_id": productId,
-                    "variation_id": variationId
-                }),
-                success: function (res) {
+                type: 'POST', url: this.ajaxurl, beforeSend: function () {
+                }, data: this.ajaxData('fs_get_product_gallery_ids', {
+                    "product_id": productId, "variation_id": variationId
+                }), success: function (res) {
                     if (res.success) {
                         if (res.data.gallery) {
                             $("#fs-product-slider-wrapper").html('<ul id="product_slider">' + res.data.gallery + '</ul>');
@@ -73,10 +58,8 @@ jQuery(document).ready(function ($) {
                         }
                     }
                 }
-            })
-            ;
-        },
-        changeCartItemCount: function (el) {
+            });
+        }, changeCartItemCount: function (el) {
             let cartItem = el.data('item-id');
             let productCount = Number(el.val());
             let step = Number(el.attr('step'));
@@ -89,14 +72,9 @@ jQuery(document).ready(function ($) {
             } else {
                 let plugin = this;
                 $.ajax({
-                    url: this.ajaxurl,
-                    type: 'POST',
-                    data: {
-                        action: 'fs_change_cart_count',
-                        item_id: cartItem,
-                        count: productCount
-                    },
-                    success: function (response) {
+                    url: this.ajaxurl, type: 'POST', data: {
+                        action: 'fs_change_cart_count', item_id: cartItem, count: productCount
+                    }, success: function (response) {
                         if (response.success) {
                             plugin.updateCarts();
                             $('[data-fs-element="cart-cost"]').text(response.data.cost)
@@ -116,8 +94,7 @@ jQuery(document).ready(function ($) {
             }
 
 
-        },
-        selectVariation: function () {
+        }, selectVariation: function () {
             var variation = $(this).val();
             var productId = $(this).data("product-id");
             var maxCount = $(this).data("max");
@@ -142,8 +119,7 @@ jQuery(document).ready(function ($) {
             // создаём событие
             var fs_select_variant = new CustomEvent("fs_select_variant", {
                 detail: {
-                    "variationId": variation,
-                    "productId": productId
+                    "variationId": variation, "productId": productId
                 }
             });
             document.dispatchEvent(fs_select_variant);
@@ -156,35 +132,23 @@ jQuery(document).ready(function ($) {
         let commentId = $(this).data('comment-id');
         let countEl = $(this).find('[data-fs-element="comment-like-count"]')
         $.ajax({
-            type: 'POST',
-            url: fShop.ajaxurl,
-            data: {
-                action: 'fs_like_comment',
-                comment_id: commentId
-            },
-            success: function (data) {
+            type: 'POST', url: fShop.ajaxurl, data: {
+                action: 'fs_like_comment', comment_id: commentId
+            }, success: function (data) {
                 if (data.success && data.data.count) {
                     countEl.text(data.data.count)
                     iziToast.show({
-                        theme: 'light',
-                        color: 'green',
-                        message: data.data.msg,
-                        position: 'bottomRight',
+                        theme: 'light', color: 'green', message: data.data.msg, position: 'bottomRight',
                     });
                 } else {
                     iziToast.show({
-                        theme: 'light',
-                        color: 'red',
-                        message: data.data.msg,
-                        position: 'bottomRight',
+                        theme: 'light', color: 'red', message: data.data.msg, position: 'bottomRight',
                     });
                 }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
+            }, error: function (xhr, ajaxOptions, thrownError) {
                 console.log('error...', xhr);
                 //error logging
-            },
-            complete: function () {
+            }, complete: function () {
                 //afer ajax call is completed
             }
         });
@@ -254,17 +218,11 @@ jQuery(document).ready(function ($) {
             success: function (data) {
                 if (data.success) {
                     iziToast.show({
-                        theme: 'light',
-                        color: 'green',
-                        message: data.data.msg,
-                        position: 'topCenter',
+                        theme: 'light', color: 'green', message: data.data.msg, position: 'topCenter',
                     });
                 } else {
                     iziToast.show({
-                        theme: 'light',
-                        color: 'red',
-                        message: data.data.msg,
-                        position: 'topCenter',
+                        theme: 'light', color: 'red', message: data.data.msg, position: 'topCenter',
                     });
                 }
 
@@ -295,9 +253,7 @@ jQuery(document).ready(function ($) {
 
         if (el.attr("data-disabled") == 'true') {
             iziToast.warning({
-                position: "topCenter",
-                title: fShop.getLang('error'),
-                message: el.attr("data-disabled-message"),
+                position: "topCenter", title: fShop.getLang('error'), message: el.attr("data-disabled-message"),
             });
             return;
         }
@@ -326,17 +282,13 @@ jQuery(document).ready(function ($) {
             image: el.data('image'),
             success: true,
             text: {
-                success: el.data('success'),
-                error: el.data('error')
+                success: el.data('success'), error: el.data('error')
             }
         };
 
 
         var productObject = {
-            "attr": attr,
-            "count": count,
-            "variation": variation,
-            'post_id': product_id
+            "attr": attr, "count": count, "variation": variation, 'post_id': product_id
         }
 
         jQuery.ajax({
@@ -415,9 +367,7 @@ jQuery(document).ready(function ($) {
                         // создаём событие "fs_after_change_att"
                         var fs_after_change_att = new CustomEvent("fs_after_change_att", {
                             detail: {
-                                el: curent,
-                                productId: productId,
-                                data: json
+                                el: curent, productId: productId, data: json
                             }
                         });
                         document.dispatchEvent(fs_after_change_att);
@@ -451,80 +401,76 @@ jQuery(document).ready(function ($) {
                 if (val) parseAtts.push(val);
             }
         });
-        if (cartbutton.data('variated') == 1)
-            jQuery.ajax({
-                type: 'POST',
-                url: fShop.ajaxurl,
-                data: {action: "fs_get_variated", product_id: productId, atts: parseAtts, current: attrVal},
-                success: function (result) {
-                    if (result.success) {
-                        let price = Number(result.data.options.price);
-                        let pricePromo = Number(result.data.options.action_price);
+        if (cartbutton.data('variated') == 1) jQuery.ajax({
+            type: 'POST',
+            url: fShop.ajaxurl,
+            data: {action: "fs_get_variated", product_id: productId, atts: parseAtts, current: attrVal},
+            success: function (result) {
+                if (result.success) {
+                    let price = Number(result.data.options.price);
+                    let pricePromo = Number(result.data.options.action_price);
 
-                        if (pricePromo && pricePromo < price) {
-                            price = pricePromo;
-                        }
+                    if (pricePromo && pricePromo < price) {
+                        price = pricePromo;
+                    }
 
-                        cartbutton.attr("data-disabled", false);
-                        cartbutton.attr("data-variation", result.data.options.variation);
-                        cartbutton.attr("data-price", price);
-                        cartbutton.removeAttr("data-disabled-message");
+                    cartbutton.attr("data-disabled", false);
+                    cartbutton.attr("data-variation", result.data.options.variation);
+                    cartbutton.attr("data-price", price);
+                    cartbutton.removeAttr("data-disabled-message");
 
-                        if (result.data.active) {
-                            // устанавливаем опции в селектах в актив
-                            for (var key in result.data.active) {
-                                $("[data-fs-element=\"attr\"][name='" + key + "'] option").each(function (index, value) {
-                                    if ($(this).attr("value") == result.data.active[key]) {
-                                        $(this).prop("selected", true);
-                                    }
-                                });
-                            }
-                            $("[data-action=\"add-to-cart\"][data-product-id=\"" + productId + "\"]").attr("data-attr", JSON.stringify(result.data.active));
-
-                        }
-
-                        if (typeof result.data.variation == 'number') {
-                            jQuery("[data-action=\"add-to-cart\"]").each(function (index, value) {
-                                if (jQuery(this).data("product-id") == productId) {
-                                    jQuery(this).attr("data-variation", result.data.variation);
+                    if (result.data.active) {
+                        // устанавливаем опции в селектах в актив
+                        for (var key in result.data.active) {
+                            $("[data-fs-element=\"attr\"][name='" + key + "'] option").each(function (index, value) {
+                                if ($(this).attr("value") == result.data.active[key]) {
+                                    $(this).prop("selected", true);
                                 }
                             });
                         }
+                        $("[data-action=\"add-to-cart\"][data-product-id=\"" + productId + "\"]").attr("data-attr", JSON.stringify(result.data.active));
 
-                        if (result.data.price) {
-                            jQuery("[data-fs-element=\"price\"]").each(function (index, value) {
-                                if (jQuery(this).data("product-id") == productId) {
-                                    jQuery(this).html(result.data.price);
-                                }
-                            });
-                        }
+                    }
 
-                        if (result.data.basePrice) {
-                            jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html(result.data.basePrice);
-                        } else {
-                            jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html('');
-                        }
-
-                        // создаём событие "fs_after_change_att"
-                        var fs_after_change_att = new CustomEvent("fs_after_change_att", {
-                            detail: {
-                                el: el,
-                                productId: productId,
-                                data: result.data
+                    if (typeof result.data.variation == 'number') {
+                        jQuery("[data-action=\"add-to-cart\"]").each(function (index, value) {
+                            if (jQuery(this).data("product-id") == productId) {
+                                jQuery(this).attr("data-variation", result.data.variation);
                             }
-                        });
-                        document.dispatchEvent(fs_after_change_att);
-                    } else {
-                        cartbutton.attr("data-disabled", true);
-                        cartbutton.attr("data-disabled-message", result.data.msg);
-
-                        iziToast.warning({
-                            title: fShop.getLang('error'),
-                            message: result.data.msg,
                         });
                     }
+
+                    if (result.data.price) {
+                        jQuery("[data-fs-element=\"price\"]").each(function (index, value) {
+                            if (jQuery(this).data("product-id") == productId) {
+                                jQuery(this).html(result.data.price);
+                            }
+                        });
+                    }
+
+                    if (result.data.basePrice) {
+                        jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html(result.data.basePrice);
+                    } else {
+                        jQuery('[data-fs-element="base-price"][data-product-id="' + productId + '"]').html('');
+                    }
+
+                    // создаём событие "fs_after_change_att"
+                    var fs_after_change_att = new CustomEvent("fs_after_change_att", {
+                        detail: {
+                            el: el, productId: productId, data: result.data
+                        }
+                    });
+                    document.dispatchEvent(fs_after_change_att);
+                } else {
+                    cartbutton.attr("data-disabled", true);
+                    cartbutton.attr("data-disabled-message", result.data.msg);
+
+                    iziToast.warning({
+                        title: fShop.getLang('error'), message: result.data.msg,
+                    });
                 }
-            });
+            }
+        });
     });
 
 
@@ -546,16 +492,11 @@ jQuery(document).ready(function ($) {
         }
 
         jQuery.ajax({
-            type: 'POST',
-            url: fShop.ajaxurl,
-            beforeSend: function () {
+            type: 'POST', url: fShop.ajaxurl, beforeSend: function () {
 
-            },
-            data: fShop.ajaxData('fs_show_shipping',
-                {
-                    fs_delivery_methods: val
-                }),
-            success: function (result) {
+            }, data: fShop.ajaxData('fs_show_shipping', {
+                fs_delivery_methods: val
+            }), success: function (result) {
                 if (!result.success) return;
 
                 if (result.data.price) {
@@ -601,8 +542,7 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    if (jQuery('[name="fs_delivery_methods"]').length)
-        getCheckoutData();
+    if (jQuery('[name="fs_delivery_methods"]').length) getCheckoutData();
 
     // Shows address fields when choosing delivery to
     jQuery(document).on('change', '[name="fs_delivery_methods"]', function (event) {
@@ -621,23 +561,18 @@ jQuery(document).ready(function ($) {
         var el = jQuery(this);
         var item = el.data('cart-item');
         var sendData = {
-            action: 'fs_delete_product',
-            item: item
+            action: 'fs_delete_product', item: item
         };
 
 
         if (!el.data('confirm') || confirm(el.data("confirm"))) {
             jQuery.ajax({
-                url: fShop.ajaxurl,
-                type: 'POST',
-                data: sendData
+                url: fShop.ajaxurl, type: 'POST', data: sendData
             }).success(function (result) {
                 if (result.success) {
                     fShop.updateCarts();
                     iziToast.show({
-                        theme: 'light',
-                        message: result.data.message,
-                        position: 'topCenter',
+                        theme: 'light', message: result.data.message, position: 'topCenter',
 
                     });
                     if (el.data('refresh')) {
@@ -645,13 +580,10 @@ jQuery(document).ready(function ($) {
                     }
                 } else {
                     iziToast.show({
-                        theme: 'light',
-                        message: result.data.message,
-                        position: 'topCenter',
+                        theme: 'light', message: result.data.message, position: 'topCenter',
                     });
                 }
-            })
-            ;
+            });
         }
     });
 
@@ -664,15 +596,11 @@ jQuery(document).ready(function ($) {
         };
         if (confirm(el.data("confirm"))) {
             jQuery.ajax({
-                url: fShop.ajaxurl,
-                type: 'POST',
-                data: sendData
+                url: fShop.ajaxurl, type: 'POST', data: sendData
             }).success(function (result) {
                 if (result.success) {
                     iziToast.show({
-                        theme: 'light',
-                        message: result.data.message,
-                        position: 'topCenter',
+                        theme: 'light', message: result.data.message, position: 'topCenter',
 
                     });
                     setTimeout(function () {
@@ -680,13 +608,10 @@ jQuery(document).ready(function ($) {
                     }, 5000);
                 } else {
                     iziToast.show({
-                        theme: 'light',
-                        message: result.data.message,
-                        position: 'topCenter',
+                        theme: 'light', message: result.data.message, position: 'topCenter',
                     });
                 }
-            })
-            ;
+            });
         }
     });
 
@@ -695,15 +620,10 @@ jQuery(document).ready(function ($) {
         event.preventDefault();
         var el = jQuery(this);
         jQuery.ajax({
-            url: fShop.ajaxurl,
-            type: 'POST',
-            beforeSend: function () {
+            url: fShop.ajaxurl, type: 'POST', beforeSend: function () {
                 el.find('.fs-atc-preloader').fadeIn();
-            },
-            data: {
-                action: 'fs_add_to_comparison',
-                product_id: el.data('product-id'),
-                product_name: el.data('product-name')
+            }, data: {
+                action: 'fs_add_to_comparison', product_id: el.data('product-id'), product_name: el.data('product-name')
             },
         })
             .success(function (data) {
@@ -776,15 +696,17 @@ jQuery(document).ready(function ($) {
 // Квантификатор товара
     jQuery(document).ready(function (jQuery) {
         // уменьшение к-ва товара на единицу
-        jQuery(document).on('click', '[data-fs-count="minus"]', function () {
+        jQuery(document).on('click', '[data-fs-count="minus"]', function (e) {
+            e.preventDefault();
             let parent = jQuery(this).parents('[data-fs-element="fs-quantity"]');
             let input = parent.find('input');
-            let step = Number(input.attr('step'));
-            let count = Number(input.val()) - step;
-            count = count < step ? step : count;
-            input.val(count);
-            input.change();
-
+            let count = Number(input.val())
+            let min = input.attr('min') != '' ? Number(input.attr('min')) : 1;
+            let step = input.attr('step') ? Number(input.attr('step')) : 1;
+            if (count - step >= min) {
+                input.val(count - step);
+                input.change();
+            }
             return false;
         });
 
@@ -884,25 +806,18 @@ jQuery(document).ready(function ($) {
         rules: {
             "fs-password": {
                 minlength: 6
-            },
-            "fs-repassword": {
+            }, "fs-repassword": {
                 equalTo: "#fs-password"
             }
-        },
-        messages: {
+        }, messages: {
             "fs-repassword": {
                 equalTo: "пароль и повтор пароля не совпадают"
-            },
-            "fs-password": {
+            }, "fs-password": {
                 minlength: "минимальная длина 6 символов"
             },
-        },
-        submitHandler: function (form) {
+        }, submitHandler: function (form) {
             jQuery.ajax({
-                url: fShop.ajaxurl,
-                type: 'POST',
-                data: userInfoEdit.serialize(),
-                beforeSend: function () {
+                url: fShop.ajaxurl, type: 'POST', data: userInfoEdit.serialize(), beforeSend: function () {
                     userInfoEdit.find('.fs-form-info').fadeOut().removeClass('fs-error fs-success').html();
                     userInfoEdit.find('[data-fs-element="submit"]').html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif">');
                 }
@@ -928,29 +843,21 @@ jQuery(document).ready(function ($) {
         rules: {
             "fs-password": {
                 minlength: 6
-            },
-            "fs-repassword": {
+            }, "fs-repassword": {
                 equalTo: "#fs-password"
             }
-        },
-        messages: {
+        }, messages: {
             "fs-repassword": {
                 equalTo: "пароль и повтор пароля не совпадают"
-            },
-            "fs-password": {
+            }, "fs-password": {
                 minlength: "минимальная длина 6 символов"
             },
-        },
-        submitHandler: function (form) {
+        }, submitHandler: function (form) {
             jQuery.ajax({
-                url: fShop.ajaxurl,
-                type: 'POST',
-                data: userProfileCreate.serialize(),
-                beforeSend: function () {
+                url: fShop.ajaxurl, type: 'POST', data: userProfileCreate.serialize(), beforeSend: function () {
                     userProfileCreate.find('.form-info').html('').fadeOut();
                     userProfileCreate.find('.fs-preloader').fadeIn();
-                },
-                success: function (result) {
+                }, success: function (result) {
                     userProfileCreate.find('.fs-preloader').fadeOut();
 
                     if (result.success) {
@@ -976,10 +883,7 @@ jQuery(document).ready(function ($) {
     loginForm.validate({
         submitHandler: function (form) {
             jQuery.ajax({
-                url: fShop.ajaxurl,
-                type: 'POST',
-                data: loginForm.serialize(),
-                beforeSend: function () {
+                url: fShop.ajaxurl, type: 'POST', data: loginForm.serialize(), beforeSend: function () {
                     loginForm.find('.form-info').fadeOut().removeClass('bg-danger').html('');
                     loginForm.find('.fs-preloader').fadeIn();
                 }
@@ -1007,10 +911,7 @@ jQuery(document).ready(function ($) {
         let form = $(this);
         let formData = form.serialize();
         $.ajax({
-            type: 'POST',
-            url: fShop.ajaxurl,
-            data: formData,
-            success: function (result) {
+            type: 'POST', url: fShop.ajaxurl, data: formData, success: function (result) {
                 if (result.success) {
                     form.find('.fs-form-info').removeClass('bg-danger').addClass('bg-success').fadeIn().html(result.data.msg);
                     // если операция прошла успешно - очищаем поля
@@ -1039,10 +940,7 @@ jQuery(document).ready(function ($) {
         let formData = $(this).serialize();
 
         $.ajax({
-            type: 'POST',
-            url: fShop.ajaxurl,
-            data: formData,
-            success: function (response) {
+            type: 'POST', url: fShop.ajaxurl, data: formData, success: function (response) {
                 if (response.success) {
                     iziToast.show({
                         theme: 'light',
@@ -1052,10 +950,7 @@ jQuery(document).ready(function ($) {
                     });
                 } else {
                     iziToast.show({
-                        theme: 'light',
-                        title: fShop.getLang('error'),
-                        message: response.data.msg,
-                        position: 'topCenter'
+                        theme: 'light', title: fShop.getLang('error'), message: response.data.msg, position: 'topCenter'
                     });
                 }
 
@@ -1075,13 +970,11 @@ jQuery(document).ready(function ($) {
     var orderSendBtn = order_send.find('[data-fs-action="order-send"]');
 
     orderSendBtn.click(function (e) {
-            e.preventDefault();
-            order_send.submit();
-        }
-    );
+        e.preventDefault();
+        order_send.submit();
+    });
     order_send.validate({
-        ignore: [],
-        submitHandler: function (form) {
+        ignore: [], submitHandler: function (form) {
             jQuery.ajax({
                 url: fShop.ajaxurl,
                 type: 'POST',
@@ -1098,8 +991,7 @@ jQuery(document).ready(function ($) {
                         // создаём событие
                         let send_order = new CustomEvent("fs_send_order", {
                             detail: {
-                                order_id: response.data.order_id,
-                                sum: response.data.sum
+                                order_id: response.data.order_id, sum: response.data.sum
                             }
                         });
                         document.dispatchEvent(send_order);
@@ -1152,15 +1044,9 @@ jQuery(document).ready(function ($) {
                 });
 
                 jQuery.ajax({
-                    type: 'POST',
-                    url: fShop.ajaxurl,
-                    data: {
-                        action: "fs_set_rating",
-                        value: ratingVal,
-                        product: productId
-                    },
-                    cache: false,
-                    success: function (data) {
+                    type: 'POST', url: fShop.ajaxurl, data: {
+                        action: "fs_set_rating", value: ratingVal, product: productId
+                    }, cache: false, success: function (data) {
                         localStorage.setItem("fs_user_voted_" + productId, 1);
                         iziToast.show({
                             theme: 'light',
@@ -1202,10 +1088,7 @@ jQuery(document).ready(function ($) {
                 // генерируем событие добавления в список желаний
                 var before_to_wishlist = new CustomEvent("fs_before_to_wishlist", {
                     detail: {
-                        id: product_id,
-                        image: curentBlock.data('image'),
-                        name: product_name,
-                        button: curentBlock
+                        id: product_id, image: curentBlock.data('image'), name: product_name, button: curentBlock
                     }
                 });
                 document.dispatchEvent(before_to_wishlist);
@@ -1239,10 +1122,8 @@ jQuery(document).ready(function ($) {
 
         if (confirm(fs_message.confirm_text.replace('%s', product_name))) {
             jQuery.ajax({
-                url: fShop.ajaxurl,
-                data: {
-                    action: 'fs_del_wishlist_pos',
-                    position: product_id
+                url: fShop.ajaxurl, data: {
+                    action: 'fs_del_wishlist_pos', position: product_id
                 },
             })
                 .done(function (success) {
@@ -1260,12 +1141,9 @@ jQuery(document).ready(function ($) {
         let form = $(this).parents('form');
 
         $.ajax({
-            type: 'POST',
-            url: fShop.ajaxurl,
-            data: fShop.ajaxData('fs_livesearch', {
+            type: 'POST', url: fShop.ajaxurl, data: fShop.ajaxData('fs_livesearch', {
                 search: searchVal
-            }),
-            success: function (data) {
+            }), success: function (data) {
                 if (data.success) {
                     if (form.find('.fs-livesearch-data').length) {
                         form.find('.fs-livesearch-data').replaceWith(data.data.html);
@@ -1310,16 +1188,73 @@ jQuery(document).ready(function ($) {
 
 // Массив для транслитерации
         var transl = {
-            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh',
-            'з': 'z', 'и': 'i', 'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n',
-            'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h',
-            'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'sh', 'ъ': space, 'ы': 'y', 'ь': space, 'э': 'e', 'ю': 'yu', 'я': 'ya',
-            ' ': space, '_': space, '`': space, '~': space, '!': space, '@': space,
-            '#': space, '$': space, '%': space, '^': space, '&': space, '*': space,
-            '(': space, ')': space, '-': space, '\=': space, '+': space, '[': space,
-            ']': space, '\\': space, '|': space, '/': space, '.': space, ',': space,
-            '{': space, '}': space, '\'': space, '"': space, ';': space, ':': space,
-            '?': space, '<': space, '>': space, '№': space
+            'а': 'a',
+            'б': 'b',
+            'в': 'v',
+            'г': 'g',
+            'д': 'd',
+            'е': 'e',
+            'ё': 'e',
+            'ж': 'zh',
+            'з': 'z',
+            'и': 'i',
+            'й': 'j',
+            'к': 'k',
+            'л': 'l',
+            'м': 'm',
+            'н': 'n',
+            'о': 'o',
+            'п': 'p',
+            'р': 'r',
+            'с': 's',
+            'т': 't',
+            'у': 'u',
+            'ф': 'f',
+            'х': 'h',
+            'ц': 'c',
+            'ч': 'ch',
+            'ш': 'sh',
+            'щ': 'sh',
+            'ъ': space,
+            'ы': 'y',
+            'ь': space,
+            'э': 'e',
+            'ю': 'yu',
+            'я': 'ya',
+            ' ': space,
+            '_': space,
+            '`': space,
+            '~': space,
+            '!': space,
+            '@': space,
+            '#': space,
+            '$': space,
+            '%': space,
+            '^': space,
+            '&': space,
+            '*': space,
+            '(': space,
+            ')': space,
+            '-': space,
+            '\=': space,
+            '+': space,
+            '[': space,
+            ']': space,
+            '\\': space,
+            '|': space,
+            '/': space,
+            '.': space,
+            ',': space,
+            '{': space,
+            '}': space,
+            '\'': space,
+            '"': space,
+            ';': space,
+            ':': space,
+            '?': space,
+            '<': space,
+            '>': space,
+            '№': space
         };
 
         var result = '';
@@ -1409,9 +1344,7 @@ jQuery(document).ready(function ($) {
 
 // возвращает cookie с именем name, если есть, если нет, то undefined
     function getCookie(name) {
-        var matches = document.cookie.match(new RegExp(
-            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-        ));
+        var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
         return matches ? decodeURIComponent(matches[1]) : undefined;
     }
 
@@ -1429,8 +1362,7 @@ jQuery(document).ready(function ($) {
      * @param {val}    string  value
      */
     var addUrlParam = function (search, key, val) {
-        var newParam = key + '=' + val,
-            params = '&' + newParam;
+        var newParam = key + '=' + val, params = '&' + newParam;
 
         // If the "search" string exists, then build params from it
         if (search) {
@@ -1458,18 +1390,12 @@ jQuery(document).ready(function ($) {
 // получает корзину через шаблон "cartTemplate"  и выводит её внутри "cartWrap"
     function fs_get_cart(cartTemplate, cartWrap) {
         let parameters = {
-            action: 'fs_get_cart',
-            template: cartTemplate
+            action: 'fs_get_cart', template: cartTemplate
         };
         jQuery.ajax({
-            type: 'POST',
-            url: fShop.ajaxurl,
-            data: parameters,
-            dataType: 'html',
-            success: function (data) {
+            type: 'POST', url: fShop.ajaxurl, data: parameters, dataType: 'html', success: function (data) {
                 if (data) jQuery(cartWrap).html(data);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
+            }, error: function (xhr, ajaxOptions, thrownError) {
                 console.log('error...', xhr);
                 //error logging
             }
@@ -1555,8 +1481,7 @@ jQuery(document).ready(function ($) {
             theme: 'light',
             title: fShop.getLang('success'),
             message: fShop.strReplace(fShop.getLang('addToWishlist'), {
-                '%product%': button.data('name'),
-                '%wishlist_url%': fShop.getSettings('wishlistUrl')
+                '%product%': button.data('name'), '%wishlist_url%': fShop.getSettings('wishlistUrl')
             }),
             position: 'topCenter',
 
@@ -1567,8 +1492,7 @@ jQuery(document).ready(function ($) {
 // Срабатывает если покупатель пытается добавить отсуствующий товар в корзину
     document.addEventListener("fsBuyNoAvailable", function (event) {
         iziToast.show({
-            theme: 'light',
-            /*icon: 'fas fa-info-circle',*/
+            theme: 'light', /*icon: 'fas fa-info-circle',*/
             timeout: false,
             maxWidth: 340,
             overlay: true,
@@ -1576,42 +1500,34 @@ jQuery(document).ready(function ($) {
             message: 'Товара &laquo;' + event.detail.name + '&raquo; нет на складе.<br> Оставьте Ваш E-mail и мы сообщим когда товар будет в наличии. <br>',
             position: 'topCenter',
             id: 'report-availability',
-            buttons: [
-                ['<input type="email" name="userEmail" placeholder="Ваш E-mail">', function (instance, toast) {
-                    console.log(instance) // using the name of input to get the value
-                }, 'input'],
-                ['<button>Отправить</button>', function (instance, toast) {
-                    let userEmail = $(toast).find('[name="userEmail"]').val();
-                    $.ajax({
-                        type: 'POST',
-                        url: fShop.ajaxurl,
-                        data: fShop.ajaxData('fs_report_availability', {
-                            "email": userEmail,
-                            "product_id": event.detail['product-id'],
-                            "product_name": event.detail.name,
-                            "product_url": event.detail.url,
-                            "variation": event.detail.variation,
-                            "count": event.detail.count
-                        }),
-                        success: function (result) {
-                            if (result.success) {
-                                $(toast).find('.iziToast-message').addClass('success').html(result.data.msg);
-                                $(toast).find('.iziToast-buttons').hide();
-                            } else {
-                                $(toast).find('.iziToast-message').addClass('error').html(result.data.msg);
-                            }
-                        },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            console.log('error...', xhr);
-                            //error logging
-                        },
-                        complete: function () {
-                            //afer ajax call is completed
+            buttons: [['<input type="email" name="userEmail" placeholder="Ваш E-mail">', function (instance, toast) {
+                console.log(instance) // using the name of input to get the value
+            }, 'input'], ['<button>Отправить</button>', function (instance, toast) {
+                let userEmail = $(toast).find('[name="userEmail"]').val();
+                $.ajax({
+                    type: 'POST', url: fShop.ajaxurl, data: fShop.ajaxData('fs_report_availability', {
+                        "email": userEmail,
+                        "product_id": event.detail['product-id'],
+                        "product_name": event.detail.name,
+                        "product_url": event.detail.url,
+                        "variation": event.detail.variation,
+                        "count": event.detail.count
+                    }), success: function (result) {
+                        if (result.success) {
+                            $(toast).find('.iziToast-message').addClass('success').html(result.data.msg);
+                            $(toast).find('.iziToast-buttons').hide();
+                        } else {
+                            $(toast).find('.iziToast-message').addClass('error').html(result.data.msg);
                         }
-                    });
+                    }, error: function (xhr, ajaxOptions, thrownError) {
+                        console.log('error...', xhr);
+                        //error logging
+                    }, complete: function () {
+                        //afer ajax call is completed
+                    }
+                });
 
-                }]
-            ]
+            }]]
 
         });
     });
@@ -1633,48 +1549,26 @@ jQuery(document).ready(function ($) {
                     let productId = form.find('input[name="product-id"]').val();
                     let cart = new Object;
                     cart[productId] = {
-                        'ID': form.find('input[name="product-id"]').val(),
-                        'count': 1,
-                        'attr': [],
-                        'variation': null
+                        'ID': form.find('input[name="product-id"]').val(), 'count': 1, 'attr': [], 'variation': null
                     };
                     $.ajax({
-                        type: 'POST',
-                        url: fShop.ajaxurl,
-                        data: fShop.ajaxData('order_send', {
+                        type: 'POST', url: fShop.ajaxurl, data: fShop.ajaxData('order_send', {
                             'fs_first_name': form.find('input[name="buyer-name"]').val(),
                             'fs_phone': form.find('input[name="buyer-phone"]').val(),
                             'fs_email': form.find('input[name="buyer-email"]').val(),
                             'cart': cart
-                        }),
-                        success: function (result) {
+                        }), success: function (result) {
                             if (result.success) {
                                 $(toast).find('.iziToast-message').text(result.data.msg)
                             }
                         }
-                    })
-                    ;
+                    });
                     return false;
 
                 });
             },
             title: 'Покупка товара &laquo;' + event.detail.name + '&raquo;',
-            message:
-                '<form method="post">' +
-                '<div class="row">' +
-                '<div class="col-md-5">' +
-                '<img src="' + event.detail.thumbnail + '" alt="' + event.detail.name + '">' +
-                '<div class="fs-price">' + event.detail.price + ' <span>' + event.detail.currency + '</span></div>' +
-                '</div>' +
-                '<div class="col-md-7">' +
-                '<input type="hidden" name="product-id" value="' + event.detail.id + '">' +
-                '<div class="form-group"><input type="text" name="buyer-name" placeholder="Ваше имя" class="form-control" required></div>' +
-                '<div class="form-group"><input type="tel" name="buyer-phone" placeholder="Номер телефона" class="form-control" required></div>' +
-                '<div class="form-group"><input type="email" name="buyer-email" placeholder="E-mail" class="form-control" required></div>' +
-                '<div class="form-group"><input type="submit" class="btn btn-primary" value="Купить" class="form-control" required></div>' +
-                '</div>' +
-                '</div>' +
-                '</form>',
+            message: '<form method="post">' + '<div class="row">' + '<div class="col-md-5">' + '<img src="' + event.detail.thumbnail + '" alt="' + event.detail.name + '">' + '<div class="fs-price">' + event.detail.price + ' <span>' + event.detail.currency + '</span></div>' + '</div>' + '<div class="col-md-7">' + '<input type="hidden" name="product-id" value="' + event.detail.id + '">' + '<div class="form-group"><input type="text" name="buyer-name" placeholder="Ваше имя" class="form-control" required></div>' + '<div class="form-group"><input type="tel" name="buyer-phone" placeholder="Номер телефона" class="form-control" required></div>' + '<div class="form-group"><input type="email" name="buyer-email" placeholder="E-mail" class="form-control" required></div>' + '<div class="form-group"><input type="submit" class="btn btn-primary" value="Купить" class="form-control" required></div>' + '</div>' + '</div>' + '</form>',
             position: 'topCenter',
             id: 'buyOneClickPopup',
 

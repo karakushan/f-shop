@@ -854,7 +854,7 @@ function fs_add_to_cart( $product_id = 0, $label = 'Add to cart', $args = array(
 		'type'       => 'button',
 		'title'      => __( 'Add to cart', 'f-shop' ),
 		'id'         => 'fs-atc-' . $product_id,
-		'data-count' => 1,
+		'data-count' => fs_get_product_min_qty( $product_id ),
 		'class'      => 'fs-add-to-cart',
 	) );
 
@@ -1106,6 +1106,28 @@ if ( ! function_exists( 'fs_in_stock' ) ) {
 
 
 /**
+ * Returns the minimum quantity that is available to order
+ *
+ * @param $product_id int
+ *
+ * @return int
+ */
+function fs_get_product_min_qty( $product_id ) {
+	$product_categories = get_the_terms( $product_id, FS_Config::get_data( 'product_taxonomy' ) );
+	if ( $product_categories ) {
+		foreach ( $product_categories as $product_category ) {
+			$min_qty = get_term_meta( $product_category->term_id, '_min_qty', 1 );
+			if ( $min_qty && is_numeric( $min_qty ) ) {
+				return (int) $min_qty;
+			}
+		}
+	}
+
+	return 1;
+}
+
+
+/**
  * Отображает или возвращает поле для изменения количества добавляемых товаров в корзину
  *
  * @param int $product_id - ID товара
@@ -1113,6 +1135,7 @@ if ( ! function_exists( 'fs_in_stock' ) ) {
  */
 function fs_quantity_product( $product_id = 0, $args = array() ) {
 	$product_id = fs_get_product_id( $product_id );
+	$min_qty    = fs_get_product_min_qty( $product_id );
 	$args       = wp_parse_args( $args, array(
 		'position'      => '%pluss% %input% %minus%',
 		'wrapper'       => 'div',
@@ -1122,9 +1145,10 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		'minus_class'   => 'fs-minus',
 		'minus_content' => '&ndash;',
 		'input_class'   => 'fs-quantity',
-		'step'          => 1
-
+		'step'          => 1,
+		'min'           => $min_qty
 	) );
+
 
 	$first_variation = fs_get_first_variation( $product_id );
 	if ( ! is_null( $first_variation ) ) {
@@ -1133,19 +1157,16 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		$total_count = get_post_meta( $product_id, FS_Config::get_meta( 'remaining_amount' ), true );
 	}
 
-	do_action( 'qm/debug', fs_option( 'fs_in_stock_manage', 0 ) );
-
-
 	// Set attributes for a tag of type input text
 	$data_atts = fs_parse_attr( array(
-		'step'               => $args['step'],
-		'value'              => $args['step'],
+		'value'              => $min_qty,
 		'name'               => 'count',
 		'class'              => $args['input_class'],
 		'data-fs-action'     => 'change_count',
 		'type'               => 'text',
 		'data-fs-product-id' => $product_id,
-		'min'                => $args['step'],
+		'min'                => $args['min'],
+		'step'               => $args['step'],
 		'max'                => fs_option( 'fs_in_stock_manage', 0 ) && $total_count ? intval( $total_count ) : ''
 	) );
 
@@ -1172,6 +1193,7 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
  * @param array $args
  */
 function fs_cart_quantity( int $item_id, float $value, array $args = array() ) {
+	$cart = fs_get_cart();
 	$args = wp_parse_args( $args, array(
 		'wrapper'       => 'div',
 		'refresh'       => true,
@@ -1180,7 +1202,8 @@ function fs_cart_quantity( int $item_id, float $value, array $args = array() ) {
 		'pluss'         => array( 'class' => sanitize_html_class( 'fs-pluss' ), 'content' => '+' ),
 		'minus'         => array( 'class' => sanitize_html_class( 'fs-minus' ), 'content' => '-' ),
 		'input'         => array( 'class' => 'fs-cart-quantity' ),
-		'step'          => 1
+		'step'          => 1,
+		'min'           => fs_get_product_min_qty( $cart[ $item_id ]['ID'] )
 	) );
 
 	$input_atts = fs_parse_attr( array(),
@@ -1193,7 +1216,7 @@ function fs_cart_quantity( int $item_id, float $value, array $args = array() ) {
 			'data-fs-type' => "cart-quantity",
 			'data-item-id' => $item_id,
 			'step'         => $args['step'],
-			'min'          => $args['step']
+			'min'          => $args['min']
 		)
 	);
 
@@ -3204,7 +3227,7 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
  * @return mixed
  */
 function fs_get_term_meta( string $meta_key, $term_id = 0, $type = 1, $multilang = true ) {
-	$term_id  = $term_id ?  : get_queried_object_id();
+	$term_id  = $term_id ?: get_queried_object_id();
 	$meta_key = $multilang && ! FS_Config::is_default_locale() ? $meta_key . '__' . get_locale() : $meta_key;
 
 	return get_term_meta( $term_id, $meta_key, $type );
@@ -3508,8 +3531,8 @@ if ( ! function_exists( 'fs_localize_category_url' ) ) {
 			]
 		] );
 
-		$prefix       = FS_Config::default_locale() != $locale ? $args['prefixes'][ $locale ] : '';
-		$slug         = FS_Config::default_locale() != $locale  && get_term_meta( $term_id, '_seo_slug__' . $locale, 1 )
+		$prefix = FS_Config::default_locale() != $locale ? $args['prefixes'][ $locale ] : '';
+		$slug   = FS_Config::default_locale() != $locale && get_term_meta( $term_id, '_seo_slug__' . $locale, 1 )
 			? get_term_meta( $term_id, '_seo_slug__' . $locale, 1 ) : $term->slug;
 
 		$url_components = [ $prefix ];
