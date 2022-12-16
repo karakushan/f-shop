@@ -273,6 +273,11 @@ class FS_Order {
 			return fs_set_product( $item );
 		}, $products ) );
 
+		foreach ( $this->items as $item ) {
+			/* @var $item FS_Product */
+			$this->count += max( (int) $item->count, 1 );
+		}
+
 		$this->total_amount  = round( (float) get_post_meta( $order_id, '_amount', 1 ), 2 );
 		$this->packing_cost  = (float) get_post_meta( $order_id, '_packing_cost', 1 );
 		$this->cart_cost     = (float) get_post_meta( $order_id, '_cart_cost', 1 );
@@ -310,7 +315,6 @@ class FS_Order {
 		}
 
 		$this->delivery_method = new FS_Delivery( $order_id );
-		$this->count           = is_array( $this->items ) ? count( $this->items ) : 0;
 		$this->status          = $this->get_order_status( $order_id );
 		$this->date            = $this->post->post_date;
 	}
