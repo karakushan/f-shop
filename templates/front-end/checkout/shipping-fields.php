@@ -11,3 +11,6 @@
 <div class="form-group">
 	<?php fs_form_field( 'fs_delivery_number' ) ?>
 </div>
+<div class="form-group">
+	<?php  fs_form_field( 'fs_address' ) ?>
+</div>

@@ -77,14 +77,8 @@ class FS_Cart {
 	 * Подключает шаблон дополнительных полей доставки
 	 */
 	public static function show_shipping_fields() {
-		$shipping_methods = fs_get_shipping_methods();
 		echo '<div id="fs-shipping-fields">';
-		if ( $shipping_methods ) {
-			$show_fields = get_term_meta( $shipping_methods[0]->term_id, '_fs_delivery_address', true );
-			if ( $show_fields ) {
-				fs_load_template( 'checkout/shipping-fields' );
-			}
-		}
+		fs_load_template( 'checkout/shipping-fields' );
 		echo '</div>';
 	}
 
@@ -230,7 +224,7 @@ class FS_Cart {
 	 * @return array
 	 */
 	public static function get_cart() {
-		return !empty( $_POST['cart'] ) ? (array) $_POST['cart'] : ( isset( $_SESSION['cart'] ) ? (array) $_SESSION['cart'] : [] );
+		return ! empty( $_POST['cart'] ) ? (array) $_POST['cart'] : ( isset( $_SESSION['cart'] ) ? (array) $_SESSION['cart'] : [] );
 	}
 
 	/**

@@ -974,7 +974,13 @@ class FS_Ajax {
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
 		}
-		$shipping_method     = absint( $_POST['fs_delivery_methods'] );
+		if(!isset($_POST['fs_delivery_methods'])){
+			$shipping_methods=get_terms(['taxonomy'=>FS_Config::get_data('product_del_taxonomy')]);
+			if(!empty($shipping_methods)) $shipping_method=$shipping_methods[0]->term_id;
+		}else{
+			$shipping_method     = absint( $_POST['fs_delivery_methods'] );
+		}
+
 		$delivery_cost_clean = floatval( get_term_meta( $shipping_method, '_fs_delivery_cost', 1 ) );
 		$delivery_cost       = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $delivery_cost_clean ), fs_currency() );
 		$total_amount        = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', fs_get_total_amount( $delivery_cost_clean ) ), fs_currency() );
