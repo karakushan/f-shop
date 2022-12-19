@@ -131,7 +131,7 @@
   letter-spacing: 0.05em;
   max-width: 100%;
   font-weight: bold;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 10px #00000000;
   font-family: Arial, sans-serif;
 }
 .fs-form .fs-submit:hover {
@@ -265,6 +265,22 @@
   display: block;
   clear: both;
   content: "";
+}
+
+.fs-badge {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+}
+.fs-badge.fs-badge-primary {
+  background-color: #007bff;
 }
 
 .row-images {
@@ -1025,7 +1041,7 @@ td.fs_photo.column-fs_photo img {
   background: #fff;
   z-index: 999999;
   padding: 12px;
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1098039216);
+  box-shadow: 0 8px 12px #0000001c;
   max-height: 363px;
   overflow: auto;
   width: 100%;
@@ -1425,6 +1441,17 @@ td.fs_photo.column-fs_photo img {
   }
 }
 
+.fs-btn-none {
+  padding: 0;
+  line-height: 1;
+  background: none;
+  border: none;
+  outline: none;
+}
+.fs-btn-none:hover {
+  cursor: pointer;
+}
+
 .fs-btn {
   display: inline-flex;
   align-items: center;
@@ -1712,77 +1739,6 @@ td.fs_photo.column-fs_photo img {
   color: #777;
 }
 
-.fs-dashboard .tab-content {
-  padding: 1.5rem 0;
-}
-.fs-dashboard .fs-user-avatar {
-  border: 1px solid #e2e0e0;
-  width: 150px;
-  height: 163px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f7f7f7;
-  position: relative;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-.fs-dashboard .fs-user-avatar label {
-  position: absolute;
-  z-index: 9;
-  bottom: 5px;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 0.05em;
-}
-.fs-dashboard .fs-user-avatar label:hover {
-  cursor: pointer;
-}
-
-.fs-dashboard-order {
-  margin-bottom: 15px;
-}
-.fs-dashboard-order .table tbody td {
-  vertical-align: middle;
-}
-.fs-dashboard-order__hide {
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  padding: 20px;
-  margin-top: 15px;
-}
-.fs-dashboard-order__hide .label {
-  font-weight: 700;
-}
-.fs-dashboard-order__hide .row {
-  width: 100%;
-  margin-bottom: 15px;
-}
-.fs-dashboard-order__header {
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 10px 20px;
-  align-items: center;
-  border-radius: 4px;
-}
-.fs-dashboard-order__header span {
-  font-weight: 300;
-  letter-spacing: 0.025em;
-}
-.fs-dashboard-order__header span.badge i {
-  color: #fff;
-}
-.fs-dashboard-order__header span i {
-  color: #000000;
-  font-weight: 500;
-  font-style: normal;
-}
-.fs-dashboard-order__header span.datetime {
-  font-weight: 700;
-}
-
 .fs-livesearch-data {
   margin: 0;
   padding: 0;
@@ -1995,6 +1951,76 @@ td.fs_photo.column-fs_photo img {
 }
 .fs-dashboard {
   margin-bottom: 50px;
+}
+.fs-dashboard .tab-content {
+  padding: 1.5rem 0;
+}
+.fs-dashboard .fs-user-avatar {
+  border: 1px solid #e2e0e0;
+  width: 150px;
+  height: 163px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7f7f7;
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.fs-dashboard .fs-user-avatar label {
+  position: absolute;
+  z-index: 9;
+  bottom: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+.fs-dashboard .fs-user-avatar label:hover {
+  cursor: pointer;
+}
+.fs-dashboard .fs-dashboard-order {
+  margin-bottom: 15px;
+}
+.fs-dashboard .fs-dashboard-order .table tbody td {
+  vertical-align: middle;
+}
+.fs-dashboard .fs-dashboard-order__hide {
+  display: none;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  padding: 20px;
+  margin-top: 15px;
+}
+.fs-dashboard .fs-dashboard-order__hide .label {
+  font-weight: 700;
+}
+.fs-dashboard .fs-dashboard-order__hide .row {
+  width: 100%;
+  margin-bottom: 15px;
+}
+.fs-dashboard .fs-dashboard-order__header {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 10px 20px;
+  align-items: center;
+  border-radius: 4px;
+}
+.fs-dashboard .fs-dashboard-order__header span {
+  font-weight: 300;
+  letter-spacing: 0.025em;
+}
+.fs-dashboard .fs-dashboard-order__header span.badge i {
+  color: #fff;
+}
+.fs-dashboard .fs-dashboard-order__header span i {
+  color: #000000;
+  font-weight: 500;
+  font-style: normal;
+}
+.fs-dashboard .fs-dashboard-order__header span.datetime {
+  font-weight: 700;
 }
 .fs-dashboard__checkbox {
   display: flex;

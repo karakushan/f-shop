@@ -1586,5 +1586,12 @@ jQuery(document).ready(function ($) {
         parent.find('.fs-dashboard__tab').removeClass('active')
         parent.find(target).addClass('active')
     });
+
+    // Collapse
+    $(document).on('click', '[data-fs-toggle="collapse"]', function (event) {
+        event.preventDefault();
+        $($(this).data('fs-target')).slideToggle();
+    });
+
 })
 

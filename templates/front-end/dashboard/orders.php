@@ -1,23 +1,24 @@
-<?php use FS\FS_Order;
+<?php
+use FS\FS_Order;
 
+/** @var array $orders */
 if ( $orders ): ?>
     <div class="fs-dashboard-orders">
 		<?php foreach ( $orders as $post ): ?>
         
-			<?php 
-
+			<?php
             $order = new FS_Order( $post->ID ) ?>
 
             <div class="fs-dashboard-order fs-dashboard-order-<?php echo $order->getID() ?>">
 
                 <div class="fs-dashboard-order__header">
-                    <span class="badge badge-primary"> <i><?php echo $order->status ?></i></span>
+                    <span class="fs-badge fs-badge-primary"><?php echo $order->status ?></span>
                     <span class="datetime"><?php printf( esc_html__( 'Order %d from %s', 'f-shop' ), $order->ID, get_the_time( 'd.m.Y H:i' )); ?>   </span>
                     <span><?php esc_html_e( 'Items', 'f-shop' ); ?>: <i><?php echo $order->count ?></i></span>
                     <span><?php esc_html_e( 'Total cost', 'f-shop' ); ?>: <i><?php echo $order->getTotalAmount() . ' ' . fs_currency() ?></i></span>
                     <button type="button"
-                            class="btn btn-primary btn-sm" data-toggle="collapse"
-                            data-target="#fs-dashboard-order-<?php echo $order->ID ?>"><?php esc_html_e( 'Order details', 'f-shop' ); ?></button>
+                            class="fs-btn-none" data-fs-toggle="collapse"
+                            data-fs-target="#fs-dashboard-order-<?php echo $order->ID ?>"><?php esc_html_e( 'Order details', 'f-shop' ); ?></button>
                 </div>
 
                 <div class="fs-dashboard-order__hide collapse" id="fs-dashboard-order-<?php echo $order->ID ?>">

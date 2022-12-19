@@ -4,17 +4,110 @@ $dashboard_accent_color: #56c563;
 .fs-dashboard {
   margin-bottom: 50px;
 
+  .tab-content {
+    padding: 1.5rem 0;
+  }
+
+  .fs-user-avatar {
+    border: 1px solid #e2e0e0;
+    width: 150px;
+    height: 163px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7f7f7;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    label {
+      position: absolute;
+      z-index: 9;
+      bottom: 5px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: .05em;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+    }
+  }
+
+
+  .fs-dashboard-order {
+    margin-bottom: 15px;
+
+    .table tbody td {
+      vertical-align: middle;
+    }
+
+    &__hide {
+      display: none;
+      border: 1px solid rgba(0, 0, 0, .125);
+      padding: 20px;
+      margin-top: 15px;
+
+
+      .label {
+        font-weight: 700;
+      }
+
+      .row {
+        width: 100%;
+        margin-bottom: 15px;
+      }
+    }
+
+    &__header {
+      border: 1px solid rgba(0, 0, 0, .125);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 10px 20px;
+      align-items: center;
+      border-radius: 4px;
+
+
+      span {
+        font-weight: 300;
+        letter-spacing: 0.025em;
+
+        &.badge {
+          i {
+            color: #fff;
+          }
+        }
+
+        i {
+          color: #000000;
+          font-weight: 500;
+          font-style: normal;
+        }
+
+        &.datetime {
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
   &__checkbox {
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
-    label{
+
+    label {
       margin: 0;
-      &:last-child{
+
+      &:last-child {
         margin-left: 12px;
       }
     }
-    span{
+
+    span {
       margin-left: 18px;
     }
   }
@@ -28,7 +121,7 @@ $dashboard_accent_color: #56c563;
   }
 
   .switch input {
-    display:none;
+    display: none;
   }
 
   .slider {
@@ -89,7 +182,7 @@ $dashboard_accent_color: #56c563;
     align-items: center;
     transition: background 0.3s ease-in;
 
-    @media (max-width:768px) {
+    @media (max-width: 768px) {
       width: 100%;
     }
 
@@ -141,7 +234,7 @@ $dashboard_accent_color: #56c563;
     font-size: 16px;
 
     @media (max-width: 768px) {
-     flex-direction: column;
+      flex-direction: column;
     }
 
     &.fs-layout-verical {
