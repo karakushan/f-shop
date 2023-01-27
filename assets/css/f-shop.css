@@ -131,7 +131,7 @@
   letter-spacing: 0.05em;
   max-width: 100%;
   font-weight: bold;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 10px #00000000;
   font-family: Arial, sans-serif;
 }
 .fs-form .fs-submit:hover {
@@ -1041,7 +1041,7 @@ td.fs_photo.column-fs_photo img {
   background: #fff;
   z-index: 999999;
   padding: 12px;
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1098039216);
+  box-shadow: 0 8px 12px #0000001c;
   max-height: 363px;
   overflow: auto;
   width: 100%;
