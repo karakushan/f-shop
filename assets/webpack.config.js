@@ -7,13 +7,13 @@ const path = require("path");
 
 module.exports = {
     watch: true,
-
     entry: {
-        main: "./vue-admin.js",
+        "fs-admin": "../assets/js/src/fs-admin.js",
+        "vue-admin": "../assets/js/src/vue-admin.js"
     },
     output: {
         filename: "[name].js",
-        path: path.resolve(__dirname, "js/vue")
+        path: path.resolve(__dirname, "js"),
     },
     module: {
         rules: [

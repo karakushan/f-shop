@@ -6,7 +6,7 @@
  * @var $name string
  */
 
-$gallery = $args['value'] ?? [];
+$gallery =(array) $args['value'];
 ?>
 <div class="fs-field-row clearfix">
     <button type="button" class="button button-secondary"
@@ -14,7 +14,7 @@ $gallery = $args['value'] ?? [];
 </div>
 
 <div class="fs-field-row fs-gallery clearfix">
-	<?php if ( $gallery ): ?>
+	<?php if ( !empty($gallery) ): ?>
         <p><?php esc_html_e( 'You can drag images to change positions in the gallery.', 'f-shop' ); ?>.</p>
 	<?php endif ?>
     <div class="fs-grid fs-sortable-items" id="fs-gallery-wrapper">

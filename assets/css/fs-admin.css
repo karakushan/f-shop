@@ -112,7 +112,7 @@
   position: relative;
   padding: 0;
 }
-.fs-metabox ul.tab-header li.fs-link-active a {
+.fs-metabox ul.tab-header li.fs-nav-link-active a {
   border-color: #DFDFDF;
   color: #000;
   color: #000;
@@ -159,9 +159,6 @@
   .fs-metabox .fs-tabs {
     width: 100%;
   }
-}
-.fs-metabox .fs-tabs > .fs-tab {
-  display: none;
 }
 @media screen and (max-width: 768px) {
   .fs-metabox .fs-tabs > .fs-tab {
@@ -421,7 +418,7 @@
 }
 
 /* start commented backslash hack \*/
-* html .clearfix, * html .fs-metabox, .fs-metabox html ul.tab-header, .fs-metabox html .fs-tabs, .fs-metabox html .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper, .fs-metabox .fs-tabs > .fs-tab .fs-field-row html .checkbox-wrapper, .fs-metabox html .fs-grid {
+* html .clearfix, * html .fs-metabox, * html .fs-metabox ul.tab-header, .fs-metabox * html ul.tab-header, * html .fs-metabox .fs-tabs, .fs-metabox * html .fs-tabs, * html .fs-metabox .fs-tabs > .fs-tab .fs-field-row .checkbox-wrapper, .fs-metabox .fs-tabs > .fs-tab .fs-field-row * html .checkbox-wrapper, * html .fs-metabox .fs-grid, .fs-metabox * html .fs-grid {
   height: 1%;
 }
 
@@ -489,7 +486,7 @@ div#fs_select_image {
   border: 1px solid #a50d49;
   /* width: 114px; */
   border-radius: 14px;
-  background-color: rgb(207, 0, 82);
+  background-color: #cf0052;
 }
 
 #fs_select_image button:hover {
@@ -1309,7 +1306,7 @@ td.fs_menu_order.column-fs_menu_order {
   position: absolute;
   left: 0;
   height: 100%;
-  background: rgb(231, 194, 11);
+  background: #e7c20b;
   animation: progress 3s infinite linear;
 }
 

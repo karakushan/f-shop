@@ -94,7 +94,7 @@ $tablet_width : 991px;
       position: relative;
       padding: 0;
 
-      &.fs-link-active {
+      &.fs-nav-link-active {
         a {
           border-color: #DFDFDF;
           color: #000;
@@ -153,7 +153,6 @@ $tablet_width : 991px;
     }
 
     > .fs-tab {
-      display: none;
       @media screen and (max-width: 768px) {
         margin: 0;
       }
