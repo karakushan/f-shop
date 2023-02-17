@@ -1,2 +1,4 @@
 !.gitignore
 assets/node_modules/
+assets/yarn.lock
+assets/package-lock.json

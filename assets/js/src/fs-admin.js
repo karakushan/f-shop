@@ -1,18 +1,18 @@
 import Alpine from "alpinejs";
+window.Alpine = Alpine
+Alpine.start()
 
-jQuery(function ($) {
+jQuery(document).ready(function ($) {
     $(window).off('beforeunload');
     const FS = {
         init() {
-            window.Alpine = Alpine
-            Alpine.start()
+
         },
         // запускает прогресс бар в самом верху сайта
         showMetaboxPreloader: function () {
             $(".fs-mb-preloader").css("display", "block");
         },
         setActiveTab: function (tab) {
-            console.log(tab);
             localStorage.setItem('fs_active_tab', tab);
         },
         getActiveTab: function () {

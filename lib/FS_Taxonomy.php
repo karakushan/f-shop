@@ -837,7 +837,7 @@ class FS_Taxonomy {
 				'show_in_rest'       => true,
 				'meta_box_cb'        => false,
 				'metabox'            => false,
-				'show_admin_column'  => true,
+				'show_admin_column'  => false,
 				'hierarchical'       => true,
 				'show_in_quick_edit' => true
 			),
@@ -855,7 +855,7 @@ class FS_Taxonomy {
 				"publicly_queryable" => true,
 				'show_in_rest'       => true,
 				'metabox'            => true,
-				'show_admin_column'  => true,
+				'show_admin_column'  => false,
 				'hierarchical'       => true,
 				'show_in_quick_edit' => true
 			),

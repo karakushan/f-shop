@@ -935,7 +935,8 @@ class FS_Product
                 }
 
                 foreach ($fields['fields'] as $key => $field) {
-                    if (isset($field['multilang']) && $field['multilang'] && fs_option('fs_multi_language_support')) {
+                    $is_multilang = isset($field['multilang']) && $field['multilang'] && fs_option('fs_multi_language_support');
+                    if (!in_array($field['type'], ['checkbox']) && $is_multilang) {
                         foreach (FS_Config::get_languages() as $code => $language) {
                             $meta_key = $key . '__' . $language['locale'];
                             if ((isset($_POST[$meta_key]) && $_POST[$meta_key] != '')
@@ -1009,6 +1010,20 @@ class FS_Product
                 'on' => true,
                 'description' => __('In this tab you can adjust the prices of goods.', 'f-shop'),
                 'fields' => array(
+                    FS_Config::get_meta('product_type') => array(
+                        'label' => __('Product type', 'f-shop'),
+                        'type' => 'radio',
+                        'required' => false,
+                        'values' => array(
+                            'physical' => __('Physical', 'f-shop'),
+                            'virtual' => __('Virtual', 'f-shop')
+                        ),
+                        'value' => 'physical',
+                        'attributes' => [
+                            'x-model' => 'productType',
+                        ],
+                        'help' => __('Check this box if you are selling a non-physical item.', 'f-shop')
+                    ),
                     FS_Config::get_meta('price') => array(
                         'label' => __('Base price', 'f-shop'),
                         'type' => 'number',
@@ -1120,6 +1135,21 @@ class FS_Product
 
                 )
             ),
+            'virtual' => array(
+                'title' => __('Virtual Product', 'f-shop'),
+                'on' => true,
+                'nav_attributes' => [
+                    'x-show' => 'productType === \'virtual\''
+                ],
+                'body' => '',
+                'fields' => array(
+                    '_fs_virtual_product_url' => array(
+                        'label' => __('Ссылка на товар', 'f-shop'),
+                        'type' => 'text',
+                        'help' => ''
+                    ),
+                )
+            ),
         );
 
         return apply_filters('fs_product_tabs_admin', $tabs);
@@ -1139,17 +1169,22 @@ class FS_Product
         $this->product_id = $post->ID;
 
         $gallery = \FS\FS_Images_Class::get_gallery(0, false, false);
+        $product_type = get_post_meta($post->ID, FS_Config::get_meta('product_type'), true);
 
-        echo '<div class="fs-metabox" id="fs-metabox" x-data="{ activeTab: localStorage.getItem(\'fs_active_tab\') || \'basic\' }">';
+        echo '<div class="fs-metabox" id="fs-metabox" x-data="{ 
+                activeTab: localStorage.getItem(\'fs_active_tab\') || \'basic\',
+                productType: \'' .($product_type ?: 'physical')  . '\',     
+             }">';
         do_action('fs_before_product_meta');
         if (count($product_tabs)) {
             echo '<ul class="tab-header">';
 
             foreach ($product_tabs as $key => $tab) : ?>
                 <li class="<?php echo esc_attr('fs-tab-nav-' . $key) ?>"
+                    <?php echo fs_parse_attr($tab['nav_attributes'] ?? []) ?>
                     :class="activeTab=='<?php echo esc_attr($key) ?>' ? 'fs-nav-link-active' : ''">
                     <a href="#tab-'<?php echo esc_attr($key) ?>"
-                       x-on:click.prevent="activeTab='<?php echo esc_attr($key) ?>'; window.fShop.setActiveTab('<?php echo esc_attr($key) ?>');"
+                       x-on:click.prevent="activeTab='<?php echo esc_attr($key) ?>'; window.FS.setActiveTab('<?php echo esc_attr($key) ?>');"
                        data-tab="<?php echo esc_attr($key) ?> ">
                         <?php _e($tab['title'], 'f-shop') ?>
                     </a>
