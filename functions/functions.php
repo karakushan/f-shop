@@ -2286,7 +2286,7 @@ function fs_product_thumbnail( $product_id = 0, $size = 'thumbnail', $args = [] 
 		$attach_id = array_shift( $gallery );
 		echo wp_get_attachment_image( $attach_id, $size, false, $args );
 	} else {
-		echo '<img src="' . esc_url( FS_PLUGIN_URL . 'assets/img/image.svg' ) . '" alt="' . esc_attr__( 'No image', 'f-shop' ) . '">';
+		echo '<img src="' . esc_url( FS_PLUGIN_URL . 'assets/img/no-image.jpg' ) . '" alt="' . esc_attr__( 'No image', 'f-shop' ) . '">';
 	}
 }
 

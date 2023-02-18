@@ -1144,7 +1144,7 @@ class FS_Product
                 'body' => '',
                 'fields' => array(
                     '_fs_virtual_product_url' => array(
-                        'label' => __('Ссылка на товар', 'f-shop'),
+                        'label' => __('Link to the product', 'f-shop'),
                         'type' => 'text',
                         'help' => ''
                     ),
@@ -1197,6 +1197,7 @@ class FS_Product
             <div class="fs-tabs">
             <?php foreach ($product_tabs as $key_body => $tab_body) : ?>
                 <div class="fs-tab fs-tab-<?php echo esc_attr($key_body) ?>"
+                x-transition.opacity.duration.200ms
                 x-show="activeTab==='<?php echo esc_attr($key_body) ?>'"
                 id="<?php echo esc_attr($key_body) ?>">
                 <?php if (!empty($tab_body['fields'])) {
