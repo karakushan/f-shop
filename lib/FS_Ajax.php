@@ -418,13 +418,16 @@ class FS_Ajax {
 	 * setting a product rating callback function
 	 */
 	function fs_set_rating_callback() {
-		if ( ! empty( $_POST ) ) {
+		if ( ! empty( $_POST['product'] ) && ! empty( $_POST['value'] ) ) {
 			$product_id     = intval( $_POST['product'] );
 			$product_rating = intval( $_POST['value'] );
 			add_post_meta( $product_id, 'fs_product_rating', $product_rating );
-
+            wp_send_json_success( array(
+                'msg' => __( 'Rating successfully set!', 'f-shop' ),
+                'title' => __( 'Success', 'f-shop' )
+            ) );
 		}
-		exit();
+
 	}
 
 

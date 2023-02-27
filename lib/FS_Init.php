@@ -205,6 +205,7 @@ class FS_Init
                 'order_send_success' => __('Your order has been successfully created. We will contact you shortly.', 'f-shop'),
                 'limit_product' => __('You have selected all available items from stock.', 'f-shop'),
                 'addToCart' => __('Item &laquo;%product%&raquo; successfully added to cart.', 'f-shop'),
+                'ratingError' => __('Your vote is not counted because you have already voted for this product!', 'f-shop'),
                 'addToCartButtons' => sprintf('<div class="fs-atc-message">%s</div>%s<div class="fs-atc-buttons"><a href="%s" class="btn btn-danger">%s</a> <a href="%s" class="btn btn-primary">%s</a></div>',
                     __('Item &laquo;%product%&raquo; successfully added to cart.', 'f-shop'),
                     '<div class="fs-atc-price">%price% <span>%currency%</span></div>',

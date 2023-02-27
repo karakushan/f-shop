@@ -1027,14 +1027,23 @@ jQuery(document).ready(function ($) {
         $('[data-fs-element="rating"]').on('click', '[data-fs-element="rating-item"]', function (e) {
             e.preventDefault();
 
-            var ratingVal = $(this).data('rating');
-            var wrapper = $(this).parents("[data-fs-element=\"rating\"]");
-            var productId = wrapper.find('input').data('product-id');
+            let ratingVal = $(this).data('rating');
+            let wrapper = $(this).parents("[data-fs-element=\"rating\"]");
+            let productId = wrapper.find('input').data('product-id');
             wrapper.find('input').val(ratingVal);
 
+            if (localStorage.getItem('fs_user_voted_' + productId)) {
+                iziToast.warning({
+                    theme: 'light',
+                    title: fShop.getLang('error',''),
+                    message: fShop.getLang('ratingError'),
+                    position: 'topCenter',
+
+                });
+                return;
+            }
 
             if (!localStorage.getItem('fs_user_voted_' + productId)) {
-
                 wrapper.find('[data-fs-element="rating-item"]').each(function (index, value) {
                     if ($(this).data('rating') <= ratingVal) {
                         $(this).addClass('active');
@@ -1042,29 +1051,26 @@ jQuery(document).ready(function ($) {
                         $(this).removeClass('active');
                     }
                 });
-
                 jQuery.ajax({
-                    type: 'POST', url: fShop.ajaxurl, data: {
+                    type: 'POST',
+                    url: fShop.ajaxurl,
+                    data: {
                         action: "fs_set_rating", value: ratingVal, product: productId
-                    }, cache: false, success: function (data) {
-                        localStorage.setItem("fs_user_voted_" + productId, 1);
-                        iziToast.show({
-                            theme: 'light',
-                            title: 'Поздравляем!',
-                            message: 'Ваш голос засчитан!',
-                            position: 'topCenter',
+                    },
+                    cache: false,
+                    success: function (response) {
+                        if (response.success) {
+                            localStorage.setItem("fs_user_voted_" + productId, 1);
+                            iziToast.success({
+                                theme: 'light',
+                                title: response.data.title,
+                                message: response.data.msg,
+                                position: 'topCenter',
 
-                        });
+                            });
+                        }
                     }
                 })
-            } else {
-                iziToast.show({
-                    theme: 'light',
-                    title: 'Информация!',
-                    message: 'Ваш голос не засчитан потому что Вы уже проголосовали за этот товар!',
-                    position: 'topCenter',
-
-                });
             }
 
         });
