@@ -1,0 +1,21 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.fs-category-filter {
+  display: grid;
+  grid-gap: 1rem;
+}
+.fs-category-filter li a {
+  display: grid;
+  align-items: center;
+  grid-gap: 10px;
+  grid-template-columns: 40px 1fr;
+}
+.fs-category-filter li a img {
+  width: 40px;
+}
+
+/*# sourceMappingURL=style.css.map */
