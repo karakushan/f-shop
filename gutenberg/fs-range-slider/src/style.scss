@@ -1,0 +1,18 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.fs-price-range {
+  &__inputs {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 20px;
+  }
+
+  .ui-slider {
+	margin-bottom: 1.5rem;
+  }
+}
