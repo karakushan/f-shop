@@ -422,10 +422,10 @@ class FS_Ajax {
 			$product_id     = intval( $_POST['product'] );
 			$product_rating = intval( $_POST['value'] );
 			add_post_meta( $product_id, 'fs_product_rating', $product_rating );
-            wp_send_json_success( array(
-                'msg' => __( 'Rating successfully set!', 'f-shop' ),
-                'title' => __( 'Success', 'f-shop' )
-            ) );
+			wp_send_json_success( array(
+				'msg'   => __( 'Rating successfully set!', 'f-shop' ),
+				'title' => __( 'Success', 'f-shop' )
+			) );
 		}
 
 	}
@@ -977,11 +977,16 @@ class FS_Ajax {
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
 		}
-		if(!isset($_POST['fs_delivery_methods'])){
-			$shipping_methods=get_terms(['taxonomy'=>FS_Config::get_data('product_del_taxonomy')]);
-			if(!empty($shipping_methods)) $shipping_method=$shipping_methods[0]->term_id;
-		}else{
-			$shipping_method     = absint( $_POST['fs_delivery_methods'] );
+
+		// Setting the shipping method
+		$shipping_method = isset( $_POST['fs_delivery_methods'] ) ? absint( $_POST['fs_delivery_methods'] ) : 0;
+		if ( ! $shipping_method ) {
+			$shipping_methods = get_terms( [ 'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ), 'hide_empty' => false ] );
+			$shipping_method = $shipping_methods[0]->term_id ?? 0;
+		}
+
+		if ( ! $shipping_method ) {
+			wp_send_json_error( array( 'msg' => __( 'Shipping method not found', 'f-shop' ) ) );
 		}
 
 		$delivery_cost_clean = floatval( get_term_meta( $shipping_method, '_fs_delivery_cost', 1 ) );

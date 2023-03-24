@@ -1,9 +1,6 @@
 <?php
 
-
 namespace FS;
-
-
 class FS_Customers {
 	/**
 	 * @var FS_Customers_List

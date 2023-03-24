@@ -3,6 +3,11 @@
 namespace FS;
 
 class FS_Form {
+
+	public function __construct() {
+		add_filter( 'fs_render_field_args', array( $this, 'render_field_args' ), 10, 3 );
+	}
+
 	/**
 	 * Returns all registered field types
 	 *
@@ -72,45 +77,73 @@ class FS_Form {
 
 		$field_path = FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
 
+		$fields = FS_Users::get_user_fields();
+
+		$field = ! empty( $fields[ $name ] ) && is_array( $fields[ $name ] )
+			? $fields[ $name ]
+			: array();
+
+		$default = array_merge( array(
+			'type'           => ! empty( $field['type'] ) ? $field['type'] : 'text',
+			'class'          => 'fs-input form-control',
+			'wrapper'        => true,
+			'autofill'       => true,
+			'wrapper_class'  => 'fs-field-wrap form-group ' . str_replace( '_', '-', $name ) . '-wrap',
+			'label_class'    => 'fs-form-label',
+			'taxonomy'       => ! empty( $field['taxonomy'] ) ? $field['taxonomy'] : 'category',
+			'query_params'   => ! empty( $field['query_params'] ) ? $field['query_params'] : null,
+			'id'             => str_replace( array(
+				'[',
+				']'
+			), array( '_' ), $name ),
+			'required'       => ! empty( $field['required'] ) ? $field['required'] : false,
+			'title'          => ! empty( $field['title'] ) ? $field['title'] : __( 'this field is required', 'f-shop' ),
+			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
+			'value'          => $field['value'] ?? null,
+			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
+			'icon'           => ! empty( $field['icon'] ) ? $field['icon'] : '',
+			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',
+			'html'           => '',
+			'selected'       => '',
+			'multilang'      => false,
+			'source'         => 'post_meta',
+			'help'           => '',
+			'post_id'        => 0,
+			'term_id'        => 0,
+			'options'        => array(),
+			'values'         => ! empty( $field['values'] ) ? $field['values'] : array(),
+			'format'         => '%input% %label%',
+			'el'             => 'radio',
+			'first_option'   => ! empty( $field['first_option'] ) ? $field['first_option'] : __( 'Select' ),
+			'before'         => '',
+			'after'          => '',
+			'disabled'       => ! empty( $field['disabled'] ) ? 'disabled' : false,
+			'editor_args'    => array(
+				'textarea_rows' => 8,
+				'textarea_name' => $name,
+				'tinymce'       => false,
+				'media_buttons' => false
+			),
+		), $field );
+
+		$args = wp_parse_args( $args, $default );
+
+		if ( ! empty( $args['alpine'] ) ) {
+			$alpine_args                   = explode( ':', $args['alpine'] );
+			$args['attributes']['x-model'] = $alpine_args[0];
+		}
+
 		// If the field is not registered or there is no template file, exit
 		if ( ! in_array( $type, $this->get_registered_field_types() ) || ! file_exists( $field_path ) ) {
 			return;
 		}
 
-		$args = wp_parse_args( $args, array(
-			'value'          => '',
-			'values'         => array(),
-			'required'       => false,
-			'title'          => '',
-			'label'          => '',
-			'label_class'    => '',
-			'placeholder'    => '',
-			'label_position' => 'before',
-			'taxonomy'       => 'category',
-			'query_params'   => [],
-			'help'           => '',
-			'size'           => '',
-			'style'          => '',
-			'step'           => 1,
-			'multilang'      => false,
-			'first_option'   => __( 'Select' ),
-			'class'          => str_replace( '_', '-', sanitize_title( 'fs-' . $type . '-field' ) ),
-			'id'             => str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $type ) ),
-			'default'        => '',
-			'textarea_rows'  => 8,
-			'post_type'      => 'post',
-			'editor_args'    => array(
-				'textarea_rows' => 8,
-				'textarea_name' => $name
-			),
-			'source'         => 'post_meta',
-			'post_id'        => 0,
-			'term_id'        => 0,
-		) );
+		$args = apply_filters( "fs_render_field_{$type}_args", $args, $name, $type );
+		$args = apply_filters( "fs_render_field_args", $args, $name, $type );
 
-		$label_after = $args['required'] ? ' <i>*</i>' : '';
+		$label_after = isset( $args['required'] ) && $args['required'] ? ' <i>*</i>' : '';
 		$screen      = is_admin() && get_current_screen() ? get_current_screen() : null;
-		$multi_lang  = $args['multilang'] && fs_option( 'fs_multi_language_support' );
+		$multi_lang  = isset( $args['multilang'] ) && $args['multilang'] && fs_option( 'fs_multi_language_support' );
 
 		if ( $multi_lang ) {
 			echo '<div class="fs-tabs nav-tab-wrapper">';
@@ -221,60 +254,19 @@ class FS_Form {
 	 * @return string html код поля
 	 */
 	function fs_form_field( $field_name, $args = array() ) {
-
-		$fields = FS_Users::get_user_fields();
-
-		$field = ! empty( $fields[ $field_name ] ) && is_array( $fields[ $field_name ] )
-			? $fields[ $field_name ]
-			: array();
-
-		$default = array(
-			'type'           => ! empty( $field['type'] ) ? $field['type'] : 'text',
-			'class'          => 'fs-input form-control',
-			'wrapper'        => true,
-			'autofill'       => true,
-			'wrapper_class'  => 'fs-field-wrap form-group ' . str_replace( '_', '-', $field_name ) . '-wrap',
-			'label_class'    => 'fs-form-label',
-			'taxonomy'       => ! empty( $field['taxonomy'] ) ? $field['taxonomy'] : 'category',
-			'query_params'   => ! empty( $field['query_params'] ) ? $field['query_params'] : null,
-			'id'             => str_replace( array(
-				'[',
-				']'
-			), array( '_' ), $field_name ),
-			'required'       => ! empty( $field['required'] ) ? $field['required'] : false,
-			'title'          => ! empty( $field['title'] ) ? $field['title'] : __( 'this field is required', 'f-shop' ),
-			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
-			'value'          => $field['value'] ?? null,
-			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
-			'icon'           => ! empty( $field['icon'] ) ? $field['icon'] : '',
-			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',
-			'html'           => '',
-			'selected'       => '',
-			'options'        => array(),
-			'values'         => ! empty( $field['values'] ) ? $field['values'] : array(),
-			'format'         => '%input% %label%',
-			'el'             => 'radio',
-			'first_option'   => ! empty( $field['first_option'] ) ? $field['first_option'] : __( 'Select' ),
-			'before'         => '',
-			'after'          => '',
-			'disabled'       => ! empty( $field['disabled'] ) ? 'disabled' : false,
-			'editor_args'    => array(
-				'textarea_rows' => 8,
-				'textarea_name' => $field_name,
-				'tinymce'       => false,
-				'media_buttons' => false
-			)
-
-		);
-
-		$args = wp_parse_args( $args, $default );
+		$args = array_merge( [
+			'wrapper'       => true,
+			'wrapper_class' => '',
+			'before'        => '',
+			'after'         => '',
+			'type'          => 'text',
+		], $args );
 
 		if ( $args['wrapper'] ) {
 			echo '<div class="' . esc_attr( 'fs-field-wrap ' . $args['wrapper_class'] ) . '">';
 		}
-		if ( ! empty( $args['before'] ) ) {
-			echo $args['before'];
-		}
+
+		echo $args['before'];
 
 		$this->render_field( $field_name, $args['type'], $args );
 
@@ -282,14 +274,36 @@ class FS_Form {
 			echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_attr( $args['help'] ) . '"></span>';
 		}
 
-		if ( ! empty( $args['after'] ) ) {
-			echo $args['after'];
-		}
+		echo $args['after'];
 
-		if ( $args['wrapper'] ) {
+
+		if ( ! empty( $args['wrapper'] ) ) {
 			echo '</div>';
 		}
 	}
+
+
+	/**
+	 * Returns an array of fields to send to alpine.js
+	 *
+	 * @return array
+	 */
+	public static function alpine_map_fields_xdata( $fields = array() ) {
+		if ( empty( $fields ) ) {
+			$fields = FS_Users::get_user_fields();
+		}
+
+		$form_fields = array_filter( $fields, function ( $field ) {
+			return ! empty( $field['alpine'] );
+		} );
+
+		$form_fields = array_map( function ( $field ) {
+			return $field['alpine'];
+		}, $form_fields );
+
+		return implode( ' ', $form_fields );
+	}
+
 
 	/**
 	 * Возвращает открывающий тег формы со скрытыми полями безопасности
@@ -312,6 +326,8 @@ class FS_Form {
 			'validate'     => true
 		) );
 
+		$alpine_fields = self::alpine_map_fields_xdata();
+
 		$out = '<form';
 		$out .= ' action="' . esc_attr( $args['action'] ) . '"';
 		$out .= ' data-ajax="' . esc_attr( $args['ajax'] ) . '"';
@@ -321,6 +337,7 @@ class FS_Form {
 		$out .= ' data-validation="' . esc_attr( $args['validate'] ) . '"';
 		$out .= ' enctype="' . esc_attr( $args['enctype'] ) . '"';
 		$out .= ' class="' . esc_attr( $args['class'] ) . '"';
+		$out .= ' x-data="{' . esc_attr( $alpine_fields ) . '}"';
 		$out .= ' id="' . esc_attr( $args['id'] ) . '">';
 		$out .= FS_Config::nonce_field();
 		$out .= '<input type="hidden" name="action" value="' . esc_attr( $args['ajax_action'] ) . '">';
@@ -356,4 +373,12 @@ class FS_Form {
 		return '<button ' . $inline_attributes . '>' . esc_html( $label ) . '</button>';
 	}
 
+	function render_field_args( $args, $name, $type ) {
+		if ( ! empty( $args['alpine'] ) ) {
+			$alpine_args                   = explode( ':', $args['alpine'] );
+			$args['attributes']['x-model'] = $alpine_args[0];
+		}
+
+		return $args;
+	}
 }

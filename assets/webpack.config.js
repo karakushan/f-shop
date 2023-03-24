@@ -9,7 +9,8 @@ module.exports = {
     watch: true,
     entry: {
         "fs-admin": "../assets/js/src/fs-admin.js",
-        "vue-admin": "../assets/js/src/vue-admin.js"
+        "vue-admin": "../assets/js/src/vue-admin.js",
+        "f-shop": "../assets/js/src/f-shop.js",
     },
     output: {
         filename: "[name].js",

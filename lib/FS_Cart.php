@@ -37,9 +37,7 @@ class FS_Cart {
 		if ( ! empty( $_SESSION['cart'] ) ) {
 			$this->cart = $_SESSION['cart'];
 		}
-
 	}
-
 
 	/**
 	 * Updating the number of goods in the basket by ajax

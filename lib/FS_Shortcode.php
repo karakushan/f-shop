@@ -238,21 +238,26 @@ class FS_Shortcode {
 	/**
 	 * шорткод для отображения формы оформления заказа
 	 *
-	 * @param array $atts атрибуты тега form
+	 * @param array $args атрибуты тега form
 	 *
 	 * @return string
 	 */
-	public function order_send( $atts = array() ) {
-		$atts = shortcode_atts( array(
+	public function order_send( $args = array() ) {
+		$args = shortcode_atts( array(
 			'class' => 'fs-checkout-form'
-		), $atts );
-		$cart = FS_Cart::get_cart();
-		if ( empty( $cart ) ) {
+		), $args );
+
+		if ( FS_Cart::has_empty() ) {
 			return fs_frontend_template( 'checkout/checkout-no-items' );
 		}
-		$template = fs_form_header( array( 'name' => 'fs-order-send', 'class' => $atts['class'] ), 'order_send' );
+
+		$template = FS_Form::form_open( array(
+			'name'        => 'fs-order-send',
+			'class'       => $args['class'],
+			'ajax_action' => 'order_send'
+		) );
 		$template .= fs_frontend_template( 'checkout/checkout', array( 'vars' => array( 'cart' => FS_Cart::get_cart() ) ) );
-		$template .= fs_form_bottom( '' );
+		$template .= FS_Form::form_close();
 
 		return $template;
 	}

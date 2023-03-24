@@ -10,6 +10,6 @@
  */
 ?>
 <input
-        <?php echo fs_parse_attr($args['attributes']) ?>
+	<?php echo fs_parse_attr( $args['attributes'] ?? [] ) ?>
         type="checkbox" name="<?php echo esc_attr( $name ) ?>" id="<?php echo esc_attr( $args['id'] ) ?>"
        class="<?php echo esc_attr( $args['class'] ) ?>" value="1" <?php checked(1,$args['value']) ?>>

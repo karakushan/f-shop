@@ -16,7 +16,7 @@ if (  !empty( $args['values'] ) ) {
 
 		echo '<div class="radio">';
 		echo '<label>';
-		echo '<input '.fs_parse_attr($args['attributes']).' type="radio" name="' . esc_attr( $name ) . '" ' . checked( $args['value'], $key, 0 ) . ' value="' . esc_attr( $key ) . '">';
+		echo '<input '.fs_parse_attr($args['attributes'] ?? []).' type="radio" name="' . esc_attr( $name ) . '" ' . checked( $args['value'], $key, 0 ) . ' value="' . esc_attr( $key ) . '">';
 
 		if ( $args['icon'] ) {
 			echo '<picture>'.fs_get_category_image( $key, 'full' ).'</picture>';

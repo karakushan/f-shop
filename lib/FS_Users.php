@@ -365,7 +365,7 @@ class FS_Users {
 		}
 
 		$fields = array(
-			'fs_email'      => array(
+			'fs_email'                  => array(
 				'name'        => __( 'E-mail', 'f-shop' ),
 				'type'        => 'email',
 				'label'       => '',
@@ -376,18 +376,17 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => false
 			),
-			'fs_first_name' => array(
+			'fs_first_name'             => array(
 				'name'        => __( 'First name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
 				'value'       => fs_option( 'fs_autofill_form' ) && ! empty( $user->first_name ) ? $user->first_name : '',
 				'placeholder' => __( 'First name', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true,
 				'checkout'    => true,
 				'save_meta'   => false
 			),
-			'fs_last_name'  => array(
+			'fs_last_name'              => array(
 				'name'        => __( 'Last name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -398,8 +397,112 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => false
 			),
+			'fs_other_shipping_address' => array(
+				'name'        => __( 'Other shipping address', 'f-shop' ),
+				'type'        => 'checkbox',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'Other shipping address', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'required'    => false,
+				'checkout'    => true,
+				'alpine'      => 'fs_other_shipping_address:false',
+				'save_meta'   => false
+			),
+			'fs_shipping_first_name'    => array(
+				'name'        => __( 'First name', 'f-shop' ),
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'First name', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'attributes'  => [
+					'x-bind:required' => 'fs_other_shipping_address'
+				],
+				'checkout'    => true,
+				'save_meta'   => false
+			),
+			'fs_shipping_last_name'     => array(
+				'name'        => __( 'Last name', 'f-shop' ),
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'Last name', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'required'    => false,
+				'checkout'    => true,
+				'save_meta'   => false
+			),
+			'fs_shipping_email'         => array(
+				'name'        => __( 'E-mail', 'f-shop' ),
+				'type'        => 'email',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'Your email', 'f-shop' ),
+				'title'       => __( 'Keep the correct email', 'f-shop' ),
+				'required'    => false,
+				'checkout'    => true,
+				'save_meta'   => false
+			),
+			'fs_shipping_phone'         => array(
+				'name'        => __( 'Phone', 'f-shop' ),
+				'type'        => 'tel',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'Phone', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'attributes'  => [
+					'x-bind:required' => 'fs_other_shipping_address'
+				],
+				'checkout'    => true,
+				'save_meta'   => false
+			),
+			'fs_shipping_address'       => array(
+				'name'        => __( 'Address', 'f-shop' ),
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'Address', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'required'    => true,
+				'checkout'    => true,
+				'save_meta'   => false
+			),
+			'fs_shipping_city'          => array(
+				'name'        => __( 'City', 'f-shop' ),
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'City', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'required'    => true,
+				'checkout'    => true,
+				'save_meta'   => false
+			),
+			'fs_shipping_state'         => array(
+				'name'        => __( 'State', 'f-shop' ),
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'State', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'required'    => true,
+				'checkout'    => true,
+				'save_meta'   => false
+			),
+			'fs_shipping_zip'           => array(
+				'name'        => __( 'Zip', 'f-shop' ),
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'Zip', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'required'    => true,
+				'checkout'    => true,
+				'save_meta'   => false
+			),
 
-			'fs_user_avatar'       => array(
+			'fs_user_avatar' => array(
 				'name'        => __( 'Avatar', 'f-shop' ),
 				'type'        => 'file',
 				'label'       => '',
@@ -408,6 +511,7 @@ class FS_Users {
 				'required'    => false,
 				'save_meta'   => false
 			),
+
 			'fs_phone'             => array(
 				'name'        => __( 'Phone number', 'f-shop' ),
 				'type'        => 'tel',
