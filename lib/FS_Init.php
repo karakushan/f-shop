@@ -38,7 +38,7 @@ class FS_Init {
 		FS_Export_Class::class,
 		FS_SEO::class,
 		FS_Customers::class,
-		FS_Form::class,
+		FS_Form::class
 	];
 	protected static $instance = null;
 

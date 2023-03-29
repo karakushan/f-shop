@@ -12,7 +12,6 @@ namespace FS;
 class FS_Api_Class {
 
 	function __construct() {
-		// $_GET['fs-api']
 		add_action( 'admin_init', array( $this, 'http_action' ) );
 		add_action( 'fs_api', array( $this, 'plugin_admin_api_actions' ), 10, 2 );
 
@@ -66,7 +65,7 @@ class FS_Api_Class {
 		if ( empty( $api_command ) ) {
 			wp_die( 'Не задана API команда' );
 		}
-		$fs_config=new FS_Config();
+		$fs_config = new FS_Config();
 		// импортирует свойства товаров из опций
 		if ( $api_command == 'migrate' ) {
 			FS_Migrate_Class::import_option_attr();

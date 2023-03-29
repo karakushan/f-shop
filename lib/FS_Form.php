@@ -73,36 +73,34 @@ class FS_Form {
 	 * @param string $type
 	 * @param array $args
 	 */
-	function render_field( $name, $type = 'text', $args = [] ) {
-
-		$field_path = FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
-
+	public function render_field( $name, $type = '', $args = [] ) {
 		$fields = FS_Users::get_user_fields();
 
 		$field = ! empty( $fields[ $name ] ) && is_array( $fields[ $name ] )
 			? $fields[ $name ]
 			: array();
 
+		if ( $name == 'fs_delivery_methods' ) {
+			do_action( 'qm/debug', $args );
+		}
+
 		$default = array_merge( array(
-			'type'           => ! empty( $field['type'] ) ? $field['type'] : 'text',
+			'type'           => 'text',
 			'class'          => 'fs-input form-control',
 			'wrapper'        => true,
 			'autofill'       => true,
 			'wrapper_class'  => 'fs-field-wrap form-group ' . str_replace( '_', '-', $name ) . '-wrap',
 			'label_class'    => 'fs-form-label',
-			'taxonomy'       => ! empty( $field['taxonomy'] ) ? $field['taxonomy'] : 'category',
-			'query_params'   => ! empty( $field['query_params'] ) ? $field['query_params'] : null,
-			'id'             => str_replace( array(
-				'[',
-				']'
-			), array( '_' ), $name ),
-			'required'       => ! empty( $field['required'] ) ? $field['required'] : false,
-			'title'          => ! empty( $field['title'] ) ? $field['title'] : __( 'this field is required', 'f-shop' ),
-			'placeholder'    => ! empty( $field['placeholder'] ) ? $field['placeholder'] : null,
-			'value'          => $field['value'] ?? null,
-			'label'          => ! empty( $field['label'] ) ? $field['label'] : '',
-			'icon'           => ! empty( $field['icon'] ) ? $field['icon'] : '',
-			'label_position' => ! empty( $field['label_position'] ) ? $field['label_position'] : 'before',
+			'taxonomy'       => 'category',
+			'query_params'   => null,
+			'id'             => str_replace( array( '[', ']' ), array( '_' ), $name ),
+			'required'       => false,
+			'title'          => __( 'this field is required', 'f-shop' ),
+			'placeholder'    => null,
+			'value'          => null,
+			'label'          => null,
+			'icon'           => null,
+			'label_position' => 'before',
 			'html'           => '',
 			'selected'       => '',
 			'multilang'      => false,
@@ -111,13 +109,13 @@ class FS_Form {
 			'post_id'        => 0,
 			'term_id'        => 0,
 			'options'        => array(),
-			'values'         => ! empty( $field['values'] ) ? $field['values'] : array(),
+			'values'         => array(),
 			'format'         => '%input% %label%',
 			'el'             => 'radio',
-			'first_option'   => ! empty( $field['first_option'] ) ? $field['first_option'] : __( 'Select' ),
+			'first_option'   => __( 'Select' ),
 			'before'         => '',
 			'after'          => '',
-			'disabled'       => ! empty( $field['disabled'] ) ? 'disabled' : false,
+			'disabled'       => false,
 			'editor_args'    => array(
 				'textarea_rows' => 8,
 				'textarea_name' => $name,
@@ -127,6 +125,11 @@ class FS_Form {
 		), $field );
 
 		$args = wp_parse_args( $args, $default );
+
+
+		$type = is_string( $type ) && $type != '' ? $type : $args['type'];
+
+		$field_path = FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
 
 		if ( ! empty( $args['alpine'] ) ) {
 			$alpine_args                   = explode( ':', $args['alpine'] );
@@ -144,6 +147,7 @@ class FS_Form {
 		$label_after = isset( $args['required'] ) && $args['required'] ? ' <i>*</i>' : '';
 		$screen      = is_admin() && get_current_screen() ? get_current_screen() : null;
 		$multi_lang  = isset( $args['multilang'] ) && $args['multilang'] && fs_option( 'fs_multi_language_support' );
+
 
 		if ( $multi_lang ) {
 			echo '<div class="fs-tabs nav-tab-wrapper">';
@@ -190,7 +194,15 @@ class FS_Form {
 					echo '</label>';
 				}
 
+				if ( $args['wrapper'] ) {
+					echo '<div class="' . esc_attr( 'fs-field-wrap ' . $args['wrapper_class'] ) . '">';
+				}
+
 				include $field_path;
+
+				if ( $args['wrapper'] ) {
+					echo '</div>';
+				}
 
 				if ( ( ! empty( $args['label'] ) || ! empty( $args['help'] ) ) && $args['label_position'] == 'after' ) {
 
@@ -208,6 +220,10 @@ class FS_Form {
 			}
 
 		} else {
+			if ( $args['wrapper'] ) {
+				echo '<div class="fs-field-wrap ' . esc_attr( $args['wrapper_class'] ) . '">';
+			}
+
 			if ( $args['source'] == 'post_meta' && $args['post_id'] ) {
 				$args['value'] = get_post_meta( $args['post_id'], $name, true );
 			} elseif ( $args['source'] == 'term_meta' && $args['term_id'] ) {
@@ -240,48 +256,16 @@ class FS_Form {
 				echo '</div>';
 			}
 
+			if ( $args['wrapper'] ) {
+				echo '</div>';
+			}
+
 		}
 
 		if ( $multi_lang ) {
 			echo '</div><!! end .fs-tabs !!>';
 		}
 	}
-
-	/**
-	 * @param string $field_name ключ поля в FS_Config::$form_fields
-	 * @param array $args атрибуты input (class,id,value,checked)
-	 *
-	 * @return string html код поля
-	 */
-	function fs_form_field( $field_name, $args = array() ) {
-		$args = array_merge( [
-			'wrapper'       => true,
-			'wrapper_class' => '',
-			'before'        => '',
-			'after'         => '',
-			'type'          => 'text',
-		], $args );
-
-		if ( $args['wrapper'] ) {
-			echo '<div class="' . esc_attr( 'fs-field-wrap ' . $args['wrapper_class'] ) . '">';
-		}
-
-		echo $args['before'];
-
-		$this->render_field( $field_name, $args['type'], $args );
-
-		if ( ! empty( $args['help'] ) && ! in_array( $args['type'], array( 'checkbox' ) ) ) {
-			echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_attr( $args['help'] ) . '"></span>';
-		}
-
-		echo $args['after'];
-
-
-		if ( ! empty( $args['wrapper'] ) ) {
-			echo '</div>';
-		}
-	}
-
 
 	/**
 	 * Returns an array of fields to send to alpine.js

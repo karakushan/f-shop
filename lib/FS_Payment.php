@@ -15,7 +15,7 @@ class FS_Payment
      * Возвращает все зарегистрированные способы оплаты в виде масссива
      * @return mixed|void
      */
-    function payment_methods()
+   public static function payment_methods()
     {
         $methods = array();
 
@@ -32,16 +32,14 @@ class FS_Payment
      *
      * @return string
      */
-    function order_pay($atts)
+   public static function order_pay($atts)
     {
-
-        $atts = shortcode_atts(array(
+		$atts = shortcode_atts(array(
             'item-wrapper-class' => 'col-lg-2 col-sm-6',
             'item-class' => 'fs-pay-item'
         ), $atts);
 
         $order_id = !empty($_GET['order_id']) && is_numeric($_GET['order_id']) ? intval($_GET['order_id']) : FS_Orders::get_last_order_id();
-
 
         // Если не указан номер заказа
         if (!$order_id) {
@@ -83,8 +81,8 @@ class FS_Payment
             if (!empty($payment_methods[$term->slug]) && !is_wp_error($term)) {
 
                 $html .= fs_action_message(
-                    sprintf(__('Оплата заказа #%d с помощью &laquo;%s&raquo;', 'f-shop'), $order_id, $term->name),
-                    sprintf(__('В случае успешной оплаты с вас будет снято %s %s. ', 'f-shop'), apply_filters('fs_price_format', $order_amount), fs_currency()),
+                    sprintf(__('Payment for order #%d with &laquo;%s&raquo;', 'f-shop'), $order_id, $term->name),
+                    sprintf(__('If payment is successful, you will be charged %s %s.', 'f-shop'), apply_filters('fs_price_format', $order_amount), fs_currency()),
                     'info',
                     [
                         'echo' => false,

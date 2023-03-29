@@ -1,4 +1,5 @@
 import Alpine from "alpinejs";
+
 window.Alpine = Alpine
 Alpine.start()
 
@@ -496,11 +497,14 @@ jQuery(document).ready(function ($) {
         }
 
         jQuery.ajax({
-            type: 'POST', url: fShop.ajaxurl, beforeSend: function () {
-
-            }, data: fShop.ajaxData('fs_show_shipping', {
+            type: 'POST', url: fShop.ajaxurl,
+            beforeSend: function () {
+                jQuery(document).trigger('fs_before_get_shipping_data', val);
+            },
+            data: fShop.ajaxData('fs_show_shipping', {
                 fs_delivery_methods: val
-            }), success: function (result) {
+            }),
+            success: function (result) {
                 if (!result.success) return;
 
                 if (result.data.price) {
@@ -509,6 +513,10 @@ jQuery(document).ready(function ($) {
                     jQuery("[data-fs-element=\"taxes-list\"]").replaceWith(result.data.taxes);
                     jQuery("[data-fs-element=\"packing-cost\"]").html(result.data.packing_cost);
                 }
+
+                // loading the fields for the selected delivery method
+                if (result.data.html !== '')
+                    jQuery('[data-fs-element="shipping-custom"]').html(result.data.html);
 
                 // Оключаем поля которые нужно скрыть
                 $('.fs-checkout-form input,.fs-checkout-form .fs-field-wrap').fadeIn(0);
@@ -540,6 +548,8 @@ jQuery(document).ready(function ($) {
                         field.attr('required', 'required').attr('data-ajax-req', true);
                     }
                 }
+
+                jQuery(document).trigger('fs_after_get_shipping_data', result);
             }
 
 
@@ -1039,7 +1049,7 @@ jQuery(document).ready(function ($) {
             if (localStorage.getItem('fs_user_voted_' + productId)) {
                 iziToast.warning({
                     theme: 'light',
-                    title: fShop.getLang('error',''),
+                    title: fShop.getLang('error', ''),
                     message: fShop.getLang('ratingError'),
                     position: 'topCenter',
 

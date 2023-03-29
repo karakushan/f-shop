@@ -464,7 +464,7 @@ class FS_Users {
 				'value'       => '',
 				'placeholder' => __( 'Address', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true,
+				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
 			),
@@ -475,9 +475,9 @@ class FS_Users {
 				'value'       => '',
 				'placeholder' => __( 'City', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true,
+				'required'    => false,
 				'checkout'    => true,
-				'save_meta'   => false
+				'save_meta'   => true
 			),
 			'fs_shipping_state'         => array(
 				'name'        => __( 'State', 'f-shop' ),
@@ -486,7 +486,7 @@ class FS_Users {
 				'value'       => '',
 				'placeholder' => __( 'State', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true,
+				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
 			),
@@ -497,7 +497,7 @@ class FS_Users {
 				'value'       => '',
 				'placeholder' => __( 'Zip', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => true,
+				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
 			),

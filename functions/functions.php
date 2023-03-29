@@ -2088,7 +2088,7 @@ function fs_get_payment( $payment_id ) {
  */
 function fs_form_field( $field_name, $args = array() ) {
 	$form_class = new \FS\FS_Form();
-	$form_class->fs_form_field( $field_name, $args );
+	$form_class->render_field( $field_name,'',  $args );
 }
 
 /**
