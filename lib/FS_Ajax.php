@@ -109,6 +109,10 @@ class FS_Ajax {
 			// Заполняет поля данными в режиме quick edit
 			add_action( 'wp_ajax_fs_quick_edit_values', array( $this, 'fs_quick_edit_values_callback' ) );
 			add_action( 'wp_ajax_nopriv_fs_quick_edit_values', array( $this, 'fs_quick_edit_values_callback' ) );
+
+			// fs_get_terms
+			add_action( 'wp_ajax_fs_get_terms', array( $this, 'fs_get_terms_callback' ) );
+			add_action( 'wp_ajax_nopriv_fs_get_terms', array( $this, 'fs_get_terms_callback' ) );
 		}
 	}
 
@@ -1027,5 +1031,17 @@ class FS_Ajax {
 			'packing_cost'   => $packing_cost,
 			'total'          => $total_amount,
 		] );
+	}
+
+	/**
+	 * @return void
+	 */
+	function fs_get_terms_callback(){
+		$terms = get_terms(  FS_Config::get_data('features_taxonomy'), array(
+			'hide_empty' => false,
+			'parent' => intval($_POST['parent'])
+		) );
+
+		wp_send_json_success( $terms );
 	}
 } 

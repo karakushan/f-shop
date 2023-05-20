@@ -2,6 +2,8 @@ import Alpine from "alpinejs";
 window.Alpine = Alpine
 Alpine.start()
 
+
+
 jQuery(document).ready(function ($) {
     $(window).off('beforeunload');
     const FS = {
@@ -730,6 +732,22 @@ jQuery(document).on('change', '.fs_select_variant', function (event) {
         }
     }
 });
+
+window.fsGetAttributes = function (parent, callback) {
+    jQuery.ajax({
+        url: ajaxurl,
+        type: 'POST',
+        data: {
+            action: "fs_get_terms",
+            parent: parent
+        },
+        success: function (result) {
+            if (result.success) {
+                callback(result.data);
+            }
+        },
+    });
+}
 
 
 
