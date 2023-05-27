@@ -79,6 +79,11 @@ function fs_get_gallery( $product_id = 0, $thumbnail = true, $attachments = fals
 	return $images;
 }
 
+function fs_has_sale_price( $product_id = 0 ) {
+	$product_id = fs_get_product_id( $product_id );
+
+	return (bool) get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ) );
+}
 
 //Получает текущую цену с учётом скидки
 /**
