@@ -2088,7 +2088,7 @@ function fs_get_payment( $payment_id ) {
  */
 function fs_form_field( $field_name, $args = array() ) {
 	$form_class = new \FS\FS_Form();
-	$form_class->render_field( $field_name,'',  $args );
+	$form_class->render_field( $field_name, '', $args );
 }
 
 /**
@@ -3084,9 +3084,10 @@ function fs_product_rating( $product_id = 0, $args = array() ) {
  *
  * @return void
  */
-function fs_product_average_rating( $product_id = 0 ) {
+function fs_product_average_rating( $product_id = 0, $default = 5 ) {
 	$product_id = fs_get_product_id( $product_id );
-	echo FS_Product::get_average_rating( $product_id );
+	$rating     = FS_Product::get_average_rating( $product_id );
+	echo $rating > 0 ? $rating : $default;
 }
 
 /**
