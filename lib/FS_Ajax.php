@@ -27,6 +27,14 @@ class FS_Ajax {
 			add_action( 'wp_ajax_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
 			add_action( 'wp_ajax_nopriv_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
 
+			// Clean Wishlist
+			add_action( 'wp_ajax_fs_clean_wishlist', array( $this, 'fs_clean_wishlist' ) );
+			add_action( 'wp_ajax_nopriv_fs_clean_wishlist', array( $this, 'fs_clean_wishlist' ) );
+
+
+			add_action( 'wp_ajax_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
+			add_action( 'wp_ajax_nopriv_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
+
 			//  Getting related category posts
 			add_action( 'wp_ajax_fs_get_taxonomy_posts', array( $this, 'get_taxonomy_posts' ) );
 			add_action( 'wp_ajax_nopriv_fs_get_taxonomy_posts', array( $this, 'get_taxonomy_posts' ) );
@@ -583,9 +591,10 @@ class FS_Ajax {
 
 		foreach ( $form_fields as $key => $form_field ) {
 			if ( isset( $form_field['required'] ) && $form_field['required'] && trim( $_POST[ $key ] ) == '' ) {
-				wp_send_json_error( [ 'msg'   => sprintf( __( 'Поле "%s" является обязательным!' ), $form_field['name'] ),
-				                      'key'   => $key,
-				                      'value' => $_POST[ $key ]
+				wp_send_json_error( [
+					'msg'   => sprintf( __( 'Поле "%s" является обязательным!' ), $form_field['name'] ),
+					'key'   => $key,
+					'value' => $_POST[ $key ]
 				] );
 				break;
 			}
@@ -1036,12 +1045,49 @@ class FS_Ajax {
 	/**
 	 * @return void
 	 */
-	function fs_get_terms_callback(){
-		$terms = get_terms(  FS_Config::get_data('features_taxonomy'), array(
+	function fs_get_terms_callback() {
+		$terms = get_terms( FS_Config::get_data( 'features_taxonomy' ), array(
 			'hide_empty' => false,
-			'parent' => intval($_POST['parent'])
+			'parent'     => intval( $_POST['parent'] )
 		) );
 
 		wp_send_json_success( $terms );
+	}
+
+	/**
+	 * Clears the wishlist
+	 *
+	 * @return void
+	 */
+	function fs_clean_wishlist() {
+		if ( ! FS_Config::verify_nonce() ) {
+			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
+		}
+
+		unset( $_SESSION['fs_wishlist'] );
+		wp_send_json_success();
+	}
+
+	/**
+	 * Adds all products from the wish list to the cart
+	 *
+	 * @return void
+	 */
+	function fs_add_wishlist_to_cart() {
+		if ( ! FS_Config::verify_nonce() ) {
+			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
+		}
+
+		$wishlist = $_SESSION['fs_wishlist'] ?? [];
+		if ( ! empty( $wishlist ) ) {
+			foreach ( $wishlist as $product_id ) {
+				FS_Cart::push_item( [ 'ID' => $product_id ] );
+			}
+		}
+
+		wp_send_json_success( [
+			'message' => __( 'Products added to cart', 'f-shop' ),
+			'title'   => __( 'Success!', 'f-shop' )
+		] );
 	}
 } 

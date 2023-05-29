@@ -1,8 +1,3 @@
-import Alpine from "alpinejs";
-
-window.Alpine = Alpine
-Alpine.start()
-
 jQuery(document).ready(function ($) {
     let fShop = Object.assign({
         getLang: function (string) {
@@ -16,18 +11,22 @@ jQuery(document).ready(function ($) {
                 if (array[i] === value) return i;
             }
             return -1;
-        }, ajaxData: function (action, data) {
+        },
+        ajaxData: function (action, data) {
             data.action = action;
             data.fs_secret = this.nonce
             return data;
-        }, strReplace: function (string, obj) {
+        },
+        strReplace: function (string, obj) {
             for (var x in obj) {
                 string = string.replace(new RegExp(x, 'g'), obj[x]);
             }
             return string;
-        }, getSettings: function (settingName) {
+        },
+        getSettings: function (settingName) {
             return this[settingName];
-        }, updateCarts: function () {
+        },
+        updateCarts: function () {
             jQuery("[data-fs-element=\"cart-widget\"]").each(function () {
                 let templatePath = "cart-widget/widget";
                 if (jQuery(this).data("template") != "") {
@@ -99,7 +98,8 @@ jQuery(document).ready(function ($) {
             }
 
 
-        }, selectVariation: function () {
+        },
+        selectVariation: function () {
             var variation = $(this).val();
             var productId = $(this).data("product-id");
             var maxCount = $(this).data("max");

@@ -11,6 +11,7 @@ module.exports = {
         "fs-admin": "../assets/js/src/fs-admin.js",
         "vue-admin": "../assets/js/src/vue-admin.js",
         "f-shop": "../assets/js/src/f-shop.js",
+        "fs-frontend": "../assets/js/src/fs-frontend.js",
     },
     output: {
         filename: "[name].js",

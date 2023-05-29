@@ -1986,26 +1986,20 @@ function fs_parse_attr( $attr = array(), $default = array(), $exclude = [] ) {
 
 
 /**
- * возвращает список желаний
+ * Returns a wishlist as a WP_Query object
  *
- * @param array $args массив аргументов, идентичные WP_Query
- *
- * @return array список желаний
+ * @return array
  */
-function fs_get_wishlist( $args = array() ) {
-	if ( empty( $_SESSION['fs_wishlist'] ) ) {
-		$wishlist[0] = 0;
-	} else {
-		$wishlist = $_SESSION['fs_wishlist'];
+function fs_get_wishlist() {
+	if ( empty( $_SESSION['fs_wishlist'] ) || ! is_array( $_SESSION['fs_wishlist'] ) ) {
+		return [];
 	}
-	$args     = wp_parse_args( $args, array(
-		'post_type' => 'product',
-		'post__in'  => array_unique( $wishlist )
 
+	return get_posts( array(
+		'post_type'      => FS_Config::get_data( 'post_type' ),
+		'post__in'       => array_unique( $_SESSION['fs_wishlist'] ),
+		'posts_per_page' => - 1,
 	) );
-	$wh_posts = new WP_Query( $args );
-
-	return $wh_posts;
 }
 
 /**

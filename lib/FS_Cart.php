@@ -81,7 +81,7 @@ class FS_Cart {
 	}
 
 	/**
-	 * Добавдяет позицию в корзину
+	 * Adds an item to the cart
 	 *
 	 * @param array $data
 	 *
