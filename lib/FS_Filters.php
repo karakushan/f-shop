@@ -3,6 +3,10 @@
 namespace FS;
 /**
  * Class FS_Filters
+ *
+ * Этот класс содержит хуки и фильтры, которые используются для фильтрации товаров и других сущностей
+ * todo: методы не соответствующие контексту класса перенести в другие классы
+ *
  * @package FS
  */
 class FS_Filters {
@@ -33,7 +37,6 @@ class FS_Filters {
 		 * Transliteration of text for use in the slug
 		 */
 		add_filter( 'fs_filter_meta_field', array( $this, 'transliteration_product_slug' ), 10, 3 );
-
 	}
 
 	/**
@@ -105,36 +108,38 @@ class FS_Filters {
 	function product_quick_edit_fields( $column_name, $post_type ) {
 		if ( $column_name == 'fs_price' && $post_type == 'product' ) {
 			?>
-            <fieldset class="inline-edit-col-left inline-edit-fast-shop">
-                <legend class="inline-edit-legend"><?php esc_html_e( 'Product Settings', 'f-shop' ) ?> </legend>
-                <div class="inline-edit-col">
-                    <label>
-                        <span class="title"><?php esc_html_e( 'Price', 'f-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
-                        <span class="input-text-wrap">
+			<fieldset class="inline-edit-col-left inline-edit-fast-shop">
+				<legend class="inline-edit-legend"><?php esc_html_e( 'Product Settings', 'f-shop' ) ?> </legend>
+				<div class="inline-edit-col">
+					<label>
+						<span
+							class="title"><?php esc_html_e( 'Price', 'f-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
+						<span class="input-text-wrap">
                         <input type="number" name="<?php echo esc_attr( FS_Config::get_meta( 'price' ) ) ?>"
                                class="fs_price"
                                value=""
                                required step="0.01" min="0">
                     </span>
-                    </label>
-                    <label>
-                        <span class="title"><?php esc_html_e( 'Vendor code', 'f-shop' ) ?></span>
-                        <span class="input-text-wrap">
+					</label>
+					<label>
+						<span class="title"><?php esc_html_e( 'Vendor code', 'f-shop' ) ?></span>
+						<span class="input-text-wrap">
                         <input type="text" name="<?php echo esc_attr( FS_Config::get_meta( 'sku' ) ) ?>"
                                class="fs_vendor_code"
                                value="">
                     </span>
-                    </label>
-                    <label>
-            <span class="title"><?php esc_html_e( 'Stock in stock', 'f-shop' ) ?> (<?php esc_html_e( 'units', 'f-shop' ) ?>
+					</label>
+					<label>
+            <span
+	            class="title"><?php esc_html_e( 'Stock in stock', 'f-shop' ) ?> (<?php esc_html_e( 'units', 'f-shop' ) ?>
                 )</span>
-                        <span class="input-text-wrap">
+						<span class="input-text-wrap">
                         <input type="number" name="<?php echo esc_attr( FS_Config::get_meta( 'remaining_amount' ) ) ?>"
                                class="fs_stock" min="0" step="1"
                                value=""></span>
-                    </label>
-                </div>
-            </fieldset>
+					</label>
+				</div>
+			</fieldset>
 			<?php
 		}
 	}
@@ -361,4 +366,30 @@ class FS_Filters {
 		return;
 	}
 
+	/**
+	 * Returns an array with filters that are used on the product catalog page
+	 *
+	 * @return array
+	 */
+	public static function get_used_filters() {
+		$filters    = array();
+		$url_params = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY );
+		parse_str( $url_params, $url_params );
+		$current_url = strtok( $_SERVER["REQUEST_URI"], '?' );
+
+		if ( isset( $_GET['attributes'] ) && is_array( $_GET['attributes'] ) ) {
+			foreach ( $_GET['attributes'] as $key => $value ) {
+				$term      = get_term_by( 'id', $value, FS_Config::get_data( 'features_taxonomy' ) );
+				$filters[] = [
+					'name'       => $term->name,
+					'value'      => $value,
+					'type'       => 'attributes',
+					'reset_link' => add_query_arg( [ 'attributes' => array_diff( $url_params['attributes'], [ $key => $value ] ) ], $current_url )
+				];
+			}
+		}
+
+
+		return $filters;
+	}
 }
