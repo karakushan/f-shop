@@ -297,50 +297,105 @@ class FS_SEO {
 			return;
 		}
 		global $post;
-		$product_taxonomy = FS_Config::get_data( 'product_taxonomy' );
-		$product_id       = intval( $post->ID );
-		$categories       = get_the_terms( $product_id, $product_taxonomy );
-		$manufacturer     = get_the_terms( $product_id, 'brands' );
-		$brand            = ! is_wp_error( $manufacturer ) && ! empty( $manufacturer[0]->name ) ? $manufacturer[0]->name : get_bloginfo( 'name' );
-		$description      = $post->post_excerpt
+		$product_taxonomy       = FS_Config::get_data( 'product_taxonomy' );
+		$product_id             = $post->ID;
+		$categories             = get_the_terms( $product_id, $product_taxonomy );
+		$manufacturer           = get_the_terms( $product_id, 'brands' );
+		$brand                  = ! is_wp_error( $manufacturer ) && ! empty( $manufacturer[0]->name ) ? $manufacturer[0]->name : get_bloginfo( 'name' );
+		$description            = $post->post_excerpt
 			? apply_filters( 'the_content', $post->post_excerpt )
 			: apply_filters( 'the_content', $post->post_content );
-		$description      = strip_tags( $description );
+		$description            = strip_tags( $description );
+		$total_votes            = get_post_meta( $product_id, 'fs_product_rating' );
+		$product_average_rating = get_post_meta( $product_id, 'fs_product_average_rating' );
 
 		$schema = array(
-			"@context"     => "https://schema.org",
-			"@type"        => "Product",
-			"url"          => get_the_permalink(),
-			"category"     => ! is_wp_error( $categories ) && ! empty( $categories[0]->name ) ? esc_attr( $categories[0]->name ) : '',
-			"image"        => esc_url( fs_get_product_thumbnail_url( 0, 'full' ) ),
-			"brand"        => $brand,
-			"manufacturer" => $brand,
-			"model"        => get_the_title(),
-			"sku"          => fs_get_product_code(),
-			"mpn"          => fs_get_product_code(),
-			"productID"    => $product_id,
-			"description"  => $description,
-			"name"         => get_the_title( $product_id ),
-			"offers"       => [
-				"@type"           => "Offer",
-				"availability"    => fs_aviable_product() ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-				"price"           => fs_get_price(),
-				"priceCurrency"   => fs_option( 'fs_currency_code', 'UAH' ),
-				"url"             => get_the_permalink(),
-				"priceValidUntil" => date( "Y-m-d", strtotime( 'tomorrow' ) ),
+			"@context"        => "https://schema.org",
+			"@type"           => "Product",
+			"url"             => get_the_permalink(),
+			"category"        => ! is_wp_error( $categories ) && ! empty( $categories[0]->name ) ? esc_attr( $categories[0]->name ) : '',
+			"image"           => esc_url( fs_get_product_thumbnail_url( 0, 'full' ) ),
+			"brand"           => $brand,
+			"manufacturer"    => $brand,
+			"model"           => get_the_title(),
+			"sku"             => fs_get_product_code(),
+			"mpn"             => fs_get_product_code(),
+			"productID"       => $product_id,
+			"description"     => $description ?: __( 'No description', 'f-shop' ),
+			"name"            => get_the_title( $product_id ),
+			"aggregateRating" => [
+				"@type"       => "AggregateRating",
+				"ratingCount" => count( $total_votes ) ? count( $total_votes ) : 1,
+				"ratingValue" => $product_average_rating ?: 5
+			],
+			"offers"          => [
+				"@type"                   => "Offer",
+				"availability"            => fs_in_stock() ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+				"price"                   => fs_get_price(),
+				"priceCurrency"           => fs_option( 'fs_currency_code', 'UAH' ),
+				"url"                     => get_the_permalink(),
+				"priceValidUntil"         => date( "Y-m-d", strtotime( 'tomorrow' ) ),
+				"hasMerchantReturnPolicy" => [
+					"@type"                    => "MerchantReturnPolicy",
+					"refundType"               => "FullRefund",
+					"applicableCountry"        => "UA",
+					"returnPolicyCategory"     => "https://schema.org/MerchantReturnFiniteReturnWindow",
+					"returnPolicyDuration"     => [
+						"@type"    => "QuantitativeValue",
+						"value"    => 14,
+						"unitCode" => "DAY"
+					],
+					"returnMethod"             => "https://schema.org/ReturnByMail",
+					"returnPolicyLabel"        => "14 дней",
+					"merchantReturnDays"       => 14,
+					"returnShippingFeesAmount" => [
+						"@type"    => "MonetaryAmount",
+						"currency" => fs_option( 'fs_currency_code', 'UAH' ),
+						"value"    => 0
+					]
+				],
+				"shippingDetails"         => [
+					"@type"               => "OfferShippingDetails",
+					"shippingRate"        => [
+						"@type"    => "MonetaryAmount",
+						"currency" => fs_option( 'fs_currency_code', 'UAH' ),
+						"value"    => fs_option( 'fs_min_shipping_cost', 70 )
+					],
+					"shippingDestination" =>
+						[
+							"@type"          => "DefinedRegion",
+							"addressCountry" => "UA"
+						],
+					"deliveryTime"        => [
+						"@type"        => "ShippingDeliveryTime",
+						"transitTime"  => [
+							"@type"    => "QuantitativeValue",
+							"minValue" => 1,
+							"maxValue" => 5,
+							"unitCode" => "DAY"
+						],
+						"handlingTime" => [
+							"@type"    => "QuantitativeValue",
+							"minValue" => 1,
+							"maxValue" => 2,
+							"unitCode" => "DAY"
+						],
+						"businessDays" => [
+							"@type"     => "OpeningHoursSpecification",
+							"dayOfWeek" => [
+								"Monday",
+								"Tuesday",
+								"Wednesday",
+								"Thursday",
+								"Friday"
+							],
+							"opens"     => "09:00",
+							"closes"    => "18:00"
+						]
+					]
+				]
 			]
 		);
-
-
-		// -->aggregateRating
-		$total_vote = get_post_meta( $product_id, 'fs_product_rating' );
-		if ( count( $total_vote ) ) {
-			$schema["aggregateRating"] = [
-				"@type"       => "AggregateRating",
-				"ratingCount" => count( $total_vote ),
-				"ratingValue" => FS_Product::get_average_rating( $product_id )
-			];
-		}
 
 		// -->review
 		$comments = get_comments( [ 'post_id' => $product_id ] );
@@ -402,7 +457,7 @@ class FS_SEO {
 		}
 		$term        = get_queried_object();
 		$count_votes = FS_Rating_Class::get_count_ratings_in_category();
-		$schema = array(
+		$schema      = array(
 			"@context"        => "https://schema.org",
 			"@type"           => "Product",
 			"name"            => $term->name,
