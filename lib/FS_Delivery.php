@@ -42,6 +42,7 @@ class FS_Delivery {
 		}
 
 		$this->term_id                 = absint( $term->term_id );
+		$this->name                    = $term->name;
 		$this->cost                    = get_term_meta( $term->term_id, '_fs_delivery_cost', 1 ) ? apply_filters( 'fs_price_format', (float) get_term_meta( $term->term_id, '_fs_delivery_cost', 1 ) ) : 0;
 		$this->city                    = get_post_meta( $order_id, 'city', 1 );
 		$this->delivery_address        = ! empty( $delivery_method['address'] ) ? $delivery_method['address'] : '';

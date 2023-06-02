@@ -813,7 +813,7 @@ class FS_Ajax {
 				'contact_email'     => fs_option( 'manager_email', get_option( 'admin_email' ) ),
 				'contact_phone'     => fs_option( 'contact_phone' ),
 				'contact_address'   => fs_option( 'contact_address' ),
-				'mail_logo'         => fs_option( 'site_logo' ) ? wp_get_attachment_image_url( fs_option( 'site_logo' ), 'full' ) : '',
+				'mail_logo'         => fs_option( 'fs_email_logo' ) ? wp_get_attachment_image_url( fs_option( 'fs_email_logo' ), 'full' ) : '',
 				'social_links'      => [],
 
 				// Client data

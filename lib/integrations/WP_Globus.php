@@ -55,8 +55,8 @@ class WP_Globus {
 				global $post;
 				$prefix = $lang == WPGlobus::Config()->default_language ? '' : $lang;
 				$slug   = get_post_meta( $post->ID, 'fs_seo_slug__' . $locales[ $lang ], 1 );
-				$link   = $slug ? site_url( sprintf( '%s/%s/%s', $prefix, $post_type, $slug ) )
-					: site_url( sprintf( '%s/%s/%s', $prefix, $post_type, $post->post_name ) );
+				$link   = $slug ? site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $slug ) )
+					: site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $post->post_name ) );
 			} elseif ( fs_is_product_category() ) {
 				$link = fs_localize_category_url( get_queried_object_id(), $locales[ $lang ] );
 			} else {

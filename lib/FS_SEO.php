@@ -24,6 +24,7 @@ class FS_SEO {
 		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
 			// Change wordpress seo canonical
 			add_filter( 'wpseo_canonical', array( $this, 'replace_products_canonical' ), 10, 1 );
+
 		}
 
 		add_filter( 'document_title_parts', array( $this, 'meta_title_filter' ), 10, 1 );
@@ -68,16 +69,16 @@ class FS_SEO {
 	 */
 	public function meta_title_filter( $title ) {
 		if ( fs_is_catalog() && fs_option( '_fs_catalog_meta_title' ) != '' ) {
-			$title['title'] = esc_attr( apply_filters('the_title',fs_option( '_fs_catalog_meta_title' )) );
+			$title['title'] = esc_attr( apply_filters( 'the_title', fs_option( '_fs_catalog_meta_title' ) ) );
 			$title['site']  = '';
-		} elseif ( fs_is_product_category()) {
-            $term_id = get_queried_object_id();
-            $meta_title =get_term_meta( $term_id, fs_localize_meta_key( '_seo_title' ), 1 ) ?: get_term_meta( $term_id, '_seo_title', 1 );
-			$title['title'] = esc_attr(apply_filters('the_title',$meta_title) );
+		} elseif ( fs_is_product_category() ) {
+			$term_id        = get_queried_object_id();
+			$meta_title     = get_term_meta( $term_id, fs_localize_meta_key( '_seo_title' ), 1 ) ?: get_term_meta( $term_id, '_seo_title', 1 );
+			$title['title'] = esc_attr( apply_filters( 'the_title', $meta_title ) );
 			$title['site']  = '';
 		}
 
-		$title['title'] = apply_filters('fs_meta_title',$title['title']);
+		$title['title'] = apply_filters( 'fs_meta_title', $title['title'] );
 
 		return $title;
 	}
@@ -92,7 +93,7 @@ class FS_SEO {
 		if ( fs_is_catalog() && fs_option( '_fs_catalog_meta_description' ) != '' ) {
 			$meta_description = fs_option( '_fs_catalog_meta_description' );
 		} elseif ( fs_is_product_category() ) { // Если посетитель находится на странице таксономии товаров
-			$meta_description =fs_get_term_meta('_seo_description');
+			$meta_description = fs_get_term_meta( '_seo_description' );
 		}
 
 		$meta_description = apply_filters( 'fs_meta_description', $meta_description );
@@ -106,7 +107,7 @@ class FS_SEO {
 	 * Выводит скрипты в шапке
 	 */
 	public function scripts_in_head() {
-		$this->meta_description_action();
+//		$this->meta_description_action();
 
 		do_action( 'fs_local_business_microdata' );
 		do_action( 'fs_organization_microdata' );
@@ -135,7 +136,7 @@ class FS_SEO {
 		$page_checkout         = fs_option( 'page_checkout' );
 		$page_checkout_success = fs_option( 'page_success' );
 		?>
-        <script>
+		<script>
 			<?php if (is_front_page()): ?>
             gtag('event', 'page_view', {
                 'ecomm_prodid': '',
@@ -170,7 +171,7 @@ class FS_SEO {
                 'ecomm_totalvalue':  <?php echo esc_attr( fs_get_price( get_the_ID() ) ); ?>
             });
 			<?php endif; ?>
-        </script>
+		</script>
 		<?php
 	}
 
@@ -399,35 +400,31 @@ class FS_SEO {
 		if ( ! fs_is_product_category() ) {
 			return;
 		}
-		$term = get_queried_object();
-		// get from cache
-		$schema = get_transient( 'fs_product_category_microdata_' . $term->term_id );
-		if ( $schema === false ) {
+		$term        = get_queried_object();
+		$count_votes = FS_Rating_Class::get_count_ratings_in_category();
+		$schema = array(
+			"@context"        => "https://schema.org",
+			"@type"           => "Product",
+			"name"            => $term->name,
+			"image"           => esc_url( fs_get_category_image( $term->term_id, 'full' ) ),
+			"description"     => strip_tags( $term->description ) != ''
+				? strip_tags( $term->description )
+				: '',
+			"offers"          => [
+				"@type"         => "AggregateOffer",
+				"lowPrice"      => FS_Product::get_min_price_in_category(),
+				"highPrice"     => FS_Product::get_max_price_in_category(),
+				"offerCount"    => FS_Product::get_count_products_in_category(),
+				"priceCurrency" => fs_option( 'fs_currency_code', 'UAH' ),
+			],
+			"aggregateRating" => [
+				"@type"       => "AggregateRating",
+				"ratingCount" => $count_votes ?: 1,
+				"ratingValue" => $count_votes ? round( FS_Rating_Class::get_average_rating_in_category(), 1 ) : 5,
+				"bestRating"  => "5"
+			]
+		);
 
-			$schema = array(
-				"@context"        => "https://schema.org",
-				"@type"           => "Product",
-				"name"            => $term->name,
-				"image"           => esc_url( fs_get_category_image( $term->term_id, 'full' ) ),
-				"description"     => strip_tags( $term->description ) != ''
-					? strip_tags( $term->description )
-					: '',
-				"offers"          => [
-					"@type"         => "AggregateOffer",
-					"lowPrice"      => FS_Product::get_min_price_in_category(),
-					"highPrice"     => FS_Product::get_max_price_in_category(),
-					"offerCount"    => FS_Product::get_count_products_in_category(),
-					"priceCurrency" => fs_option( 'fs_currency_code', 'UAH' ),
-				],
-				"aggregateRating" => [
-					"@type"       => "AggregateRating",
-					"ratingCount" => FS_Rating_Class::get_count_ratings_in_category(),
-					"ratingValue" => round( FS_Rating_Class::get_average_rating_in_category(), 1 ),
-					"bestRating"  => "5"
-				]
-			);
-			set_transient( 'fs_product_category_microdata_' . $term->term_id, $schema, DAY_IN_SECONDS );
-		}
 
 		echo '<script type="application/ld+json">';
 		echo json_encode( $schema );

@@ -32,36 +32,40 @@ class Category_Widget extends \WP_Widget {
 		$item_view_mode     = ! empty( $instance['item_view_mode'] ) ? $instance['item_view_mode'] : 'checkboxes';
 		$only_subcategories = isset( $instance['only_subcategories'] ) && $instance['only_subcategories'] == 1 ? 1 : 0
 		?>
-        <div class="fs-widget-wrapper">
-            <div class="form-row">
-                <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e('Title','f-shop'); ?></label>
-                <input class="widefat title"
-                       id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
-                       name="<?php
+		<div class="fs-widget-wrapper">
+			<div class="form-row">
+				<label
+					for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ); ?></label>
+				<input class="widefat title"
+				       id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+				       name="<?php
 				       echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
-                       value="<?php echo esc_attr( $title ); ?>"/>
+				       value="<?php echo esc_attr( $title ); ?>"/>
 
-            </div>
+			</div>
 
-            <p class="form-row">
+			<p class="form-row">
                 <span class="fs-custom-checkbox">
                   <input type="checkbox"
                          name="<?php echo esc_attr( $this->get_field_name( 'only_subcategories' ) ); ?>"
                          id="<?php echo esc_attr( $this->get_field_id( 'only_subcategories' ) ); ?>"
                          value="1" <?php checked( 1, $only_subcategories ) ?>/>
-                    <label for="<?php echo esc_attr( $this->get_field_id( 'only_subcategories' ) ); ?>"><?php esc_html_e( 'Display only subcategories', 'f-shop' ); ?></label>
+                    <label
+	                    for="<?php echo esc_attr( $this->get_field_id( 'only_subcategories' ) ); ?>"><?php esc_html_e( 'Display only subcategories', 'f-shop' ); ?></label>
                 </span>
-            </p>
+			</p>
 
-            <div class="form-row">
-                <label><?php esc_html_e( 'Display method', 'f-shop' ); ?></label>
-                <select name="<?php echo esc_attr( $this->get_field_name( 'item_view_mode' ) ); ?>"
-                        id="<?php echo esc_attr( $this->get_field_id( 'item_view_mode' ) ); ?>">
-                    <option value="checkboxes" <?php selected( $item_view_mode, 'checkboxes' ) ?>><?php esc_html_e( 'Checkbox', 'f-shop' ); ?></option>
-                    <option value="links" <?php selected( $item_view_mode, 'links' ) ?>><?php esc_html_e( 'Links', 'f-shop' ); ?></option>
-                </select>
-            </div>
-        </div>
+			<div class="form-row">
+				<label><?php esc_html_e( 'Display method', 'f-shop' ); ?></label>
+				<select name="<?php echo esc_attr( $this->get_field_name( 'item_view_mode' ) ); ?>"
+				        id="<?php echo esc_attr( $this->get_field_id( 'item_view_mode' ) ); ?>">
+					<option
+						value="checkboxes" <?php selected( $item_view_mode, 'checkboxes' ) ?>><?php esc_html_e( 'Checkbox', 'f-shop' ); ?></option>
+					<option
+						value="links" <?php selected( $item_view_mode, 'links' ) ?>><?php esc_html_e( 'Links', 'f-shop' ); ?></option>
+				</select>
+			</div>
+		</div>
 		<?php
 	}
 
@@ -83,33 +87,39 @@ class Category_Widget extends \WP_Widget {
 		$title              = apply_filters( 'widget_title', $instance[ $title_name ] );
 		$only_subcategories = isset( $instance['only_subcategories'] ) && $instance['only_subcategories'] == 1 ? 1 : 0;
 		$item_view_mode     = ! empty( $instance['item_view_mode'] ) ? $instance['item_view_mode'] : 'checkboxes';
-
-		echo $args['before_widget'];
-		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . $title . $args['after_title'];
-		}
-		$categories = get_terms( [
+		$categories         = get_terms( [
 			'taxonomy'   => FS_Config::get_data( 'product_taxonomy' ),
 			'hide_empty' => false,
 			'parent'     => fs_is_product_category() && $only_subcategories
 				? $current_category->term_id : 0
 		] );
-		$query      = $_REQUEST['categories'] ?? [];
+
+
+		if ( empty( $categories ) ) {
+			return;
+		}
+
+		echo $args['before_widget'];
+		if ( ! empty( $title ) ) {
+			echo $args['before_title'] . $title . $args['after_title'];
+		}
+
+		$query = $_REQUEST['categories'] ?? [];
 		if ( ! empty( $categories ) ): ?>
-            <ul class="fs-category-filter">
+			<ul class="fs-category-filter">
 				<?php foreach ( $categories as $category ): ?>
 					<?php $clear_category = $query;
 					$key                  = array_search( $category->term_id, $query );
 					if ( $key !== false ) {
 						unset( $clear_category[ $key ] );
 					} ?>
-                    <li class="fs-checkbox-wrapper level-1">
+					<li class="fs-checkbox-wrapper level-1">
 						<?php if ( $item_view_mode == 'links' ): ?>
-                            <a <?php if ( $current_category->term_id != $category->term_id ): ?>href="<?php echo esc_attr( get_term_link( $category ) ) ?>"<?php endif; ?>
-                               class="level-1-link <?php echo $current_category->term_id == $category->term_id || $current_category->parent == $category->term_id ? 'active' : '' ?>">
+							<a <?php if ( $current_category->term_id != $category->term_id ): ?>href="<?php echo esc_attr( get_term_link( $category ) ) ?>"<?php endif; ?>
+							   class="level-1-link <?php echo $current_category->term_id == $category->term_id || $current_category->parent == $category->term_id ? 'active' : '' ?>">
 								<?php echo fs_get_category_icon( $category->term_id ) ?: '' ?>
 								<?php echo apply_filters( 'the_title', $category->name ) ?>
-                            </a>
+							</a>
 							<?php
 							$sub_categories = get_terms( [
 								'taxonomy'   => FS_Config::get_data( 'product_taxonomy' ),
@@ -118,30 +128,31 @@ class Category_Widget extends \WP_Widget {
 							] );
 							if ( ! empty( $sub_categories ) ):
 								?>
-                                <ul class="fs-category-filter">
+								<ul class="fs-category-filter">
 									<?php foreach ( $sub_categories as $sub_category ): ?>
-                                        <li class="level-2">
-                                            <a <?php if ( $current_category->term_id != $sub_category->term_id ): ?>href="<?php echo esc_attr( get_term_link( $sub_category ) ) ?>"<?php endif ?>
-                                               class="level-2-link <?php echo $current_category->term_id == $sub_category->term_id ? 'active' : '' ?>">
+										<li class="level-2">
+											<a <?php if ( $current_category->term_id != $sub_category->term_id ): ?>href="<?php echo esc_attr( get_term_link( $sub_category ) ) ?>"<?php endif ?>
+											   class="level-2-link <?php echo $current_category->term_id == $sub_category->term_id ? 'active' : '' ?>">
 												<?php echo fs_get_category_icon( $sub_category->term_id ) ?: '' ?>
 												<?php echo apply_filters( 'the_title', $sub_category->name ) ?>
-                                            </a>
-                                        </li>
+											</a>
+										</li>
 									<?php endforeach ?>
-                                </ul>
+								</ul>
 							<?php endif; ?>
 						<?php else: ?>
-                            <input type="checkbox" class="checkStyle"
-                                   data-fs-action="filter"
-                                   data-fs-redirect="<?php echo esc_url( add_query_arg( [ 'categories' => $clear_category ] ) ); ?>"
-                                   name="categories[<?php echo $category->slug; ?>]"
-                                   value="<?php echo esc_url( add_query_arg( [ 'categories' => array_merge( $query, [ $category->term_id ] ) ] ) ); ?>"
-                                   id="fs-category-<?php echo $category->term_id ?>" <?php echo in_array( $category->term_id, $query ) ? 'checked' : '' ?>>
-                            <label for="fs-category-<?php echo $category->term_id ?>"><?php echo $category->name; ?></label>
+							<input type="checkbox" class="checkStyle"
+							       data-fs-action="filter"
+							       data-fs-redirect="<?php echo esc_url( add_query_arg( [ 'categories' => $clear_category ] ) ); ?>"
+							       name="categories[<?php echo $category->slug; ?>]"
+							       value="<?php echo esc_url( add_query_arg( [ 'categories' => array_merge( $query, [ $category->term_id ] ) ] ) ); ?>"
+							       id="fs-category-<?php echo $category->term_id ?>" <?php echo in_array( $category->term_id, $query ) ? 'checked' : '' ?>>
+							<label
+								for="fs-category-<?php echo $category->term_id ?>"><?php echo $category->name; ?></label>
 						<?php endif; ?>
-                    </li>
+					</li>
 				<?php endforeach; ?>
-            </ul>
+			</ul>
 		<?php endif ?>
 		<?php echo $args['after_widget'];
 	}

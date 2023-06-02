@@ -446,9 +446,9 @@ class FS_Settings {
 					),
 					array(
 						'type'  => 'image',
-						'name'  => 'site_logo',
+						'name'  => 'fs_email_logo',
 						'label' => __( 'Letter Logo', 'f-shop' ),
-						'value' => fs_option( 'site_logo' )
+						'value' => fs_option( 'fs_email_logo' )
 					),
 					array(
 						'type'  => 'text',

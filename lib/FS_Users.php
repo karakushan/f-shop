@@ -827,7 +827,6 @@ class FS_Users {
 		require_once( ABSPATH . "wp-admin" . '/includes/file.php' );
 		require_once( ABSPATH . "wp-admin" . '/includes/media.php' );
 
-
 		// If for some reason the user’s fields have disappeared, although this is unlikely
 		if ( ! is_array( $user_fields ) || ! count( $user_fields ) ) {
 			wp_send_json_error( array( 'msg' => __( 'No fields found to save user data', 'f-shop' ) ) );
@@ -840,15 +839,6 @@ class FS_Users {
 
 		// Сохраняем данные пользователя
 		foreach ( $user_fields as $meta_key => $user_field ) {
-			if ( $user_field['type'] == 'file' && empty( $_FILES[ $meta_key ] ) ) {
-				continue;
-			}
-
-			// Выходим из цикла если поля не существует
-			if ( ! isset( $_POST[ $meta_key ] ) ) {
-				continue;
-			}
-
 			$meta_value = trim( $_POST[ $meta_key ] );
 
 			if ( $user_field['type'] == 'checkbox' && $meta_value != 1 ) {
@@ -856,11 +846,7 @@ class FS_Users {
 			}
 
 			// Сохраняем аватарку
-			if ( $user_field['type'] == 'file' && ! empty( $_FILES[ $meta_key ] ) ) {
-				if ( $_FILES[ $meta_key ]['error'] ) {
-					wp_send_json_error( array( 'msg' => $_FILES ) );
-				}
-
+			if ( $user_field['type'] == 'file' && ! empty( $_FILES[ $meta_key ])) {
 				$attach_id = media_handle_upload( $meta_key, 0 );
 
 				if ( is_wp_error( $attach_id ) ) {
