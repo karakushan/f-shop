@@ -236,13 +236,23 @@ class FS_Taxonomy
             if (isset($url['price_start']) && isset($url['price_end'])) {
                 $price_start = !empty($url['price_start']) ? (int)$url['price_start'] : 0;
                 $price_end = !empty($url['price_end']) ? (int)$url['price_end'] : PHP_INT_MAX;
-                $meta_query['price_interval'] =
-                    array(
+                $meta_query['price_interval']=[
+                    'relation' => 'OR',
+                    [
+                        [
                         'key' => FS_Config::get_meta('price'),
-                        'value' => array($price_start, $price_end),
+                        'value' => [ $price_start, $price_end ],
                         'compare' => 'BETWEEN',
                         'type' => 'NUMERIC',
-                    );
+                        ],
+                        [
+                            'key' => FS_Config::get_meta('currency'),
+                            'value' => [ $price_start, $price_end ],
+                            'compare' => 'BETWEEN',
+                            'type' => 'NUMERIC',
+                        ]
+                    ]
+                ];
             }
 
             //Фильтруем по к-во выводимых постов на странице

@@ -80,10 +80,6 @@ class FS_Form {
 			? $fields[ $name ]
 			: array();
 
-		if ( $name == 'fs_delivery_methods' ) {
-			do_action( 'qm/debug', $args );
-		}
-
 		$default = array_merge( array(
 			'type'           => 'text',
 			'class'          => 'fs-input form-control',

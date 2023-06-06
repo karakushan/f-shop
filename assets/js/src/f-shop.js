@@ -748,23 +748,20 @@ jQuery(document).ready(function ($) {
     });
 
 
-//слайдер диапазона цены
-    let catalogMinPrice = Number(fShop.catalogMinPrice);
-    let catalogMaxPrice = Number(fShop.catalogMaxPrice);
-    var u = new Url;
-    var p_start = u.query.price_start == undefined ? catalogMinPrice : u.query.price_start;
-    var p_end = u.query.price_end == undefined ? catalogMaxPrice : u.query.price_end;
-
     jQuery('[data-fs-element="range-slider"]').each(function (index, value) {
-        var rangeSLider = jQuery(this);
-        var sliderWrapper = rangeSLider.parents("[data-fs-element=\"jquery-ui-slider\"]");
-        var sliderEnd = $('[data-fs-element="range-end"]');
-        var sliderStart = $('[data-fs-element="range-start"]');
-        rangeSLider.slider({
+        const el = jQuery(this);
+        const sliderEnd = $('[data-fs-element="range-end"]');
+        const sliderStart = $('[data-fs-element="range-start"]');
+        const minPrice = el.data('min');
+        const maxPrice = el.data('max');
+        const url = new Url;
+        let minValue = typeof url.query.price_start === 'undefined' ? minPrice : url.query.price_start;
+        let maxValue = typeof url.query.price_end === 'undefined' ? maxPrice : url.query.price_end;
+        el.slider({
             range: true,
-            min: catalogMinPrice,
-            max: catalogMaxPrice,
-            values: [p_start, p_end],
+            min: minPrice,
+            max: maxPrice,
+            values: [minValue, maxValue],
             slide: function (event, ui) {
                 if (sliderStart.data("currency")) {
                     sliderStart.html(ui.values[0] + ' <span>' + fShop.fs_currency + '</span>');
@@ -780,26 +777,12 @@ jQuery(document).ready(function ($) {
                 $('[data-fs-element="range-end-input"]').val(ui.values[1]);
             },
             change: function (event, ui) {
-                u.query.fs_filter = fShop.nonce;
-                u.query.price_start = ui.values[0];
-                u.query.price_end = ui.values[1];
-                window.location.href = u.toString();
+                url.query.fs_filter = fShop.nonce;
+                url.query.price_start = ui.values[0];
+                url.query.price_end = ui.values[1];
+                window.location.href = url.toString();
             }
         });
-
-        if (sliderStart.data("currency")) {
-            sliderStart.html(p_start + ' <span>' + fShop.fs_currency + '</span>');
-        } else {
-            sliderStart.html(p_start);
-        }
-        if (sliderEnd.data("currency")) {
-            sliderEnd.html(p_end + ' <span>' + fShop.fs_currency + '</span>');
-        } else {
-            sliderEnd.html(p_end);
-        }
-
-        sliderWrapper.find('[data-fs-element="range-start-input"]').val(p_start);
-        sliderWrapper.find('[data-fs-element="range-end-input"]').val(p_end);
     });
 
 

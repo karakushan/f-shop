@@ -17,6 +17,8 @@ if ( $args['multiple'] && ! is_array( $args['value'] ) ) {
 	$args['value'] = [];
 	$name          = $name . '[]';
 }
+do_action( 'qm/debug', $args );
+
 ?>
 <select name="<?php echo esc_attr( $name ) ?>"
         title="<?php echo esc_attr( $args['title'] ) ?>"

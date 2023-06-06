@@ -1474,10 +1474,35 @@ function fs_attr_group_filter( $group, $type = 'option', $option_default = 'Вы
  *
  */
 function fs_range_slider() {
+	$prices = [];
+
+	if ( fs_is_product_category() ) {
+		$products = get_posts( array(
+			'post_type'      => FS_Config::get_data( 'post_type' ),
+			'posts_per_page' => - 1,
+			'tax_query'      => array(
+				array(
+					'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
+					'field'    => 'term_id',
+					'terms'    => get_queried_object_id()
+				)
+			)
+		) );
+		foreach ( $products as $product ) {
+			$prices[] = fs_get_price( $product->ID );
+		}
+	} elseif ( fs_is_catalog() ) {
+		$prices = [ fs_price_min(), fs_price_max() ];
+	}
+
 	echo fs_frontend_template( 'widget/jquery-ui-slider/ui-slider', array(
-		'price_start' => ! empty( $_GET['price_start'] ) ? intval( $_GET['price_start'] ) : fs_price_min(),
-		'price_max'   => ! empty( $_GET['price_end'] ) ? intval( $_GET['price_end'] ) : fs_price_max(),
-		'currency'    => fs_currency()
+		'vars' => [
+			'price_min'   => min( $prices ),
+			'price_max'   => max( $prices ),
+			'price_start' => ! empty( $_GET['price_start'] ) ? intval( $_GET['price_start'] ) : min( $prices ),
+			'price_end'   => ! empty( $_GET['price_end'] ) ? intval( $_GET['price_end'] ) : max( $prices ),
+			'currency'    => fs_currency()
+		]
 	) );
 }
 
@@ -1540,19 +1565,21 @@ function fs_price_min() {
 		$min           = wp_cache_get( 'fs_min_price_term_' . $term->term_id );
 		$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
 		if ( ! $min ) {
-			// get min price form meta value price in product category
-			$min = $wpdb->get_var( $wpdb->prepare( "
-				SELECT MIN( CAST( pm.meta_value AS DECIMAL(10,2) ) )
-				FROM {$wpdb->posts} AS p
-				INNER JOIN {$wpdb->term_relationships} AS tr ON p.ID = tr.object_id
-				INNER JOIN {$wpdb->term_taxonomy} AS tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
-				INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-				WHERE p.post_type = %s
-				AND p.post_status = 'publish'
-				AND tt.taxonomy = %s
-				AND tt.term_id = %d
-				AND pm.meta_key = %s
-			", FS_Config::get_data( 'post_type' ), $taxonomy_name, $term->term_id, FS_Config::get_meta( 'price' ) ) );
+			$products = get_posts( array(
+				'post_type'      => FS_Config::get_data( 'post_type' ),
+				'posts_per_page' => - 1,
+				'tax_query'      => array(
+					array(
+						'taxonomy' => $taxonomy_name,
+						'field'    => 'term_id',
+						'terms'    => $term->term_id
+					)
+				)
+			) );
+			foreach ( $products as $product ) {
+
+			}
+
 			wp_cache_set( 'fs_min_price_term_' . $term->term_id, $min );
 		}
 	} elseif ( fs_is_catalog() ) {

@@ -181,6 +181,8 @@ class FS_SEO {
 	public function product_reviews_microdata() {
 		$comments = get_comments( [ 'post_id' => get_the_ID(), 'comment_parent' => 0 ] );
 		foreach ( $comments as $comment ) {
+			$average_rating = FS_Product::get_average_rating( $comment->comment_post_ID );
+			$total_votes    = get_post_meta( $comment->comment_post_ID, 'fs_product_rating' );
 			echo '<script type=\'application/ld+json\'>';
 			echo json_encode( [
 				"@context"     => "http://www.schema.org",
@@ -206,8 +208,8 @@ class FS_SEO {
 					"image"           => get_the_post_thumbnail_url( $comment->comment_post_ID ) ?: '',
 					"aggregateRating" => [
 						"@type"       => "AggregateRating",
-						"ratingValue" => FS_Product::get_average_rating( $comment->comment_post_ID ),
-						"reviewCount" => "11"
+						"ratingValue" => $average_rating ?: 5,
+						"reviewCount" => is_array( $total_votes ) && count( $total_votes ) > 0 ? count( $total_votes ) : 1
 					],
 					"sku"             => fs_get_product_code( $comment->comment_post_ID )
 				]
@@ -469,7 +471,7 @@ class FS_SEO {
 				"@type"         => "AggregateOffer",
 				"lowPrice"      => FS_Product::get_min_price_in_category(),
 				"highPrice"     => FS_Product::get_max_price_in_category(),
-				"offerCount"    => FS_Product::get_count_products_in_category(),
+				"offerCount"    => FS_Product::get_count_products_in_category() >0 ? FS_Product::get_count_products_in_category() : 1,
 				"priceCurrency" => fs_option( 'fs_currency_code', 'UAH' ),
 			],
 			"aggregateRating" => [

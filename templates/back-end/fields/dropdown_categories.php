@@ -4,9 +4,12 @@
  * User: karak
  * Date: 01.07.2018
  * Time: 16:13
+ *
+ * @var array $args
+ * @var string $name
  */
 
-$default = array(
+$args = [
 	'class'             => 'fs-select form-control',
 	'echo'              => 1,
 	'option_none_value' => "",
@@ -17,7 +20,8 @@ $default = array(
 	'orderby'           => 'name',
 	'order'             => 'ASC',
 	'hide_empty'        => 0,
-	'hierarchical'       => 1,
-);
-$args    = array_merge( $default, $args );
+	'hierarchical'      => 1,
+	'taxonomy'          => $args['taxonomy'] ?? 'category',
+];
+
 wp_dropdown_categories( $args );
