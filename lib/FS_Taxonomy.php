@@ -60,6 +60,8 @@ class FS_Taxonomy {
 		add_action( 'fs_product_category_filter', [ $this, 'product_category_filter' ] );
 
 		add_filter( 'fs_filter_price_range', [ $this, 'filter_price_range' ], 10, 2 );
+
+		add_filter( 'posts_clauses', [ $this, 'fs_filter_by_price_clause' ], 10, 2 );
 	}
 
 	/**
@@ -227,11 +229,6 @@ class FS_Taxonomy {
 			$tax_query = [];
 			$arr_url   = urldecode( $_SERVER['QUERY_STRING'] );
 			parse_str( $arr_url, $url );
-
-			// Filtering by price range values
-			if(isset($url['price_start']) || isset($url['price_end'])){
-				$meta_query['price_interval'] = apply_filters( 'fs_filter_price_range', [], $url );
-			}
 
 			//Фильтруем по к-во выводимых постов на странице
 			if ( isset( $url['per_page'] ) ) {
@@ -403,60 +400,51 @@ class FS_Taxonomy {
 	 *
 	 * @return array
 	 */
-	function filter_price_range( $meta_query, $query ) {
-		$price_start = isset( $query['price_start'] ) ? (int) $query['price_start'] : 0;
-		$price_end   = isset( $query['price_end'] ) ? (int) $query['price_end'] : PHP_INT_MAX;
+	function fs_filter_by_price_clause( $clauses, $query ) {
+		if ( ( ! isset( $_GET['price_start'] ) || ! isset( $_GET['price_end'] ) ) || is_admin() ) {
+			return $clauses;
+		}
+
+		global $wpdb;
+
+		$price_start = isset( $_GET['price_start'] ) ? (int) $_GET['price_start'] : 0;
+		$price_end   = isset( $_GET['price_end'] ) ? (int) $_GET['price_end'] : PHP_INT_MAX;
+
+		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}postmeta AS meta ON ({$wpdb->posts}.ID = meta.post_id)";
 
 		if ( ! fs_option( 'multi_currency_on' ) ) {
-			return [
-				'key'     => FS_Config::get_meta( 'price' ),
-				'value'   => [ $price_start, $price_end ],
-				'compare' => 'BETWEEN',
-				'type'    => 'NUMERIC',
-			];
+			$clauses['where'] .= $wpdb->prepare( " AND (meta.meta_key = %s AND CAST(meta.meta_value AS SIGNED) BETWEEN %d AND %d)", FS_Config::get_meta( 'price' ), $price_start, $price_end );
+
+			return $clauses;
 		}
 
-		$currencies = get_terms( [
-			'hide_empty' => false,
-			'taxonomy'   => FS_Config::get_data( 'currencies_taxonomy' )
-		] );
-		foreach ( $currencies as $currency ) {
+		$currencies = wp_cache_get( 'fs_currencies' );
+		if ( empty( $currencies ) ) {
+			$currencies = get_terms( [
+				'hide_empty' => false,
+				'taxonomy'   => FS_Config::get_data( 'currencies_taxonomy' )
+			] );
+			wp_cache_set( 'fs_currencies', $currencies );
+		}
+
+		if ( empty( $currencies ) ) {
+			return $clauses;
+		}
+
+		$sub_query = [];
+		foreach ( $currencies as $key => $currency ) {
 			$price_in_base = get_term_meta( $currency->term_id, '_fs_currency_cost', true );
-			if ( fs_option( 'default_currency' ) == $currency->term_id ) {
-				$meta_query[] = [
-					'relation' => 'AND',
-					[
-						'key'     => FS_Config::get_meta( 'price' ),
-						'value'   => [ $price_start, $price_end ],
-						'compare' => 'BETWEEN',
-						'type'    => 'NUMERIC',
-					],
-					[
-						'key'     => FS_Config::get_meta( 'currency' ),
-						'compare' => 'NOT EXISTS',
-					]
-				];
-			} else {
-				$meta_query[] = [
-					'relation' => 'AND',
-					[
-						'key'     => FS_Config::get_meta( 'price' ),
-						'value'   => [ $price_start / $price_in_base, $price_end / $price_in_base ],
-						'compare' => 'BETWEEN',
-						'type'    => 'NUMERIC',
-					],
-					[
-						'key'     => FS_Config::get_meta( 'currency' ),
-						'compare' => '=',
-						'value'   => $currency->term_id,
-					]
-				];
+			if ( $price_in_base == 0 ) {
+				continue;
 			}
-
+			$sub_query [] = "(meta.meta_key = '" . FS_Config::get_meta( 'price' ) . "' AND CAST(meta.meta_value AS SIGNED) BETWEEN " . $price_start / $price_in_base . " AND " . $price_end / $price_in_base . ")";
 		}
 
-		return $meta_query;
+		$clauses['where'] .= " AND (" . implode( ' OR ', $sub_query ) . ")";
+
+		return $clauses;
 	}
+
 
 	/**
 	 * Add rewrite rules for terms
