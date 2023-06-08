@@ -27,9 +27,11 @@ class WP_Globus {
 		}
 
 		$args = wp_parse_args( $args, [
-			'class' => 'lang-switcher',
-			'type'  => 'ul',
-			'name'  => 'wpglobus-lang-switcher'
+			'class'             => 'lang-switcher',
+			'type'              => 'ul',
+			'name'              => 'wpglobus-lang-switcher',
+			'link_class'        => '',
+			'link_active_class' => ''
 		] );
 
 		$this->switcher_name = $args['name'];
@@ -37,7 +39,6 @@ class WP_Globus {
 		$locales   = [ 'ua' => 'uk', 'ru' => 'ru_RU' ];
 		$post_type = FS_Config::get_data( 'post_type' );
 		$languages = WPGlobus::Config()->enabled_languages;
-
 
 		if ( $args['type'] == 'ul' ) {
 			echo '<ul class="' . esc_attr( $args['class'] ) . '">';
@@ -71,9 +72,9 @@ class WP_Globus {
 				echo ' <option ' . $class . ' value="' . esc_url( $link ) . '" ' . selected( $lang, WPGlobus::Config()->language, false ) . '>' . esc_html( $lang_name ) . '</option>';
 			} elseif ( $args['type'] == 'link' ) {
 				if ( WPGlobus::Config()->language != $lang ) {
-					echo '<a href="' . esc_attr( $link ) . '">' . esc_html( $lang_name ) . '</a>';
+					echo '<a href="' . esc_attr( $link ) . '" class="'.esc_attr($args['link_class']).'" title="' . esc_html( $lang_name ) . '">' . esc_html( $lang_name ) . '</a>';
 				} else {
-					echo '<span>' . esc_html( $lang_name ) . '</span>';
+					echo '<span class="'.esc_attr($args['link_active_class']).'">' . esc_html( $lang_name ) . '</span>';
 				}
 			}
 		}
@@ -88,10 +89,10 @@ class WP_Globus {
 	}
 
 	public function footer_inline_scripts() { ?>
-        <script>
+		<script>
             jQuery('[name="<?php echo esc_attr( $this->switcher_name ) ?>"').on('change', function () {
                 location.href = jQuery(this).val();
             })
-        </script>
+		</script>
 	<?php }
 }
