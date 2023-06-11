@@ -36,9 +36,11 @@ class WP_Globus {
 
 		$this->switcher_name = $args['name'];
 
-		$locales   = [ 'ua' => 'uk', 'ru' => 'ru_RU' ];
-		$post_type = FS_Config::get_data( 'post_type' );
-		$languages = WPGlobus::Config()->enabled_languages;
+		$post_type        = FS_Config::get_data( 'post_type' );
+		$languages        = WPGlobus::Config()->enabled_languages;
+		$default_language = WPGlobus::Config()->default_language;
+		$locales          = WPGlobus::Config()->locale;
+
 
 		if ( $args['type'] == 'ul' ) {
 			echo '<ul class="' . esc_attr( $args['class'] ) . '">';
@@ -49,7 +51,7 @@ class WP_Globus {
 		}
 
 		foreach ( $languages as $lang ) {
-			$class     = $lang == WPGlobus::Config()->language ? 'class="active"' : '';
+			$class     = $lang == $default_language ? 'class="active"' : '';
 			$lang_name = apply_filters( 'fs_language_display_name', $lang );
 
 			if ( is_singular( $post_type ) ) {
@@ -58,9 +60,7 @@ class WP_Globus {
 				$slug   = get_post_meta( $post->ID, 'fs_seo_slug__' . $locales[ $lang ], 1 );
 				$link   = $slug ? site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $slug ) )
 					: site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $post->post_name ) );
-			} elseif ( fs_is_product_category() ) {
-				$link = fs_localize_category_url( get_queried_object_id(), $locales[ $lang ] );
-			} else {
+			}  else {
 				$link = WPGlobus_Utils::localize_current_url( $lang );
 			}
 
@@ -72,9 +72,9 @@ class WP_Globus {
 				echo ' <option ' . $class . ' value="' . esc_url( $link ) . '" ' . selected( $lang, WPGlobus::Config()->language, false ) . '>' . esc_html( $lang_name ) . '</option>';
 			} elseif ( $args['type'] == 'link' ) {
 				if ( WPGlobus::Config()->language != $lang ) {
-					echo '<a href="' . esc_attr( $link ) . '" class="'.esc_attr($args['link_class']).'" title="' . esc_html( $lang_name ) . '">' . esc_html( $lang_name ) . '</a>';
+					echo '<a href="' . esc_attr( $link ) . '" class="' . esc_attr( $args['link_class'] ) . '" title="' . esc_html( $lang_name ) . '">' . esc_html( $lang_name ) . '</a>';
 				} else {
-					echo '<span class="'.esc_attr($args['link_active_class']).'">' . esc_html( $lang_name ) . '</span>';
+					echo '<span class="' . esc_attr( $args['link_active_class'] ) . '">' . esc_html( $lang_name ) . '</span>';
 				}
 			}
 		}

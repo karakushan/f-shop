@@ -2350,11 +2350,11 @@ function fs_get_product_thumbnail_url( $product_id = 0, $size = 'thumbnail' ) {
  * Создаёт ссылку для отфильтровки товаров по параметрам в каталоге
  *
  * @param array $query строка запроса
- * @param string $catalog_link ссылка на страницу на которой отобразить результаты
+ * @param string|null $catalog_link ссылка на страницу на которой отобразить результаты
  * @param array $unset параметры, которые нужно удалить из строки запроса
  */
-function fs_filter_link( $query = [], $catalog_link = null ) {
-	$fs_config = new FS_Config();
+function fs_filter_link( $query = [],  $catalog_link = null ) {
+
 
 	if ( ! $catalog_link && is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
 		$catalog_link = get_term_link( get_queried_object_id() );
@@ -2362,13 +2362,18 @@ function fs_filter_link( $query = [], $catalog_link = null ) {
 
 
 	$query = wp_parse_args( $query, array(
-		'fs_filter' => wp_create_nonce( 'f-shop' )
+		'fs_filter' => wp_create_nonce( 'f-shop' ),
+		'echo'=>true
 	) );
 
 	// устанавливаем базовый путь без query_string
-	$catalog_link = $catalog_link ? $catalog_link : get_post_type_archive_link( $fs_config->data['post_type'] );
+	$catalog_link = $catalog_link ? : get_post_type_archive_link( FS_Config::get_data('post_type'));
 
-	echo esc_url( add_query_arg( $query, $catalog_link ) );
+	$url=add_query_arg( $query, $catalog_link );
+
+	if (!$query['echo'])  return $url;
+
+	echo $url;
 }
 
 

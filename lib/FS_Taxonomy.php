@@ -59,8 +59,6 @@ class FS_Taxonomy {
 
 		add_action( 'fs_product_category_filter', [ $this, 'product_category_filter' ] );
 
-		add_filter( 'fs_filter_price_range', [ $this, 'filter_price_range' ], 10, 2 );
-
 		add_filter( 'posts_clauses', [ $this, 'fs_filter_by_price_clause' ], 10, 2 );
 	}
 

@@ -384,6 +384,11 @@ Good luck!', 'f-shop' );
 	}
 
 	function true_status_display( $statuses ) {
+		// check if screen is order list
+		$screen = get_current_screen();
+		if ( ! is_object( $screen ) || $screen->id != 'edit-shop_order' ) {
+			return $statuses;
+		} // end if
 		global $post;
 		if ( self::default_order_statuses() ) {
 			foreach ( self::default_order_statuses() as $key => $status ) {

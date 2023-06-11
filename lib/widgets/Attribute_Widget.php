@@ -218,6 +218,10 @@ class Attribute_Widget extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
+		if ( ! have_posts() ) {
+			return;
+		}
+
 		$title_name = fs_option( 'fs_multi_language_support' )
 		              && FS_Config::default_locale() != get_locale() ? 'title_' . get_locale() : 'title';
 

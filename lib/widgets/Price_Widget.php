@@ -18,8 +18,8 @@ class Price_Widget extends \WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'fs_price_widget',
-			__('Filter by price range (F-SHOP)','f-shop'),
-			array( 'description' => __('Filtering products by price range','f-shop') )
+			__( 'Filter by price range (F-SHOP)', 'f-shop' ),
+			array( 'description' => __( 'Filtering products by price range', 'f-shop' ) )
 		);
 	}
 
@@ -29,20 +29,20 @@ class Price_Widget extends \WP_Widget {
 	public function form( $instance ) {
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : '';
 		?>
-        <div class="fs-widget-wrapper">
-            <div class="form-row">
-                <label
-                        for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
+		<div class="fs-widget-wrapper">
+			<div class="form-row">
+				<label
+					for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
 				<?php if ( fs_option( 'fs_multi_language_support' ) ) : ?>
-                <div class="form-group">
-                    <span class="form-group__sub"><?php echo esc_html( FS_Config::default_language_name() ) ?></span>
+				<div class="form-group">
+					<span class="form-group__sub"><?php echo esc_html( FS_Config::default_language_name() ) ?></span>
 					<?php endif; ?>
-                    <input class="widefat title"
-                           id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
-                           name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
-                           value="<?php echo esc_attr( $title ); ?>"/>
+					<input class="widefat title"
+					       id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+					       name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
+					       value="<?php echo esc_attr( $title ); ?>"/>
 					<?php if ( fs_option( 'fs_multi_language_support' ) ) : ?>
-                </div>
+				</div>
 			<?php endif; ?>
 				<?php
 
@@ -54,18 +54,18 @@ class Price_Widget extends \WP_Widget {
 						$name  = 'title_' . $language['locale'];
 						$title = ! empty( $instance[ $name ] ) ? $instance[ $name ] : '';
 						?>
-                        <div class="form-group">
-                            <span class="form-group__sub"><?php echo $key ?></span>
-                            <input class="widefat title form-group__sub"
-                                   id="<?php echo esc_attr( $this->get_field_id( $name ) ); ?>"
-                                   name="<?php echo esc_attr( $this->get_field_name( $name ) ); ?>"
-                                   value="<?php echo esc_attr( $title ); ?>"/>
-                        </div>
+						<div class="form-group">
+							<span class="form-group__sub"><?php echo $key ?></span>
+							<input class="widefat title form-group__sub"
+							       id="<?php echo esc_attr( $this->get_field_id( $name ) ); ?>"
+							       name="<?php echo esc_attr( $this->get_field_name( $name ) ); ?>"
+							       value="<?php echo esc_attr( $title ); ?>"/>
+						</div>
 					<?php }
 				}
 				?>
-            </div>
-        </div>
+			</div>
+		</div>
 
 		<?php
 	}
@@ -75,6 +75,10 @@ class Price_Widget extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
+		if ( ! have_posts() ) {
+			return;
+		}
+
 		$title_name = fs_option( 'fs_multi_language_support' )
 		              && FS_Config::default_locale() != get_locale() ? 'title_' . get_locale() : 'title';
 		if ( empty( $instance[ $title_name ] ) ) {

@@ -665,15 +665,15 @@ class FS_Config {
 	static function get_languages() {
 		$languages = array(
 			'en' => array(
-				'name'   => __( 'English', 'f - shop' ),
+				'name'   => __( 'English', 'f-shop' ),
 				'locale' => 'en_US'
 			),
 			'ru' => array(
-				'name'   => __( 'Russian', 'f - shop' ),
+				'name'   => __( 'Russian', 'f-shop' ),
 				'locale' => 'ru_RU'
 			),
 			'ua' => array(
-				'name'   => __( 'Ukrainian', 'f - shop' ),
+				'name'   => __( 'Ukrainian', 'f-shop' ),
 				'locale' => 'uk'
 			)
 		);
