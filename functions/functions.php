@@ -2036,17 +2036,12 @@ function fs_get_wishlist( $args = array() ) {
 }
 
 /**
- * Выводит количество товаров в списке желаний
+ * Displays the number of products in the wishlist
  */
 function fs_wishlist_count() {
-	$wl = fs_get_wishlist();
-	if ( $wl ) {
-		echo esc_html( $wl->found_posts );
-	} else {
-		echo 0;
-	}
+	$items = fs_get_wishlist();
+	echo esc_html( count($items));
 }
-
 
 /**
  * Return a link to the wish list
