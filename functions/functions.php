@@ -758,7 +758,9 @@ function fs_product_count( $echo = true ) {
 function fs_get_base_price( $product_id = 0 ) {
 	$product_id = fs_get_product_id( $product_id );
 
-	$price = floatval( get_post_meta( $product_id, FS_Config::get_meta( 'price' ), 1 ) );
+	$price      = floatval( get_post_meta( $product_id, FS_Config::get_meta( 'price' ), 1 ) );
+	$sale_price = get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), true )
+		? floatval( get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), true ) ) : 0;
 
 	$first_variation = fs_get_first_variation( $product_id );
 	if ( isset( $first_variation['price'] ) && is_numeric( $first_variation['price'] ) ) {
@@ -766,12 +768,14 @@ function fs_get_base_price( $product_id = 0 ) {
 
 	}
 
-	$price     = apply_filters( 'fs_price_filter', $price, $product_id );
-	$buy_price = fs_get_price( $product_id );
+	$price      = apply_filters( 'fs_price_filter', $price, $product_id );
+	$sale_price = apply_filters( 'fs_price_filter', $sale_price, $product_id );
 
-	if ( $buy_price < $price ) {
+	if ( $sale_price && $sale_price < $price ) {
 		return $price;
 	}
+
+	return null;
 }
 
 /**
@@ -791,7 +795,6 @@ function fs_base_price( $product_id = 0, $wrap = '%s <span>%s</span>', $args = a
 	if ( ! $price ) {
 		return null;
 	}
-
 	$price      = apply_filters( 'fs_price_format', $price );
 	$show_price = sprintf( $wrap, esc_html( $price ), esc_html( fs_currency() ) );
 	printf( '<span data-fs-element="base-price" data-product-id="%d" data-fs-value="%f" class="%s">%s</span>',
@@ -2013,26 +2016,23 @@ function fs_parse_attr( $attr = array(), $default = array(), $exclude = [] ) {
 
 
 /**
- * возвращает список желаний
+ * Returns a wishlist
  *
- * @param array $args массив аргументов, идентичные WP_Query
+ * @param array  массив аргументов, идентичные WP_Query
  *
- * @return array список желаний
+ * @return array
  */
 function fs_get_wishlist( $args = array() ) {
 	if ( empty( $_SESSION['fs_wishlist'] ) ) {
-		$wishlist[0] = 0;
-	} else {
-		$wishlist = $_SESSION['fs_wishlist'];
+		return [];
 	}
-	$args     = wp_parse_args( $args, array(
+
+	$args = wp_parse_args( $args, array(
 		'post_type' => 'product',
-		'post__in'  => array_unique( $wishlist )
-
+		'post__in'  => array_unique( array_values( (array) $_SESSION['fs_wishlist'] ) )
 	) );
-	$wh_posts = new WP_Query( $args );
 
-	return $wh_posts;
+	return get_posts( $args );
 }
 
 /**
@@ -2353,7 +2353,7 @@ function fs_get_product_thumbnail_url( $product_id = 0, $size = 'thumbnail' ) {
  * @param string|null $catalog_link ссылка на страницу на которой отобразить результаты
  * @param array $unset параметры, которые нужно удалить из строки запроса
  */
-function fs_filter_link( $query = [],  $catalog_link = null ) {
+function fs_filter_link( $query = [], $catalog_link = null ) {
 
 
 	if ( ! $catalog_link && is_tax( FS_Config::get_data( 'product_taxonomy' ) ) ) {
@@ -2363,15 +2363,17 @@ function fs_filter_link( $query = [],  $catalog_link = null ) {
 
 	$query = wp_parse_args( $query, array(
 		'fs_filter' => wp_create_nonce( 'f-shop' ),
-		'echo'=>true
+		'echo'      => true
 	) );
 
 	// устанавливаем базовый путь без query_string
-	$catalog_link = $catalog_link ? : get_post_type_archive_link( FS_Config::get_data('post_type'));
+	$catalog_link = $catalog_link ?: get_post_type_archive_link( FS_Config::get_data( 'post_type' ) );
 
-	$url=add_query_arg( $query, $catalog_link );
+	$url = add_query_arg( $query, $catalog_link );
 
-	if (!$query['echo'])  return $url;
+	if ( ! $query['echo'] ) {
+		return $url;
+	}
 
 	echo $url;
 }
@@ -3129,6 +3131,8 @@ function fs_product_average_rating( $product_id = 0, $default = 5 ) {
 
 /**
  * Выводит к-во комментариев к товару
+ *
+ * @param int $product_id
  *
  * @return void
  */
