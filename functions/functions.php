@@ -1281,19 +1281,17 @@ function fs_is_action( $product_id = 0 ) {
  *
  * @param array $args
  *
- * @return stdClass|WP_Query
+ * @return array
  */
 function fs_user_viewed( $args = [] ) {
-	$viewed = isset( $_SESSION['fs_user_settings']['viewed_product'] ) ? $_SESSION['fs_user_settings']['viewed_product'] : array();
-	$posts  = new stdClass();
-	if ( ! empty( $viewed ) ) {
-		$args  = wp_parse_args( $args, array(
-			'post_type'      => 'product',
-			'post__in'       => $viewed,
-			'posts_per_page' => 4
-		) );
-		$posts = new WP_Query( $args );
-	}
+
+	if (!isset( $_SESSION['fs_user_settings']['viewed_product']) ||  !is_array($_SESSION['fs_user_settings']['viewed_product'])) return [];
+
+	$posts=get_posts(wp_parse_args( $args, array(
+		'post_type'      => FS_Config::get_data('post_type'),
+		'include'       => array_values($_SESSION['fs_user_settings']['viewed_product']),
+		'numberposts' =>-1
+	) ));
 
 	return $posts;
 }
