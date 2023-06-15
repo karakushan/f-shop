@@ -2021,13 +2021,13 @@ function fs_parse_attr( $attr = array(), $default = array(), $exclude = [] ) {
  * @return array
  */
 function fs_get_wishlist( $args = array() ) {
-	if ( empty( $_SESSION['fs_wishlist'] ) ) {
+	if ( empty( $_SESSION['fs_wishlist'] ) || !is_array($_SESSION['fs_wishlist'])) {
 		return [];
 	}
 
 	$args = wp_parse_args( $args, array(
 		'post_type' => 'product',
-		'post__in'  => array_unique( array_values( (array) $_SESSION['fs_wishlist'] ) )
+		'post__in'  => array_unique( $_SESSION['fs_wishlist'] )
 	) );
 
 	return get_posts( $args );
