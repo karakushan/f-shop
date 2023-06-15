@@ -5,10 +5,11 @@ class FS {
         this.ajaxurl = window.fShop.ajaxurl;
         this.nonce = window.fShop.nonce;
         this.nonceField = 'fs_secret';
-        this.cleanWishList = this.cleanWishList.bind(this)
+
         this.addWishListToCart = this.addWishListToCart.bind(this)
     }
 
+    // Sends a POST request using the fetch method
     post(action, params) {
         let data = new FormData();
         data.append('action', action);
@@ -23,7 +24,10 @@ class FS {
         })
     }
 
-    cleanWishList() {
+    // === WISHLIST ===
+
+    // Deletes the wishlist
+    cleanWishlist() {
         this.post('fs_clean_wishlist', {})
             .then((response) => response.json())
             .then((data) => {
@@ -32,6 +36,7 @@ class FS {
             )
     }
 
+    // Adds the entire wishlist to the cart
     addWishListToCart() {
         this.post('fs_add_wishlist_to_cart', {})
             .then((response) => response.json())
