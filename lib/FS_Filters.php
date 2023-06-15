@@ -374,6 +374,9 @@ class FS_Filters {
 	public static function get_used_filters() {
 		$filters    = array();
 		$url_params = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY );
+		if ( ! is_string( $url_params ) ) {
+			return [];
+		}
 		parse_str( $url_params, $url_params );
 		$current_url = strtok( $_SERVER["REQUEST_URI"], '?' );
 
