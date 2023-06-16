@@ -336,6 +336,7 @@ function fs_get_taxes_amount( $amount ) {
  * Returns the total discount amount of all items in the cart.
  *
  * @param string $phone_number
+ * @param bool $sale_products
  *
  * @return float|int
  */
@@ -372,7 +373,15 @@ function fs_get_total_discount( $phone_number = '' ) {
 				$discount += $discount_value;
 			}
 		}
+	}
 
+	if ( ! FS_Cart::has_empty() ) {
+		foreach ( fs_get_cart() as $item ) {
+			if ( ! fs_has_sale_price( $item['ID'] ) ) {
+				continue;
+			}
+			$discount += fs_get_base_price( $item['ID'] ) - fs_get_price( $item['ID'] );
+		}
 	}
 
 	return floatval( $discount );
@@ -556,10 +565,9 @@ function fs_get_first_discount() {
  * Displays a discount amount
  *
  * @param string $wrap
- *
  */
 function fs_total_discount( $wrap = '%s <span>%s</span>' ) {
-	$discount = fs_get_total_discount();
+	$discount = fs_get_total_discount( '' );
 	$discount = apply_filters( 'fs_price_format', $discount );
 	printf( '<span data-fs-element="total-discount">' . $wrap . '</span>', esc_attr( $discount ), esc_html( fs_currency() ) );
 }
@@ -879,6 +887,8 @@ function fs_add_to_cart( $product_id = 0, $label = 'Add to cart', $args = array(
 		'data-currency'   => fs_currency(),
 		'data-image'      => esc_url( get_the_post_thumbnail_url( $product_id ) ),
 		'data-attr'       => json_encode( new stdClass() ),
+		'x-data'          => json_encode( [ 'inCart' => FS_Cart::contains( $product_id ) ] ),
+		'x-on:click'      => 'inCart=true'
 	] );
 
 
@@ -1285,13 +1295,15 @@ function fs_is_action( $product_id = 0 ) {
  */
 function fs_user_viewed( $args = [] ) {
 
-	if (!isset( $_SESSION['fs_user_settings']['viewed_product']) ||  !is_array($_SESSION['fs_user_settings']['viewed_product'])) return [];
+	if ( ! isset( $_SESSION['fs_user_settings']['viewed_product'] ) || ! is_array( $_SESSION['fs_user_settings']['viewed_product'] ) ) {
+		return [];
+	}
 
-	$posts=get_posts(wp_parse_args( $args, array(
-		'post_type'      => FS_Config::get_data('post_type'),
-		'include'       => array_values($_SESSION['fs_user_settings']['viewed_product']),
-		'numberposts' =>-1
-	) ));
+	$posts = get_posts( wp_parse_args( $args, array(
+		'post_type'   => FS_Config::get_data( 'post_type' ),
+		'include'     => array_values( $_SESSION['fs_user_settings']['viewed_product'] ),
+		'numberposts' => - 1
+	) ) );
 
 	return $posts;
 }
@@ -1623,6 +1635,8 @@ function fs_add_to_wishlist( $product_id = 0, $label = 'В список жела
 		'title'           => __( 'Add to wishlist', 'f-shop' ),
 		'data-image'      => get_the_post_thumbnail_url( $product_id ),
 		'data-product-id' => $product_id,
+		'x-data'          => json_encode( [ 'inWishlist' => \FS\FS_Wishlist::contains( $product_id ) ] ),
+		'x-on:click'      => 'inWishlist=true'
 	) );
 
 	switch ( $args['type'] ) {
@@ -2021,7 +2035,7 @@ function fs_parse_attr( $attr = array(), $default = array(), $exclude = [] ) {
  * @return array
  */
 function fs_get_wishlist( $args = array() ) {
-	if ( empty( $_SESSION['fs_wishlist'] ) || !is_array($_SESSION['fs_wishlist'])) {
+	if ( empty( $_SESSION['fs_wishlist'] ) || ! is_array( $_SESSION['fs_wishlist'] ) ) {
 		return [];
 	}
 
@@ -2038,7 +2052,7 @@ function fs_get_wishlist( $args = array() ) {
  */
 function fs_wishlist_count() {
 	$items = fs_get_wishlist();
-	echo esc_html( count($items));
+	echo esc_html( count( $items ) );
 }
 
 /**
@@ -2768,8 +2782,11 @@ function fs_get_category_icon( $term_id = 0, $size = 'thumbnail', $args = array(
 	if ( $args['return'] == 'image' ) {
 		if ( $image_id ) {
 			$image = wp_get_attachment_image( $image_id, $size, false, $args['attr'] );
-		} elseif ( ! $image_id && !empty($args['default']) ) {
-			$image = '<img '.fs_parse_attr(array_merge(['alt'=>"No image",'src'=>$args['default'] ],$args['attr'])).'>';
+		} elseif ( ! $image_id && ! empty( $args['default'] ) ) {
+			$image = '<img ' . fs_parse_attr( array_merge( [
+					'alt' => "No image",
+					'src' => $args['default']
+				], $args['attr'] ) ) . '>';
 		}
 
 	} elseif ( $args['return'] == 'url' ) {

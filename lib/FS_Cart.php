@@ -246,5 +246,18 @@ class FS_Cart {
 		$_SESSION['cart'] = $cart;
 	}
 
+	/**
+	 * Checks if an item is in the cart
+	 *
+	 * @param $product_id
+	 *
+	 * @return bool
+	 */
+	public static function contains( $product_id = 0 ) {
+		$ids = array_map( function ( $item ) {
+			return $item['ID'];
+		}, self::get_cart() );
 
+		return in_array( $product_id, $ids );
+	}
 }
