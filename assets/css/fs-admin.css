@@ -160,6 +160,12 @@
     width: 100%;
   }
 }
+.fs-metabox .fs-tabs > .fs-tab {
+  display: none;
+}
+.fs-metabox .fs-tabs > .fs-tab.active {
+  display: block;
+}
 @media screen and (max-width: 768px) {
   .fs-metabox .fs-tabs > .fs-tab {
     margin: 0;

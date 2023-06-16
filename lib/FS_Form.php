@@ -176,7 +176,7 @@ class FS_Form {
 					$args['value'] = get_term_meta( $args['term_id'], $name, true );
 				}
 
-				if ( $args['value'] == '' && $args['default'] != '' ) {
+				if ( $args['value'] == '' && isset($args['default']) &&  $args['default'] != '' ) {
 					$args['value'] = $args['default'];
 				}
 
@@ -252,7 +252,7 @@ class FS_Form {
 				echo '</div>';
 			}
 
-			if ( $args['wrapper'] ) {
+			if ( !empty($args['wrapper']) ) {
 				echo '</div>';
 			}
 

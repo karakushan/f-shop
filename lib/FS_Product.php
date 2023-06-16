@@ -928,9 +928,9 @@ class FS_Product {
 
 		// Set product features
 		if ( ! empty( $_POST['fs_product_attributes'] ) && is_array( $_POST['fs_product_attributes'] ) ) {
-			wp_set_post_terms( $post_id, array_map( 'intval', $_POST['fs_product_attributes'] ), FS_Config::get_data( 'features_taxonomy' ),true);
-        }else{
-			wp_set_post_terms( $post_id, array(), FS_Config::get_data( 'features_taxonomy' ),false);
+			wp_set_post_terms( $post_id, array_map( 'intval', $_POST['fs_product_attributes'] ), FS_Config::get_data( 'features_taxonomy' ), true );
+		} else {
+			wp_set_post_terms( $post_id, array(), FS_Config::get_data( 'features_taxonomy' ), false );
 		}
 
 		do_action( 'fs_after_save_meta_fields', $post_id );
@@ -1136,21 +1136,15 @@ class FS_Product {
 		$gallery      = \FS\FS_Images_Class::get_gallery( 0, false, false );
 		$product_type = get_post_meta( $post->ID, FS_Config::get_meta( 'product_type' ), true );
 
-		echo '<div class="fs-metabox" id="fs-metabox" x-data="{ 
-                activeTab: localStorage.getItem(\'fs_active_tab\') || \'basic\',
-                productType: \'' . ( $product_type ?: 'physical' ) . '\',     
-             }">';
+		echo '<div class="fs-metabox" id="fs-metabox" x-data="{ productType: \'' . ( $product_type ?: 'physical' ) . '\', }">';
 		do_action( 'fs_before_product_meta' );
 		if ( count( $product_tabs ) ) {
 			echo '<ul class="tab-header">';
-
 			foreach ( $product_tabs as $key => $tab ) : ?>
-				<li class="<?php echo esc_attr( 'fs-tab-nav-' . $key ) ?>"
-					<?php echo fs_parse_attr( $tab['nav_attributes'] ?? [] ) ?>
-					:class="activeTab=='<?php echo esc_attr( $key ) ?>' ? 'fs-nav-link-active' : ''">
-					<a href="#tab-'<?php echo esc_attr( $key ) ?>"
-					   x-on:click.prevent="activeTab='<?php echo esc_attr( $key ) ?>'; window.FS.setActiveTab('<?php echo esc_attr( $key ) ?>');"
-					   data-tab="<?php echo esc_attr( $key ) ?> ">
+				<li <?php echo fs_parse_attr( $tab['nav_attributes'] ?? [] ) ?>
+					class="<?php echo esc_attr( 'fs-tab-nav-' . $key ) ?>"
+					:class="{'fs-nav-link-active': $store.FS?.activeTab==='<?php echo esc_attr( $key ) ?>' }">
+					<a x-on:click.prevent="$store.FS?.setActiveTab('<?php echo esc_attr( $key ) ?>')">
 						<?php _e( $tab['title'], 'f-shop' ) ?>
 					</a>
 				</li>
@@ -1162,8 +1156,7 @@ class FS_Product {
 			<div class="fs-tabs">
 			<?php foreach ( $product_tabs as $key_body => $tab_body ) : ?>
 				<div class="fs-tab fs-tab-<?php echo esc_attr( $key_body ) ?>"
-				x-transition.opacity.duration.200ms
-				x-show="activeTab==='<?php echo esc_attr( $key_body ) ?>'"
+				:class="{'active':$store.FS?.activeTab==='<?php echo esc_attr( $key_body ) ?>'}"
 				id="<?php echo esc_attr( $key_body ) ?>">
 				<?php if ( ! empty( $tab_body['fields'] ) ) {
 					if ( ! empty( $tab_body['title'] ) ) {
@@ -1176,23 +1169,25 @@ class FS_Product {
 						$filter_meta[ $key ] = $key;
 					}
 
-
 					foreach ( $tab_body['fields'] as $key => $field ) {
+						if ($field['type']=='dropdown_categories') continue;
+
 						// если у поля есть атрибут "on" и он выключён то выходим из цикла
 						if ( isset( $field['on'] ) && $field['on'] != true ) {
 							continue;
 						}
+
 						// если не указан атрибут type
 						if ( empty( $field['type'] ) ) {
 							$field['type'] = 'text';
 						}
-						echo '<div class="fs-field-row clearfix">';
 
-						$key              = apply_filters( 'fs_product_tab_admin_meta_key', $key, $field );
-						$field['source']  = 'post_meta';
-						$field['post_id'] = $post->ID;
-						$form_class->render_field( $key, $field['type'], $field );
-						echo '</div>';
+						$form_class->render_field(
+							apply_filters( 'fs_product_tab_admin_meta_key', $key, $field ),
+							$field['type'],
+							array_merge( $field, [ 'post_id' => $post->ID, 'source' => 'post_meta','wrapper_class'=>'fs-field-row clearfix' ] )
+						);
+
 					}
 				} elseif ( ! empty( $tab_body['template'] ) ) {
 					$template_file = sprintf( FS_PLUGIN_PATH . 'templates/back-end/metabox/%s.php', $tab_body['template'] );
