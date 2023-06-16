@@ -2768,8 +2768,8 @@ function fs_get_category_icon( $term_id = 0, $size = 'thumbnail', $args = array(
 	if ( $args['return'] == 'image' ) {
 		if ( $image_id ) {
 			$image = wp_get_attachment_image( $image_id, $size, false, $args['attr'] );
-		} elseif ( ! $image_id && $args['default'] ) {
-			$image = '<img src="' . esc_attr( $args['default'] ) . '" alt="No image">';
+		} elseif ( ! $image_id && !empty($args['default']) ) {
+			$image = '<img '.fs_parse_attr(array_merge(['alt'=>"No image",'src'=>$args['default'] ],$args['attr'])).'>';
 		}
 
 	} elseif ( $args['return'] == 'url' ) {
