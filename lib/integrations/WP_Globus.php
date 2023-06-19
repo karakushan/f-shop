@@ -60,7 +60,9 @@ class WP_Globus {
 				$slug   = get_post_meta( $post->ID, 'fs_seo_slug__' . $locales[ $lang ], 1 );
 				$link   = $slug ? site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $slug ) )
 					: site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $post->post_name ) );
-			}  else {
+			} elseif ( fs_option( 'fs_localize_slug' ) && fs_is_product_category() ) {
+				$link = fs_localize_category_url( get_queried_object_id(), $locales[ $lang ] );
+			} else {
 				$link = WPGlobus_Utils::localize_current_url( $lang );
 			}
 
