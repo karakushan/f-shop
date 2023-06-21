@@ -61,17 +61,19 @@ class FS_Shortcode {
 			'empty_text'    => __( 'Wish list is empty', 'f-shop' ),
 			'template'      => 'wishlist/wishlist-product'
 		), $atts );
-		$query = fs_get_wishlist();
+		$items = fs_get_wishlist();
 		$html  = '<div class="' . esc_attr( $atts['wrapper_class'] ) . '">';
 
-		if ( $query->have_posts() ) {
+		if ( $items ) {
 			$html .= $atts['before_loops'];
-			while ( $query->have_posts() ) {
-				$query->the_post();
+			global $post;
+			foreach ( $items as $post ) {
+				setup_postdata( $post );
 				$html .= fs_frontend_template( $atts['template'] );
 
 			}
 			$html .= $atts['after_loops'];
+			wp_reset_postdata();
 		} else {
 			$html .= '<p>' . esc_html( $atts['empty_text'] ) . '</p >';
 		}

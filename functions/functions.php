@@ -3029,13 +3029,17 @@ function fs_load_template( $template_path ) {
  * @return array|int|WP_Error
  */
 function fs_get_shipping_methods() {
-	$fs_config        = new FS_Config();
-	$shipping_methods = get_terms( array(
-		'taxonomy'   => $fs_config->data['product_del_taxonomy'],
+	return get_terms( array(
+		'taxonomy'   => FS_Config::get_data('product_del_taxonomy'),
 		'hide_empty' => false
 	) );
+}
 
-	return $shipping_methods;
+function fs_get_payment_methods(){
+	return get_terms( array(
+		'taxonomy'   => FS_Config::get_data('product_pay_taxonomy'),
+		'hide_empty' => false
+	) );
 }
 
 /**

@@ -107,7 +107,9 @@ class FS_SEO {
 	 * Выводит скрипты в шапке
 	 */
 	public function scripts_in_head() {
-//		$this->meta_description_action();
+		if ( fs_is_catalog() || fs_is_product_category() ) {
+			$this->meta_description_action();
+		}
 
 		do_action( 'fs_local_business_microdata' );
 		do_action( 'fs_organization_microdata' );
@@ -471,7 +473,7 @@ class FS_SEO {
 				"@type"         => "AggregateOffer",
 				"lowPrice"      => FS_Product::get_min_price_in_category(),
 				"highPrice"     => FS_Product::get_max_price_in_category(),
-				"offerCount"    => FS_Product::get_count_products_in_category() >0 ? FS_Product::get_count_products_in_category() : 1,
+				"offerCount"    => FS_Product::get_count_products_in_category() > 0 ? FS_Product::get_count_products_in_category() : 1,
 				"priceCurrency" => fs_option( 'fs_currency_code', 'UAH' ),
 			],
 			"aggregateRating" => [
