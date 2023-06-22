@@ -5,7 +5,7 @@ namespace FS;
 class FS_Wishlist {
 
 	public static function get_items() {
-		return (array) $_SESSION['fs_wishlist'];
+		return isset( $_SESSION['fs_wishlist'] ) ? (array) $_SESSION['fs_wishlist'] : [];
 	}
 
 	/**
