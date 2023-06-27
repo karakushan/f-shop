@@ -13,5 +13,5 @@ body::before {
   padding: 1em;
   margin-bottom: 1em;
   border-bottom: 2px solid black;
-  content: "Error: Undefined variable.\a   \2577 \a 9 \2502          border-radius: $wp-radius-round;\a   \2502                         ^^^^^^^^^^^^^^^^\a   \2575 \a   style.scss 9:18  root stylesheet";
+  content: "Error: Undefined variable.\a   \2577 \a 9 \2502          border-radius: $wp-radius-round;\d\a   \2502                         ^^^^^^^^^^^^^^^^\a   \2575 \a   style.scss 9:18  root stylesheet";
 }

@@ -13,5 +13,5 @@ body::before {
   padding: 1em;
   margin-bottom: 1em;
   border-bottom: 2px solid black;
-  content: "Error: Undefined variable.\a    \2577 \a 15 \2502              color: $wp-color-base-gray;\a    \2502                     ^^^^^^^^^^^^^^^^^^^\a    \2575 \a   style.scss 15:11  root stylesheet";
+  content: "Error: Undefined variable.\a    \2577 \a 15 \2502              color: $wp-color-base-gray;\d\a    \2502                     ^^^^^^^^^^^^^^^^^^^\a    \2575 \a   style.scss 15:11  root stylesheet";
 }

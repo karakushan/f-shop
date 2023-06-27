@@ -13,5 +13,5 @@ body::before {
   padding: 1em;
   margin-bottom: 1em;
   border-bottom: 2px solid black;
-  content: "Error: Undefined variable.\a   \2577 \a 8 \2502          padding: $size-base * 3;\a   \2502                   ^^^^^^^^^^\a   \2575 \a   style.scss 8:12  root stylesheet";
+  content: "Error: Undefined variable.\a   \2577 \a 8 \2502          padding: $size-base * 3;\d\a   \2502                   ^^^^^^^^^^\a   \2575 \a   style.scss 8:12  root stylesheet";
 }

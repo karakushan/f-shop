@@ -254,9 +254,6 @@ function fs_get_total_amount( $delivery_cost = false, $args = [] ) {
 		$delivery_cost = 0;
 	}
 
-	// Отнимаем скидку на общую сумму товаров в корзине
-	$amount = $amount - fs_get_total_discount( $args['customer_phone'] );
-
 	// Добавляем стоимость доставки
 	if ( ! is_numeric( $delivery_cost ) ) {
 		$delivery_cost = fs_get_delivery_cost();
