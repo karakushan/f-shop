@@ -2,6 +2,8 @@
 
 namespace FS;
 
+use FS\Admin\ProductEdit;
+
 class FS_Config {
 	public $data;
 	public $meta;
@@ -32,7 +34,7 @@ class FS_Config {
 		$this->texts = self::get_texts();
 
 		// Tabs displayed in the metabox in product editing
-		$this->tabs = FS_Product::get_product_tabs();
+//		$this->tabs = (new ProductEdit)->get_product_tabs();
 
 		// Array of site settings
 		$this->options = get_option( 'fs_option', array() );
@@ -167,28 +169,28 @@ class FS_Config {
 	 */
 	public static function get_orderby_keys() {
 		$keys = array(
-			'date_desc'  => array(
+			'date_desc'    => array(
 				'name' => __( 'Recently added', 'f-shop' )
 			),
-			'date_asc'   => array(
+			'date_asc'     => array(
 				'name' => __( 'Later added', 'f-shop' )
 			),
-			'price_asc'  => array(
+			'price_asc'    => array(
 				'name' => __( 'From cheap to expensive', 'f-shop' )
 			),
-			'price_desc' => array(
+			'price_desc'   => array(
 				'name' => __( 'From expensive to cheap', 'f-shop' )
 			),
-			'name_asc'   => array(
+			'name_asc'     => array(
 				'name' => __( 'By title A to Z', 'f-shop' )
 			),
-			'name_desc'  => array(
+			'name_desc'    => array(
 				'name' => __( 'By title Z to A', 'f-shop' )
 			),
-			'views_desc' => array(
+			'views_desc'   => array(
 				'name' => __( 'Behind the popularity', 'f-shop' )
 			),
-			'action_price'       => array(
+			'action_price' => array(
 				'name' => __( 'First promotional', 'f-shop' )
 			),
 		);
@@ -604,11 +606,12 @@ class FS_Config {
 			'currency'          => [ 'key' => 'fs_currency' ],
 			'sku'               => [
 				'key'   => 'fs_articul',
+				'type'  => 'text',
 				'label' => __( 'SKU', 'f-shop' )
 			],
 			'quantity'          => [
 				'key'   => 'fs_remaining_amount',
-				'type'  => 'number',
+				'type'  => 'text',
 				'label' => __( 'Stock in stock', 'f-shop' ),
 				'help'  => __( 'Enter "0" if stock is exhausted. An empty field means inventory control for the item. disabled, and the goods are always in the presence!', 'f-shop' )
 			],
@@ -756,8 +759,5 @@ class FS_Config {
 			return $data;
 
 		}
-
 	}
-
-
 }

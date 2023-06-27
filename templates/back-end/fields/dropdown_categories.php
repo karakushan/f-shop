@@ -23,5 +23,4 @@ $args = [
 	'hierarchical'      => 1,
 	'taxonomy'          => $args['taxonomy'] ?? 'category',
 ];
-
-// wp_dropdown_categories( $args );
+wp_dropdown_categories( $args );

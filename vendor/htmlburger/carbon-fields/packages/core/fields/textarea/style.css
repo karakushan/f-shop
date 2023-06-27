@@ -1,0 +1,10 @@
+/* ==========================================================================
+   Textarea
+   ========================================================================== */
+.cf-textarea__input {
+  display: block;
+  width: 100% !important;
+  resize: vertical;
+}
+
+/*# sourceMappingURL=style.css.map */
