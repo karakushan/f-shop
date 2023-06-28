@@ -13,6 +13,7 @@ class ProductEdit {
 	public function __construct() {
 		add_action( 'carbon_fields_register_fields', [ $this, 'product_metabox_handle' ] );
 		add_action( 'after_setup_theme', [ $this, 'crb_load' ] );
+		add_action( 'carbon_fields_post_meta_container_saved', [ $this, 'save_product_attributes' ],10,2 );
 	}
 
 	function product_metabox_handle() {
@@ -245,5 +246,25 @@ class ProductEdit {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Assigns product characteristics from meta fields
+	 *
+	 * @param $post_id
+	 * @param $context
+	 *
+	 * @return void
+	 */
+	function save_product_attributes($post_id, $context){
+
+		$fields =(array) $_POST['carbon_fields_compact_input']['_fs_attributes'];
+
+		$attributes=array_map(function ($item){
+			$atts=explode(':',$item);
+			return  intval($atts[count($atts)-1]);
+		},$fields);
+
+		wp_set_post_terms($post_id,$attributes,FS_Config::get_data('features_taxonomy'));
 	}
 }

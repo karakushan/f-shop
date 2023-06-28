@@ -700,7 +700,7 @@ class FS_Product {
 	 * @return mixed
 	 */
 	public function get_base_price( $product_id = 0, $variation_id = null ) {
-		$fs_config = new FS_Config();
+
 
 		$product_id   = $product_id ? $product_id : $this->id;
 		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
@@ -714,7 +714,7 @@ class FS_Product {
 
 			return floatval( $base_price );
 		} else {
-			$price = get_post_meta( $product_id, $fs_config->meta['price'], 1 );
+			$price = get_post_meta( $product_id, FS_Config::get_meta('price'), 1 );
 
 			return apply_filters( 'fs_price_filter', $price, $product_id );
 		}

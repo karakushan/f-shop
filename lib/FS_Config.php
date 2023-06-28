@@ -2,8 +2,6 @@
 
 namespace FS;
 
-use FS\Admin\ProductEdit;
-
 class FS_Config {
 	public $data;
 	public $meta;
@@ -33,8 +31,6 @@ class FS_Config {
 		// Gets an array of service texts
 		$this->texts = self::get_texts();
 
-		// Tabs displayed in the metabox in product editing
-//		$this->tabs = (new ProductEdit)->get_product_tabs();
 
 		// Array of site settings
 		$this->options = get_option( 'fs_option', array() );
@@ -561,7 +557,7 @@ class FS_Config {
 		$meta = array(
 			'price'             => 'fs_price',
 			'action_price'      => 'fs_action_price',
-			'real_price'        => '_fs_real_price',
+			'real_price'        => 'fs_real_price',
 			'currency'          => 'fs_currency',
 			'sku'               => 'fs_articul',
 			'remaining_amount'  => 'fs_remaining_amount',
@@ -606,12 +602,11 @@ class FS_Config {
 			'currency'          => [ 'key' => 'fs_currency' ],
 			'sku'               => [
 				'key'   => 'fs_articul',
-				'type'  => 'text',
 				'label' => __( 'SKU', 'f-shop' )
 			],
 			'quantity'          => [
 				'key'   => 'fs_remaining_amount',
-				'type'  => 'text',
+				'type'  => 'number',
 				'label' => __( 'Stock in stock', 'f-shop' ),
 				'help'  => __( 'Enter "0" if stock is exhausted. An empty field means inventory control for the item. disabled, and the goods are always in the presence!', 'f-shop' )
 			],
@@ -759,5 +754,8 @@ class FS_Config {
 			return $data;
 
 		}
+
 	}
+
+
 }
