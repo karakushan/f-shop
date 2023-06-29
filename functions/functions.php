@@ -377,7 +377,7 @@ function fs_get_total_discount( $phone_number = '' ) {
 			if ( ! fs_has_sale_price( $item['ID'] ) ) {
 				continue;
 			}
-			$discount += fs_get_base_price( $item['ID'] ) - fs_get_price( $item['ID'] );
+			$discount += ( fs_get_base_price( $item['ID'] ) - fs_get_price( $item['ID'] ) ) * $item['qty'];
 		}
 	}
 
@@ -3027,14 +3027,14 @@ function fs_load_template( $template_path ) {
  */
 function fs_get_shipping_methods() {
 	return get_terms( array(
-		'taxonomy'   => FS_Config::get_data('product_del_taxonomy'),
+		'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
 		'hide_empty' => false
 	) );
 }
 
-function fs_get_payment_methods(){
+function fs_get_payment_methods() {
 	return get_terms( array(
-		'taxonomy'   => FS_Config::get_data('product_pay_taxonomy'),
+		'taxonomy'   => FS_Config::get_data( 'product_pay_taxonomy' ),
 		'hide_empty' => false
 	) );
 }
@@ -3281,7 +3281,7 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
  */
 function fs_get_term_meta( string $meta_key, $term_id = 0, $type = 1, $multilang = true ) {
 	$term_id  = $term_id ?: get_queried_object_id();
-	$meta_key = $multilang  ? $meta_key . '__' . get_locale() : $meta_key;
+	$meta_key = $multilang ? $meta_key . '__' . get_locale() : $meta_key;
 
 	return get_term_meta( $term_id, $meta_key, $type );
 }
