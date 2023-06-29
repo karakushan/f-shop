@@ -3281,7 +3281,7 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
  */
 function fs_get_term_meta( string $meta_key, $term_id = 0, $type = 1, $multilang = true ) {
 	$term_id  = $term_id ?: get_queried_object_id();
-	$meta_key = $multilang && ! FS_Config::is_default_locale() ? $meta_key . '__' . get_locale() : $meta_key;
+	$meta_key = $multilang  ? $meta_key . '__' . get_locale() : $meta_key;
 
 	return get_term_meta( $term_id, $meta_key, $type );
 }
