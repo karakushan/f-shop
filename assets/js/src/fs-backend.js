@@ -1,15 +1,10 @@
 import Alpine from "alpinejs";
-
-document.addEventListener('alpine:init', () => {
-    Alpine.store('FS', {
-        activeTab: localStorage.getItem('activeTab') || 'basic',
-        setActiveTab(tab) {
-            localStorage.setItem('activeTab', tab);
-            this.activeTab = tab;
-        }
-    })
-})
+import FS from "./lib/fs.js";
 
 window.Alpine = Alpine;
 Alpine.start()
-
+document.addEventListener('alpine:init', () => {
+    const fs=new FS();
+    fs.ajaxurl = window.ajaxurl;
+    Alpine.store('FS',fs)
+})

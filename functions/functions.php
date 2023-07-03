@@ -3680,3 +3680,17 @@ function fs_is_catalog() {
 function fs_order_exist( $order_id ) {
 	return get_post( $order_id ) && get_post_type( $order_id ) == \FS\FS_Config::get_data( 'post_type_orders' );
 }
+
+function fs_get_currencies() {
+	$args    = [ 'taxonomy' => 'fs-currencies', 'hide_empty' => false ];
+	$terms   = get_terms( $args );
+	$options = [];
+	foreach ( $terms as $term ) {
+		if ( ! is_object( $term ) ) {
+			continue;
+		}
+		$options[ $term->term_id ] = $term->name;
+	}
+
+	return $options;
+}

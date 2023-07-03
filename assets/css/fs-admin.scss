@@ -1838,28 +1838,35 @@ td.fs_menu_order.column-fs_menu_order {
 
 // Tabs
 .fs-vertical-tabs {
-
-  &.cf-container__fields {
-    display: flex;
+  h2, h3 {
+    margin: 5px 0;
+  }
+  .cf-container__fields {
     flex-direction: column;
-    flex-wrap: nowrap;
+     .cf-field {
+      flex: unset;
+    }
   }
-  .cf-container .cf-field {
-    flex: unset;
-  }
+
+
+
   .cf-container__tabs-list .cf-container__tabs-item {
     background-color: #f0f0f1;
   }
+
   .cf-container__tabs-list .cf-container__tabs-item--current {
     background-color: #fff;
     border-bottom-color: #fff;
   }
+
   &.cf-container--tabbed-horizontal {
     flex-direction: row;
   }
+
   .cf-container__tabs--tabbed-horizontal {
     flex-basis: 304px;
     padding: 0;
+
     .cf-container__tabs-list {
       flex-direction: column;
     }

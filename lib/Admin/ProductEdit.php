@@ -8,17 +8,20 @@ use FS\FS_Config;
 
 class ProductEdit {
 
-	private $alowed_types = [ 'media_gallery', 'text', 'checkbox', 'radio', 'association', 'select' ];
+	protected $post_id = null;
+
+	private $allowed_types = [ 'media_gallery', 'text','textarea', 'checkbox', 'radio', 'association', 'select', 'html' ];
 
 	public function __construct() {
 		add_action( 'carbon_fields_register_fields', [ $this, 'product_metabox_handle' ] );
 		add_action( 'after_setup_theme', [ $this, 'crb_load' ] );
-		add_action( 'carbon_fields_post_meta_container_saved', [ $this, 'save_product_attributes' ],10,2 );
+		add_action( 'carbon_fields_post_meta_container_saved', [ $this, 'save_product_meta' ], 10, 2 );
 	}
 
 	function product_metabox_handle() {
-
-		$container = Container::make( 'post_meta', 'fs_metabox', __( 'Настройки товара' ) );
+		$this->post_id = $_GET['post'] ?? null;
+		$container     = Container::make( 'post_meta', 'fs_metabox', __( 'Настройки товара' ) );
+		$container->set_datastore(new PostMetaDatastore());
 		$container->where( 'post_type', '=', FS_Config::get_data( 'post_type' ) );
 		$container->set_classes( 'fs-vertical-tabs' );
 		foreach ( $this->get_product_tabs() as $key => $tab ) {
@@ -28,17 +31,32 @@ class ProductEdit {
 				continue;
 			}
 			foreach ( $tab['fields'] as $name => $field ) {
-				if ( ! in_array( $field['type'], $this->alowed_types ) ) {
+				if ( ! isset( $field['type'] ) || ! in_array( $field['type'], $this->allowed_types ) ) {
 					continue;
 				}
 				$f = Field::make( $field['type'], $name, $field['label'] );
-				if ( isset( $field['options'] ) ) {
-					$f->set_options( $field['options'] );
+
+				if ( isset( $field['width'] ) ) {
+					$f->set_width( $field['width'] );
+				}
+
+				if ( isset( $field['required'] ) ) {
+					$f->set_required( $field['required'] );
+				}
+
+				if ( in_array( $field['type'], [ 'select','radio' ] ) && isset( $field['options'] ) ) {
+					$f->add_options( $field['options'] );
 				}
 				if ( $field['type'] == 'association' && isset( $field['types'] ) ) {
 					$f->set_types( [
 						$field['types']
 					] );
+				}
+
+				if ( $field['type'] == 'html' && isset( $field['template'] ) ) {
+					ob_start();
+					include( $field['template'] );
+					$f->set_html( ob_get_clean() );
 				}
 
 				if ( isset( $field['help'] ) ) {
@@ -105,7 +123,8 @@ class ProductEdit {
 						'label'    => __( 'Item Currency', 'f-shop' ),
 						'on'       => (bool) fs_option( 'multi_currency_on' ),
 						'type'     => 'select',
-						'options'  => $this->get_currencies_options(),
+						'max'      => 1,
+						'options'  => 'fs_get_currencies',
 						'help'     => __( 'The field is active if you have enabled multicurrency in settings.', 'f-shop' ),
 						'taxonomy' => FS_Config::get_data( 'currencies_taxonomy' )
 					),
@@ -115,8 +134,6 @@ class ProductEdit {
 			'gallery'      => array(
 				'title'  => __( 'Gallery', 'f-shop' ),
 				'on'     => true,
-				'body'   => '',
-//				'template' => 'gallery',
 				'fields' => [
 					'fs_galery' => [
 						'label'     => __( 'Gallery', 'f-shop' ),
@@ -166,10 +183,15 @@ class ProductEdit {
 
 			),
 			'variants'     => array(
-				'title'    => __( 'Variation', 'f-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'variants'
+				'title'  => __( 'Variation', 'f-shop' ),
+				'on'     => true,
+				'fields' => [
+					'fs_variants' => [
+						'label'    => __( 'This tab is relevant if you have several varieties of a single product.', 'f-shop' ),
+						'type'     => 'html',
+						'template' => FS_PLUGIN_PATH . '/templates/back-end/metabox/variants.php',
+					]
+				]
 			),
 			'delivery'     => array(
 				'title'  => __( 'Shipping and payment', 'f-shop' ),
@@ -178,10 +200,9 @@ class ProductEdit {
 				'fields' => array(
 					'_fs_delivery_description' => array(
 						'label' => __( 'Shipping and Payment Details', 'f-shop' ),
-						'type'  => 'editor',
+						'type'  => 'textarea',
 						'help'  => ''
 					),
-
 				)
 			),
 			'seo'          => array(
@@ -234,20 +255,6 @@ class ProductEdit {
 		return apply_filters( 'fs_product_tabs_admin', $tabs );
 	}
 
-	function get_currencies_options() {
-		$args    = [ 'taxonomy' => 'fs-currencies', 'hide_empty' => false ];
-		$terms   = get_terms( $args );
-		$options = [];
-		foreach ( $terms as $term ) {
-			if ( ! is_object( $term ) ) {
-				continue;
-			}
-			$options[ $term->term_id ] = $term->name;
-		}
-
-		return $options;
-	}
-
 	/**
 	 * Assigns product characteristics from meta fields
 	 *
@@ -256,15 +263,21 @@ class ProductEdit {
 	 *
 	 * @return void
 	 */
-	function save_product_attributes($post_id, $context){
+	function save_product_meta( $post_id, $context ) {
 
-		$fields =(array) $_POST['carbon_fields_compact_input']['_fs_attributes'];
+		$fields = (array) $_POST['carbon_fields_compact_input']['_fs_attributes'];
 
-		$attributes=array_map(function ($item){
-			$atts=explode(':',$item);
-			return  intval($atts[count($atts)-1]);
-		},$fields);
+		$attributes = array_map( function ( $item ) {
+			$atts = explode( ':', $item );
 
-		wp_set_post_terms($post_id,$attributes,FS_Config::get_data('features_taxonomy'));
+			return intval( $atts[ count( $atts ) - 1 ] );
+		}, $fields );
+
+		wp_set_post_terms( $post_id, $attributes, FS_Config::get_data( 'features_taxonomy' ) );
+
+
+		if (isset($_POST['carbon_fields_compact_input']['_fs_currency'])) {
+			wp_set_post_terms( $post_id, intval($_POST['carbon_fields_compact_input']['_fs_currency']), FS_Config::get_data( 'currencies_taxonomy' ) );
+		}
 	}
 }

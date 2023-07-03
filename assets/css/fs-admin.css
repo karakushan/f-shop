@@ -1539,12 +1539,13 @@ td.fs_menu_order.column-fs_menu_order {
   grid-gap: 0.5rem;
 }
 
-.fs-vertical-tabs.cf-container__fields {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+.fs-vertical-tabs h2, .fs-vertical-tabs h3 {
+  margin: 5px 0;
 }
-.fs-vertical-tabs .cf-container .cf-field {
+.fs-vertical-tabs .cf-container__fields {
+  flex-direction: column;
+}
+.fs-vertical-tabs .cf-container__fields .cf-field {
   flex: unset;
 }
 .fs-vertical-tabs .cf-container__tabs-list .cf-container__tabs-item {

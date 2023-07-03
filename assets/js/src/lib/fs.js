@@ -3,7 +3,7 @@ import iziToast from "izitoast";
 class FS {
     constructor() {
         this.ajaxurl = window.fShop.ajaxurl;
-        this.nonce = window.fShop.nonce;
+        this.nonce = window.fShop.nonce ?? null ;
         this.nonceField = 'fs_secret';
 
         this.addWishListToCart = this.addWishListToCart.bind(this)
