@@ -499,7 +499,8 @@ class FS_Taxonomy {
 	 * @return void
 	 */
 	function redirect_to_localized_url() {
-		if ( ! fs_is_product_category() || get_locale() == FS_Config::default_locale() ) {
+		global $wp_query;
+		if (! fs_is_product_category() ||  count($wp_query->query)>1 || get_locale() == FS_Config::default_locale()  ) {
 			return;
 		}
 
