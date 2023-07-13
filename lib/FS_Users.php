@@ -409,6 +409,17 @@ class FS_Users {
 				'alpine'      => 'fs_other_shipping_address:false',
 				'save_meta'   => false
 			),
+			'fs_shipping_name'    => array(
+				'name'        => __( 'Delivery service name', 'f-shop' ),
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => '',
+				'placeholder' => __( 'Delivery service name', 'f-shop' ),
+				'title'       => __( 'This field is required.', 'f-shop' ),
+				'checkout'    => true,
+				'save_meta'   => false
+			),
+
 			'fs_shipping_first_name'    => array(
 				'name'        => __( 'First name', 'f-shop' ),
 				'type'        => 'text',
