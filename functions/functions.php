@@ -3587,8 +3587,8 @@ if ( ! function_exists( 'fs_localize_category_url' ) ) {
 		] );
 
 		$prefix = FS_Config::default_locale() != $locale ? $args['prefixes'][ $locale ] : '';
-		$slug   = FS_Config::default_locale() != $locale && get_term_meta( $term_id, '_seo_slug__' . $locale, 1 )
-			? get_term_meta( $term_id, '_seo_slug__' . $locale, 1 ) : $term->slug;
+		$slug   = FS_Config::default_locale() != $locale && get_term_meta( $term_id, '_seo_slug__' . mb_strtolower($locale), 1 )
+			? get_term_meta( $term_id, '_seo_slug__' . mb_strtolower($locale), 1 ) : $term->slug;
 
 		$url_components = [ $prefix ];
 
