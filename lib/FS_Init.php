@@ -3,6 +3,7 @@
 namespace FS;
 
 
+use FS\Admin\TermEdit;
 use FS\Integrations\WP_Globus;
 
 /**
@@ -39,7 +40,8 @@ class FS_Init {
 		FS_SEO::class,
 		FS_Customers::class,
 		FS_Form::class,
-		Admin\ProductEdit::class
+		Admin\ProductEdit::class,
+		TermEdit::class
 
 	];
 	protected static $instance = null;
@@ -76,6 +78,8 @@ class FS_Init {
 		add_action( 'wp_head', [ $this, 'marketing_code_header' ] );
 
 		add_action( 'init', [ $this, 'plugin_integration' ] );
+
+		add_action( 'after_setup_theme', [ $this, 'crb_load' ] );
 	}
 
 	/**
@@ -321,4 +325,9 @@ class FS_Init {
 			new WP_Globus();
 		}
 	}
+
+	function crb_load() {
+		\Carbon_Fields\Carbon_Fields::boot();
+	}
+
 }

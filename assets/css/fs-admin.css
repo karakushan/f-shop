@@ -1566,4 +1566,8 @@ td.fs_menu_order.column-fs_menu_order {
   flex-direction: column;
 }
 
+.term-php .cf-container__fields > .cf-field:not(.cf-field--has-width) > .cf-field__head {
+  position: relative !important;
+}
+
 /*# sourceMappingURL=fs-admin.css.map */

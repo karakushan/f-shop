@@ -17,11 +17,14 @@
 
 namespace FS;
 
-use FS\Integrations\WP_Globus;
+use FS\Admin\TermMetaDatastore;
 use function WP_CLI\Utils\glob_brace;
+use Carbon_Fields\Container;
+use Carbon_Fields\Field;
 
 class FS_Taxonomy {
 	public $taxonomy_name;
+
 
 	function __construct() {
 		$this->taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
@@ -500,7 +503,7 @@ class FS_Taxonomy {
 	 */
 	function redirect_to_localized_url() {
 		global $wp_query;
-		if (! fs_is_product_category() ||  count($wp_query->query)>1 || get_locale() == FS_Config::default_locale()  ) {
+		if ( ! fs_is_product_category() || count( $wp_query->query ) > 1 || get_locale() == FS_Config::default_locale() ) {
 			return;
 		}
 
@@ -571,7 +574,7 @@ class FS_Taxonomy {
 				array(
 					'_content'         => array(
 						'name' => __( 'Category text', 'f-shop' ),
-						'type' => 'editor',
+						'type' => 'rich_text',
 						'args' => [
 							'multilang' => true
 						]
@@ -621,7 +624,7 @@ class FS_Taxonomy {
 					],
 					'_min_qty'         => array(
 						'name' => __( 'Minimum quantity of goods for order', 'f-shop' ),
-						'type' => 'number',
+						'type' => 'text',
 						'args' => [
 							'multilang' => false,
 						],
@@ -669,24 +672,19 @@ class FS_Taxonomy {
 					),
 					'_fs_delivery_cost'    => array(
 						'name' => __( 'Shipping Cost in Base Currency', 'f-shop' ),
-						'type' => 'number',
+						'type' => 'text',
+						'subtype' => 'number',
 						'args' => array( 'style' => 'width:72px;', 'step' => 0.01 )
 					),
 					'_fs_disable_fields'   => array(
 						'name' => __( 'Fields to disable when choosing this delivery method', 'f-shop' ),
-						'type' => 'select',
-						'args' => array(
-							'values'   => $checkout_fields,
-							'multiple' => true
-						)
+						'type' => 'multiselect',
+						'options' => $checkout_fields,
 					),
 					'_fs_required_fields'  => array(
 						'name' => __( 'Required fields when choosing this delivery method', 'f-shop' ),
-						'type' => 'select',
-						'args' => array(
-							'values'   => $checkout_fields,
-							'multiple' => true
-						)
+						'type' => 'multiselect',
+						'options' => $checkout_fields,
 					),
 					'_fs_add_packing_cost' => array(
 						'name' => __( 'Consider the cost of packaging', 'f-shop' ),
@@ -750,7 +748,7 @@ class FS_Taxonomy {
 					),
 					'fs_min_order_amount'    => array(
 						'name' => __( 'Minimum order amount', 'f-shop' ),
-						'type' => 'number',
+						'type' => 'text',
 						'help' => __( 'It is applied if the order amount has exceeded the value specified in this field' ),
 						'args' => array(
 							'min' => 1
@@ -1027,21 +1025,6 @@ class FS_Taxonomy {
 				register_taxonomy( $key, $object_type, $taxonomy );
 			}
 		}
-
-		// создание дополнительных полей на странице добавления и редактирования таксономии
-		if ( $this->shop_taxonomies() ) {
-			foreach ( $this->shop_taxonomies() as $key => $taxonomy ) {
-				if ( in_array( $key, array( 'product-attributes' ) ) ) {
-					continue;
-				}
-				// поля таксономии категорий товара
-				add_action( "{$key}_edit_form_fields", array( $this, 'edit_taxonomy_fields' ), 10, 2 );
-				add_action( "{$key}_add_form_fields", array( $this, 'add_taxonomy_fields' ), 10, 1 );
-				add_action( "create_{$key}", array( $this, 'save_taxonomy_fields' ), 10, 2 );
-				add_action( "edited_{$key}", array( $this, 'save_taxonomy_fields' ), 10, 2 );
-			}
-		}
-
 
 		// поля таксономии харакеристик товара
 		add_action( "product-attributes_edit_form_fields", array( $this, 'edit_product_attr_fields' ) );
@@ -1623,5 +1606,4 @@ class FS_Taxonomy {
 
 		return $count;
 	}
-
 }

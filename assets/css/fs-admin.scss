@@ -1841,13 +1841,14 @@ td.fs_menu_order.column-fs_menu_order {
   h2, h3 {
     margin: 5px 0;
   }
+
   .cf-container__fields {
     flex-direction: column;
-     .cf-field {
+
+    .cf-field {
       flex: unset;
     }
   }
-
 
 
   .cf-container__tabs-list .cf-container__tabs-item {
@@ -1871,6 +1872,11 @@ td.fs_menu_order.column-fs_menu_order {
       flex-direction: column;
     }
   }
+}
+
+.term-php .cf-container__fields > .cf-field:not(.cf-field--has-width) > .cf-field__head {
+  position: relative !important;
+
 }
 
 

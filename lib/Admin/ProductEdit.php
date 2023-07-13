@@ -14,7 +14,6 @@ class ProductEdit {
 
 	public function __construct() {
 		add_action( 'carbon_fields_register_fields', [ $this, 'product_metabox_handle' ] );
-		add_action( 'after_setup_theme', [ $this, 'crb_load' ] );
 		add_action( 'carbon_fields_post_meta_container_saved', [ $this, 'save_product_meta' ], 10, 2 );
 	}
 
@@ -68,12 +67,6 @@ class ProductEdit {
 			$container->add_tab( $tab['title'], $fields );
 		}
 	}
-
-
-	function crb_load() {
-		\Carbon_Fields\Carbon_Fields::boot();
-	}
-
 	/**
 	 * Gets the array that contains the list of product settings tabs.
 	 *
