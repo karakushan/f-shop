@@ -24,4 +24,4 @@ $args = [
 	'taxonomy'          => $args['taxonomy'] ?? 'category',
 ];
 
-// wp_dropdown_categories( $args );
+ wp_dropdown_categories( $args );

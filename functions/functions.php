@@ -863,7 +863,7 @@ function fs_get_product_category_name( $product_id = 0 ) {
  */
 function fs_add_to_cart( $product_id = 0, $label = 'Add to cart', $args = array() ) {
 	$product_id = fs_get_product_id( $product_id );
-	$label      = $label ? $label : __( 'Add to cart', 'f-shop' );
+	$label      = $label ? : __( 'Add to cart', 'f-shop' );
 
 	// Параметры доступные для переопределения
 	$args = wp_parse_args( $args, array(
@@ -872,6 +872,7 @@ function fs_add_to_cart( $product_id = 0, $label = 'Add to cart', $args = array(
 		'id'         => 'fs-atc-' . $product_id,
 		'data-count' => fs_get_product_min_qty( $product_id ),
 		'class'      => 'fs-add-to-cart',
+		'inline_attributes' => '',
 	) );
 
 	// Смешиваем параметры  для вывода текскот в качестве атрибутов кнопки
@@ -903,14 +904,15 @@ function fs_add_to_cart( $product_id = 0, $label = 'Add to cart', $args = array(
 		$args['href'] = add_query_arg( array( 'fs-api' => 'add_to_cart', 'product_id' => $product_id ) );
 	}
 
+	$html_attributes = fs_parse_attr( [], $args );
+	$html_attributes .= ' ' . $args['inline_attributes'];
+
 	/* allow you to set different html elements as a button */
 	switch ( $args['type'] ) {
 		case 'link':
-			$html_attributes = fs_parse_attr( [], $args );
 			$atc_button      = sprintf( '<a %s>%s %s</a>', $html_attributes, $label, $atc_after );
 			break;
 		default:
-			$html_attributes = fs_parse_attr( [], $args );
 			$atc_button      = sprintf( '<button type="button" %s>%s %s</button>', $html_attributes, $label, $atc_after );
 			break;
 	}

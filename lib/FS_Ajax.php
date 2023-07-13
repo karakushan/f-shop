@@ -1017,7 +1017,7 @@ class FS_Ajax {
 		fs_taxes_list( array( 'wrapper' => false ), $total );
 		$taxes_out = ob_get_clean();
 
-		$disable_fields = get_term_meta( $shipping_method_id, '_fs_disable_fields', 0 );
+		$disable_fields = get_term_meta( $shipping_method_id, '_fs_disable_fields', 1 );
 		$disable_fields = ! empty( $disable_fields ) ? $disable_fields : [];
 
 		$required_fields = get_term_meta( $shipping_method_id, '_fs_required_fields', 0 );

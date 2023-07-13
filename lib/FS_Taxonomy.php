@@ -47,7 +47,7 @@ class FS_Taxonomy {
 		add_action( 'generate_rewrite_rules', array( $this, 'taxonomy_rewrite_rules' ) );
 
 		//  redirect to localized url
-		add_action( 'template_redirect', array( $this, 'redirect_to_localized_url' ) );
+//		add_action( 'template_redirect', array( $this, 'redirect_to_localized_url' ) );
 
 		// Filtering products on the category page and in the product archives
 		add_action( 'pre_get_posts', array( $this, 'taxonomy_filter_products' ), 12, 1 );
