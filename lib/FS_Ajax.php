@@ -1017,11 +1017,11 @@ class FS_Ajax {
 		fs_taxes_list( array( 'wrapper' => false ), $total );
 		$taxes_out = ob_get_clean();
 
-		$disable_fields = get_term_meta( $shipping_method_id, '_fs_disable_fields', 0 );
-		$disable_fields = ! empty( $disable_fields ) ? $disable_fields : [];
+		$disable_fields = get_term_meta( $shipping_method_id, '_fs_disable_fields', 1 );
+		$disable_fields =$disable_fields ? : [];
 
-		$required_fields = get_term_meta( $shipping_method_id, '_fs_required_fields', 0 );
-		$required_fields = ! empty( $required_fields ) ? array_shift( $required_fields ) : [];
+		$required_fields = get_term_meta( $shipping_method_id, '_fs_required_fields', 1);
+		$required_fields = $required_fields ? : [];
 
 		$packing_cost = fs_option( 'fs_include_packing_cost' ) && $shipping_method_id ? fs_get_packing_cost( $shipping_method_id ) : 0;
 		$packing_cost = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $packing_cost ), fs_currency() );
