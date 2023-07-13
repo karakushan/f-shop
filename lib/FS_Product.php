@@ -28,17 +28,15 @@ class FS_Product {
 	public $count = 1;
 	public $attributes = [];
 	public $post_type = 'product';
+	public $product_id = null;
 
 
 	/**
 	 * FS_Product_Class constructor.
 	 */
 	public function __construct() {
-		add_action( 'save_post', array( $this, 'save_product_fields' ), 10, 3 );
+//		add_action( 'save_post', array( $this, 'save_product_fields' ), 10, 3 );
 		add_action( 'init', array( $this, 'init' ), 12 );
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'fs_before_product_meta', array( $this, 'before_product_meta' ) );
-
 		/* We set the real price with the discount and currency */
 		add_action( 'fs_after_save_meta_fields', array( $this, 'set_real_product_price' ), 10, 1 );
 
@@ -80,6 +78,8 @@ class FS_Product {
 	 * @param $post
 	 * @param $leavename
 	 * @param $sample
+	 *
+	 * todo: перенести в соответсвующий клас интеграции
 	 *
 	 * @return string
 	 */
@@ -193,12 +193,6 @@ class FS_Product {
 
 		return $query;
 
-	}
-
-	// Выводит скрытый прелоадер перед полями метабокса
-	function before_product_meta() {
-		echo '
-        <div class="fs-mb-preloader"></div>';
 	}
 
 	/**
@@ -706,7 +700,7 @@ class FS_Product {
 	 * @return mixed
 	 */
 	public function get_base_price( $product_id = 0, $variation_id = null ) {
-		$fs_config = new FS_Config();
+
 
 		$product_id   = $product_id ? $product_id : $this->id;
 		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
@@ -720,7 +714,7 @@ class FS_Product {
 
 			return floatval( $base_price );
 		} else {
-			$price = get_post_meta( $product_id, $fs_config->meta['price'], 1 );
+			$price = get_post_meta( $product_id, FS_Config::get_meta('price'), 1 );
 
 			return apply_filters( 'fs_price_filter', $price, $product_id );
 		}
@@ -731,91 +725,6 @@ class FS_Product {
 	 */
 	public function set_item_id( $item_id = 0 ) {
 		$this->item_id = $item_id;
-	}
-
-	/**
-	 * Выводит вкладки товаров в лицевой части сайта
-	 *
-	 * @param int $product_id
-	 * @param array $args
-	 */
-	public static function product_tabs( $product_id = 0, $args = array() ) {
-		$product_id = fs_get_product_id( $product_id );
-
-		$args = wp_parse_args( $args, array(
-			'wrapper_class'   => 'fs-product-tabs',
-			'before'          => '',
-			'after'           => '',
-			'attributes_args' => array()
-
-		) );
-
-		// Get the product attributes
-		ob_start();
-		fs_the_atts_list( $product_id, $args['attributes_args'] );
-		$attributes = ob_get_clean();
-
-		// Вкладки по умолчанию
-		$default_tabs = array(
-			'attributes'  => array(
-				'title'   => __( 'Characteristic', 'f-shop' ),
-				'content' => $attributes
-			),
-			'description' => array(
-				'title'   => __( 'Description', 'f-shop' ),
-				'content' => apply_filters( 'the_content', get_the_content() )
-			),
-			'delivery'    => array(
-				'title'   => __( 'Shipping and payment', 'f-shop' ),
-				'content' => fs_frontend_template( 'product/tabs/delivery' )
-			),
-			'reviews'     => array(
-				'title'   => __( 'Reviews', 'f-shop' ),
-				'content' => fs_frontend_template( 'product/tabs/comments' )
-			)
-
-		);
-
-		$default_tabs = apply_filters( 'fs_product_tabs_items', $default_tabs, $product_id );
-
-		if ( is_array( $default_tabs ) && ! empty( $default_tabs ) ) {
-
-			$html = '<div class="' . esc_attr( $args['wrapper_class'] ) . '">';
-			$html .= $args['before'];
-			$html .= '<ul class="nav nav-tabs" id="fs-product-tabs-nav" role="tablist">';
-
-			// Display tab switches
-			$counter = 0;
-			foreach ( $default_tabs as $id => $tab ) {
-				$class = ! $counter ? ' active' : '';
-				$html  .= '<li class="nav-item ' . $class . '">';
-				$html  .= '<a class="nav-link' . esc_attr( $class ) . '" id="fs-product-tab-nav-' . esc_attr( $id ) . '" data-toggle="tab" href="#fs-product-tab-' . esc_attr( $id ) . '" role="tab" aria-controls="' . esc_attr( $id ) . '" aria-selected="true">' . esc_html( $tab['title'] ) . '</a>';
-				$html  .= '</li>';
-				$counter ++;
-			}
-
-			$html .= '</ul><!-- END #fs-product-tabs-nav -->';
-
-			$html .= '<div class="tab-content" id="fs-product-tabs-content">';
-
-			// Display the contents of the tabs
-			$counter = 0;
-			foreach ( $default_tabs as $id => $tab ) {
-				$class = ! $counter ? ' active' : '';
-				$html  .= '<div class="tab-pane' . esc_attr( $class ) . '" id="fs-product-tab-' . esc_attr( $id ) . '" role="tabpanel" aria-labelledby="' . esc_attr( $id ) . '-tab">';
-				$html  .= $tab['content'];
-				$html  .= '</div>';
-				$counter ++;
-			}
-
-			$html .= '</div><!-- END #fs-product-tabs-content -->';
-			$html .= $args['after'];
-			$html .= ' </div><!-- END .product-meta__row -->';
-
-			echo apply_filters( 'fs_product_tabs_html', $html );
-		}
-
-
 	}
 
 	/**
@@ -936,278 +845,18 @@ class FS_Product {
 		do_action( 'fs_after_save_meta_fields', $post_id );
 	}
 
-	/**
-	 * hook into WP's admin_init action hook
-	 */
-	public function admin_init() {
-		// Add metaboxes
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
-	} // END public function admin_init()
 
 	/**
-	 * hook into WP's add_meta_boxes action hook
-	 */
-	public function add_meta_boxes() {
-		// Add this metabox to every selected post
-		add_meta_box(
-			sprintf( 'fast_shop_%s_metabox', FS_Config::get_data( 'post_type' ) ),
-			__( 'Product settings', 'f-shop' ),
-			array( &$this, 'add_inner_meta_boxes' ),
-			FS_Config::get_data( 'post_type' ),
-			'normal',
-			'high'
-		);
-
-		// Add this metabox to every selected post
-
-	} // END public function add_meta_boxes()
-
-
-	/**
-	 * Gets the array that contains the list of product settings tabs.
+	 *  Выводит диалог для выбора товаров upsell
 	 *
-	 * @return array
-	 */
-	public static function get_product_tabs() {
-		$product_fields = FS_Config::get_product_field();
-		$tabs           = array(
-			'basic'        => array(
-				'title'       => __( 'Basic', 'f-shop' ),
-				'on'          => true,
-				'description' => __( 'In this tab you can adjust the prices of goods.', 'f-shop' ),
-				'fields'      => array(
-					FS_Config::get_meta( 'product_type' ) => array(
-						'label'      => __( 'Product type', 'f-shop' ),
-						'type'       => 'radio',
-						'required'   => false,
-						'values'     => array(
-							'physical' => __( 'Physical', 'f-shop' ),
-							'virtual'  => __( 'Virtual', 'f-shop' )
-						),
-						'value'      => 'physical',
-						'attributes' => [
-							'x-model' => 'productType',
-						],
-						'help'       => __( 'Check this box if you are selling a non-physical item.', 'f-shop' )
-					),
-					FS_Config::get_meta( 'price' )        => array(
-						'label'      => __( 'Base price', 'f-shop' ),
-						'type'       => 'number',
-						'required'   => true,
-						'attributes' => [
-							'min'  => 0,
-							'step' => 0.01
-						],
-						'help'       => __( 'This is the main price on the site. Required field!', 'f-shop' )
-					),
-					FS_Config::get_meta( 'action_price' ) => array(
-						'label' => __( 'Promotional price', 'f-shop' ),
-						'type'  => 'number',
-						'help'  => __( 'If this field is filled, the base price loses its relevance. But you can display it on the site.', 'f-shop' )
-					),
-
-					$product_fields['sku']['key']      => $product_fields['sku'],
-					$product_fields['quantity']['key'] => $product_fields['quantity'],
-					FS_Config::get_meta( 'currency' )  => array(
-						'label'    => __( 'Item Currency', 'f-shop' ),
-						'on'       => fs_option( 'multi_currency_on' ) ? true : false,
-						'type'     => 'dropdown_categories',
-						'help'     => __( 'The field is active if you have enabled multicurrency in settings.', 'f-shop' ),
-						'taxonomy' => FS_Config::get_data( 'currencies_taxonomy' )
-					),
-
-				)
-			),
-			'gallery'      => array(
-				'title'  => __( 'Gallery', 'f-shop' ),
-				'on'     => true,
-				'body'   => '',
-//				'template' => 'gallery',
-				'fields' => [
-					'fs_galery' => [
-						'label'     => __( 'Gallery', 'f-shop' ),
-						'type'      => 'gallery',
-						'help'      => __( 'Add images to the gallery.', 'f-shop' ),
-						'multilang' => false
-					]
-				]
-			),
-			'attributes'   => array(
-				'title'    => __( 'Attributes', 'f-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'attributes'
-			),
-			'related'      => array(
-				'title'    => __( 'Associated', 'f-shop' ),
-				'on'       => false, // Сейчас в разработке
-				'body'     => '',
-				'template' => 'related'
-			),
-			'up_sell'      => array(
-				'title'    => __( 'Up-sell', 'f-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'up-sell'
-			),
-			'cross_sell'   => array(
-				'title'    => __( 'Cross-sell', 'f-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'cross-sell'
-			),
-			'variants'     => array(
-				'title'    => __( 'Variation', 'f-shop' ),
-				'on'       => true,
-				'body'     => '',
-				'template' => 'variants'
-			),
-			'delivery'     => array(
-				'title'  => __( 'Shipping and payment', 'f-shop' ),
-				'on'     => true,
-				'body'   => '',
-				'fields' => array(
-					'_fs_delivery_description' => array(
-						'label' => __( 'Shipping and Payment Details', 'f-shop' ),
-						'type'  => 'editor',
-						'help'  => ''
-					),
-
-				)
-			),
-			'seo'          => array(
-				'title'  => __( 'SEO', 'f-shop' ),
-				'on'     => true,
-				'body'   => '',
-				'fields' => array(
-					'fs_seo_slug' => array(
-						'label'     => __( 'SEO slug', 'f-shop' ),
-						'type'      => 'text',
-						'multilang' => true,
-						'help'      => __( 'Allows you to set multilingual url', 'f-shop' )
-					),
-
-				)
-			),
-			'additionally' => array(
-				'title'  => __( 'Additionally', 'f-shop' ),
-				'on'     => true,
-				'body'   => '',
-				'fields' => array(
-					$product_fields['exclude_archive']['key']  => $product_fields['exclude_archive'],
-					$product_fields['label_bestseller']['key'] => $product_fields['label_bestseller'],
-					$product_fields['label_promotion']['key']  => $product_fields['label_promotion'],
-					$product_fields['label_novelty']['key']    => $product_fields['label_novelty'],
-
-				)
-			),
-			'virtual'      => array(
-				'title'          => __( 'Virtual Product', 'f-shop' ),
-				'on'             => true,
-				'nav_attributes' => [
-					'x-show' => 'productType === \'virtual\''
-				],
-				'body'           => '',
-				'fields'         => array(
-					'_fs_virtual_product_url' => array(
-						'label' => __( 'Link to the product', 'f-shop' ),
-						'type'  => 'text',
-						'help'  => ''
-					),
-				)
-			),
-		);
-
-		return apply_filters( 'fs_product_tabs_admin', $tabs );
-	}
-
-	/**
-	 * called off of the add meta box
+	 * todo: эта функция замедляет загрузку формы редактирования товара, нужно сделать подгрузку товаров ajax
 	 *
-	 * @param $post
+	 * @param \WP_Post $post
+	 *
+	 * @return void
 	 */
-	public function add_inner_meta_boxes( $post ) {
-		$form_class       = new FS_Form();
-		$product_tabs     = array_filter( self::get_product_tabs(), function ( $tab ) {
-			return $tab['on'];
-		} );
-		$this->product_id = $post->ID;
-
-		$gallery      = \FS\FS_Images_Class::get_gallery( 0, false, false );
-		$product_type = get_post_meta( $post->ID, FS_Config::get_meta( 'product_type' ), true );
-
-		echo '<div class="fs-metabox" id="fs-metabox" x-data="{ productType: \'' . ( $product_type ?: 'physical' ) . '\', }">';
-		do_action( 'fs_before_product_meta' );
-		if ( count( $product_tabs ) ) {
-			echo '<ul class="tab-header">';
-			foreach ( $product_tabs as $key => $tab ) : ?>
-				<li <?php echo fs_parse_attr( $tab['nav_attributes'] ?? [] ) ?>
-					class="<?php echo esc_attr( 'fs-tab-nav-' . $key ) ?>"
-					:class="{'fs-nav-link-active': $store.FS?.activeTab==='<?php echo esc_attr( $key ) ?>' }">
-					<a x-on:click.prevent="$store.FS?.setActiveTab('<?php echo esc_attr( $key ) ?>')">
-						<?php _e( $tab['title'], 'f-shop' ) ?>
-					</a>
-				</li>
-			<?php
-			endforeach;
-
-			echo '</ul>'; ?>
-
-			<div class="fs-tabs">
-			<?php foreach ( $product_tabs as $key_body => $tab_body ) : ?>
-				<div class="fs-tab fs-tab-<?php echo esc_attr( $key_body ) ?>"
-				:class="{'active':$store.FS?.activeTab==='<?php echo esc_attr( $key_body ) ?>'}"
-				id="<?php echo esc_attr( $key_body ) ?>">
-				<?php if ( ! empty( $tab_body['fields'] ) ) {
-					if ( ! empty( $tab_body['title'] ) ) {
-						echo '<h3>' . esc_html( $tab_body['title'] ) . '</h3>';
-					}
-					if ( ! empty( $tab_body['description'] ) ) {
-						echo '<p class="description">' . esc_html( $tab_body['description'] ) . '</p>';
-					}
-					foreach ( $tab_body['fields'] as $key => $field ) {
-						$filter_meta[ $key ] = $key;
-					}
-
-					foreach ( $tab_body['fields'] as $key => $field ) {
-						if ($field['type']=='dropdown_categories') continue;
-
-						// если у поля есть атрибут "on" и он выключён то выходим из цикла
-						if ( isset( $field['on'] ) && $field['on'] != true ) {
-							continue;
-						}
-
-						// если не указан атрибут type
-						if ( empty( $field['type'] ) ) {
-							$field['type'] = 'text';
-						}
-
-						$form_class->render_field(
-							apply_filters( 'fs_product_tab_admin_meta_key', $key, $field ),
-							$field['type'],
-							array_merge( $field, [ 'post_id' => $post->ID, 'source' => 'post_meta','wrapper_class'=>'fs-field-row clearfix' ] )
-						);
-
-					}
-				} elseif ( ! empty( $tab_body['template'] ) ) {
-					$template_file = sprintf( FS_PLUGIN_PATH . 'templates/back-end/metabox/%s.php', $tab_body['template'] );
-					if ( file_exists( $template_file ) ) {
-						include( $template_file );
-					} else {
-						esc_html_e( 'Template file not found', 'f-shop' );
-					}
-				} elseif ( ! empty( $tab_body['body'] ) ) {
-					echo $tab_body['body'];
-				}
-				echo '</div>';
-
-			endforeach;
-			echo "</div>";
-			echo '<div class="clearfix"></div>';
-
-		}
+	function after_product_tabs( \WP_Post $post ) {
 		?>
-		<!-- The modal / dialog box, hidden somewhere near the footer -->
 		<div id="fs-upsell-dialog" class="hidden fs-select-products-dialog" style="max-width:420px">
 			<?php
 			$args  = array(
@@ -1219,17 +868,17 @@ class FS_Product {
 				echo '<ul>';
 				while ( $query->have_posts() ) {
 					$query->the_post();
-					the_title( '<li><span>', '</span><button class="button add-product" data-id="' . esc_attr( get_the_ID() ) . '" data-field="fs_up_sell" data-name="' . esc_attr( get_the_title() ) . '">' . esc_html__( 'choose', 'f-shop' ) . '</button></li>' );
+					the_title( '<li><span>', '</span><button class="button add-product" data-id="' . esc_attr( $post->ID ) . '" data-field="fs_up_sell" data-name="' . esc_attr( get_the_title() ) . '">' . esc_html__( 'choose', 'f-shop' ) . '</button></li>' );
 				}
 				echo '</ul>';
 			}
 			wp_reset_query();
 			?>
 		</div>
-		<?php
-		echo '</div>';
-	}
 
+		<div class="fs-mb-preloader"></div>
+		<?php
+	}
 
 	public function set_real_product_price( $product_id = 0 ) {
 		update_post_meta( $product_id, '_fs_real_price', fs_get_price( $product_id ) );

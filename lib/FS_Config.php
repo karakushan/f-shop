@@ -31,8 +31,6 @@ class FS_Config {
 		// Gets an array of service texts
 		$this->texts = self::get_texts();
 
-		// Tabs displayed in the metabox in product editing
-		$this->tabs = FS_Product::get_product_tabs();
 
 		// Array of site settings
 		$this->options = get_option( 'fs_option', array() );
@@ -167,28 +165,28 @@ class FS_Config {
 	 */
 	public static function get_orderby_keys() {
 		$keys = array(
-			'date_desc'  => array(
+			'date_desc'    => array(
 				'name' => __( 'Recently added', 'f-shop' )
 			),
-			'date_asc'   => array(
+			'date_asc'     => array(
 				'name' => __( 'Later added', 'f-shop' )
 			),
-			'price_asc'  => array(
+			'price_asc'    => array(
 				'name' => __( 'From cheap to expensive', 'f-shop' )
 			),
-			'price_desc' => array(
+			'price_desc'   => array(
 				'name' => __( 'From expensive to cheap', 'f-shop' )
 			),
-			'name_asc'   => array(
+			'name_asc'     => array(
 				'name' => __( 'By title A to Z', 'f-shop' )
 			),
-			'name_desc'  => array(
+			'name_desc'    => array(
 				'name' => __( 'By title Z to A', 'f-shop' )
 			),
-			'views_desc' => array(
+			'views_desc'   => array(
 				'name' => __( 'Behind the popularity', 'f-shop' )
 			),
-			'action_price'       => array(
+			'action_price' => array(
 				'name' => __( 'First promotional', 'f-shop' )
 			),
 		);
@@ -559,7 +557,7 @@ class FS_Config {
 		$meta = array(
 			'price'             => 'fs_price',
 			'action_price'      => 'fs_action_price',
-			'real_price'        => '_fs_real_price',
+			'real_price'        => 'fs_real_price',
 			'currency'          => 'fs_currency',
 			'sku'               => 'fs_articul',
 			'remaining_amount'  => 'fs_remaining_amount',

@@ -1539,4 +1539,30 @@ td.fs_menu_order.column-fs_menu_order {
   grid-gap: 0.5rem;
 }
 
+.fs-vertical-tabs.cf-container__fields {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+.fs-vertical-tabs .cf-container .cf-field {
+  flex: unset;
+}
+.fs-vertical-tabs .cf-container__tabs-list .cf-container__tabs-item {
+  background-color: #f0f0f1;
+}
+.fs-vertical-tabs .cf-container__tabs-list .cf-container__tabs-item--current {
+  background-color: #fff;
+  border-bottom-color: #fff;
+}
+.fs-vertical-tabs.cf-container--tabbed-horizontal {
+  flex-direction: row;
+}
+.fs-vertical-tabs .cf-container__tabs--tabbed-horizontal {
+  flex-basis: 304px;
+  padding: 0;
+}
+.fs-vertical-tabs .cf-container__tabs--tabbed-horizontal .cf-container__tabs-list {
+  flex-direction: column;
+}
+
 /*# sourceMappingURL=fs-admin.css.map */

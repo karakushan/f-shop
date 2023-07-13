@@ -31,14 +31,14 @@ class Brand_Widget extends \WP_Widget {
 
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : '';
 		?>
-        <p>
-            <label
-                    for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
-            <input class="widefat title"
-                   id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
-                   name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
-                   value="<?php echo esc_attr( $title ); ?>"/>
-        </p>
+		<p>
+			<label
+				for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
+			<input class="widefat title"
+			       id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+			       name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
+			       value="<?php echo esc_attr( $title ); ?>"/>
+		</p>
 		<?php
 	}
 
@@ -49,6 +49,11 @@ class Brand_Widget extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
+		global $wp_query;
+		if ( ! $wp_query->have_posts() ) {
+			return;
+		}
+
 		$title_name = fs_option( 'fs_multi_language_support' )
 		              && FS_Config::default_locale() != get_locale() ? 'title_' . get_locale() : 'title';
 
@@ -56,13 +61,42 @@ class Brand_Widget extends \WP_Widget {
 			$title_name = 'title';
 		}
 
-		$title  = apply_filters( 'widget_title', $instance[ $title_name ] );
-		$brands = get_terms( [ 'taxonomy' => FS_Config::get_data( 'brand_taxonomy' ), 'hide_empty' => false ] );
+		$title    = apply_filters( 'widget_title', $instance[ $title_name ] );
+		$terms    = wp_cache_get('fs_brand_widget_terms');
+
+		if ( false === $terms) {
+			$terms    = [];
+			$products = get_posts( array_merge( $wp_query->query_vars, [
+				'numberposts' => - 1,
+			] ) );
+			foreach ( $products as $product ) :
+				$post_terms = wp_get_post_terms( $product->ID, FS_Config::get_data( 'brand_taxonomy' ) );
+				foreach ( $post_terms as $term ) {
+					if ( in_array( $term->term_id, $terms ) ) {
+						continue;
+					}
+					$terms[] = $term->term_id;
+				}
+			endforeach;
+			$wp_query->reset_postdata();
+
+			wp_cache_set('fs_brand_widget_terms', $terms);
+		}
+
+		if ( empty( $terms ) ) {
+			return;
+		}
+
+		$brands = get_terms( [
+			'taxonomy'   => FS_Config::get_data( 'brand_taxonomy' ),
+			'hide_empty' => false,
+			'include'    => $terms
+		] );
 		$query  = $_REQUEST['brands'] ?? [];
 
 		echo $args['before_widget'];
 		echo ! empty( $title ) ? $args['before_title'] . $title . $args['after_title'] : ''; ?>
-        <ul class="fs-brand-filter">
+		<ul class="fs-brand-filter">
 			<?php foreach ( $brands as $brand ): ?>
 				<?php
 				$clear_brand = $query;
@@ -71,18 +105,18 @@ class Brand_Widget extends \WP_Widget {
 					unset( $clear_brand[ $key ] );
 				}
 				?>
-                <li class="fs-checkbox-wrapper">
-                    <input type="checkbox" class="checkStyle"
-                           data-fs-action="filter"
-                           data-fs-redirect="<?php echo esc_url( add_query_arg( [ 'brands' => $clear_brand] ) ); ?>"
-                           name="brands[<?php echo $brand->slug; ?>]"
-                           value="<?php echo esc_url( add_query_arg( [ 'brands' => array_merge( $query, [ $brand->term_id ] ) ] ) ); ?>"
-                           id="fs-brand-<?php echo $brand->term_id; ?>" <?php  echo in_array($brand->term_id,$query) ?  'checked' : ''  ?>>
-                    <label for="fs-brand-<?php echo $brand->term_id; ?>"
-                           class="checkLabel"> <?php echo $brand->name; ?></label>
-                </li>
+				<li class="fs-checkbox-wrapper">
+					<input type="checkbox" class="checkStyle"
+					       data-fs-action="filter"
+					       data-fs-redirect="<?php echo esc_url( add_query_arg( [ 'brands' => $clear_brand ] ) ); ?>"
+					       name="brands[<?php echo $brand->slug; ?>]"
+					       value="<?php echo esc_url( add_query_arg( [ 'brands' => array_merge( $query, [ $brand->term_id ] ) ] ) ); ?>"
+					       id="fs-brand-<?php echo $brand->term_id; ?>" <?php echo in_array( $brand->term_id, $query ) ? 'checked' : '' ?>>
+					<label for="fs-brand-<?php echo $brand->term_id; ?>"
+					       class="checkLabel"> <?php echo $brand->name; ?></label>
+				</li>
 			<?php endforeach; ?>
-        </ul>
+		</ul>
 
 		<?php echo $args['after_widget'];
 	}

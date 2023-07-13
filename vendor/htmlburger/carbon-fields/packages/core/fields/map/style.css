@@ -1,0 +1,17 @@
+/* Error: Undefined variable.
+ *    ,
+ * 16 |     border-color: $wp-color-gray-light-500;
+ *    |                   ^^^^^^^^^^^^^^^^^^^^^^^^
+ *    '
+ *   style.scss 16:16  root stylesheet */
+
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: Undefined variable.\a    \2577 \a 16 \2502      border-color: $wp-color-gray-light-500;\d\a    \2502                    ^^^^^^^^^^^^^^^^^^^^^^^^\a    \2575 \a   style.scss 16:16  root stylesheet";
+}
