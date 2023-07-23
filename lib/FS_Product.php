@@ -997,4 +997,89 @@ class FS_Product {
 
 		return intval( $count );
 	}
+
+	/**
+	 * Выводит вкладки товаров в лицевой части сайта
+	 *
+	 * @param int $product_id
+	 * @param array $args
+	 */
+	public static function product_tabs( $product_id = 0, $args = array() ) {
+		$product_id = fs_get_product_id( $product_id );
+
+		$args = wp_parse_args( $args, array(
+			'wrapper_class'   => 'fs-product-tabs',
+			'before'          => '',
+			'after'           => '',
+			'attributes_args' => array()
+
+		) );
+
+		// Get the product attributes
+		ob_start();
+		fs_the_atts_list( $product_id, $args['attributes_args'] );
+		$attributes = ob_get_clean();
+
+		// Вкладки по умолчанию
+		$default_tabs = array(
+			'attributes'  => array(
+				'title'   => __( 'Characteristic', 'f-shop' ),
+				'content' => $attributes
+			),
+			'description' => array(
+				'title'   => __( 'Description', 'f-shop' ),
+				'content' => apply_filters( 'the_content', get_the_content() )
+			),
+			'delivery'    => array(
+				'title'   => __( 'Shipping and payment', 'f-shop' ),
+				'content' => fs_frontend_template( 'product/tabs/delivery' )
+			),
+			'reviews'     => array(
+				'title'   => __( 'Reviews', 'f-shop' ),
+				'content' => fs_frontend_template( 'product/tabs/comments' )
+			)
+
+		);
+
+		$default_tabs = apply_filters( 'fs_product_tabs_items', $default_tabs, $product_id );
+
+		if ( is_array( $default_tabs ) && ! empty( $default_tabs ) ) {
+
+			$html = '<div class="' . esc_attr( $args['wrapper_class'] ) . '">';
+			$html .= $args['before'];
+			$html .= '<ul class="nav nav-tabs" id="fs-product-tabs-nav" role="tablist">';
+
+			// Display tab switches
+			$counter = 0;
+			foreach ( $default_tabs as $id => $tab ) {
+				$class = ! $counter ? ' active' : '';
+				$html  .= '<li class="nav-item ' . $class . '">';
+				$html  .= '<a class="nav-link' . esc_attr( $class ) . '" id="fs-product-tab-nav-' . esc_attr( $id ) . '" data-toggle="tab" href="#fs-product-tab-' . esc_attr( $id ) . '" role="tab" aria-controls="' . esc_attr( $id ) . '" aria-selected="true">' . esc_html( $tab['title'] ) . '</a>';
+				$html  .= '</li>';
+				$counter ++;
+			}
+
+			$html .= '</ul><!-- END #fs-product-tabs-nav -->';
+
+			$html .= '<div class="tab-content" id="fs-product-tabs-content">';
+
+			// Display the contents of the tabs
+			$counter = 0;
+			foreach ( $default_tabs as $id => $tab ) {
+				$class = ! $counter ? ' active' : '';
+				$html  .= '<div class="tab-pane' . esc_attr( $class ) . '" id="fs-product-tab-' . esc_attr( $id ) . '" role="tabpanel" aria-labelledby="' . esc_attr( $id ) . '-tab">';
+				$html  .= $tab['content'];
+				$html  .= '</div>';
+				$counter ++;
+			}
+
+			$html .= '</div><!-- END #fs-product-tabs-content -->';
+			$html .= $args['after'];
+			$html .= ' </div><!-- END .product-meta__row -->';
+
+			echo apply_filters( 'fs_product_tabs_html', $html );
+		}
+
+
+	}
 }

@@ -57,7 +57,7 @@ class WP_Globus {
 			if ( is_singular( $post_type ) ) {
 				global $post;
 				$prefix = $lang == WPGlobus::Config()->default_language ? '' : $lang;
-				$slug   = get_post_meta( $post->ID, 'fs_seo_slug__' . $locales[ $lang ], 1 );
+				$slug   = get_post_meta( $post->ID, 'fs_seo_slug__' . mb_strtolower($locales[ $lang ]), 1 );
 				$link   = $slug ? site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $slug ) )
 					: site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $post->post_name ) );
 			} elseif ( fs_option( 'fs_localize_slug' ) && fs_is_product_category() ) {
