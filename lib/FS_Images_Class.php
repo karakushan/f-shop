@@ -49,20 +49,14 @@ class FS_Images_Class {
 			"prevHtml"       => '',
 			"nextHtml"       => '',
 			"attachments"    => false,
-			"thumbnail"      => false,
-			"plug_thumbnail" => true,
+			"use_post_thumbnail" => true,
 			"verticalHeight" => 500,
 			"alt"            => get_the_title( $product_id ),
 			"title"          => get_the_title( $product_id )
 		);
 		$args    = wp_parse_args( $args, $default );
 
-		$gallery_images = self::get_gallery( $product_id, $args['thumbnail'], $args['attachments'] );
-
-		// Добавляем миниатюру в галерею если не загружены фото
-		if ( $args['plug_thumbnail'] && empty( $gallery_images ) && has_post_thumbnail( $product_id ) ) {
-			array_push( $gallery_images, get_post_thumbnail_id( $product_id ) );
-		}
+		$gallery_images = self::get_gallery( $product_id, $args['use_post_thumbnail'], $args['attachments'] );
 
 		if ( empty( $gallery_images ) ) {
 			echo '<img src="' . FS_PLUGIN_URL . '/assets/img/no-photos.svg" alt="No Photo" class="fs-product-image-plug">';
@@ -141,6 +135,12 @@ class FS_Images_Class {
 				$gallery = array_merge( $gallery, $product_variations_first['gallery'] );
 			}
 		}
+
+		$gallery= array_filter( $gallery,function ($item){
+		    return (is_numeric( $item ) && $item > 0);
+		} );
+		
+		do_action( 'qm/debug', $gallery );
 
 		return apply_filters( 'fs_custom_gallery', array_unique( $gallery ), $product_id );
 
