@@ -21,8 +21,10 @@ class PostMetaDatastore extends \Carbon_Fields\Datastore\Datastore {
 	 * @inheritDoc
 	 */
 	public function load( Field $field ) {
-		$key = $this->get_key_for_field( $field );
-		return get_post_meta( $this->get_object_id(), $key, true);
+		$key        = $this->get_key_for_field( $field );
+		$meta_value = get_post_meta( $this->get_object_id(), $key, true );
+
+		return $meta_value !== false ? $meta_value : $field->get_default_value();
 	}
 
 	/**

@@ -142,11 +142,8 @@ class ProductEdit {
 				'fields' => [
 					'fs_attributes' => [
 						'label' => __( 'Характеристики товара', 'f-shop' ),
-						'type'  => 'association',
-						'types' => [
-							'type'     => 'term',
-							'taxonomy' => FS_Config::get_data( 'features_taxonomy' ),
-						],
+						'type'  => 'html',
+						'template' => FS_PLUGIN_PATH . '/templates/back-end/metabox/variants.php',
 					]
 				]
 			),
