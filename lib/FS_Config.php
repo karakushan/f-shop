@@ -602,7 +602,8 @@ class FS_Config {
 			'currency'          => [ 'key' => 'fs_currency' ],
 			'sku'               => [
 				'key'   => 'fs_articul',
-				'label' => __( 'SKU', 'f-shop' )
+				'label' => __( 'SKU', 'f-shop' ),
+				'type'  => 'text',
 			],
 			'quantity'          => [
 				'key'   => 'fs_remaining_amount',
