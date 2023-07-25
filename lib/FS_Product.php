@@ -1082,4 +1082,37 @@ class FS_Product {
 
 
 	}
+
+	/**
+	 * Returns a list of product attributes as a hierarchical list
+	 *
+	 * @param $post_id
+	 *
+	 * @return array|array[]
+	 */
+	public static function get_attributes_hierarchy($post_id) {
+		$attributes = get_the_terms( $post_id, FS_Config::get_data( 'features_taxonomy' ) );
+
+		if( ! $attributes || is_wp_error( $attributes ) ) {
+			return [];
+		}
+
+		$parents = array_filter( $attributes, function ( $attribute ) {
+			return $attribute->parent === 0;
+		} );
+
+		$groped = array_map( function ( $attribute ) use ( $attributes ) {
+			return [
+				'id'       => $attribute->term_id,
+				'name'     => $attribute->name,
+				'slug'     => $attribute->slug,
+				'parent'   => $attribute->parent,
+				'children' => array_values( array_filter( $attributes, function ( $child ) use ( $attribute ) {
+					return $child->parent === $attribute->term_id;
+				} ) )
+			];
+		}, $parents );
+
+		return  array_values( $groped );
+	}
 }

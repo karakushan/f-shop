@@ -3,6 +3,7 @@
 namespace FS;
 
 
+use FS\Admin\ProductEdit;
 use FS\Admin\TermEdit;
 use FS\Integrations\WP_Globus;
 
@@ -51,12 +52,14 @@ class FS_Init {
 	 * FS_Init constructor.
 	 */
 	public function __construct() {
+		global $f_shop;
+		$f_shop = $this;
 		// Получаем опции плагина
 		$this->fs_option = get_option( 'fs_option' );
 
 		// Инициализация классов
 		foreach ( $this->init_classes as $init_class ) {
-			new $init_class;
+			$this->init_classes[ $init_class ] = new $init_class;
 		}
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'frontend_scripts_and_styles' ] );
@@ -79,7 +82,7 @@ class FS_Init {
 
 		add_action( 'init', [ $this, 'plugin_integration' ] );
 
-		add_action( 'after_setup_theme', [ $this, 'crb_load' ] );
+		add_action( 'admin_init', [ $this, 'crb_load' ] );
 	}
 
 	/**
@@ -262,7 +265,7 @@ class FS_Init {
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'wp-content/plugins/f-shop/assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'select2', FS_PLUGIN_URL . 'assets/plugins/bower_components/select2/dist/js/select2.min.js', array( 'jquery' ), null, true );
 
-		wp_enqueue_script( FS_PLUGIN_PREFIX . 'backend', FS_PLUGIN_URL . 'assets/js/fs-backend.js', array(), null, true );
+
 
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'admin', FS_PLUGIN_URL . 'assets/js/fs-admin.js', array(
 			'jquery',
@@ -277,6 +280,13 @@ class FS_Init {
 		);
 		wp_localize_script( FS_PLUGIN_PREFIX . 'admin', 'fShop', $l10n );
 
+		wp_enqueue_script( FS_PLUGIN_PREFIX . 'backend', FS_PLUGIN_URL . 'assets/js/fs-backend.js', array(), null, true );
+		wp_localize_script( FS_PLUGIN_PREFIX . 'backend', 'FS_BACKEND', [
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( 'f-shop' ),
+			'lang'    => [
+			]
+		] );
 	}
 
 	/**
@@ -330,4 +340,7 @@ class FS_Init {
 		\Carbon_Fields\Carbon_Fields::boot();
 	}
 
+	function get( $classname ) {
+		return $this->init_classes[ $classname ] ?? null;
+	}
 }

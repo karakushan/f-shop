@@ -2,8 +2,8 @@ import iziToast from "izitoast";
 
 class FS {
     constructor() {
-        this.ajaxurl = window.fShop.ajaxurl;
-        this.nonce = window.fShop.nonce ?? null ;
+        this.ajaxurl = '/wp-admin/admin-ajax.php';
+        this.nonce = window.fShop.nonce ?? null;
         this.nonceField = 'fs_secret';
 
         this.addWishListToCart = this.addWishListToCart.bind(this)
@@ -74,6 +74,27 @@ class FS {
                 //error logging
             }
         });
+    }
+
+    // === ATTRIBUTES ===
+    insertAttribute(postId, attributeName, attributeValue) {
+        return this.post('fs_add_custom_attribute', {post_id: postId, name: attributeName, value: attributeValue})
+    }
+
+    insertChildAttribute(postId, attributeValue,parentId) {
+        return this.post('fs_add_child_attribute', {post_id: postId, value: attributeValue, parent_id: parentId})
+    }
+
+    getAttributes(postId) {
+        return this.post('fs_get_post_attributes', {post_id: postId})
+    }
+
+    detachAttribute(postId, attributeId) {
+        return this.post('fs_detach_attribute', {post_id: postId, attribute_id: attributeId})
+    }
+
+    attachAttribute(postId, attributeId) {
+        return this.post('fs_attach_attribute', {post_id: postId, attribute_id: attributeId})
     }
 }
 

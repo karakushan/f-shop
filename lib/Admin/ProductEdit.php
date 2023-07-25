@@ -10,9 +10,25 @@ class ProductEdit {
 
 	protected $post_id = null;
 
-	private $allowed_types = [ 'media_gallery', 'text','textarea', 'checkbox', 'radio', 'association', 'select', 'html' ];
+	private $allowed_types = [
+		'media_gallery',
+		'text',
+		'textarea',
+		'checkbox',
+		'radio',
+		'association',
+		'select',
+		'html'
+	];
 
+	/**
+	 * ProductEdit constructor.
+	 */
 	public function __construct() {
+		$this->init();
+	}
+
+	function init() {
 		add_action( 'carbon_fields_register_fields', [ $this, 'product_metabox_handle' ] );
 		add_action( 'carbon_fields_post_meta_container_saved', [ $this, 'save_product_meta' ], 10, 2 );
 	}
@@ -20,7 +36,7 @@ class ProductEdit {
 	function product_metabox_handle() {
 		$this->post_id = $_GET['post'] ?? null;
 		$container     = Container::make( 'post_meta', 'fs_metabox', __( 'Настройки товара' ) );
-		$container->set_datastore(new PostMetaDatastore());
+		$container->set_datastore( new PostMetaDatastore() );
 		$container->where( 'post_type', '=', FS_Config::get_data( 'post_type' ) );
 		$container->set_classes( 'fs-vertical-tabs' );
 		foreach ( $this->get_product_tabs() as $key => $tab ) {
@@ -43,7 +59,7 @@ class ProductEdit {
 					$f->set_required( $field['required'] );
 				}
 
-				if ( in_array( $field['type'], [ 'select','radio' ] ) && isset( $field['options'] ) ) {
+				if ( in_array( $field['type'], [ 'select', 'radio' ] ) && isset( $field['options'] ) ) {
 					$f->add_options( $field['options'] );
 				}
 				if ( $field['type'] == 'association' && isset( $field['types'] ) ) {
@@ -67,6 +83,7 @@ class ProductEdit {
 			$container->add_tab( $tab['title'], $fields );
 		}
 	}
+
 	/**
 	 * Gets the array that contains the list of product settings tabs.
 	 *
@@ -141,9 +158,9 @@ class ProductEdit {
 				'on'     => true,
 				'fields' => [
 					'fs_attributes' => [
-						'label' => __( 'Характеристики товара', 'f-shop' ),
-						'type'  => 'html',
-						'template' => FS_PLUGIN_PATH . '/templates/back-end/metabox/variants.php',
+						'label'    => __( 'Характеристики товара', 'f-shop' ),
+						'type'     => 'html',
+						'template' => FS_PLUGIN_PATH . '/templates/back-end/metabox/attributes.php',
 					]
 				]
 			),
@@ -255,19 +272,6 @@ class ProductEdit {
 	 */
 	function save_product_meta( $post_id, $context ) {
 
-		$fields = (array) $_POST['carbon_fields_compact_input']['_fs_attributes'];
 
-		$attributes = array_map( function ( $item ) {
-			$atts = explode( ':', $item );
-
-			return intval( $atts[ count( $atts ) - 1 ] );
-		}, $fields );
-
-		wp_set_post_terms( $post_id, $attributes, FS_Config::get_data( 'features_taxonomy' ) );
-
-
-		if (isset($_POST['carbon_fields_compact_input']['_fs_currency'])) {
-			wp_set_post_terms( $post_id, intval($_POST['carbon_fields_compact_input']['_fs_currency']), FS_Config::get_data( 'currencies_taxonomy' ) );
-		}
 	}
 }

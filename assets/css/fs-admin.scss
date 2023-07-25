@@ -1,7 +1,9 @@
 @import "scss/base";
 @import "scss/mixins";
+@import "scss/variables";
+@import "scss/flexbox";
+@import "scss/utilites";
 
-$tablet_width: 991px;
 
 .fs-preloader {
   display: none;
@@ -1853,6 +1855,7 @@ td.fs_menu_order.column-fs_menu_order {
 
   .cf-container__tabs-list .cf-container__tabs-item {
     background-color: #f0f0f1;
+    border: none;
   }
 
   .cf-container__tabs-list .cf-container__tabs-item--current {
@@ -1870,6 +1873,7 @@ td.fs_menu_order.column-fs_menu_order {
 
     .cf-container__tabs-list {
       flex-direction: column;
+      gap: 2px;
     }
   }
 }
@@ -1879,6 +1883,109 @@ td.fs_menu_order.column-fs_menu_order {
 
 }
 
+.fs-attributes {
+  &__create {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 12px;
+    border: 1px solid #e2e4e7;
+    margin: 1rem 0;
 
+    &-field {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+  }
 
+  &__select {
+    height: 32px;
+  }
 
+  &__add {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+.fs-field__error {
+  display: block;
+  margin-top: 4px;
+  color: $color_error;
+}
+
+.fs-attributes {
+  &__add-child {
+    padding: 12px;
+  }
+
+  &__item-value-actions {
+    button {
+      background: none;
+      border: none;
+      padding: 4px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__item-value {
+    padding: 4px 12px;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #f0f0f1;
+
+    }
+  }
+
+  &__item-values {
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  &__item-name {
+    font-weight: 500;
+  }
+
+  &__item-actions {
+    display: flex;
+    gap: .5rem;
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      padding: 4px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__list {
+    margin-top: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+  }
+
+  &__item {
+    border: 1px solid #e2e4e7;
+    border-radius: 3px;
+
+    &-header {
+      background: #f0f0f1;
+      padding: 6px 12px;
+    }
+  }
+}

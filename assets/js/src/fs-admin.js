@@ -1,9 +1,3 @@
-import Alpine from "alpinejs";
-window.Alpine = Alpine
-Alpine.start()
-
-
-
 jQuery(document).ready(function ($) {
     $(window).off('beforeunload');
     const FS = {

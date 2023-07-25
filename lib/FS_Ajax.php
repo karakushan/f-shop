@@ -102,6 +102,22 @@ class FS_Ajax {
 			add_action( 'wp_ajax_fs_add_custom_attribute', array( $this, 'fs_add_custom_attribute_callback' ) );
 			add_action( 'wp_ajax_nopriv_fs_add_custom_attribute', array( $this, 'fs_add_custom_attribute_callback' ) );
 
+			// fs_add_child_attribute action
+			add_action( 'wp_ajax_fs_add_child_attribute', array( $this, 'fs_add_child_attribute_callback' ) );
+			add_action( 'wp_ajax_nopriv_fs_add_child_attribute', array( $this, 'fs_add_child_attribute_callback' ) );
+
+			// action fs_get_post_attributes
+			add_action( 'wp_ajax_fs_get_post_attributes', array( $this, 'fs_get_post_attributes_callback' ) );
+			add_action( 'wp_ajax_nopriv_fs_get_post_attributes', array( $this, 'fs_get_post_attributes_callback' ) );
+
+			// action fs_detach_attribute
+			add_action( 'wp_ajax_fs_detach_attribute', array( $this, 'fs_detach_attribute_callback' ) );
+			add_action( 'wp_ajax_nopriv_fs_detach_attribute', array( $this, 'fs_detach_attribute_callback' ) );
+
+			// fs_attach_attribute
+			add_action( 'wp_ajax_fs_attach_attribute', array( $this, 'fs_attach_attribute_callback' ) );
+			add_action( 'wp_ajax_nopriv_fs_attach_attribute', array( $this, 'fs_attach_attribute_callback' ) );
+
 			add_action( 'wp_ajax_fs_get_admin_attributes_table', array(
 				'FS\FS_Taxonomy',
 				'fs_get_admin_product_attributes_table'
@@ -1018,10 +1034,10 @@ class FS_Ajax {
 		$taxes_out = ob_get_clean();
 
 		$disable_fields = get_term_meta( $shipping_method_id, '_fs_disable_fields', 1 );
-		$disable_fields =$disable_fields ? : [];
+		$disable_fields = $disable_fields ?: [];
 
-		$required_fields = get_term_meta( $shipping_method_id, '_fs_required_fields', 1);
-		$required_fields = $required_fields ? : [];
+		$required_fields = get_term_meta( $shipping_method_id, '_fs_required_fields', 1 );
+		$required_fields = $required_fields ?: [];
 
 		$packing_cost = fs_option( 'fs_include_packing_cost' ) && $shipping_method_id ? fs_get_packing_cost( $shipping_method_id ) : 0;
 		$packing_cost = sprintf( '%s <span>%s</span>', apply_filters( 'fs_price_format', $packing_cost ), fs_currency() );
@@ -1087,6 +1103,97 @@ class FS_Ajax {
 
 		wp_send_json_success( [
 			'message' => __( 'Products added to cart', 'f-shop' ),
+			'title'   => __( 'Success!', 'f-shop' )
+		] );
+	}
+
+	/**
+	 * Возвращает атрибуты товара сгруппированные по родителям
+	 *
+	 * @return void
+	 */
+	function fs_get_post_attributes_callback() {
+		$post_id = intval( $_POST['post_id'] );
+		wp_send_json_success( FS_Product::get_attributes_hierarchy( $post_id ) );
+	}
+
+	/**
+	 * Открепляет атрибут от товара
+	 *
+	 * @return void
+	 */
+	function fs_detach_attribute_callback() {
+		if ( ! FS_Config::verify_nonce() ) {
+			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
+		}
+		$attribute_id = intval( $_POST['attribute_id'] );
+		$post_id      = intval( $_POST['post_id'] );
+		$taxonomy     = FS_Config::get_data( 'features_taxonomy' );
+
+		wp_remove_object_terms( $post_id, [ $attribute_id ], $taxonomy );
+
+		wp_send_json_success( [
+			'message' => __( 'Attribute removed', 'f-shop' ),
+			'title'   => __( 'Success!', 'f-shop' )
+		] );
+	}
+
+	/**
+	 * Attaches an existing attribute to a product
+	 *
+	 * @return void
+	 */
+	function fs_attach_attribute_callback() {
+		if ( ! FS_Config::verify_nonce() ) {
+			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
+		}
+		$attribute_id = intval( $_POST['attribute_id'] );
+		$post_id      = intval( $_POST['post_id'] );
+		$taxonomy     = FS_Config::get_data( 'features_taxonomy' );
+
+		wp_set_object_terms( $post_id, [ $attribute_id ], $taxonomy, true );
+
+		wp_send_json_success( [
+			'message' => __( 'Attribute added', 'f-shop' ),
+			'title'   => __( 'Success!', 'f-shop' )
+		] );
+	}
+
+	/**
+	 * Creates and attaches a feature to a product
+	 *
+	 * @return void
+	 */
+	function fs_add_child_attribute_callback() {
+		if ( ! FS_Config::verify_nonce() ) {
+			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
+		}
+		$attribute_name = trim( $_POST['value'] );
+		$post_id        = intval( $_POST['post_id'] );
+		$parent_id      = intval( $_POST['parent_id'] );
+		$taxonomy       = FS_Config::get_data( 'features_taxonomy' );
+
+		$term = wp_insert_term( $attribute_name, $taxonomy, [ 'parent' => $parent_id ] );
+
+		if ( is_wp_error( $term ) ) {
+			wp_send_json_error( [
+				'message' => $term->get_error_message(),
+				'title'   => __( 'Error!', 'f-shop' )
+			] );
+		}
+
+		$term_ids = wp_set_object_terms( $post_id, [ $term['term_id'] ], $taxonomy, true );
+
+		if ( is_wp_error( $term_ids ) ) {
+			wp_send_json_error( [
+				'message' => $term_ids->get_error_message(),
+				'title'   => __( 'Error!', 'f-shop' )
+			] );
+		}
+
+		wp_send_json_success( [
+			'term'    => get_term( $term['term_id'], $taxonomy ),
+			'message' => __( 'Attribute added', 'f-shop' ),
 			'title'   => __( 'Success!', 'f-shop' )
 		] );
 	}

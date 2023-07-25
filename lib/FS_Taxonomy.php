@@ -17,6 +17,7 @@
 
 namespace FS;
 
+use FS\Admin\ProductEdit;
 use FS\Admin\TermMetaDatastore;
 use function WP_CLI\Utils\glob_brace;
 use Carbon_Fields\Container;
@@ -31,8 +32,7 @@ class FS_Taxonomy
     {
         $this->taxonomy_name = FS_Config::get_data('product_taxonomy');
 
-        add_action('init', array($this, 'create_taxonomy'), 10);
-
+        add_action('carbon_fields_loaded', array($this, 'create_taxonomy'));
         add_filter('manage_fs-currencies_custom_column', array($this, 'currencies_column_content'), 10, 3);
         add_filter('manage_fs-currencies_custom_column', array($this, 'currencies_column_content'), 10, 3);
         add_filter('manage_edit-fs-currencies_columns', array($this, 'add_fs_currencies_columns'));

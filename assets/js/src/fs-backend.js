@@ -1,10 +1,13 @@
 import Alpine from "alpinejs";
 import FS from "./lib/fs.js";
 
+const fs=new FS();
+fs.ajaxurl=window.FS_BACKEND.ajaxUrl;
+fs.nonce=window.FS_BACKEND.nonce;
+
 window.Alpine = Alpine;
-Alpine.start()
 document.addEventListener('alpine:init', () => {
-    const fs=new FS();
-    fs.ajaxurl = window.ajaxurl;
     Alpine.store('FS',fs)
 })
+
+Alpine.start()
