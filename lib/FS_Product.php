@@ -714,7 +714,7 @@ class FS_Product {
 
 			return floatval( $base_price );
 		} else {
-			$price = get_post_meta( $product_id, FS_Config::get_meta('price'), 1 );
+			$price = get_post_meta( $product_id, FS_Config::get_meta( 'price' ), 1 );
 
 			return apply_filters( 'fs_price_filter', $price, $product_id );
 		}
@@ -1090,10 +1090,11 @@ class FS_Product {
 	 *
 	 * @return array|array[]
 	 */
-	public static function get_attributes_hierarchy($post_id) {
-		$attributes = get_the_terms( $post_id, FS_Config::get_data( 'features_taxonomy' ) );
+	public static function get_attributes_hierarchy( $post_id ) {
+		$tax        = FS_Config::get_data( 'features_taxonomy' );
+		$attributes = get_the_terms( $post_id, $tax );
 
-		if( ! $attributes || is_wp_error( $attributes ) ) {
+		if ( ! $attributes || is_wp_error( $attributes ) ) {
 			return [];
 		}
 
@@ -1101,18 +1102,32 @@ class FS_Product {
 			return $attribute->parent === 0;
 		} );
 
-		$groped = array_map( function ( $attribute ) use ( $attributes ) {
+		$groped = array_map( function ( $attribute ) use ( $attributes, $tax ) {
+			$children = array_values( array_filter( $attributes, function ( $child ) use ( $attribute ) {
+				return $child->parent === $attribute->term_id;
+			} ) );
+
 			return [
-				'id'       => $attribute->term_id,
-				'name'     => $attribute->name,
-				'slug'     => $attribute->slug,
-				'parent'   => $attribute->parent,
-				'children' => array_values( array_filter( $attributes, function ( $child ) use ( $attribute ) {
-					return $child->parent === $attribute->term_id;
-				} ) )
+				'id'             => $attribute->term_id,
+				'name'           => $attribute->name,
+				'parent'         => $attribute->parent,
+				'children'       => array_map( function ( $child ) {
+					return [
+						'id'     => $child->term_id,
+						'name'   => $child->name,
+						'parent' => $child->parent,
+					];
+				}, $children ),
+				'children_all'   => array_map( function ( $child ) {
+					return [
+						'id'     => $child->term_id,
+						'name'   => $child->name,
+						'parent' => $child->parent,
+					];
+				}, get_terms( [ 'parent' => $attribute->term_id, 'hide_empty' => false, 'taxonomy' => $tax ] ) )
 			];
 		}, $parents );
 
-		return  array_values( $groped );
+		return array_values( $groped );
 	}
 }

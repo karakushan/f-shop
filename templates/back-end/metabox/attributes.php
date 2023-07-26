@@ -13,7 +13,8 @@ $attributes = get_terms( [
 	'hide_empty' => false,
 	'parent'     => 0
 ] );
-
+$attributes = \FS\FS_Product::get_attributes_hierarchy( $post_id );
+do_action( 'qm/debug', $attributes );
 $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? [] );
 ?>
 
@@ -33,7 +34,7 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 			getAttributes(){
 				 $store.FS?.getAttributes(this.createAttribute.postId)
 				    .then((response) => response.json())
-				    .then((response) => { this.attributes = response.data; this.$refresh() });
+				    .then((response) => { this.attributes = response.data; });
 			},
 			validateAttribute(ctx,exclude = []){
 				this[ctx] = [];
@@ -68,14 +69,14 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 					});
 				}
 			},
-			attachAttribute(){
-				if(this.selectedAttribute!==""){
-					$store.FS?.attachAttribute(this.createAttribute.postId,this.selectedAttribute)
+			attachAttribute(id=null){
+				if(id){
+					$store.FS?.attachAttribute(this.createAttribute.postId,id)
 					.then((response) => response.json())
 					.then((response) => {
 						if(response.success){
 							this.selectedAttribute = "";
-							this.getAttributes();
+
 						}
 					});
 				}else{
@@ -97,7 +98,7 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 			<?php endforeach; ?>
 		</select>
 		<button href="#" class="button button-primary button-large"
-		        x-on:click.prevent="attachAttribute()"><?php _e( 'Додати', 'f-shop' ) ?></button>
+		        x-on:click.prevent="attachAttribute(selectedAttribute)"><?php _e( 'Додати', 'f-shop' ) ?></button>
 	</div>
 
 	<div class="fs-attributes__create fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap" x-show="showAddForm"
@@ -145,7 +146,7 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 					</div>
 				</div>
 				<div class="fs-attributes__item-values" x-show="open" x-transition>
-					<template x-for="value in attribute.children" :key="value.term_id">
+					<template x-for="value in attribute.children" :key="value.id">
 						<div
 							x-data="{show:true}" x-show="show"
 							class="fs-attributes__item-value fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap">
@@ -154,16 +155,34 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 							</div>
 							<div class="fs-attributes__item-value-actions">
 								<button class="fs-text-error" title="Видалити значення"
-								        x-on:click.prevent="detachAttribute(value.term_id);show=false">
+								        x-on:click.prevent="detachAttribute(value.id);show=false">
 									<span class="dashicons dashicons-trash"></span>
 								</button>
 							</div>
 						</div>
 					</template>
-					<div class="fs-attributes__add-child fs-flex fs-flex-items-center fs-gap-0-5">
-						<input type="text" x-model="createAttribute.value">
-						<button class="button button-large"
-						        x-on:click.prevent="addChildAttribute(attribute.id,attributeIndex)"><?php _e( 'Додати значення', 'f-shop' ) ?>
+					<div class="fs-attributes__add-child fs-flex fs-flex-items-center fs-flex-wrap fs-gap-0-5"
+					     x-data="{createNew:false, id:null}">
+						<div class="fs-width-100 fs-flex fs-flex-items-center">
+							<input type="checkbox" x-model="createNew" value="true"
+							       :id="'create-checkbox-'+attribute.id">
+							<label :for="'create-checkbox-'+attribute.id">Створити нові</label>
+						</div>
+						<input type="text" placeholder="Введіть назву" x-model="createAttribute.value" x-show="createNew" class="fs-width-1-4">
+						<select x-show="!createNew" class="fs-width-1-4" x-model="id">
+							<option value="">Виберіть із списку</option>
+							<template x-for="att in attribute.children_all" :key="'children_all'+att.id">
+								<option :value="att.id" x-text="att.name"></option>
+							</template>
+						</select>
+						<button class="button button-large" x-show="createNew"
+						        x-on:click.prevent="addChildAttribute(attribute.id,attributeIndex);">
+							<?php _e( 'Додати значення', 'f-shop' ) ?>
+						</button>
+						<button class="button button-large" x-show="!createNew"
+						        x-on:click.prevent="attachAttribute(id);
+						      attribute.children.push(attribute.children_all.find(item=>item.id===parseInt(id)));">
+							<?php _e( 'Додати значення', 'f-shop' ) ?>
 						</button>
 					</div>
 				</div>
