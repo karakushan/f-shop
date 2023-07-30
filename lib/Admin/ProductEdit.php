@@ -242,7 +242,11 @@ class ProductEdit {
 
 	function make_field( $field, $name ,$label = '') {
 
-		$f = Field::make( $field['type'], $name, $label ??  $field['label'] );
+		if($label!==''){
+			$field['label'] = $label;
+		}
+
+		$f = Field::make( $field['type'], $name, $field['label'] );
 
 		if ( isset( $field['width'] ) ) {
 			$f->set_width( $field['width'] );
