@@ -176,7 +176,7 @@ class FS_Product {
 
 		// Получаем ID поста по метаполю
 		global $wpdb;
-		$meta_key = 'fs_seo_slug__' . get_locale();
+		$meta_key = 'fs_seo_slug__' . mb_strtolower( get_locale());
 		$post_id  = $wpdb->get_var( "SELECT post_id  FROM $wpdb->postmeta WHERE meta_key='$meta_key' AND meta_value='$slug'" );
 		if ( ! $post_id ) {
 			return $query;
