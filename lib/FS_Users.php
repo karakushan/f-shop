@@ -82,18 +82,19 @@ class FS_Users {
 	 */
 	public function admin_profile_edit_fields( $user ) {
 		?>
-        <h2><?php esc_html_e( 'Delivery Settings', 'f-shop' ); ?></h2>
-        <table class="form-table">
+		<h2><?php esc_html_e( 'Delivery Settings', 'f-shop' ); ?></h2>
+		<table class="form-table">
 			<?php foreach ( self::get_user_fields( $user->ID ) as $name => $user_field ) {
 				if ( isset( $user_field['save_meta'] ) && $user_field['save_meta'] == false ) {
 					continue;
 				}
 				?>
-                <tr>
-                    <th>
-                        <label for="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>"><?php echo esc_html( $user_field['name'] ) ?></label>
-                    </th>
-                    <td>
+				<tr>
+					<th>
+						<label
+							for="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>"><?php echo esc_html( $user_field['name'] ) ?></label>
+					</th>
+					<td>
 						<?php
 						$args = wp_parse_args( $user_field, [
 							'value' => get_user_meta( $user->ID, $name, 1 ),
@@ -103,14 +104,14 @@ class FS_Users {
 						unset( $args['name'] );
 						$this->form->render_field( $name, $user_field['type'], $args );
 						if ( ! empty( $user_field['description'] ) ): ?>
-                            <p class="description">
+							<p class="description">
 								<?php echo $user_field['description']; ?>
-                            </p>
+							</p>
 						<?php endif ?>
-                    </td>
-                </tr>
+					</td>
+				</tr>
 			<?php } ?>
-        </table>
+		</table>
 		<?php
 	}
 
@@ -150,31 +151,31 @@ class FS_Users {
 		$result['status'] = false;
 
 		if ( empty( $str ) ) {
-			$result['msg']    = __('Password can not be empty','f-shop');
+			$result['msg']    = __( 'Password can not be empty', 'f-shop' );
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['lengthStatus'] == true ) & ( $this->lengthValidation( $str, $this->rules['minLength'], $this->rules['maxLength'] ) == false ) ) {
-			$result['msg']    =sprintf(__('Your password must be %s to %s characters','f-shop'),$this->rules['minLength'],$this->rules['maxLength']) ;
+			$result['msg']    = sprintf( __( 'Your password must be %s to %s characters', 'f-shop' ), $this->rules['minLength'], $this->rules['maxLength'] );
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['numberStatus'] == true ) & ( $this->isContainNumber( $str ) == false ) ) {
-			$result['msg']    = __('Your password must contain at least one number.','f-shop');
+			$result['msg']    = __( 'Your password must contain at least one number.', 'f-shop' );
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['uppercaseStatus'] == true ) & ( $this->isContainUppercase( $str ) == false ) ) {
-			$result['msg']    = __('Your password must contain at least one uppercase letter.','f-shop');
+			$result['msg']    = __( 'Your password must contain at least one uppercase letter.', 'f-shop' );
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['lowercaseStatus'] == true ) & ( $this->isContainLowercase( $str ) == false ) ) {
-			$result['msg']    = __('Your password must contain at least one lowercase letter.','f-shop');
+			$result['msg']    = __( 'Your password must contain at least one lowercase letter.', 'f-shop' );
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['specialCharacterStatus'] == true ) & ( $this->isContainSpecialCharacter( $str ) == false ) ) {
-			$result['msg']    = __('Your password must contain at least one special character.','f-shop');
+			$result['msg']    = __( 'Your password must contain at least one special character.', 'f-shop' );
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['whiteSpaceStatus'] == true ) & ( $this->isWhiteSpaceContain( $str ) == false ) ) {
-			$result['msg']    = __('Space is not allow in password','f-shop');
+			$result['msg']    = __( 'Space is not allow in password', 'f-shop' );
 			$result['status'] = false;
 
 		} else {
@@ -409,7 +410,7 @@ class FS_Users {
 				'alpine'      => 'fs_other_shipping_address:false',
 				'save_meta'   => false
 			),
-			'fs_shipping_name'    => array(
+			'fs_shipping_name'          => array(
 				'name'        => __( 'Delivery service name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -420,7 +421,7 @@ class FS_Users {
 				'save_meta'   => false
 			),
 
-			'fs_shipping_first_name'    => array(
+			'fs_shipping_first_name' => array(
 				'name'        => __( 'First name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -433,7 +434,7 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => false
 			),
-			'fs_shipping_last_name'     => array(
+			'fs_shipping_last_name'  => array(
 				'name'        => __( 'Last name', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -444,7 +445,7 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => false
 			),
-			'fs_shipping_email'         => array(
+			'fs_shipping_email'      => array(
 				'name'        => __( 'E-mail', 'f-shop' ),
 				'type'        => 'email',
 				'label'       => '',
@@ -455,7 +456,7 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => false
 			),
-			'fs_shipping_phone'         => array(
+			'fs_shipping_phone'      => array(
 				'name'        => __( 'Phone', 'f-shop' ),
 				'type'        => 'tel',
 				'label'       => '',
@@ -468,7 +469,7 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => false
 			),
-			'fs_shipping_address'       => array(
+			'fs_shipping_address'    => array(
 				'name'        => __( 'Address', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -479,7 +480,7 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => false
 			),
-			'fs_shipping_city'          => array(
+			'fs_shipping_city'       => array(
 				'name'        => __( 'City', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -490,7 +491,7 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => true
 			),
-			'fs_shipping_state'         => array(
+			'fs_shipping_state'      => array(
 				'name'        => __( 'State', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -501,7 +502,7 @@ class FS_Users {
 				'checkout'    => true,
 				'save_meta'   => false
 			),
-			'fs_shipping_zip'           => array(
+			'fs_shipping_zip'        => array(
 				'name'        => __( 'Zip', 'f-shop' ),
 				'type'        => 'text',
 				'label'       => '',
@@ -857,7 +858,7 @@ class FS_Users {
 			}
 
 			// Сохраняем аватарку
-			if ( $user_field['type'] == 'file' && ! empty( $_FILES[ $meta_key ])) {
+			if ( $user_field['type'] == 'file' && ! empty( $_FILES[ $meta_key ] ) ) {
 				$attach_id = media_handle_upload( $meta_key, 0 );
 
 				if ( is_wp_error( $attach_id ) ) {
