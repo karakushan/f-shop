@@ -273,4 +273,18 @@ class ProductEdit {
 
 		return $f;
 	}
+
+	/**
+	 * Assigns product characteristics from meta fields
+	 *
+	 * @param $post_id
+	 * @param $context
+	 *
+	 * @return void
+	 */
+	function save_product_meta( $post_id, $context ) {
+
+//		$field = (array) $_POST['carbon_fields_compact_input']['_fs_attributes'];
+
+	}
 }
