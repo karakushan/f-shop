@@ -49,36 +49,14 @@ class ProductEdit {
 				if ( ! isset( $field['type'] ) || ! in_array( $field['type'], $this->allowed_types ) ) {
 					continue;
 				}
-				$f = Field::make( $field['type'], $name, $field['label'] );
 
-				if ( isset( $field['width'] ) ) {
-					$f->set_width( $field['width'] );
+				if ( isset( $field['multilang'] ) && $field['multilang'] == true ) {
+					foreach ( FS_Config::get_languages() as $language ) {
+						$fields[] = $this->make_field( $field, $name . '__' .mb_strtolower($language['locale']),$field['label'] . ' (' . $language['name'] . ')');
+					}
+				} else {
+					$fields[] = $this->make_field( $field, $name );
 				}
-
-				if ( isset( $field['required'] ) ) {
-					$f->set_required( $field['required'] );
-				}
-
-				if ( in_array( $field['type'], [ 'select', 'radio' ] ) && isset( $field['options'] ) ) {
-					$f->add_options( $field['options'] );
-				}
-				if ( $field['type'] == 'association' && isset( $field['types'] ) ) {
-					$f->set_types( [
-						$field['types']
-					] );
-				}
-
-				if ( $field['type'] == 'html' && isset( $field['template'] ) ) {
-					ob_start();
-					include( $field['template'] );
-					$f->set_html( ob_get_clean() );
-				}
-
-				if ( isset( $field['help'] ) ) {
-					$f->set_help_text( $field['help'] );
-				}
-
-				$fields[] = $f;
 			}
 			$container->add_tab( $tab['title'], $fields );
 		}
@@ -262,16 +240,37 @@ class ProductEdit {
 		return apply_filters( 'fs_product_tabs_admin', $tabs );
 	}
 
-	/**
-	 * Assigns product characteristics from meta fields
-	 *
-	 * @param $post_id
-	 * @param $context
-	 *
-	 * @return void
-	 */
-	function save_product_meta( $post_id, $context ) {
+	function make_field( $field, $name ,$label = '') {
 
+		$f = Field::make( $field['type'], $name, $label ??  $field['label'] );
 
+		if ( isset( $field['width'] ) ) {
+			$f->set_width( $field['width'] );
+		}
+
+		if ( isset( $field['required'] ) ) {
+			$f->set_required( $field['required'] );
+		}
+
+		if ( in_array( $field['type'], [ 'select', 'radio' ] ) && isset( $field['options'] ) ) {
+			$f->add_options( $field['options'] );
+		}
+		if ( $field['type'] == 'association' && isset( $field['types'] ) ) {
+			$f->set_types( [
+				$field['types']
+			] );
+		}
+
+		if ( $field['type'] == 'html' && isset( $field['template'] ) ) {
+			ob_start();
+			include( $field['template'] );
+			$f->set_html( ob_get_clean() );
+		}
+
+		if ( isset( $field['help'] ) ) {
+			$f->set_help_text( $field['help'] );
+		}
+
+		return $f;
 	}
 }
