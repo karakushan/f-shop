@@ -13,14 +13,12 @@ $attributes = get_terms( [
 	'hide_empty' => false,
 	'parent'     => 0
 ] );
-$attributes = \FS\FS_Product::get_attributes_hierarchy( $post_id );
-do_action( 'qm/debug', $attributes );
 $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? [] );
 ?>
 
 <div class="fs-attributes"
      x-data='{
-	        selectedAttribute : "",
+	        selectedAttribute : null,
 	        addErrors : [],
 	        addErrorsChild : [],
 	        addSuccessMessage : "",
@@ -51,7 +49,7 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 						if(response.success){
 							this.createAttribute.name = "";
 							this.createAttribute.value = "";
-							this.getAttributes();
+							this.attributes.push(response.data.term);
 						}
 					});
 				}
@@ -76,7 +74,7 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 					.then((response) => {
 						if(response.success){
 							this.selectedAttribute = "";
-
+							this.getAttributes()
 						}
 					});
 				}else{
@@ -90,15 +88,15 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 			}
 }'
 >
-	<div class="fs-attributes__add">
+	<div class="fs-attributes__add" >
 		<select class="fs-attributes__select" x-model="selectedAttribute">
-			<option value="">Додати новий атрибут</option>
+			<option>Додати новий атрибут</option>
 			<?php foreach ( $attributes as $attribute ): ?>
 				<option value="<?php echo $attribute->term_id ?>"><?php echo $attribute->name ?></option>
 			<?php endforeach; ?>
 		</select>
-		<button href="#" class="button button-primary button-large"
-		        x-on:click.prevent="attachAttribute(selectedAttribute)"><?php _e( 'Додати', 'f-shop' ) ?></button>
+		<button  class="button button-primary button-large"
+		        x-on:click.prevent="selectedAttribute ? attachAttribute(selectedAttribute) : showAddForm=true"><?php _e( 'Додати', 'f-shop' ) ?></button>
 	</div>
 
 	<div class="fs-attributes__create fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap" x-show="showAddForm"

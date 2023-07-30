@@ -225,7 +225,27 @@ class FS_Ajax {
 			$value_term_id
 		], $attribute_tax, true );
 		if ( ! is_wp_error( $set_terms ) ) {
-			wp_send_json_success( [ 'message' => __( 'Атрибуты успешно добавленны!', 'f-shop' ) ] );
+			wp_send_json_success( [
+				'term'    => [
+					'id'     => $value_term_id,
+					'name'   => $attribute_name,
+					'parent' => $term_parent['term_id'],
+					'children' => [
+						[
+							'id'   => $value_term_id,
+							'name' => $attribute_value
+						]
+					],
+					'children_all'   => array_map( function ( $child ) {
+						return [
+							'id'     => $child->term_id,
+							'name'   => $child->name,
+							'parent' => $child->parent,
+						];
+					}, get_terms( [ 'parent' => $term_parent['term_id'], 'hide_empty' => false, 'taxonomy' => $attribute_tax ] ) )
+				],
+				'message' => __( 'Атрибуты успешно добавленны!', 'f-shop' )
+			] );
 		}
 
 		wp_send_json_error( [
