@@ -150,31 +150,31 @@ class FS_Users {
 		$result['status'] = false;
 
 		if ( empty( $str ) ) {
-			$result['msg']    = 'Password can not be empty';
+			$result['msg']    = __('Password can not be empty','f-shop');
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['lengthStatus'] == true ) & ( $this->lengthValidation( $str, $this->rules['minLength'], $this->rules['maxLength'] ) == false ) ) {
-			$result['msg']    = 'Your password must be ' . $this->rules['minLength'] . ' to  ' . $this->rules['maxLength'] . ' characters';
+			$result['msg']    =sprintf(__('Your password must be %s to %s characters','f-shop'),$this->rules['minLength'],$this->rules['maxLength']) ;
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['numberStatus'] == true ) & ( $this->isContainNumber( $str ) == false ) ) {
-			$result['msg']    = 'Your password must contain at least one number.';
+			$result['msg']    = __('Your password must contain at least one number.','f-shop');
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['uppercaseStatus'] == true ) & ( $this->isContainUppercase( $str ) == false ) ) {
-			$result['msg']    = 'Your password must contain at least one uppercase letter.';
+			$result['msg']    = __('Your password must contain at least one uppercase letter.','f-shop');
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['lowercaseStatus'] == true ) & ( $this->isContainLowercase( $str ) == false ) ) {
-			$result['msg']    = 'Your password must contain at least one lowercase letter.';
+			$result['msg']    = __('Your password must contain at least one lowercase letter.','f-shop');
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['specialCharacterStatus'] == true ) & ( $this->isContainSpecialCharacter( $str ) == false ) ) {
-			$result['msg']    = 'Your password must contain at least one special character.';
+			$result['msg']    = __('Your password must contain at least one special character.','f-shop');
 			$result['status'] = false;
 
 		} elseif ( ( $this->rules['whiteSpaceStatus'] == true ) & ( $this->isWhiteSpaceContain( $str ) == false ) ) {
-			$result['msg']    = 'Space is not allow in password';
+			$result['msg']    = __('Space is not allow in password','f-shop');
 			$result['status'] = false;
 
 		} else {
