@@ -139,8 +139,6 @@ class FS_Images_Class {
 		$gallery= array_filter( $gallery,function ($item){
 		    return (is_numeric( $item ) && $item > 0);
 		} );
-		
-		do_action( 'qm/debug', $gallery );
 
 		return apply_filters( 'fs_custom_gallery', array_unique( $gallery ), $product_id );
 

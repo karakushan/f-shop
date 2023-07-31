@@ -477,7 +477,6 @@ class FS_Settings {
 						'value' => fs_option( 'customer_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ),
 						'help'  => '',
 					),
-
 					array(
 						'type'      => 'dropdown_posts',
 						'name'      => 'register_mail_template',
