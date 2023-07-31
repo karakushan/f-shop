@@ -1035,6 +1035,7 @@ class FS_Users {
 			'admin_email' => get_bloginfo( 'admin_email' ),
 			'site_url'    => get_bloginfo( 'url' ),
 			'login'       => $save_fields['fs_email'],
+			'cabinet_url' => fs_account_url(),
 		];
 
 
@@ -1047,7 +1048,7 @@ class FS_Users {
 		} else {
 			// A letter if the template is not found
 			$post_template_title   = __( 'Registration on the website «{{ site_name }}»', 'f-shop' );
-			$post_template_content = fs_frontend_template( 'mail/templates/user-registration', [], '.twig' );
+			$post_template_content = fs_frontend_template( 'mail/user-registration', [], '.twig' );
 		}
 
 		// Connect a template engine
