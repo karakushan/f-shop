@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2023-07-30 13:20+0000\n"
+"PO-Revision-Date: 2023-07-31 08:15+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -1452,6 +1452,9 @@ msgstr "Не вказаний метод оплати"
 #: templates/front-end/dashboard/wishlist.php:75
 msgid "No product found in wish list"
 msgstr "Не знайдено товарів в списку бажань"
+
+msgid "No reviews"
+msgstr "Немає відгуків"
 
 #: lib/widgets/Attribute_Widget.php:137
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24

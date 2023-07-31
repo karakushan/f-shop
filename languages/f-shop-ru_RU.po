@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2023-07-30 13:23+0000\n"
+"PO-Revision-Date: 2023-07-31 08:16+0000\n"
 "Last-Translator: Виталий Каракушан\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -1460,6 +1460,9 @@ msgstr "Не найден метод оплаты"
 #: templates/front-end/dashboard/wishlist.php:75
 msgid "No product found in wish list"
 msgstr "Не найдено товаров в списке желаний"
+
+msgid "No reviews"
+msgstr "Нет отзывов"
 
 #: lib/widgets/Attribute_Widget.php:137
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24

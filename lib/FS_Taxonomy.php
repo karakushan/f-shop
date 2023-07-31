@@ -550,7 +550,7 @@ class FS_Taxonomy
             return $term_link;
         }
 
-        $meta_key = get_locale() != FS_Config::default_locale() ? '_seo_slug__' . get_locale() : '_seo_slug';
+        $meta_key = get_locale() != FS_Config::default_locale() ? '_seo_slug__' . mb_strtolower(get_locale()) : '_seo_slug';
 
         // Remove the taxonomy prefix in links
         if (fs_option('fs_disable_taxonomy_slug')) {
