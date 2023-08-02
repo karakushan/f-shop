@@ -22,7 +22,8 @@ class TermMetaDatastore extends \Carbon_Fields\Datastore\Datastore {
 	 */
 	public function load( Field $field ) {
 		$key = $this->get_key_for_field( $field );
-		return get_term_meta( $this->get_object_id(), $key, true);
+		$meta_value=get_term_meta( $this->get_object_id(), $key, true);
+		return $meta_value !== false ? $meta_value : $field->get_default_value();
 	}
 
 	/**

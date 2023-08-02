@@ -589,7 +589,7 @@ class FS_Taxonomy
                         'name' => __('Category text', 'f-shop'),
                         'type' => 'rich_text',
                         'args' => [
-                            'multilang' => true
+	                        'multilang' => true,
                         ]
                     ),
                     '_seo_slug' => array(
@@ -614,13 +614,13 @@ class FS_Taxonomy
                             'multilang' => true,
                         ]
                     ),
-                    '_seo_canonical' => array(
-                        'name' => __('SEO canonical', 'f-shop'),
-                        'type' => 'text',
-                        'args' => [
-                            'multilang' => true,
-                        ]
-                    ),
+//                    '_seo_canonical' => array(
+//                        'name' => __('SEO canonical', 'f-shop'),
+//                        'type' => 'text',
+//                        'args' => [
+//                            'multilang' => true,
+//                        ]
+//                    ),
                     '_thumbnail_id' => [
                         'name' => __('Thumbnail', 'f-shop'),
                         'type' => 'image',
@@ -638,6 +638,7 @@ class FS_Taxonomy
                     '_min_qty' => array(
                         'name' => __('Minimum quantity of goods for order', 'f-shop'),
                         'type' => 'text',
+                        'subtype'=>'number',
                         'args' => [
                             'multilang' => false,
                         ],
