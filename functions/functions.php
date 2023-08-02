@@ -3283,7 +3283,7 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
  */
 function fs_get_term_meta( string $meta_key, $term_id = 0, $type = 1, $multilang = true ) {
 	$term_id  = $term_id ?: get_queried_object_id();
-	$meta_key = $multilang ? $meta_key . '__' . get_locale() : $meta_key;
+	$meta_key = $multilang ? $meta_key . '__' . mb_strtolower(get_locale()) : $meta_key;
 
 	return get_term_meta( $term_id, $meta_key, $type );
 }
@@ -3518,7 +3518,7 @@ if ( ! function_exists( 'fs_localize_meta_key' ) ) {
 	 */
 	function fs_localize_meta_key( $meta_key = '' ) {
 		if ( fs_option( 'fs_multi_language_support' ) ) {
-			$meta_key = $meta_key . '__' . get_locale();
+			$meta_key = $meta_key . '__' . mb_strtolower(get_locale());
 		}
 
 		return $meta_key;
