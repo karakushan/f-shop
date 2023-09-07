@@ -79,12 +79,17 @@ function fs_get_gallery( $product_id = 0, $thumbnail = true, $attachments = fals
 	return $images;
 }
 
+/**
+ * Проверяет есть ли акционная цена
+ *
+ * @param $product_id
+ *
+ * @return bool
+ */
 function fs_has_sale_price( $product_id = 0 ) {
 	$product_id = fs_get_product_id( $product_id );
 
-
-
-	return (bool) get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ) );
+	return (bool) get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), 1 );
 }
 
 //Получает текущую цену с учётом скидки
@@ -1955,23 +1960,29 @@ function fs_get_related_products( $product_id = 0, $args = array() ) {
 }
 
 /**
+ * Returns the discount percentage
+ *
  * @param int $product_id
+ * @param int $round number of decimal places when rounding
  *
  * @return float|int|string
  */
-function fs_change_price_percent( $product_id = 0 ) {
+function fs_change_price_percent( $product_id = 0, $round = 1 ) {
 	$product_id   = fs_get_product_id( $product_id );
 	$change_price = 0;
-	$config       = new FS\FS_Config;
-	// получаем возможные типы цен
-	$base_price   = get_post_meta( $product_id, $config->meta['price'], true );//базовая и главная цена
-	$base_price   = (float) $base_price;
-	$action_price = get_post_meta( $product_id, $config->meta['action_price'], true );//акионная цена
-	$action_price = (float) $action_price;
-	if ( ! empty( $action_price ) && ! empty( $base_price ) && $action_price < $base_price ) {
 
+	if ( get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), 1 ) == ''
+	     || get_post_meta( $product_id, FS_Config::get_meta( 'price' ), 1 ) == '' ) {
+		return $change_price;
+	}
+
+	// получаем возможные типы цен
+	$base_price   = (float) get_post_meta( $product_id, FS_Config::get_meta( 'price' ), true );//базовая и главная цена
+	$action_price = (float) get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), true );//акционная цена
+
+	if ( $base_price > 0 && $action_price < $base_price ) {
 		$change_price = ( $base_price - $action_price ) / $base_price * 100;
-		$change_price = round( $change_price );
+		$change_price = round( $change_price, $round );
 	}
 
 	return $change_price;
@@ -1991,10 +2002,11 @@ function fs_discount_percent( $product_id = 0, $format = '-%s%s', $args = array(
 		)
 	);
 	$discount = fs_change_price_percent( $product_id );
+
 	if ( $discount > 0 ) {
 		printf( '<span data-fs-element="discount" class="%s">', esc_attr( $args['class'] ) );
 		printf( $format, $discount, '%' );
-		print( '</span>' );
+		printf( '</span>' );
 	}
 
 }
@@ -3285,7 +3297,7 @@ function fs_buy_one_click( $product_id = 0, $text = 'Купить в 1 клик'
  */
 function fs_get_term_meta( string $meta_key, $term_id = 0, $type = 1, $multilang = true ) {
 	$term_id  = $term_id ?: get_queried_object_id();
-	$meta_key = $multilang ? $meta_key . '__' . mb_strtolower(get_locale()) : $meta_key;
+	$meta_key = $multilang ? $meta_key . '__' . mb_strtolower( get_locale() ) : $meta_key;
 
 	return get_term_meta( $term_id, $meta_key, $type );
 }
@@ -3520,7 +3532,7 @@ if ( ! function_exists( 'fs_localize_meta_key' ) ) {
 	 */
 	function fs_localize_meta_key( $meta_key = '' ) {
 		if ( fs_option( 'fs_multi_language_support' ) ) {
-			$meta_key = $meta_key . '__' . mb_strtolower(get_locale());
+			$meta_key = $meta_key . '__' . mb_strtolower( get_locale() );
 		}
 
 		return $meta_key;
@@ -3589,8 +3601,8 @@ if ( ! function_exists( 'fs_localize_category_url' ) ) {
 		] );
 
 		$prefix = FS_Config::default_locale() != $locale ? $args['prefixes'][ $locale ] : '';
-		$slug   = FS_Config::default_locale() != $locale && get_term_meta( $term_id, '_seo_slug__' . mb_strtolower($locale), 1 )
-			? get_term_meta( $term_id, '_seo_slug__' . mb_strtolower($locale), 1 ) : $term->slug;
+		$slug   = FS_Config::default_locale() != $locale && get_term_meta( $term_id, '_seo_slug__' . mb_strtolower( $locale ), 1 )
+			? get_term_meta( $term_id, '_seo_slug__' . mb_strtolower( $locale ), 1 ) : $term->slug;
 
 		$url_components = [ $prefix ];
 
