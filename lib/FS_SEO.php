@@ -5,6 +5,8 @@ namespace FS;
 
 
 class FS_SEO {
+	protected $yoast_integration = false;
+
 	function __construct() {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
@@ -36,6 +38,31 @@ class FS_SEO {
 		add_action( 'wp_head', array( $this, 'product_microdata' ) );
 
 		add_filter( 'fs_transform_meta_value', [ $this, 'transform_meta_value' ], 10, 3 );
+
+		// check if Yoast is installed
+		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
+			$this->yoast_integration = true;
+			// yoast seo meta description
+			add_action( 'wpseo_metadesc', array( $this, 'yoast_seo_description' ) );
+		}
+	}
+
+	/**
+	 * Change wordpress seo meta description
+	 *
+	 * @param string $meta_description
+	 *
+	 * @return string
+	 */
+	public function yoast_seo_description( $meta_description ) {
+		// Если это страница каталога
+		if ( fs_is_catalog() && fs_option( '_fs_catalog_meta_description' ) != '' ) {
+			$meta_description = fs_option( '_fs_catalog_meta_description' );
+		} elseif ( fs_is_product_category() ) { // Если посетитель находится на странице таксономии товаров
+			$meta_description = fs_get_term_meta( '_seo_description' );
+		}
+
+		return apply_filters( 'fs_meta_description', $meta_description );
 	}
 
 	/**
@@ -84,7 +111,7 @@ class FS_SEO {
 	}
 
 	/**
-	 * Добавляет meta description
+	 * Adds a meta description
 	 */
 	public function meta_description_action() {
 		$meta_description = '';
@@ -107,7 +134,8 @@ class FS_SEO {
 	 * Выводит скрипты в шапке
 	 */
 	public function scripts_in_head() {
-		if ( fs_is_catalog() || fs_is_product_category() ) {
+		// If the WPSEO or Yoast SEO plugin is not found, then we display the description in the catalog and in the product category
+		if (!$this->yoast_integration && ( fs_is_catalog() || fs_is_product_category() )) {
 			$this->meta_description_action();
 		}
 
