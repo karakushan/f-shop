@@ -485,40 +485,6 @@ class FS_Product {
 	}
 
 	/**
-	 * Возвращает цену  товара или его вариации, если указан параметр $variation_id
-	 *
-	 * @param int $product_id
-	 * @param null $variation_id
-	 *
-	 * @return string
-	 */
-	function get_price( $product_id = 0, $variation_id = null ) {
-		$product_id   = $product_id ? $product_id : $this->id;
-		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
-		$price        = fs_get_price( $product_id );
-
-		$variations = $this->get_product_variations( $product_id, true );
-
-		if ( count( $variations ) && ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
-			$variation    = $this->get_variation( $product_id, $variation_id );
-			$price        = floatval( $variation['price'] );
-			$action_price = floatval( $variation['action_price'] );
-
-			// если забыли установить главную цену
-			if ( $price == 0 && $action_price > 0 ) {
-				$price = $action_price;
-			}
-			if ( ! empty( $variation['action_price'] ) && $action_price < $price ) {
-				$price = $action_price;
-			}
-			$price = apply_filters( 'fs_price_filter', $price, $product_id );
-		}
-
-		return $price;
-	}
-
-
-	/**
 	 * Displays the current price of the product for the basket
 	 *
 	 * @param string $format
@@ -526,7 +492,7 @@ class FS_Product {
 	function the_price( $format = '%s <span>%s</span>' ) {
 		$format = ! empty( $format ) ? $format : $this->price_format;
 
-		printf( '<span class="fs-price">' . $format . '</span>', apply_filters( 'fs_price_format', $this->get_price() ), $this->currency );
+		printf( '<span class="fs-price">' . $format . '</span>', apply_filters( 'fs_price_format', $this->price ), $this->currency );
 	}
 
 	/**
@@ -536,8 +502,8 @@ class FS_Product {
 	 */
 	function the_base_price( $format = '%s <span>%s</span>' ) {
 		$format = ! empty( $format ) ? $format : $this->price_format;
-		if ( $this->get_base_price() > $this->get_price() ) {
-			printf( '<del class="fs-base-price">' . $format . '</del>', apply_filters( 'fs_price_format', $this->get_base_price() ), $this->currency );
+		if ( $this->base_price > $this->price ) {
+			printf( '<del class="fs-base-price">' . $format . '</del>', apply_filters( 'fs_price_format',$this->base_price ), $this->currency );
 		}
 	}
 
@@ -593,8 +559,8 @@ class FS_Product {
 
 		$this->title              = ! empty( $product['name'] ) ? apply_filters( 'the_title', $product['name'] ) : $this->get_title();
 		$this->sku                = $this->get_sku();
-		$this->price              = ! empty( $product['price'] ) ? floatval( $product['price'] ) : $this->get_price();
-		$this->base_price         = $this->get_base_price();
+		$this->price              = fs_get_price($this->id);
+		$this->base_price         = fs_get_base_price($this->id);
 		$this->base_price_display = apply_filters( 'fs_price_format', $this->base_price );
 		$this->price_display      = apply_filters( 'fs_price_format', $this->price );
 		$this->permalink          = $this->get_permalink();
@@ -688,36 +654,6 @@ class FS_Product {
 	 */
 	public function the_permalink( $product_id = 0 ) {
 		echo esc_url( $this->get_permalink( $product_id ) );
-	}
-
-	/**
-	 * Returns the base price of the item.
-	 *
-	 * @param int $product_id
-	 *
-	 * @param null $variation_id
-	 *
-	 * @return mixed
-	 */
-	public function get_base_price( $product_id = 0, $variation_id = null ) {
-
-
-		$product_id   = $product_id ? $product_id : $this->id;
-		$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
-
-		$variations = $this->get_product_variations( $product_id, true );
-
-		if ( count( $variations ) && ! is_null( $variation_id ) && is_numeric( $variation_id ) ) {
-			$variation_id = ! is_null( $variation_id ) && is_numeric( $variation_id ) ? $variation_id : $this->variation;
-			$variation    = $this->get_variation( $product_id, $variation_id );
-			$base_price   = apply_filters( 'fs_price_filter', $variation['price'], $product_id );
-
-			return floatval( $base_price );
-		} else {
-			$price = get_post_meta( $product_id, FS_Config::get_meta( 'price' ), 1 );
-
-			return apply_filters( 'fs_price_filter', $price, $product_id );
-		}
 	}
 
 	/**

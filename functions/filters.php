@@ -7,7 +7,7 @@ add_filter( 'fs_price_format', 'fs_price_format', 10, 2 );
 function fs_price_format( $price, $delimiter = '' ) {
 	$cents     = fs_option( 'price_cents' ) == 1 ? 2 : 0;
 	$delimiter = ! empty( $delimiter ) ? $delimiter : fs_option( 'currency_delimiter', '.' );
-	$price     = number_format( floatval($price), $cents, $delimiter, ' ' );
+	$price     = number_format( floatval( $price ), $cents, $delimiter, ' ' );
 
 	return $price;
 }
@@ -27,6 +27,7 @@ function fs_discount_filter__callback( $price ) {
 	return (float) $price;
 
 }
+
 add_filter( 'fs_discount_filter', 'fs_discount_filter__callback', 10, 1 );
 
 // создаем новую колонку
@@ -205,20 +206,21 @@ function fs_dropdown_cats_multiple( $output, $r ) {
 
 // вносит коррективы в цену с учётом настроек валюты
 add_filter( 'fs_price_filter', 'fs_price_filter_callback', 10, 2 );
-function fs_price_filter_callback($price, $post_id ) {
-	$price = floatval( $price );
+function fs_price_filter_callback( $price, $post_id ) {
+	$price = floatval( str_replace(',', '.', $price) );
 	if ( fs_option( 'multi_currency_on' ) != 1 ) {
 		return $price;
 	}
+
 	global $wpdb;
-	$fs_config           = new FS_Config();
 	$default_currency_id = fs_option( 'default_currency' ); // id валюты установленной в настройках
-	$product_currency_id = get_post_meta( $post_id, $fs_config->meta['currency'], true );// id валюты товара
+	$product_currency_id = get_post_meta( $post_id, FS_Config::get_meta( 'currency'), 1 );// id валюты товара
 	// default_currency_cost = get_term_meta( $default_currency_id, '_fs_currency_cost', true ); // стоимость валюты установленной в настройках
 	$locale = get_locale();
 
 	// Если установлена галочка "конвертация стоимости в зависимости от языка"
 	if ( fs_option( 'price_conversion' ) ) {
+
 		// получаем валюту текущей локали
 		$locale_currency_id = $wpdb->get_var( $wpdb->prepare( "SELECT term_id FROM $wpdb->termmeta WHERE meta_key='_fs_currency_locale' AND meta_value='%s'", $locale ) );
 		if ( ! $locale_currency_id ) {
@@ -263,7 +265,7 @@ add_filter( 'fs_price_discount_filter', 'fs_price_discount_filter', 10, 2 );
  *
  * @return mixed
  */
-function fs_price_discount_filter(  $price, $product_id ) {
+function fs_price_discount_filter( $price, $product_id ) {
 	$discount_terms_conf = array(
 		'taxonomy'   => FS_Config::get_data( 'discount_taxonomy' ),
 		'hide_empty' => false,

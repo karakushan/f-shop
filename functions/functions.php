@@ -99,14 +99,16 @@ function fs_has_sale_price( $product_id = 0 ) {
  * @return float $price-значение цены
  */
 function fs_get_price( $product_id = 0 ) {
-	$product_id   = fs_get_product_id( $product_id );
-	$has_variared = false;
+	$product_id  = fs_get_product_id( $product_id );
+	$is_variable = false;
 
 	// получаем возможные типы цен
 	$price        = get_post_meta( $product_id, FS_Config::get_meta( 'price' ), true ); //базовая цена
 	$action_price = get_post_meta( $product_id, FS_Config::get_meta( 'action_price' ), true ); //акционная цена
+	$price=floatval(str_replace(',', '.', $price));
+	$action_price=floatval(str_replace(',', '.', $action_price));
 
-	if ( $action_price && (float) $action_price < (float) $price ) {
+	if ( $action_price &&  $action_price <  $price ) {
 		$price = $action_price;
 	}
 
@@ -114,24 +116,24 @@ function fs_get_price( $product_id = 0 ) {
 	$first_variation = fs_get_first_variation( $product_id );
 
 	if ( isset( $first_variation['price'] ) && is_numeric( $first_variation['price'] ) ) {
-		$price        = floatval( $first_variation['price'] );
-		$has_variared = true;
+		$price       = floatval( $first_variation['price'] );
+		$is_variable = true;
 
 	}
 
 	// Если товар вариативный и у первой вариации есть акционная цена, то возвращаем ее
-	if ( $has_variared && isset( $first_variation['action_price'] ) && is_numeric( $first_variation['action_price'] ) ) {
+	if ( $is_variable && isset( $first_variation['action_price'] ) && is_numeric( $first_variation['action_price'] ) ) {
 		$action_price = floatval( $first_variation['action_price'] );
 		if ( $action_price < $price ) {
 			$price = $action_price;
 		}
 	}
 
-
 	$price = apply_filters( 'fs_price_discount_filter', $price, $product_id );
-	$price = apply_filters( 'fs_price_filter', $price, $product_id, );
+	$price = apply_filters( 'fs_price_filter', $price, $product_id );
+	$use_pennies = fs_option( 'price_cents' ) ? 2 : 0;
 
-	return floatval( $price );
+	return round( floatval( $price ), $use_pennies  );
 }
 
 /**
