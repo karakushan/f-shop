@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2023-07-31 08:16+0000\n"
+"PO-Revision-Date: 2023-09-15 06:26+0000\n"
 "Last-Translator: Виталий Каракушан\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -2242,6 +2242,9 @@ msgstr "Благодарим за заказ!"
 #: lib/FS_Config.php:122
 msgid "Thank you for your purchase."
 msgstr "Благодарим за покупку."
+
+msgid "The \"%s\" field is required!"
+msgstr "Поле \"%s\" является обязательным!"
 
 #: lib/FS_Orders.php:235
 msgid ""

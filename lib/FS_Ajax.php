@@ -628,7 +628,7 @@ class FS_Ajax {
 		foreach ( $form_fields as $key => $form_field ) {
 			if ( isset( $form_field['required'] ) && $form_field['required'] && trim( $_POST[ $key ] ) == '' ) {
 				wp_send_json_error( [
-					'msg'   => sprintf( __( 'Поле "%s" является обязательным!' ), $form_field['name'] ),
+					'msg'   => sprintf( __( 'The "%s" field is required!','f-shop' ), $form_field['name'] ),
 					'key'   => $key,
 					'value' => $_POST[ $key ]
 				] );

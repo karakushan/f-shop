@@ -1004,8 +1004,7 @@ jQuery(document).ready(function ($) {
                             });
                         }
                     } else {
-                        iziToast.show({
-                            theme: 'light',
+                        iziToast.error({
                             title: fShop.getLang('error'),
                             message: response.data.msg,
                             position: 'topCenter'
