@@ -62,7 +62,8 @@ class Brand_Widget extends \WP_Widget {
 		}
 
 		$title    = apply_filters( 'widget_title', $instance[ $title_name ] );
-		$terms    = wp_cache_get('fs_brand_widget_terms');
+		$cache_key= 'fs_brand_widget_terms_term_'.get_queried_object_id();
+		$terms    = wp_cache_get($cache_key);
 
 		if ( false === $terms) {
 			$terms    = [];
@@ -80,7 +81,7 @@ class Brand_Widget extends \WP_Widget {
 			endforeach;
 			$wp_query->reset_postdata();
 
-			wp_cache_set('fs_brand_widget_terms', $terms);
+			wp_cache_set($cache_key, $terms);
 		}
 
 		if ( empty( $terms ) ) {
