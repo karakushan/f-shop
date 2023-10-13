@@ -44,7 +44,23 @@ class FS_SEO {
 			$this->yoast_integration = true;
 			// yoast seo meta description
 			add_action( 'wpseo_metadesc', array( $this, 'yoast_seo_description' ) );
+			add_filter( 'wpseo_robots', [ $this, 'add_noindex_meta_tag' ] );
 		}
+
+	}
+
+	/**
+     * Blocks pages with product filters from indexing by search engines
+     *
+	 * @param $robots
+	 *
+	 * @return mixed|string
+	 */
+	function add_noindex_meta_tag( $robots ) {
+		if ( isset( $_GET['fs_filter'] ) ) {
+			$robots = 'noindex, nofollow';
+		}
+		return $robots;
 	}
 
 	/**
@@ -135,7 +151,7 @@ class FS_SEO {
 	 */
 	public function scripts_in_head() {
 		// If the WPSEO or Yoast SEO plugin is not found, then we display the description in the catalog and in the product category
-		if (!$this->yoast_integration && ( fs_is_catalog() || fs_is_product_category() )) {
+		if ( ! $this->yoast_integration && ( fs_is_catalog() || fs_is_product_category() ) ) {
 			$this->meta_description_action();
 		}
 
@@ -166,7 +182,7 @@ class FS_SEO {
 		$page_checkout         = fs_option( 'page_checkout' );
 		$page_checkout_success = fs_option( 'page_success' );
 		?>
-		<script>
+        <script>
 			<?php if (is_front_page()): ?>
             gtag('event', 'page_view', {
                 'ecomm_prodid': '',
@@ -201,7 +217,7 @@ class FS_SEO {
                 'ecomm_totalvalue':  <?php echo esc_attr( fs_get_price( get_the_ID() ) ); ?>
             });
 			<?php endif; ?>
-		</script>
+        </script>
 		<?php
 	}
 

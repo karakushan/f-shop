@@ -186,6 +186,9 @@ class FS_Config {
 			'views_desc'   => array(
 				'name' => __( 'Behind the popularity', 'f-shop' )
 			),
+			'rating_desc'   => array(
+				'name' => __( 'By rating', 'f-shop' )
+			),
 			'action_price' => array(
 				'name' => __( 'First promotional', 'f-shop' )
 			),

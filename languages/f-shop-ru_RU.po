@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2023-09-15 06:26+0000\n"
-"Last-Translator: Виталий Каракушан\n"
+"PO-Revision-Date: 2023-10-13 07:08+0000\n"
+"Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -24,7 +24,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Loco-Target-Locale: ru_RU\n"
-"X-Loco-Version: 2.4.2; wp-5.6.4"
+"X-Loco-Version: 2.6.6; wp-6.3.2"
 
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
@@ -252,11 +252,11 @@ msgstr "Атрибут"
 
 #: lib/FS_Ajax.php:1177 lib/FS_Ajax.php:1216
 msgid "Attribute added"
-msgstr ""
+msgstr "Характеристика добавлена"
 
 #: lib/FS_Ajax.php:1156
 msgid "Attribute removed"
-msgstr ""
+msgstr "Характеристика удалена"
 
 #: lib/FS_Ajax.php:499
 msgid "Attribute successfully attached to product"
@@ -315,7 +315,7 @@ msgstr "Начало диапазона"
 
 #: lib/FS_Config.php:187
 msgid "Behind the popularity"
-msgstr ""
+msgstr "По популярности"
 
 #: lib/FS_Config.php:630
 msgid "Best-seller"
@@ -364,7 +364,7 @@ msgstr "По полю сортировки"
 
 #: lib/FS_Config.php:181
 msgid "By title A to Z"
-msgstr ""
+msgstr "По названию А-Я"
 
 #: lib/FS_Filters.php:331
 msgid "by title A to Z"
@@ -376,7 +376,7 @@ msgstr "По названию от А до Я"
 
 #: lib/FS_Config.php:184
 msgid "By title Z to A"
-msgstr ""
+msgstr "По названию Я-А"
 
 #: lib/FS_Filters.php:334
 msgid "by title Z to A"
@@ -692,7 +692,7 @@ msgstr "Номер отделения службы доставки"
 
 #: lib/FS_Users.php:414 lib/FS_Users.php:418
 msgid "Delivery service name"
-msgstr ""
+msgstr "Название службы доставки"
 
 #: lib/FS_Users.php:85
 msgid "Delivery Settings"
@@ -992,7 +992,7 @@ msgstr "Имя"
 
 #: lib/FS_Config.php:190
 msgid "First promotional"
-msgstr ""
+msgstr "Сначала акционные"
 
 #: lib/FS_Taxonomy.php:809
 msgid "Fixed discount"
@@ -1009,7 +1009,7 @@ msgstr "Забыли пароль?"
 
 #: lib/FS_Config.php:175
 msgid "From cheap to expensive"
-msgstr ""
+msgstr "От дешевых к дорогим"
 
 #: lib/FS_Filters.php:325
 msgid "from cheap to expensive"
@@ -1017,7 +1017,7 @@ msgstr "от дешевых к дорогим"
 
 #: lib/FS_Config.php:178
 msgid "From expensive to cheap"
-msgstr ""
+msgstr "От дорогих к дешевым"
 
 #: lib/FS_Filters.php:328
 msgid "from expensive to cheap"
@@ -1297,7 +1297,7 @@ msgstr "Фамилия"
 
 #: lib/FS_Config.php:172
 msgid "Later added"
-msgstr ""
+msgstr "Ранее добавленные"
 
 #: lib/FS_Filters.php:322 lib/FS_Settings.php:277
 msgid "later added"
@@ -1920,7 +1920,7 @@ msgstr "Получать новости сайта и спецпредложен
 
 #: lib/FS_Config.php:169
 msgid "Recently added"
-msgstr ""
+msgstr "Последние добавленные"
 
 #: lib/FS_Filters.php:319 lib/FS_Settings.php:276
 msgid "recently added"
@@ -2115,7 +2115,7 @@ msgstr "Стоимость доставки в базовой валюте"
 
 #: lib/FS_Ajax.php:1044
 msgid "Shipping method not found"
-msgstr ""
+msgstr "Способ доставки не найден"
 
 #: lib/FS_Settings.php:108
 msgid "Shop"
@@ -2162,7 +2162,7 @@ msgstr "Пробел не допускается в пароле"
 
 #: lib/FS_Users.php:495 lib/FS_Users.php:499
 msgid "State"
-msgstr ""
+msgstr "Область"
 
 #: lib/FS_Config.php:75
 msgid "State / Province"
@@ -2890,7 +2890,7 @@ msgstr "Ваш голос не засчитан, так как вы уже пр�
 
 #: lib/FS_Users.php:506 lib/FS_Users.php:510
 msgid "Zip"
-msgstr ""
+msgstr "Индекс"
 
 #: lib/FS_Users.php:576 lib/FS_Users.php:579
 msgid "Zip Code"

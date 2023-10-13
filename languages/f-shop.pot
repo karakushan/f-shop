@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2023-09-15 06:25+0000\n"
+"POT-Creation-Date: 2023-10-13 06:56+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -2902,4 +2902,7 @@ msgid "No reviews"
 msgstr ""
 
 msgid "The \"%s\" field is required!"
+msgstr ""
+
+msgid "By rating"
 msgstr ""
