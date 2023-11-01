@@ -5,7 +5,7 @@ namespace FS;
 
 use FS\Admin\ProductEdit;
 use FS\Admin\TermEdit;
-use FS\Integrations\WP_Globus;
+use FS\Integrations\FS_WPGlobus;
 
 /**
  * Инициализирует функции и классы плагина
@@ -332,7 +332,7 @@ class FS_Init {
 
 	function plugin_integration() {
 		if ( defined( 'WPGLOBUS_VERSION' ) ) {
-			new WP_Globus();
+			new FS_WPGlobus();
 		}
 	}
 

@@ -8,7 +8,7 @@ use FS\FS_Config;
 use WPGlobus;
 use WPGlobus_Utils;
 
-class WP_Globus {
+class FS_WPGlobus {
 	public $switcher_name = '';
 
 	public function __construct() {
