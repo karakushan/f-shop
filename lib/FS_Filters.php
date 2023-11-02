@@ -108,38 +108,38 @@ class FS_Filters {
 	function product_quick_edit_fields( $column_name, $post_type ) {
 		if ( $column_name == 'fs_price' && $post_type == 'product' ) {
 			?>
-			<fieldset class="inline-edit-col-left inline-edit-fast-shop">
-				<legend class="inline-edit-legend"><?php esc_html_e( 'Product Settings', 'f-shop' ) ?> </legend>
-				<div class="inline-edit-col">
-					<label>
+            <fieldset class="inline-edit-col-left inline-edit-fast-shop">
+                <legend class="inline-edit-legend"><?php esc_html_e( 'Product Settings', 'f-shop' ) ?> </legend>
+                <div class="inline-edit-col">
+                    <label>
 						<span
-							class="title"><?php esc_html_e( 'Price', 'f-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
-						<span class="input-text-wrap">
+                                class="title"><?php esc_html_e( 'Price', 'f-shop' ) ?> (<?php echo fs_currency(); ?>)</span>
+                        <span class="input-text-wrap">
                         <input type="number" name="<?php echo esc_attr( FS_Config::get_meta( 'price' ) ) ?>"
                                class="fs_price"
                                value=""
                                required step="0.01" min="0">
                     </span>
-					</label>
-					<label>
-						<span class="title"><?php esc_html_e( 'Vendor code', 'f-shop' ) ?></span>
-						<span class="input-text-wrap">
+                    </label>
+                    <label>
+                        <span class="title"><?php esc_html_e( 'Vendor code', 'f-shop' ) ?></span>
+                        <span class="input-text-wrap">
                         <input type="text" name="<?php echo esc_attr( FS_Config::get_meta( 'sku' ) ) ?>"
                                class="fs_vendor_code"
                                value="">
                     </span>
-					</label>
-					<label>
+                    </label>
+                    <label>
             <span
-	            class="title"><?php esc_html_e( 'Stock in stock', 'f-shop' ) ?> (<?php esc_html_e( 'units', 'f-shop' ) ?>
+                    class="title"><?php esc_html_e( 'Stock in stock', 'f-shop' ) ?> (<?php esc_html_e( 'units', 'f-shop' ) ?>
                 )</span>
-						<span class="input-text-wrap">
+                        <span class="input-text-wrap">
                         <input type="number" name="<?php echo esc_attr( FS_Config::get_meta( 'remaining_amount' ) ) ?>"
                                class="fs_stock" min="0" step="1"
                                value=""></span>
-					</label>
-				</div>
-			</fieldset>
+                    </label>
+                </div>
+            </fieldset>
 			<?php
 		}
 	}
@@ -309,61 +309,63 @@ class FS_Filters {
 	 *
 	 * @param array $attr дополниетльные атрибуты html тега
 	 *
-	 * @return string              выводит html элемент типа select
+	 * @return void              выводит html элемент типа select
 	 */
 	public static function fs_types_sort_filter( $attr = array() ) {
 		$attr = wp_parse_args( $attr, array(
-			'class'   => 'fs-types-sort-filter',
-			'filters' => array(
-				'date_desc'  => array(
-					'name' => __( 'recently added', 'f-shop' )// недавно добавленные
-				),
-				'date_asc'   => array(
-					'name' => __( 'later added', 'f-shop' ) // давно добавленные
-				),
-				'price_asc'  => array(
-					'name' => __( 'from cheap to expensive', 'f-shop' ) // от дешевых к дорогим
-				),
-				'price_desc' => array(
-					'name' => __( 'from expensive to cheap', 'f-shop' ) // от дорогих к дешевым
-				),
-				'name_asc'   => array(
-					'name' => __( 'by title A to Z', 'f-shop' ) // по названию от А до Я
-				),
-				'name_desc'  => array(
-					'name' => __( 'by title Z to A', 'f-shop' ) // по названию от Я до А
-				)
-			)
+			'class' => 'fs-types-sort-filter'
 		) );
 
-		$order_type_get = ! empty( $_GET['order_type'] ) ? $_GET['order_type'] : fs_option( 'fs_product_sort_by' );
-		if ( count( $attr['filters'] ) ) {
-			echo ' <select name="order_type"  class="' . esc_attr( $attr['class'] ) . '" data-fs-action="filter"> ';
-			foreach ( $attr['filters'] as $key => $order_type ) {
-				if ( $key == 'default' ) {
-					if ( is_page() ) {
-						$redirect_url = get_the_permalink( get_the_ID() );
-					} elseif ( is_tax() ) {
-						$redirect_url = get_term_link( get_queried_object_id() );
-					} elseif ( is_archive( FS_Config::get_data( 'post_type' ) ) ) {
-						$redirect_url = get_post_type_archive_link( FS_Config::get_data( 'post_type' ) );
-					} else {
-						$redirect_url = $_SERVER['REQUEST_URI'];
-					}
+		$sorting_types = apply_filters( 'fs_catalog_sorting_criteria', [
+			'date_desc'  => [
+				'name' => __( 'recently added', 'f-shop' )// недавно добавленные
+			],
+			'date_asc'   => [
+				'name' => __( 'later added', 'f-shop' ) // давно добавленные
+			],
+			'price_asc'  => [
+				'name' => __( 'from cheap to expensive', 'f-shop' ) // от дешевых к дорогим
+			],
+			'price_desc' => [
+				'name' => __( 'from expensive to cheap', 'f-shop' ) // от дорогих к дешевым
+			],
+			'name_asc'   => [
+				'name' => __( 'by title A to Z', 'f-shop' ) // по названию от А до Я
+			],
+			'name_desc'  => [
+				'name' => __( 'by title Z to A', 'f-shop' ) // по названию от Я до А
+			]
+		] );
 
-				} else {
-					$redirect_url = add_query_arg( array(
-						'fs_filter'  => wp_create_nonce( 'f-shop' ),
-						'order_type' => $key
-					) );
-				}
-
-				echo ' <option value="' . esc_url( $redirect_url ) . '" ' . selected( $key, $order_type_get, 0 ) . '> ' . esc_html( $order_type['name'] ) . ' </option> ';
-			}
-			echo '</select> ';
+		if ( empty( $sorting_types ) ) {
+			return;
 		}
 
-		return;
+		$order_type_get = ! empty( $_GET['order_type'] ) ? $_GET['order_type'] : fs_option( 'fs_product_sort_by' );
+
+		echo ' <select name="order_type"  class="' . esc_attr( $attr['class'] ) . '" data-fs-action="filter"> ';
+		foreach ( $sorting_types as $key => $order_type ) {
+			if ( $key == 'default' ) {
+				if ( is_page() ) {
+					$redirect_url = get_the_permalink( get_the_ID() );
+				} elseif ( is_tax() ) {
+					$redirect_url = get_term_link( get_queried_object_id() );
+				} elseif ( is_archive( FS_Config::get_data( 'post_type' ) ) ) {
+					$redirect_url = get_post_type_archive_link( FS_Config::get_data( 'post_type' ) );
+				} else {
+					$redirect_url = $_SERVER['REQUEST_URI'];
+				}
+
+			} else {
+				$redirect_url = add_query_arg( array(
+					'fs_filter'  => wp_create_nonce( 'f-shop' ),
+					'order_type' => $key
+				) );
+			}
+
+			echo ' <option value="' . esc_url( $redirect_url ) . '" ' . selected( $key, $order_type_get, 0 ) . '> ' . esc_html( $order_type['name'] ) . ' </option> ';
+		}
+		echo '</select> ';
 	}
 
 	/**
