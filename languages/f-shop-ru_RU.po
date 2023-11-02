@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2023-10-13 07:08+0000\n"
+"PO-Revision-Date: 2023-11-02 17:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -24,7 +24,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "X-Loco-Target-Locale: ru_RU\n"
-"X-Loco-Version: 2.6.6; wp-6.3.2"
+"X-Loco-Version: 2.6.4; wp-6.3.2"
 
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
@@ -1120,7 +1120,7 @@ msgstr ""
 #: lib/FS_Payment.php:85
 #, php-format
 msgid "If payment is successful, you will be charged %s %s."
-msgstr ""
+msgstr "Если платеж пройдет успешно, с Вас будет снята сумма %s %s."
 
 #: lib/FS_Settings.php:401
 msgid ""
@@ -1667,7 +1667,7 @@ msgstr "Оплата"
 #: lib/FS_Payment.php:84
 #, php-format
 msgid "Payment for order #%d with &laquo;%s&raquo;"
-msgstr ""
+msgstr "Оплата заказа №%d с помощью &laquo;%s&raquo;"
 
 #: lib/FS_Taxonomy.php:880 templates/back-end/metabox/order/show.php:44
 #: templates/back-end/metabox/order/add.php:72

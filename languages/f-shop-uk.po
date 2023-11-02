@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2023-10-13 06:57+0000\n"
+"PO-Revision-Date: 2023-11-02 17:23+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -1114,7 +1114,7 @@ msgstr ""
 #: lib/FS_Payment.php:85
 #, php-format
 msgid "If payment is successful, you will be charged %s %s."
-msgstr ""
+msgstr "Якщо платіж буде успішним, з Вас буде стягнуто %s %s."
 
 #: lib/FS_Settings.php:401
 msgid ""
@@ -1662,7 +1662,7 @@ msgstr "Оплата"
 #: lib/FS_Payment.php:84
 #, php-format
 msgid "Payment for order #%d with &laquo;%s&raquo;"
-msgstr ""
+msgstr "Оплата замовлення №%d за допомогою &laquo;%s&raquo;"
 
 #: lib/FS_Taxonomy.php:880 templates/back-end/metabox/order/show.php:44
 #: templates/back-end/metabox/order/add.php:72
