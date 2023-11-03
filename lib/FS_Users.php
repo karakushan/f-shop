@@ -1165,14 +1165,14 @@ class FS_Users {
 			'class'          => 'fs-login-form',
 			'name'           => 'fs-login',
 			'method'         => 'post',
-			'logged_in_text' => __( 'You are already logged in.', 'f-shop' ),
+			'data-logged-in-text' => __( 'You are already logged in.', 'f-shop' ),
 			'echo'           => false
 
 		) );
 
 		$template = '';
 		if ( is_user_logged_in() ) {
-			$template .= '<p class="text-center">' . $args['logged_in_text'] . '</p>';
+			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
 			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">В личный кабинет</a></p>';
 		} else {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_login' );
@@ -1203,14 +1203,13 @@ class FS_Users {
 			'class'          => 'fs-register',
 			'name'           => 'fs-register',
 			'method'         => 'post',
-			'logged_in_text' => __( 'You are already logged in.', 'f-shop' ),
+			'data-logged-in-text' => __( 'You are already logged in.', 'f-shop' ),
 			'echo'           => false
-
 		) );
 
 		$template = '';
 		if ( is_user_logged_in() ) {
-			$template .= '<p class="text-center">' . $args['logged_in_text'] . '</p>';
+			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
 			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
 		} else {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_profile_create' );
@@ -1240,13 +1239,12 @@ class FS_Users {
 			'name'           => 'fs-lostpassword',
 			'method'         => 'post',
 			'action'         => wp_lostpassword_url(),
-			'logged_in_text' => __( 'You are already logged in.', 'f-shop' )
-
+			'data-logged-in-text' => __( 'You are already logged in.', 'f-shop' )
 		) );
 
 		$template = '';
 		if ( is_user_logged_in() ) {
-			$template .= '<p class="text-center">' . $args['logged_in_text'] . '</p>';
+			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
 			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
 		} else {
 			$template = apply_filters( 'fs_form_header', $args, 'fs_lostpassword' );

@@ -134,7 +134,7 @@ function fs_form_header( $args = array(), $ajax_action ) {
 		'method'       => 'POST',
 		'autocomplete' => 'off',
 		'class'        => 'fs-form'
-	) );
+	),['echo'] );
 	$form_header = '<form ' . $attr . '>';
 	$form_header .= \FS\FS_Config::nonce_field();
 	$form_header .= '<input type="hidden" name="action" value="' . $ajax_action . '">';
