@@ -82,7 +82,7 @@ class FS_Init {
 
 		add_action( 'init', [ $this, 'plugin_integration' ] );
 
-		add_action( 'admin_init', [ $this, 'crb_load' ] );
+		add_action( 'after_setup_theme', [ $this, 'crb_load' ] );
 	}
 
 	/**
@@ -243,8 +243,8 @@ class FS_Init {
 			), null, true );
 
 		} elseif ( in_array( $screen->id, [ 'orders' ] ) ) {
-			wp_enqueue_style( FS_PLUGIN_PREFIX . 'fs-vue-css', FS_PLUGIN_URL . 'assets/js/vue/main.css' );
-			wp_enqueue_script( FS_PLUGIN_PREFIX . 'vue-main', FS_PLUGIN_URL . 'assets/js/vue/main.js', array( 'jquery' ), null, true );
+			wp_enqueue_style( FS_PLUGIN_PREFIX . 'vue-css', FS_PLUGIN_URL . 'assets/js/vue-admin.css' );
+			wp_enqueue_script( FS_PLUGIN_PREFIX . 'vue-admin', FS_PLUGIN_URL . 'assets/js/vue-admin.js', array( 'jquery' ), null, true );
 		} elseif ( $screen->id == 'fs-mail-template' ) {
 			wp_enqueue_script( FS_PLUGIN_PREFIX . 'codemirror', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/lib/codemirror.js', array( 'jquery' ), null, true );
 			wp_enqueue_script( FS_PLUGIN_PREFIX . 'codemirror-xml', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/mode/xml/xml.js', array( 'jquery' ), null, true );
@@ -280,11 +280,33 @@ class FS_Init {
 		);
 		wp_localize_script( FS_PLUGIN_PREFIX . 'admin', 'fShop', $l10n );
 
-		wp_enqueue_script( FS_PLUGIN_PREFIX . 'backend', FS_PLUGIN_URL . 'assets/js/fs-backend.js', array(), null, true );
+		wp_enqueue_script( FS_PLUGIN_PREFIX . 'backend', FS_PLUGIN_URL . 'assets/js/fs-backend.js', array(), null, false );
 		wp_localize_script( FS_PLUGIN_PREFIX . 'backend', 'FS_BACKEND', [
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'nonce'   => wp_create_nonce( 'f-shop' ),
+			'currency'=>fs_currency(),
 			'lang'    => [
+				'purchased_items' => __( 'Purchased items', 'f-shop' ),
+				'add_product' => __( 'Add product', 'f-shop' ),
+				'name' => __( 'Name', 'f-shop' ),
+				'price' => __( 'Price', 'f-shop' ),
+				'quantity' => __( 'Quantity', 'f-shop' ),
+				'delete' => __( 'Delete', 'f-shop' ),
+				'order_price' => __( 'Order price', 'f-shop' ),
+				'cost_goods' => __( 'Cost of goods', 'f-shop' ),
+				'packaging' => __( 'Packaging', 'f-shop' ),
+				'delivery' => __( 'Delivery', 'f-shop' ),
+				'discount' => __( 'Discount', 'f-shop' ),
+				'search_input_label' => __( 'Product name, ID or SKU', 'f-shop' ),
+				'found_products' => __( 'Found products', 'f-shop' ),
+				'add' => __( 'Add', 'f-shop' ),
+				'photo' => __( 'Photo', 'f-shop' ),
+				'close' => __( 'Close', 'f-shop' ),
+				'action' => __( 'Action', 'f-shop' ),
+				'cost' => __( 'Cost', 'f-shop' ),
+				'product_selection' => __( 'Product selection', 'f-shop' ),
+				'product' => __( 'product', 'f-shop' ),
+				'selected' => __( 'selected', 'f-shop' ),
 			]
 		] );
 	}

@@ -2,11 +2,11 @@
   <div class="fs-order-items">
     <md-table v-model="products" md-card @md-selected="onSelect">
       <md-table-toolbar>
-        <h1 class="md-title">
+        <div class="md-title">
           <md-icon>shopping_cart</md-icon>
-          Купленные товары
-        </h1>
-        <md-button class="md-raised md-primary" @click="showDialog = true">Добавить товар</md-button>
+          {{ translations.purchased_items }}
+        </div>
+        <md-button class="md-raised md-primary" @click="showDialog = true">{{ translations.add_product }}</md-button>
       </md-table-toolbar>
       <md-table-row slot="md-table-row" slot-scope="{ item,index }">
         <md-table-cell md-label="ID">
@@ -14,25 +14,25 @@
           <input type="hidden" :name="'order[_products]['+index+'][ID]'"
                  :value="item.id">
         </md-table-cell>
-        <md-table-cell md-label="Фото">
+        <md-table-cell :md-label="translations.photo">
           <md-avatar class="md-large" v-if="item.thumbnail_url">
             <img :src="item.thumbnail_url" :alt="item.title" width="100">
           </md-avatar>
           <md-avatar v-else class="md-large md-avatar-icon"><md-icon>visibility_off</md-icon></md-avatar>
 
         </md-table-cell>
-        <md-table-cell md-label="Название">
+        <md-table-cell :md-label="translations.name">
           <a :href="item.permalink" target="_blank" v-if="item.id">{{ item.title }}</a>
           <span v-else>{{ item.title }}</span>
           <input type="hidden" :name="'order[_products]['+index+'][name]'" :value="item.title">
         </md-table-cell>
-        <md-table-cell md-label="Цена">
+        <md-table-cell :md-label="translations.price">
           {{ itemPrice(item) }}
           <input type="hidden"
                  :name="'order[_products]['+index+'][price]'"
                  :value="item.price">
         </md-table-cell>
-        <md-table-cell md-label="К-во">
+        <md-table-cell :md-label="translations.quantity">
           <md-field>
             <md-input style="width: 20px;" type="number" min="1" step="1" size="3"
                       v-model="item.count"
@@ -40,10 +40,10 @@
                       :value="item.count"></md-input>
           </md-field>
         </md-table-cell>
-        <md-table-cell md-label="Стоимость">{{ itemCost(item) }}</md-table-cell>
-        <md-table-cell md-label="Действие">
+        <md-table-cell :md-label="translations.cost">{{ itemCost(item) }}</md-table-cell>
+        <md-table-cell :md-label="translations.action">
           <md-button class="md-fab md-mini md-plain" @click="deleteItem(index)">
-            <md-tooltip>Удалить</md-tooltip>
+            <md-tooltip>{{ translations.delete }}</md-tooltip>
             <md-icon>delete</md-icon>
           </md-button>
         </md-table-cell>
@@ -53,12 +53,12 @@
     <md-toolbar md-elevation="1" class="fs-order-items__footer">
       <md-list>
         <md-list-item md-expand>
-          <h4 class="md-list-item-text"> Сумма заказа: {{ totalAmount }} UAH
+          <h4 class="md-list-item-text"> {{ translations.order_price }}: {{ totalAmount }} {{ currency }}
             <input type="hidden" name="order[_amount]" v-model.number="totalAmount">
           </h4>
           <md-list slot="md-expand">
             <md-list-item>
-              <h5>Стоимость товаров:</h5>
+              <h5>{{ translations.cost_goods }}:</h5>
               <div class="md-field__wrap">
                 <md-field>
                   <md-input type="number" name="order[_cart_cost]"
@@ -66,13 +66,13 @@
                             :step=".01"
                             :min="0" disabled="disabled">
                   </md-input>
-                  <span class="md-suffix">UAH</span>
+                  <span class="md-suffix">{{ currency }}</span>
                 </md-field>
               </div>
             </md-list-item>
             <md-divider></md-divider>
             <md-list-item>
-              <h5>Упаковка:</h5>
+              <h5>{{ translations.packaging }}:</h5>
               <div class="md-field__wrap">
                 <md-field>
                   <md-input type="number" name="order[_packing_cost]"
@@ -80,13 +80,13 @@
                             :step=".01"
                             :min="0">
                   </md-input>
-                  <span class="md-suffix">UAH</span>
+                  <span class="md-suffix">{{ currency }}</span>
                 </md-field>
               </div>
             </md-list-item>
             <md-divider></md-divider>
             <md-list-item>
-              <h5>Доставка:</h5>
+              <h5>{{ translations.delivery }}:</h5>
               <div class="md-field__wrap">
                 <md-field>
                   <md-input type="number" name="order[_shipping_cost]"
@@ -94,13 +94,13 @@
                             :step=".01"
                             :min="0">
                   </md-input>
-                  <span class="md-suffix">UAH</span>
+                  <span class="md-suffix">{{ currency }}</span>
                 </md-field>
               </div>
             </md-list-item>
             <md-divider></md-divider>
             <md-list-item>
-              <h5>Скидка:</h5>
+              <h5>{{ translations.discount }}:</h5>
               <div class="md-field__wrap">
                 <md-field>
                   <md-input type="number"
@@ -109,7 +109,7 @@
                             :step=".01"
                             :min="0">
                   </md-input>
-                  <span class="md-suffix">UAH</span>
+                  <span class="md-suffix">{{ currency }}</span>
                 </md-field>
               </div>
             </md-list-item>
@@ -120,24 +120,24 @@
 
     <md-dialog :md-active.sync="showDialog">
       <md-progress-bar md-mode="indeterminate" v-show="inProcess"></md-progress-bar>
-      <md-dialog-title>Выбор товара</md-dialog-title>
+      <md-dialog-title>{{ translations.product_selection }}</md-dialog-title>
       <md-dialog-content>
         <md-field>
           <md-icon>search</md-icon>
-          <label>Название товара, ID или артикул</label>
+          <label>{{ translations.search_input_label }}</label>
           <md-input v-model="search"></md-input>
         </md-field>
 
         <md-table v-model="searchItems" md-card @md-selected="onSelect" md-card md-fixed-header>
           <md-table-toolbar>
-            <div class="md-title">Найденные товары</div>
+            <div class="md-title">{{ translations.found_products }}: {{ searchItems.length}}</div>
           </md-table-toolbar>
 
           <md-table-toolbar slot="md-table-alternate-header" slot-scope="{ count }">
             <div class="md-toolbar-section-start">{{ getAlternateLabel(count) }}</div>
 
             <div class="md-toolbar-section-end">
-              <md-button class="md-raised md-primary" @click="addItems()">Добавить</md-button>
+              <md-button class="md-raised md-primary" @click="addItems()">{{ translations.add }}</md-button>
             </div>
           </md-table-toolbar>
 
@@ -148,15 +148,15 @@
               <input type="hidden" :name="'fs_products['+index+'][ID]'"
                      :value="item.id">
             </md-table-cell>
-            <md-table-cell md-label="Фото" md-sort-by="thumbnail_url">
+            <md-table-cell :md-label="translations.photo" md-sort-by="thumbnail_url">
               <md-avatar class="md-large">
                 <img :src="item.thumbnail_url" :alt="item.title" width="100" v-if="item.thumbnail_url">
               </md-avatar>
 
             </md-table-cell>
-            <md-table-cell md-label="Название" md-sort-by="name">{{ item.title }}</md-table-cell>
-            <md-table-cell md-label="Цена" md-sort-by="price">{{ item.price }} {{ item.currency }}</md-table-cell>
-            <md-table-cell md-label="К-во" md-sort-by="count">
+            <md-table-cell :md-label="translations.name" md-sort-by="name">{{ item.title }}</md-table-cell>
+            <md-table-cell :md-label="translations.price" md-sort-by="price">{{ item.price }} {{ item.currency }}</md-table-cell>
+            <md-table-cell :md-label="translations.quantity" md-sort-by="count">
               <md-field>
                 <md-input style="width: 20px;" type="number" min="1" step="1" size="3"
                           :name="'fs_products['+index+'][count]'"
@@ -169,7 +169,7 @@
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="closeDialog()">Закрыть</md-button>
+        <md-button class="md-primary" @click="closeDialog()">{{ translations.close }}</md-button>
       </md-dialog-actions>
     </md-dialog>
   </div>
@@ -187,7 +187,9 @@ export default {
       searchItems: [],
       delayTimer: null,
       inProcess: false,
-      orderData: this.order
+      orderData: this.order,
+      translations: window.FS_BACKEND.lang || {},
+      currency: window.FS_BACKEND.currency || 'UAH',
     }
   },
   props: {
@@ -238,7 +240,7 @@ export default {
         plural = 'а'
       }
 
-      return `${count} товар${plural} выбрано`
+      return count +' '+this.translations.product+' '+this.translations.selected
     }
   },
   watch: {
@@ -271,6 +273,9 @@ export default {
         });
       }, 800);
     }
+  },
+  mounted() {
+
   },
   computed: {
     cartCost() {
