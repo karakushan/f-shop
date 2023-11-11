@@ -1,9 +1,15 @@
 import iziToast from "izitoast";
 
 class FS {
-    constructor() {
+    constructor(is_admin=false) {
         this.ajaxurl = '/wp-admin/admin-ajax.php';
-        this.nonce = window.fShop.nonce ?? null;
+        this.is_admin = is_admin;
+        if (this.is_admin) {
+            this.nonce = window.FS_BACKEND.nonce ?? null;
+        } else {
+            this.nonce = window.fShop.nonce ?? null;
+        }
+
         this.nonceField = 'fs_secret';
 
         this.addWishListToCart = this.addWishListToCart.bind(this)
@@ -81,7 +87,7 @@ class FS {
         return this.post('fs_add_custom_attribute', {post_id: postId, name: attributeName, value: attributeValue})
     }
 
-    insertChildAttribute(postId, attributeValue,parentId) {
+    insertChildAttribute(postId, attributeValue, parentId) {
         return this.post('fs_add_child_attribute', {post_id: postId, value: attributeValue, parent_id: parentId})
     }
 
