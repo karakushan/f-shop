@@ -160,8 +160,6 @@ class FS_Product {
 
 		// Разбиваем текущий урл на компоненты
 		$url_components = explode( '/', $_SERVER['REQUEST_URI'] );
-        
-        do_action( 'qm/debug', $url_components );
 
 		// нам нужно чтобы было как миннимум 4 компонента
 		if ( count( $url_components ) < 4 ) {

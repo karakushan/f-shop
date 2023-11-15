@@ -40,9 +40,8 @@ class FS_WPGlobus {
 		$languages        = WPGlobus::Config()->enabled_languages;
 		$default_language = WPGlobus::Config()->default_language;
 		$locales          = WPGlobus::Config()->locale;
-
-
-		if ( $args['type'] == 'ul' ) {
+        
+        if ( $args['type'] == 'ul' ) {
 			echo '<ul class="' . esc_attr( $args['class'] ) . '">';
 		} elseif ( $args['type'] == 'select' ) {
 			echo '<select name="' . esc_attr( $args['name'] ) . '" class="' . esc_attr( $args['class'] ) . '" >';
@@ -54,12 +53,11 @@ class FS_WPGlobus {
 			$class     = $lang == $default_language ? 'class="active"' : '';
 			$lang_name = apply_filters( 'fs_language_display_name', $lang );
 
-			if ( is_singular( $post_type ) ) {
+			if ( is_singular( $post_type ) ) { 
 				global $post;
-				$prefix = $lang == WPGlobus::Config()->default_language ? '' : $lang;
-				$slug   = get_post_meta( $post->ID, 'fs_seo_slug__' . mb_strtolower($locales[ $lang ]), 1 );
-				$link   = $slug ? site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $slug ) )
-					: site_url( sprintf( '%s/%s/%s/', $prefix, $post_type, $post->post_name ) );
+				$slug   = $default_language==$lang ? $post->post_name : get_post_meta( $post->ID, 'fs_seo_slug__' . mb_strtolower($locales[ $lang ]), 1 ) ;
+				$link   =$default_language==$lang ? site_url( sprintf( '%s/%s/', $post_type, $slug ) )
+                    : site_url( sprintf( '%s/%s/%s/', $lang, $post_type, $slug ) );
 			} elseif ( fs_option( 'fs_localize_slug' ) && fs_is_product_category() ) {
 				$link = fs_localize_category_url( get_queried_object_id(), $locales[ $lang ] );
 			} else {
