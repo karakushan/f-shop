@@ -41,6 +41,7 @@ class FS_SEO {
         }
 	}
 
+
 	/**
 	 * Изменяет meta title
 	 *

@@ -14,6 +14,23 @@ class FS_WPGlobus {
 	public function __construct() {
 		add_action( 'fs_wpglobus_language_switcher', [ $this, 'wpglobus_language_switcher' ] );
 		add_action( 'wp_footer', [ $this, 'footer_inline_scripts' ] );
+		add_filter( 'wpseo_canonical', [$this, 'custom_canonical_url'], 10, 1 );
+
+	}
+
+	/**
+	 * Изменяем canonical_url
+	 *
+	 * @param $canonical_url
+	 *
+	 * @return mixed|string|null
+	 */
+	function custom_canonical_url( $canonical_url ) {
+		if ( ! FS_Config::is_default_locale() && is_singular( FS_Config::get_data( 'post_type' ) ) && get_post_meta( get_the_ID(), 'fs_seo_slug__' . mb_strtolower( get_locale() ), true ) ) {
+			$canonical_url = site_url( sprintf( '%s/%s/%s/', WPGlobus::Config()->language, FS_Config::get_data( 'post_type' ), get_post_meta( get_the_ID(), 'fs_seo_slug__' . mb_strtolower( get_locale() ), true ) ) );
+		}
+
+		return $canonical_url;
 	}
 
 	/**
@@ -40,8 +57,8 @@ class FS_WPGlobus {
 		$languages        = WPGlobus::Config()->enabled_languages;
 		$default_language = WPGlobus::Config()->default_language;
 		$locales          = WPGlobus::Config()->locale;
-        
-        if ( $args['type'] == 'ul' ) {
+
+		if ( $args['type'] == 'ul' ) {
 			echo '<ul class="' . esc_attr( $args['class'] ) . '">';
 		} elseif ( $args['type'] == 'select' ) {
 			echo '<select name="' . esc_attr( $args['name'] ) . '" class="' . esc_attr( $args['class'] ) . '" >';
@@ -53,11 +70,11 @@ class FS_WPGlobus {
 			$class     = $lang == $default_language ? 'class="active"' : '';
 			$lang_name = apply_filters( 'fs_language_display_name', $lang );
 
-			if ( is_singular( $post_type ) ) { 
+			if ( is_singular( $post_type ) ) {
 				global $post;
-				$slug   = $default_language==$lang ? $post->post_name : get_post_meta( $post->ID, 'fs_seo_slug__' . mb_strtolower($locales[ $lang ]), 1 ) ;
-				$link   =$default_language==$lang ? site_url( sprintf( '%s/%s/', $post_type, $slug ) )
-                    : site_url( sprintf( '%s/%s/%s/', $lang, $post_type, $slug ) );
+				$slug = $default_language == $lang ? $post->post_name : get_post_meta( $post->ID, 'fs_seo_slug__' . mb_strtolower( $locales[ $lang ] ), 1 );
+				$link = $default_language == $lang ? site_url( sprintf( '%s/%s/', $post_type, $slug ) )
+					: site_url( sprintf( '%s/%s/%s/', $lang, $post_type, $slug ) );
 			} elseif ( fs_option( 'fs_localize_slug' ) && fs_is_product_category() ) {
 				$link = fs_localize_category_url( get_queried_object_id(), $locales[ $lang ] );
 			} else {
@@ -89,10 +106,10 @@ class FS_WPGlobus {
 	}
 
 	public function footer_inline_scripts() { ?>
-		<script>
+        <script>
             jQuery('[name="<?php echo esc_attr( $this->switcher_name ) ?>"').on('change', function () {
                 location.href = jQuery(this).val();
             })
-		</script>
+        </script>
 	<?php }
 }

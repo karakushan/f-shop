@@ -92,7 +92,7 @@ class FS_Product {
 			return $post_link;
 		}
 
-		$custom_slug = get_post_meta( $post->ID, 'fs_seo_slug__' . get_locale(), 1 );
+		$custom_slug = get_post_meta( $post->ID, 'fs_seo_slug__' . mb_strtolower(get_locale()), 1 );
 
 		if ( ! $custom_slug ) {
 			return $post_link;
