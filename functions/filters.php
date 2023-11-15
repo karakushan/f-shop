@@ -400,34 +400,3 @@ function fs_product_tab_admin_meta_key( $meta_key, $field ) {
 
 	return $meta_key;
 }
-
-// Localize the url
-add_filter( 'post_type_link', 'fs_post_type_link_filters', 10, 4 );
-function fs_post_type_link_filters( $post_link, $post, $leavename, $sample ) {
-    if (is_admin()) {
-        return $post_link;
-    }
-
-	$default_language = FS_Config::default_locale();
-	$current_locale   = get_locale();
-
-	if ( $post->post_type != FS_Config::get_data( 'post_type' ) || $current_locale == $default_language ) {
-		return $post_link;
-	}
-
-	if ( $slug = get_post_meta( $post->ID, 'fs_seo_slug__' . mb_strtolower( $current_locale ), 1 ) ) {
-		$lang_prefix   = '';
-		$all_languages = FS_Config::get_languages();
-		foreach ( $all_languages as $id => $language ) {
-			if ( $language['locale'] == $current_locale ) {
-				$lang_prefix = $id;
-				break;
-			}
-
-		}
-		$post_link = site_url( sprintf( '%s/%s/%s/', $lang_prefix, $post->post_type, $slug ) );
-	}
-
-	return $post_link;
-}
-

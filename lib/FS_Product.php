@@ -88,19 +88,15 @@ class FS_Product {
 			return $post_link;
 		}
 
-		if ( $post->post_type != $this->post_type || FS_Config::is_default_locale() ) {
+		if ( $post->post_type != FS_Config::get_data('post_type') || FS_Config::is_default_locale() ) {
 			return $post_link;
 		}
 
-		$custom_slug = get_post_meta( $post->ID, 'fs_seo_slug__' . mb_strtolower(get_locale()), 1 );
+        if ($custom_slug = get_post_meta( $post->ID, 'fs_seo_slug__' . mb_strtolower(get_locale()), 1 )) {
+            return site_url(sprintf('/%s/%s/%s/',\WPGlobus::Config()->language,  $post->post_type, $custom_slug));
+        }
 
-		if ( ! $custom_slug ) {
-			return $post_link;
-		}
-
-		$post_link = str_replace( $post->post_name, $custom_slug, $post_link );
-
-		return \WPGlobus_Utils::localize_url( $post_link, \WPGlobus::Config()->language );
+		return $post_link;
 	}
 
 
