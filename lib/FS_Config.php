@@ -186,7 +186,7 @@ class FS_Config {
 			'views_desc'   => array(
 				'name' => __( 'Behind the popularity', 'f-shop' )
 			),
-			'rating_desc'   => array(
+			'rating_desc'  => array(
 				'name' => __( 'By rating', 'f-shop' )
 			),
 			'action_price' => array(
@@ -746,6 +746,7 @@ class FS_Config {
 			'product_taxes_taxonomy'  => 'fs-taxes',
 			'discount_taxonomy'       => 'fs-discounts',
 			'currencies_taxonomy'     => 'fs-currencies',
+			'drop_taxonomy'           => 'fs-dropshiping',
 			'preloader'               => FS_PLUGIN_URL . '/assets/img/ajax-loader.gif',
 			'default_order_status'    => 'new'
 

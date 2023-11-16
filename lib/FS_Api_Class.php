@@ -9,6 +9,8 @@
 namespace FS;
 
 
+use FS\Api\FS_XML_Import;
+
 class FS_Api_Class {
 
 	function __construct() {
@@ -17,6 +19,24 @@ class FS_Api_Class {
 
 		// Возможность создавать и выполнять хуки для неавторизованого пользователя
 		add_action( 'template_redirect', array( $this, 'do_user_api' ) );
+
+		add_action( 'rest_api_init', [ $this, 'register_plugin_api' ] );
+	}
+
+	function register_plugin_api() {
+		register_rest_route( 'f-shop', '/yml_parse/', array(
+			'methods'             => 'GET',
+			'callback'            => [ FS_XML_Import::class, 'handle' ],
+			'permission_callback' => [ $this, 'check_api_key_permission_callback' ],
+		) );
+	}
+
+	/**
+	 * Проверка прав доступа к API
+	 * @return true
+	 */
+	function check_api_key_permission_callback() {
+		return true;
 	}
 
 	/**
