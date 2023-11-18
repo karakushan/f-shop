@@ -77,12 +77,6 @@ class FS_Yoast_SEO {
 		$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
 		if ( is_tax( $taxonomy_name ) && fs_option( 'fs_disable_taxonomy_slug' ) ) {
 			$canonical = get_term_link( get_queried_object_id(), $taxonomy_name );
-		} elseif ( is_singular( FS_Config::get_data( 'post_type' ) ) && get_locale() != FS_Config::default_locale() ) {
-			global $post;
-			$slug = get_post_meta( $post->ID, 'fs_seo_slug__' . get_locale(), 1 );
-			if ( $slug ) {
-				$canonical = site_url( sprintf( '%s/%s/%s/', 'ua', FS_Config::get_data( 'post_type' ), $slug ) );
-			}
 		}
 
 		return $canonical;

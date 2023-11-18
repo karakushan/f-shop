@@ -14,23 +14,6 @@ class FS_WPGlobus {
 	public function __construct() {
 		add_action( 'fs_wpglobus_language_switcher', [ $this, 'wpglobus_language_switcher' ] );
 		add_action( 'wp_footer', [ $this, 'footer_inline_scripts' ] );
-		add_filter( 'wpseo_canonical', [$this, 'custom_canonical_url'], 10, 1 );
-
-	}
-
-	/**
-	 * Изменяем canonical_url
-	 *
-	 * @param $canonical_url
-	 *
-	 * @return mixed|string|null
-	 */
-	function custom_canonical_url( $canonical_url ) {
-		if ( ! FS_Config::is_default_locale() && is_singular( FS_Config::get_data( 'post_type' ) ) && get_post_meta( get_the_ID(), 'fs_seo_slug__' . mb_strtolower( get_locale() ), true ) ) {
-			$canonical_url = site_url( sprintf( '%s/%s/%s/', WPGlobus::Config()->language, FS_Config::get_data( 'post_type' ), get_post_meta( get_the_ID(), 'fs_seo_slug__' . mb_strtolower( get_locale() ), true ) ) );
-		}
-
-		return $canonical_url;
 	}
 
 	/**
