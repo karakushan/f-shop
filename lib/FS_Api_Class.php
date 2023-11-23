@@ -9,7 +9,7 @@
 namespace FS;
 
 
-use FS\Api\FS_XML_Import;
+use FS\Api\FS_YML_Import;
 
 class FS_Api_Class {
 
@@ -26,7 +26,7 @@ class FS_Api_Class {
 	function register_plugin_api() {
 		register_rest_route( 'f-shop', '/yml_parse/', array(
 			'methods'             => 'GET',
-			'callback'            => [ FS_XML_Import::class, 'handle' ],
+			'callback'            => [ FS_YML_Import::class, 'handle' ],
 			'permission_callback' => [ $this, 'check_api_key_permission_callback' ],
 		) );
 	}

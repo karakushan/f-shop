@@ -579,7 +579,8 @@ class FS_Config {
 			'up_sell'           => 'fs_up_sell',
 			'cross_sell'        => 'fs_cross_sell',
 			'product_rating'    => 'fs_product_rating',
-			'product_type'      => 'fs_product_type'
+			'product_type'      => 'fs_product_type',
+			'country_of_origin' => 'fs_country_of_origin',
 		);
 
 		$meta = apply_filters( 'fs_meta', $meta );

@@ -5,6 +5,7 @@ namespace FS;
 
 use FS\Admin\ProductEdit;
 use FS\Admin\TermEdit;
+use FS\CLI\Init_Commands;
 use FS\Integrations\FS_WPGlobus;
 
 /**
@@ -42,7 +43,8 @@ class FS_Init {
 		FS_Customers::class,
 		FS_Form::class,
 		Admin\ProductEdit::class,
-		TermEdit::class
+		TermEdit::class,
+		Init_Commands::class
 
 	];
 	protected static $instance = null;
