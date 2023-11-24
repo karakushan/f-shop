@@ -1,0 +1,39 @@
+.fs-select-product{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &__search{
+    display: flex;
+    justify-content: space-between;
+    gap:.5rem;
+    &-input{
+      flex:1;
+    }
+  }
+  &__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+  }
+  &__title{
+    margin: 0;
+  }
+  &__body{
+    width: 420px;
+    max-width:100%;
+    background: #ffffff;
+    padding: 1rem;
+    box-shadow: -5px 5px 15px 0px rgba(0, 0, 0 , .15);
+    border-radius: 0.2rem;
+
+  }
+}

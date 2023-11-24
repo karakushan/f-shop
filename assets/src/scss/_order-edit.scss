@@ -1,0 +1,47 @@
+.fs-order-edit{
+  &__toolbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .5rem;
+  }
+  &__title{
+    margin: 0;
+    padding: 0.5rem 0;
+    font-weight: 700;
+    font-size: .92rem;
+  }
+  &__section{
+    margin-bottom: 2.5rem;
+  }
+  &__items{
+    margin-bottom: 2rem;
+  }
+  &__item{
+    border-bottom: 1px solid #f6f7f7;
+    &-price,&-cost{
+      gap:.25rem;
+      span{
+        display: flex;
+      }
+    }
+    &-name{
+      font-weight: 700;
+
+    }
+    &--header{
+      font-weight: 700;
+      background-color:#f6f7f7;
+      border-bottom: 1px solid #e2e4e7;
+      padding: .8rem;
+
+    }
+    padding: .8rem ;
+    display:grid;
+    grid-template-columns: repeat(7,1fr);
+    &>*{
+      display: flex;
+      align-items: center;
+    }
+  }
+}
