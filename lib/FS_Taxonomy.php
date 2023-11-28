@@ -17,12 +17,6 @@
 
 namespace FS;
 
-use FS\Admin\ProductEdit;
-use FS\Admin\TermMetaDatastore;
-use function WP_CLI\Utils\glob_brace;
-use Carbon_Fields\Container;
-use Carbon_Fields\Field;
-
 class FS_Taxonomy
 {
     public $taxonomy_name;
@@ -48,9 +42,10 @@ class FS_Taxonomy
         // Remove taxonomy slug from links
         add_filter('term_link', array($this, 'replace_taxonomy_slug_filter'), 10, 3);
 
-        // Generate rewrite rules
-        add_action('generate_rewrite_rules', array($this, 'taxonomy_rewrite_rules'));
-
+        add_action('init', function () {
+            // Generate rewrite rules
+            add_action('generate_rewrite_rules', array($this, 'taxonomy_rewrite_rules'));
+        });
         //  redirect to localized url
         add_action('template_redirect', array($this, 'redirect_to_localized_url'));
 
@@ -464,9 +459,8 @@ class FS_Taxonomy
     {
         $rules = [];
         $terms = get_terms(['taxonomy' => $this->taxonomy_name, 'hide_empty' => false]);
-
         if (fs_option('fs_disable_taxonomy_slug')) {
-            foreach (FS_Config::get_languages() as  $language) {
+            foreach (FS_Config::get_languages() as $language_name=>$language) {
                 $meta_key = '_seo_slug__' . mb_strtolower($language['locale']);
                 foreach ($terms as $term) {
                     $localize_slug = get_term_meta($term->term_id, $meta_key, 1);
@@ -474,18 +468,16 @@ class FS_Taxonomy
                         $rules[$term->slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
                         $rules[$term->slug . '/page/(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
                         $rules[$term->slug . '/page-(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
-
-
                     } elseif ($language['locale'] != FS_Config::default_locale() && $localize_slug) {
-                        $rules[$localize_slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
-                        $rules[$localize_slug . '/page/(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
-                        $rules[$localize_slug . '/page-(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+                        $rules[$language_name.'/' . $localize_slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+                        $rules[$language_name.'/' .$localize_slug . '/page/(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+                        $rules[$language_name.'/' .$localize_slug . '/page-(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
                     }
                 }
             }
 
         } else {
-            foreach (FS_Config::get_languages() as  $language) {
+            foreach (FS_Config::get_languages() as $language) {
                 if ($language['locale'] == FS_Config::default_locale()) {
                     continue;
                 }
@@ -589,7 +581,7 @@ class FS_Taxonomy
                         'name' => __('Category text', 'f-shop'),
                         'type' => 'rich_text',
                         'args' => [
-	                        'multilang' => true,
+                            'multilang' => true,
                         ]
                     ),
                     '_seo_slug' => array(
@@ -638,7 +630,7 @@ class FS_Taxonomy
                     '_min_qty' => array(
                         'name' => __('Minimum quantity of goods for order', 'f-shop'),
                         'type' => 'text',
-                        'subtype'=>'number',
+                        'subtype' => 'number',
                         'args' => [
                             'multilang' => false,
                         ],
@@ -1250,7 +1242,7 @@ class FS_Taxonomy
             } else echo 'none' ?>">
             <th scope="row">
                 <label
-                    for="fs_att_compare"><?php esc_html_e('Use the number of purchased goods to compare with this attribute.', 'f-shop'); ?></label>
+                        for="fs_att_compare"><?php esc_html_e('Use the number of purchased goods to compare with this attribute.', 'f-shop'); ?></label>
             </th>
             <td>
                 <input type="checkbox"
@@ -1556,12 +1548,12 @@ class FS_Taxonomy
                         <td>
                             <ul class="fs-childs-list">   <?php foreach ($att_h as $child): ?>
                                     <li><?php echo esc_html(apply_filters('the_title', $child->name)) ?> <a
-                                            class="remove-att"
-                                            title="<?php esc_attr_e('do I delete a property?', 'f-shop') ?>"
-                                            data-action="remove-att"
-                                            data-category-id="<?php echo esc_attr($child->term_id) ?>"
-                                            data-product-id="<?php echo esc_attr($post_id) ?>"><span
-                                                class="dashicons dashicons-no-alt"></span></a>
+                                                class="remove-att"
+                                                title="<?php esc_attr_e('do I delete a property?', 'f-shop') ?>"
+                                                data-action="remove-att"
+                                                data-category-id="<?php echo esc_attr($child->term_id) ?>"
+                                                data-product-id="<?php echo esc_attr($post_id) ?>"><span
+                                                    class="dashicons dashicons-no-alt"></span></a>
                                     </li>
 
                                 <?php endforeach; ?>

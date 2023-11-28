@@ -874,7 +874,7 @@ function fs_add_to_cart( $product_id = 0, $label = 'Add to cart', $args = array(
 	// Параметры доступные для переопределения
 	$args = wp_parse_args( $args, array(
 		'type'              => 'button',
-		'title'             => __( 'Add to cart', 'f-shop' ),
+		'title'             => __( 'Add to cart', 'f-shop'),
 		'id'                => 'fs-atc-' . $product_id,
 		'data-count'        => fs_get_product_min_qty( $product_id ),
 		'class'             => 'fs-add-to-cart',
@@ -1512,7 +1512,7 @@ function fs_range_slider() {
 		foreach ( $products as $product ) {
 			$prices[] = fs_get_price( $product->ID );
 		}
-	} elseif ( fs_is_catalog() ) {
+	} elseif ( fs_is_catalog() || is_search()) {
 		$prices = [ fs_price_min(), fs_price_max() ];
 	}
 
@@ -1557,7 +1557,7 @@ function fs_price_max() {
 			wp_cache_set( 'fs_max_price_term_' . $term->term_id, $max );
 
 		}
-	} elseif ( fs_is_catalog() ) {
+	} elseif ( fs_is_catalog() || is_search() ) {
 		$max = wp_cache_get( 'fs_max_price_archive' );
 		if ( ! $max ) {
 			$sql = "SELECT max(cast(meta_value as unsigned)) FROM $wpdb->postmeta WHERE meta_key='%s'";

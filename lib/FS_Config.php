@@ -680,7 +680,6 @@ class FS_Config {
 			)
 		);
 
-
 		return apply_filters( 'fs_languages', $languages );
 	}
 
@@ -701,7 +700,7 @@ class FS_Config {
 	 */
 	public
 	static function default_language_name() {
-		return apply_filters( 'default_language_name', 'ru' );
+		return apply_filters( 'fs_default_language_name', 'ru' );
 	}
 
 	/**

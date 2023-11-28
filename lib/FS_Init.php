@@ -2,19 +2,12 @@
 
 namespace FS;
 
-
-use FS\Admin\ProductEdit;
 use FS\Admin\TermEdit;
-use FS\Integrations\FS_WPGlobus;
-
 /**
  * Инициализирует функции и классы плагина
  */
 class FS_Init {
 	public $fs_config;
-	public $fs_payment;
-	public $fs_api;
-	public $fs_action;
 	public $fs_orders;
 	public $fs_option;
 	public $fs_product;
@@ -80,8 +73,6 @@ class FS_Init {
 		// Displays js analytics codes in the site header
 		add_action( 'wp_head', [ $this, 'marketing_code_header' ] );
 
-		add_action( 'init', [ $this, 'plugin_integration' ] );
-
 		add_action( 'after_setup_theme', [ $this, 'crb_load' ] );
 	}
 
@@ -143,7 +134,7 @@ class FS_Init {
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), FS_Config::get_data( 'plugin_ver' ), 'all' );
 
 		// Скрипты на страницах архивов и таксономий
-		if ( is_archive( $post_type ) || is_tax( $taxonomy ) ) {
+		if ( is_archive( $post_type ) || is_tax( $taxonomy )  || is_search()) {
 			wp_enqueue_style( FS_PLUGIN_PREFIX . 'jquery-ui', FS_PLUGIN_URL . 'assets/plugins/jquery-ui-themes-1.11.4/themes/' . $jquery_ui_theme . '/jquery-ui.min.css' );
 			wp_enqueue_style( FS_PLUGIN_PREFIX . 'jquery-ui-theme', FS_PLUGIN_URL . 'assets/plugins/jquery-ui-themes-1.11.4/themes/' . $jquery_ui_theme . '/theme.css' );
 			wp_enqueue_script( 'jquery-touch-punch' );
@@ -347,12 +338,6 @@ class FS_Init {
 	 */
 	public function marketing_code_header() {
 		echo fs_option( 'fs_marketing_code_header' );
-	}
-
-	function plugin_integration() {
-		if ( defined( 'WPGLOBUS_VERSION' ) ) {
-			new FS_WPGlobus();
-		}
 	}
 
 	function crb_load() {
