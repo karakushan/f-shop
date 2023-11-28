@@ -1,3 +1,5 @@
+import "./scss/fs-admin.scss";
+
 jQuery(document).ready(function ($) {
     $(window).off('beforeunload');
     const FS = {
@@ -675,7 +677,7 @@ jQuery(document).ready(function ($) {
     $('#fs-add-gallery').click(open_media_window);
 
     function open_media_window() {
-        if (this.window === undefined) { 
+        if (this.window === undefined) {
             this.window = wp.media({
                 title: 'Добавление изображений в галерею',
                 library: {type: 'image'},

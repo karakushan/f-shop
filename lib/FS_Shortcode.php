@@ -281,9 +281,9 @@ class FS_Shortcode {
 		$template = '<form action="#" name="fs-order-send" class="' . esc_attr( $args['class'] ) . '" method="POST">
             <div class="products_wrapper" ></div>
 			<input type = "hidden" id = "_wpnonce" name = "fs_secret" value = "' . wp_create_nonce( 'f-shop' ) . '">
-			<input type = "hidden" name = "action" value = "order_send">
-			<input type = "hidden" name = "cart[0][ID]" value="' . esc_attr( $args['product_id'] ) . '">
-			<input type = "hidden" name = "cart[0][count]" value="1">';
+			<input type = "hidden" id="fs-quick-order-action" name = "action" value = "order_send">
+			<input type = "hidden" id="fs-quick-order-product" name = "cart[0][ID]" value="' . esc_attr( $args['product_id'] ) . '">
+			<input type = "hidden" id="fs-quick-order-count" name = "cart[0][count]" value="1">';
 		$template .= fs_frontend_template( 'order/quick-order', $args );
 		$template .= '</form>';
 

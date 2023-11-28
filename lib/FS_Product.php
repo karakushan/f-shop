@@ -17,7 +17,7 @@ class FS_Product {
 	public $price;
 	public $base_price;
 	public $base_price_display;
-	public $price_format = '%s <span>%s</span>';
+	private $price_format = '%s <span>%s</span>';
 	public $price_display;
 	public $currency;
 	public $sku;
@@ -509,7 +509,7 @@ class FS_Product {
 	 *
 	 * @param string $format
 	 */
-	function the_cost( $format = '' ) {
+	function the_cost( $format = '%s %s' ) {
 		$format = ! empty( $format ) ? $format : $this->price_format;
 		printf( $format, esc_html( $this->cost_display ), esc_html( $this->currency ) );
 	}

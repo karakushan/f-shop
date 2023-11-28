@@ -186,7 +186,7 @@ class FS_Order {
 			return new \WP_Error( 'fs_not_valid_customer_data', __( 'User data is not filled in or not valid!', 'f-shop' ) );
 		}
 
-		// Обновляем давнные покупателя
+		// Обновляем данные покупателя
 		if ( $this->customer_ID ) {
 			$wpdb->update( $this->customer_table, $this->customer_data, [ 'id' => $this->customer_ID ] );
 		} else {
@@ -451,7 +451,7 @@ class FS_Order {
 	 * @return array
 	 */
 	public function getItems() {
-		return $this->items;
+		return(array) $this->items;
 	}
 
 	/**

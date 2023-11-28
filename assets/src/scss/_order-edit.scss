@@ -1,4 +1,9 @@
 .fs-order-edit{
+ &__btn{
+   &-danger{
+     color: $color_error;
+   }
+ }
   &__toolbar{
     display: flex;
     justify-content: space-between;
@@ -19,6 +24,28 @@
   }
   &__item{
     border-bottom: 1px solid #f6f7f7;
+    &-qty{
+      input{
+        width: 4rem;
+      }
+    }
+    &-action{
+      display: flex;
+      justify-content: center;
+      button{
+        padding: 0.25rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        &:hover{
+          cursor: pointer;
+        }
+
+      }
+    }
     &-price,&-cost{
       gap:.25rem;
       span{

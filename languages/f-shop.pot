@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2023-11-03 11:09+0000\n"
+"POT-Creation-Date: 2023-11-20 13:47+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Account deleting"
 msgstr ""
 
-#: lib/FS_Init.php:305
+#: lib/FS_Init.php:302 templates/back-end/metabox/order/edit.php:37
 msgid "Action"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Activate multicurrency"
 msgstr ""
 
-#: lib/FS_Init.php:302
+#: lib/FS_Init.php:299 templates/back-end/metabox/select-product.php:52
 msgid "Add"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgstr ""
 msgid "Add Email Template"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:129
+#: lib/Admin/ProductEdit.php:137
 msgid "Add images to the gallery."
 msgstr ""
 
@@ -109,7 +109,8 @@ msgstr ""
 msgid "Add packaging cost to order"
 msgstr ""
 
-#: lib/FS_Init.php:290 lib/FS_Settings.php:81 lib/FS_Product.php:676
+#: lib/FS_Init.php:287 lib/FS_Settings.php:81 lib/FS_Product.php:672
+#: templates/back-end/metabox/order/edit.php:26
 msgid "Add product"
 msgstr ""
 
@@ -145,7 +146,7 @@ msgstr ""
 msgid "Additional data"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:208
+#: lib/Admin/ProductEdit.php:217
 msgid "Additionally"
 msgstr ""
 
@@ -189,7 +190,7 @@ msgstr ""
 msgid "Allows you to set analytics and marketing codes"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:202
+#: lib/Admin/ProductEdit.php:211
 msgid "Allows you to set multilingual url"
 msgstr ""
 
@@ -223,7 +224,7 @@ msgstr ""
 msgid "Are you sure you want to delete the image?"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:146
+#: lib/Admin/ProductEdit.php:154
 msgid "Associated"
 msgstr ""
 
@@ -247,7 +248,7 @@ msgstr ""
 msgid "Attribute type"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:135
+#: lib/Admin/ProductEdit.php:143
 #: templates/back-end/metabox/order/meta-box-0.php:12
 msgid "Attributes"
 msgstr ""
@@ -265,11 +266,11 @@ msgstr ""
 msgid "Back to orders"
 msgstr ""
 
-#: lib/FS_Config.php:55 lib/Admin/ProductEdit.php:93
+#: lib/FS_Config.php:55 lib/Admin/ProductEdit.php:101
 msgid "Base price"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:74
+#: lib/Admin/ProductEdit.php:82
 msgid "Basic"
 msgstr ""
 
@@ -310,8 +311,11 @@ msgstr ""
 msgid "Branch number"
 msgstr ""
 
+#: templates/back-end/metabox/order/edit.php:83
+msgid "Buyer"
+msgstr ""
+
 #: templates/back-end/metabox/order/add.php:12
-#: templates/back-end/metabox/order/edit.php:34
 msgid "Buyer details"
 msgstr ""
 
@@ -407,7 +411,7 @@ msgstr ""
 msgid "Change order status"
 msgstr ""
 
-#: lib/FS_Product.php:962
+#: lib/FS_Product.php:958
 msgid "Characteristic"
 msgstr ""
 
@@ -416,7 +420,7 @@ msgstr ""
 msgid "Characteristic groups %d not on site in function %s"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:90
+#: lib/Admin/ProductEdit.php:98
 msgid "Check this box if you are selling a non-physical item."
 msgstr ""
 
@@ -434,7 +438,7 @@ msgstr ""
 msgid "Checkout Page"
 msgstr ""
 
-#: lib/FS_Product.php:807
+#: lib/FS_Product.php:803
 msgid "choose"
 msgstr ""
 
@@ -461,7 +465,7 @@ msgstr ""
 #: templates/front-end/order/last-order-info.php:27
 #: templates/front-end/shortcode/fs-order-info.php:64
 #: templates/back-end/metabox/order/add.php:47
-#: templates/back-end/metabox/order/edit.php:79
+#: templates/back-end/metabox/order/edit.php:129
 #: templates/back-end/metabox/order/show.php:28
 #: templates/front-end/mail/user-create-order.twig:406
 msgid "City"
@@ -471,7 +475,7 @@ msgstr ""
 msgid "Client"
 msgstr ""
 
-#: lib/FS_Init.php:304
+#: lib/FS_Init.php:301
 msgid "Close"
 msgstr ""
 
@@ -493,7 +497,7 @@ msgid "Comment on the order"
 msgstr ""
 
 #: templates/back-end/metabox/order/add.php:82
-#: templates/back-end/metabox/order/edit.php:121
+#: templates/back-end/metabox/order/edit.php:171
 #: templates/back-end/metabox/order/show.php:48
 msgid "Comment to the order"
 msgstr ""
@@ -532,13 +536,14 @@ msgstr ""
 msgid "Conversion of the cost of goods depending on the language"
 msgstr ""
 
-#: lib/FS_Taxonomy.php:1441 lib/FS_Init.php:306
+#: lib/FS_Taxonomy.php:1441 lib/FS_Init.php:303
 #: templates/front-end/cart/list-products.php:27
 #: templates/front-end/checkout/checkout.php:23
 #: templates/front-end/dashboard/orders.php:34
 #: templates/front-end/shortcode/fs-order-info.php:18
 #: templates/front-end/shortcode/order-detail.php:19
 #: templates/back-end/metabox/order/meta-box-0.php:13
+#: templates/back-end/metabox/order/edit.php:36
 msgid "Cost"
 msgstr ""
 
@@ -550,7 +555,7 @@ msgstr ""
 msgid "Cost of delivery"
 msgstr ""
 
-#: lib/FS_Init.php:296 templates/front-end/mail/user-create-order.twig:511
+#: lib/FS_Init.php:293 templates/front-end/mail/user-create-order.twig:511
 msgid "Cost of goods"
 msgstr ""
 
@@ -566,7 +571,7 @@ msgstr ""
 msgid "Cross sell products"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:159
+#: lib/Admin/ProductEdit.php:167
 msgid "Cross-selling products"
 msgstr ""
 
@@ -631,7 +636,8 @@ msgstr ""
 msgid "Default: product"
 msgstr ""
 
-#: lib/FS_Init.php:294 templates/back-end/fields/image.php:20
+#: lib/FS_Init.php:291 templates/back-end/fields/image.php:20
+#: templates/back-end/metabox/order/edit.php:69
 msgid "Delete"
 msgstr ""
 
@@ -647,21 +653,20 @@ msgstr ""
 msgid "Delivered"
 msgstr ""
 
-#: lib/FS_Init.php:298 templates/front-end/dashboard/orders.php:56
-#: templates/back-end/metabox/order/edit.php:14
+#: lib/FS_Init.php:295 templates/front-end/dashboard/orders.php:56
 #: templates/front-end/mail/user-create-order.twig:402
 msgid "Delivery"
 msgstr ""
 
 #: actions.php:70 functions/actions.php:70 functions/actions.php:70
 #: templates/back-end/metabox/order/add.php:68
-#: templates/back-end/metabox/order/edit.php:104
+#: templates/back-end/metabox/order/edit.php:154
 #: templates/back-end/metabox/order/show.php:40
 msgid "Delivery address"
 msgstr ""
 
 #: lib/FS_Taxonomy.php:898 templates/back-end/metabox/order/add.php:52
-#: templates/back-end/metabox/order/edit.php:87
+#: templates/back-end/metabox/order/edit.php:137
 #: templates/back-end/metabox/order/show.php:32
 #: templates/front-end/mail/user-create-order.twig:403
 msgid "Delivery method"
@@ -676,7 +681,7 @@ msgid "Delivery service address"
 msgstr ""
 
 #: templates/back-end/metabox/order/add.php:62
-#: templates/back-end/metabox/order/edit.php:97
+#: templates/back-end/metabox/order/edit.php:147
 msgid "Delivery service branch number"
 msgstr ""
 
@@ -696,7 +701,7 @@ msgstr ""
 msgid "Denied"
 msgstr ""
 
-#: lib/FS_Product.php:966
+#: lib/FS_Product.php:962
 msgid "Description"
 msgstr ""
 
@@ -724,8 +729,7 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: lib/FS_Taxonomy.php:990 lib/FS_Init.php:299
-#: templates/back-end/metabox/order/edit.php:18
+#: lib/FS_Taxonomy.php:990 lib/FS_Init.php:296
 #: templates/front-end/mail/user-create-order.twig:513
 msgid "Discount"
 msgstr ""
@@ -782,6 +786,10 @@ msgstr ""
 msgid "Do not override standard templates."
 msgstr ""
 
+#: templates/back-end/metabox/order/edit.php:68
+msgid "Do you confirm deletion?"
+msgstr ""
+
 #: lib/FS_Settings.php:98
 msgid "Documentation F-Shop"
 msgstr ""
@@ -796,7 +804,7 @@ msgstr ""
 #: templates/front-end/auth/lostpassword.php:4
 #: templates/front-end/shortcode/fs-order-info.php:56
 #: templates/back-end/metabox/order/add.php:42
-#: templates/back-end/metabox/order/edit.php:70
+#: templates/back-end/metabox/order/edit.php:120
 #: templates/back-end/metabox/order/show.php:24
 msgid "E-mail"
 msgstr ""
@@ -813,7 +821,7 @@ msgstr ""
 msgid "Edit order"
 msgstr ""
 
-#: lib/FS_Product.php:678
+#: lib/FS_Product.php:674
 msgid "Edit product"
 msgstr ""
 
@@ -888,6 +896,10 @@ msgstr ""
 msgid ""
 "Enter \"0\" if stock is exhausted. An empty field means inventory control "
 "for the item. disabled, and the goods are always in the presence!"
+msgstr ""
+
+#: templates/back-end/metabox/select-product.php:30
+msgid "Enter product name, ID, SKU"
 msgstr ""
 
 #: lib/FS_Init.php:193 lib/FS_Ajax.php:1201 lib/FS_Ajax.php:1210
@@ -970,7 +982,7 @@ msgstr ""
 #: lib/FS_Users.php:381 lib/FS_Users.php:385 lib/FS_Users.php:425
 #: lib/FS_Users.php:429 lib/FS_Customers_List.php:163
 #: templates/back-end/metabox/order/add.php:25
-#: templates/back-end/metabox/order/edit.php:46
+#: templates/back-end/metabox/order/edit.php:96
 #: templates/back-end/metabox/order/show.php:12
 msgid "First name"
 msgstr ""
@@ -992,7 +1004,7 @@ msgstr ""
 msgid "Forgot your password?"
 msgstr ""
 
-#: lib/FS_Init.php:301
+#: lib/FS_Init.php:298
 msgid "Found products"
 msgstr ""
 
@@ -1012,7 +1024,7 @@ msgstr ""
 msgid "from expensive to cheap"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:123 lib/Admin/ProductEdit.php:127
+#: lib/Admin/ProductEdit.php:131 lib/Admin/ProductEdit.php:135
 msgid "Gallery"
 msgstr ""
 
@@ -1064,7 +1076,7 @@ msgstr ""
 msgid "Have an account?"
 msgstr ""
 
-#: lib/FS_Product.php:703
+#: lib/FS_Product.php:699
 msgid "Here are the products of your site."
 msgstr ""
 
@@ -1098,7 +1110,8 @@ msgstr ""
 #: templates/front-end/shortcode/fs-order-info.php:13
 #: templates/back-end/metabox/order/meta-box-0.php:6
 #: templates/back-end/metabox/order/add.php:17
-#: templates/back-end/metabox/order/edit.php:39
+#: templates/back-end/metabox/order/edit.php:31
+#: templates/back-end/metabox/order/edit.php:89
 #: templates/back-end/metabox/order/show.php:4
 msgid "ID"
 msgstr ""
@@ -1115,7 +1128,7 @@ msgid ""
 "in the currency settings."
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:105
+#: lib/Admin/ProductEdit.php:113
 msgid ""
 "If this field is filled, the base price loses its relevance. But you can "
 "display it on the site."
@@ -1169,7 +1182,7 @@ msgstr ""
 msgid "In the process of payment"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:76
+#: lib/Admin/ProductEdit.php:84
 msgid "In this tab you can adjust the prices of goods."
 msgstr ""
 
@@ -1225,7 +1238,7 @@ msgid ""
 "href=\"%wishlist_url%\">Go to wishlist</a>"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:111
+#: lib/Admin/ProductEdit.php:119
 msgid "Item Currency"
 msgstr ""
 
@@ -1262,7 +1275,7 @@ msgstr ""
 #: lib/FS_Users.php:442 lib/FS_Customers_List.php:164
 #: templates/front-end/shortcode/fs-order-info.php:52
 #: templates/back-end/metabox/order/add.php:32
-#: templates/back-end/metabox/order/edit.php:53
+#: templates/back-end/metabox/order/edit.php:103
 #: templates/back-end/metabox/order/show.php:16
 #: templates/front-end/mail/user-create-order.twig:410
 msgid "Last name"
@@ -1300,7 +1313,7 @@ msgid ""
 "or <a href=\"%s\" target=\"_blank\">%s</a>"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:228
+#: lib/Admin/ProductEdit.php:237
 msgid "Link to the product"
 msgstr ""
 
@@ -1387,7 +1400,8 @@ msgstr ""
 msgid "My orders"
 msgstr ""
 
-#: lib/FS_Init.php:291 templates/front-end/order/last-order-info.php:11
+#: lib/FS_Init.php:288 templates/front-end/order/last-order-info.php:11
+#: templates/back-end/metabox/order/edit.php:33
 #: templates/front-end/product/tabs/comments.php:75
 msgid "Name"
 msgstr ""
@@ -1412,7 +1426,7 @@ msgstr ""
 msgid "No customers avaliable."
 msgstr ""
 
-#: lib/FS_SEO.php:310
+#: lib/FS_SEO.php:311
 msgid "No description"
 msgstr ""
 
@@ -1480,6 +1494,10 @@ msgstr ""
 msgid "Only in stock"
 msgstr ""
 
+#: templates/back-end/metabox/order/edit.php:53
+msgid "Open in new tab"
+msgstr ""
+
 #: lib/FS_Post_Types.php:107
 msgid "Order"
 msgstr ""
@@ -1490,12 +1508,10 @@ msgid "Order #%d from %s %s (%s)"
 msgstr ""
 
 #: lib/FS_Payment.php:71
-#, php-format
 msgid "Order #%d paid successfully"
 msgstr ""
 
 #: lib/FS_Ajax.php:928
-#, php-format
 msgid "Order #%d successfully added"
 msgstr ""
 
@@ -1523,7 +1539,6 @@ msgid "Order details"
 msgstr ""
 
 #: templates/front-end/shortcode/order-detail.php:9
-#, php-format
 msgid "Order details #%d"
 msgstr ""
 
@@ -1533,7 +1548,7 @@ msgstr ""
 msgid "Order goods on the site \"%s\""
 msgstr ""
 
-#: templates/back-end/metabox/order/edit.php:135
+#: templates/back-end/metabox/order/edit.php:186
 msgid "Order history"
 msgstr ""
 
@@ -1561,7 +1576,7 @@ msgstr ""
 msgid "Order number not specified"
 msgstr ""
 
-#: lib/FS_Init.php:295
+#: lib/FS_Init.php:292
 msgid "Order price"
 msgstr ""
 
@@ -1587,11 +1602,10 @@ msgstr ""
 msgid "Other shipping address"
 msgstr ""
 
-#: lib/FS_Init.php:297
+#: lib/FS_Init.php:294
 msgid "Packaging"
 msgstr ""
 
-#: templates/back-end/metabox/order/edit.php:10
 #: templates/front-end/mail/user-create-order.twig:514
 msgid "Packing"
 msgstr ""
@@ -1642,7 +1656,7 @@ msgid "Payment for order #%d with &laquo;%s&raquo;"
 msgstr ""
 
 #: lib/FS_Taxonomy.php:881 templates/back-end/metabox/order/add.php:72
-#: templates/back-end/metabox/order/edit.php:111
+#: templates/back-end/metabox/order/edit.php:161
 #: templates/back-end/metabox/order/show.php:44
 msgid "Payment method"
 msgstr ""
@@ -1690,13 +1704,13 @@ msgstr ""
 #: lib/FS_Config.php:72 templates/front-end/order/last-order-info.php:23
 #: templates/front-end/shortcode/fs-order-info.php:60
 #: templates/back-end/metabox/order/add.php:37
-#: templates/back-end/metabox/order/edit.php:61
+#: templates/back-end/metabox/order/edit.php:111
 #: templates/back-end/metabox/order/show.php:20
 #: templates/front-end/mail/user-create-order.twig:412
 msgid "Phone number"
 msgstr ""
 
-#: functions/filters.php:44 lib/FS_Init.php:303
+#: functions/filters.php:44 lib/FS_Init.php:300
 #: templates/front-end/cart/list-products.php:12
 #: templates/front-end/checkout/checkout.php:8
 #: templates/front-end/dashboard/wishlist.php:10
@@ -1704,10 +1718,11 @@ msgstr ""
 #: templates/front-end/shortcode/fs-order-info.php:14
 #: templates/front-end/shortcode/order-detail.php:15
 #: templates/back-end/metabox/order/meta-box-0.php:7
+#: templates/back-end/metabox/order/edit.php:32
 msgid "Photo"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:83
+#: lib/Admin/ProductEdit.php:91
 msgid "Physical"
 msgstr ""
 
@@ -1727,7 +1742,7 @@ msgstr ""
 msgid "Position successful removed from the basket"
 msgstr ""
 
-#: functions/filters.php:41 lib/FS_Init.php:292 lib/FS_Filters.php:116
+#: functions/filters.php:41 lib/FS_Init.php:289 lib/FS_Filters.php:116
 #: templates/front-end/cart/list-products.php:21
 #: templates/front-end/checkout/checkout.php:17
 #: templates/front-end/dashboard/wishlist.php:19
@@ -1735,6 +1750,7 @@ msgstr ""
 #: templates/front-end/shortcode/fs-order-info.php:16
 #: templates/front-end/shortcode/order-detail.php:17
 #: templates/back-end/metabox/order/meta-box-0.php:10
+#: templates/back-end/metabox/order/edit.php:34
 #: templates/back-end/metabox/product-variations/add-variation.php:56
 msgid "Price"
 msgstr ""
@@ -1747,13 +1763,13 @@ msgstr ""
 msgid "Processed"
 msgstr ""
 
-#: lib/FS_Product.php:675 templates/front-end/cart/list-products.php:15
+#: lib/FS_Product.php:671 templates/front-end/cart/list-products.php:15
 #: templates/front-end/checkout/checkout.php:11
 #: templates/front-end/dashboard/wishlist.php:13
 msgid "Product"
 msgstr ""
 
-#: lib/FS_Init.php:308
+#: lib/FS_Init.php:305
 msgid "product"
 msgstr ""
 
@@ -1795,15 +1811,15 @@ msgstr ""
 msgid "Product link localization"
 msgstr ""
 
-#: lib/FS_Init.php:300
+#: lib/FS_Init.php:297
 msgid "Product name, ID or SKU"
 msgstr ""
 
-#: lib/FS_SEO.php:174
+#: lib/FS_SEO.php:175
 msgid "Product Reviews"
 msgstr ""
 
-#: lib/FS_Init.php:307
+#: lib/FS_Init.php:304
 msgid "Product selection"
 msgstr ""
 
@@ -1815,11 +1831,12 @@ msgstr ""
 msgid "Product slug"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:79
+#: lib/Admin/ProductEdit.php:87
 msgid "Product type"
 msgstr ""
 
-#: lib/FS_Settings.php:228 lib/FS_Product.php:674 lib/FS_Product.php:685
+#: lib/FS_Settings.php:228 lib/FS_Product.php:670 lib/FS_Product.php:681
+#: templates/back-end/metabox/order/edit.php:25
 msgid "Products"
 msgstr ""
 
@@ -1837,7 +1854,7 @@ msgstr ""
 msgid "Prom.ua"
 msgstr ""
 
-#: lib/FS_Config.php:62 lib/Admin/ProductEdit.php:103
+#: lib/FS_Config.php:62 lib/Admin/ProductEdit.php:111
 #: templates/back-end/metabox/product-variations/add-variation.php:62
 msgid "Promotional price"
 msgstr ""
@@ -1862,7 +1879,7 @@ msgstr ""
 msgid "Purchased goods"
 msgstr ""
 
-#: lib/FS_Init.php:289
+#: lib/FS_Init.php:286
 msgid "Purchased items"
 msgstr ""
 
@@ -1872,11 +1889,12 @@ msgstr ""
 msgid "Qty"
 msgstr ""
 
-#: lib/FS_Init.php:293 templates/front-end/cart/list-products.php:24
+#: lib/FS_Init.php:290 templates/front-end/cart/list-products.php:24
 #: templates/front-end/checkout/checkout.php:20
 #: templates/front-end/shortcode/fs-order-info.php:17
 #: templates/front-end/shortcode/list-orders.php:9
 #: templates/back-end/metabox/order/meta-box-0.php:11
+#: templates/back-end/metabox/order/edit.php:35
 msgid "Quantity"
 msgstr ""
 
@@ -1984,7 +2002,7 @@ msgstr ""
 msgid "Review"
 msgstr ""
 
-#: lib/FS_Post_Types.php:82 lib/FS_Product.php:974
+#: lib/FS_Post_Types.php:82 lib/FS_Product.php:970
 #: templates/front-end/dashboard/index.php:22
 msgid "Reviews"
 msgstr ""
@@ -2038,7 +2056,11 @@ msgstr ""
 msgid "select image"
 msgstr ""
 
-#: lib/FS_Init.php:309
+#: templates/back-end/metabox/select-product.php:23
+msgid "Select product"
+msgstr ""
+
+#: lib/FS_Init.php:306
 msgid "selected"
 msgstr ""
 
@@ -2054,7 +2076,7 @@ msgstr[1] ""
 msgid "Send"
 msgstr ""
 
-#: lib/FS_Settings.php:654 lib/Admin/ProductEdit.php:194
+#: lib/FS_Settings.php:654 lib/Admin/ProductEdit.php:202
 msgid "SEO"
 msgstr ""
 
@@ -2062,7 +2084,7 @@ msgstr ""
 msgid "SEO description"
 msgstr ""
 
-#: lib/FS_Taxonomy.php:596 lib/Admin/ProductEdit.php:199
+#: lib/FS_Taxonomy.php:596 lib/Admin/ProductEdit.php:207
 msgid "SEO slug"
 msgstr ""
 
@@ -2084,11 +2106,11 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: lib/FS_Product.php:970 lib/Admin/ProductEdit.php:182
+#: lib/FS_Product.php:966 lib/Admin/ProductEdit.php:190
 msgid "Shipping and payment"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:187
+#: lib/Admin/ProductEdit.php:195
 msgid "Shipping and Payment Details"
 msgstr ""
 
@@ -2227,6 +2249,7 @@ msgid "Thank you for your purchase."
 msgstr ""
 
 #: lib/FS_Ajax.php:631
+#, php-format
 msgid "The \"%s\" field is required!"
 msgstr ""
 
@@ -2262,7 +2285,7 @@ msgid ""
 "characteristics selected below"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:116
+#: lib/Admin/ProductEdit.php:124
 msgid "The field is active if you have enabled multicurrency in settings."
 msgstr ""
 
@@ -2374,7 +2397,7 @@ msgid ""
 "This is convenient in some cases, but it is better to leave this option off"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:100
+#: lib/Admin/ProductEdit.php:108
 msgid "This is the main price on the site. Required field!"
 msgstr ""
 
@@ -2406,7 +2429,7 @@ msgid ""
 "phone automatically receive this status."
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:175
+#: lib/Admin/ProductEdit.php:183
 msgid "This tab is relevant if you have several varieties of a single product."
 msgstr ""
 
@@ -2463,7 +2486,6 @@ msgstr ""
 msgid "To wish list"
 msgstr ""
 
-#: templates/back-end/metabox/order/edit.php:22
 #: templates/front-end/mail/user-create-order.twig:465
 #: templates/front-end/mail/user-create-order.twig:516
 msgid "Total"
@@ -2525,7 +2547,7 @@ msgstr ""
 msgid "Update Date"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:150
+#: lib/Admin/ProductEdit.php:158
 msgid "Upsell products"
 msgstr ""
 
@@ -2597,7 +2619,7 @@ msgstr ""
 msgid "Variant name"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:171
+#: lib/Admin/ProductEdit.php:179
 msgid "Variation"
 msgstr ""
 
@@ -2616,11 +2638,11 @@ msgstr ""
 msgid "Views"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:84
+#: lib/Admin/ProductEdit.php:92
 msgid "Virtual"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:220
+#: lib/Admin/ProductEdit.php:229
 msgid "Virtual Product"
 msgstr ""
 
@@ -2747,7 +2769,6 @@ msgid "Your name"
 msgstr ""
 
 #: templates/front-end/mail/user-create-order.twig:365
-#, php-format
 msgid ""
 "Your order #%d has been successfully created. We will contact you shortly. "
 "If this did not happen within 1-2 days, then contact us for these contact "
@@ -2815,6 +2836,10 @@ msgstr ""
 
 #: lib/FS_Ajax.php:247
 msgid "Атрибуты успешно добавленны!"
+msgstr ""
+
+#: templates/back-end/metabox/order/edit.php:41
+msgid "В заказе нет товаров"
 msgstr ""
 
 #: lib/FS_Ajax.php:252
@@ -2937,14 +2962,14 @@ msgstr ""
 msgid "Фильтр по производителю"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:139
+#: lib/Admin/ProductEdit.php:147
 msgid "Характеристики товара"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:165
+#: lib/Admin/ProductEdit.php:173
 msgid "додаткові товари, які можна запропонувати з основним"
 msgstr ""
 
-#: lib/Admin/ProductEdit.php:156
+#: lib/Admin/ProductEdit.php:164
 msgid "товари схожі на основний"
 msgstr ""

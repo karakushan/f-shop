@@ -1,18 +1,14 @@
-const {VueLoaderPlugin} = require("vue-loader");
-const htmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const autoprefixer = require("autoprefixer");
 const path = require("path");
 
 module.exports = {
     watch: true,
     entry: {
-        "fs-admin": "../assets/js/src/fs-admin.js",
-        "vue-admin": "../assets/js/src/vue-admin.js",
-        "f-shop": "../assets/js/src/f-shop.js",
-        "fs-frontend": "../assets/js/src/fs-frontend.js",
-        "fs-backend": "../assets/js/src/fs-backend.js",
+        "fs-admin": "../assets/src/fs-admin.js",
+        "f-shop": "../assets/src/f-shop.js",
+        "fs-frontend": "../assets/src/fs-frontend.js",
+        "fs-backend": "../assets/src/fs-backend.js",
     },
     output: {
         filename: "[name].js",
@@ -32,18 +28,21 @@ module.exports = {
                 loader: "vue-loader",
             },
             {
-                test: /\.s?css$/,
+                test: /\.scss$/,
                 use: [
-                    "style-loader",
                     MiniCssExtractPlugin.loader,
-                    "css-loader",
                     {
-                        loader: "postcss-loader",
+                        loader: 'css-loader',
                         options: {
-                            plugins: () => [autoprefixer()],
-                        },
+                            url: false,
+                            importLoaders: 2,
+                            sourceMap: true
+                        }
                     },
-                    "sass-loader",
+                    {
+                        loader: 'sass-loader',
+                        options: {sourceMap: true}
+                    }
                 ],
             },
             {
@@ -62,38 +61,13 @@ module.exports = {
         ],
     },
     plugins: [
-        new VueLoaderPlugin(),
-        // new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
-            filename: "[name].css",
+            filename: "../css/[name].css",
             chunkFilename: "[name].css",
-        }),
-        // new htmlWebpackPlugin({
-        //     template: path.resolve(__dirname, "./", "index.html"),
-        //     favicon: "./public/favicon.ico",
-        // }),
+            sourceMap: true
+        })
     ],
     resolve: {
-        alias: {
-            vue$: "vue/dist/vue.esm.js",
-        },
-        extensions: ["*", ".js", ".vue", ".json"],
-    },
-    // optimization: {
-    //     moduleIds: "hashed",
-    //     runtimeChunk: "single",
-    //     splitChunks: {
-    //         cacheGroups: {
-    //             vendor: {
-    //                 test: /[\\/]node_modules[\\/]/,
-    //                 name: "vendors",
-    //                 priority: -10,
-    //                 chunks: "all",
-    //             },
-    //         },
-    //     },
-    // },
-    devServer: {
-        historyApiFallback: true,
-    },
+        extensions: ["*", ".js", ".json"],
+    }
 };

@@ -1,9 +1,12 @@
-@import "scss/base";
-@import "scss/mixins";
-@import "scss/variables";
-@import "scss/flexbox";
-@import "scss/utilites";
-@import "scss/order-edit";
+@import "base";
+@import "mixins";
+@import "variables";
+@import "flexbox";
+@import "utilites";
+@import "order-edit";
+@import "select-product";
+@import "order-history";
+
 
 .fs-preloader {
   display: none;
@@ -467,7 +470,7 @@
       position: absolute;
       height: 25px;
       width: 25px;
-      background: url(../img/rounded-remove-button.svg);
+      background: url(img/rounded-remove-button.svg);
       z-index: 1;
       top: 12px;
       left: 10px;
@@ -881,7 +884,7 @@ td.fs_price.column-fs_price span.fs-base-price {
 }
 
 #fs-table tbody th:hover {
-  background-image: url(../img/tbody_hover.gif);
+  background-image: url(img/tbody_hover.gif);
   background-repeat: repeat-x;
   background-position: bottom;
 }
@@ -941,7 +944,7 @@ td.fs_price.column-fs_price span.fs-base-price {
 
   border: 2px;
   background-color: #06c;
-  background-image: url(../img/thead_back.gif);
+  background-image: url(img/thead_back.gif);
   background-repeat: repeat-x;
   text-shadow: #333 2px 2px;
 }
@@ -954,7 +957,7 @@ td.fs_price.column-fs_price span.fs-base-price {
   text-align: center;
 
   background-color: #036;
-  background-image: url(../img/tfoot_back.gif);
+  background-image: url(img/tfoot_back.gif);
   background-repeat: repeat-x;
   text-shadow: #333 2px 2px;
 }
@@ -968,7 +971,7 @@ td.fs_price.column-fs_price span.fs-base-price {
 
   color: FFF;
   background-color: #036;
-  background-image: url(../img/tfoot_back.gif);
+  background-image: url(img/tfoot_back.gif);
   background-repeat: repeat-x;
   text-shadow: #333 2px 2px;
 }
@@ -1746,46 +1749,7 @@ td.fs_menu_order.column-fs_menu_order {
   }
 }
 
-.fs-order-history {
-  .md-list-item-text :nth-child(2), .md-list-item-text :nth-child(3) {
-    font-size: 16px;
-    width: auto;
-  }
 
-  &__date {
-    width: auto !important;
-    margin-right: 12px !important;
-    font-size: 14px;
-    background: #acf;
-    display: block;
-    padding: 3px 9px;
-  }
-
-  &__event {
-    width: auto;
-    font-size: 18px;
-  }
-
-  .md-list-item-text {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-  }
-}
-
-.fs-order-items {
-  &__toolbar{
-    justify-content: space-between;
-  }
-  .md-toolbar-row {
-    min-height: 45px;
-    border-bottom: 1px solid #e2e4e7;
-  }
-
-  .md-toolbar .md-title {
-    margin-left: 0;
-  }
-}
 
 #fs-mail-template-metabox {
   .inside {

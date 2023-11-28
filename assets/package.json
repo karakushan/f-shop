@@ -2,10 +2,9 @@
   "name": "f-shop",
   "version": "1.0.0",
   "description": "",
-  "main": "js/src/vue-admin.js",
+  "main": "src/f-shop.js",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --mode development",
     "dev": "webpack --mode development "
   },
   "keywords": [],
@@ -15,12 +14,7 @@
     "alpinejs": "^3.11.1",
     "axios": "^0.21.2",
     "core-js": "^3.6.5",
-    "izitoast": "^1.4.0",
-    "vue": "^2.6.12",
-    "vue-axios": "^3.2.4",
-    "vue-lazy-input": "^1.1.0",
-    "vue-material": "^1.0.0-beta-15",
-    "vue-router": "^3.4.3"
+    "izitoast": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
@@ -37,8 +31,6 @@
     "sass": "^1.26.10",
     "sass-loader": "^10.0.2",
     "style-loader": "^1.2.1",
-    "vue-loader": "^15.9.3",
-    "vue-template-compiler": "^2.6.12",
     "webpack": "^5.76.0",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^4.11.1"

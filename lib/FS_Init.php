@@ -242,10 +242,7 @@ class FS_Init {
 				FS_PLUGIN_PREFIX . 'jquery-validate'
 			), null, true );
 
-		} elseif ( in_array( $screen->id, [ 'orders' ] ) ) {
-			wp_enqueue_style( FS_PLUGIN_PREFIX . 'vue-css', FS_PLUGIN_URL . 'assets/js/vue-admin.css' );
-			wp_enqueue_script( FS_PLUGIN_PREFIX . 'vue-admin', FS_PLUGIN_URL . 'assets/js/vue-admin.js', array( 'jquery' ), null, true );
-		} elseif ( $screen->id == 'fs-mail-template' ) {
+		}elseif ( $screen->id == 'fs-mail-template' ) {
 			wp_enqueue_script( FS_PLUGIN_PREFIX . 'codemirror', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/lib/codemirror.js', array( 'jquery' ), null, true );
 			wp_enqueue_script( FS_PLUGIN_PREFIX . 'codemirror-xml', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/mode/xml/xml.js', array( 'jquery' ), null, true );
 			wp_enqueue_script( FS_PLUGIN_PREFIX . 'codemirror-xml-fold', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/addon/fold/xml-fold.js', array( 'jquery' ), null, true );

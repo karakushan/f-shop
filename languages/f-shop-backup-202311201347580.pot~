@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2023-11-03 10:39+0000\n"
+"POT-Creation-Date: 2023-11-03 11:09+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Account deleting"
 msgstr ""
 
-#: lib/FS_Init.php:304
+#: lib/FS_Init.php:305
 msgid "Action"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Activate multicurrency"
 msgstr ""
 
-#: lib/FS_Init.php:301
+#: lib/FS_Init.php:302
 msgid "Add"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr ""
 msgid "Add packaging cost to order"
 msgstr ""
 
-#: lib/FS_Init.php:289 lib/FS_Settings.php:81 lib/FS_Product.php:676
+#: lib/FS_Init.php:290 lib/FS_Settings.php:81 lib/FS_Product.php:676
 msgid "Add product"
 msgstr ""
 
@@ -471,7 +471,7 @@ msgstr ""
 msgid "Client"
 msgstr ""
 
-#: lib/FS_Init.php:303
+#: lib/FS_Init.php:304
 msgid "Close"
 msgstr ""
 
@@ -532,7 +532,8 @@ msgstr ""
 msgid "Conversion of the cost of goods depending on the language"
 msgstr ""
 
-#: lib/FS_Taxonomy.php:1441 templates/front-end/cart/list-products.php:27
+#: lib/FS_Taxonomy.php:1441 lib/FS_Init.php:306
+#: templates/front-end/cart/list-products.php:27
 #: templates/front-end/checkout/checkout.php:23
 #: templates/front-end/dashboard/orders.php:34
 #: templates/front-end/shortcode/fs-order-info.php:18
@@ -549,7 +550,7 @@ msgstr ""
 msgid "Cost of delivery"
 msgstr ""
 
-#: lib/FS_Init.php:295 templates/front-end/mail/user-create-order.twig:511
+#: lib/FS_Init.php:296 templates/front-end/mail/user-create-order.twig:511
 msgid "Cost of goods"
 msgstr ""
 
@@ -630,7 +631,7 @@ msgstr ""
 msgid "Default: product"
 msgstr ""
 
-#: lib/FS_Init.php:293 templates/back-end/fields/image.php:20
+#: lib/FS_Init.php:294 templates/back-end/fields/image.php:20
 msgid "Delete"
 msgstr ""
 
@@ -646,7 +647,7 @@ msgstr ""
 msgid "Delivered"
 msgstr ""
 
-#: lib/FS_Init.php:297 templates/front-end/dashboard/orders.php:56
+#: lib/FS_Init.php:298 templates/front-end/dashboard/orders.php:56
 #: templates/back-end/metabox/order/edit.php:14
 #: templates/front-end/mail/user-create-order.twig:402
 msgid "Delivery"
@@ -723,7 +724,7 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: lib/FS_Taxonomy.php:990 lib/FS_Init.php:298
+#: lib/FS_Taxonomy.php:990 lib/FS_Init.php:299
 #: templates/back-end/metabox/order/edit.php:18
 #: templates/front-end/mail/user-create-order.twig:513
 msgid "Discount"
@@ -991,7 +992,7 @@ msgstr ""
 msgid "Forgot your password?"
 msgstr ""
 
-#: lib/FS_Init.php:300
+#: lib/FS_Init.php:301
 msgid "Found products"
 msgstr ""
 
@@ -1386,7 +1387,7 @@ msgstr ""
 msgid "My orders"
 msgstr ""
 
-#: lib/FS_Init.php:290 templates/front-end/order/last-order-info.php:11
+#: lib/FS_Init.php:291 templates/front-end/order/last-order-info.php:11
 #: templates/front-end/product/tabs/comments.php:75
 msgid "Name"
 msgstr ""
@@ -1560,7 +1561,7 @@ msgstr ""
 msgid "Order number not specified"
 msgstr ""
 
-#: lib/FS_Init.php:294
+#: lib/FS_Init.php:295
 msgid "Order price"
 msgstr ""
 
@@ -1586,7 +1587,7 @@ msgstr ""
 msgid "Other shipping address"
 msgstr ""
 
-#: lib/FS_Init.php:296
+#: lib/FS_Init.php:297
 msgid "Packaging"
 msgstr ""
 
@@ -1695,7 +1696,7 @@ msgstr ""
 msgid "Phone number"
 msgstr ""
 
-#: functions/filters.php:44 lib/FS_Init.php:302
+#: functions/filters.php:44 lib/FS_Init.php:303
 #: templates/front-end/cart/list-products.php:12
 #: templates/front-end/checkout/checkout.php:8
 #: templates/front-end/dashboard/wishlist.php:10
@@ -1726,7 +1727,7 @@ msgstr ""
 msgid "Position successful removed from the basket"
 msgstr ""
 
-#: functions/filters.php:41 lib/FS_Init.php:291 lib/FS_Filters.php:116
+#: functions/filters.php:41 lib/FS_Init.php:292 lib/FS_Filters.php:116
 #: templates/front-end/cart/list-products.php:21
 #: templates/front-end/checkout/checkout.php:17
 #: templates/front-end/dashboard/wishlist.php:19
@@ -1750,6 +1751,10 @@ msgstr ""
 #: templates/front-end/checkout/checkout.php:11
 #: templates/front-end/dashboard/wishlist.php:13
 msgid "Product"
+msgstr ""
+
+#: lib/FS_Init.php:308
+msgid "product"
 msgstr ""
 
 #: lib/FS_Settings.php:667
@@ -1790,12 +1795,16 @@ msgstr ""
 msgid "Product link localization"
 msgstr ""
 
-#: lib/FS_Init.php:299
+#: lib/FS_Init.php:300
 msgid "Product name, ID or SKU"
 msgstr ""
 
 #: lib/FS_SEO.php:174
 msgid "Product Reviews"
+msgstr ""
+
+#: lib/FS_Init.php:307
+msgid "Product selection"
 msgstr ""
 
 #: lib/FS_Filters.php:112
@@ -1853,7 +1862,7 @@ msgstr ""
 msgid "Purchased goods"
 msgstr ""
 
-#: lib/FS_Init.php:288
+#: lib/FS_Init.php:289
 msgid "Purchased items"
 msgstr ""
 
@@ -1863,7 +1872,7 @@ msgstr ""
 msgid "Qty"
 msgstr ""
 
-#: lib/FS_Init.php:292 templates/front-end/cart/list-products.php:24
+#: lib/FS_Init.php:293 templates/front-end/cart/list-products.php:24
 #: templates/front-end/checkout/checkout.php:20
 #: templates/front-end/shortcode/fs-order-info.php:17
 #: templates/front-end/shortcode/list-orders.php:9
@@ -2027,6 +2036,10 @@ msgstr ""
 
 #: lib/FS_Taxonomy.php:1265 lib/FS_Taxonomy.php:1318
 msgid "select image"
+msgstr ""
+
+#: lib/FS_Init.php:309
+msgid "selected"
 msgstr ""
 
 #: templates/front-end/widget/reset-filter/reset-filter.php:3
@@ -2898,10 +2911,6 @@ msgstr ""
 
 #: lib/widgets/Attribute_Widget.php:178
 msgid "Скрыть значения из фильтра"
-msgstr ""
-
-#: lib/FS_Init.php:305
-msgid "Стоимость"
 msgstr ""
 
 #: lib/FS_Settings.php:548

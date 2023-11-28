@@ -34,10 +34,10 @@ $font__headers: 'Roboto Condensed', sans-serif;
 $font__open_sans: 'Open Sans Condensed', sans-serif;
 
 //---- Import
-@import "scss/base";
-@import "scss/modal";
-@import "scss/form";
-@import "scss/animation";
+@import "base";
+@import "modal";
+@import "form";
+@import "animation";
 
 //----- Extends
 %clearfix:after {

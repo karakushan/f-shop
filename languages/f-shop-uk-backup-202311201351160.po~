@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2023-11-03 10:39+0000\n"
+"PO-Revision-Date: 2023-11-03 11:12+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgstr ""
 msgid "Account deleting"
 msgstr "Видалення облікового запису"
 
-#: lib/FS_Init.php:304
+#: lib/FS_Init.php:305
 msgid "Action"
 msgstr "Дія"
 
@@ -60,7 +60,7 @@ msgstr "Активувати систему знижок"
 msgid "Activate multicurrency"
 msgstr "Активувати режим мультиваютності"
 
-#: lib/FS_Init.php:301
+#: lib/FS_Init.php:302
 msgid "Add"
 msgstr "Додати"
 
@@ -124,7 +124,7 @@ msgstr "Створити новий статус замовлення"
 msgid "Add packaging cost to order"
 msgstr "Додавати вартість упаковки до замовлення"
 
-#: lib/FS_Init.php:289 lib/FS_Settings.php:81 lib/FS_Product.php:676
+#: lib/FS_Init.php:290 lib/FS_Settings.php:81 lib/FS_Product.php:676
 msgid "Add product"
 msgstr "Додати товар"
 
@@ -488,7 +488,7 @@ msgstr "Місто"
 msgid "Client"
 msgstr "Клієнт"
 
-#: lib/FS_Init.php:303
+#: lib/FS_Init.php:304
 msgid "Close"
 msgstr "Закрити"
 
@@ -549,7 +549,8 @@ msgstr "Продовжити покупки"
 msgid "Conversion of the cost of goods depending on the language"
 msgstr "Конвертувати ціну в залежності від локації"
 
-#: lib/FS_Taxonomy.php:1441 templates/front-end/cart/list-products.php:27
+#: lib/FS_Taxonomy.php:1441 lib/FS_Init.php:306
+#: templates/front-end/cart/list-products.php:27
 #: templates/front-end/checkout/checkout.php:23
 #: templates/front-end/dashboard/orders.php:34
 #: templates/front-end/shortcode/fs-order-info.php:18
@@ -566,7 +567,7 @@ msgstr "Вартість в базовій валюті"
 msgid "Cost of delivery"
 msgstr "Вартість доставки"
 
-#: lib/FS_Init.php:295 templates/front-end/mail/user-create-order.twig:511
+#: lib/FS_Init.php:296 templates/front-end/mail/user-create-order.twig:511
 msgid "Cost of goods"
 msgstr "Вартість товару"
 
@@ -647,7 +648,7 @@ msgstr "За замовчуванням: catalog"
 msgid "Default: product"
 msgstr "За замовчуванням: product"
 
-#: lib/FS_Init.php:293 templates/back-end/fields/image.php:20
+#: lib/FS_Init.php:294 templates/back-end/fields/image.php:20
 msgid "Delete"
 msgstr "Видалити"
 
@@ -663,7 +664,7 @@ msgstr "Видалити акаунт"
 msgid "Delivered"
 msgstr "Доставлено"
 
-#: lib/FS_Init.php:297 templates/front-end/dashboard/orders.php:56
+#: lib/FS_Init.php:298 templates/front-end/dashboard/orders.php:56
 #: templates/back-end/metabox/order/edit.php:14
 #: templates/front-end/mail/user-create-order.twig:402
 msgid "Delivery"
@@ -740,7 +741,7 @@ msgstr "Відключити слаг терміна в посиланнях"
 msgid "Disabled"
 msgstr "Вимкнено"
 
-#: lib/FS_Taxonomy.php:990 lib/FS_Init.php:298
+#: lib/FS_Taxonomy.php:990 lib/FS_Init.php:299
 #: templates/back-end/metabox/order/edit.php:18
 #: templates/front-end/mail/user-create-order.twig:513
 msgid "Discount"
@@ -894,7 +895,7 @@ msgstr "Кінцеве значення діапазону"
 
 #: lib/FS_Config.php:670
 msgid "English"
-msgstr ""
+msgstr "Англійська"
 
 #: templates/back-end/metabox/other.php:12
 msgid ""
@@ -1015,7 +1016,7 @@ msgstr "Слідкувати за ціною"
 msgid "Forgot your password?"
 msgstr "Забули пароль?"
 
-#: lib/FS_Init.php:300
+#: lib/FS_Init.php:301
 msgid "Found products"
 msgstr "Знайдені товари"
 
@@ -1311,7 +1312,7 @@ msgstr "Прізвище"
 
 #: lib/FS_Config.php:172
 msgid "Later added"
-msgstr ""
+msgstr "Раніше додано"
 
 #: lib/FS_Settings.php:277 lib/FS_Filters.php:324
 msgid "later added"
@@ -1430,7 +1431,7 @@ msgstr "Потрібно дати згоду"
 msgid "My orders"
 msgstr "Мої замовлення"
 
-#: lib/FS_Init.php:290 templates/front-end/order/last-order-info.php:11
+#: lib/FS_Init.php:291 templates/front-end/order/last-order-info.php:11
 #: templates/front-end/product/tabs/comments.php:75
 msgid "Name"
 msgstr "Ім`я"
@@ -1457,7 +1458,7 @@ msgstr "Клієнтів немає."
 
 #: lib/FS_SEO.php:310
 msgid "No description"
-msgstr ""
+msgstr "Без опису"
 
 #: lib/FS_Users.php:844
 msgid "No fields found to save user data"
@@ -1608,7 +1609,7 @@ msgstr "Номер замовлення не знайдено"
 msgid "Order number not specified"
 msgstr "Номер замовлення не вказано"
 
-#: lib/FS_Init.php:294
+#: lib/FS_Init.php:295
 msgid "Order price"
 msgstr "Сума замовлення"
 
@@ -1634,7 +1635,7 @@ msgstr "Тут розміщуються замовлення з вашого с�
 msgid "Other shipping address"
 msgstr "Інша адреса доставки"
 
-#: lib/FS_Init.php:296
+#: lib/FS_Init.php:297
 msgid "Packaging"
 msgstr "Упаковка"
 
@@ -1743,7 +1744,7 @@ msgstr "Телефон"
 msgid "Phone number"
 msgstr "Номер телефону"
 
-#: functions/filters.php:44 lib/FS_Init.php:302
+#: functions/filters.php:44 lib/FS_Init.php:303
 #: templates/front-end/cart/list-products.php:12
 #: templates/front-end/checkout/checkout.php:8
 #: templates/front-end/dashboard/wishlist.php:10
@@ -1774,7 +1775,7 @@ msgstr "Позиція на карті"
 msgid "Position successful removed from the basket"
 msgstr "Позиція успішно видалена із кошика"
 
-#: functions/filters.php:41 lib/FS_Init.php:291 lib/FS_Filters.php:116
+#: functions/filters.php:41 lib/FS_Init.php:292 lib/FS_Filters.php:116
 #: templates/front-end/cart/list-products.php:21
 #: templates/front-end/checkout/checkout.php:17
 #: templates/front-end/dashboard/wishlist.php:19
@@ -1799,6 +1800,10 @@ msgstr "В обробці"
 #: templates/front-end/dashboard/wishlist.php:13
 msgid "Product"
 msgstr "Товар"
+
+#: lib/FS_Init.php:308
+msgid "product"
+msgstr "товар"
 
 #: lib/FS_Settings.php:667
 msgid "Product archive title"
@@ -1838,13 +1843,17 @@ msgstr "Оцінка товару:"
 msgid "Product link localization"
 msgstr "Локалізація посилань на товари"
 
-#: lib/FS_Init.php:299
+#: lib/FS_Init.php:300
 msgid "Product name, ID or SKU"
 msgstr "Назва товару, ID або артикул (SKU)"
 
 #: lib/FS_SEO.php:174
 msgid "Product Reviews"
 msgstr "Відгуки про товари"
+
+#: lib/FS_Init.php:307
+msgid "Product selection"
+msgstr "Вибір товару"
 
 #: lib/FS_Filters.php:112
 msgid "Product Settings"
@@ -1903,7 +1912,7 @@ msgstr "Історія покупок"
 msgid "Purchased goods"
 msgstr "Куплені товари"
 
-#: lib/FS_Init.php:288
+#: lib/FS_Init.php:289
 msgid "Purchased items"
 msgstr "Куплені товари"
 
@@ -1913,7 +1922,7 @@ msgstr "Куплені товари"
 msgid "Qty"
 msgstr "К-сть"
 
-#: lib/FS_Init.php:292 templates/front-end/cart/list-products.php:24
+#: lib/FS_Init.php:293 templates/front-end/cart/list-products.php:24
 #: templates/front-end/checkout/checkout.php:20
 #: templates/front-end/shortcode/fs-order-info.php:17
 #: templates/front-end/shortcode/list-orders.php:9
@@ -2078,6 +2087,10 @@ msgstr "Виберіть спосіб оплати"
 #: lib/FS_Taxonomy.php:1265 lib/FS_Taxonomy.php:1318
 msgid "select image"
 msgstr "вибрати зображення"
+
+#: lib/FS_Init.php:309
+msgid "selected"
+msgstr "вибрано"
 
 #: templates/front-end/widget/reset-filter/reset-filter.php:3
 #, php-format
@@ -3016,10 +3029,6 @@ msgstr ""
 
 #: lib/widgets/Attribute_Widget.php:178
 msgid "Скрыть значения из фильтра"
-msgstr ""
-
-#: lib/FS_Init.php:305
-msgid "Стоимость"
 msgstr ""
 
 #: lib/FS_Settings.php:548

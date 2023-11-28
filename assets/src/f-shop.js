@@ -1,3 +1,5 @@
+import "./scss/f-shop.scss";
+
 jQuery(document).ready(function ($) {
     let fShop = Object.assign({
         getLang: function (string) {

@@ -693,6 +693,7 @@ Good luck!', 'f-shop' );
 		}
 		global $wpdb;
 		$order            = new FS_Order( $post->ID );
+        do_action( 'qm/debug', $order );
 		$action           = $screen->action ? $screen->action : ( isset( $_GET['action'] ) ? $_GET['action'] : 'edit' );
 		$shipping_methods = get_terms( [
 			'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),

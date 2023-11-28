@@ -1,0 +1,58 @@
+.fs-order-history {
+  display: grid;
+  gap: .5rem;
+
+  .fs-order-history__item-open {
+    .fs-order-history__toggle span {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__body {
+    padding: 0.5rem;
+    border-top: 1px solid #e2e4e7;
+    margin-top: 0.5rem;
+  }
+
+  &__item {
+    border: 1px solid #e2e4e7;
+    padding: 0.5rem;
+  }
+
+  &__toggle {
+    padding: 0.2rem;
+    background: none;
+    border: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+  }
+
+  &__header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+  }
+
+  &__date {
+    font-size: .8rem;
+    background: $color_gray;
+    display: block;
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+
+  &__event {
+    width: auto;
+    font-size: 1rem;
+  }
+}
