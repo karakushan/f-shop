@@ -13,6 +13,13 @@ class FS_Post_Types
         add_action('add_meta_boxes', [$this, 'mail_template_metabox']);
         add_action('save_post_fs-mail-template', [$this, 'save_mail_template_callback'], 10, 3);
 
+        // Hiding the Discussion and Comments metaboxes
+        add_action('admin_menu',[$this, 'hide_discussion_metabox']);
+    }
+
+    function hide_discussion_metabox() {
+        remove_meta_box('commentstatusdiv', FS_Config::get_data('post_type_orders'), 'normal');
+        remove_meta_box('commentsdiv', FS_Config::get_data('post_type_orders'), 'normal');
     }
 
     public function init()
