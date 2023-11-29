@@ -23,6 +23,7 @@ class FS_Init {
 		FS_Orders::class,
 		FS_Images_Class::class,
 		FS_Taxonomy::class,
+        FS_Products::class,
 		FS_Action::class,
 		FS_Users::class,
 		FS_Api_Class::class,

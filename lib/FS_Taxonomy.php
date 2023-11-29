@@ -149,7 +149,7 @@ class FS_Taxonomy
     }
 
     /**
-     * Filtering products on the category page and in the product archives
+     * Filtering products on the category page, in the product archives and in the search
      *
      * @param $query
      */
@@ -177,7 +177,7 @@ class FS_Taxonomy
             $query->set('post_type', 'product');
             $query->set('post_status', 'publish');
             // отфильтровываем выключенные для показа товары в админке
-            $query->set('meta_query', [
+            $meta_query [] =  [
                 'relation' => 'AND',
                 'exclude' => [
                     'relation' => 'OR',
@@ -191,14 +191,11 @@ class FS_Taxonomy
                         'value' => "1"
                     ]
                 ]
-            ]);
-
-            return $query;
-
+            ];
         }
 
         if ($query->is_tax(FS_Config::get_data('product_taxonomy'))
-            || $query->is_post_type_archive(FS_Config::get_data('post_type'))) {
+            || $query->is_post_type_archive(FS_Config::get_data('post_type')) || is_search()) {
 
             // отфильтровываем выключенные для показа товары в админке
 //			$meta_query [] = array(
@@ -492,6 +489,14 @@ class FS_Taxonomy
                 }
             }
         }
+
+        // Rewriting rules for products in other languages
+        foreach (FS_Config::get_languages() as $language_name=>$language) {
+            if ($language['locale'] == FS_Config::default_locale()) {
+                continue;
+            }
+            $rules[$language_name.'/product/([^/]+)(?:/([0-9]+))?/?$'] = 'index.php?product=$matches[1]&page=$matches[2]';
+        } 
 
         $wp_rewrite->rules = $rules + $wp_rewrite->rules;
 
