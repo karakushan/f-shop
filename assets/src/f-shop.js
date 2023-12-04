@@ -963,65 +963,8 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-
-// валидация и отправка формы заказа
-    var order_send = jQuery('[name="fs-order-send"]');
-    var orderSendBtn = order_send.find('[data-fs-action="order-send"]');
-
-    orderSendBtn.click(function (e) {
-        e.preventDefault();
-        order_send.submit();
-    });
-    order_send.validate({
-        ignore: [], submitHandler: function (form) {
-            jQuery.ajax({
-                url: fShop.ajaxurl,
-                type: 'POST',
-                data: order_send.serialize(),
-                dataType: 'json',
-                async: false,
-                beforeSend: function () {
-                    orderSendBtn.html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
-                },
-                success: function (response) {
-                    orderSendBtn.find('button[data-fs-action=order-send]').find('.fs-preloader').fadeOut('slow');
-                    /* если статус заказ успешный */
-                    if (response.success) {
-                        // создаём событие
-                        let send_order = new CustomEvent("fs_send_order", {
-                            detail: {
-                                order_id: response.data.order_id, sum: response.data.sum
-                            }
-                        });
-                        document.dispatchEvent(send_order);
-
-                        if (response.data.redirect != false) {
-                            document.location.href = response.data.redirect;
-                        } else {
-                            iziToast.show({
-                                theme: 'light',
-                                title: fShop.getLang('success'),
-                                message: response.data.msg,
-                                position: 'topCenter'
-                            });
-                        }
-                    } else {
-                        iziToast.error({
-                            title: fShop.getLang('error'),
-                            message: response.data.msg,
-                            position: 'topCenter'
-                        });
-                        orderSendBtn.html(orderSendBtn.data("content"));
-                    }
-                }
-            });
-
-
-        }
-    });
-
     (function ($) {
-        // Рейтинг товара
+        // Product rating
         $('[data-fs-element="rating"]').on('click', '[data-fs-element="rating-item"]', function (e) {
             e.preventDefault();
 

@@ -1,17 +1,16 @@
 import iziToast from "izitoast";
 
 class FS {
-    constructor(is_admin=false) {
+    constructor(is_admin = false) {
         this.ajaxurl = '/wp-admin/admin-ajax.php';
         this.is_admin = is_admin;
         if (this.is_admin) {
             this.nonce = window.FS_BACKEND.nonce ?? null;
         } else {
-            this.nonce = window.fShop.nonce ?? null;
+            this.nonce = window.FS_DATA.nonce ?? null;
         }
 
         this.nonceField = 'fs_secret';
-
         this.addWishListToCart = this.addWishListToCart.bind(this)
     }
 
@@ -101,6 +100,15 @@ class FS {
 
     attachAttribute(postId, attributeId) {
         return this.post('fs_attach_attribute', {post_id: postId, attribute_id: attributeId})
+    }
+
+    sendOrder($event, order = {}) {
+        const formData = new FormData($event.target);
+        for (const [key, value] of formData.entries()) {
+            order[key] = value
+        }
+        console.log(order);
+        return this.post('order_send', order).then((r) => r.json())
     }
 }
 

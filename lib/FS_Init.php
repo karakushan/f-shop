@@ -164,11 +164,10 @@ class FS_Init {
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'jquery-validate', FS_PLUGIN_URL . 'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'domurl', FS_PLUGIN_URL . 'assets/js/url.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );
-		wp_enqueue_script( FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', array( 'jquery' ), null, true );
 
-		wp_enqueue_script( FS_PLUGIN_PREFIX . 'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', array(
+        wp_enqueue_script( FS_PLUGIN_PREFIX . 'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', array(
 			'jquery'
-		), time(), true );
+		), null, true );
 
 		$l10n = array(
 			'ajaxurl'         => admin_url( "admin-ajax.php" ),
@@ -200,7 +199,9 @@ class FS_Init {
 			'fs_cart_type'    => fs_option( 'fs_cart_type', 'modal' )
 		);
 		wp_localize_script( FS_PLUGIN_PREFIX . 'main', 'fShop', $l10n );
-	}
+        wp_enqueue_script( FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', [], null, false );
+        wp_localize_script( FS_PLUGIN_PREFIX . 'frontend', 'FS_DATA', $l10n );
+    }
 
 
 	/**
