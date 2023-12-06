@@ -466,9 +466,9 @@ class FS_Taxonomy
                         $rules[$term->slug . '/page/(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
                         $rules[$term->slug . '/page-(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
                     } elseif ($language['locale'] != FS_Config::default_locale() && $localize_slug) {
-                        $rules[$language_name.'/' . $localize_slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
-                        $rules[$language_name.'/' .$localize_slug . '/page/(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
-                        $rules[$language_name.'/' .$localize_slug . '/page-(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+                        $rules[ $localize_slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+                        $rules[$localize_slug . '/page/(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
+                        $rules[$localize_slug . '/page-(\d+)/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]';
                     }
                 }
             }
