@@ -199,7 +199,7 @@ class FS_Init {
 			'fs_cart_type'    => fs_option( 'fs_cart_type', 'modal' )
 		);
 		wp_localize_script( FS_PLUGIN_PREFIX . 'main', 'fShop', $l10n );
-        wp_enqueue_script( FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', [], null, false );
+        wp_enqueue_script( FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', [], null, true );
         wp_localize_script( FS_PLUGIN_PREFIX . 'frontend', 'FS_DATA', $l10n );
     }
 

@@ -11,8 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@alpinejs/mask": "^3.13.3",
     "alpinejs": "^3.11.1",
-    "axios": "^0.21.2",
+    "axios": "^0.21.4",
     "core-js": "^3.6.5",
     "izitoast": "^1.4.0"
   },

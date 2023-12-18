@@ -273,8 +273,10 @@ class FS_Form
         $out .= ' enctype="' . esc_attr($args['enctype']) . '"';
         $out .= ' class="' . esc_attr($args['class']) . '"';
         $out .= ' x-data="{' . esc_attr($alpine_fields) . '}"';
+        $out .= ' x-on:submit.prevent="$store.FS.sendOrder($event)"';
         $out .= ' id="' . esc_attr($args['id']) . '">';
         $out .= FS_Config::nonce_field();
+
         $out .= '<input type="hidden" name="action" value="' . esc_attr($args['ajax_action']) . '">';
 
         return $out;

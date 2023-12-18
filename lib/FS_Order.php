@@ -465,10 +465,10 @@ class FS_Order {
 
 	/**
 	 *  total amount display
-	 * @return string
+	 * @return void
 	 */
 	public function totalAmount( $format = '%s <span>%s</span>' ) {
-		return printf( $format, $this->getTotalAmount(), fs_currency() );
+		 printf( $format, $this->getTotalAmount(), fs_currency() );
 	}
 
 	/**

@@ -12,21 +12,19 @@ class FS {
 
         this.nonceField = 'fs_secret';
         this.addWishListToCart = this.addWishListToCart.bind(this)
+        this.cart = [];
+
     }
 
     // Sends a POST request using the fetch method
     post(action, params) {
-        let data = new FormData();
-        data.append('action', action);
-        data.append(this.nonceField, this.nonce);
-        for (let key in params) {
-            data.append(key, params[key]);
-        }
+        params.append('action', action);
+        params.append(this.nonceField, this.nonce);
         return fetch(this.ajaxurl, {
             method: 'POST',
             credentials: 'same-origin',
-            body: data,
-        })
+            body: params,
+        }).then((r) => r.json());
     }
 
     // === WISHLIST ===
@@ -34,7 +32,6 @@ class FS {
     // Deletes the wishlist
     cleanWishlist() {
         this.post('fs_clean_wishlist', {})
-            .then((response) => response.json())
             .then((data) => {
                     window.location.reload()
                 }
@@ -44,7 +41,6 @@ class FS {
     // Adds the entire wishlist to the cart
     addWishListToCart() {
         this.post('fs_add_wishlist_to_cart', {})
-            .then((response) => response.json())
             .then((response) => {
                     this.updateCarts();
                     iziToast.success({
@@ -102,13 +98,27 @@ class FS {
         return this.post('fs_attach_attribute', {post_id: postId, attribute_id: attributeId})
     }
 
-    sendOrder($event, order = {}) {
+    sendOrder($event, order = {cart: []}) {
+        window.dispatchEvent(new CustomEvent('fs-checkout-start-submit'));
         const formData = new FormData($event.target);
-        for (const [key, value] of formData.entries()) {
-            order[key] = value
+
+        if (order.cart.length === 0 ) {
+            order.cart = Alpine.store('FS').cart;
         }
-        console.log(order);
-        return this.post('order_send', order).then((r) => r.json())
+        
+        order.cart.forEach((item, index) => {
+            formData.append('cart['+index+'][ID]',item.ID )
+            formData.append('cart['+index+'][count]',item.count )
+        })
+
+        return this.post('order_send', formData)
+            .then((r) => {
+                window.dispatchEvent(new CustomEvent('fs-checkout-finish-submit'));
+                if (r.success) {
+                    if (r.data.redirect.length) window.location.href = r.data.redirect;
+                }
+                return r;
+            })
     }
 }
 
