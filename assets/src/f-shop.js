@@ -1540,5 +1540,10 @@ jQuery(document).ready(function ($) {
         $($(this).data('fs-target')).slideToggle();
     });
 
+    $(document).on('click', '.fs-toast-close', function (event) {
+        event.preventDefault();
+        $('.iziToast').fadeOut(400);
+    });
+
 })
 
