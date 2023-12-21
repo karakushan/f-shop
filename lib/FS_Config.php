@@ -186,7 +186,7 @@ class FS_Config {
 			'views_desc'   => array(
 				'name' => __( 'Behind the popularity', 'f-shop' )
 			),
-			'rating_desc'   => array(
+			'rating_desc'  => array(
 				'name' => __( 'By rating', 'f-shop' )
 			),
 			'action_price' => array(
@@ -599,7 +599,7 @@ class FS_Config {
 	 */
 	public static function get_product_field( $key = '' ) {
 		$fields = array(
-			'price'             => [ 'key' => 'fs_price' ],
+			'price'             => [ 'key'  => 'fs_price' ],
 			'action_price'      => [ 'key' => 'fs_action_price' ],
 			'real_price'        => [ 'key' => '_fs_real_price' ],
 			'currency'          => [ 'key' => 'fs_currency' ],
@@ -610,7 +610,12 @@ class FS_Config {
 			],
 			'quantity'          => [
 				'key'   => 'fs_remaining_amount',
-				'type'  => 'number',
+				'type'  => 'text',
+				'atts'  => [
+					'min'  => 0,
+					'step' => 1,
+					'type' => 'number',
+				],
 				'label' => __( 'Stock in stock', 'f-shop' ),
 				'help'  => __( 'Enter "0" if stock is exhausted. An empty field means inventory control for the item. disabled, and the goods are always in the presence!', 'f-shop' )
 			],
