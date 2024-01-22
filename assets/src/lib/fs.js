@@ -102,13 +102,13 @@ class FS {
         window.dispatchEvent(new CustomEvent('fs-checkout-start-submit'));
         const formData = new FormData($event.target);
 
-        if (order.cart.length === 0 ) {
+        if (order.cart.length === 0) {
             order.cart = Alpine.store('FS').cart;
         }
-        
+
         order.cart.forEach((item, index) => {
-            formData.append('cart['+index+'][ID]',item.ID )
-            formData.append('cart['+index+'][count]',item.count )
+            formData.append('cart[' + index + '][ID]', item.ID)
+            formData.append('cart[' + index + '][count]', item.count)
         })
 
         return this.post('order_send', formData)
@@ -119,6 +119,10 @@ class FS {
                 }
                 return r;
             })
+    }
+
+    addToCart(productId, count = 1) {
+        return this.cart.push({ID: productId, count: count})
     }
 }
 

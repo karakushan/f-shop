@@ -39,6 +39,7 @@ class FS_Shortcode
         # ORDERS
         // Quick order form shortcode
         add_shortcode('fs_quick_order_form', array($this, 'quick_order_form_shortcode'));
+        add_shortcode('fs_quick_order_btn', array($this, 'quick_order_btn_shortcode'));
         add_shortcode('fs_user_orders', array($this, 'user_orders'));
         add_shortcode('fs_pay_methods', array($this, 'pay_methods'));
         add_shortcode('fs_list_orders', array('FS\FS_Orders', 'list_orders'));
@@ -306,6 +307,44 @@ class FS_Shortcode
         $template .= '</form>';
 
         return $template;
+    }
+
+    /**
+     * Generates a shortcode for a quick order button.
+     *
+     * @param array $attributes {
+     *     An array of attributes for the shortcode.
+     *
+     * @type string $text The text displayed on the button. Default is 'Quick order'.
+     * @type string $tag The HTML tag to use for the button. Default is 'a'.
+     * @type string $class The CSS class for styling the button. Default is 'fs-quick-order-btn'.
+     * @type string $href The URL to link to when the button is clicked. Default is '#'.
+     * @type int $bs -modal  Whether to enable Bootstrap modal. Default is 0.
+     * @type string $bs -target The Bootstrap modal target if enabled.
+     * }
+     * @return string The generated HTML for the quick order button.
+     */
+    public function quick_order_btn_shortcode($attributes = [])
+    {
+        $attributes = shortcode_atts([
+            'product_id' => get_the_ID(),
+            'text' => __('Quick order', 'f-shop'),
+            'tag' => 'a',
+            'class' => 'fs-quick-order-btn',
+            'href' => '#',
+            'bs-modal' => '',
+        ], $attributes);
+
+        $out = '<' . $attributes['tag'] . ' ' . fs_parse_attr(['class' => $attributes['class'], 'href' => $attributes['href']]);
+        $out .= ' onclick="Alpine.store(\'FS\').addToCart('.$attributes['product_id'].')"';
+        if (!empty($attributes['bs-modal'])) {
+            $out .= ' data-toggle="modal" data-target="' . esc_attr($attributes['bs-modal']) . '"';
+        }
+        $out .= '>';
+        $out .= esc_html($attributes['text']);
+        $out .= '</' . $attributes['tag'] . '>';
+
+        return $out;
     }
 
     /**

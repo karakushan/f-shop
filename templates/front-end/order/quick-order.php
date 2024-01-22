@@ -1,11 +1,14 @@
 <div class="fs-quick-order__row">
     <label for="first-name"><?php _e( 'First Name', 'f-shop' ); ?></label>
-    <input type="text" id="first-name" name="fs_first_name" class="fs-quick-order__control">
+    <?php fs_form_field('fs_first_name'); ?>
 </div>
 <div class="fs-quick-order__row">
     <label for="first-name"><?php _e( 'Phone', 'f-shop' ); ?></label>
-    <input type="tel" id="fs-phone" name="fs_phone" class="fs-quick-order__control">
+    <?php fs_form_field('fs_phone'); ?>
 </div>
+
+<div class="alert alert-danger" x-show="msg" x-text="msg"></div>
+
 <div>
-    <button type="submit" class="btn btn-primary"><?php _e( 'Send', 'f-shop' ); ?></button>
+    <?php fs_order_send(__( 'Send', 'f-shop' )); ?>
 </div>
