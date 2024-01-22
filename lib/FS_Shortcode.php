@@ -36,10 +36,13 @@ class FS_Shortcode
         add_shortcode('fs_checkout_success', array($this, 'fs_checkout_success'));
         add_shortcode('fs_checkout', array($this, 'order_send'));
 
-        # ORDERS
+        # === ORDERS === #
         // Quick order form shortcode
         add_shortcode('fs_quick_order_form', array($this, 'quick_order_form_shortcode'));
+
+        // Quick order button shortcode
         add_shortcode('fs_quick_order_btn', array($this, 'quick_order_btn_shortcode'));
+
         add_shortcode('fs_user_orders', array($this, 'user_orders'));
         add_shortcode('fs_pay_methods', array($this, 'pay_methods'));
         add_shortcode('fs_list_orders', array('FS\FS_Orders', 'list_orders'));

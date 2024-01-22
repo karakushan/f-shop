@@ -7,11 +7,7 @@
                 </a>
             </li>
             <li>
-                <a data-toggle="tab" href="#current-orders"><?php esc_html_e( 'Current orders', 'f-shop' ) ?>
-                </a>
-            </li>
-            <li>
-                <a data-toggle="tab" href="#purchase-history"><?php esc_html_e( 'Purchase history', 'f-shop' ) ?>
+                <a data-toggle="tab" href="#current-orders"><?php esc_html_e( 'My orders', 'f-shop' ) ?>
                 </a>
             </li>
             <li>
@@ -38,14 +34,6 @@
 				<?= fs_frontend_template( 'dashboard/orders', [
 					'vars' => array(
 						'orders' => FS\FS_Orders::get_user_orders( 0, 'new' )
-					)
-				] ) ?>
-            </div>
-
-            <div id="purchase-history" class="fs-dashboard__tab">
-				<?= fs_frontend_template( 'dashboard/orders', [
-					'vars' => array(
-						'orders' => FS\FS_Orders::get_user_orders()
 					)
 				] ) ?>
             </div>

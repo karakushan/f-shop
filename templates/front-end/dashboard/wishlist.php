@@ -1,7 +1,7 @@
 <?php
-$wishlist = fs_get_wishlist();
+$wishlist_items = fs_get_wishlist();
 
-if ( $wishlist->have_posts() ): ?>
+if (count($wishlist_items)  ): ?>
 	<div class="table-responsive">
 		<table class="table table-bordered table-centered">
 			<thead>
@@ -27,9 +27,9 @@ if ( $wishlist->have_posts() ): ?>
 			</thead>
 			<tbody>
 			<?php
-			if ( $wishlist->have_posts() ) {
-				while ( $wishlist->have_posts() ):
-					$wishlist->the_post();
+            global $post;
+			foreach ( $wishlist_items as $post ) :
+                    setup_postdata( $post );
 					?>
 
 					<tr>
@@ -66,8 +66,10 @@ if ( $wishlist->have_posts() ): ?>
 							<?php fs_delete_wishlist_position(0,'&times;',['class'=>'btn btn-danger btn-sm']) ?>
 						</td>
 					</tr>
-				<?php endwhile;
-			} ?>
+				<?php endforeach;
+
+                wp_reset_postdata();
+			 ?>
 			</tbody>
 		</table>
 	</div>
