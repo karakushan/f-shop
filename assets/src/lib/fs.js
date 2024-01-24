@@ -17,13 +17,18 @@ class FS {
     }
 
     // Sends a POST request using the fetch method
-    post(action, params) {
-        params.append('action', action);
-        params.append(this.nonceField, this.nonce);
+    post(action, params = {}) {
+        let fData =params instanceof FormData ? params : new FormData();
+        for (var key in params) {
+            fData.append(key, params[key]);
+        }
+
+        fData.append('action', action);
+        fData.append(this.nonceField, this.nonce);
         return fetch(this.ajaxurl, {
             method: 'POST',
             credentials: 'same-origin',
-            body: params,
+            body: fData,
         }).then((r) => r.json());
     }
 

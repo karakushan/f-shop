@@ -1,5 +1,7 @@
+
+
 <div x-data='{variants:[]}' x-init="()=>{
-$store.FS?.post('fs_get_variations', {product_id: document.getElementById('post_ID').value})
+this.$store?.FS?.post('fs_get_variations', {product_id: document.getElementById('post_ID').value})
             .then((response) => response.json())
 	            .then((response) => {
 	            console.log(response.data);

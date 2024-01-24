@@ -269,7 +269,7 @@ class FS_Init {
 		);
 		wp_localize_script( FS_PLUGIN_PREFIX . 'admin', 'fShop', $l10n );
 
-		wp_enqueue_script( FS_PLUGIN_PREFIX . 'backend', FS_PLUGIN_URL . 'assets/js/fs-backend.js', array(), null, false );
+		wp_enqueue_script( FS_PLUGIN_PREFIX . 'backend', FS_PLUGIN_URL . 'assets/js/fs-backend.js', array(), null, true );
 		wp_localize_script( FS_PLUGIN_PREFIX . 'backend', 'FS_BACKEND', [
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'nonce'   => wp_create_nonce( 'f-shop' ),
