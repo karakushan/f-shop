@@ -3756,14 +3756,6 @@ if (!function_exists('fs_localize_category_url')) {
     }
 }
 
-add_filter('wp_update_term_data', function ($data, $term_id, $taxonomy, $args) {
-    $data['name'] = preg_replace(['/(^[\{:ru\}]*)/ix', '/(\{:\}){2,}/ixu'], ['{:ru}', '{:}'], $data['name']);
-
-    $_SESSION['term_data'] = $data;
-
-    return $data;
-}, 99, 4);
-
 add_action('admin_init', function () {
     if (!isset($_GET['replace_terms']) || !is_admin()) {
         return;
