@@ -3759,7 +3759,6 @@ if (!function_exists('fs_localize_category_url')) {
 add_action('admin_init', function () {
     if (!isset($_GET['replace_terms']) || !is_admin()) {
         return;
-    }
 
     global $wpdb;
     $terms = $wpdb->get_results("SELECT * FROM $wpdb->terms");
