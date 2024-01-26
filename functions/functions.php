@@ -785,9 +785,9 @@ function fs_product_count($echo = true)
 
     if ($echo) {
         echo esc_html($count);
-    } else {
-        return (int)$count;
     }
+
+	return (int)$count;
 }
 
 /**
@@ -3759,6 +3759,7 @@ if (!function_exists('fs_localize_category_url')) {
 add_action('admin_init', function () {
     if (!isset($_GET['replace_terms']) || !is_admin()) {
         return;
+    }
 
     global $wpdb;
     $terms = $wpdb->get_results("SELECT * FROM $wpdb->terms");
