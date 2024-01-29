@@ -18,7 +18,7 @@ class FS {
 
     // Sends a POST request using the fetch method
     post(action, params = {}) {
-        let fData =params instanceof FormData ? params : new FormData();
+        let fData = params instanceof FormData ? params : new FormData();
         for (var key in params) {
             fData.append(key, params[key]);
         }
@@ -107,14 +107,15 @@ class FS {
         window.dispatchEvent(new CustomEvent('fs-checkout-start-submit'));
         const formData = new FormData($event.target);
 
-        if (order.cart.length === 0) {
+        if (order.cart.length === 0 && typeof Alpine.store('FS') !== 'undefined') {
             order.cart = Alpine.store('FS').cart;
         }
 
-        order.cart.forEach((item, index) => {
-            formData.append('cart[' + index + '][ID]', item.ID)
-            formData.append('cart[' + index + '][count]', item.count)
-        })
+        if (order.cart.length > 0)
+            order.cart.forEach((item, index) => {
+                formData.append('cart[' + index + '][ID]', item.ID)
+                formData.append('cart[' + index + '][count]', item.count)
+            })
 
         return this.post('order_send', formData)
             .then((r) => {
