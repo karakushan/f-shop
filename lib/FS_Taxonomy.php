@@ -157,6 +157,8 @@ class FS_Taxonomy {
 			return;
 		}
 
+
+
 		// If we are on the search page
 		if ( $query->is_search() ) {
 
@@ -192,7 +194,7 @@ class FS_Taxonomy {
 		if ( $query->is_tax( FS_Config::get_data( 'product_taxonomy' ) )
 		     || $query->is_post_type_archive( FS_Config::get_data( 'post_type' ) ) || is_search() ) {
 
-			// отфильтровываем выключенные для показа товары в админке
+            // отфильтровываем выключенные для показа товары в админке
 //			$meta_query [] = array(
 //				'relation' => 'AND',
 //				'exclude'  => array(
@@ -403,9 +405,11 @@ class FS_Taxonomy {
 		$price_start = isset( $_GET['price_start'] ) ? (int) $_GET['price_start'] : 0;
 		$price_end   = isset( $_GET['price_end'] ) ? (int) $_GET['price_end'] : PHP_INT_MAX;
 
-		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}postmeta AS meta ON ({$wpdb->posts}.ID = meta.post_id)";
+		$clauses['join'] .= " LEFT JOIN $wpdb->postmeta AS meta ON ({$wpdb->posts}.ID = meta.post_id)";
 
-		if ( ! fs_option( 'multi_currency_on' ) ) {
+        $count_currencies = get_terms(['taxonomy' => FS_Config::get_data( 'currencies_taxonomy' ), 'hide_empty' => false]);
+
+		if ( ! fs_option( 'multi_currency_on' )  || count( $count_currencies ) == 0 ) {
 			$clauses['where'] .= $wpdb->prepare( " AND (meta.meta_key = %s AND CAST(meta.meta_value AS SIGNED) BETWEEN %d AND %d)", FS_Config::get_meta( 'price' ), $price_start, $price_end );
 
 			return $clauses;
