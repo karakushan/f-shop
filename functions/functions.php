@@ -3756,20 +3756,6 @@ if (!function_exists('fs_localize_category_url')) {
     }
 }
 
-add_action('admin_init', function () {
-    if (!isset($_GET['replace_terms']) || !is_admin()) {
-        return;
-    }
-
-    global $wpdb;
-    $terms = $wpdb->get_results("SELECT * FROM $wpdb->terms");
-    foreach ($terms as $term) {
-        $name = preg_replace(['/(^[\{:ru\}]*)/ixu', '/(\{:\}){2,}/ixu'], ['{:ru}', '{:}'], $term->name);
-        $wpdb->update($wpdb->terms, ['name' => $name], ['term_id' => $term->term_id]);
-        echo $term->term_id;
-    }
-});
-
 /**
  * Удаляет параметр запроса или группу из урл
  *

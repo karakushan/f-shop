@@ -110,7 +110,7 @@ class FS_Products
     function product_link_localize($post_link, $post, $leavename, $sample)
     {
 		if (!FS_Config::is_default_locale() && $custom_slug = get_post_meta($post->ID, 'fs_seo_slug__' . mb_strtolower(get_locale()), 1)) {
-            return str_replace($post->post_name, $custom_slug, $post_link);
+			return str_replace($post->post_name, $custom_slug, $post_link);
         }
 
         return $post_link;

@@ -13,7 +13,6 @@ $attributes = get_terms( [
 	'hide_empty' => false,
 	'parent'     => 0
 ] );
-$product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? [] );
 ?>
 
 <div class="fs-attributes"
@@ -27,7 +26,7 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 	            name: "",
 	            value: ""
 	        },
-			attributes: <?php echo json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ) ?>,
+			attributes: <?php echo json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? [],  JSON_UNESCAPED_SLASHES ) ?>,
 			showAddForm: false,
 			getAttributes(){
 				 $store.FS?.getAttributes(<?php echo $post_id ?>)
@@ -120,7 +119,7 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 	</div>
 
 	<div class="fs-attributes__list">
-		<template x-for="(attribute, attributeIndex) in attributes" :key="attribute.id">
+		<template x-for="(attribute, attributeIndex) in attributes" :key="'attribute-'+attributeIndex">
 			<div class="fs-attributes__item " x-data="{ open:false }">
 				<div class="fs-attributes__item-header fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap">
 					<div class="fs-attributes__item-name fs-flex fs-flex-1 fs-flex-items-center fs-gap-0-5">
@@ -138,7 +137,7 @@ $product_attributes = json_encode( \FS\FS_Product::get_attributes_hierarchy( $po
 					</div>
 				</div>
 				<div class="fs-attributes__item-values" x-show="open" x-transition>
-					<template x-for="value in attribute.children" :key="value.id">
+					<template x-for="(value,index) in attribute.children" :key="'child-'+index">
 						<div
 							x-data="{show:true}" x-show="show"
 							class="fs-attributes__item-value fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap">
