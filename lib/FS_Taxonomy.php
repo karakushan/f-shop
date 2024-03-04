@@ -157,8 +157,6 @@ class FS_Taxonomy {
 			return;
 		}
 
-
-
 		// If we are on the search page
 		if ( $query->is_search() ) {
 
