@@ -26,7 +26,7 @@ $attributes = get_terms( [
 	            name: "",
 	            value: ""
 	        },
-			attributes: <?php echo json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? [],  JSON_UNESCAPED_SLASHES ) ?>,
+			attributes: <?php echo json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? []) ?>,
 			showAddForm: false,
 			getAttributes(){
 				 $store.FS?.getAttributes(<?php echo $post_id ?>)

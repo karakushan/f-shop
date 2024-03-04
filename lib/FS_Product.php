@@ -864,14 +864,14 @@ class FS_Product {
 				'children'     => array_map( function ( $child ) {
 					return [
 						'id'     => $child->term_id,
-						'name'   => $child->name,
+						'name'   => str_replace(['\'','"'],['ʼ'],$child->name),
 						'parent' => $child->parent,
 					];
 				}, $children ),
 				'children_all' => array_map( function ( $child ) {
 					return [
 						'id'     => $child->term_id,
-						'name'   => $child->name,
+						'name'   => str_replace(['\'','"'],['ʼ'],$child->name),
 						'parent' => $child->parent,
 					];
 				}, get_terms( [ 'parent' => $attribute->term_id, 'hide_empty' => false, 'taxonomy' => $tax ] ) )
