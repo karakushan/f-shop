@@ -2167,7 +2167,9 @@ function fs_wishlist_url()
  */
 function fs_account_url()
 {
-    return get_the_permalink(intval(fs_option('page_cabinet')));
+    return is_user_logged_in()
+	    ? get_the_permalink(intval(fs_option('page_cabinet' )))
+	    : get_the_permalink(intval(fs_option( 'page_auth' )));
 }
 
 /**
