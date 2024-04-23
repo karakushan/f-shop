@@ -859,7 +859,7 @@ class FS_Product {
 
 			return [
 				'id'           => $attribute->term_id,
-				'name'         => $attribute->name,
+				'name'         =>str_replace(['\'','"'],['ʼ'], $attribute->name),
 				'parent'       => $attribute->parent,
 				'children'     => array_map( function ( $child ) {
 					return [
