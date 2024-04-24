@@ -300,8 +300,7 @@ class ProductEdit {
 	 * @return void
 	 */
 	function save_product_meta( $post_id, $context ) {
-
-//		$field = (array) $_POST['carbon_fields_compact_input']['_fs_attributes'];
-
+		$field = (array) $_POST['variations'];
+		update_post_meta($post_id, FS_Config::get_meta('variations'), $field);
 	}
 }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/f-shop.js",
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "webpack --mode production && exit",
     "dev": "webpack --mode development "
   },
   "keywords": [],

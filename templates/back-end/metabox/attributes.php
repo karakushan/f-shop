@@ -13,8 +13,6 @@ $attributes = get_terms( [
 	'hide_empty' => false,
 	'parent'     => 0
 ] );
-
-do_action( 'qm/debug', \FS\FS_Product::get_attributes_hierarchy( $post_id ) );
 ?>
 
 <div class="fs-attributes"

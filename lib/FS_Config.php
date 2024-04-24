@@ -567,6 +567,7 @@ class FS_Config {
 			'gallery'           => 'fs_galery',
 			'related_products'  => 'fs_related_products',
 			'vendor'            => 'fs_vendor',
+			'variations'        => 'fs_variations',
 			'variants'          => 'fs_variant',
 			'variants_price'    => 'fs_variant_price',
 			'variant_count'     => 'fs_variant_count',
