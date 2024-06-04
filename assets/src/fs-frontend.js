@@ -1,6 +1,7 @@
 import Alpine from "alpinejs";
 window.Alpine = Alpine;
 
+
 // phone mask plugin
 import mask from '@alpinejs/mask';
 Alpine.plugin(mask);

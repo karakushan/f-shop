@@ -13,7 +13,7 @@ class FS {
         this.nonceField = 'fs_secret';
         this.addWishListToCart = this.addWishListToCart.bind(this)
         this.cart = [];
-
+        this.filters = [];
     }
 
     // Sends a POST request using the fetch method
@@ -129,6 +129,20 @@ class FS {
 
     addToCart(productId, count = 1) {
         return this.cart.push({ID: productId, count: count})
+    }
+
+    getCategoryAttributes(attributeId, categoryId = null) {
+        return this.post('fs_get_category_attributes', {category_id: categoryId, attribute_id: attributeId})
+    }
+
+    getUriAttributes(url) {
+        const urlObj = new URL(url);
+        const params = new URLSearchParams(urlObj.search);
+        const paramsArray = [];
+        params.forEach((value, key) => {
+            paramsArray.push(value);
+        });
+        return paramsArray.map(v=>parseInt(v));
     }
 }
 

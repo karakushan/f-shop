@@ -66,20 +66,20 @@ class Attribute_Widget extends \WP_Widget {
 		);
 		$languages = FS_Config::get_languages();
 		?>
-		<div class="fs-widget-wrapper">
-			<div class="form-row">
-				<label
-					for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
+        <div class="fs-widget-wrapper">
+            <div class="form-row">
+                <label
+                        for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
 				<?php if ( fs_option( 'fs_multi_language_support' ) ) : ?>
-				<div class="form-group">
-					<span class="form-group__sub"><?php echo esc_html( FS_Config::default_language_name() ) ?></span>
+                <div class="form-group">
+                    <span class="form-group__sub"><?php echo esc_html( FS_Config::default_language_name() ) ?></span>
 					<?php endif; ?>
-					<input class="widefat title"
-					       id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
-					       name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
-					       value="<?php echo esc_attr( $title ); ?>"/>
+                    <input class="widefat title"
+                           id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+                           name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
+                           value="<?php echo esc_attr( $title ); ?>"/>
 					<?php if ( fs_option( 'fs_multi_language_support' ) ) : ?>
-				</div>
+                </div>
 			<?php endif; ?>
 				<?php
 
@@ -91,60 +91,60 @@ class Attribute_Widget extends \WP_Widget {
 						$name  = 'title_' . $language['locale'];
 						$title = ! empty( $instance[ $name ] ) ? $instance[ $name ] : '';
 						?>
-						<div class="form-group">
-							<span class="form-group__sub"><?php echo $key ?></span>
-							<input class="widefat title form-group__sub"
-							       id="<?php echo esc_attr( $this->get_field_id( $name ) ); ?>"
-							       name="<?php echo esc_attr( $this->get_field_name( $name ) ); ?>"
-							       value="<?php echo esc_attr( $title ); ?>"/>
-						</div>
+                        <div class="form-group">
+                            <span class="form-group__sub"><?php echo $key ?></span>
+                            <input class="widefat title form-group__sub"
+                                   id="<?php echo esc_attr( $this->get_field_id( $name ) ); ?>"
+                                   name="<?php echo esc_attr( $this->get_field_name( $name ) ); ?>"
+                                   value="<?php echo esc_attr( $title ); ?>"/>
+                        </div>
 					<?php }
 				}
 				?>
-			</div>
-			<p>
-				<label
-					for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>">
+            </div>
+            <p>
+                <label
+                        for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>">
 					<?php esc_html_e( 'Feature Group', 'f-shop' ) ?>
-				</label>
+                </label>
 				<?php wp_dropdown_categories( $args ); ?>
-			</p>
-			<p>
+            </p>
+            <p>
                 <span class="fs-custom-checkbox">
                     <input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'fs_screen_atts' ) ); ?>"
                            value="1"
                            id="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>" <?php checked( 1, $fs_screen_atts ) ?>>
                 <label
-	                for="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>"><?php esc_html_e( 'Attributes for category only', 'f-shop' ) ?></label>
+                        for="<?php echo esc_attr( $this->get_field_id( 'fs_screen_atts' ) ); ?>"><?php esc_html_e( 'Attributes for category only', 'f-shop' ) ?></label>
                 </span>
-			</p>
-			<p>
+            </p>
+            <p>
                 <span class="fs-custom-checkbox">
                        <input type="checkbox"
                               name="<?php echo esc_attr( $this->get_field_name( 'fs_hide_in_catalog' ) ); ?>"
                               value="1"
                               id="<?php echo esc_attr( $this->get_field_id( 'fs_hide_in_catalog' ) ); ?>" <?php checked( 1, $fs_hide_in_catalog ) ?>>
                 <label
-	                for="<?php echo esc_attr( $this->get_field_id( 'fs_hide_in_catalog' ) ); ?>"><?php esc_html_e( 'Don\'t show on catalog page', 'f-shop' ) ?></label>
+                        for="<?php echo esc_attr( $this->get_field_id( 'fs_hide_in_catalog' ) ); ?>"><?php esc_html_e( 'Don\'t show on catalog page', 'f-shop' ) ?></label>
                 </span>
 
-			</p>
-			<p>
-				<label
-					for="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>"><?php esc_html_e( 'Type', 'f-shop' ) ?></label>
-				<select name="<?php echo esc_attr( $this->get_field_name( 'fs_att_types' ) ); ?>"
-				        id="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>" class="fs-select-field">
-					<option value="normal"><?php esc_html_e( 'Normal', 'f-shop' ) ?></option>
-					<option
-						value="color" <?php selected( 'color', $fs_att_types ) ?>><?php esc_html_e( 'Color', 'f-shop' ) ?></option>
-					<option
-						value="image" <?php selected( 'image', $fs_att_types ) ?>><?php esc_html_e( 'Image', 'f-shop' ) ?></option>
-				</select>
-			</p>
-			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'fs_only_cats' ) ) ?>">
+            </p>
+            <p>
+                <label
+                        for="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>"><?php esc_html_e( 'Type', 'f-shop' ) ?></label>
+                <select name="<?php echo esc_attr( $this->get_field_name( 'fs_att_types' ) ); ?>"
+                        id="<?php echo esc_attr( $this->get_field_id( 'fs_att_types' ) ); ?>" class="fs-select-field">
+                    <option value="normal"><?php esc_html_e( 'Normal', 'f-shop' ) ?></option>
+                    <option
+                            value="color" <?php selected( 'color', $fs_att_types ) ?>><?php esc_html_e( 'Color', 'f-shop' ) ?></option>
+                    <option
+                            value="image" <?php selected( 'image', $fs_att_types ) ?>><?php esc_html_e( 'Image', 'f-shop' ) ?></option>
+                </select>
+            </p>
+            <p>
+                <label for="<?php echo esc_attr( $this->get_field_id( 'fs_only_cats' ) ) ?>">
 					<?php esc_html_e( 'Show only in categories', 'f-shop' ); ?>
-				</label>
+                </label>
 				<?php $args = array(
 					'show_option_all'   => '',
 					'show_option_none'  => '',
@@ -172,11 +172,11 @@ class Attribute_Widget extends \WP_Widget {
 				);
 
 				wp_dropdown_categories( $args ); ?>
-			</p>
-			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'fs_hide_custom_values' ) ) ?>">
+            </p>
+            <p>
+                <label for="<?php echo esc_attr( $this->get_field_id( 'fs_hide_custom_values' ) ) ?>">
 					<?php esc_html_e( 'Скрыть значения из фильтра', 'f-shop' ); ?>
-				</label>
+                </label>
 				<?php $args = array(
 					'show_option_all'   => '',
 					'show_option_none'  => '',
@@ -206,8 +206,8 @@ class Attribute_Widget extends \WP_Widget {
 				do_action( 'qm/debug', $args );
 
 				wp_dropdown_categories( $args ); ?>
-			</p>
-		</div>
+            </p>
+        </div>
 		<?php
 	}
 
@@ -218,9 +218,9 @@ class Attribute_Widget extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
-		if ( ! have_posts() ) {
-			return;
-		}
+//		if ( ! have_posts() ) {
+//			return;
+//		}
 
 		$title_name = fs_option( 'fs_multi_language_support' )
 		              && FS_Config::default_locale() != get_locale() ? 'title_' . get_locale() : 'title';
@@ -251,20 +251,46 @@ class Attribute_Widget extends \WP_Widget {
 			return;
 		}
 
-		ob_start();
-		do_action( 'fs_attr_filter', $instance['fs_att_group'], $widget_attributes );
-		$html = ob_get_clean();
-
-		if ( empty( $html ) ) {
-			return;
-		}
 
 		echo $args['before_widget'];
 		if ( ! empty( $title ) ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
-		echo $html;
+		$current_category = fs_is_product_category() ? get_queried_object() : 0;
+		$attr_group       = get_term( $instance['fs_att_group'] );
+		?>
+        <ul x-data="{attributes: [], loaded:false }"
+            x-init="Alpine.store('FS')?.getCategoryAttributes(<?php echo $instance['fs_att_group'] ?>,<?php echo $current_category->term_id ?>)
+            .then( (r) =>{ if(r.success===true) {attributes=r.data.attributes;} } )
+            .finally(()=> loaded=true);">
+            <div  class="fs-loader-block" :style="{'display':!loaded?'flex':'none'}" style="display:none;">
+                <img src="<?php echo esc_url(FS_PLUGIN_URL) ?>/assets/img/loader-circle.svg" alt="loader">
+            </div>
+            <div x-data="{checked: () => {
+                    const params = new URLSearchParams(window.location.search);
+                    if(!params.get('filter')) return [];
+                    return params.get('filter').split(',');
+                }}" x-init="$watch('checked', (atts) => {
+                 const currentUrl = new URL(window.location.href);
+                 currentUrl.searchParams.set('filter',[...new Set(atts)].join(','));
+                window.location.href=currentUrl;
+ } )">
+                <template x-for="attribute in attributes" :key="attribute.term_id">
+                    <li>
+                        <input type="checkbox"
+                               :id="'filter-<?php echo $attr_group->slug ?>-'+attribute.term_id"
+                               :name="'<?php echo $attr_group->slug ?>['+attribute.slug+']'"
+                               :value="attribute.term_id"
+                               x-model="checked">
+                        <label :for="'filter-<?php echo $attr_group->slug ?>-'+attribute.term_id"
+                               x-text="attribute.name"></label>
+                    </li>
+                </template>
+            </div>
 
+        </ul>
+
+		<?php
 		echo $args['after_widget'];
 	}
 

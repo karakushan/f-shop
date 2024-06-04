@@ -1971,6 +1971,17 @@ td.fs_photo.column-fs_photo img {
   }
 }
 
+.fs-loader-block{
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  width: 100%;
+  height: auto;
+  img{
+    width: 36px;
+  }
+}
+
 @media (max-width: 768px) {
   .fs-dashboard-order__header span {
     display: block;

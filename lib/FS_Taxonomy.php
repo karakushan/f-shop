@@ -343,15 +343,17 @@ class FS_Taxonomy {
 					)
 				);
 			}
+            
+            do_action( 'qm/debug',  );
 
 			//Фильтруем по свойствам (атрибутам)
-			if ( ! empty( $_REQUEST['attributes'] ) ) {
+			if ( ! empty( $_REQUEST['filter'] ) ) {
 				$tax_query[] = array(
 					'relation' => 'AND',
 					array(
 						'taxonomy' => 'product-attributes',
 						'field'    => 'id',
-						'terms'    => array_values( $_REQUEST['attributes'] ),
+						'terms'    => explode(',', $_REQUEST['filter'] ),
 						'operator' => fs_option( 'fs_product_filter_type', 'AND' )
 					)
 				);

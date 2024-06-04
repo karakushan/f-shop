@@ -139,6 +139,10 @@ class FS_Ajax
             // fs_get_terms
             add_action('wp_ajax_fs_get_terms', array($this, 'fs_get_terms_callback'));
             add_action('wp_ajax_nopriv_fs_get_terms', array($this, 'fs_get_terms_callback'));
+
+			// get attribute filters for product category
+            add_action('wp_ajax_fs_get_category_attributes', array($this, 'fs_get_category_attributes'));
+            add_action('wp_ajax_nopriv_fs_get_category_attributes', array($this, 'fs_get_category_attributes'));
         }
     }
 
@@ -1248,4 +1252,20 @@ class FS_Ajax
             'title' => __('Success!', 'f-shop')
         ]);
     }
+
+	public function fs_get_category_attributes() {
+		if (!FS_Config::verify_nonce()) {
+			wp_send_json_error(array('msg' => __('Security check failed', 'f-shop')));
+		}
+
+		if(empty($_POST['attribute_id'])) {
+			wp_send_json_error(array('msg' => __('Attribute ID not found', 'f-shop')));
+		}
+
+		$attributes = fs_product_category_screen_attributes( (int) $_POST['attribute_id'],(int)$_POST['category_id']);
+
+		wp_send_json_success([
+			'attributes' => (array) $attributes,
+		]);
+	}
 } 

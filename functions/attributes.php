@@ -166,6 +166,60 @@ function fs_current_screen_attributes( $group_id = 0, $args = array() ) {
 }
 
 /**
+ * Возвращает характеристики определенной группы атрибутов и категории товара
+ *
+ * @param int $group_id
+ *
+ * @param array $args
+ *
+ * @return array массив объектов поста
+ */
+function fs_product_category_screen_attributes( $group_id, $category_id, $args = array() ) {
+	$attributes = [];
+	$args       = wp_parse_args( $args, array(
+		'taxonomy'   => FS_Config::get_data( 'features_taxonomy' ),
+		'parent'     => $group_id,
+		'hide_empty' => false
+	) );
+
+	$post_args                    = [];
+	$post_args ['posts_per_page'] = - 1;
+	$post_args ['post_type']      = 'product';
+	$post_args['tax_query'][]       = [
+		'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
+		'field'    => 'id',
+		'operator' => 'IN',
+		'terms'    => $category_id
+	];
+	$post_args                    = apply_filters( 'fs_current_screen_attributes_args', $post_args );
+	$posts = get_posts( $post_args );
+	if ( ! $posts ) {
+		return [];
+	}
+
+	foreach ( $posts as $post ) {
+		$post_terms = get_the_terms( $post->ID, FS_Config::get_data( 'features_taxonomy' ) );
+		if ( $post_terms ) {
+			foreach ( $post_terms as $post_term ) {
+				if ( $post_term->parent != $group_id ) {
+					continue;
+				}
+				$attributes[] = $post_term->term_id;
+			}
+		}
+	}
+
+	if ( count( $attributes ) ) {
+		$attributes      = array_unique( $attributes );
+		$args['include'] = $attributes;
+		$attributes      = get_terms( $args );
+	}
+
+
+	return $attributes;
+}
+
+/**
  * Select filter sort by taxonomy
  *
  * @param string $taxonomy
