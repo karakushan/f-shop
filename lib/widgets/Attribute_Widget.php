@@ -203,8 +203,6 @@ class Attribute_Widget extends \WP_Widget {
 					'required'          => false,
 				);
 
-				do_action( 'qm/debug', $args );
-
 				wp_dropdown_categories( $args ); ?>
             </p>
         </div>
@@ -218,10 +216,6 @@ class Attribute_Widget extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
-//		if ( ! have_posts() ) {
-//			return;
-//		}
-
 		$title_name = fs_option( 'fs_multi_language_support' )
 		              && FS_Config::default_locale() != get_locale() ? 'title_' . get_locale() : 'title';
 
@@ -230,16 +224,8 @@ class Attribute_Widget extends \WP_Widget {
 		}
 
 		$title              = apply_filters( 'widget_title', $instance[ $title_name ] );
-		$type               = ! empty( $instance['fs_att_types'] ) ? $instance['fs_att_types'] : 'text';
-		$fs_only_cats       = ! empty( $instance['fs_only_cats'] ) ? explode( ',', $instance['fs_only_cats'] ) : [];
+		$fs_only_cats       = ! empty( $instance['fs_only_cats'] ) ? $instance['fs_only_cats'] : [];
 		$fs_hide_in_catalog = ! empty( $instance['fs_hide_in_catalog'] ) ? $instance['fs_hide_in_catalog'] : 0;
-
-		$widget_attributes = apply_filters( 'fs_widget_attributes',
-			[
-				'type'           => $type,
-				'current_screen' => intval( $instance['fs_screen_atts'] ),
-				'exclude'        => isset( $instance['fs_hide_custom_values'] ) ? $instance['fs_hide_custom_values'] : []
-			], $instance );
 
 		//We exit if we are on the page of the term taxonomy and the term is not found in the settings
 		if ( is_tax() && count( $fs_only_cats ) && ! in_array( get_queried_object_id(), $fs_only_cats ) ) {
@@ -250,7 +236,6 @@ class Attribute_Widget extends \WP_Widget {
 		if ( $fs_hide_in_catalog && is_archive() && ! is_tax() ) {
 			return;
 		}
-
 
 		echo $args['before_widget'];
 		if ( ! empty( $title ) ) {
