@@ -150,16 +150,6 @@ class FS_Init {
 			wp_enqueue_style( FS_PLUGIN_PREFIX . 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/css/lightslider.min.css', array(), FS_Config::get_data( 'plugin_ver' ), 'all' );
 		}
 
-		// Подключаем стили для основных тем Вордпресса
-		// TODO: если нет файла стилей для данной темы то необходимо создать уведомление в админке о том что можно купить или заказать адаптацию
-		if ( in_array( $text_domain, [ 'twentynineteen' ] ) ) {
-			if ( file_exists( get_template_directory() . DIRECTORY_SEPARATOR . FS_PLUGIN_NAME . '/assets/' . $text_domain . '/style.css' ) ) {
-				wp_enqueue_style( FS_PLUGIN_PREFIX . $text_domain, get_template_directory_uri() . '/' . FS_PLUGIN_NAME . '/assets/' . $text_domain . '/style.css' );
-			} elseif ( file_exists( FS_PLUGIN_PATH . 'templates/front-end/assets/' . $text_domain . '/style.css' ) ) {
-				wp_enqueue_style( FS_PLUGIN_PREFIX . $text_domain, FS_PLUGIN_URL . 'templates/front-end/assets/' . $text_domain . '/style.css' );
-			}
-		}
-
 
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'jquery-validate', FS_PLUGIN_URL . 'assets/js/jquery.validate.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'domurl', FS_PLUGIN_URL . 'assets/js/url.min.js', array( 'jquery' ), null, true );

@@ -47,10 +47,8 @@ $font__open_sans: 'Open Sans Condensed', sans-serif;
 }
 
 
-
-
 // ===== Badges =============================
-.fs-badge{
+.fs-badge {
   display: inline-block;
   padding: 0.35em 0.65em;
   font-size: .75em;
@@ -66,7 +64,6 @@ $font__open_sans: 'Open Sans Condensed', sans-serif;
     background-color: $color_primary;
   }
 }
-
 
 
 .row-images {
@@ -1166,9 +1163,13 @@ td.fs_photo.column-fs_photo img {
 }
 
 .fs-rating {
+  display: flex;
+  align-items: center;
   .star-rating {
     line-height: 32px;
     font-size: 1.25em;
+    display: flex;
+    align-items: center;
 
     > span {
       margin: 0 1px;
@@ -1344,17 +1345,19 @@ td.fs_photo.column-fs_photo img {
 }
 
 // Кнопки
-.fs-btn-none{
+.fs-btn-none {
   padding: 0;
   line-height: 1;
   background: none;
   border: none;
   outline: none;
-  &:hover{
+
+  &:hover {
     cursor: pointer;
   }
 
 }
+
 .fs-btn {
   display: inline-flex;
   align-items: center;

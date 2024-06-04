@@ -195,14 +195,15 @@ class FS_Product {
 		$product_id = fs_get_product_id( $product_id );
 
 		$args = wp_parse_args( $args, array(
-			'wrapper_class'     => 'fs-rating',
-			'before'            => '',
-			'after'             => '',
-			'stars'             => 5,
-			'default_value'     => self::get_average_rating( $product_id ),
-			'star_class'        => 'far fa-star',
-			'star_active_class' => 'fas fa-star',
-			'echo'              => true
+			'wrapper_class'   => 'fs-rating',
+			'before'          => '',
+			'after'           => '',
+			'stars'           => 5,
+			'default_value'   => self::get_average_rating( $product_id ),
+			'echo'            => true,
+			'size'            => '16',
+			'voted_color'     => '#FFB91D',
+			'not_voted_color' => '#686565'
 		) );
 		if ( ! $args['echo'] ) {
 			ob_start();
@@ -219,7 +220,10 @@ class FS_Product {
 						} else {
 							$star_class = $args['star_class'];
 						}
-						echo '<span class="' . esc_attr( $star_class ) . '" data-fs-element="rating-item" data-rating="' . esc_attr( $count ) . '"></span>';
+
+						echo '<span class="' . esc_attr( $star_class ) . '" data-fs-element="rating-item" data-rating="' . esc_attr( $count ) . '">';
+						include FS_PLUGIN_PATH . '/assets/img/icon/star.svg';
+						echo '</span>';
 					}
 				} ?>
                 <input type="hidden" name="fs-rating-value" data-product-id="<?php echo esc_attr( $product_id ) ?>"
@@ -229,6 +233,11 @@ class FS_Product {
 			<?php if ( $args['after'] )
 				echo $args['after'] ?>
         </div>
+        <style>
+            .fs-rating {
+
+            }
+        </style>
 		<?php
 		if ( ! $args['echo'] ) {
 			return ob_get_clean();
@@ -828,27 +837,27 @@ class FS_Product {
 		$tax        = FS_Config::get_data( 'features_taxonomy' );
 		$attributes = get_the_terms( $post_id, $tax );
 
-		if ( ! is_array( $attributes ) || empty( $attributes ) || is_wp_error($attributes)) {
+		if ( ! is_array( $attributes ) || empty( $attributes ) || is_wp_error( $attributes ) ) {
 			return [];
 		}
 
-		$parents = [];
-		$parents_ids=[];
+		$parents     = [];
+		$parents_ids = [];
 		foreach ( $attributes as $attribute ) {
-            if ( !$attribute->parent  && !in_array($attribute->term_id, $parents_ids)) {
-				$parents[] = $attribute;
-	            $parents_ids[]=$attribute->term_id;
+			if ( ! $attribute->parent && ! in_array( $attribute->term_id, $parents_ids ) ) {
+				$parents[]     = $attribute;
+				$parents_ids[] = $attribute->term_id;
 				continue;
 			}
 
-            if ($attribute->parent  && !in_array($attribute->parent, $parents_ids)) {
-	            $parent=get_term( $attribute->parent );
-	            if(is_wp_error($parent)) {
-		            continue;
-	            }
-	            $parents[] = $parent;
-	            $parents_ids[]=$parent->term_id;
-            }
+			if ( $attribute->parent && ! in_array( $attribute->parent, $parents_ids ) ) {
+				$parent = get_term( $attribute->parent );
+				if ( is_wp_error( $parent ) ) {
+					continue;
+				}
+				$parents[]     = $parent;
+				$parents_ids[] = $parent->term_id;
+			}
 
 		}
 
@@ -859,19 +868,19 @@ class FS_Product {
 
 			return [
 				'id'           => $attribute->term_id,
-				'name'         =>str_replace(['\'','"'],['ʼ'], $attribute->name),
+				'name'         => str_replace( [ '\'', '"' ], [ 'ʼ' ], $attribute->name ),
 				'parent'       => $attribute->parent,
 				'children'     => array_map( function ( $child ) {
 					return [
 						'id'     => $child->term_id,
-						'name'   => str_replace(['\'','"'],['ʼ'],$child->name),
+						'name' => str_replace( [ '\'', '"' ], [ 'ʼ' ], $child->name ),
 						'parent' => $child->parent,
 					];
 				}, $children ),
 				'children_all' => array_map( function ( $child ) {
 					return [
 						'id'     => $child->term_id,
-						'name'   => str_replace(['\'','"'],['ʼ'],$child->name),
+						'name' => str_replace( [ '\'', '"' ], [ 'ʼ' ], $child->name ),
 						'parent' => $child->parent,
 					];
 				}, get_terms( [ 'parent' => $attribute->term_id, 'hide_empty' => false, 'taxonomy' => $tax ] ) )
