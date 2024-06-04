@@ -203,12 +203,24 @@ class FS_Product {
 			'echo'            => true,
 			'size'            => '16',
 			'voted_color'     => '#FFB91D',
-			'not_voted_color' => '#686565'
+			'not_voted_color' => '#FFF'
 		) );
 		if ( ! $args['echo'] ) {
 			ob_start();
 		}
 		?>
+        <style>
+            .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating svg{
+                width: <?php echo $args['size'] ?>px;
+                height: <?php echo $args['size'] ?>px;
+            }
+            .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating :not(.active) svg,.<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating :not(.active) svg path{
+                fill: <?php echo $args['not_voted_color'] ?>;
+            }
+            .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating .active svg,.<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating .active svg path{
+                fill: <?php echo $args['voted_color'] ?>;
+            }
+        </style>
         <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>">
 			<?php if ( $args['before'] )
 				echo $args['before'] ?>
