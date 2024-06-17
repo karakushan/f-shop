@@ -57,6 +57,10 @@ class FS_Users
         add_action('wp_ajax_fs_change_login', array($this, 'change_login'));
         add_action('wp_ajax_nopriv_fs_change_login', array($this, 'change_login'));
 
+        // Change password
+        add_action('wp_ajax_fs_change_password', array($this, 'change_password'));
+        add_action('wp_ajax_nopriv_fs_change_password', array($this, 'change_password'));
+
         // Protection of personal account from unauthorized users
         add_action('template_redirect', array($this, 'cabinet_protect'));
 
@@ -184,7 +188,8 @@ class FS_Users
             $result['status'] = false;
 
         } else {
-            $result = true;
+            $result['status'] = true;
+            $result['msg'] = __('Password is valid', 'f-shop');
         }
 
         return $result;
@@ -352,6 +357,47 @@ class FS_Users
         }
 
         wp_send_json_error(array('msg' => __('Your data has not been changed, or you did not specify it.', 'f-shop')));
+    }
+
+
+    /**
+     * Change the user's password after validation and update the user data.
+     *
+     */
+    function change_password()
+    {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(array('msg' => __('Failed verification of nonce form', 'f-shop')));
+        }
+
+        $current_user = wp_get_current_user();
+
+        // Check old password
+        if (empty($_POST['fs_old_password']) || !wp_check_password($_POST['fs_old_password'], $current_user->user_pass)) {
+            wp_send_json_error(array('msg' => __('Incorrect old password', 'f-shop')));
+        }
+
+        // Password and repeat password
+        if ($_POST['fs_password'] != $_POST['fs_password_repeat']) {
+            wp_send_json_error(array('msg' => __('Passwords do not match', 'f-shop')));
+        }
+
+        // Validation
+        $password = sanitize_text_field($_POST['fs_password']);
+        $password_validation = $this->password_validation($password);
+
+        if ($password_validation['status'] == false) {
+            wp_send_json_error(array('msg' => $password_validation['msg']));
+        }
+        
+        wp_set_password($password, $current_user->ID);
+
+        $current_user = wp_get_current_user();
+        if (wp_check_password($password, $current_user->user_pass, $current_user->ID)) {
+            wp_send_json_success(['msg' => __('Your password has been successfully changed', 'f-shop')]);
+        }
+
+        wp_send_json_success(['msg' => __('Your data has been successfully changed', 'f-shop')]);
     }
 
 
