@@ -787,7 +787,7 @@ function fs_product_count($echo = true)
         echo esc_html($count);
     }
 
-	return (int)$count;
+    return (int)$count;
 }
 
 /**
@@ -1021,7 +1021,7 @@ function fs_order_send($label = 'Отправить заказ', $attr = [])
         'preloader_width' => 32,
     ]);
     $preloader = '<img class="fs-atc-preloader" style="display:none" x-show="loading" src="' . esc_attr($args['preloader_src']) . '" width="' . esc_attr($args['preloader_width']) . '" alt="preloader">';
-    $inline_attributes = fs_parse_attr($attr, $args, ['preloader_src','preloader_width']);
+    $inline_attributes = fs_parse_attr($attr, $args, ['preloader_src', 'preloader_width']);
 
     printf('<button type="submit" x-on:fs-checkout-start-submit.window="loading = true" x-on:fs-checkout-finish-submit.window="loading = false" x-data="{loading: false }" %s><span>%s</span> ' . $preloader . '</button>', $inline_attributes, $label);
 }
@@ -2134,11 +2134,14 @@ function fs_get_wishlist($args = array())
     }
 
     $args = wp_parse_args($args, array(
-        'post_type' => 'product',
-        'post__in' => array_unique($_SESSION['fs_wishlist'])
+        'post_type' => FS_Config::get_data('post_type'),
+        'include' => array_unique(array_values($_SESSION['fs_wishlist'])),
+        'numberposts' => -1
     ));
 
-    return get_posts($args);
+    $items = get_posts($args);
+
+    return $items;
 }
 
 /**
@@ -2168,8 +2171,8 @@ function fs_wishlist_url()
 function fs_account_url()
 {
     return is_user_logged_in()
-	    ? get_the_permalink(intval(fs_option('page_cabinet' )))
-	    : get_the_permalink(intval(fs_option( 'page_auth' )));
+        ? get_the_permalink(intval(fs_option('page_cabinet')))
+        : get_the_permalink(intval(fs_option('page_auth')));
 }
 
 /**
