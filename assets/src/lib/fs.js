@@ -142,8 +142,17 @@ class FS {
         params.forEach((value, key) => {
             paramsArray.push(value);
         });
-        return paramsArray.map(v=>parseInt(v));
+        return paramsArray.map(v => parseInt(v));
     }
+
+    login(data) {
+        return this.post('fs_login', data)
+    }
+
+    liveSearch(query) {
+        return this.post('fs_livesearch', {search: query})
+    }
+
 }
 
 export default FS;

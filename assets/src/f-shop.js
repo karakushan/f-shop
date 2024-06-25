@@ -841,7 +841,7 @@ jQuery(document).ready(function ($) {
 
 // регистрация пользователя
     var userProfileCreate = jQuery('form[name="fs-register"]');
-    if (userProfileCreate.length)
+    if (typeof userProfileCreate.validate === 'function') {
         userProfileCreate.validate({
             rules: {
                 "fs-password": {
@@ -880,10 +880,11 @@ jQuery(document).ready(function ($) {
 
             }
         });
+    }
 
 // авторизация пользователя
     var loginForm = jQuery('form[name="fs-login"]');
-    if (loginForm.length)
+    if (typeof loginForm.validate === 'function') {
         loginForm.validate({
             submitHandler: function (form) {
                 jQuery.ajax({
@@ -907,6 +908,7 @@ jQuery(document).ready(function ($) {
                     });
             }
         });
+    }
 
 
     /*  Обработка формы сброса пароля */
@@ -1088,7 +1090,7 @@ jQuery(document).ready(function ($) {
     });
 
     // Живой поиск товаров
-    $("[name=s]").on('input', function (e) {
+/*    $("[name=s]").on('input', function (e) {
         let searchVal = $(this).val();
         let form = $(this).parents('form');
 
@@ -1110,7 +1112,7 @@ jQuery(document).ready(function ($) {
     $("[name=s]").focusout(function (e) {
         $(".fs-livesearch-data").fadeOut(function () {
         });
-    });
+    });*/
 
     // Активирует радио кнопки на странице оформления покупки
     $(".fs-field-wrap").each(function () {
