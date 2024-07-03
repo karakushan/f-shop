@@ -18,8 +18,8 @@ class FS_Cart {
 		add_action( 'wp_ajax_nopriv_add_to_cart', array( $this, 'add_to_cart_ajax' ) );
 
 		//Удаление товара из корзины ajax
-		add_action( 'wp_ajax_fs_delete_product', array( $this, 'delete_product_ajax' ) );
-		add_action( 'wp_ajax_nopriv_fs_delete_product', array( $this, 'delete_product_ajax' ) );
+		add_action( 'wp_ajax_fs_delete_cart_item', array( $this, 'delete_cart_item' ) );
+		add_action( 'wp_ajax_nopriv_fs_delete_cart_item', array( $this, 'delete_cart_item' ) );
 
 		//Удаление всех товаров из корзины ajax
 		add_action( 'wp_ajax_fs_delete_cart', array( $this, 'remove_cart_ajax' ) );
@@ -64,11 +64,40 @@ class FS_Cart {
 	 * позволяет использовать пользователям отображение корзины в нескольких местах одновременно
 	 */
 	function fs_get_cart_callback() {
-		$template = ! empty( $_POST['template'] ) ? $_POST['template'] : 'cart-widget/widget';
-		if ( ! empty( $template ) ) {
-			echo fs_frontend_template( $template );
+		wp_send_json_success( (array) $this->get_cart_object() );
+
+	}
+
+	/**
+	 * Получает объект корзины
+	 * @return \stdClass
+	 */
+	function get_cart_object() {
+		$cart_items = self::get_cart();
+
+		$cart        = new \stdClass();
+		$cart->items = [];
+		$cart->total = 0;
+		$cart->count = 0;
+
+		if ( empty( $cart_items ) ) {
+			return $cart;
 		}
-		exit();
+
+		foreach ( $cart_items as $key => $item ) {
+			$cart->items[] = [
+				'ID'        => $item['ID'],
+				'count'     => (int) $item['count'],
+				'attr'      => $item['attr'],
+				'variation' => $item['variation'],
+				'product'   => fs_set_product( $item, $key )
+			];
+			$cart->total   += fs_get_price( $item['ID'] ) * $item['count'];
+			$cart->count   += $item['count'];
+		}
+
+
+		return $cart;
 	}
 
 	/**
@@ -203,17 +232,22 @@ class FS_Cart {
 	}
 
 
-	//удаление товара в корзине аяксом
-	public function delete_product_ajax() {
-		$remove = $this->fs_remove_product( $_POST['item'] );
-		if ( $remove ) {
-			wp_send_json_success( array( 'message' => sprintf( __( 'Position successful removed from the basket', 'f-shop' ), $_POST['item'] ) ) );
+	/**
+	 * Удаляет одну позицию из корзины по индексу массива
+	 *
+	 * @return void
+	 */
+	public function delete_cart_item() {
+		if ( ! isset( $_POST['index'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Index not specified', 'f-shop' ) ) );
 		}
-		if ( is_wp_error( $remove ) ) {
-			wp_send_json_error( array( 'message' => sprintf( $remove->get_error_message(), $_POST['item'] ) ) );
-		} else {
-			wp_send_json_error( array( 'message' => sprintf( __( 'An error occurred while removing position from the cart', 'f-shop' ), $_POST['item'] ) ) );
+		
+		$index = intval( $_POST['index'] );
+		if ( ! empty( $_SESSION['cart'] ) ) {
+			unset( $_SESSION['cart'][ $index ] );
 		}
+
+		wp_send_json_success( $this->get_cart_object() );
 	}
 
 	/**

@@ -996,7 +996,7 @@ class FS_Users {
 		// If the user does not exist, send an error message
 		if ( ! $user ) {
 			wp_send_json_error( [
-				'msg' => 'К сожалению пользователя с таким данными не существует на сайте'
+				'msg' => __('Unfortunately, a user with such data does not exist on the site','f-shop')
 			] );
 		} else {
 			// Authenticate the user

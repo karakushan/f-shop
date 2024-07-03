@@ -28,6 +28,7 @@ class FS_Product {
 	public $attributes = [];
 	public $post_type = 'product';
 	public $product_id = null;
+	public $comments_count = 0;
 
 
 	/**
@@ -210,14 +211,16 @@ class FS_Product {
 		}
 		?>
         <style>
-            .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating svg{
+            .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating svg {
                 width: <?php echo $args['size'] ?>px;
                 height: <?php echo $args['size'] ?>px;
             }
-            .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating :not(.active) svg,.<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating :not(.active) svg path{
+
+            .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating :not(.active) svg, .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating :not(.active) svg path {
                 fill: <?php echo $args['not_voted_color'] ?>;
             }
-            .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating .active svg,.<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating .active svg path{
+
+            .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating .active svg, .<?php echo esc_attr( $args['wrapper_class'] ) ?> .star-rating .active svg path {
                 fill: <?php echo $args['voted_color'] ?>;
             }
         </style>
@@ -444,6 +447,7 @@ class FS_Product {
 		$this->currency           = fs_currency( $this->id );
 		$this->attributes         = [];
 		$this->thumbnail_url      = has_post_thumbnail( $this->id ) ? get_the_post_thumbnail_url( $this->id ) : null;
+		$this->comments_count     = get_comments_number( $this->id );
 
 
 		// Если указаны свойства товара
@@ -885,14 +889,14 @@ class FS_Product {
 				'children'     => array_map( function ( $child ) {
 					return [
 						'id'     => $child->term_id,
-						'name' => str_replace( [ '\'', '"' ], [ 'ʼ' ], $child->name ),
+						'name'   => str_replace( [ '\'', '"' ], [ 'ʼ' ], $child->name ),
 						'parent' => $child->parent,
 					];
 				}, $children ),
 				'children_all' => array_map( function ( $child ) {
 					return [
 						'id'     => $child->term_id,
-						'name' => str_replace( [ '\'', '"' ], [ 'ʼ' ], $child->name ),
+						'name'   => str_replace( [ '\'', '"' ], [ 'ʼ' ], $child->name ),
 						'parent' => $child->parent,
 					];
 				}, get_terms( [ 'parent' => $attribute->term_id, 'hide_empty' => false, 'taxonomy' => $tax ] ) )

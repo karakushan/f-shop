@@ -312,12 +312,14 @@ jQuery(document).ready(function ($) {
             }
         })
             .done(function (result) {
-                fShop.updateCarts();
                 // создаём событие
                 let add_to_cart = new CustomEvent("fs_add_to_cart", {
                     detail: detail
                 });
                 document.dispatchEvent(add_to_cart);
+
+                const cartUpdatedEvent = new CustomEvent('fs-cart-updated',);
+                window.dispatchEvent(cartUpdatedEvent);
             });
 
     });
@@ -1090,29 +1092,29 @@ jQuery(document).ready(function ($) {
     });
 
     // Живой поиск товаров
-/*    $("[name=s]").on('input', function (e) {
-        let searchVal = $(this).val();
-        let form = $(this).parents('form');
+    /*    $("[name=s]").on('input', function (e) {
+            let searchVal = $(this).val();
+            let form = $(this).parents('form');
 
-        $.ajax({
-            type: 'POST', url: fShop.ajaxurl, data: fShop.ajaxData('fs_livesearch', {
-                search: searchVal
-            }), success: function (data) {
-                if (data.success) {
-                    if (form.find('.fs-livesearch-data').length) {
-                        form.find('.fs-livesearch-data').replaceWith(data.data.html);
-                    } else {
-                        form.append(data.data.html);
+            $.ajax({
+                type: 'POST', url: fShop.ajaxurl, data: fShop.ajaxData('fs_livesearch', {
+                    search: searchVal
+                }), success: function (data) {
+                    if (data.success) {
+                        if (form.find('.fs-livesearch-data').length) {
+                            form.find('.fs-livesearch-data').replaceWith(data.data.html);
+                        } else {
+                            form.append(data.data.html);
+                        }
                     }
                 }
-            }
-        });
-    })
+            });
+        })
 
-    $("[name=s]").focusout(function (e) {
-        $(".fs-livesearch-data").fadeOut(function () {
-        });
-    });*/
+        $("[name=s]").focusout(function (e) {
+            $(".fs-livesearch-data").fadeOut(function () {
+            });
+        });*/
 
     // Активирует радио кнопки на странице оформления покупки
     $(".fs-field-wrap").each(function () {

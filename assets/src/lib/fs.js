@@ -26,9 +26,7 @@ class FS {
         fData.append('action', action);
         fData.append(this.nonceField, this.nonce);
         return fetch(this.ajaxurl, {
-            method: 'POST',
-            credentials: 'same-origin',
-            body: fData,
+            method: 'POST', credentials: 'same-origin', body: fData,
         }).then((r) => r.json());
     }
 
@@ -38,49 +36,44 @@ class FS {
     cleanWishlist() {
         this.post('fs_clean_wishlist', {})
             .then((data) => {
-                    window.location.reload()
-                }
-            )
+                window.location.reload()
+            })
     }
 
     // Adds the entire wishlist to the cart
     addWishListToCart() {
         this.post('fs_add_wishlist_to_cart', {})
             .then((response) => {
-                    this.updateCarts();
-                    iziToast.success({
-                        title: response.data.title,
-                        message: response.data.message,
-                        position: 'topCenter'
-                    });
-                }
-            )
+                this.updateCarts();
+                iziToast.success({
+                    title: response.data.title, message: response.data.message, position: 'topCenter'
+                });
+            })
     }
 
-    updateCarts() {
-        let self = this;
-        jQuery("[data-fs-element=\"cart-widget\"]").each(function () {
-            let templatePath = "cart-widget/widget";
-            if (jQuery(this).data("template") != "") {
-                templatePath = jQuery(this).data("template");
-            }
-            self.fs_get_cart(templatePath, this);
-        });
+    // === CART ===
+    getCart() {
+        return this.post('fs_get_cart', {})
     }
 
-    fs_get_cart(cartTemplate, cartWrap) {
-        let parameters = {
-            action: 'fs_get_cart', template: cartTemplate
-        };
-        jQuery.ajax({
-            type: 'POST', url: fShop.ajaxurl, data: parameters, dataType: 'html', success: function (data) {
-                if (data) jQuery(cartWrap).html(data);
-            }, error: function (xhr, ajaxOptions, thrownError) {
-                console.log('error...', xhr);
-                //error logging
-            }
-        });
+    deleteCartItem(index) {
+        return this.post('fs_delete_cart_item', {'index': index}).then((r) => {
+            const cartUpdatedEvent = new CustomEvent('fs-cart-updated',);
+            window.dispatchEvent(cartUpdatedEvent);
+
+            return r;
+        })
     }
+
+    deleteCart() {
+        return this.post('fs_delete_cart', {}).then((r) => {
+            const cartUpdatedEvent = new CustomEvent('fs-cart-updated',);
+            window.dispatchEvent(cartUpdatedEvent);
+
+            return r;
+        })
+    }
+
 
     // === ATTRIBUTES ===
     insertAttribute(postId, attributeName, attributeValue) {
@@ -111,11 +104,10 @@ class FS {
             order.cart = Alpine.store('FS').cart;
         }
 
-        if (order.cart.length > 0)
-            order.cart.forEach((item, index) => {
-                formData.append('cart[' + index + '][ID]', item.ID)
-                formData.append('cart[' + index + '][count]', item.count)
-            })
+        if (order.cart.length > 0) order.cart.forEach((item, index) => {
+            formData.append('cart[' + index + '][ID]', item.ID)
+            formData.append('cart[' + index + '][count]', item.count)
+        })
 
         return this.post('order_send', formData)
             .then((r) => {

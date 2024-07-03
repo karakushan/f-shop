@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-01-24 16:41+0000\n"
+"PO-Revision-Date: 2024-07-03 06:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -1399,6 +1399,9 @@ msgstr "Ссылки"
 msgid "Localize Cyrillic slug"
 msgstr "Локализация кирилических урл"
 
+msgid "Log In"
+msgstr ""
+
 #: lib/FS_Users.php:750 lib/FS_Users.php:753
 #: templates/front-end/auth/login.php:14
 msgid "Login"
@@ -1521,6 +1524,9 @@ msgstr "Не найден метод оплаты"
 #: templates/front-end/dashboard/wishlist.php:77
 msgid "No product found in wish list"
 msgstr "Не найдено товаров в списке желаний"
+
+msgid "No reviews"
+msgstr "Нет отзывов"
 
 #: lib/widgets/Attribute_Widget.php:137
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24
@@ -2667,6 +2673,9 @@ msgstr "Украинская гривна"
 #: lib/FS_Taxonomy.php:655
 msgid "Unavailable for payment"
 msgstr "Не доступен для оплаты"
+
+msgid "Unfortunately, a user with such data does not exist on the site"
+msgstr "К сожалению пользователя с таким данными не существует на сайте"
 
 #: lib/FS_Filters.php:134
 msgid "units"

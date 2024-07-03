@@ -8,13 +8,13 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2024-01-24 16:37+0000\n"
+"PO-Revision-Date: 2024-07-03 06:17+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Loco-Version: 2.6.6; wp-6.3.2"
+"X-Loco-Version: 2.6.10; wp-6.5.3"
 
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
@@ -1391,6 +1391,9 @@ msgstr "Посилання"
 msgid "Localize Cyrillic slug"
 msgstr "Локалізувати слаг на кирилиці"
 
+msgid "Log In"
+msgstr "Увійти"
+
 #: lib/FS_Users.php:750 lib/FS_Users.php:753
 #: templates/front-end/auth/login.php:14
 msgid "Login"
@@ -1513,6 +1516,9 @@ msgstr "Не вказаний метод оплати"
 #: templates/front-end/dashboard/wishlist.php:77
 msgid "No product found in wish list"
 msgstr "Не знайдено товарів в списку бажань"
+
+msgid "No reviews"
+msgstr "Немає відгуків"
 
 #: lib/widgets/Attribute_Widget.php:137
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24
@@ -2054,7 +2060,7 @@ msgstr "видалити варіант"
 
 #: templates/front-end/auth/register.php:17
 msgid "Repeat password"
-msgstr "Нагадати пароль"
+msgstr "Повторіть пароль"
 
 #: templates/front-end/auth/login.php:4 templates/front-end/auth/login.php:10
 msgid "required"
@@ -2658,6 +2664,9 @@ msgstr "Гривня"
 #: lib/FS_Taxonomy.php:655
 msgid "Unavailable for payment"
 msgstr "Недоступно для оплати"
+
+msgid "Unfortunately, a user with such data does not exist on the site"
+msgstr "На жаль, користувача з такими даними не існує на сайті"
 
 #: lib/FS_Filters.php:134
 msgid "units"
