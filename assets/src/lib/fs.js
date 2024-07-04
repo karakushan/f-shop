@@ -74,6 +74,15 @@ class FS {
         })
     }
 
+    changeCartCount(index, count) {
+        return this.post('fs_change_cart_count', {'index': index, 'count': count}).then((r) => {
+            const cartUpdatedEvent = new CustomEvent('fs-cart-updated',);
+            window.dispatchEvent(cartUpdatedEvent);
+
+            return r;
+        })
+    }
+
 
     // === ATTRIBUTES ===
     insertAttribute(postId, attributeName, attributeValue) {

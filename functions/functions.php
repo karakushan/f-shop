@@ -1242,7 +1242,8 @@ function fs_cart_quantity( int $item_id, float $value, array $args = array() ) {
 			'data-fs-type' => "cart-quantity",
 			'data-item-id' => $item_id,
 			'step'         => $args['step'],
-			'min'          => $args['min']
+			'min'          => $args['min'],
+
 		)
 	);
 

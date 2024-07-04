@@ -43,7 +43,7 @@ class FS_Cart {
 	 * Updating the number of goods in the basket by ajax
 	 */
 	public function change_cart_item_count() {
-		$item_id       = intval( $_POST['item_id'] );
+		$item_id       = intval( $_POST['index'] );
 		$product_count = floatval( $_POST['count'] );
 		if ( ! empty( $_SESSION['cart'] ) ) {
 			$_SESSION['cart'][ $item_id ]['count'] = $product_count;
@@ -238,14 +238,11 @@ class FS_Cart {
 	 * @return void
 	 */
 	public function delete_cart_item() {
-		if ( ! isset( $_POST['index'] ) ) {
+		if ( ! is_numeric( $_POST['index'] ) || ! isset( $_SESSION['cart'][ $_POST['index'] ] ) ) {
 			wp_send_json_error( array( 'message' => __( 'Index not specified', 'f-shop' ) ) );
 		}
-		
-		$index = intval( $_POST['index'] );
-		if ( ! empty( $_SESSION['cart'] ) ) {
-			unset( $_SESSION['cart'][ $index ] );
-		}
+		unset( $_SESSION['cart'][ $_POST['index'] ] );
+		$_SESSION['cart'] = array_values( $_SESSION['cart'] );
 
 		wp_send_json_success( $this->get_cart_object() );
 	}

@@ -439,7 +439,7 @@ class FS_Product {
 		$this->price              = fs_get_price( $this->id );
 		$this->base_price         = fs_get_base_price( $this->id );
 		$this->base_price_display = apply_filters( 'fs_price_format', $this->base_price );
-		$this->price_display      = apply_filters( 'fs_price_format', $this->price );
+		$this->price_display      = apply_filters( 'fs_price_format', $this->price ) . ' ' . fs_currency( $this->id );
 		$this->permalink          = $this->get_permalink();
 		$this->count              = floatval( $product['count'] );
 		$this->cost               = floatval( $this->count * $this->price );
