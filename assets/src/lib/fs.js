@@ -154,6 +154,11 @@ class FS {
         return this.post('fs_livesearch', {search: query})
     }
 
+    // === Products ===
+    // Подсчет цены товара с учетом атрибутов указанных в вариациях
+    calculatePrice(productId, attributes = {}) {
+        return this.post('fs_calculate_price', {product_id: productId, attributes: Object.values(attributes)})
+    }
 }
 
 export default FS;

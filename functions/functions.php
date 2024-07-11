@@ -143,7 +143,7 @@ function fs_get_price( $product_id = 0 ) {
  * @param string $wrap html wrapper for price
  * @param array $args additional arguments
  */
-function fs_the_price( $product_id = 0, $wrap = "%s <span>%s</span>", $args = array() ) {
+function fs_the_price( $product_id = 0, $wrap = "%s <span x-text='currency'>%s</span>", $args = array() ) {
 	$args       = wp_parse_args( $args, array(
 		'class' => 'fs-price'
 	) );
@@ -151,7 +151,8 @@ function fs_the_price( $product_id = 0, $wrap = "%s <span>%s</span>", $args = ar
 	$product_id = fs_get_product_id( $product_id );
 	$price      = fs_get_price( $product_id );
 	$price      = apply_filters( 'fs_price_format', $price );
-	printf( '<span data-fs-element="price" data-product-id="' . esc_attr( $product_id ) . '" data-fs-value="' . esc_attr( $price ) . '" class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', esc_attr( $price ), esc_attr( $cur_symb ) );
+
+	printf( '<span class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', '<span x-text="price">' . esc_attr( $price ) . '</span>', '<span x-text="currency">' . esc_attr( $cur_symb ) . '</span>' );
 }
 
 /**
@@ -1193,6 +1194,7 @@ function fs_quantity_product( $product_id = 0, $args = array() ) {
 		'data-fs-product-id' => $product_id,
 		'min'                => $args['min'],
 		'step'               => $args['step'],
+		'x-model'            => 'count',
 		'max'                => fs_option( 'fs_in_stock_manage', 0 ) && $total_count ? intval( $total_count ) : ''
 	) );
 
@@ -3718,4 +3720,37 @@ function fs_body_open( $data = [] ) {
     x-on:fs-cart-updated.window="Alpine.store('FS').getCart().then(r=>cart=r.data)"
     x-init="Alpine.store('FS').getCart().then(r=>cart=r.data)"
 	<?php
+}
+
+/**
+ * Выводит атрибуты для компонента Alpine.js
+ * необходимо вставлять перед началом цикла единичного товара
+ *
+ * @return void
+ */
+function fs_before_product_atts() {
+	$product_id           = get_the_ID();
+	$product              = new FS_Product();
+	$variation_attributes = $product->get_all_variation_attributes( $product_id );
+	$variations           = $product->get_product_variations( $product_id );
+	$attributes           = [];
+	array_walk( $variation_attributes, function ( $value, $key ) use ( &$attributes ) {
+		$newKey                = str_replace( '-', '_', $value['slug'] ); // Пример преобразования ключа
+		$attributes[ $newKey ] = $value['children'][0]['term_id'];
+	} );
+
+	echo ' x-data=\'' . json_encode( [
+			'attributes' => $attributes,
+			'count'      => 1,
+			'price'      => count( $variation_attributes ) ? $variations[0]['price'] : fs_get_price( $product_id ),
+			'old_price'  => count( $variation_attributes ) ? $variations[0]['sale_price'] : fs_get_base_price( $product_id ),
+			'currency'   => fs_currency( $product_id )
+		] ) . ' \'';
+
+	echo ' x-init="$watch(\'attributes\',(val)=>Alpine.store(\'FS\').calculatePrice(' . $product_id . ',val).then(r=>{
+	    if(r.success){
+	        price=r.data.price;
+	        sale_price=r.data.sale_price;
+	    }
+	} ))" ';
 }

@@ -141,6 +141,10 @@ class FS_Ajax {
 			// get attribute filters for product category
 			add_action( 'wp_ajax_fs_get_category_attributes', array( $this, 'fs_get_category_attributes' ) );
 			add_action( 'wp_ajax_nopriv_fs_get_category_attributes', array( $this, 'fs_get_category_attributes' ) );
+
+			// fs_calculate_price
+			add_action( 'wp_ajax_fs_calculate_price', array( $this, 'fs_calculate_price_callback' ) );
+			add_action( 'wp_ajax_nopriv_fs_calculate_price', array( $this, 'fs_calculate_price_callback' ) );
 		}
 	}
 
@@ -1254,5 +1258,41 @@ class FS_Ajax {
 		wp_send_json_success( [
 			'attributes' => (array) $attributes,
 		] );
+	}
+
+	public function fs_calculate_price_callback() {
+		if ( ! is_numeric( $_POST['product_id'] ) ) {
+			wp_send_json_error( [ 'msg' => __( 'Product ID not found', 'f-shop' ) ] );
+		}
+
+		$product_id      = intval( $_POST['product_id'] );
+		$post_attributes = array_map( 'intval', explode( ',', $_POST['attributes'] ) );
+		$variations      = ( new FS_Product() )->get_product_variations( $product_id );
+		$price           = fs_get_price( $product_id );
+		$old_price       = fs_get_base_price( $product_id );
+
+		if ( ! $variations ) {
+			wp_send_json_success( [
+				'price'     => $price,
+				'old_price' => $old_price,
+			] );
+		}
+
+		foreach ( $variations as $variation ) {
+			$variation_attributes = array_map( 'intval', $variation['attributes'] );
+			$intersect            = array_intersect( $post_attributes, $variation_attributes );
+
+			if ( count( $intersect ) == count( $post_attributes ) ) {
+				$price     = $variation['price'];
+				$old_price = $variation['sale_price'];
+				break;
+			}
+		}
+
+		wp_send_json_success( [
+			'price'     => $price,
+			'old_price' => $old_price,
+		] );
+
 	}
 } 

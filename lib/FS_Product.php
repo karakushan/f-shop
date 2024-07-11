@@ -54,28 +54,14 @@ class FS_Product {
 	 *
 	 * @param int $product_id идентификатор товара
 	 *
-	 * @param bool $hide_disabled не возвращать выключенные
 	 *
 	 * @return array
 	 */
-	public static function get_product_variations( $product_id = 0, $hide_disabled = true ) {
+	public static function get_product_variations( $product_id = 0 ) {
 		$product_id = fs_get_product_id( $product_id );
-		$variations = get_post_meta( $product_id, 'fs_variant', 0 );
+		$variations = get_post_meta( $product_id, FS_Config::get_meta( 'variations' ), 1 );
 
-		if ( ! empty( $variations[0] ) ) {
-			if ( $hide_disabled ) {
-				foreach ( $variations[0] as $key => $variation ) {
-					if ( ( ! empty( $variation['deactive'] ) && $variation['deactive'] == 1 ) || ( ! empty( $variation['count'] ) && $variation['count'] == 0 ) ) {
-						unset( $variations[0][ $key ] );
-					}
-				}
-			}
-
-			return $variations[0];
-
-		} else {
-			return array();
-		}
+		return ! empty( $variations ) ? $variations : [];
 	}
 
 	/**
@@ -103,37 +89,36 @@ class FS_Product {
 	 *
 	 * @return array|int
 	 */
-	function get_all_variation_attributes( $product_id = 0, $parents = false ) {
-		$product_id   = fs_get_product_id( $product_id );
-		$variations   = $this->get_product_variations( $product_id );
-		$attributes   = [];
-		$parents_atts = [];
-		if ( ! count( $variations ) ) {
-			return $attributes;
+	function get_all_variation_attributes( $product_id = 0, $parents = true ) {
+		$product_id = fs_get_product_id( $product_id );
+		$variations = $this->get_product_variations( $product_id );
+		$attributes = [];
+
+		if ( empty( $variations ) ) {
+			return [];
 		}
+
 		foreach ( $variations as $variation ) {
-			if ( ! empty( $variation['attr'] ) && is_array( $variation['attr'] ) ) {
-				foreach ( $variation['attr'] as $att ) {
-					$att = intval( $att );
-					if ( $parents ) {
-						$parents_atts_get = get_term_field( 'parent', $att );
-						if ( ! is_wp_error( $parents_atts_get ) ) {
-							$parents_atts[] = $parents_atts_get;
-						}
-					} else {
-						$attributes [] = $att;
-					}
-
-				}
-
+			if ( empty( $variation['attributes'] ) ) {
+				continue;
 			}
+			$attributes = array_merge( $attributes, $variation['attributes'] );
 		}
 
-		if ( $parents ) {
-			return array_unique( $parents_atts );
-		} else {
-			return array_unique( $attributes );
+		$attributes = array_unique( $attributes );
+
+		$parents = [];
+		foreach ( $attributes as $attribute ) {
+			$term        = get_term( $attribute, FS_Config::get_data( 'features_taxonomy' ) );
+			$parent_term = get_term( $term->parent, FS_Config::get_data( 'features_taxonomy' ) );
+			if ( ! isset( $parents[ $parent_term->term_id ] ) ) {
+				$parents[ $parent_term->term_id ] = (array) $parent_term;
+			}
+			$parents[ $parent_term->term_id ]['children'][] = (array) $term;
+
 		}
+
+		return $parents;
 	}
 
 	/**
@@ -160,9 +145,7 @@ class FS_Product {
 				$max_count = max( 0, $max_count - $count );
 				update_post_meta( $product_id, $fs_config->meta['remaining_amount'], $max_count );
 			}
-
 		}
-
 	}
 
 
