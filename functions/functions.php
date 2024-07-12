@@ -143,7 +143,7 @@ function fs_get_price( $product_id = 0 ) {
  * @param string $wrap html wrapper for price
  * @param array $args additional arguments
  */
-function fs_the_price( $product_id = 0, $wrap = "%s <span x-text='currency'>%s</span>", $args = array() ) {
+function fs_the_price( $product_id = 0, $wrap = "%s %s", $args = array() ) {
 	$args       = wp_parse_args( $args, array(
 		'class' => 'fs-price'
 	) );
@@ -152,7 +152,7 @@ function fs_the_price( $product_id = 0, $wrap = "%s <span x-text='currency'>%s</
 	$price      = fs_get_price( $product_id );
 	$price      = apply_filters( 'fs_price_format', $price );
 
-	printf( '<span class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', '<span x-text="price">' . esc_attr( $price ) . '</span>', '<span x-text="currency">' . esc_attr( $cur_symb ) . '</span>' );
+	printf( '<span class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', '<span x-text="typeof price!==\'undefined\' ? price : ' . $price . ' ">' . esc_attr( $price ) . '</span>', '<span x-text="typeof currency!==\'undefined\' ? currency : \'' . esc_attr( $cur_symb ) . '\'">' . esc_attr( $cur_symb ) . '</span>' );
 }
 
 /**
