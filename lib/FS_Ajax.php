@@ -1270,6 +1270,7 @@ class FS_Ajax {
 		$variations      = ( new FS_Product() )->get_product_variations( $product_id );
 		$price           = fs_get_price( $product_id );
 		$old_price       = fs_get_base_price( $product_id );
+		$use_pennies     = fs_option( 'price_cents' ) ? 2 : 0;
 
 		if ( ! $variations ) {
 			wp_send_json_success( [
@@ -1283,7 +1284,8 @@ class FS_Ajax {
 			$intersect            = array_intersect( $post_attributes, $variation_attributes );
 
 			if ( count( $intersect ) == count( $post_attributes ) ) {
-				$price     = $variation['price'];
+				$price     = apply_filters( 'fs_price_filter', $variation['price'], $product_id );
+				$price     = round( floatval( $price ), $use_pennies );
 				$old_price = $variation['sale_price'];
 				break;
 			}

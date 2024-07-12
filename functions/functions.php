@@ -118,7 +118,6 @@ function fs_get_price( $product_id = 0 ) {
 	if ( isset( $first_variation['price'] ) && is_numeric( $first_variation['price'] ) ) {
 		$price       = floatval( $first_variation['price'] );
 		$is_variable = true;
-
 	}
 
 	// Если товар вариативный и у первой вариации есть акционная цена, то возвращаем ее
@@ -828,21 +827,10 @@ function fs_base_price( $product_id = 0, $wrap = '%s <span>%s</span>', $args = a
  * @return int|string|null
  */
 function fs_get_first_variation( $product_id, $return = 'all' ) {
-	$product_class   = new FS\FS_Product();
-	$variations      = $product_class->get_product_variations( $product_id );
-	$first_variation = null;
-	if ( count( $variations ) ) {
-		foreach ( $variations as $key => $variation ) {
-			if ( $return == 'all' ) {
-				$first_variation = $variation;
-			} elseif ( $return == 'key' ) {
-				$first_variation = $key;
-			}
-			break;
-		}
-	}
+	$product_class = new FS\FS_Product();
+	$variations    = $product_class->get_product_variations( $product_id );
 
-	return $first_variation;
+	return count( $variations ) ? $variations[0] : null;
 }
 
 /**
@@ -3742,8 +3730,8 @@ function fs_before_product_atts() {
 	echo ' x-data=\'' . json_encode( [
 			'attributes' => $attributes,
 			'count'      => 1,
-			'price'      => count( $variation_attributes ) ? $variations[0]['price'] : fs_get_price( $product_id ),
-			'old_price'  => count( $variation_attributes ) ? $variations[0]['sale_price'] : fs_get_base_price( $product_id ),
+			'price'      => fs_get_price( $product_id ),
+			'old_price'  => fs_get_base_price( $product_id ),
 			'currency'   => fs_currency( $product_id )
 		] ) . ' \'';
 
