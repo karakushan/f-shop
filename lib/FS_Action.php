@@ -222,16 +222,30 @@ class FS_Action {
 	 * Callback before range slider
 	 */
 	public function fs_before_range_slider_callback( $args ) {
-		$args = wp_parse_args( $args, [
+		$args    = wp_parse_args( $args, [
 			'data'          => [],
 			'wrapper_class' => 'noUiSlider-wrapper'
 		] );
+		$term_id = get_queried_object_id();
+		$data    = [
+			'fsRangeSlider' => null,
+			'price_min'     => 0,
+			'price_max'     => 10000,
+			'price_start'   => 0,
+			'price_end'     => 0
+		];
 		?>
-        <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>"
-             x-data="<?php echo esc_attr( json_encode( $args['data'] ) ) ?>"
-             x-init="()=>{
-							window.addEventListener('DOMContentLoaded', () => {
-								if(typeof noUiSlider === 'object'){
+    <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>"
+         x-data="<?php echo esc_attr( json_encode( $data ) ) ?>"
+         x-init="()=>{
+                window.addEventListener('DOMContentLoaded', async (event) => {
+                  const prices =await Alpine.store('FS').getMaxMinPrice(<?php echo esc_attr( $term_id ) ?>).then(r=>r.data);
+                  price_min=parseInt(prices.min);
+                  price_max=parseInt(prices.max);
+                  const url = new URL(window.location.href);
+                  price_start=parseInt(url.searchParams.get('price_start')) || price_min;
+                  price_end=parseInt(url.searchParams.get('price_end')) || price_max;
+                   if(typeof noUiSlider === 'object'){
 								fsRangeSlider = noUiSlider.create($refs.fsRangeSlider, {
 									start: [price_start, price_end],
 									connect: true,
@@ -250,10 +264,13 @@ class FS_Action {
 									url.searchParams.set('price_end', price_end);
 									window.location.href = url
 								});
-								}
-							}) // DOMContentLoaded
-							}"';
-        }">
+				}
+                });
+
+
+                }"
+
+    >
 		<?php
 	}
 

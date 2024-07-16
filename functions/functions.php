@@ -1486,33 +1486,14 @@ function fs_attr_group_filter( $group, $type = 'option', $option_default = 'Вы
  *
  */
 function fs_range_slider() {
-	$prices = [];
-
-	if ( fs_is_product_category() ) {
-		$products = get_posts( array(
-			'post_type'      => FS_Config::get_data( 'post_type' ),
-			'posts_per_page' => - 1,
-			'tax_query'      => array(
-				array(
-					'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
-					'field'    => 'term_id',
-					'terms'    => get_queried_object_id()
-				)
-			)
-		) );
-		foreach ( $products as $product ) {
-			$prices[] = fs_get_price( $product->ID );
-		}
-	} elseif ( fs_is_catalog() || is_search() ) {
-		$prices = [ fs_price_min(), fs_price_max() ];
-	}
+	$term_id = get_queried_object_id() ? get_queried_object_id() : 0;
 
 	echo fs_frontend_template( 'widget/jquery-ui-slider/ui-slider', array(
 		'vars' => [
-			'price_min'   => min( $prices ),
-			'price_max'   => max( $prices ),
-			'price_start' => ! empty( $_GET['price_start'] ) ? intval( $_GET['price_start'] ) : min( $prices ),
-			'price_end'   => ! empty( $_GET['price_end'] ) ? intval( $_GET['price_end'] ) : max( $prices ),
+			'price_min'   => fs_price_min( $term_id ),
+			'price_max'   => fs_price_max( $term_id ),
+			'price_start' => ! empty( $_GET['price_start'] ) ? intval( $_GET['price_start'] ) : fs_price_min( $term_id ),
+			'price_end'   => ! empty( $_GET['price_end'] ) ? intval( $_GET['price_end'] ) : fs_price_max( $term_id ),
 			'currency'    => fs_currency()
 		]
 	) );
@@ -1523,13 +1504,13 @@ function fs_range_slider() {
  *
  * @return float|int|null|string
  */
-function fs_price_max() {
+function fs_price_max( $term_id ) {
 	global $wpdb;
 	$max = 0;
 
-	if ( fs_is_product_category() ) {
+	if ( $term_id ) {
+		$term          = get_term( $term_id );
 		$taxonomy_name = FS_Config::get_data( 'product_taxonomy' );
-		$term          = get_queried_object();
 		$max           = wp_cache_get( 'fs_max_price_term_' . $term->term_id );
 		if ( ! $max ) {
 			// get max price form meta value price in product category

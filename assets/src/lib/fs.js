@@ -159,6 +159,10 @@ class FS {
     calculatePrice(productId, attributes = {}) {
         return this.post('fs_calculate_price', {product_id: productId, attributes: Object.values(attributes)})
     }
+
+    getMaxMinPrice(term_id) {
+        return this.post('fs_get_max_min_price', {term_id: term_id})
+    }
 }
 
 export default FS;

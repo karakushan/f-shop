@@ -29,20 +29,20 @@ class Price_Widget extends \WP_Widget {
 	public function form( $instance ) {
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : '';
 		?>
-		<div class="fs-widget-wrapper">
-			<div class="form-row">
-				<label
-					for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
+        <div class="fs-widget-wrapper">
+            <div class="form-row">
+                <label
+                        for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
 				<?php if ( fs_option( 'fs_multi_language_support' ) ) : ?>
-				<div class="form-group">
-					<span class="form-group__sub"><?php echo esc_html( FS_Config::default_language_name() ) ?></span>
+                <div class="form-group">
+                    <span class="form-group__sub"><?php echo esc_html( FS_Config::default_language_name() ) ?></span>
 					<?php endif; ?>
-					<input class="widefat title"
-					       id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
-					       name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
-					       value="<?php echo esc_attr( $title ); ?>"/>
+                    <input class="widefat title"
+                           id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+                           name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
+                           value="<?php echo esc_attr( $title ); ?>"/>
 					<?php if ( fs_option( 'fs_multi_language_support' ) ) : ?>
-				</div>
+                </div>
 			<?php endif; ?>
 				<?php
 
@@ -54,18 +54,18 @@ class Price_Widget extends \WP_Widget {
 						$name  = 'title_' . $language['locale'];
 						$title = ! empty( $instance[ $name ] ) ? $instance[ $name ] : '';
 						?>
-						<div class="form-group">
-							<span class="form-group__sub"><?php echo $key ?></span>
-							<input class="widefat title form-group__sub"
-							       id="<?php echo esc_attr( $this->get_field_id( $name ) ); ?>"
-							       name="<?php echo esc_attr( $this->get_field_name( $name ) ); ?>"
-							       value="<?php echo esc_attr( $title ); ?>"/>
-						</div>
+                        <div class="form-group">
+                            <span class="form-group__sub"><?php echo $key ?></span>
+                            <input class="widefat title form-group__sub"
+                                   id="<?php echo esc_attr( $this->get_field_id( $name ) ); ?>"
+                                   name="<?php echo esc_attr( $this->get_field_name( $name ) ); ?>"
+                                   value="<?php echo esc_attr( $title ); ?>"/>
+                        </div>
 					<?php }
 				}
 				?>
-			</div>
-		</div>
+            </div>
+        </div>
 
 		<?php
 	}
@@ -91,7 +91,7 @@ class Price_Widget extends \WP_Widget {
 		if ( ! empty( $title ) ) {
 			echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
 		}
-		fs_range_slider();
+		echo fs_frontend_template( 'widget/jquery-ui-slider/ui-slider' );
 		echo $args['after_widget'];
 	}
 

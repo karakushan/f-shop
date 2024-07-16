@@ -151,15 +151,15 @@ class FS_Init {
 		), null, true );
 
 		$l10n = array(
-			'ajaxurl'         => admin_url( "admin-ajax.php" ),
-			'nonce'           => wp_create_nonce( 'f-shop' ),
-			'fs_currency'     => fs_currency(),
-			'cartUrl'         => fs_cart_url( false ),
-			'checkoutUrl'     => fs_checkout_url( false ),
-			'catalogUrl'      => fs_get_catalog_link(),
-			'wishlistUrl'     => fs_wishlist_url(),
-			'preorderWindow'  => fs_option( 'fs_preorder_services', 0 ),
-			'langs'           => array(
+			'ajaxurl'        => admin_url( "admin-ajax.php" ),
+			'nonce'          => wp_create_nonce( 'f-shop' ),
+			'fs_currency'    => fs_currency(),
+			'cartUrl'        => fs_cart_url( false ),
+			'checkoutUrl'    => fs_checkout_url( false ),
+			'catalogUrl'     => fs_get_catalog_link(),
+			'wishlistUrl'    => fs_wishlist_url(),
+			'preorderWindow' => fs_option( 'fs_preorder_services', 0 ),
+			'langs'          => array(
 				'success'            => __( 'Success!', 'f-shop' ),
 				'added'              => __( 'Added!', 'f-shop' ),
 				'error'              => __( 'Error!', 'f-shop' ),
@@ -174,9 +174,7 @@ class FS_Init {
 					fs_checkout_url( false ), __( 'Checkout', 'f-shop' ) ),
 				'addToWishlist'      => __( 'Item &laquo;%product%&raquo; successfully added to wishlist. <a href="%wishlist_url%">Go to wishlist</a>', 'f-shop' ),
 			),
-			'catalogMinPrice' => fs_price_min(),
-			'catalogMaxPrice' => fs_price_max(),
-			'fs_cart_type'    => fs_option( 'fs_cart_type', 'modal' )
+			'fs_cart_type'   => fs_option( 'fs_cart_type', 'modal' )
 		);
 		wp_localize_script( FS_PLUGIN_PREFIX . 'main', 'fShop', $l10n );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', [], null, false );

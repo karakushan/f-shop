@@ -145,6 +145,10 @@ class FS_Ajax {
 			// fs_calculate_price
 			add_action( 'wp_ajax_fs_calculate_price', array( $this, 'fs_calculate_price_callback' ) );
 			add_action( 'wp_ajax_nopriv_fs_calculate_price', array( $this, 'fs_calculate_price_callback' ) );
+
+			// fs_get_max_min_price
+			add_action( 'wp_ajax_fs_get_max_min_price', array( $this, 'fs_get_max_min_price_callback' ) );
+			add_action( 'wp_ajax_nopriv_fs_get_max_min_price', array( $this, 'fs_get_max_min_price_callback' ) );
 		}
 	}
 
@@ -1296,5 +1300,13 @@ class FS_Ajax {
 			'old_price' => $old_price,
 		] );
 
+	}
+
+	public function fs_get_max_min_price_callback() {
+		$term_id = (int) $_POST['term_id'];
+		wp_send_json_success( [
+			'max' => fs_price_max( $term_id ),
+			'min' => fs_price_min( $term_id ),
+		] );
 	}
 } 
