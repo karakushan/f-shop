@@ -135,6 +135,23 @@ jQuery(document).ready(function ($) {
         }
     }, window.fShop);
 
+    var slider = document.getElementById('slider');
+    if (slider) {
+        noUiSlider.create(slider, {
+            start: [0, 6000],
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 10000
+            }
+        });
+
+        slider.noUiSlider.on('update', function (values, handle) {
+            $('#slider-min').text(Math.round(values[0]))
+            $('#slider-max').text(Math.round(values[1]))
+        });
+    }
+
     $(document).on('click', '[data-fs-element="comment-like"]', function (event) {
         let commentId = $(this).data('comment-id');
         let countEl = $(this).find('[data-fs-element="comment-like-count"]')
@@ -748,44 +765,6 @@ jQuery(document).ready(function ($) {
                 detail: {count: count, productId: productId}
             });
             document.dispatchEvent(change_count);
-        });
-    });
-
-
-    jQuery('[data-fs-element="range-slider"]').each(function (index, value) {
-        const el = jQuery(this);
-        const sliderEnd = $('[data-fs-element="range-end"]');
-        const sliderStart = $('[data-fs-element="range-start"]');
-        const minPrice = el.data('min');
-        const maxPrice = el.data('max');
-        const url = new Url;
-        let minValue = typeof url.query.price_start === 'undefined' ? minPrice : url.query.price_start;
-        let maxValue = typeof url.query.price_end === 'undefined' ? maxPrice : url.query.price_end;
-        el.slider({
-            range: true,
-            min: minPrice,
-            max: maxPrice,
-            values: [minValue, maxValue],
-            slide: function (event, ui) {
-                if (sliderStart.data("currency")) {
-                    sliderStart.html(ui.values[0] + ' <span>' + fShop.fs_currency + '</span>');
-                } else {
-                    sliderStart.html(ui.values[0]);
-                }
-                if (sliderEnd.data("currency")) {
-                    sliderEnd.html(ui.values[1] + ' <span>' + fShop.fs_currency + '</span>');
-                } else {
-                    sliderEnd.html(ui.values[1]);
-                }
-                $('[data-fs-element="range-start-input"]').val(ui.values[0]);
-                $('[data-fs-element="range-end-input"]').val(ui.values[1]);
-            },
-            change: function (event, ui) {
-                url.query.fs_filter = fShop.nonce;
-                url.query.price_start = ui.values[0];
-                url.query.price_end = ui.values[1];
-                window.location.href = url.toString();
-            }
         });
     });
 

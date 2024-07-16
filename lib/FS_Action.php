@@ -12,6 +12,8 @@ class FS_Action {
 		add_action( 'init', array( &$this, 'register_plugin_filters' ), 10 );
 		add_action( 'admin_menu', array( $this, 'remove_admin_submenus' ), 999 );
 		add_action( 'fs_live_search', array( $this, 'live_search' ) );
+		add_action( 'fs_before_range_slider', array( $this, 'fs_before_range_slider_callback' ) );
+		add_action( 'fs_after_range_slider', array( $this, 'fs_after_range_slider_callback' ) );
 	}
 
 	public
@@ -214,5 +216,51 @@ class FS_Action {
 	 */
 	public function live_search() {
 		echo fs_frontend_template( 'search/livesearch' );
+	}
+
+	/**
+	 * Callback before range slider
+	 */
+	public function fs_before_range_slider_callback( $args ) {
+		$args = wp_parse_args( $args, [
+			'data'          => [],
+			'wrapper_class' => 'noUiSlider-wrapper'
+		] );
+		?>
+        <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>"
+             x-data="<?php echo esc_attr( json_encode( $args['data'] ) ) ?>"
+             x-init="()=>{
+							window.addEventListener('DOMContentLoaded', () => {
+								if(typeof noUiSlider === 'object'){
+								fsRangeSlider = noUiSlider.create($refs.fsRangeSlider, {
+									start: [price_start, price_end],
+									connect: true,
+									range: {
+									'min': price_min,
+									'max': price_max
+									}
+								});
+								fsRangeSlider.on('update', function (values, handle) {
+									price_start=parseInt(values[0]);
+									price_end=parseInt(values[1]);
+								});
+								fsRangeSlider.on('change', function (values, handle) {
+									const url = new URL(window.location.href);
+									url.searchParams.set('price_start', price_start);
+									url.searchParams.set('price_end', price_end);
+									window.location.href = url
+								});
+								}
+							}) // DOMContentLoaded
+							}"';
+        }">
+		<?php
+	}
+
+	/**
+	 * Callback after range slider
+	 */
+	public function fs_after_range_slider_callback() {
+		echo '</div>';
 	}
 }
