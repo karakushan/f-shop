@@ -3686,8 +3686,8 @@ function fs_body_open( $data = [] ) {
 	$json = str_replace( '"', "'", $json );
 	?>
     x-data="<?php echo esc_attr( $json ) ?>"
-    x-on:fs-cart-updated.window="Alpine.store('FS').getCart().then(r=>cart=r.data)"
-    x-init="Alpine.store('FS').getCart().then(r=>cart=r.data)"
+    x-on:fs-cart-updated.window="Alpine.store('FS')?.getCart().then(r=>cart=r.data)"
+    x-init="Alpine.store('FS')?.getCart().then(r=>cart=r.data)"
 	<?php
 }
 
