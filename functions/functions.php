@@ -3711,8 +3711,8 @@ function fs_before_product_atts() {
 	echo ' x-data=\'' . json_encode( [
 			'attributes' => $attributes,
 			'count'      => 1,
-			'price'      => fs_get_price( $product_id ),
-			'old_price'  => fs_get_base_price( $product_id ),
+			'price'      => apply_filters('fs_price_format', fs_get_price( $product_id )),
+			'old_price'  => apply_filters('fs_price_format', fs_get_base_price( $product_id )),
 			'currency'   => fs_currency( $product_id )
 		] ) . ' \'';
 
