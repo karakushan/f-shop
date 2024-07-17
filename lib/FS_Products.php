@@ -204,7 +204,7 @@ class FS_Products {
 			'label_class'   => '',
 			'select_class'  => '',
 		] );
-        
+
 		$attributes = [];
 		array_walk( $variations, function ( $value, $key ) use ( &$attributes ) {
 			$newKey                = str_replace( '-', '_', $value['slug'] ); // Пример преобразования ключа
@@ -226,4 +226,102 @@ class FS_Products {
 		<?php endforeach;
 	}
 
+	/**
+	 * Получить максимальную цену в категории вне зависимости от валюты (в базовой валюте)
+	 *
+	 * @param $term_id
+	 *
+	 * @return float|int
+	 */
+	public static function get_max_price_in_category( $term_id ) {
+
+        // проверяем есть ли данные в кеше
+        $cache_key = 'fs_max_price_in_category_' . $term_id;
+        $cache = wp_cache_get( $cache_key );
+        if ( false !== $cache ) {
+            return $cache;
+        }
+
+		$args = array(
+			'post_type'      => FS_Config::get_data( 'post_type' ),
+			'posts_per_page' => - 1, // Получить все товары
+			'tax_query'      => array(
+				array(
+					'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
+					'field'    => 'term_id',
+					'terms'    => $term_id,
+				),
+			),
+		);
+
+		$query     = new \WP_Query( $args );
+		$max_price = 0;
+
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) {
+				$query->the_post();
+				$price = fs_get_price( get_the_ID() );
+				if ( $price > $max_price ) {
+					$max_price = $price;
+				}
+			}
+		}
+
+		wp_reset_postdata(); // Сброс после запроса
+
+        // кешируем результат
+        wp_cache_set( $cache_key, $max_price );
+
+		return $max_price;
+	}
+
+
+	/**
+     * Получить минимальную цену в категории вне зависимости от валюты (в базовой валюте)
+     *
+	 * @param $term_id
+	 *
+	 * @return float|int|mixed
+	 */
+	public static function get_min_price_in_category( $term_id ) {
+
+        // проверяем есть ли данные в кеше
+        $cache_key = 'fs_min_price_in_category_' . $term_id;
+        $cache = wp_cache_get( $cache_key );
+        if ( false !== $cache ) {
+            return $cache;
+        }
+
+        $args = array(
+            'post_type'      => FS_Config::get_data( 'post_type' ),
+            'posts_per_page' => - 1, // Получить все товары
+            'tax_query'      => array(
+                array(
+                    'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
+                    'field'    => 'term_id',
+                    'terms'    => $term_id,
+                ),
+            ),
+        );
+
+        $query     = new \WP_Query( $args );
+        $min_price = 0;
+
+        if ( $query->have_posts() ) {
+            while ( $query->have_posts() ) {
+                $query->the_post();
+                $price = fs_get_price( get_the_ID() );
+                if ( $price < $min_price  || $min_price == 0) {
+                    $min_price = $price;
+                }
+            }
+        }
+
+        wp_reset_postdata(); // Сброс после запроса
+
+        // кешируем результат
+        wp_cache_set( $cache_key, $min_price );
+
+        return $min_price;
+    }
 }

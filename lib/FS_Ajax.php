@@ -1305,8 +1305,8 @@ class FS_Ajax {
 	public function fs_get_max_min_price_callback() {
 		$term_id = (int) $_POST['term_id'];
 		wp_send_json_success( [
-			'max' => fs_price_max( $term_id ),
-			'min' => fs_price_min( $term_id ),
+			'max' => FS_Products::get_max_price_in_category( $term_id ),
+			'min' => FS_Products::get_min_price_in_category( $term_id ),
 		] );
 	}
 } 
