@@ -134,7 +134,7 @@ function fs_form_header( $args = array(), $ajax_action ) {
 		'method'       => 'POST',
 		'autocomplete' => 'off',
 		'class'        => 'fs-form'
-	),['echo'] );
+	), [ 'echo' ] );
 	$form_header = '<form ' . $attr . '>';
 	$form_header .= \FS\FS_Config::nonce_field();
 	$form_header .= '<input type="hidden" name="action" value="' . $ajax_action . '">';
@@ -208,9 +208,11 @@ function fs_dropdown_cats_multiple( $output, $r ) {
 add_filter( 'fs_price_filter', 'fs_price_filter_callback', 10, 2 );
 function fs_price_filter_callback( $price, $post_id ) {
 	$price = floatval( str_replace( ',', '.', $price ) );
+	
 	if ( fs_option( 'multi_currency_on' ) != 1 ) {
 		return $price;
 	}
+
 
 	global $wpdb;
 	$default_currency_id = fs_option( 'default_currency' ); // id валюты установленной в настройках

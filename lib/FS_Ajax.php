@@ -1282,8 +1282,8 @@ class FS_Ajax {
 
 		if ( ! $variations ) {
 			wp_send_json_success( [
-				'price'     => $price,
-				'old_price' => $old_price,
+				'price'     => apply_filters( 'fs_price_format', $price ),
+				'old_price' => apply_filters( 'fs_price_format', $old_price ),
 			] );
 		}
 
@@ -1292,16 +1292,20 @@ class FS_Ajax {
 			$intersect            = array_intersect( $post_attributes, $variation_attributes );
 
 			if ( count( $intersect ) == count( $post_attributes ) ) {
-				$price     = apply_filters( 'fs_price_filter', $variation['price'], $product_id );
-				$price     = round( floatval( $price ), $use_pennies );
-				$old_price = $variation['sale_price'];
+				$price      = apply_filters( 'fs_price_filter', $variation['price'], $product_id );
+				$price      = round( floatval( $price ), $use_pennies );
+				$sale_price = apply_filters( 'fs_price_filter', (float) $variation['sale_price'], $product_id );
+				if ( $sale_price > 0 && $sale_price < $price ) {
+					$old_price = $price;
+					$price     = $sale_price;
+				}
 				break;
 			}
 		}
 
 		wp_send_json_success( [
-			'price'     => $price,
-			'old_price' => $old_price,
+			'price'     => apply_filters( 'fs_price_format', $price ),
+			'old_price' => $old_price > 0 ? apply_filters( 'fs_price_format', $old_price ) : '',
 		] );
 
 	}

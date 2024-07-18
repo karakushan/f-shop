@@ -121,8 +121,8 @@ function fs_get_price( $product_id = 0 ) {
 	}
 
 	// Если товар вариативный и у первой вариации есть акционная цена, то возвращаем ее
-	if ( $is_variable && isset( $first_variation['action_price'] ) && is_numeric( $first_variation['action_price'] ) ) {
-		$action_price = floatval( $first_variation['action_price'] );
+	if ( $is_variable && isset( $first_variation['sale_price'] ) && is_numeric( $first_variation['sale_price'] ) ) {
+		$action_price = floatval( $first_variation['sale_price'] );
 		if ( $action_price < $price ) {
 			$price = $action_price;
 		}
@@ -3701,7 +3701,6 @@ function fs_before_product_atts() {
 	$product_id           = get_the_ID();
 	$product              = new FS_Product();
 	$variation_attributes = $product->get_all_variation_attributes( $product_id );
-	$variations           = $product->get_product_variations( $product_id );
 	$attributes           = [];
 	array_walk( $variation_attributes, function ( $value, $key ) use ( &$attributes ) {
 		$newKey                = str_replace( '-', '_', $value['slug'] ); // Пример преобразования ключа
@@ -3711,8 +3710,8 @@ function fs_before_product_atts() {
 	echo ' x-data=\'' . json_encode( [
 			'attributes' => $attributes,
 			'count'      => 1,
-			'price'      => apply_filters('fs_price_format', fs_get_price( $product_id )),
-			'old_price'  => apply_filters('fs_price_format', fs_get_base_price( $product_id )),
+			'price'      => apply_filters( 'fs_price_format', fs_get_price( $product_id ) ),
+			'old_price'  => apply_filters( 'fs_price_format', fs_get_base_price( $product_id ) ),
 			'currency'   => fs_currency( $product_id )
 		] ) . ' \'';
 
