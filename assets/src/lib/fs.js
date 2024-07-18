@@ -163,6 +163,10 @@ class FS {
     getMaxMinPrice(term_id) {
         return this.post('fs_get_max_min_price', {term_id: term_id})
     }
+
+    getCategoryBrands(term_id) {
+        return this.post('fs_get_category_brands', {term_id: term_id})
+    }
 }
 
 export default FS;

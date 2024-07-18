@@ -149,6 +149,10 @@ class FS_Ajax {
 			// fs_get_max_min_price
 			add_action( 'wp_ajax_fs_get_max_min_price', array( $this, 'fs_get_max_min_price_callback' ) );
 			add_action( 'wp_ajax_nopriv_fs_get_max_min_price', array( $this, 'fs_get_max_min_price_callback' ) );
+
+			// fs_get_category_brands
+			add_action( 'wp_ajax_fs_get_category_brands', array( $this, 'fs_get_category_brands_callback' ) );
+			add_action( 'wp_ajax_nopriv_fs_get_category_brands', array( $this, 'fs_get_category_brands_callback' ) );
 		}
 	}
 
@@ -1308,5 +1312,12 @@ class FS_Ajax {
 			'max' => FS_Products::get_max_price_in_category( $term_id ),
 			'min' => FS_Products::get_min_price_in_category( $term_id ),
 		] );
+	}
+
+	public function fs_get_category_brands_callback() {
+		$term_id = (int) $_POST['term_id'];
+		$brands  = FS_Products::get_category_brands( $term_id );
+
+		wp_send_json_success( $brands );
 	}
 } 

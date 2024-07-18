@@ -192,7 +192,7 @@ class FS_Taxonomy {
 		if ( $query->is_tax( FS_Config::get_data( 'product_taxonomy' ) )
 		     || $query->is_post_type_archive( FS_Config::get_data( 'post_type' ) ) || is_search() ) {
 
-            // отфильтровываем выключенные для показа товары в админке
+			// отфильтровываем выключенные для показа товары в админке
 //			$meta_query [] = array(
 //				'relation' => 'AND',
 //				'exclude'  => array(
@@ -332,19 +332,20 @@ class FS_Taxonomy {
 			}
 
 			// Фильтрация по производителю
-			if ( isset( $url['brands'] ) && ! empty( $url['brands'] ) && is_array( $url['brands'] ) ) {
+			if ( isset( $url['brands'] ) && ! empty( $url['brands'] ) ) {
+				$brands      = explode( ',', $url['brands'] );
 				$tax_query[] = array(
 					'relation' => 'AND',
 					array(
 						'taxonomy' => FS_Config::get_data( 'brand_taxonomy' ),
 						'field'    => 'id',
-						'terms'    => array_filter( $url['brands'], 'intval' ),
+						'terms'    => array_filter( $brands, 'intval' ),
 						'operator' => 'IN'
 					)
 				);
 			}
-            
-            do_action( 'qm/debug',  );
+
+			do_action( 'qm/debug', );
 
 			//Фильтруем по свойствам (атрибутам)
 			if ( ! empty( $_REQUEST['filter'] ) ) {
@@ -353,7 +354,7 @@ class FS_Taxonomy {
 					array(
 						'taxonomy' => 'product-attributes',
 						'field'    => 'id',
-						'terms'    => explode(',', $_REQUEST['filter'] ),
+						'terms'    => explode( ',', $_REQUEST['filter'] ),
 						'operator' => fs_option( 'fs_product_filter_type', 'AND' )
 					)
 				);
@@ -407,9 +408,11 @@ class FS_Taxonomy {
 
 		$clauses['join'] .= " LEFT JOIN $wpdb->postmeta AS meta ON ({$wpdb->posts}.ID = meta.post_id)";
 
-        $count_currencies = get_terms(['taxonomy' => FS_Config::get_data( 'currencies_taxonomy' ), 'hide_empty' => false]);
+		$count_currencies = get_terms( [ 'taxonomy'   => FS_Config::get_data( 'currencies_taxonomy' ),
+		                                 'hide_empty' => false
+		] );
 
-		if ( ! fs_option( 'multi_currency_on' )  || count( $count_currencies ) == 0 ) {
+		if ( ! fs_option( 'multi_currency_on' ) || count( $count_currencies ) == 0 ) {
 			$clauses['where'] .= $wpdb->prepare( " AND (meta.meta_key = %s AND CAST(meta.meta_value AS SIGNED) BETWEEN %d AND %d)", FS_Config::get_meta( 'price' ), $price_start, $price_end );
 
 			return $clauses;
