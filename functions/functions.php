@@ -1975,7 +1975,7 @@ function fs_discount_percent( $product_id = 0, $format = '-%s%s', $args = array(
 			'class' => 'fs-discount'
 		)
 	);
-	$discount = fs_change_price_percent( $product_id );
+	$discount = fs_change_price_percent( $product_id, 0 );
 
 	if ( $discount > 0 ) {
 		printf( '<span data-fs-element="discount" class="%s">', esc_attr( $args['class'] ) );
