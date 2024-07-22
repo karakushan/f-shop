@@ -17,14 +17,21 @@ class FS {
     }
 
     // Sends a POST request using the fetch method
-    post(action, params = {}) {
+    post(action, params = {}, files = []) {
         let fData = params instanceof FormData ? params : new FormData();
         for (var key in params) {
             fData.append(key, params[key]);
         }
 
+        if (files.length > 0) {
+            for (var i = 0; i < files.length; i++) {
+                fData.append('files[]', files[i]);
+            }
+        }
+
         fData.append('action', action);
         fData.append(this.nonceField, this.nonce);
+
         return fetch(this.ajaxurl, {
             method: 'POST', credentials: 'same-origin', body: fData,
         }).then((r) => r.json());
@@ -166,6 +173,24 @@ class FS {
 
     getCategoryBrands(term_id) {
         return this.post('fs_get_category_brands', {term_id: term_id})
+    }
+
+    getProductComments(post_id, per_page) {
+        return this.post('fs_get_product_comments', {post_id: post_id, 'per_page': per_page})
+    }
+
+    sendProductComment(post_id, comment, files = []) {
+        return this.post('fs_send_product_comment', {
+            post_id: post_id,
+            name: comment.name,
+            email: comment.email,
+            body: comment.body,
+            rating: comment.rating,
+        }, files)
+    }
+
+    commentLikeDislike(comment_id, type = 'like') {
+        return this.post('fs_comment_like_dislike', {comment_id: comment_id, type: type})
     }
 }
 

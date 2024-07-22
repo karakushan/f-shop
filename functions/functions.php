@@ -3533,6 +3533,20 @@ function fs_comment_single( $comment, $args, $depth ) {
 	] );
 }
 
+function fs_list_product_reviews( $product_id = null, $args = [] ) {
+	$product_id = fs_get_product_id( $product_id );
+	$args       = wp_parse_args( $args, [
+		'post_id' => $product_id,
+		'status'  => 'approve',
+	] );
+	$comments   = get_comments( $args );
+	echo fs_frontend_template( 'product/comments', [
+		'vars' => compact( 'comments' )
+	] );
+
+}
+
+
 if ( ! function_exists( 'fs_get_user_ip' ) ) {
 	/**
 	 * Returns the IP address of the current visitor
@@ -3722,5 +3736,7 @@ function fs_before_product_atts() {
 	    }
 	} ))" ';
 }
+
+
 
 
