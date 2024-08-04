@@ -3048,7 +3048,7 @@ function fs_get_payment_methods() {
  */
 function fs_is_label( $label ) {
 	global $post;
-	$product_id = intval( $post->ID );
+	$product_id = $post->ID;
 	$label_show = false;
 	switch ( $label ) {
 		case 'pop':
