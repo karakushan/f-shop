@@ -185,14 +185,14 @@ function fs_product_category_screen_attributes( $group_id, $category_id, $args =
 	$post_args                    = [];
 	$post_args ['posts_per_page'] = - 1;
 	$post_args ['post_type']      = 'product';
-	$post_args['tax_query'][]       = [
+	$post_args['tax_query'][]     = [
 		'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
 		'field'    => 'id',
 		'operator' => 'IN',
 		'terms'    => $category_id
 	];
 	$post_args                    = apply_filters( 'fs_current_screen_attributes_args', $post_args );
-	$posts = get_posts( $post_args );
+	$posts                        = get_posts( $post_args );
 	if ( ! $posts ) {
 		return [];
 	}
@@ -213,6 +213,12 @@ function fs_product_category_screen_attributes( $group_id, $category_id, $args =
 		$attributes      = array_unique( $attributes );
 		$args['include'] = $attributes;
 		$attributes      = get_terms( $args );
+
+		$attributes = array_map( function ( $a ) {
+			$a->name = html_entity_decode( $a->name );
+
+			return $a;
+		}, $attributes );
 	}
 
 

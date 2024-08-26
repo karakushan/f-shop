@@ -248,15 +248,17 @@ class Attribute_Widget extends \WP_Widget {
             x-init="Alpine.store('FS')?.getCategoryAttributes(<?php echo $instance['fs_att_group'] ?>,<?php echo $current_category->term_id ?>)
             .then( (r) =>{ if(r.success===true) {attributes=r.data.attributes;} } )
             .finally(()=> loaded=true);">
-            <div  class="fs-loader-block" :style="{'display':!loaded?'flex':'none'}" style="display:none;">
-                <img src="<?php echo esc_url(FS_PLUGIN_URL) ?>/assets/img/loader-circle.svg" alt="loader">
+            <div class="fs-loader-block" :style="{'display':!loaded?'flex':'none'}" style="display:none;">
+                <img src="<?php echo esc_url( FS_PLUGIN_URL ) ?>/assets/img/loader-circle.svg" alt="loader">
             </div>
-            <div x-data="{checked: () => {
+            <div x-data="{
+            baseUrl: '<?php echo esc_url( fs_is_product_category() ? get_term_link( $current_category ) : fs_get_catalog_link() ) ?>',
+            checked: () => {
                     const params = new URLSearchParams(window.location.search);
                     if(!params.get('filter')) return [];
                     return params.get('filter').split(',');
                 }}" x-init="$watch('checked', (atts) => {
-                 const currentUrl = new URL(window.location.href);
+                 const currentUrl = new URL(baseUrl);
                  currentUrl.searchParams.set('filter',[...new Set(atts)].join(','));
                 window.location.href=currentUrl;
  } )">
@@ -268,7 +270,7 @@ class Attribute_Widget extends \WP_Widget {
                                :value="attribute.term_id"
                                x-model="checked">
                         <label :for="'filter-<?php echo $attr_group->slug ?>-'+attribute.term_id"
-                               x-text="attribute.name"></label>
+                               x-html="attribute.name"></label>
                     </li>
                 </template>
             </div>
