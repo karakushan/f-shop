@@ -996,7 +996,7 @@ class FS_Users {
 		// If the user does not exist, send an error message
 		if ( ! $user ) {
 			wp_send_json_error( [
-				'msg' => __('Unfortunately, a user with such data does not exist on the site','f-shop')
+				'msg' => __( 'Unfortunately, a user with such data does not exist on the site', 'f-shop' )
 			] );
 		} else {
 			// Authenticate the user
@@ -1376,10 +1376,16 @@ class FS_Users {
 	 * Отвечает за создание вкладок личного кабинета и их содержимого
 	 */
 	static function user_cabinet_tabs() {
-		$user = fs_get_current_user();
+		$user         = fs_get_current_user();
+		$wishlist_ids = array_unique( array_values( (array) $_SESSION['fs_wishlist'] ) );
+		$wishlist     = new \WP_Query( [
+			'post_type'      => FS_Config::get_data( 'post_type' ),
+			'post__in'       => count( $wishlist_ids ) ? $wishlist_ids : [ 0 ],
+			'posts_per_page' => - 1
+		] );
 
 		return fs_frontend_template( 'dashboard/index', array(
-			'vars' => compact( 'user' )
+			'vars' => compact( 'user', 'wishlist' )
 		) );
 	}
 

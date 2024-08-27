@@ -2031,10 +2031,9 @@ function fs_get_wishlist( $args = array() ) {
 		'include'     => array_unique( array_values( $_SESSION['fs_wishlist'] ) ),
 		'numberposts' => - 1
 	) );
+    
 
-	$items = get_posts( $args );
-
-	return $items;
+	return get_posts( $args );
 }
 
 /**
