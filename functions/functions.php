@@ -151,7 +151,7 @@ function fs_the_price( $product_id = 0, $wrap = "%s %s", $args = array() ) {
 	$price      = fs_get_price( $product_id );
 	$price      = apply_filters( 'fs_price_format', $price );
 
-	printf( '<span class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', '<span x-text="typeof price!==\'undefined\' ? price : \'' . $price . '\' ">' . esc_attr( $price ) . '</span>', '<span x-text="typeof currency!==\'undefined\' ? currency : \'' . esc_attr( $cur_symb ) . '\'">' . esc_attr( $cur_symb ) . '</span>' );
+	printf( '<span class="' . esc_attr( $args['class'] ) . '">' . $wrap . '</span>', '<span x-text="typeof price===\'number\' ? price : \'' . $price . '\' ">' . esc_attr( $price ) . '</span>', '<span x-text="typeof currency!==\'undefined\' ? currency : \'' . esc_attr( $cur_symb ) . '\'">' . esc_attr( $cur_symb ) . '</span>' );
 }
 
 /**
@@ -2031,7 +2031,7 @@ function fs_get_wishlist( $args = array() ) {
 		'include'     => array_unique( array_values( $_SESSION['fs_wishlist'] ) ),
 		'numberposts' => - 1
 	) );
-    
+
 
 	return get_posts( $args );
 }
