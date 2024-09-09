@@ -1101,21 +1101,11 @@ if ( ! function_exists( 'fs_in_stock' ) ) {
 	 */
 	function fs_in_stock( $product_id = 0 ) {
 
-		$product_id    = fs_get_product_id( $product_id );
-		$product_class = new FS\FS_Product();
-		$variations    = $product_class->get_product_variations( $product_id );
-		$available     = false;
+		$product_id = fs_get_product_id( $product_id );
 
-		if ( count( $variations ) ) {
-			$available = true;
-		} else {
-			$availability = get_post_meta( $product_id, FS_Config::get_meta( 'remaining_amount' ), true );
-			if ( $availability == '' || $availability > 0 ) {
-				$available = true;
-			}
-		}
+		$stock = get_post_meta( $product_id, FS_Config::get_meta( 'remaining_amount' ), true );
 
-		return $available;
+		return ( is_numeric( $stock ) && intval( $stock ) > 0 ) || $stock == '';
 	}
 }
 
