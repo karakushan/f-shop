@@ -84,8 +84,12 @@ class FS_Ajax {
 			add_action( 'wp_ajax_nopriv_fs_search_product_admin', array( $this, 'search_product_admin' ) );
 
 			// Add new order and send e-mail
-			add_action( 'wp_ajax_order_send', array( $this, 'order_send_ajax' ) );
-			add_action( 'wp_ajax_nopriv_order_send', array( $this, 'order_send_ajax' ) );
+			add_action( 'wp_ajax_order_send', array( $this, 'fs_order_create' ) );
+			add_action( 'wp_ajax_nopriv_order_send', array( $this, 'fs_order_create' ) );
+
+			// fs_clone_order
+			add_action( 'wp_ajax_fs_clone_order', array( $this, 'fs_clone_order' ) );
+			add_action( 'wp_ajax_nopriv_fs_clone_order', array( $this, 'fs_clone_order' ) );
 
 			// Notifies of the appearance of goods in stock
 			add_action( 'wp_ajax_fs_report_availability', array( $this, 'report_availability' ) );
@@ -646,10 +650,9 @@ class FS_Ajax {
 			$_SESSION['fs_comparison_list'] = array_unshift( $_SESSION['fs_comparison_list'], (int) $_POST['product_id'] );
 		} else {
 			$_SESSION['fs_comparison_list'][] = (int) $_POST['product_id'];
-
 		}
 
-// Устанавливаем Cookie до конца сессии:
+		// Устанавливаем Cookie до конца сессии:
 		setcookie( "fs_comparison_list", serialize( $_SESSION['fs_comparison_list'] ), 30 * DAYS_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN );
 		echo json_encode( array(
 			'status' => true
@@ -700,7 +703,7 @@ class FS_Ajax {
 	/**
 	 * Ajax order creation
 	 */
-	function order_send_ajax() {
+	function fs_order_create() {
 		// Checking if the request comes from our site
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
@@ -1514,5 +1517,32 @@ class FS_Ajax {
 			'likes'    => $likes,
 			'dislikes' => $dislikes
 		] );
+	}
+
+	/**
+	 *  Клонирование заказа
+	 *
+	 * @return void
+	 */
+	function fs_clone_order(): void {
+		if ( ! FS_Config::verify_nonce() ) {
+			wp_send_json_error( [ 'msg' => __( 'Security check failed', 'f-shop' ) ] );
+		}
+
+		if ( ! isset( $_POST['order_id'] ) ) {
+			wp_send_json_error( [ 'msg' => __( 'Order ID not found', 'f-shop' ) ] );
+		}
+
+		$new_order_id = FS_Orders::clone_order( $_POST['order_id'] );
+
+		if ( is_wp_error( $new_order_id ) ) {
+			wp_send_json_error( [ 'msg' => $new_order_id->get_error_message() ] );
+		}
+
+		$redirect_link = fs_option( 'page_success' ) ? add_query_arg( [
+			'order_id' => $new_order_id
+		], get_permalink( fs_option( 'page_success' ) ) ) : '';
+
+		wp_send_json_success( [ 'order_id' => $new_order_id, 'redirect' => $redirect_link ] );
 	}
 } 

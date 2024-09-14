@@ -385,7 +385,7 @@ Good luck!', 'f-shop' );
 
 	function true_status_display( $statuses ) {
 		// check if screen is order list
-        global $current_screen;
+		global $current_screen;
 		if ( ! is_object( $current_screen ) || $current_screen->id != 'edit-shop_order' ) {
 			return $statuses;
 		} // end if
@@ -692,8 +692,8 @@ Good luck!', 'f-shop' );
 			return;
 		}
 		global $wpdb;
-		$order            = new FS_Order( $post->ID );
-        do_action( 'qm/debug', $order );
+		$order = new FS_Order( $post->ID );
+		do_action( 'qm/debug', $order );
 		$action           = $screen->action ? $screen->action : ( isset( $_GET['action'] ) ? $_GET['action'] : 'edit' );
 		$shipping_methods = get_terms( [
 			'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
@@ -708,5 +708,55 @@ Good luck!', 'f-shop' );
 
 	}
 
+	/**
+	 *  Клонирование заказа
+	 *
+	 * @param $order_id
+	 *
+	 * @return \WP_Error|int
+	 */
+	public static function clone_order( $order_id ) {
 
+		$post = get_post( $order_id );
+		if ( ! $post ) {
+			return new \WP_Error( 'not_found', 'Order not found' );
+		}
+
+
+		$new_order_id = wp_insert_post( array(
+			'post_title'  => $post->post_title,
+			'post_status' => 'new',
+			'post_type'   => FS_Config::get_data( 'post_type_orders' ),
+			'post_author' => $post->post_author
+		) );
+
+		global $wpdb;
+
+		// clone all meta fields to new order
+		$meta_fields = $wpdb->get_results( "SELECT * FROM $wpdb->postmeta WHERE post_id = $order_id" );
+		foreach ( $meta_fields as $meta_field ) {
+			$wpdb->insert( $wpdb->postmeta, [
+				'meta_key'   => $meta_field->meta_key,
+				'meta_value' => $meta_field->meta_value,
+				'meta_id'    => null,
+				'post_id'    => $new_order_id
+			] );
+		}
+
+		$user = get_post_meta( $new_order_id, '_user', true );
+
+		/* обновляем название заказа для админки */
+		wp_update_post( array(
+				'ID'         => $new_order_id,
+				'post_title' => sprintf(
+					__( 'Order #%d from %s %s (%s)', 'f-shop' ),
+					$new_order_id, $user['fs_first_name'], $user['fs_last_name'], date( 'd.m.y H:i', time() ) )
+			)
+		);
+
+
+		do_action( 'fs_create_order', $new_order_id );
+
+		return $new_order_id;
+	}
 }

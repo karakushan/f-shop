@@ -135,6 +135,10 @@ class FS {
             })
     }
 
+    cloneOrder(orderId) {
+        return this.post('fs_clone_order', {order_id: orderId})
+    }
+
     addToCart(productId, count = 1) {
         return this.cart.push({ID: productId, count: count})
     }
