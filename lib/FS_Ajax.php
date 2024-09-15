@@ -702,6 +702,7 @@ class FS_Ajax {
 
 	/**
 	 * Ajax order creation
+	 * @throws \Exception
 	 */
 	function fs_order_create() {
 		// Checking if the request comes from our site
@@ -934,27 +935,20 @@ class FS_Ajax {
 				$user_email_message         = $fs_template->get_from_string( $create_order_mail_template, $mail_data );
 			}
 
-			// Проверяем включен ли тестовый режим
-			if ( fs_option( 'fs_test_mode' ) ) {
-				//Отсылаем письмо с данными заказа заказчику
-				$admin_email = get_bloginfo( 'admin_email' );
-				FS_Form::send_email( $admin_email, $customer_mail_subject, $user_email_message );
+			$notification = new FS_Notification();
 
-				//Отсылаем письмо с данными заказа на почту указанную в настроках для оповещения о заказах
-				$admin_mail_subject = fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
-				$admin_message      = $fs_template->get( 'mail/admin-create-order', $mail_data );
-				FS_Form::send_email( $admin_email, $admin_mail_subject, $admin_message );
-			} else {
-				if ( $sanitize_field['fs_email'] ) {
-					//Отсылаем письмо с данными заказа заказчику
-					FS_Form::send_email( $sanitize_field['fs_email'], $customer_mail_subject, $user_email_message );
-				}
+			// Отсылаем письмо с данными заказа заказчику
+			$notification->set_recipients( [ $sanitize_field['fs_email'] ] );
+			$notification->set_subject( $customer_mail_subject );
+			$notification->set_template( 'mail/user-create-order', $mail_data );
+			$notification->send();
 
-				//Отсылаем письмо с данными заказа на почту указанную в настроках для оповещения о заказах
-				$admin_mail_subject = fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
-				$admin_message      = $fs_template->get( 'mail/admin-create-order', $mail_data );
-				FS_Form::send_email( fs_option( 'manager_email', get_option( 'admin_email' ) ), $admin_mail_subject, $admin_message );
-			}
+			//Отсылаем письмо с данными заказа на почту указанную в настройках для оповещения о заказах
+			$notification->set_recipients( [ fs_option( 'manager_email', get_option( 'admin_email' ) ) ] );
+			$notification->set_subject( fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ) );
+			$notification->set_message( $user_email_message );
+			$notification->set_template( 'mail/admin-create-order', $mail_data );
+			$notification->send();
 
 			/* обновляем название заказа для админки */
 			wp_update_post( array(
@@ -1034,7 +1028,7 @@ class FS_Ajax {
 		exit;
 	}
 
-//  возвражает список постов определёного термина
+//  возвращает список постов определённого термина
 	public function get_taxonomy_posts() {
 		$term_id = (int) $_POST['term_id'];
 		$post_id = (int) $_POST['post'];

@@ -1,14 +1,19 @@
 {
   "name": "karak/f-shop",
   "require": {
-    "twig/twig": "^3.0",
     "htmlburger/carbon-fields": "^3.6"
   },
   "autoload": {
     "psr-4": {
-      "FS\\": ["lib"],
-      "FS\\Widget\\": ["lib/widgets"],
-      "FS\\Integrations\\": ["lib/integrations"]
+      "FS\\": [
+        "lib"
+      ],
+      "FS\\Widget\\": [
+        "lib/widgets"
+      ],
+      "FS\\Integrations\\": [
+        "lib/integrations"
+      ]
     },
     "files": [
       "functions/functions.php",
