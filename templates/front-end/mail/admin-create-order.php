@@ -4,7 +4,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>{{ order_title }}</title>
+    <title><?= /** @var string $order_title */
+		$order_title ?></title>
 
     <style type="text/css">
         /* Take care of image borders and formatting, client hacks */
@@ -326,17 +327,23 @@
                                     <tr>
                                         <td class="pull-left mobile-header-padding-left"
                                             style="vertical-align: middle;">
-                                            <a href="{{ home_url }}"><img width="137" height="47" src="{{ mail_logo }}"
-                                                                          alt="{{ site_name }}"></a>
+                                            <a href="<?= /** @var string $home_url */
+											$home_url ?>">
+                                                <img width="137" height="47"
+                                                     src="<?= /** @var string $mail_logo */
+												     $mail_logo ?>"
+                                                     alt="<?= /** @var string $site_name */
+												     $site_name ?>"></a>
                                         </td>
                                         <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
-                                            {% for social in social_links %}
-                                                <a href="{{ social_links.url }}">
+											<?php /** @var array $social_links */
+											foreach ( $social_links as $social_link ): ?>
+                                                <a href="<?= $social_link['url'] ?>">
                                                     <img width="44" height="47"
-                                                         src="{{ social_links.img }}"
-                                                         alt="{{ social_links.name }}"/>
+                                                         src="<?= $social_link['img'] ?>"
+                                                         alt="<?= $social_link['name'] ?>"/>
                                                 </a>
-                                            {% endfor %}
+											<?php endforeach; ?>
                                         </td>
                                     </tr>
                                 </table>
@@ -357,31 +364,41 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td class="header-lg">
-                            {{ __('Congratulations! A new order has appeared on your site.','f-shop') }}
+							<?= __( 'Congratulations! A new order has appeared on your site.', 'f-shop' ) ?>
                         </td>
                     </tr>
                     <tr>
                         <td class="free-text">
-                            {{ __('On your site "%s" user %s created a new order #%d. Please contact the customer for this data:','f-shop')|format(site_name,client_first_name,order_id) }} <br/>
-                            {% if client_phone %}<a href="tel:{{ client_phone|clean_number }}">{{ client_phone }}</a>
-                                <br/>{% endif %}
-                            {% if client_email %} <a href="mailto:{{ client_email }}">{{ client_email }}</a>{% endif %}
+							<?= /** @var string $client_first_name */
+							/** @var string $order_id */
+							sprintf( __( 'On your site "%s" user %s created a new order #%d. Please contact the customer for this data:', 'f-shop' ), $site_name, $client_first_name, $order_id ) ?>
+                            <br/>
+							<?php if ( ! empty( $client_phone ) && ! empty( $clean_number ) ): ?>
+                                <a
+                                        href="tel:<?= $clean_number ?>"><?= $client_phone ?></a>
+                                <br/>
+							<?php endif ?>
+							<?php if ( ! empty( $client_email ) ): ?>
+                                <a href="mailto:<?= $client_email ?>"><?= $client_email ?></a>
+							<?php endif ?>
                         </td>
                     </tr>
                     <tr>
                         <td class="button">
                             <div><!--[if mso]>
                                 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
-                                             xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ order_edit_url }}"
+                                             xmlns:w="urn:schemas-microsoft-com:office:word" href="<?php
+								/** @var string $order_edit_url */
+								echo $order_edit_url ?>"
                                              style="height:45px;v-text-anchor:middle;width:155px;" arcsize="15%"
                                              strokecolor="#ffffff" fillcolor="#ff6f6f">
                                     <w:anchorlock/>
                                     <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">
-                                        {{ __('View order','f-shop') }}
+                                        <?= __( 'View order', 'f-shop' ) ?>
                                     </center>
                                 </v:roundrect>
-                                <![endif]--><a href="{{ order_edit_url }}"
-                                               style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">{{ __('View order') }}</a>
+                                <![endif]--><a href="<?= $order_edit_url ?>"
+                                               style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;"><?= __( 'View order', 'f-shop' ) ?></a>
                             </div>
                         </td>
                     </tr>
@@ -397,18 +414,22 @@
                                                            style="border-collapse:separate !important;">
                                                         <tr>
                                                             <td class="mini-block">
-                                                                <span class="header-sm">{{ __('Delivery') }}</span><br/>
-                                                                {% if delivery_method %} {{ __("Delivery method") }}:  {{ delivery_method }}{% endif %}
-                                                                {% if delivery_number %}, {{ delivery_number }}{% endif %}<br/>
-                                                                {% if client_city %} {{ __('City') }}: {{ client_city }}
-                                                                    <br/>{% endif %}
-                                                                {% if client_address %} {{ __("Address") }}: {{ client_address }}
-                                                                    <br/>{% endif %}
-                                                                {% if client_first_name %} {{ __("First Name") }} {{ __("Last name") }}: {{ client_first_name }} {{ client_last_name }}
-                                                                    <br/>{% endif %}
-                                                                {% if client_phone %} {{ __("Phone number") }}: {{ client_phone }} {% endif %}
-                                                                <br/>
+                                                                <span class="header-sm"><?= __( 'Delivery', 'f-shop' ) ?></span><br/>
+																<?= ! empty( $delivery_method ) ? __( "Delivery method", 'f-shop' ) . ': ' . $delivery_method . '<br>' : '' ?>
 
+																<?= ! empty( $delivery_number ) ? __( "Delivery number", 'f-shop' ) . ': ' . $delivery_number . '<br>' : '' ?>
+
+																<?= ! empty( $client_city ) ? __( "City", 'f-shop' ) . ': ' . $client_city . '<br>' : '' ?>
+
+																<?= ! empty( $client_address ) ? __( "Address", 'f-shop' ) . ': ' . $client_address . '<br>' : '' ?>
+
+																<?= ! empty( $client_first_name ) ? __( "First Name", 'f-shop' ) . ': ' . $client_first_name . '<br>' : '' ?>
+
+																<?= ! empty( $client_last_name ) ? __( "Last name", 'f-shop' ) . ': ' . $client_last_name . '<br>' : '' ?>
+
+																<?= ! empty( $client_email ) ? __( "Email", 'f-shop' ) . ': ' . $client_email . '<br>' : '' ?>
+
+																<?= ! empty( $client_phone ) ? __( "Phone number", 'f-shop' ) . ': ' . $client_phone . '<br>' : '' ?>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -424,10 +445,12 @@
                                                            style="border-collapse:separate !important;">
                                                         <tr>
                                                             <td class="mini-block">
-                                                                <span class="header-sm">{{ __('Payment') }}</span><br/>
-                                                                {{ payment_method }} <br/> <br/>
-                                                                <span class="header-sm">{{ __('Date Ordered') }}</span><br/>
-                                                                {{ order_date }}
+                                                                <span class="header-sm"><?= __( 'Payment', 'f-shop' ) ?></span><br/>
+																<?php /** @var string $payment_method */
+																echo $payment_method ?> <br/> <br/>
+                                                                <span class="header-sm"><?= __( 'Date Ordered', 'f-shop' ) ?></span><br/>
+																<?= /** @var string $order_date */
+																$order_date ?>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -453,45 +476,47 @@
                             <table cellspacing="0" cellpadding="0" width="100%">
                                 <tr>
                                     <td class="title-dark" width="300">
-                                        {{ __('Item') }}
+										<?= __( 'Item', 'f-shop' ) ?>
                                     </td>
                                     <td class="title-dark" width="163">
-                                        {{ __('Qty') }}
+										<?= __( 'Qty', 'f-shop' ) ?>
                                     </td>
                                     <td class="title-dark" width="97">
-                                        {{ __('Total') }}
+										<?= __( 'Total', 'f-shop' ) ?>
                                     </td>
                                 </tr>
 
-                                {% for item in cart_items %}
+								<?php /** @var array $cart_items */
+								foreach ( $cart_items as $item ): ?>
                                     <tr>
                                         <td class="item-col item">
                                             <table cellspacing="0" cellpadding="0" width="100%">
                                                 <tr>
                                                     <td class="mobile-hide-img">
-                                                        <a href="{{ item.link }}" target="_blank">
-                                                            <img width="110" src="{{ item.thumbnail_url }}"
-                                                                 alt="{{ item.name }}">
+                                                        <a href="<?= $item['link'] ?>" target="_blank">
+                                                            <img width="110" src="<?= $item['thumbnail_url'] ?>"
+                                                                 alt="<?= $item['name'] ?>">
                                                         </a>
                                                     </td>
                                                     <td class="product">
-                                                        <a href="{{ item.link }}" target="_blank" style="color: #4d4d4d; font-weight:bold;">{{ item.name|html_entity_decode }}</a>
+                                                        <a href="<?= $item['link'] ?>" target="_blank"
+                                                           style="color: #4d4d4d; font-weight:bold;"><?= $item['name'] ?></a>
                                                         <br/>
-                                                        {% for attribute in item.attr %}
-                                                            {{ attribute.parent_name }}: {{ attribute.name }}  <br/>
-                                                        {% endfor %}
+														<?php foreach ( $item['attr'] as $attribute ) {
+															echo $attribute['parent_name'] . ' : ' . $attribute['name'] . '<br/>';
+														} ?>
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td class="item-col quantity">
-                                            {{ item.qty }}
+											<?= $item['qty'] ?>
                                         </td>
                                         <td class="item-col">
-                                            {{ item.all_price|raw }} {{ item.currency }}
+											<?= $item['all_price'] ?><?= $item['currency'] ?>
                                         </td>
                                     </tr>
-                                {% endfor %}
+								<?php endforeach; ?>
 
                                 <tr>
                                     <td class="item-col item mobile-row-padding"></td>
@@ -499,26 +524,30 @@
                                     <td class="item-col price"></td>
                                 </tr>
 
-
                                 <tr>
                                     <td class="item-col item">
                                     </td>
                                     <td class="item-col quantity"
                                         style="text-align:right; padding-right: 10px; border-top: 1px solid #cccccc;">
-                                        <span class="total-space">{{ __('Cost of goods') }}</span> <br/>
-                                        <span class="total-space">{{ __('Cost of delivery') }}</span> <br/>
-                                        <span class="total-space">{{ __('Discount') }}</span> <br/>
-                                        <span class="total-space">{{ __('Packing') }}</span> <br/>
+                                        <span class="total-space"><?= __( 'Cost of goods', 'f-shop' ) ?></span> <br/>
+                                        <span class="total-space"><?= __( 'Cost of delivery', 'f-shop' ) ?></span> <br/>
+                                        <span class="total-space"><?= __( 'Discount', 'f-shop' ) ?></span> <br/>
+                                        <span class="total-space"><?= __( 'Packing', 'f-shop' ) ?></span> <br/>
                                         <span class="total-space"
-                                              style="font-weight: bold; color: #4d4d4d">{{ __('Total') }}</span>
+                                              style="font-weight: bold; color: #4d4d4d"><?= __( 'Total', 'f-shop' ) ?></span>
                                     </td>
                                     <td class="item-col price" style="text-align: left; border-top: 1px solid #cccccc;">
-                                        <span class="total-space">{{ products_cost }}</span> <br/>
-                                        <span class="total-space">{{ delivery_cost }}</span> <br/>
-                                        <span class="total-space">{{ cart_discount }}</span> <br/>
-                                        <span class="total-space">{{ packing_cost }}</span> <br/>
+	                                    <span class="total-space"><?= /** @var string $products_cost */
+		                                    $products_cost ?></span> <br/>
+                                        <span class="total-space"><?= /** @var string $delivery_cost */
+											$delivery_cost ?></span> <br/>
+                                        <span class="total-space"><?= /** @var string $cart_discount */
+											$cart_discount ?></span> <br/>
+                                        <span class="total-space"><?= /** @var string $packing_cost */
+											$packing_cost ?></span> <br/>
                                         <span class="total-space"
-                                              style="font-weight:bold; color: #4d4d4d">{{ cart_amount }}</span>
+                                              style="font-weight:bold; color: #4d4d4d"><?= /** @var string $cart_amount */
+											$cart_amount ?></span>
                                     </td>
                                 </tr>
                             </table>
@@ -534,8 +563,9 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td style="padding: 25px 0 25px">
-                            {{ __('The online store works for','f-shop') }} <strong><a href="https://f-shop.top/"
-                                                                    target="_blank">F-SHOP</a></strong>
+							<?= __( 'The online store works for', 'f-shop' ) ?> <strong><a
+                                        href="https://f-shop.top/"
+                                        target="_blank">F-SHOP</a></strong>
                         </td>
                     </tr>
                 </table>
@@ -543,6 +573,5 @@
         </td>
     </tr>
 </table>
-</div>
 </body>
 </html>

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-09-15 14:03+0000\n"
+"PO-Revision-Date: 2024-09-15 13:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -187,8 +187,6 @@ msgstr "Дополнительно"
 
 #: lib/FS_Config.php:78 lib/FS_Customers_List.php:169 lib/FS_Users.php:518
 #: lib/FS_Users.php:522 lib/FS_Users.php:644 lib/FS_Users.php:647
-#: templates/front-end/mail/user-create-order.php:424
-#: templates/front-end/mail/admin-create-order.php:424
 msgid "Address"
 msgstr "Адрес"
 
@@ -512,8 +510,6 @@ msgstr "Выберите способ доставки"
 #: lib/FS_Customers_List.php:247 lib/FS_Users.php:529 lib/FS_Users.php:533
 #: lib/FS_Users.php:597 lib/FS_Users.php:600 functions/actions.php:69
 #: functions/actions.php:69 templates/front-end/order/last-order-info.php:27
-#: templates/front-end/mail/user-create-order.php:422
-#: templates/front-end/mail/admin-create-order.php:422
 #: templates/front-end/shortcode/fs-order-info.php:64
 #: templates/back-end/metabox/order/add.php:47
 #: templates/back-end/metabox/order/show.php:28
@@ -610,13 +606,7 @@ msgstr "Стоимость"
 msgid "Cost in base currency"
 msgstr "Стоимость в базвовой валюте"
 
-#: templates/front-end/mail/user-create-order.php:533
-#: templates/front-end/mail/admin-create-order.php:533
-msgid "Cost of delivery"
-msgstr ""
-
-#: lib/FS_Init.php:263 templates/front-end/mail/user-create-order.php:532
-#: templates/front-end/mail/admin-create-order.php:532
+#: lib/FS_Init.php:263
 msgid "Cost of goods"
 msgstr "Стоимость товаров"
 
@@ -681,11 +671,6 @@ msgstr "Дата родждения"
 msgid "Date of purchase"
 msgstr "Дата покупки"
 
-#: templates/front-end/mail/user-create-order.php:451
-#: templates/front-end/mail/admin-create-order.php:451
-msgid "Date Ordered"
-msgstr ""
-
 #: lib/FS_Settings.php:736
 msgid "Default currency"
 msgstr "Валюта по умолчанию"
@@ -723,9 +708,7 @@ msgstr "Удалить аккаунт"
 msgid "Delivered"
 msgstr "Доставлен"
 
-#: lib/FS_Init.php:265 templates/front-end/mail/user-create-order.php:417
-#: templates/front-end/mail/admin-create-order.php:417
-#: templates/front-end/dashboard/orders.php:56
+#: lib/FS_Init.php:265 templates/front-end/dashboard/orders.php:56
 msgid "Delivery"
 msgstr "Доставка"
 
@@ -736,9 +719,7 @@ msgstr "Доставка"
 msgid "Delivery address"
 msgstr "Адрес доставки"
 
-#: lib/FS_Taxonomy.php:890 templates/front-end/mail/user-create-order.php:418
-#: templates/front-end/mail/admin-create-order.php:418
-#: templates/back-end/metabox/order/add.php:52
+#: lib/FS_Taxonomy.php:890 templates/back-end/metabox/order/add.php:52
 #: templates/back-end/metabox/order/show.php:32
 #: templates/back-end/metabox/order/edit.php:137
 msgid "Delivery method"
@@ -747,11 +728,6 @@ msgstr "Способ доставки"
 #: lib/FS_Taxonomy.php:887 lib/FS_Taxonomy.php:889 lib/FS_Users.php:688
 msgid "Delivery methods"
 msgstr "Способы доставки"
-
-#: templates/front-end/mail/user-create-order.php:420
-#: templates/front-end/mail/admin-create-order.php:420
-msgid "Delivery number"
-msgstr ""
 
 #: templates/back-end/metabox/order/show.php:36
 msgid "Delivery service address"
@@ -807,8 +783,6 @@ msgid "Disabled"
 msgstr "Выключено"
 
 #: lib/FS_Init.php:266 lib/FS_Taxonomy.php:982
-#: templates/front-end/mail/user-create-order.php:534
-#: templates/front-end/mail/admin-create-order.php:534
 msgid "Discount"
 msgstr "Скидка"
 
@@ -911,8 +885,6 @@ msgstr "Изменить профиль"
 #: actions.php:65 functions/actions.php:65
 #: templates/front-end/order/last-order-info.php:19
 #: templates/front-end/auth/register.php:7
-#: templates/front-end/mail/user-create-order.php:430
-#: templates/front-end/mail/admin-create-order.php:430
 #: templates/front-end/product/comments.php:150
 msgid "Email"
 msgstr "E-mail"
@@ -1063,8 +1035,6 @@ msgid "Find"
 msgstr "Искать"
 
 #: lib/FS_Customers_List.php:249 templates/front-end/order/quick-order.php:2
-#: templates/front-end/mail/user-create-order.php:426
-#: templates/front-end/mail/admin-create-order.php:426
 #: templates/front-end/shortcode/fs-order-info.php:48
 msgid "First Name"
 msgstr "Имя"
@@ -1331,11 +1301,6 @@ msgstr ""
 msgid "It looks like your site has not been visited yet."
 msgstr "Похоже, ваш сайт еще не посещался."
 
-#: templates/front-end/mail/user-create-order.php:479
-#: templates/front-end/mail/admin-create-order.php:479
-msgid "Item"
-msgstr ""
-
 #: lib/FS_Init.php:168 lib/FS_Init.php:171
 msgid "Item &laquo;%product%&raquo; successfully added to cart."
 msgstr "Товар &laquo;%product%&raquo; успешно добавлен в корзину."
@@ -1383,8 +1348,6 @@ msgstr "Фамилия"
 #: actions.php:64 lib/FS_Customers_List.php:164 lib/FS_Users.php:436
 #: lib/FS_Users.php:440 lib/FS_Users.php:483 lib/FS_Users.php:487
 #: functions/actions.php:64 functions/actions.php:64
-#: templates/front-end/mail/user-create-order.php:428
-#: templates/front-end/mail/admin-create-order.php:428
 #: templates/front-end/shortcode/fs-order-info.php:52
 #: templates/back-end/metabox/order/add.php:32
 #: templates/back-end/metabox/order/show.php:16
@@ -1751,11 +1714,6 @@ msgstr "Другой адрес доставки"
 msgid "Packaging"
 msgstr "Упаковка"
 
-#: templates/front-end/mail/user-create-order.php:535
-#: templates/front-end/mail/admin-create-order.php:535
-msgid "Packing"
-msgstr ""
-
 #: lib/FS_Settings.php:362
 msgid "Packing cost"
 msgstr "Стоимость упаковки"
@@ -1799,8 +1757,6 @@ msgstr ""
 msgid "pay now"
 msgstr "заплатить сейчас"
 
-#: templates/front-end/mail/user-create-order.php:448
-#: templates/front-end/mail/admin-create-order.php:448
 #: templates/front-end/dashboard/orders.php:65
 msgid "Payment"
 msgstr "Оплата"
@@ -1856,8 +1812,6 @@ msgstr "Телефон"
 
 #: lib/FS_Config.php:72 lib/FS_Customers_List.php:243 lib/FS_Users.php:573
 #: lib/FS_Users.php:577 templates/front-end/order/last-order-info.php:23
-#: templates/front-end/mail/user-create-order.php:432
-#: templates/front-end/mail/admin-create-order.php:432
 #: templates/front-end/shortcode/fs-order-info.php:60
 #: templates/back-end/metabox/order/add.php:37
 #: templates/back-end/metabox/order/show.php:20
@@ -2037,8 +1991,6 @@ msgstr "Приобретенные товары"
 msgid "Purchased items"
 msgstr "Купленные товары"
 
-#: templates/front-end/mail/user-create-order.php:482
-#: templates/front-end/mail/admin-create-order.php:482
 #: templates/front-end/shortcode/order-detail.php:18
 #: templates/front-end/dashboard/orders.php:33
 msgid "Qty"
@@ -2700,13 +2652,6 @@ msgstr "В каталог"
 msgid "To wish list"
 msgstr "В список желаний"
 
-#: templates/front-end/mail/user-create-order.php:485
-#: templates/front-end/mail/user-create-order.php:537
-#: templates/front-end/mail/admin-create-order.php:485
-#: templates/front-end/mail/admin-create-order.php:537
-msgid "Total"
-msgstr ""
-
 #: templates/front-end/shortcode/fs-order-info.php:38
 #: templates/front-end/shortcode/list-orders.php:11
 msgid "Total Cost"
@@ -2859,9 +2804,7 @@ msgid "Vendor code"
 msgstr "Артикул"
 
 #: templates/front-end/mail/user-create-order.php:397
-#: templates/front-end/mail/user-create-order.php:401
 #: templates/front-end/mail/admin-create-order.php:397
-#: templates/front-end/mail/admin-create-order.php:401
 msgid "View order"
 msgstr "Смотреть заказ"
 

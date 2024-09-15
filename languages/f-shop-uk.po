@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2024-09-13 13:53+0000\n"
+"PO-Revision-Date: 2024-09-15 14:08+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -146,9 +146,6 @@ msgstr "Додати характеристику/групу характери�
 msgid "Add tax"
 msgstr "Додати податок"
 
-msgid "Add to wishlist"
-msgstr "Додати до списку бажань"
-
 #: templates/back-end/metabox/up-sell.php:3
 msgid "Add up-sell products"
 msgstr "Додати ар-сейл товар"
@@ -180,7 +177,8 @@ msgstr "Додатково"
 
 #: lib/FS_Config.php:78 lib/FS_Customers_List.php:169 lib/FS_Users.php:518
 #: lib/FS_Users.php:522 lib/FS_Users.php:644 lib/FS_Users.php:647
-#: templates/front-end/mail/user-create-order.twig:408
+#: templates/front-end/mail/user-create-order.php:424
+#: templates/front-end/mail/admin-create-order.php:424
 msgid "Address"
 msgstr "Адреса"
 
@@ -233,7 +231,7 @@ msgid ""
 "An error occurred while removing items from the cart or the cart is empty."
 msgstr "Виникла помилка з видаленням товарів із кошика, або кошик порожній."
 
-#: lib/FS_Ajax.php:541 lib/FS_Ajax.php:549
+#: lib/FS_Ajax.php:545 lib/FS_Ajax.php:553
 msgid ""
 "An unexpected error occurred while attaching the attribute to the product."
 msgstr "Під час приєднання атрибуту до товару виникла  помилка."
@@ -266,19 +264,19 @@ msgstr ""
 msgid "Attribute"
 msgstr "Характеристика"
 
-#: lib/FS_Ajax.php:1223 lib/FS_Ajax.php:1262
+#: lib/FS_Ajax.php:1210 lib/FS_Ajax.php:1249
 msgid "Attribute added"
 msgstr "Атрибут додано"
 
-#: lib/FS_Ajax.php:1273
+#: lib/FS_Ajax.php:1260
 msgid "Attribute ID not found"
 msgstr ""
 
-#: lib/FS_Ajax.php:1202
+#: lib/FS_Ajax.php:1189
 msgid "Attribute removed"
 msgstr "Атрибут видалено"
 
-#: lib/FS_Ajax.php:545
+#: lib/FS_Ajax.php:549
 msgid "Attribute successfully attached to product"
 msgstr "Атрибут успішно додано до товару"
 
@@ -504,11 +502,12 @@ msgstr "Виберіть спосіб доставки"
 #: lib/FS_Customers_List.php:247 lib/FS_Users.php:529 lib/FS_Users.php:533
 #: lib/FS_Users.php:597 lib/FS_Users.php:600 functions/actions.php:69
 #: functions/actions.php:69 templates/front-end/order/last-order-info.php:27
+#: templates/front-end/mail/user-create-order.php:422
+#: templates/front-end/mail/admin-create-order.php:422
 #: templates/front-end/shortcode/fs-order-info.php:64
 #: templates/back-end/metabox/order/add.php:47
 #: templates/back-end/metabox/order/show.php:28
 #: templates/back-end/metabox/order/edit.php:129
-#: templates/front-end/mail/user-create-order.twig:406
 msgid "City"
 msgstr "Місто"
 
@@ -533,11 +532,11 @@ msgstr "колір"
 msgid "Color value"
 msgstr "Значення кольору"
 
-#: lib/FS_Ajax.php:1496
+#: lib/FS_Ajax.php:1483
 msgid "Comment ID not found"
 msgstr ""
 
-#: lib/FS_Ajax.php:1405
+#: lib/FS_Ajax.php:1392
 msgid "Comment is required"
 msgstr ""
 
@@ -555,7 +554,8 @@ msgstr "Коментар до замовлення"
 msgid "Confirm password"
 msgstr "Підтвердіть пароль"
 
-#: templates/front-end/mail/admin-create-order.twig:360
+#: templates/front-end/mail/user-create-order.php:367
+#: templates/front-end/mail/admin-create-order.php:367
 msgid "Congratulations! A new order has appeared on your site."
 msgstr "Вітаємо. На Вашому сайті з'явилося нове замовлення."
 
@@ -600,11 +600,13 @@ msgstr "Вартість"
 msgid "Cost in base currency"
 msgstr "Вартість в базовій валюті"
 
-#: templates/front-end/mail/user-create-order.twig:512
+#: templates/front-end/mail/user-create-order.php:533
+#: templates/front-end/mail/admin-create-order.php:533
 msgid "Cost of delivery"
 msgstr "Вартість доставки"
 
-#: lib/FS_Init.php:263 templates/front-end/mail/user-create-order.twig:511
+#: lib/FS_Init.php:263 templates/front-end/mail/user-create-order.php:532
+#: templates/front-end/mail/admin-create-order.php:532
 msgid "Cost of goods"
 msgstr "Вартість товару"
 
@@ -669,7 +671,8 @@ msgstr "Дата народження"
 msgid "Date of purchase"
 msgstr "Дата покупки"
 
-#: templates/front-end/mail/user-create-order.twig:432
+#: templates/front-end/mail/user-create-order.php:451
+#: templates/front-end/mail/admin-create-order.php:451
 msgid "Date Ordered"
 msgstr "Дата замовлення"
 
@@ -710,8 +713,9 @@ msgstr "Видалити акаунт"
 msgid "Delivered"
 msgstr "Доставлено"
 
-#: lib/FS_Init.php:265 templates/front-end/dashboard/orders.php:56
-#: templates/front-end/mail/user-create-order.twig:402
+#: lib/FS_Init.php:265 templates/front-end/mail/user-create-order.php:417
+#: templates/front-end/mail/admin-create-order.php:417
+#: templates/front-end/dashboard/orders.php:56
 msgid "Delivery"
 msgstr "Доставка"
 
@@ -722,16 +726,22 @@ msgstr "Доставка"
 msgid "Delivery address"
 msgstr "Адреса доставки"
 
-#: lib/FS_Taxonomy.php:890 templates/back-end/metabox/order/add.php:52
+#: lib/FS_Taxonomy.php:890 templates/front-end/mail/user-create-order.php:418
+#: templates/front-end/mail/admin-create-order.php:418
+#: templates/back-end/metabox/order/add.php:52
 #: templates/back-end/metabox/order/show.php:32
 #: templates/back-end/metabox/order/edit.php:137
-#: templates/front-end/mail/user-create-order.twig:403
 msgid "Delivery method"
 msgstr "Спосіб доставки"
 
 #: lib/FS_Taxonomy.php:887 lib/FS_Taxonomy.php:889 lib/FS_Users.php:688
 msgid "Delivery methods"
 msgstr "Способи доставки"
+
+#: templates/front-end/mail/user-create-order.php:420
+#: templates/front-end/mail/admin-create-order.php:420
+msgid "Delivery number"
+msgstr ""
 
 #: templates/back-end/metabox/order/show.php:36
 msgid "Delivery service address"
@@ -787,7 +797,8 @@ msgid "Disabled"
 msgstr "Вимкнено"
 
 #: lib/FS_Init.php:266 lib/FS_Taxonomy.php:982
-#: templates/front-end/mail/user-create-order.twig:513
+#: templates/front-end/mail/user-create-order.php:534
+#: templates/front-end/mail/admin-create-order.php:534
 msgid "Discount"
 msgstr "Знижка"
 
@@ -890,6 +901,8 @@ msgstr "Редагувати профіль"
 #: actions.php:65 functions/actions.php:65
 #: templates/front-end/order/last-order-info.php:19
 #: templates/front-end/auth/register.php:7
+#: templates/front-end/mail/user-create-order.php:430
+#: templates/front-end/mail/admin-create-order.php:430
 #: templates/front-end/product/comments.php:150
 msgid "Email"
 msgstr "E-mail"
@@ -898,7 +911,7 @@ msgstr "E-mail"
 msgid "Email does not match format"
 msgstr "Email не відповідає формату"
 
-#: lib/FS_Ajax.php:1395
+#: lib/FS_Ajax.php:1382
 msgid "Email is not valid"
 msgstr ""
 
@@ -973,11 +986,11 @@ msgstr "Введіть назву"
 msgid "Enter product name, ID, SKU"
 msgstr "Введіть назву товару, ID або код виробника"
 
-#: lib/FS_Ajax.php:1247 lib/FS_Ajax.php:1256 lib/FS_Init.php:165
+#: lib/FS_Ajax.php:1234 lib/FS_Ajax.php:1243 lib/FS_Init.php:165
 msgid "Error!"
 msgstr "Помилка!"
 
-#: lib/FS_Ajax.php:984
+#: lib/FS_Ajax.php:971
 msgid "Errors occurred while creating an order"
 msgstr "Виникла помилка при створенні замовлення"
 
@@ -997,7 +1010,7 @@ msgstr "Експорт на сайт"
 msgid "F-Shop"
 msgstr ""
 
-#: lib/FS_Ajax.php:321 lib/FS_Ajax.php:404 lib/FS_Ajax.php:706
+#: lib/FS_Ajax.php:325 lib/FS_Ajax.php:408 lib/FS_Ajax.php:710
 #: lib/FS_Users.php:323 lib/FS_Users.php:356 lib/FS_Users.php:837
 #: lib/FS_Users.php:877 lib/FS_Users.php:1027
 msgid "Failed verification of nonce form"
@@ -1012,7 +1025,7 @@ msgstr "Група характеристик"
 msgid "Female"
 msgstr "Жінка"
 
-#: lib/FS_Ajax.php:176
+#: lib/FS_Ajax.php:180
 msgid "Fields not specified!"
 msgstr "Поля не вказані!"
 
@@ -1041,8 +1054,9 @@ msgid "Find"
 msgstr "Шукати"
 
 #: lib/FS_Customers_List.php:249 templates/front-end/order/quick-order.php:2
+#: templates/front-end/mail/user-create-order.php:426
+#: templates/front-end/mail/admin-create-order.php:426
 #: templates/front-end/shortcode/fs-order-info.php:48
-#: templates/front-end/mail/user-create-order.twig:410
 msgid "First Name"
 msgstr "Ім'я"
 
@@ -1126,7 +1140,7 @@ msgstr ""
 "Товари, яких немає в наявності будуть сховані в загальному списку товарів, "
 "проте вони все одно доступні по прямому посиланню."
 
-#: lib/FS_Ajax.php:566 lib/FS_Ajax.php:603
+#: lib/FS_Ajax.php:570 lib/FS_Ajax.php:607
 msgid ""
 "Goods with such a set of characteristics are not in stock. Try changing "
 "parameters."
@@ -1309,7 +1323,8 @@ msgstr ""
 msgid "It looks like your site has not been visited yet."
 msgstr "Схоже що ваші товари ще ніхто не переглядав"
 
-#: templates/front-end/mail/user-create-order.twig:459
+#: templates/front-end/mail/user-create-order.php:479
+#: templates/front-end/mail/admin-create-order.php:479
 msgid "Item"
 msgstr "Позиція"
 
@@ -1360,11 +1375,12 @@ msgstr "Прізвище"
 #: actions.php:64 lib/FS_Customers_List.php:164 lib/FS_Users.php:436
 #: lib/FS_Users.php:440 lib/FS_Users.php:483 lib/FS_Users.php:487
 #: functions/actions.php:64 functions/actions.php:64
+#: templates/front-end/mail/user-create-order.php:428
+#: templates/front-end/mail/admin-create-order.php:428
 #: templates/front-end/shortcode/fs-order-info.php:52
 #: templates/back-end/metabox/order/add.php:32
 #: templates/back-end/metabox/order/show.php:16
 #: templates/back-end/metabox/order/edit.php:103
-#: templates/front-end/mail/user-create-order.twig:410
 msgid "Last name"
 msgstr "Прізвище"
 
@@ -1518,7 +1534,7 @@ msgstr "Назва"
 msgid "Name field cannot be empty"
 msgstr "Поле ім'я не може бути порожнім"
 
-#: lib/FS_Ajax.php:1400
+#: lib/FS_Ajax.php:1387
 msgid "Name is required"
 msgstr ""
 
@@ -1595,7 +1611,8 @@ msgstr "Не відображати"
 msgid "On order"
 msgstr "Під заказ"
 
-#: templates/front-end/mail/admin-create-order.twig:365
+#: templates/front-end/mail/user-create-order.php:374
+#: templates/front-end/mail/admin-create-order.php:374
 #, php-format
 msgid ""
 "On your site \"%s\" user %s created a new order #%d. Please contact the "
@@ -1616,7 +1633,7 @@ msgstr "Відкрити в новій вкладці"
 msgid "Order"
 msgstr "Замовлення"
 
-#: lib/FS_Ajax.php:960 lib/FS_Order.php:233
+#: lib/FS_Ajax.php:947 lib/FS_Order.php:233 lib/FS_Orders.php:752
 #, php-format
 msgid "Order #%d from %s %s (%s)"
 msgstr "Замовлення #%d від %s %s (%s)"
@@ -1625,7 +1642,7 @@ msgstr "Замовлення #%d від %s %s (%s)"
 msgid "Order #%d paid successfully"
 msgstr "Замовлення #%d успішно оплачено"
 
-#: lib/FS_Ajax.php:974
+#: lib/FS_Ajax.php:961
 msgid "Order #%d successfully added"
 msgstr "Замовлення #%d успішно створено"
 
@@ -1658,8 +1675,8 @@ msgstr "Деталі замовлення"
 msgid "Order details #%d"
 msgstr "Деталі замовлення #%d"
 
-#: lib/FS_Ajax.php:884 lib/FS_Ajax.php:941 lib/FS_Ajax.php:951
-#: lib/FS_Settings.php:470 lib/FS_Settings.php:477
+#: lib/FS_Ajax.php:887 lib/FS_Ajax.php:939 lib/FS_Settings.php:470
+#: lib/FS_Settings.php:477
 #, php-format
 msgid "Order goods on the site \"%s\""
 msgstr "Замовлення товарів на сайті \"%s\""
@@ -1671,6 +1688,10 @@ msgstr "Історія замовлення"
 #: actions.php:66 functions/actions.php:66 functions/actions.php:66
 msgid "Order id"
 msgstr "Номер замовлення"
+
+#: lib/FS_Ajax.php:1517
+msgid "Order ID not found"
+msgstr ""
 
 #: lib/FS_Settings.php:646
 msgid "Order Information Page"
@@ -1722,9 +1743,10 @@ msgstr "Інша адреса доставки"
 msgid "Packaging"
 msgstr "Упаковка"
 
-#: templates/front-end/mail/user-create-order.twig:514
+#: templates/front-end/mail/user-create-order.php:535
+#: templates/front-end/mail/admin-create-order.php:535
 msgid "Packing"
-msgstr "Укаковка"
+msgstr "Упаковка"
 
 #: lib/FS_Settings.php:362
 msgid "Packing cost"
@@ -1769,8 +1791,9 @@ msgstr ""
 msgid "pay now"
 msgstr "оплатити зараз"
 
+#: templates/front-end/mail/user-create-order.php:448
+#: templates/front-end/mail/admin-create-order.php:448
 #: templates/front-end/dashboard/orders.php:65
-#: templates/front-end/mail/user-create-order.twig:430
 msgid "Payment"
 msgstr "Оплата"
 
@@ -1809,8 +1832,7 @@ msgstr "Скидка в процентах"
 msgid "Personal account page"
 msgstr "Сторінка особистого кабінету"
 
-#: lib/FS_Config.php:132 templates/front-end/mail/user-create-order.twig:382
-#: templates/front-end/mail/user-create-order.twig:386
+#: lib/FS_Config.php:132
 msgid "Personal Area"
 msgstr "Особистий кабінет"
 
@@ -1826,11 +1848,12 @@ msgstr "Телефон"
 
 #: lib/FS_Config.php:72 lib/FS_Customers_List.php:243 lib/FS_Users.php:573
 #: lib/FS_Users.php:577 templates/front-end/order/last-order-info.php:23
+#: templates/front-end/mail/user-create-order.php:432
+#: templates/front-end/mail/admin-create-order.php:432
 #: templates/front-end/shortcode/fs-order-info.php:60
 #: templates/back-end/metabox/order/add.php:37
 #: templates/back-end/metabox/order/show.php:20
 #: templates/back-end/metabox/order/edit.php:111
-#: templates/front-end/mail/user-create-order.twig:412
 msgid "Phone number"
 msgstr "Номер телефону"
 
@@ -1850,7 +1873,7 @@ msgstr "Фото"
 msgid "Physical"
 msgstr "Фізичний"
 
-#: lib/FS_Ajax.php:408
+#: lib/FS_Ajax.php:412
 msgid "Please enter a valid email address"
 msgstr "Будь ласка введіть правильну e-mail адресу"
 
@@ -1924,7 +1947,7 @@ msgstr "Категорія товару"
 msgid "Product category filter"
 msgstr "Фільтр категорії товарів"
 
-#: lib/FS_Ajax.php:1285 lib/FS_Ajax.php:1345 lib/FS_Ajax.php:1390
+#: lib/FS_Ajax.php:1272 lib/FS_Ajax.php:1332 lib/FS_Ajax.php:1377
 msgid "Product ID not found"
 msgstr ""
 
@@ -1961,7 +1984,7 @@ msgstr "Тип товару"
 msgid "Products"
 msgstr "Товари"
 
-#: lib/FS_Ajax.php:1171
+#: lib/FS_Ajax.php:1158
 msgid "Products added to cart"
 msgstr "Товар додано до кошика"
 
@@ -2006,9 +2029,10 @@ msgstr "Куплені товари"
 msgid "Purchased items"
 msgstr "Куплені товари"
 
+#: templates/front-end/mail/user-create-order.php:482
+#: templates/front-end/mail/admin-create-order.php:482
 #: templates/front-end/shortcode/order-detail.php:18
 #: templates/front-end/dashboard/orders.php:33
-#: templates/front-end/mail/user-create-order.twig:462
 msgid "Qty"
 msgstr "К-сть"
 
@@ -2033,7 +2057,7 @@ msgstr "діапазон"
 msgid "Rate the product"
 msgstr ""
 
-#: lib/FS_Ajax.php:520
+#: lib/FS_Ajax.php:524
 msgid "Rating successfully set!"
 msgstr "Ваш голос враховано!"
 
@@ -2153,9 +2177,10 @@ msgstr "Знижка"
 msgid "Save"
 msgstr "Зберегти"
 
-#: lib/FS_Ajax.php:992 lib/FS_Ajax.php:1076 lib/FS_Ajax.php:1146
-#: lib/FS_Ajax.php:1160 lib/FS_Ajax.php:1193 lib/FS_Ajax.php:1214
-#: lib/FS_Ajax.php:1235 lib/FS_Ajax.php:1269 lib/FS_Cart.php:142
+#: lib/FS_Ajax.php:979 lib/FS_Ajax.php:1063 lib/FS_Ajax.php:1133
+#: lib/FS_Ajax.php:1147 lib/FS_Ajax.php:1180 lib/FS_Ajax.php:1201
+#: lib/FS_Ajax.php:1222 lib/FS_Ajax.php:1256 lib/FS_Ajax.php:1513
+#: lib/FS_Cart.php:142
 msgid "Security check failed"
 msgstr "Помилка перевірки безпеки"
 
@@ -2250,7 +2275,7 @@ msgstr "Деталі доставки та оплати"
 msgid "Shipping Cost in Base Currency"
 msgstr "Вартысть доставки в основній валюті"
 
-#: lib/FS_Ajax.php:1090
+#: lib/FS_Ajax.php:1077
 msgid "Shipping method not found"
 msgstr "Спосіб доставки не знайдено"
 
@@ -2341,12 +2366,12 @@ msgstr "Налаштування магазину"
 msgid "Subscribe"
 msgstr "Підписка"
 
-#: lib/FS_Ajax.php:521
+#: lib/FS_Ajax.php:525
 msgid "Success"
 msgstr "Успіх"
 
-#: lib/FS_Ajax.php:1172 lib/FS_Ajax.php:1203 lib/FS_Ajax.php:1224
-#: lib/FS_Ajax.php:1263 lib/FS_Init.php:163
+#: lib/FS_Ajax.php:1159 lib/FS_Ajax.php:1190 lib/FS_Ajax.php:1211
+#: lib/FS_Ajax.php:1250 lib/FS_Init.php:163
 msgid "Success!"
 msgstr "Успіх!"
 
@@ -2378,15 +2403,11 @@ msgstr "Тестовий режим"
 msgid "text"
 msgstr "текст"
 
-#: templates/front-end/mail/user-create-order.twig:360
-msgid "Thank you for your order!"
-msgstr "Дякуємо за ваше замовлення!"
-
 #: lib/FS_Config.php:122
 msgid "Thank you for your purchase."
 msgstr "Дякуємо за покупку."
 
-#: lib/FS_Ajax.php:677
+#: lib/FS_Ajax.php:680
 #, php-format
 msgid "The \"%s\" field is required!"
 msgstr "Поле \"%s\" є обов'язковим! "
@@ -2443,8 +2464,8 @@ msgstr "Форма не пройшла перевірку безпеки!"
 msgid "The maximum file size is 10 Mb"
 msgstr ""
 
-#: templates/front-end/mail/admin-create-order.twig:537
-#: templates/front-end/mail/user-create-order.twig:540
+#: templates/front-end/mail/user-create-order.php:566
+#: templates/front-end/mail/admin-create-order.php:566
 msgid "The online store works for"
 msgstr "Інтернет-магазин працює на"
 
@@ -2514,7 +2535,7 @@ msgstr ""
 msgid "The status that is assigned to a new order"
 msgstr "Цей статус встановлюється для нового замовлення"
 
-#: lib/FS_Ajax.php:427
+#: lib/FS_Ajax.php:431
 msgid "There was an error sending a letter to the site administrator!"
 msgstr "Під час надсилання листа адміністратору сайту сталася помилка!"
 
@@ -2670,10 +2691,12 @@ msgstr "В каталог"
 msgid "To wish list"
 msgstr "До списку бажань"
 
-#: templates/front-end/mail/user-create-order.twig:465
-#: templates/front-end/mail/user-create-order.twig:516
+#: templates/front-end/mail/user-create-order.php:485
+#: templates/front-end/mail/user-create-order.php:537
+#: templates/front-end/mail/admin-create-order.php:485
+#: templates/front-end/mail/admin-create-order.php:537
 msgid "Total"
-msgstr "Всього"
+msgstr "Разом"
 
 #: templates/front-end/shortcode/fs-order-info.php:38
 #: templates/front-end/shortcode/list-orders.php:11
@@ -2776,7 +2799,7 @@ msgstr "Користувач \"%s\" змінив статус замовленн
 msgid "User \"%s\" created an order"
 msgstr "Користувач \"%s\" створив замовлення"
 
-#: lib/FS_Ajax.php:411
+#: lib/FS_Ajax.php:415
 #, php-format
 msgid ""
 "User %s requests to be notified of the availability of the product \"%s\". "
@@ -2793,7 +2816,7 @@ msgstr "Дані користувача не заповнені або неді�
 msgid "User is not found"
 msgstr "Користувач не знайдений"
 
-#: lib/FS_Ajax.php:771
+#: lib/FS_Ajax.php:774
 #, php-format
 msgid ""
 "User with such E-mail or Login is registered on the site. <a href=\"#fs-"
@@ -2827,7 +2850,10 @@ msgstr "Варіації"
 msgid "Vendor code"
 msgstr "Артикул"
 
-#: templates/front-end/mail/admin-create-order.twig:380
+#: templates/front-end/mail/user-create-order.php:397
+#: templates/front-end/mail/user-create-order.php:401
+#: templates/front-end/mail/admin-create-order.php:397
+#: templates/front-end/mail/admin-create-order.php:401
 msgid "View order"
 msgstr "Дивитися замовлення"
 
@@ -2922,7 +2948,7 @@ msgstr "На даний момент у вас немає замовлень"
 msgid "You currently have no orders."
 msgstr "Зараз у вас немає замовлень"
 
-#: lib/FS_Ajax.php:195
+#: lib/FS_Ajax.php:199
 msgid "You have already voted for this review!"
 msgstr "Ви вже проголосували за цей відгук!"
 
@@ -2963,23 +2989,13 @@ msgstr "Ваші дані не збережено, або ви не вказал
 msgid "Your email"
 msgstr "Ваш e-mail"
 
-#: lib/FS_Ajax.php:207
+#: lib/FS_Ajax.php:211
 msgid "Your like has been added to the review!"
 msgstr "Ваш голос враховано при оцінюванні цього відгуку!"
 
 #: templates/front-end/auth/register.php:2
 msgid "Your name"
 msgstr "Ваше ім'я"
-
-#: templates/front-end/mail/user-create-order.twig:365
-msgid ""
-"Your order #%d has been successfully created. We will contact you shortly. "
-"If this did not happen within 1-2 days, then contact us for these contact "
-"details:"
-msgstr ""
-"Ваше замовлення #%d успішно створено. Ми зв'яжемося з вами найближчим часом. "
-"Якщо цього не сталося протягом 1-2 днів, зв’яжіться з нами за цими "
-"контактами:"
 
 #: lib/FS_Orders.php:342
 msgid ""
@@ -3032,11 +3048,11 @@ msgstr "Ваш пароль має містити хоча б один спец�
 msgid "Your password must contain at least one uppercase letter."
 msgstr "Ваш пароль має містити принаймні одну велику літеру."
 
-#: lib/FS_Ajax.php:421
+#: lib/FS_Ajax.php:425
 msgid "Your request has been sent successfully!"
 msgstr "Ваш запит успішно відправлено!"
 
-#: lib/FS_Ajax.php:1486
+#: lib/FS_Ajax.php:1473
 msgid ""
 "Your review has been successfully added. It will be published after "
 "verification."
@@ -3055,7 +3071,7 @@ msgstr "Поштовий індекс"
 msgid "Zip Code"
 msgstr "Поштовий індекс"
 
-#: lib/FS_Ajax.php:279
+#: lib/FS_Ajax.php:283
 msgid "Атрибуты успешно добавленны!"
 msgstr ""
 
@@ -3063,7 +3079,7 @@ msgstr ""
 msgid "В заказе нет товаров"
 msgstr ""
 
-#: lib/FS_Ajax.php:284
+#: lib/FS_Ajax.php:288
 msgid "Возникла ошибка при добавлении атрибута к товару"
 msgstr ""
 
@@ -3104,11 +3120,11 @@ msgstr ""
 msgid "Контакты"
 msgstr ""
 
-#: lib/FS_Ajax.php:667
+#: lib/FS_Ajax.php:670
 msgid "Корзина пуста!"
 msgstr ""
 
-#: lib/FS_Ajax.php:735
+#: lib/FS_Ajax.php:738
 #, php-format
 msgid "Минимальная сумма заказа %s %s"
 msgstr ""
@@ -3138,7 +3154,7 @@ msgstr ""
 msgid "Почтовый индекс"
 msgstr ""
 
-#: lib/FS_Ajax.php:410
+#: lib/FS_Ajax.php:414
 msgid "Просьба уведомить о наличии товара"
 msgstr "Прохання повідомити про наявність товару"
 

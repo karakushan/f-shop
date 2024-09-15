@@ -716,7 +716,6 @@ class FS_Ajax {
 		global $wpdb;
 		$wpdb->show_errors( false );
 		$fs_config                 = new FS_Config();
-		$fs_template               = new FS_Template();
 		$order_create_time         = time();
 		$order_create_date_display = date_i18n( 'd F Y H:i', $order_create_time );
 		$update_user_meta          = ! isset( $_POST['fs_update_user_meta'] ) || boolval( $_POST['fs_update_user_meta'] );
@@ -926,15 +925,7 @@ class FS_Ajax {
 			];
 
 			$mail_data = apply_filters( 'fs_create_order_mail_data', $mail_data );
-
-			$user_email_message = $fs_template->get( 'mail/user-create-order', $mail_data );
-
-			// Если выбран кастомный шаблон сообщения
-			if ( fs_option( 'create_order_mail_template' ) && is_numeric( fs_option( 'create_order_mail_template' ) ) ) {
-				$create_order_mail_template = get_post_meta( (int) fs_option( 'create_order_mail_template' ), 'template', 1 );
-				$user_email_message         = $fs_template->get_from_string( $create_order_mail_template, $mail_data );
-			}
-
+			
 			$notification = new FS_Notification();
 
 			// Отсылаем письмо с данными заказа заказчику
@@ -943,10 +934,9 @@ class FS_Ajax {
 			$notification->set_template( 'mail/user-create-order', $mail_data );
 			$notification->send();
 
-			//Отсылаем письмо с данными заказа на почту указанную в настройках для оповещения о заказах
+			//Отсылаем письмо админу
 			$notification->set_recipients( [ fs_option( 'manager_email', get_option( 'admin_email' ) ) ] );
 			$notification->set_subject( fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ) );
-			$notification->set_message( $user_email_message );
 			$notification->set_template( 'mail/admin-create-order', $mail_data );
 			$notification->send();
 

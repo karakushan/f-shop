@@ -54,6 +54,9 @@ class FS_Notification {
 
 	public function set_template( $template, $replace = [] ): void {
 		$this->template = $template;
+		$this->message  = fs_frontend_template( $template, [
+			'vars' => $replace
+		] );
 	}
 
 	private function send_via_email() {
@@ -67,10 +70,5 @@ class FS_Notification {
 		);
 
 		return wp_mail( $this->recipients, $this->subject, $this->message, $headers, $this->attachment );
-	}
-
-
-	private function validate() {
-
 	}
 }
