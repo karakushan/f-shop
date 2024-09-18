@@ -2,7 +2,7 @@ import iziToast from "izitoast";
 
 class FS {
     constructor(is_admin = false) {
-        this.ajaxurl = window.FS_DATA.ajaxurl;
+        this.ajaxurl = '/wp-admin/admin-ajax.php';
         this.is_admin = is_admin;
         if (this.is_admin) {
             this.nonce = window.FS_BACKEND.nonce ?? null;
