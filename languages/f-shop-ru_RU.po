@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-09-17 09:27+0000\n"
+"PO-Revision-Date: 2024-09-18 16:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -1213,7 +1213,7 @@ msgstr ""
 #: lib/FS_Payment.php:85
 #, php-format
 msgid "If payment is successful, you will be charged %s %s."
-msgstr "Если платеж пройдет успешно, с Вас будет снята сумма %s %s."
+msgstr "Если платеж будет успешным, с Вашего счета спишется %s %s."
 
 #: lib/FS_Settings.php:401
 msgid ""

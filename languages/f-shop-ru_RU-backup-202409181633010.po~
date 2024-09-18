@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-09-17 07:08+0000\n"
+"PO-Revision-Date: 2024-09-17 09:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -155,6 +155,12 @@ msgstr "Добавление свойства/группы свойств"
 #: lib/FS_Taxonomy.php:945
 msgid "Add tax"
 msgstr "Добавить налог"
+
+msgid "Add to cart"
+msgstr "В корзину"
+
+msgid "Add to wishlist"
+msgstr "Добавить в список желаний"
 
 #: templates/back-end/metabox/up-sell.php:3
 msgid "Add up-sell products"
@@ -1582,6 +1588,9 @@ msgstr "Не найден метод оплаты"
 msgid "No product found in wish list"
 msgstr "Не найдено товаров в списке желаний"
 
+msgid "No reviews"
+msgstr "Нет отзывов"
+
 #: lib/widgets/Attribute_Widget.php:137
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24
 msgid "Normal"
@@ -2412,6 +2421,9 @@ msgstr "Тестовый режим"
 msgid "text"
 msgstr "текст"
 
+msgid "Thank you for your order"
+msgstr "Спасибо за ваш заказ."
+
 #: lib/FS_Config.php:122
 msgid "Thank you for your purchase."
 msgstr "Благодарим за покупку."
@@ -3010,6 +3022,9 @@ msgstr "Ваш лайк добавлен к отзыву!"
 #: templates/front-end/auth/register.php:2
 msgid "Your name"
 msgstr "Ваше имя"
+
+msgid "Your order #%d has been placed. We will contact you shortly."
+msgstr "Ваш заказ #%d был размещен. Мы свяжемся с вами в ближайшее время."
 
 #: lib/FS_Orders.php:342
 msgid ""

@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2024-09-17 07:11+0000\n"
+"PO-Revision-Date: 2024-09-17 09:29+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -145,6 +145,12 @@ msgstr "Додати характеристику/групу характери�
 #: lib/FS_Taxonomy.php:945
 msgid "Add tax"
 msgstr "Додати податок"
+
+msgid "Add to cart"
+msgstr "До кошика"
+
+msgid "Add to wishlist"
+msgstr "Додати до списку бажань"
 
 #: templates/back-end/metabox/up-sell.php:3
 msgid "Add up-sell products"
@@ -2409,6 +2415,9 @@ msgstr "Тестовий режим"
 msgid "text"
 msgstr "текст"
 
+msgid "Thank you for your order"
+msgstr "Дякуємо за замовлення"
+
 #: lib/FS_Config.php:122
 msgid "Thank you for your purchase."
 msgstr "Дякуємо за покупку."
@@ -3006,6 +3015,9 @@ msgstr "Ваш голос враховано при оцінюванні цьо�
 #: templates/front-end/auth/register.php:2
 msgid "Your name"
 msgstr "Ваше ім'я"
+
+msgid "Your order #%d has been placed. We will contact you shortly."
+msgstr "Ваше замовлення #%d розміщено. Ми зв'яжемося з вами найближчим часом."
 
 #: lib/FS_Orders.php:342
 msgid ""
