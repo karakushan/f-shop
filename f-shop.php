@@ -91,7 +91,6 @@ function fs_activate() {
 	global $wpdb;
 	require_once dirname( FS_PLUGIN_FILE ) . '/lib/FS_Config.php';
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	load_plugin_textdomain('f-shop', false, dirname(plugin_basename(FS_PLUGIN_FILE)) . '/languages');
 
 	// Создаем таблицу покупателей
 	$table_customers = $wpdb->prefix . "fs_customers";
@@ -191,3 +190,12 @@ function fs_activate() {
  */
 function fs_deactivate() {
 }
+
+/**
+ * Устанавливаем путь к файлам локализации
+ */
+function fs_load_plugin_textdomain() {
+	load_plugin_textdomain( 'f-shop', false, dirname( plugin_basename( FS_PLUGIN_FILE ) ) . '/languages' );
+}
+
+add_action( 'plugins_loaded', 'fs_load_plugin_textdomain' );

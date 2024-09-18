@@ -889,43 +889,49 @@ class FS_Ajax {
 			// Здесь мы определяем переменные для шаблона письма
 			$mail_data = [
 				// Cart data
-				'order_date'        => $order_create_date_display,
-				'order_id'          => $order_id,
-				'cart_discount'     => sprintf( '%s %s', apply_filters( 'fs_price_format', $discount ), fs_currency() ),
-				'cart_amount'       => sprintf( '%s %s', apply_filters( 'fs_price_format', $sum ), fs_currency() ),
-				'delivery_cost'     => sprintf( '%s %s', apply_filters( 'fs_price_format', $delivery_cost ), fs_currency() ),
-				'products_cost'     => sprintf( '%s %s', apply_filters( 'fs_price_format', $cart_cost ), fs_currency() ),
-				'packing_cost'      => sprintf( '%s %s', apply_filters( 'fs_price_format', $packing_cost ), fs_currency() ),
-				'delivery_method'   => $sanitize_field['fs_delivery_methods'] ? fs_get_delivery( $sanitize_field['fs_delivery_methods'] ) : '',
-				'delivery_number'   => $sanitize_field['fs_delivery_number'],
-				'payment_method'    => $pay_method && isset( $pay_method->name ) ? $pay_method->name : '',
-				'cart_items'        => fs_get_cart(),
-				'order_title'       => $customer_mail_subject,
-				'order_edit_url'    => admin_url( 'post.php?post=' . $order_id . '&action=edit' ),
+				'order_date'            => $order_create_date_display,
+				'order_id'              => $order_id,
+				'cart_discount'         => sprintf( '%s %s', apply_filters( 'fs_price_format', $discount ), fs_currency() ),
+				'cart_amount'           => sprintf( '%s %s', apply_filters( 'fs_price_format', $sum ), fs_currency() ),
+				'delivery_cost'         => sprintf( '%s %s', apply_filters( 'fs_price_format', $delivery_cost ), fs_currency() ),
+				'products_cost'         => sprintf( '%s %s', apply_filters( 'fs_price_format', $cart_cost ), fs_currency() ),
+				'packing_cost'          => sprintf( '%s %s', apply_filters( 'fs_price_format', $packing_cost ), fs_currency() ),
+				'delivery_method'       => $sanitize_field['fs_delivery_methods'] ? fs_get_delivery( $sanitize_field['fs_delivery_methods'] ) : '',
+				'delivery_number'       => $sanitize_field['fs_delivery_number'],
+				'payment_method'        => $pay_method && isset( $pay_method->name ) ? $pay_method->name : '',
+				'cart_items'            => fs_get_cart(),
+				'order_title'           => $customer_mail_subject,
+				'order_edit_url'        => admin_url( 'post.php?post=' . $order_id . '&action=edit' ),
 
 				// Site data
-				'site_name'         => get_bloginfo( 'name' ),
-				'home_url'          => home_url( '/' ),
-				'dashboard_url'     => fs_account_url(),
-				'admin_email'       => get_option( 'admin_email' ),
-				'contact_email'     => fs_option( 'manager_email', get_option( 'admin_email' ) ),
-				'contact_phone'     => fs_option( 'contact_phone' ),
-				'contact_address'   => fs_option( 'contact_address' ),
-				'mail_logo'         => fs_option( 'fs_email_logo' ) ? wp_get_attachment_image_url( fs_option( 'fs_email_logo' ), 'full' ) : '',
-				'social_links'      => [],
+				'site_name'             => get_bloginfo( 'name' ),
+				'home_url'              => home_url( '/' ),
+				'dashboard_url'         => fs_account_url(),
+				'admin_email'           => get_option( 'admin_email' ),
+				'contact_email'         => fs_option( 'manager_email', get_option( 'admin_email' ) ),
+				'contact_phone'         => fs_option( 'contact_phone' ),
+				'contact_address'       => fs_option( 'contact_address' ),
+				'mail_logo'             => fs_option( 'fs_email_logo' ) ? wp_get_attachment_image_url( fs_option( 'fs_email_logo' ), 'full' ) : '',
+				'social_links'          => [],
 
 				// Client data
-				'client_city'       => $sanitize_field['fs_city'],
-				'client_address'    => $sanitize_field['fs_address'],
-				'client_phone'      => $sanitize_field['fs_phone'],
-				'client_email'      => $sanitize_field['fs_email'],
-				'client_first_name' => $sanitize_field['fs_first_name'],
-				'client_last_name'  => $sanitize_field['fs_last_name'],
-				'client_id'         => $user_id,
+				'client_city'           => $sanitize_field['fs_city'],
+				'client_address'        => $sanitize_field['fs_address'],
+				'client_phone'          => $sanitize_field['fs_phone'],
+				'client_email'          => $sanitize_field['fs_email'],
+				'client_first_name'     => $sanitize_field['fs_first_name'],
+				'client_last_name'      => $sanitize_field['fs_last_name'],
+				'client_id'             => $user_id,
+
+				// mail data
+				'admin_mail_title'      => __( 'Congratulations! A new order has appeared on your site.', 'f-shop' ),
+				'admin_mail_message'    => sprintf( __( 'On your site "%s" user %s created a new order #%d. Please contact the customer for this data:', 'f-shop' ), get_bloginfo( 'name' ), $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'], $order_id ),
+				'customer_mail_title'   => __( 'Thank you for your order', 'f-shop' ),
+				'customer_mail_message' => sprintf( __( 'Your order #%d has been placed. We will contact you shortly.', 'f-shop' ), $order_id ),
 			];
 
 			$mail_data = apply_filters( 'fs_create_order_mail_data', $mail_data );
-			
+
 			$notification = new FS_Notification();
 
 			// Отсылаем письмо с данными заказа заказчику

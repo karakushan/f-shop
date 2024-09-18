@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-09-15 14:03+0000\n"
+"PO-Revision-Date: 2024-09-17 09:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -155,6 +155,12 @@ msgstr "Добавление свойства/группы свойств"
 #: lib/FS_Taxonomy.php:945
 msgid "Add tax"
 msgstr "Добавить налог"
+
+msgid "Add to cart"
+msgstr "В корзину"
+
+msgid "Add to wishlist"
+msgstr "Добавить в список желаний"
 
 #: templates/back-end/metabox/up-sell.php:3
 msgid "Add up-sell products"
@@ -569,7 +575,7 @@ msgstr "Повторите пароль"
 msgid "Congratulations! A new order has appeared on your site."
 msgstr "Поздравляем! На Вашем сайте появился новый заказ."
 
-#: lib/FS_Users.php:1118
+#: lib/FS_Users.php:1119
 #, php-format
 msgid ""
 "Congratulations! You have successfully registered! <a href=\"%s\">Log in</a>"
@@ -917,7 +923,7 @@ msgstr "Изменить профиль"
 msgid "Email"
 msgstr "E-mail"
 
-#: lib/FS_Users.php:1047
+#: lib/FS_Users.php:1049
 msgid "Email does not match format"
 msgstr "E-mail не соответствует формату"
 
@@ -1161,7 +1167,7 @@ msgstr ""
 msgid "Group"
 msgstr "Группа"
 
-#: templates/front-end/auth/register.php:33
+#: templates/front-end/auth/register.php:34
 msgid "Have an account?"
 msgstr "Уже есть аккаунт?"
 
@@ -1186,7 +1192,7 @@ msgstr "Номер дома"
 msgid "https://f-shop.top/"
 msgstr ""
 
-#: templates/front-end/auth/register.php:24
+#: templates/front-end/auth/register.php:25
 msgid "I agree to the terms of use and the processing of my personal data"
 msgstr "Я соглашаюсь с правилами использования и обработки персональных данных"
 
@@ -1521,7 +1527,7 @@ msgstr "Модальное окно"
 msgid "Multi-language support"
 msgstr "Поддержка многоязычности"
 
-#: templates/front-end/auth/register.php:23
+#: templates/front-end/auth/register.php:24
 msgid "Must agree"
 msgstr "Необходимо согласиться"
 
@@ -1538,7 +1544,7 @@ msgstr "Мои заказы"
 msgid "Name"
 msgstr "Имя"
 
-#: lib/FS_Users.php:1052
+#: lib/FS_Users.php:1054
 msgid "Name field cannot be empty"
 msgstr "Поле имя не может быть пустым"
 
@@ -1581,6 +1587,9 @@ msgstr "Не найден метод оплаты"
 #: templates/front-end/dashboard/wishlist.php:77
 msgid "No product found in wish list"
 msgstr "Не найдено товаров в списке желаний"
+
+msgid "No reviews"
+msgstr "Нет отзывов"
 
 #: lib/widgets/Attribute_Widget.php:137
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24
@@ -1791,7 +1800,7 @@ msgstr "Сброс пароля"
 msgid "Password reset on the site"
 msgstr "Сброс пароля на сайте"
 
-#: lib/FS_Users.php:368
+#: lib/FS_Users.php:368 lib/FS_Users.php:1064
 msgid "Passwords do not match"
 msgstr ""
 
@@ -2117,9 +2126,10 @@ msgstr "Зарегистрируйтесь, чтобы иметь доступ �
 msgid "Registration date"
 msgstr "Дата регистрации"
 
-#: lib/FS_Users.php:1098 lib/FS_Users.php:1111
-msgid "Registration on the website «{{ site_name }}»"
-msgstr "Регистрация на сайте «{{ site_name }}»"
+#: lib/FS_Users.php:1107
+#, php-format
+msgid "Registration on the website «%s»"
+msgstr ""
 
 #: templates/back-end/metabox/related.php:2
 msgid "Related products"
@@ -2234,7 +2244,7 @@ msgstr[1] "Выбрано: %s товара"
 msgstr[2] "Выбрано: %s товаров"
 
 #: templates/front-end/order/quick-order.php:13
-#: templates/front-end/auth/register.php:29
+#: templates/front-end/auth/register.php:30
 #: templates/front-end/product/comments.php:224
 msgid "Send"
 msgstr "Отправить"
@@ -2411,6 +2421,9 @@ msgstr "Тестовый режим"
 msgid "text"
 msgstr "текст"
 
+msgid "Thank you for your order"
+msgstr "Спасибо за ваш заказ."
+
 #: lib/FS_Config.php:122
 msgid "Thank you for your purchase."
 msgstr "Благодарим за покупку."
@@ -2465,7 +2478,7 @@ msgstr ""
 msgid "The field is active if you have enabled multicurrency in settings."
 msgstr "Это поле активно если Вы включили мультивалютность в настройках."
 
-#: lib/FS_Users.php:1131
+#: lib/FS_Users.php:1132
 msgid "The form did not pass the security check!"
 msgstr "Форма не прошла проверку безопасности!"
 
@@ -2688,7 +2701,7 @@ msgstr "Заголовок в письме оформления заказа о�
 msgid "To catalog"
 msgstr "В каталог"
 
-#: lib/FS_Users.php:1259 lib/FS_Users.php:1294
+#: lib/FS_Users.php:1260 lib/FS_Users.php:1293
 msgid "To personal account"
 msgstr "В личный кабинет"
 
@@ -2932,7 +2945,7 @@ msgstr "Да"
 msgid "You are already logged in"
 msgstr "Вы уже авторизованы"
 
-#: lib/FS_Users.php:1216 lib/FS_Users.php:1252 lib/FS_Users.php:1288
+#: lib/FS_Users.php:1217 lib/FS_Users.php:1253 lib/FS_Users.php:1287
 msgid "You are already logged in."
 msgstr "Вы уже вошли на сайт"
 
@@ -2965,6 +2978,10 @@ msgstr "Вы уже проголосовали за этот отзыв!"
 msgid "You have selected all available items from stock."
 msgstr "Вы выбрали все доступные товары со склада."
 
+#: lib/FS_Users.php:1068
+msgid "You must accept the terms and conditions"
+msgstr ""
+
 #: lib/FS_Payment.php:72
 msgid "You or someone else paid for this order."
 msgstr "Вы или кто-то другой заплатил за этот заказ."
@@ -2986,7 +3003,7 @@ msgstr "Ваши данные успешно изменены"
 msgid "Your data has been successfully updated."
 msgstr "Ваши данные успешно обновлены."
 
-#: lib/FS_Users.php:1199
+#: lib/FS_Users.php:1200
 msgid "Your data has been updated successfully!"
 msgstr "Ваши данные успешно обновлены!"
 
@@ -3005,6 +3022,9 @@ msgstr "Ваш лайк добавлен к отзыву!"
 #: templates/front-end/auth/register.php:2
 msgid "Your name"
 msgstr "Ваше имя"
+
+msgid "Your order #%d has been placed. We will contact you shortly."
+msgstr "Ваш заказ #%d был размещен. Мы свяжемся с вами в ближайшее время."
 
 #: lib/FS_Orders.php:342
 msgid ""

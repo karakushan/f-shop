@@ -2,7 +2,7 @@ import iziToast from "izitoast";
 
 class FS {
     constructor(is_admin = false) {
-        this.ajaxurl = '/wp-admin/admin-ajax.php';
+        this.ajaxurl = window.FS_DATA.ajaxurl;
         this.is_admin = is_admin;
         if (this.is_admin) {
             this.nonce = window.FS_BACKEND.nonce ?? null;
@@ -159,6 +159,12 @@ class FS {
 
     login(data) {
         return this.post('fs_login', data)
+    }
+
+    register($event) {
+        const formData = new FormData($event.target);
+
+        return this.post('fs_profile_create', formData)
     }
 
     liveSearch(query) {

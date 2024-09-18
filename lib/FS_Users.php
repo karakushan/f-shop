@@ -36,8 +36,8 @@ class FS_Users {
 		add_action( 'wp_ajax_nopriv_fs_login', array( $this, 'login_user' ) );
 
 		//  Create user profile
-		add_action( 'wp_ajax_fs_profile_create', array( $this, 'create_user_ajax' ) );
-		add_action( 'wp_ajax_nopriv_fs_profile_create', array( $this, 'create_user_ajax' ) );
+		add_action( 'wp_ajax_fs_profile_create', array( $this, 'create_profile_callback' ) );
+		add_action( 'wp_ajax_nopriv_fs_profile_create', array( $this, 'create_profile_callback' ) );
 
 		//  Editing user profile
 		add_action( 'wp_ajax_fs_profile_edit', array( $this, 'fs_profile_edit' ) );
@@ -1021,7 +1021,7 @@ class FS_Users {
 	}
 
 	// создание профиля пользователя
-	public function create_user_ajax() {
+	public function create_profile_callback() {
 
 		if ( ! FS_Config::verify_nonce() ) {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
@@ -1029,8 +1029,9 @@ class FS_Users {
 
 
 		// POST data cleaning
-		$allowed_fields = self::get_user_fields();
-		$save_fields    = [];
+		$allowed_fields    = self::get_user_fields();
+		$save_fields       = [];
+		$validation_errors = [];
 
 		foreach ( $allowed_fields as $key => $field ) {
 			$value = $_POST[ $key ];
@@ -1042,20 +1043,35 @@ class FS_Users {
 			$save_fields[ $key ] = $value;
 		}
 
+
 		// Check if the transmitted address is an email address
 		if ( ! is_email( $save_fields['fs_email'] ) ) {
-			wp_send_json_error( [ 'msg' => __( 'Email does not match format', 'f-shop' ) ] );
+			$validation_errors['fs_email'] = __( 'Email does not match format', 'f-shop' );
 		}
 
 		// Check if the name field is filled
 		if ( empty( $save_fields['fs_first_name'] ) ) {
-			wp_send_json_error( [ 'msg' => __( 'Name field cannot be empty', 'f-shop' ) ] );
+			$validation_errors['fs_first_name'] = __( 'Name field cannot be empty', 'f-shop' );
 		}
 
 		// Check password for reliability
 		$check_password = $this->password_validation( $save_fields['fs_password'] );
-		if ( $check_password !== true && is_array( $check_password ) ) {
-			wp_send_json_error( $check_password );
+		if ( $check_password['status'] !== true && is_array( $check_password ) ) {
+			$validation_errors['fs_password'] = $check_password['msg'];
+		}
+
+		if ( $save_fields['fs_password'] !== $save_fields['fs_repeat_password'] ) {
+			$validation_errors['fs_repeat_password'] = __( 'Passwords do not match', 'f-shop' );
+		}
+
+		if ( ! isset( $_POST['fs_rules'] ) ) {
+			$validation_errors['fs_rules'] = __( 'You must accept the terms and conditions', 'f-shop' );
+		}
+
+
+		// If there are validation errors, send an error message
+		if ( ! empty( $validation_errors ) ) {
+			wp_send_json_error( [ 'errors' => $validation_errors ] );
 		}
 
 		// Adding a user to the database
@@ -1086,32 +1102,17 @@ class FS_Users {
 			'cabinet_url' => fs_account_url(),
 		];
 
-
-		$post_template = get_post( fs_option( 'register_mail_template', 0 ) );
-
-		if ( $post_template ) {
-			// A letter from the admin panel template
-			$post_template_title   = apply_filters( 'the_title', $post_template->post_title );
-			$post_template_content = apply_filters( 'the_content', $post_template->post_content );
-		} else {
-			// A letter if the template is not found
-			$post_template_title   = __( 'Registration on the website «{{ site_name }}»', 'f-shop' );
-			$post_template_content = fs_frontend_template( 'mail/user-registration', [], '.twig' );
-		}
-
-		// Connect a template engine
-		$template     = new FS_Template();
-		$user_subject = $template->get_from_string( $post_template_title, $replace_keys );
-		$user_message = $template->get_from_string( $post_template_content, $replace_keys );
-
-		// Send a letter to the registered user
-		FS_Form::send_email( $save_fields['fs_email'], $user_subject, $user_message );
+		// Send notification to the user
+		$notification = new FS_Notification();
+		$notification->set_subject( sprintf( __( 'Registration on the website «%s»', 'f-shop' ), get_bloginfo( 'name' ) ) );
+		$notification->set_recipients( [ $save_fields['fs_email'] ] );
+		$notification->set_template( 'mail/user-registration', $replace_keys );
+		$notification->send();
 
 		// Send a letter to the admin
-		$admin_mail_header = $template->get_from_string( __( 'Registration on the website «{{ site_name }}»', 'f-shop' ), $replace_keys );
-		$admin_message     = $template->get( 'mail/user-registration-admin', $replace_keys );
-
-		FS_Form::send_email( get_bloginfo( 'admin_email' ), $admin_mail_header, $admin_message );
+		$notification->set_recipients( [ get_bloginfo( 'admin_email' ) ] );
+		$notification->set_template( 'mail/user-registration-admin', $replace_keys );
+		$notification->send();
 
 		// Отправляем сообщение успешной регистрации на экран
 		wp_send_json_success( array(
@@ -1258,9 +1259,7 @@ class FS_Users {
 			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
 			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
 		} else {
-			$template = apply_filters( 'fs_form_header', $args, 'fs_profile_create' );
 			$template .= fs_frontend_template( 'auth/register', array( 'field' => array() ) );
-			$template .= apply_filters( 'fs_form_bottom', '' );
 		}
 
 		if ( isset( $args['echo'] ) && $args['echo'] ) {

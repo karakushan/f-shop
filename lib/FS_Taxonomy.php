@@ -44,6 +44,7 @@ class FS_Taxonomy {
 			// Generate rewrite rules
 			add_action( 'generate_rewrite_rules', array( $this, 'taxonomy_rewrite_rules' ) );
 		} );
+
 		//  redirect to localized url
 		add_action( 'template_redirect', array( $this, 'redirect_to_localized_url' ) );
 
@@ -168,11 +169,12 @@ class FS_Taxonomy {
 				$query->set( 's', '' );
 				$query->set( 'post__in', $sku_products );
 			}
-
-			$query->set( 'post_type', 'product' );
+			$query->set( 's', $search_query );
+			$query->set( 'post_type', FS_Config::get_data( 'post_type' ) );
+			$query->set( 'post_name', '' );
 			$query->set( 'post_status', 'publish' );
 			// отфильтровываем выключенные для показа товары в админке
-			$meta_query [] = [
+			/*$meta_query [] = [
 				'relation' => 'AND',
 				'exclude'  => [
 					'relation' => 'OR',
@@ -186,28 +188,11 @@ class FS_Taxonomy {
 						'value'   => "1"
 					]
 				]
-			];
+			];*/
 		}
 
 		if ( $query->is_tax( FS_Config::get_data( 'product_taxonomy' ) )
 		     || $query->is_post_type_archive( FS_Config::get_data( 'post_type' ) ) || is_search() ) {
-
-			// отфильтровываем выключенные для показа товары в админке
-//			$meta_query [] = array(
-//				'relation' => 'AND',
-//				'exclude'  => array(
-//					'relation' => 'OR',
-//					array(
-//						'key'     => FS_Config::get_meta( 'exclude_archive' ),
-//						'compare' => 'NOT EXISTS'
-//					),
-//					array(
-//						'key'     => FS_Config::get_meta( 'exclude_archive' ),
-//						'compare' => '!=',
-//						'value'   => "1"
-//					)
-//				)
-//			);
 
 			// Скрывать товары которых нет в наличии
 			if ( fs_option( 'fs_not_aviable_hidden' ) ) {
@@ -345,7 +330,7 @@ class FS_Taxonomy {
 				);
 			}
 
-			do_action( 'qm/debug', );
+			do_action( 'qm/debug' );
 
 			//Фильтруем по свойствам (атрибутам)
 			if ( ! empty( $_REQUEST['filter'] ) ) {
@@ -408,8 +393,9 @@ class FS_Taxonomy {
 
 		$clauses['join'] .= " LEFT JOIN $wpdb->postmeta AS meta ON ({$wpdb->posts}.ID = meta.post_id)";
 
-		$count_currencies = get_terms( [ 'taxonomy'   => FS_Config::get_data( 'currencies_taxonomy' ),
-		                                 'hide_empty' => false
+		$count_currencies = get_terms( [
+			'taxonomy'   => FS_Config::get_data( 'currencies_taxonomy' ),
+			'hide_empty' => false
 		] );
 
 		if ( ! fs_option( 'multi_currency_on' ) || count( $count_currencies ) == 0 ) {

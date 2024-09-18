@@ -364,14 +364,15 @@
                 <table cellspacing="0" cellpadding="0" width="600" class="w320">
                     <tr>
                         <td class="header-lg">
-							<?= __( 'Congratulations! A new order has appeared on your site.', 'f-shop' ) ?>
+							<?= /** @var string $admin_mail_title */
+							$admin_mail_title ?>
                         </td>
                     </tr>
                     <tr>
                         <td class="free-text">
-							<?= /** @var string $client_first_name */
-							/** @var string $order_id */
-							sprintf( __( 'On your site "%s" user %s created a new order #%d. Please contact the customer for this data:', 'f-shop' ), $site_name, $client_first_name, $order_id ) ?>
+							<?=
+							/** @var string $admin_mail_message */
+							$admin_mail_message ?>
                             <br/>
 							<?php if ( ! empty( $client_phone ) && ! empty( $clean_number ) ): ?>
                                 <a

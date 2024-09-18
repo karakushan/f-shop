@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-09-15 13:59+0000\n"
+"PO-Revision-Date: 2024-09-17 07:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -187,6 +187,8 @@ msgstr "Дополнительно"
 
 #: lib/FS_Config.php:78 lib/FS_Customers_List.php:169 lib/FS_Users.php:518
 #: lib/FS_Users.php:522 lib/FS_Users.php:644 lib/FS_Users.php:647
+#: templates/front-end/mail/user-create-order.php:424
+#: templates/front-end/mail/admin-create-order.php:424
 msgid "Address"
 msgstr "Адрес"
 
@@ -510,6 +512,8 @@ msgstr "Выберите способ доставки"
 #: lib/FS_Customers_List.php:247 lib/FS_Users.php:529 lib/FS_Users.php:533
 #: lib/FS_Users.php:597 lib/FS_Users.php:600 functions/actions.php:69
 #: functions/actions.php:69 templates/front-end/order/last-order-info.php:27
+#: templates/front-end/mail/user-create-order.php:422
+#: templates/front-end/mail/admin-create-order.php:422
 #: templates/front-end/shortcode/fs-order-info.php:64
 #: templates/back-end/metabox/order/add.php:47
 #: templates/back-end/metabox/order/show.php:28
@@ -565,7 +569,7 @@ msgstr "Повторите пароль"
 msgid "Congratulations! A new order has appeared on your site."
 msgstr "Поздравляем! На Вашем сайте появился новый заказ."
 
-#: lib/FS_Users.php:1118
+#: lib/FS_Users.php:1119
 #, php-format
 msgid ""
 "Congratulations! You have successfully registered! <a href=\"%s\">Log in</a>"
@@ -606,7 +610,13 @@ msgstr "Стоимость"
 msgid "Cost in base currency"
 msgstr "Стоимость в базвовой валюте"
 
-#: lib/FS_Init.php:263
+#: templates/front-end/mail/user-create-order.php:533
+#: templates/front-end/mail/admin-create-order.php:533
+msgid "Cost of delivery"
+msgstr ""
+
+#: lib/FS_Init.php:263 templates/front-end/mail/user-create-order.php:532
+#: templates/front-end/mail/admin-create-order.php:532
 msgid "Cost of goods"
 msgstr "Стоимость товаров"
 
@@ -671,6 +681,11 @@ msgstr "Дата родждения"
 msgid "Date of purchase"
 msgstr "Дата покупки"
 
+#: templates/front-end/mail/user-create-order.php:451
+#: templates/front-end/mail/admin-create-order.php:451
+msgid "Date Ordered"
+msgstr ""
+
 #: lib/FS_Settings.php:736
 msgid "Default currency"
 msgstr "Валюта по умолчанию"
@@ -708,7 +723,9 @@ msgstr "Удалить аккаунт"
 msgid "Delivered"
 msgstr "Доставлен"
 
-#: lib/FS_Init.php:265 templates/front-end/dashboard/orders.php:56
+#: lib/FS_Init.php:265 templates/front-end/mail/user-create-order.php:417
+#: templates/front-end/mail/admin-create-order.php:417
+#: templates/front-end/dashboard/orders.php:56
 msgid "Delivery"
 msgstr "Доставка"
 
@@ -719,7 +736,9 @@ msgstr "Доставка"
 msgid "Delivery address"
 msgstr "Адрес доставки"
 
-#: lib/FS_Taxonomy.php:890 templates/back-end/metabox/order/add.php:52
+#: lib/FS_Taxonomy.php:890 templates/front-end/mail/user-create-order.php:418
+#: templates/front-end/mail/admin-create-order.php:418
+#: templates/back-end/metabox/order/add.php:52
 #: templates/back-end/metabox/order/show.php:32
 #: templates/back-end/metabox/order/edit.php:137
 msgid "Delivery method"
@@ -728,6 +747,11 @@ msgstr "Способ доставки"
 #: lib/FS_Taxonomy.php:887 lib/FS_Taxonomy.php:889 lib/FS_Users.php:688
 msgid "Delivery methods"
 msgstr "Способы доставки"
+
+#: templates/front-end/mail/user-create-order.php:420
+#: templates/front-end/mail/admin-create-order.php:420
+msgid "Delivery number"
+msgstr ""
 
 #: templates/back-end/metabox/order/show.php:36
 msgid "Delivery service address"
@@ -783,6 +807,8 @@ msgid "Disabled"
 msgstr "Выключено"
 
 #: lib/FS_Init.php:266 lib/FS_Taxonomy.php:982
+#: templates/front-end/mail/user-create-order.php:534
+#: templates/front-end/mail/admin-create-order.php:534
 msgid "Discount"
 msgstr "Скидка"
 
@@ -885,11 +911,13 @@ msgstr "Изменить профиль"
 #: actions.php:65 functions/actions.php:65
 #: templates/front-end/order/last-order-info.php:19
 #: templates/front-end/auth/register.php:7
+#: templates/front-end/mail/user-create-order.php:430
+#: templates/front-end/mail/admin-create-order.php:430
 #: templates/front-end/product/comments.php:150
 msgid "Email"
 msgstr "E-mail"
 
-#: lib/FS_Users.php:1047
+#: lib/FS_Users.php:1049
 msgid "Email does not match format"
 msgstr "E-mail не соответствует формату"
 
@@ -1035,6 +1063,8 @@ msgid "Find"
 msgstr "Искать"
 
 #: lib/FS_Customers_List.php:249 templates/front-end/order/quick-order.php:2
+#: templates/front-end/mail/user-create-order.php:426
+#: templates/front-end/mail/admin-create-order.php:426
 #: templates/front-end/shortcode/fs-order-info.php:48
 msgid "First Name"
 msgstr "Имя"
@@ -1131,7 +1161,7 @@ msgstr ""
 msgid "Group"
 msgstr "Группа"
 
-#: templates/front-end/auth/register.php:33
+#: templates/front-end/auth/register.php:34
 msgid "Have an account?"
 msgstr "Уже есть аккаунт?"
 
@@ -1156,7 +1186,7 @@ msgstr "Номер дома"
 msgid "https://f-shop.top/"
 msgstr ""
 
-#: templates/front-end/auth/register.php:24
+#: templates/front-end/auth/register.php:25
 msgid "I agree to the terms of use and the processing of my personal data"
 msgstr "Я соглашаюсь с правилами использования и обработки персональных данных"
 
@@ -1301,6 +1331,11 @@ msgstr ""
 msgid "It looks like your site has not been visited yet."
 msgstr "Похоже, ваш сайт еще не посещался."
 
+#: templates/front-end/mail/user-create-order.php:479
+#: templates/front-end/mail/admin-create-order.php:479
+msgid "Item"
+msgstr ""
+
 #: lib/FS_Init.php:168 lib/FS_Init.php:171
 msgid "Item &laquo;%product%&raquo; successfully added to cart."
 msgstr "Товар &laquo;%product%&raquo; успешно добавлен в корзину."
@@ -1348,6 +1383,8 @@ msgstr "Фамилия"
 #: actions.php:64 lib/FS_Customers_List.php:164 lib/FS_Users.php:436
 #: lib/FS_Users.php:440 lib/FS_Users.php:483 lib/FS_Users.php:487
 #: functions/actions.php:64 functions/actions.php:64
+#: templates/front-end/mail/user-create-order.php:428
+#: templates/front-end/mail/admin-create-order.php:428
 #: templates/front-end/shortcode/fs-order-info.php:52
 #: templates/back-end/metabox/order/add.php:32
 #: templates/back-end/metabox/order/show.php:16
@@ -1484,7 +1521,7 @@ msgstr "Модальное окно"
 msgid "Multi-language support"
 msgstr "Поддержка многоязычности"
 
-#: templates/front-end/auth/register.php:23
+#: templates/front-end/auth/register.php:24
 msgid "Must agree"
 msgstr "Необходимо согласиться"
 
@@ -1501,7 +1538,7 @@ msgstr "Мои заказы"
 msgid "Name"
 msgstr "Имя"
 
-#: lib/FS_Users.php:1052
+#: lib/FS_Users.php:1054
 msgid "Name field cannot be empty"
 msgstr "Поле имя не может быть пустым"
 
@@ -1544,6 +1581,9 @@ msgstr "Не найден метод оплаты"
 #: templates/front-end/dashboard/wishlist.php:77
 msgid "No product found in wish list"
 msgstr "Не найдено товаров в списке желаний"
+
+msgid "No reviews"
+msgstr "Нет отзывов"
 
 #: lib/widgets/Attribute_Widget.php:137
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24
@@ -1714,6 +1754,11 @@ msgstr "Другой адрес доставки"
 msgid "Packaging"
 msgstr "Упаковка"
 
+#: templates/front-end/mail/user-create-order.php:535
+#: templates/front-end/mail/admin-create-order.php:535
+msgid "Packing"
+msgstr ""
+
 #: lib/FS_Settings.php:362
 msgid "Packing cost"
 msgstr "Стоимость упаковки"
@@ -1749,7 +1794,7 @@ msgstr "Сброс пароля"
 msgid "Password reset on the site"
 msgstr "Сброс пароля на сайте"
 
-#: lib/FS_Users.php:368
+#: lib/FS_Users.php:368 lib/FS_Users.php:1064
 msgid "Passwords do not match"
 msgstr ""
 
@@ -1757,6 +1802,8 @@ msgstr ""
 msgid "pay now"
 msgstr "заплатить сейчас"
 
+#: templates/front-end/mail/user-create-order.php:448
+#: templates/front-end/mail/admin-create-order.php:448
 #: templates/front-end/dashboard/orders.php:65
 msgid "Payment"
 msgstr "Оплата"
@@ -1812,6 +1859,8 @@ msgstr "Телефон"
 
 #: lib/FS_Config.php:72 lib/FS_Customers_List.php:243 lib/FS_Users.php:573
 #: lib/FS_Users.php:577 templates/front-end/order/last-order-info.php:23
+#: templates/front-end/mail/user-create-order.php:432
+#: templates/front-end/mail/admin-create-order.php:432
 #: templates/front-end/shortcode/fs-order-info.php:60
 #: templates/back-end/metabox/order/add.php:37
 #: templates/back-end/metabox/order/show.php:20
@@ -1991,6 +2040,8 @@ msgstr "Приобретенные товары"
 msgid "Purchased items"
 msgstr "Купленные товары"
 
+#: templates/front-end/mail/user-create-order.php:482
+#: templates/front-end/mail/admin-create-order.php:482
 #: templates/front-end/shortcode/order-detail.php:18
 #: templates/front-end/dashboard/orders.php:33
 msgid "Qty"
@@ -2069,9 +2120,10 @@ msgstr "Зарегистрируйтесь, чтобы иметь доступ �
 msgid "Registration date"
 msgstr "Дата регистрации"
 
-#: lib/FS_Users.php:1098 lib/FS_Users.php:1111
-msgid "Registration on the website «{{ site_name }}»"
-msgstr "Регистрация на сайте «{{ site_name }}»"
+#: lib/FS_Users.php:1107
+#, php-format
+msgid "Registration on the website «%s»"
+msgstr ""
 
 #: templates/back-end/metabox/related.php:2
 msgid "Related products"
@@ -2186,7 +2238,7 @@ msgstr[1] "Выбрано: %s товара"
 msgstr[2] "Выбрано: %s товаров"
 
 #: templates/front-end/order/quick-order.php:13
-#: templates/front-end/auth/register.php:29
+#: templates/front-end/auth/register.php:30
 #: templates/front-end/product/comments.php:224
 msgid "Send"
 msgstr "Отправить"
@@ -2417,7 +2469,7 @@ msgstr ""
 msgid "The field is active if you have enabled multicurrency in settings."
 msgstr "Это поле активно если Вы включили мультивалютность в настройках."
 
-#: lib/FS_Users.php:1131
+#: lib/FS_Users.php:1132
 msgid "The form did not pass the security check!"
 msgstr "Форма не прошла проверку безопасности!"
 
@@ -2640,7 +2692,7 @@ msgstr "Заголовок в письме оформления заказа о�
 msgid "To catalog"
 msgstr "В каталог"
 
-#: lib/FS_Users.php:1259 lib/FS_Users.php:1294
+#: lib/FS_Users.php:1260 lib/FS_Users.php:1293
 msgid "To personal account"
 msgstr "В личный кабинет"
 
@@ -2651,6 +2703,13 @@ msgstr "В каталог"
 #: templates/front-end/wishlist/wishlist.php:1
 msgid "To wish list"
 msgstr "В список желаний"
+
+#: templates/front-end/mail/user-create-order.php:485
+#: templates/front-end/mail/user-create-order.php:537
+#: templates/front-end/mail/admin-create-order.php:485
+#: templates/front-end/mail/admin-create-order.php:537
+msgid "Total"
+msgstr ""
 
 #: templates/front-end/shortcode/fs-order-info.php:38
 #: templates/front-end/shortcode/list-orders.php:11
@@ -2804,7 +2863,9 @@ msgid "Vendor code"
 msgstr "Артикул"
 
 #: templates/front-end/mail/user-create-order.php:397
+#: templates/front-end/mail/user-create-order.php:401
 #: templates/front-end/mail/admin-create-order.php:397
+#: templates/front-end/mail/admin-create-order.php:401
 msgid "View order"
 msgstr "Смотреть заказ"
 
@@ -2875,7 +2936,7 @@ msgstr "Да"
 msgid "You are already logged in"
 msgstr "Вы уже авторизованы"
 
-#: lib/FS_Users.php:1216 lib/FS_Users.php:1252 lib/FS_Users.php:1288
+#: lib/FS_Users.php:1217 lib/FS_Users.php:1253 lib/FS_Users.php:1287
 msgid "You are already logged in."
 msgstr "Вы уже вошли на сайт"
 
@@ -2908,6 +2969,10 @@ msgstr "Вы уже проголосовали за этот отзыв!"
 msgid "You have selected all available items from stock."
 msgstr "Вы выбрали все доступные товары со склада."
 
+#: lib/FS_Users.php:1068
+msgid "You must accept the terms and conditions"
+msgstr ""
+
 #: lib/FS_Payment.php:72
 msgid "You or someone else paid for this order."
 msgstr "Вы или кто-то другой заплатил за этот заказ."
@@ -2929,7 +2994,7 @@ msgstr "Ваши данные успешно изменены"
 msgid "Your data has been successfully updated."
 msgstr "Ваши данные успешно обновлены."
 
-#: lib/FS_Users.php:1199
+#: lib/FS_Users.php:1200
 msgid "Your data has been updated successfully!"
 msgstr "Ваши данные успешно обновлены!"
 

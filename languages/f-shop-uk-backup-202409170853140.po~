@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2024-09-15 14:07+0000\n"
+"PO-Revision-Date: 2024-09-17 07:11+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -538,7 +538,7 @@ msgstr ""
 
 #: lib/FS_Ajax.php:1392
 msgid "Comment is required"
-msgstr ""
+msgstr "Коментар обов'язковий"
 
 #: lib/FS_Users.php:741 lib/FS_Users.php:744
 msgid "Comment on the order"
@@ -559,7 +559,7 @@ msgstr "Підтвердіть пароль"
 msgid "Congratulations! A new order has appeared on your site."
 msgstr "Вітаємо. На Вашому сайті з'явилося нове замовлення."
 
-#: lib/FS_Users.php:1118
+#: lib/FS_Users.php:1119
 #, php-format
 msgid ""
 "Congratulations! You have successfully registered! <a href=\"%s\">Log in</a>"
@@ -603,7 +603,7 @@ msgstr "Вартість в базовій валюті"
 #: templates/front-end/mail/user-create-order.php:533
 #: templates/front-end/mail/admin-create-order.php:533
 msgid "Cost of delivery"
-msgstr ""
+msgstr "Вартість доставки"
 
 #: lib/FS_Init.php:263 templates/front-end/mail/user-create-order.php:532
 #: templates/front-end/mail/admin-create-order.php:532
@@ -741,7 +741,7 @@ msgstr "Способи доставки"
 #: templates/front-end/mail/user-create-order.php:420
 #: templates/front-end/mail/admin-create-order.php:420
 msgid "Delivery number"
-msgstr ""
+msgstr "Номер відділення"
 
 #: templates/back-end/metabox/order/show.php:36
 msgid "Delivery service address"
@@ -907,13 +907,13 @@ msgstr "Редагувати профіль"
 msgid "Email"
 msgstr "E-mail"
 
-#: lib/FS_Users.php:1047
+#: lib/FS_Users.php:1049
 msgid "Email does not match format"
 msgstr "Email не відповідає формату"
 
 #: lib/FS_Ajax.php:1382
 msgid "Email is not valid"
-msgstr ""
+msgstr "Електронна адреса недійсна"
 
 #: templates/front-end/auth/login.php:16
 msgid "Email or login"
@@ -1152,7 +1152,7 @@ msgstr ""
 msgid "Group"
 msgstr "Група"
 
-#: templates/front-end/auth/register.php:33
+#: templates/front-end/auth/register.php:34
 msgid "Have an account?"
 msgstr "Вже зареєстровані?"
 
@@ -1177,7 +1177,7 @@ msgstr "Номер будинку"
 msgid "https://f-shop.top/"
 msgstr ""
 
-#: templates/front-end/auth/register.php:24
+#: templates/front-end/auth/register.php:25
 msgid "I agree to the terms of use and the processing of my personal data"
 msgstr "Я даю згоду на використання та обробку моїх персональних даних"
 
@@ -1289,11 +1289,11 @@ msgstr "Включити мітку \"Хіт продаж\""
 
 #: lib/FS_Users.php:363
 msgid "Incorrect old password"
-msgstr ""
+msgstr "Неправильний старий пароль"
 
 #: lib/FS_Cart.php:242
 msgid "Index not specified"
-msgstr ""
+msgstr "Індекс не вказано"
 
 #: templates/front-end/checkout/checkout.php:96
 msgid "Information about delivery"
@@ -1394,7 +1394,7 @@ msgstr "давніше додані"
 
 #: templates/front-end/product/comments.php:29
 msgid "Leave a review"
-msgstr ""
+msgstr "Залишити відгук"
 
 #: templates/front-end/product/comments.php:137
 #, fuzzy
@@ -1484,6 +1484,8 @@ msgid ""
 "Messages are moderated. Comments containing profanity, insults, links to "
 "third-party resources, spam will not be published."
 msgstr ""
+"Повідомлення модеруються. Коментарі, що містять ненормативну лексику, образи,"
+" посилання на сторонні ресурси, спам не публікуються."
 
 #: lib/FS_Settings.php:679
 msgid "Meta description for product archive"
@@ -1513,7 +1515,7 @@ msgstr "Модальне вікно"
 msgid "Multi-language support"
 msgstr "Мульти язикова підтримка"
 
-#: templates/front-end/auth/register.php:23
+#: templates/front-end/auth/register.php:24
 msgid "Must agree"
 msgstr "Потрібно дати згоду"
 
@@ -1530,13 +1532,13 @@ msgstr "Мої замовлення"
 msgid "Name"
 msgstr "Назва"
 
-#: lib/FS_Users.php:1052
+#: lib/FS_Users.php:1054
 msgid "Name field cannot be empty"
 msgstr "Поле ім'я не може бути порожнім"
 
 #: lib/FS_Ajax.php:1387
 msgid "Name is required"
-msgstr ""
+msgstr "Необхідно вказати ім'я"
 
 #: lib/FS_Settings.php:456
 msgid "Name of the sender of letters"
@@ -1573,6 +1575,9 @@ msgstr "Не вказаний метод оплати"
 #: templates/front-end/dashboard/wishlist.php:77
 msgid "No product found in wish list"
 msgstr "Не знайдено товарів в списку бажань"
+
+msgid "No reviews"
+msgstr "Немає відгуків"
 
 #: lib/widgets/Attribute_Widget.php:137
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24
@@ -1691,7 +1696,7 @@ msgstr "Номер замовлення"
 
 #: lib/FS_Ajax.php:1517
 msgid "Order ID not found"
-msgstr ""
+msgstr "ID замовлення не знайдено"
 
 #: lib/FS_Settings.php:646
 msgid "Order Information Page"
@@ -1746,7 +1751,7 @@ msgstr "Упаковка"
 #: templates/front-end/mail/user-create-order.php:535
 #: templates/front-end/mail/admin-create-order.php:535
 msgid "Packing"
-msgstr ""
+msgstr "Упаковка"
 
 #: lib/FS_Settings.php:362
 msgid "Packing cost"
@@ -1783,9 +1788,9 @@ msgstr "Скинути пароль"
 msgid "Password reset on the site"
 msgstr "Зміна пароля на сайті"
 
-#: lib/FS_Users.php:368
+#: lib/FS_Users.php:368 lib/FS_Users.php:1064
 msgid "Passwords do not match"
-msgstr ""
+msgstr "Паролі не співпадають"
 
 #: templates/front-end/shortcode/fs-order-info.php:74
 msgid "pay now"
@@ -1949,7 +1954,7 @@ msgstr "Фільтр категорії товарів"
 
 #: lib/FS_Ajax.php:1272 lib/FS_Ajax.php:1332 lib/FS_Ajax.php:1377
 msgid "Product ID not found"
-msgstr ""
+msgstr "ID продукту не знайдено"
 
 #: lib/FS_Settings.php:305
 msgid "Product link localization"
@@ -2055,7 +2060,7 @@ msgstr "діапазон"
 
 #: templates/front-end/product/comments.php:169
 msgid "Rate the product"
-msgstr ""
+msgstr "Оцініть товар"
 
 #: lib/FS_Ajax.php:524
 msgid "Rating successfully set!"
@@ -2109,9 +2114,10 @@ msgstr "Зареєструватися на сайті"
 msgid "Registration date"
 msgstr "Дата реєстрації"
 
-#: lib/FS_Users.php:1098 lib/FS_Users.php:1111
-msgid "Registration on the website «{{ site_name }}»"
-msgstr "Реэстрація на сайті «{{ site_name }}»"
+#: lib/FS_Users.php:1107
+#, php-format
+msgid "Registration on the website «%s»"
+msgstr "Реєстрація на сайті «%s»"
 
 #: templates/back-end/metabox/related.php:2
 msgid "Related products"
@@ -2226,7 +2232,7 @@ msgstr[1] "Вибрано: %s товари"
 msgstr[2] "Вибрано: %s товарів"
 
 #: templates/front-end/order/quick-order.php:13
-#: templates/front-end/auth/register.php:29
+#: templates/front-end/auth/register.php:30
 #: templates/front-end/product/comments.php:224
 msgid "Send"
 msgstr "Відправити"
@@ -2456,7 +2462,7 @@ msgstr ""
 msgid "The field is active if you have enabled multicurrency in settings."
 msgstr "Це поле активне якщо ввімкнено мультивалютний режим в налаштуваннях."
 
-#: lib/FS_Users.php:1131
+#: lib/FS_Users.php:1132
 msgid "The form did not pass the security check!"
 msgstr "Форма не пройшла перевірку безпеки!"
 
@@ -2679,7 +2685,7 @@ msgstr "Назва в листі замовлення покупцеві"
 msgid "To catalog"
 msgstr "В каталог"
 
-#: lib/FS_Users.php:1259 lib/FS_Users.php:1294
+#: lib/FS_Users.php:1260 lib/FS_Users.php:1293
 msgid "To personal account"
 msgstr "До кабінету"
 
@@ -2924,7 +2930,7 @@ msgstr "Так"
 msgid "You are already logged in"
 msgstr "Ви вже авторизовані"
 
-#: lib/FS_Users.php:1216 lib/FS_Users.php:1252 lib/FS_Users.php:1288
+#: lib/FS_Users.php:1217 lib/FS_Users.php:1253 lib/FS_Users.php:1287
 msgid "You are already logged in."
 msgstr "Ви вже пройшли авторизацію на сайті."
 
@@ -2956,6 +2962,10 @@ msgstr "Ви вже проголосували за цей відгук!"
 msgid "You have selected all available items from stock."
 msgstr "Ви забрали всі доступні товари із складу."
 
+#: lib/FS_Users.php:1068
+msgid "You must accept the terms and conditions"
+msgstr ""
+
 #: lib/FS_Payment.php:72
 msgid "You or someone else paid for this order."
 msgstr "Ви або хтось інший вже оплатив це замовлення."
@@ -2977,7 +2987,7 @@ msgstr "Ваші дані успішно збережені"
 msgid "Your data has been successfully updated."
 msgstr "Ваші дані успішно збережені"
 
-#: lib/FS_Users.php:1199
+#: lib/FS_Users.php:1200
 msgid "Your data has been updated successfully!"
 msgstr "Ваші дані успішно оновлено!"
 

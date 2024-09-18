@@ -63,7 +63,6 @@ class FS_Init {
 			$this,
 			'plugin_settings_link'
 		) );
-		add_action( 'plugins_loaded', [ $this, 'true_load_plugin_textdomain' ] );
 
 		add_action( 'init', [ $this, 'session_init' ] );
 
@@ -101,12 +100,6 @@ class FS_Init {
 		}
 	}
 
-	/**
-	 * Устанавливаем путь к файлам локализации
-	 */
-	function true_load_plugin_textdomain() {
-		load_plugin_textdomain( 'f-shop', false, dirname( plugin_basename( FS_PLUGIN_FILE ) ) . '/languages' );
-	}
 
 	/**
 	 * На странице плагинов добавляет ссылку "настроить" напротив нашего плагина
