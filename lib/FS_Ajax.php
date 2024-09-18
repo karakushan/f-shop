@@ -717,7 +717,7 @@ class FS_Ajax {
 		$wpdb->show_errors( false );
 		$fs_config                 = new FS_Config();
 		$order_create_time         = time();
-		$order_create_date_display = date_i18n( 'd F Y H:i', $order_create_time );
+		$order_create_date_display = date_i18n( 'd.m.Y H:i', $order_create_time );
 		$update_user_meta          = ! isset( $_POST['fs_update_user_meta'] ) || boolval( $_POST['fs_update_user_meta'] );
 		$order_status_id           = intval( fs_option( 'fs_default_order_status' ) );
 		$customer_id               = 0;
@@ -937,13 +937,13 @@ class FS_Ajax {
 			// Отсылаем письмо с данными заказа заказчику
 			$notification->set_recipients( [ $sanitize_field['fs_email'] ] );
 			$notification->set_subject( $customer_mail_subject );
-			$notification->set_template( 'mail/user-create-order', $mail_data );
+			$notification->set_template( 'mail/' . get_locale() . '/user-create-order', $mail_data );
 			$notification->send();
 
 			//Отсылаем письмо админу
 			$notification->set_recipients( [ fs_option( 'manager_email', get_option( 'admin_email' ) ) ] );
 			$notification->set_subject( fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ) );
-			$notification->set_template( 'mail/admin-create-order', $mail_data );
+			$notification->set_template( 'mail/' . get_locale() . '/admin-create-order', $mail_data );
 			$notification->send();
 
 			/* обновляем название заказа для админки */
