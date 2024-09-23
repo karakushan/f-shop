@@ -1523,7 +1523,8 @@ class FS_Ajax {
 			wp_send_json_error( [ 'msg' => __( 'Order ID not found', 'f-shop' ) ] );
 		}
 
-		$new_order_id = FS_Orders::clone_order( $_POST['order_id'] );
+		$new_order_id                 = FS_Orders::clone_order( $_POST['order_id'] );
+		$_SESSION['fs_last_order_id'] = $new_order_id;
 
 		if ( is_wp_error( $new_order_id ) ) {
 			wp_send_json_error( [ 'msg' => $new_order_id->get_error_message() ] );
