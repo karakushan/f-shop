@@ -416,21 +416,17 @@
                                                         <tr>
                                                             <td class="mini-block">
                                                                 <span class="header-sm"><?= __( 'Delivery', 'f-shop' ) ?></span><br/>
-																<?= ! empty( $delivery_method ) ? __( "Delivery method", 'f-shop' ) . ': ' . $delivery_method . '<br>' : '' ?>
-
-																<?= ! empty( $delivery_number ) ? __( "Delivery number", 'f-shop' ) . ': ' . $delivery_number . '<br>' : '' ?>
-
-																<?= ! empty( $client_city ) ? __( "City", 'f-shop' ) . ': ' . $client_city . '<br>' : '' ?>
-
-																<?= ! empty( $client_address ) ? __( "Address", 'f-shop' ) . ': ' . $client_address . '<br>' : '' ?>
-
-																<?= ! empty( $client_first_name ) ? __( "First Name", 'f-shop' ) . ': ' . $client_first_name . '<br>' : '' ?>
-
-																<?= ! empty( $client_last_name ) ? __( "Last name", 'f-shop' ) . ': ' . $client_last_name . '<br>' : '' ?>
-
-																<?= ! empty( $client_email ) ? __( "Email", 'f-shop' ) . ': ' . $client_email . '<br>' : '' ?>
-
-																<?= ! empty( $client_phone ) ? __( "Phone number", 'f-shop' ) . ': ' . $client_phone . '<br>' : '' ?>
+																<?= ! empty( $delivery_method ) ? sprintf( 'Спосіб доставки: %s<br>', $delivery_method ) : '' ?>
+																<?= ! empty( $delivery_number ) ? sprintf( 'Номер відділення: %s<br>', $delivery_number ) : '' ?>
+																<?= ! empty( $client_city ) ? sprintf( 'Місто: %s<br>', $client_city ) : '' ?>
+																<?= ! empty( $client_address ) ? sprintf( 'Адреса: %s<br>', $client_address ) : '' ?>
+																<?= ! empty( $address_street ) ? sprintf( 'Вулиця: %s<br>', $address_street ) : '' ?>
+																<?= ! empty( $address_house_number ) ? sprintf( 'Будинок: %s<br>', $address_house_number ) : '' ?>
+																<?= ! empty( $address_entrance_number ) ? sprintf( 'Під’їзд: %s<br>', $address_entrance_number ) : '' ?>
+																<?= ! empty( $address_apartment_number ) ? sprintf( 'Квартира: %s<br>', $address_apartment_number ) : '' ?>
+																<?= ! empty( $client_last_name ) || ! empty( $client_first_name ) ? sprintf( 'Прізвище та ім’я: %s %s<br>', $client_last_name ?? '', $client_first_name ?? '' ) : '' ?>
+																<?= ! empty( $client_email ) ? sprintf( 'E-mail: %s<br>', $client_email ) : '' ?>
+																<?= ! empty( $client_phone ) ? sprintf( 'Телефон: %s<br>', $client_phone ) : '' ?>
                                                             </td>
                                                         </tr>
                                                     </table>

@@ -651,6 +651,16 @@ class FS_Users {
 				'save_meta'   => true
 
 			),
+			'fs_street'            => array(
+				'name'        => __( 'Street', 'f-shop' ),
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'Street', 'f-shop' ),
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_address', 1 ) : '',
+				'required'    => false,
+				'checkout'    => true,
+				'save_meta'   => true
+			),
 			'fs_home_num'          => array(
 				'name'        => __( 'House number', 'f-shop' ),
 				'type'        => 'text',
@@ -667,6 +677,17 @@ class FS_Users {
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __( 'Apartment number', 'f-shop' ),
+				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_apartment_num', 1 ) : '',
+				'required'    => false,
+				'checkout'    => true,
+				'save_meta'   => true
+
+			),
+			'fs_entrance_num'      => array(
+				'name'        => __( 'Entrance number', 'f-shop' ),
+				'type'        => 'text',
+				'label'       => '',
+				'placeholder' => __( 'Entrance number', 'f-shop' ),
 				'value'       => fs_option( 'fs_autofill_form' ) && $user_id ? get_user_meta( $user_id, 'fs_apartment_num', 1 ) : '',
 				'required'    => false,
 				'checkout'    => true,

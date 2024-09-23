@@ -415,15 +415,17 @@
                                                         <tr>
                                                             <td class="mini-block">
                                                                 <span class="header-sm">Доставка</span><br/>
-                                                                Способ доставки: <?= $delivery_method ?><br/>
-                                                                Номер отделения: <?= $delivery_number ?><br/>
-                                                                Город: <?= $client_city ?><br/>
-                                                                Адрес: <?= $client_address ?><br/>
-                                                                Имя и
-                                                                фамилия: <?= $client_first_name . ' ' . $client_last_name ?>
-                                                                <br/>
-                                                                E-mail: <?= $client_email ?> <br/>
-                                                                Телефон: <?= $client_phone ?>
+																<?= ! empty( $delivery_method ) ? sprintf( 'Способ доставки: %s<br>', $delivery_method ) : '' ?>
+																<?= ! empty( $delivery_number ) ? sprintf( 'Номер отделения: %s<br>', $delivery_number ) : '' ?>
+																<?= ! empty( $client_city ) ? sprintf( 'Город: %s<br>', $client_city ) : '' ?>
+																<?= ! empty( $client_address ) ? sprintf( 'Адрес: %s<br>', $client_address ) : '' ?>
+																<?= ! empty( $address_street ) ? sprintf( 'Улица: %s<br>', $address_street ) : '' ?>
+																<?= ! empty( $address_house_number ) ? sprintf( 'Дом: %s<br>', $address_house_number ) : '' ?>
+																<?= ! empty( $address_entrance_number ) ? sprintf( 'Подъезд: %s<br>', $address_entrance_number ) : '' ?>
+																<?= ! empty( $address_apartment_number ) ? sprintf( 'Квартира: %s<br>', $address_apartment_number ) : '' ?>
+																<?= ! empty( $client_last_name ) || ! empty( $client_first_name ) ? sprintf( 'Фамилия и имя: %s %s<br>', $client_last_name ?? '', $client_first_name ?? '' ) : '' ?>
+																<?= ! empty( $client_email ) ? sprintf( 'E-mail: %s<br>', $client_email ) : '' ?>
+																<?= ! empty( $client_phone ) ? sprintf( 'Телефон: %s<br>', $client_phone ) : '' ?>
                                                             </td>
                                                         </tr>
                                                     </table>
