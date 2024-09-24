@@ -8,13 +8,13 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2024-09-17 08:53+0000\n"
+"PO-Revision-Date: 2024-09-18 16:25+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Loco-Version: 2.6.10; wp-6.5.3"
+"X-Loco-Version: 2.6.11; wp-6.6.1"
 
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
@@ -146,8 +146,11 @@ msgstr "Додати характеристику/групу характери�
 msgid "Add tax"
 msgstr "Додати податок"
 
+msgid "Add to cart"
+msgstr "До кошика"
+
 msgid "Add to wishlist"
-msgstr "Добавить в список желаний"
+msgstr "Додати до списку бажань"
 
 #: templates/back-end/metabox/up-sell.php:3
 msgid "Add up-sell products"
@@ -1201,7 +1204,7 @@ msgstr ""
 #: lib/FS_Payment.php:85
 #, php-format
 msgid "If payment is successful, you will be charged %s %s."
-msgstr "Якщо платіж буде успішним, з Вас буде стягнуто %s %s."
+msgstr "Якщо платіж буде успішним, з Вашого рахунку буде списано %s %s."
 
 #: lib/FS_Settings.php:401
 msgid ""
@@ -2412,6 +2415,9 @@ msgstr "Тестовий режим"
 msgid "text"
 msgstr "текст"
 
+msgid "Thank you for your order"
+msgstr "Дякуємо за замовлення"
+
 #: lib/FS_Config.php:122
 msgid "Thank you for your purchase."
 msgstr "Дякуємо за покупку."
@@ -3009,6 +3015,9 @@ msgstr "Ваш голос враховано при оцінюванні цьо�
 #: templates/front-end/auth/register.php:2
 msgid "Your name"
 msgstr "Ваше ім'я"
+
+msgid "Your order #%d has been placed. We will contact you shortly."
+msgstr "Ваше замовлення #%d розміщено. Ми зв'яжемося з вами найближчим часом."
 
 #: lib/FS_Orders.php:342
 msgid ""

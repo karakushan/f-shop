@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2024-09-16 08:39+0000\n"
+"POT-Creation-Date: 2024-09-17 09:26+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -3088,4 +3088,19 @@ msgstr ""
 
 #: lib/Admin/ProductEdit.php:165
 msgid "товари схожі на основний"
+msgstr ""
+
+msgid "No reviews"
+msgstr ""
+
+msgid "Add to wishlist"
+msgstr ""
+
+msgid "Add to cart"
+msgstr ""
+
+msgid "Thank you for your order"
+msgstr ""
+
+msgid "Your order #%d has been placed. We will contact you shortly."
 msgstr ""
