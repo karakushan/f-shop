@@ -30,8 +30,7 @@ class FS_Ajax {
 			// Clean Wishlist
 			add_action( 'wp_ajax_fs_clean_wishlist', array( $this, 'fs_clean_wishlist' ) );
 			add_action( 'wp_ajax_nopriv_fs_clean_wishlist', array( $this, 'fs_clean_wishlist' ) );
-
-
+			
 			add_action( 'wp_ajax_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
 			add_action( 'wp_ajax_nopriv_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
 

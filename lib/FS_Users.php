@@ -1127,12 +1127,12 @@ class FS_Users {
 		$notification = new FS_Notification();
 		$notification->set_subject( sprintf( __( 'Registration on the website «%s»', 'f-shop' ), get_bloginfo( 'name' ) ) );
 		$notification->set_recipients( [ $save_fields['fs_email'] ] );
-		$notification->set_template( 'mail/user-registration', $replace_keys );
+		$notification->set_template( 'mail/' . get_locale() . '/user-registration', $replace_keys );
 		$notification->send();
 
 		// Send a letter to the admin
 		$notification->set_recipients( [ get_bloginfo( 'admin_email' ) ] );
-		$notification->set_template( 'mail/user-registration-admin', $replace_keys );
+		$notification->set_template( 'mail/' . get_locale() . '/user-registration-admin', $replace_keys );
 		$notification->send();
 
 		// Отправляем сообщение успешной регистрации на экран
