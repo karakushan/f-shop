@@ -303,7 +303,7 @@ class FS_Settings {
 						'type'  => 'checkbox',
 						'name'  => 'fs_localize_product_url',
 						'label' => __( 'Product link localization', 'f-shop' ),
-						'help'  => __('Adds a field for entering a slug in other languages','f-shop'),
+						'help'  => __( 'Adds a field for entering a slug in other languages', 'f-shop' ),
 						'value' => fs_option( 'fs_localize_product_url' )
 					)
 				)
@@ -467,14 +467,14 @@ class FS_Settings {
 						'type'  => 'text',
 						'name'  => 'admin_mail_header',
 						'label' => __( 'Title in the order letter to the administrator', 'f-shop' ),
-						'value' => fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ),
+						'value' => fs_option( 'admin_mail_header' ),
 						'help'  => '',
 					),
 					array(
 						'type'  => 'text',
 						'name'  => 'customer_mail_header',
 						'label' => __( 'Title in the order letter to the buyer', 'f-shop' ),
-						'value' => fs_option( 'customer_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ),
+						'value' => fs_option( 'customer_mail_header' ),
 						'help'  => '',
 					),
 					array(

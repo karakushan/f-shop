@@ -30,7 +30,7 @@ class FS_Ajax {
 			// Clean Wishlist
 			add_action( 'wp_ajax_fs_clean_wishlist', array( $this, 'fs_clean_wishlist' ) );
 			add_action( 'wp_ajax_nopriv_fs_clean_wishlist', array( $this, 'fs_clean_wishlist' ) );
-			
+
 			add_action( 'wp_ajax_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
 			add_action( 'wp_ajax_nopriv_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
 
@@ -698,6 +698,18 @@ class FS_Ajax {
 		return $form_fields;
 	}
 
+	function replace_mail_variables( $message, $mail_data ) {
+		return str_replace( array_map( function ( $item ) {
+			return '%' . $item . '%';
+		}, array_keys( $mail_data ) ), array_values( $mail_data ), $message );
+	}
+
+	function extract_text_by_locale( $text, $locale = '' ) {
+		$locale = $locale ? $locale : get_locale();
+		preg_match( '/<' . $locale . '>(.*?)<\/' . $locale . '>/', $text, $matches );
+
+		return isset( $matches[1] ) ? $matches[1] : $text;
+	}
 
 	/**
 	 * Ajax order creation
@@ -884,6 +896,7 @@ class FS_Ajax {
 			$_SESSION['fs_last_order_pay'] = $pay_method ? $pay_method->slug : 0;
 
 			$customer_mail_subject = fs_option( 'customer_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
+			$admin_mail_subject    = fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) );
 
 			// Здесь мы определяем переменные для шаблона письма
 			$mail_data = [
@@ -939,13 +952,13 @@ class FS_Ajax {
 
 			// Отсылаем письмо с данными заказа заказчику
 			$notification->set_recipients( [ $sanitize_field['fs_email'] ] );
-			$notification->set_subject( $customer_mail_subject );
+			$notification->set_subject( $this->replace_mail_variables( $this->extract_text_by_locale( $customer_mail_subject ), $mail_data ) );
 			$notification->set_template( 'mail/' . get_locale() . '/user-create-order', $mail_data );
 			$notification->send();
 
 			//Отсылаем письмо админу
 			$notification->set_recipients( [ fs_option( 'manager_email', get_option( 'admin_email' ) ) ] );
-			$notification->set_subject( fs_option( 'admin_mail_header', sprintf( __( 'Order goods on the site "%s"', 'f-shop' ), get_bloginfo( 'name' ) ) ) );
+			$notification->set_subject( $this->replace_mail_variables( $this->extract_text_by_locale( $admin_mail_subject ), $mail_data ) );
 			$notification->set_template( 'mail/' . get_locale() . '/admin-create-order', $mail_data );
 			$notification->send();
 
