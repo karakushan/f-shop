@@ -513,6 +513,20 @@ class FS_Settings {
 							'min' => 0
 						]
 					),
+					array(
+						'type'  => 'checkbox',
+						'name'  => 'fs_notify_telegram',
+						'label' => __( 'Notifications in telegram', 'f-shop' ),
+						'value' => fs_option( 'fs_notify_telegram', 0 ),
+						'after' => sprintf( __( 'Щоб отримувати повідомлення в телеграмі додайте бота <a href="%s" target="_blank">@FShopOfficialBot</a> та напишіть будь-яке повідомлення типу "Привіт"', 'f-shop' ), 'https://t.me/FShopOfficialBot' )
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'fs_telegram_user_id',
+						'label' => __( 'Telegram user id', 'f-shop' ),
+						'value' => fs_option( 'fs_telegram_user_id' ),
+						'after' => sprintf( __( 'Щоб дізнатися "user id" можна скористатися ботом <a href="%s" target="_blank">@getmyid_bot</a>', 'f-shop' ), 'https://t.me/getmyid_bot' ),
+					),
 				)
 
 

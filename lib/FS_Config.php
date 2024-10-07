@@ -3,6 +3,7 @@
 namespace FS;
 
 class FS_Config {
+
 	public $data;
 	public $meta;
 	public $term_meta;
@@ -21,6 +22,9 @@ class FS_Config {
 	public static $pages = array();
 
 	protected static $nonce_field = 'fs_secret';
+	private static $telegram_bot = 'FShopOfficialBot';
+	private static $telegram_bot_token = '7657903599:AAEJ_-9Tpcuot9fpLdS5yf2Fsbso5sSFhDo';
+
 
 	/**
 	 * FS_Config constructor.
@@ -600,7 +604,7 @@ class FS_Config {
 	 */
 	public static function get_product_field( $key = '' ) {
 		$fields = array(
-			'price'             => [ 'key'  => 'fs_price' ],
+			'price'             => [ 'key' => 'fs_price' ],
 			'action_price'      => [ 'key' => 'fs_action_price' ],
 			'real_price'        => [ 'key' => '_fs_real_price' ],
 			'currency'          => [ 'key' => 'fs_currency' ],
@@ -766,5 +770,7 @@ class FS_Config {
 
 	}
 
-
+	public static function get_telegram_bot_token(): string {
+		return self::$telegram_bot_token;
+	}
 }

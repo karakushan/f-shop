@@ -948,6 +948,7 @@ class FS_Ajax {
 
 			$mail_data = apply_filters( 'fs_create_order_mail_data', $mail_data );
 
+			// NOTIFICATION
 			$notification = new FS_Notification();
 
 			// Отсылаем письмо с данными заказа заказчику
@@ -957,6 +958,9 @@ class FS_Ajax {
 			$notification->send();
 
 			//Отсылаем письмо админу
+			if ( fs_option( 'fs_notify_telegram' ) ) {
+				$notification->push_channel( 'telegram' );
+			}
 			$notification->set_recipients( [ fs_option( 'manager_email', get_option( 'admin_email' ) ) ] );
 			$notification->set_subject( $this->replace_mail_variables( $this->extract_text_by_locale( $admin_mail_subject ), $mail_data ) );
 			$notification->set_template( 'mail/' . get_locale() . '/admin-create-order', $mail_data );
@@ -970,7 +974,6 @@ class FS_Ajax {
 						$order_id, $sanitize_field['fs_first_name'], $sanitize_field['fs_last_name'], date( 'd.m.y H:i', time() ) )
 				)
 			);
-
 
 			// Создаем ссылку для оплаты
 			$redirect_to   = $pay_method && get_term_meta( $pay_method->term_id, '_fs_checkout_redirect', 1 ) ? 'page_payment' : 'page_success';

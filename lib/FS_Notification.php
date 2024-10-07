@@ -2,14 +2,17 @@
 
 namespace FS;
 
+use FS\Services\Telegram;
+
 class FS_Notification {
 	protected $recipients;
 	protected $subject;
 	protected $message;
 	protected $attachment;
 	protected $sender;
+	protected $replace;
 	protected $channels = [
-		'email'
+		'email',
 	];
 
 	protected string $template = '';
@@ -39,26 +42,46 @@ class FS_Notification {
 	}
 
 	/**
+	 * Sets notification message
+	 *
+	 * @param mixed $attachment
 	 * @param mixed $message
 	 */
 	public function set_message( $message, $replace = [] ): void {
+		$this->replace = $replace;
 		$this->message = $message;
 	}
 
 	/**
+	 * Sets notification subject
+	 *
 	 * @param mixed $subject
 	 */
 	public function set_subject( $subject ): void {
 		$this->subject = $subject;
 	}
 
+	/**
+	 * Sets notification template
+	 *
+	 * @param $template
+	 * @param $replace
+	 *
+	 * @return void
+	 */
 	public function set_template( $template, $replace = [] ): void {
 		$this->template = $template;
+		$this->replace  = $replace;
 		$this->message  = fs_frontend_template( $template, [
 			'vars' => $replace
 		] );
 	}
 
+	/**
+	 * Sends notification via email
+	 *
+	 * @return bool|mixed
+	 */
 	private function send_via_email() {
 		$headers = array(
 			sprintf(
@@ -70,5 +93,44 @@ class FS_Notification {
 		);
 
 		return wp_mail( $this->recipients, $this->subject, $this->message, $headers, $this->attachment );
+	}
+
+	/**
+	 * Sends notification via telegram
+	 *
+	 * @return void
+	 */
+	private function send_via_telegram() {
+		$urlButton = [
+			'text' => __( 'View order', 'f-shop' ),
+			'url'  => $this->replace['order_edit_url'],
+		];
+
+		$telegram = new Telegram();
+		$message  = "<b>Нове замовлення №%order_id% на сайті %site_name%</b>\n\n";
+		$message  .= "<b>Сума замовлення:</b> %cart_amount%\n"
+		             . "<b>Спосіб доставки:</b> %delivery_method%\n"
+		             . "<b>Відділення:</b> %delivery_number%\n"
+		             . "<b>Адреса:</b> %client_address%\n"
+		             . "<b>Тип оплати:</b> %payment_method%\n"
+		             . "<b>Прізвище та ім’я:</b> %client_first_name% %client_last_name%\n"
+		             . "<b>E-mail:</b> %client_email%\n"
+		             . "<b>Телефон:</b> %client_phone%\n";
+		$message  = str_replace( array_map( function ( $item ) {
+			return '%' . $item . '%';
+		}, array_keys( $this->replace ) ), array_values( $this->replace ), $message );
+		$telegram->send_message( $message, $urlButton );
+	}
+
+
+	/**
+	 * Pushes a new channel to the list of channels
+	 *
+	 * @param $channel
+	 *
+	 * @return void
+	 */
+	function push_channel( $channel ) {
+		$this->channels[] = $channel;
 	}
 }

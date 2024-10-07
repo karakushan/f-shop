@@ -1,5 +1,6 @@
 {
   "name": "karak/f-shop",
+  "platform-check": false,
   "require": {
     "htmlburger/carbon-fields": "^3.6"
   },
