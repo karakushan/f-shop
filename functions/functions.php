@@ -1586,7 +1586,8 @@ function fs_price_min() {
  *
  */
 function fs_add_to_wishlist( $product_id = 0, $label = 'В список желаний', $args = array() ) {
-	$product_id = fs_get_product_id( $product_id );
+	$product_id  = fs_get_product_id( $product_id );
+	$in_wishlist = \FS\FS_Wishlist::contains( $product_id );
 	// определим параметры по умолчанию
 	$defaults  = array(
 		'attr'      => '',
@@ -1606,7 +1607,8 @@ function fs_add_to_wishlist( $product_id = 0, $label = 'В список жела
 		'data-image'      => get_the_post_thumbnail_url( $product_id ),
 		'data-product-id' => $product_id,
 		'x-data'          => json_encode( [ 'inWishlist' => \FS\FS_Wishlist::contains( $product_id ) ] ),
-		'x-on:click'      => 'inWishlist=true'
+		'x-on:click'      => 'inWishlist=true',
+		'x-bind:class'    => '{"fs-in-wishlist":inWishlist}'
 	) );
 
 	switch ( $args['type'] ) {
