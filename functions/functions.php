@@ -3602,9 +3602,9 @@ if ( ! function_exists( 'fs_localize_category_url' ) ) {
 /**
  * Удаляет параметр запроса или группу из урл
  *
- * @param $param
- * @param string $group
- * @param string $url
+ * @param  $param - тут необходимо указать значение характеристики, категории и т.д которые будут удалены из фильтра
+ * @param string $group - ключ массива удаляемого параметра(значения)
+ * @param string $url - урл над которым производится удаление, если не указан то $_SERVER['REQUEST_URI']
  *
  * @return string
  */
@@ -3618,15 +3618,13 @@ function fs_remove_url_param( $param, $group = '', $url = '' ) {
 
 	parse_str( $query['query'], $output );
 
-	if ( ! empty( $group ) && isset( $output[ $group ][ $param ] ) ) {
-		unset( $output[ $group ][ $param ] );
+	if ( ! empty( $group ) && is_array( $output[ $group ] ) && $array_key = array_search( $param, $output[ $group ] ) ) {
+		unset( $output[ $group ][ $array_key ] );
 	} elseif ( empty( $group ) && isset( $output[ $param ] ) ) {
 		unset( $output[ $param ] );
 	}
 
-	$url = $query['path'] . '?' . http_build_query( $output );
-
-	return $url;
+	return $query['path'] . '?' . http_build_query( $output );
 }
 
 /**
