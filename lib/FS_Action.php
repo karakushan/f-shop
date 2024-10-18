@@ -232,12 +232,20 @@ class FS_Action {
 			'price_min'     => 0,
 			'price_max'     => 10000,
 			'price_start'   => 0,
-			'price_end'     => 0
+			'price_end'     => 0,
+			'input_changed' => false,
+
 		];
 		?>
     <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>"
          x-data="<?php echo esc_attr( json_encode( $data ) ) ?>"
          x-init="()=>{
+                window.applyFilters=(price_start,price_end)=>{
+                    const url = new URL(window.location.href);
+									url.searchParams.set('price_start', price_start);
+									url.searchParams.set('price_end', price_end);
+									window.location.href = url
+                }
                 window.addEventListener('DOMContentLoaded', async (event) => {
                   const prices =await Alpine.store('FS').getMaxMinPrice(<?php echo esc_attr( $term_id ) ?>).then(r=>r.data);
                   price_min=parseInt(prices.min);
@@ -263,6 +271,7 @@ class FS_Action {
 									url.searchParams.set('price_start', price_start);
 									url.searchParams.set('price_end', price_end);
 									window.location.href = url
+								
 								});
 				}
                 });
