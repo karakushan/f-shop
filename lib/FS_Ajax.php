@@ -1482,7 +1482,7 @@ class FS_Ajax {
 			'comment_content'      => $_POST['body'],
 			'user_id'              => get_current_user_id(),
 			'comment_date'         => current_time( 'mysql' ),
-			'comment_approved'     => 1,
+			'comment_approved'     => 0,
 			'comment_karma'        => (int) $_POST['rating'],
 		];
 
