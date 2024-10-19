@@ -898,6 +898,10 @@ class FS_Users {
 			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
 		}
 
+		$locale = isset( $_POST['locale'] ) ? sanitize_text_field( $_POST['locale'] ) : get_locale();
+		// Переключение на переданную локаль
+		switch_to_locale( $locale );
+
 		$user_fields = self::get_user_fields();
 		$user_id     = get_current_user_id();
 
@@ -1397,7 +1401,8 @@ class FS_Users {
 	 */
 	static function user_cabinet_tabs() {
 		$user         = fs_get_current_user();
-		$wishlist_ids = array_unique( array_values( (array) $_SESSION['fs_wishlist'] ) );
+		$wishlist     = isset( $_SESSION['fs_wishlist'] ) && is_array( $_SESSION['fs_wishlist'] ) ? $_SESSION['fs_wishlist'] : [];
+		$wishlist_ids = array_unique( array_values( $wishlist ) );
 		$wishlist     = new \WP_Query( [
 			'post_type'      => FS_Config::get_data( 'post_type' ),
 			'post__in'       => count( $wishlist_ids ) ? $wishlist_ids : [ 0 ],

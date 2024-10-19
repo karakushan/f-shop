@@ -112,6 +112,7 @@ class FS {
         return this.post('fs_attach_attribute', {post_id: postId, attribute_id: attributeId})
     }
 
+
     sendOrder($event, order = {cart: []}) {
         window.dispatchEvent(new CustomEvent('fs-checkout-start-submit'));
         const formData = new FormData($event.target);

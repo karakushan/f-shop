@@ -25,12 +25,10 @@ class ProductEdit {
 	 * ProductEdit constructor.
 	 */
 	public function __construct() {
-		$this->init();
-	}
-
-	function init() {
-		add_action( 'carbon_fields_register_fields', [ $this, 'product_metabox_handle' ] );
-		add_action( 'carbon_fields_post_meta_container_saved', [ $this, 'save_product_meta' ], 10, 2 );
+		if ( is_admin() ) {
+			add_action( 'carbon_fields_register_fields', [ $this, 'product_metabox_handle' ] );
+			add_action( 'carbon_fields_post_meta_container_saved', [ $this, 'save_product_meta' ], 10, 2 );
+		}
 	}
 
 	function product_metabox_handle() {
@@ -93,20 +91,20 @@ class ProductEdit {
 						'help'       => __( 'Check this box if you are selling a non-physical item.', 'f-shop' )
 					),
 					FS_Config::get_meta( 'price' )        => array(
-						'label'      => __( 'Base price', 'f-shop' ),
-						'required'   => true,
-						'type'  => 'text',
-						'atts' => [
+						'label'    => __( 'Base price', 'f-shop' ),
+						'required' => true,
+						'type'     => 'text',
+						'atts'     => [
 							'min'  => 0,
 							'step' => .01,
 							'type' => 'number',
 						],
-						'help'       => __( 'This is the main price on the site. Required field!', 'f-shop' )
+						'help'     => __( 'This is the main price on the site. Required field!', 'f-shop' )
 					),
 					FS_Config::get_meta( 'action_price' ) => array(
 						'label' => __( 'Promotional price', 'f-shop' ),
 						'type'  => 'text',
-						'atts' => [
+						'atts'  => [
 							'min'  => 0,
 							'step' => .01,
 							'type' => 'number',
@@ -257,8 +255,8 @@ class ProductEdit {
 
 		$f = Field::make( $field['type'], $name, $field['label'] );
 
-		if ( ! empty( $field['atts'] ) && is_array($field['atts'])) {
-			$f->set_attributes( $field['atts']  );
+		if ( ! empty( $field['atts'] ) && is_array( $field['atts'] ) ) {
+			$f->set_attributes( $field['atts'] );
 		}
 
 		if ( isset( $field['width'] ) ) {
@@ -301,6 +299,6 @@ class ProductEdit {
 	 */
 	function save_product_meta( $post_id, $context ) {
 		$field = (array) $_POST['variations'];
-		update_post_meta($post_id, FS_Config::get_meta('variations'), $field);
+		update_post_meta( $post_id, FS_Config::get_meta( 'variations' ), $field );
 	}
 }

@@ -81,9 +81,8 @@ function fs_wp_cli_init() {
 
 }
 
-// hooks are triggered when the plugin is activated or deactivated
+// hooks are triggered when the plugin is activated
 register_activation_hook( __FILE__, 'fs_activate' );
-register_deactivation_hook( __FILE__, 'fs_deactivate' );
 /**
  * The function is triggered when the plugin is activated.
  */
@@ -184,18 +183,12 @@ function fs_activate() {
 	flush_rewrite_rules();
 }
 
-
 /**
- * The function is triggered when the plugin is deactivated.
- */
-function fs_deactivate() {
-}
-
-/**
- * Устанавливаем путь к файлам локализации
+ * Including localization files
  */
 function fs_load_plugin_textdomain() {
-	load_plugin_textdomain( 'f-shop', false, dirname( plugin_basename( FS_PLUGIN_FILE ) ) . '/languages' );
+	$path = dirname( plugin_basename( __FILE__ ) );
+	load_plugin_textdomain( 'f-shop', false, $path . '/languages' );
 }
 
-add_action( 'plugins_loaded', 'fs_load_plugin_textdomain' );
+add_action( 'init', 'fs_load_plugin_textdomain' );
