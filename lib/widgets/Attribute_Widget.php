@@ -41,7 +41,7 @@ class Attribute_Widget extends \WP_Widget {
 		$fs_hide_custom_values = $instance['fs_hide_custom_values'] ?? 0;
 
 
-		$args      = array(
+		$args           = array(
 			'show_option_all'  => '',
 			'show_option_none' => '',
 			'orderby'          => 'name',
@@ -64,45 +64,42 @@ class Attribute_Widget extends \WP_Widget {
 			'class'            => 'fs-select-field',
 			'required'         => false,
 		);
-		$languages = FS_Config::get_languages();
+		$languages      = FS_Config::get_languages();
+		$default_locale = FS_Config::default_locale();
+		$current_locale = $_GET['edit_lang'] ? $languages[ $_GET['edit_lang'] ]['locale'] : $default_locale;
 		?>
         <div class="fs-widget-wrapper">
-            <div class="form-row">
-                <label
-                        for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'f-shop' ) ?></label>
-				<?php if ( fs_option( 'fs_multi_language_support' ) ) : ?>
-                <div class="form-group">
-                    <span class="form-group__sub"><?php echo esc_html( FS_Config::default_language_name() ) ?></span>
-					<?php endif; ?>
-                    <input class="widefat title"
-                           id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
-                           name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
-                           value="<?php echo esc_attr( $title ); ?>"/>
-					<?php if ( fs_option( 'fs_multi_language_support' ) ) : ?>
-                </div>
-			<?php endif; ?>
-				<?php
+			<?php if ( fs_option( 'fs_multi_language_support' ) ): ?>
+                <div class="form-row">
+                    <label for="<?php echo esc_attr( $this->get_field_id( 'title_' . $current_locale ) ); ?>">
+						<?php esc_html_e( 'Title', 'f-shop' ) ?></label>
 
-				if ( fs_option( 'fs_multi_language_support' ) ) {
-					$languages = FS_Config::get_languages();
-					foreach ( $languages as $key => $language ) {
-						if ( $language['locale'] == FS_Config::default_locale() ) {
-							continue;
-						}
-						$name  = 'title_' . $language['locale'];
-						$title = ! empty( $instance[ $name ] ) ? $instance[ $name ] : '';
-						?>
-                        <div class="form-group">
-                            <span class="form-group__sub"><?php echo $key ?></span>
+                    <div class="form-group">
+						<?php foreach ( $languages as $lang_name => $lang ) : ?>
+							<?php $field_name = 'title_' . $lang['locale']; ?>
                             <input class="widefat title form-group__sub"
-                                   id="<?php echo esc_attr( $this->get_field_id( $name ) ); ?>"
-                                   name="<?php echo esc_attr( $this->get_field_name( $name ) ); ?>"
-                                   value="<?php echo esc_attr( $title ); ?>"/>
-                        </div>
-					<?php }
-				}
-				?>
-            </div>
+                                   type="<?php echo esc_attr( $lang['locale'] == $current_locale ? 'text' : 'hidden' ) ?>"
+                                   id="<?php echo esc_attr( $this->get_field_id( $field_name ) ); ?>"
+                                   name="<?php echo esc_attr( $this->get_field_name( $field_name ) ); ?>"
+                                   value="<?php echo esc_attr( $instance[ $field_name ] ); ?>"/>
+						<?php endforeach; ?>
+                    </div>
+                </div>
+			<?php else: ?>
+                <div class="form-row">
+                    <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
+						<?php esc_html_e( 'Title', 'f-shop' ) ?></label>
+
+                    <div class="form-group">
+                        <input class="widefat title form-group__sub"
+                               type="text"
+                               id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+                               name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
+                               value="<?php echo esc_attr( $instance['title'] ); ?>"/>
+
+                    </div>
+                </div>
+			<?php endif ?>
             <p>
                 <label
                         for="<?php echo esc_attr( $this->get_field_id( 'fs_att_group' ) ); ?>">
@@ -217,14 +214,10 @@ class Attribute_Widget extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
-		$title_name = fs_option( 'fs_multi_language_support' )
-		              && FS_Config::default_locale() != get_locale() ? 'title_' . get_locale() : 'title';
+		$title = fs_option( 'fs_multi_language_support' ) && isset( $instance[ 'title_' . get_locale() ] )
+			? $instance[ 'title_' . get_locale() ] : $instance['title'];
 
-		if ( empty( $instance[ $title_name ] ) ) {
-			$title_name = 'title';
-		}
-
-		$title              = apply_filters( 'widget_title', $instance[ $title_name ] );
+		$title              = apply_filters( 'widget_title', $title );
 		$fs_only_cats       = ! empty( $instance['fs_only_cats'] ) ? $instance['fs_only_cats'] : [];
 		$fs_hide_in_catalog = ! empty( $instance['fs_hide_in_catalog'] ) ? $instance['fs_hide_in_catalog'] : 0;
 
