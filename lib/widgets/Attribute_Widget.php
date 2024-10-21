@@ -84,7 +84,8 @@ class Attribute_Widget extends \WP_Widget {
 				<?php
 
 				if ( fs_option( 'fs_multi_language_support' ) ) {
-					foreach ( FS_Config::get_languages() as $key => $language ) {
+					$languages = FS_Config::get_languages();
+					foreach ( $languages as $key => $language ) {
 						if ( $language['locale'] == FS_Config::default_locale() ) {
 							continue;
 						}

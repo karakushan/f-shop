@@ -192,3 +192,4 @@ function fs_load_plugin_textdomain() {
 }
 
 add_action( 'init', 'fs_load_plugin_textdomain' );
+add_action( 'plugins_loaded', 'fs_load_plugin_textdomain' );
