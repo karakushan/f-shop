@@ -22,6 +22,9 @@ class Telegram {
 	 * @return void
 	 */
 	function get_chat_id_by_user_id( $user_id ) {
+		if ( get_option( 'fs_telegram_chat_id' ) ) {
+			return get_option( 'fs_telegram_chat_id' );
+		}
 		$updates = $this->get_updates();
 		$chat_id = '';
 		foreach ( $updates as $update ) {
@@ -52,8 +55,14 @@ class Telegram {
 		if ( ! $this->user_id ) {
 			return;
 		}
-		$token    = FS_Config::get_telegram_bot_token();
-		$chat_id  = $this->get_chat_id_by_user_id( $this->user_id );
+		$token   = FS_Config::get_telegram_bot_token();
+		$chat_id = $this->get_chat_id_by_user_id( $this->user_id );
+		if ( ! $chat_id ) {
+			error_log( 'Telegram chat id not found for user ' . $this->user_id );
+
+			return;
+		}
+
 		$url      = 'https://api.telegram.org/bot' . $token . '/sendMessage';
 		$keyboard = [
 			'inline_keyboard' => [

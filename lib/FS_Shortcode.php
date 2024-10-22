@@ -258,9 +258,10 @@ class FS_Shortcode {
 		}
 
 		$template = FS_Form::form_open( array(
-			'name'        => 'fs-order-send',
-			'class'       => $args['class'],
-			'ajax_action' => 'order_send'
+			'name'              => 'fs-order-send',
+			'class'             => $args['class'],
+			'ajax_action'       => 'order_send',
+			'inline_attributes' => 'x-on:submit.prevent="Alpine.store(\'FS\').sendOrder($event);"'
 		) );
 		$template .= fs_frontend_template( 'checkout/checkout', array( 'vars' => array( 'cart' => FS_Cart::get_cart() ) ) );
 		$template .= FS_Form::form_close();

@@ -23,7 +23,6 @@ class FS_Config {
 
 	protected static $nonce_field = 'fs_secret';
 	private static $telegram_bot = 'FShopOfficialBot';
-	private static $telegram_bot_token = '7657903599:AAEJ_-9Tpcuot9fpLdS5yf2Fsbso5sSFhDo';
 
 
 	/**
@@ -771,6 +770,6 @@ class FS_Config {
 	}
 
 	public static function get_telegram_bot_token(): string {
-		return self::$telegram_bot_token;
+		return fs_option( 'fs_telegram_bot_token' );
 	}
 }

@@ -522,6 +522,20 @@ class FS_Settings {
 					),
 					array(
 						'type'  => 'text',
+						'name'  => 'fs_telegram_bot_token',
+						'label' => __( 'Telegram bot token', 'f-shop' ),
+						'value' => fs_option( 'fs_telegram_bot_token' ),
+						'after' => '',
+					),
+					array(
+						'type'  => 'text',
+						'name'  => 'fs_telegram_chat_id',
+						'label' => __( 'Telegram chat id', 'f-shop' ),
+						'value' => fs_option( 'fs_telegram_chat_id' ),
+						'after' => '',
+					),
+					array(
+						'type'  => 'text',
 						'name'  => 'fs_telegram_user_id',
 						'label' => __( 'Telegram user id', 'f-shop' ),
 						'value' => fs_option( 'fs_telegram_user_id' ),
