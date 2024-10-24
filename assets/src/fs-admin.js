@@ -1,5 +1,7 @@
 import "./scss/fs-admin.scss";
 
+import 'regenerator-runtime/runtime';
+
 jQuery(document).ready(function ($) {
     $(window).off('beforeunload');
     const FS = {
@@ -58,7 +60,6 @@ jQuery(document).ready(function ($) {
 
     FS.init();
     window.FS = FS;
-
 
 
     if (typeof inlineEditPost !== 'undefined') {
