@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2024-09-24 07:30+0000\n"
+"POT-Creation-Date: 2024-10-25 12:24+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -3109,4 +3109,9 @@ msgid "Now you can continue shopping."
 msgstr ""
 
 msgid "Back to home"
+msgstr ""
+
+msgid ""
+"A password reset request was received on the site \"%site_name%\". Your new "
+"password is: %password%. If this was not you, please ignore this email."
 msgstr ""

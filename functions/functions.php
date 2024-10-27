@@ -3726,6 +3726,23 @@ function fs_before_product_atts() {
 	} ))" ';
 }
 
+/**
+ * Checks whether a product is in a certain category
+ *
+ * @param $category_id
+ *
+ * @return bool
+ */
+function fs_in_category($category_id, $post_id = null) {
+    if (!$post_id) $post_id = get_the_ID();
+    $categories = get_the_terms($post_id, FS_Config::get_data('product_taxonomy'));
+    if (!$categories) return false;
+    foreach ($categories as $category) {
+        if ($category->term_id == $category_id) return true;
+    }
+    return false;
+}
+
 
 
 

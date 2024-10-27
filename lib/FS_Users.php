@@ -882,9 +882,11 @@ class FS_Users {
 			'first_name'  => $user->first_name,
 		];
 
-		$template = new FS_Template();
-
-		FS_Form::send_email( $user_email, __( 'Password reset on the site', 'f-shop' ), $template->get( 'mail/templates/' . get_locale() . '/user-lost-password', $replace_keys ) );
+		$notification = new FS_Notification();
+		$notification->set_recipients( [ $user_email ] );
+		$notification->set_subject( __( 'Password reset on the site', 'f-shop' ) );
+		$notification->set_message( __( 'A password reset request was received on the site "%site_name%". Your new password is: %password%. If this was not you, please ignore this email.', 'f-shop' ), $replace_keys );
+		$notification->send( $user_email, 'user-lost-password', $replace_keys );
 
 		wp_send_json_success( [ 'msg' => __( 'Your password has been successfully reset. Password sent to your e-mail.', 'f-shop' ) ] );
 	}
@@ -1317,9 +1319,8 @@ class FS_Users {
 			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
 			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
 		} else {
-			$template = apply_filters( 'fs_form_header', $args, 'fs_lostpassword' );
-			$template .= fs_frontend_template( 'auth/lostpassword', array( 'field' => array() ) );
-			$template .= apply_filters( 'fs_form_bottom', '' );
+			$template = fs_frontend_template( 'auth/lostpassword', array( 'field' => array() ) );
+
 		}
 
 		return $template;

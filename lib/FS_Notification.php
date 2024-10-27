@@ -92,7 +92,7 @@ class FS_Notification {
 			'Content-type: text/html; charset=utf-8'
 		);
 
-		return wp_mail( $this->recipients, $this->subject, $this->message, $headers, $this->attachment );
+		return wp_mail( $this->recipients, $this->subject, $this->replace_mail_variables( $this->message ), $headers, $this->attachment );
 	}
 
 	/**
@@ -116,10 +116,21 @@ class FS_Notification {
 		             . "<b>Прізвище та ім’я:</b> %client_first_name% %client_last_name%\n"
 		             . "<b>E-mail:</b> %client_email%\n"
 		             . "<b>Телефон:</b> %client_phone%\n";
-		$message  = str_replace( array_map( function ( $item ) {
+
+		$telegram->send_message( $this->replace_mail_variables( $message ), $urlButton );
+	}
+
+	/**
+	 * Replaces mail variables
+	 *
+	 * @param $message
+	 *
+	 * @return array|string|string[]
+	 */
+	function replace_mail_variables( $message ) {
+		return str_replace( array_map( function ( $item ) {
 			return '%' . $item . '%';
 		}, array_keys( $this->replace ) ), array_values( $this->replace ), $message );
-		$telegram->send_message( $message, $urlButton );
 	}
 
 

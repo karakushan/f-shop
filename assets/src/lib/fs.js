@@ -158,6 +158,7 @@ class FS {
         return paramsArray.map(v => parseInt(v));
     }
 
+    // === AUTH ===
     login(data) {
         return this.post('fs_login', data)
     }
@@ -166,6 +167,12 @@ class FS {
         const formData = new FormData($event.target);
 
         return this.post('fs_profile_create', formData)
+    }
+
+    resetPassword($event) {
+        const formData = new FormData($event.target);
+
+        return this.post('fs_lostpassword', formData)
     }
 
     liveSearch(query) {
