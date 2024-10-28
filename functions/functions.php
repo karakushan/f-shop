@@ -3134,14 +3134,25 @@ function fs_product_average_rating( $product_id = 0, $default = 5 ) {
  * @return void
  */
 function fs_comments_count( $product_id = 0 ): void {
-	$product_id = fs_get_product_id( $product_id );
-	$count      = (int) wp_count_comments( $product_id )->approved;
+	$product_id      = fs_get_product_id( $product_id );
+	$count_cache_key = 'fs_comments_count_' . $product_id;
+	$count           = get_transient( $count_cache_key );
 
-	if ( $count > 0 ) {
-		printf( _n( '%s review', '%s reviews', $count, 'f-shop' ), number_format_i18n( $count ) );
-	} else {
-		_e( 'No reviews', 'f-shop' );
+	if ( false === $count ) {
+		global $wpdb;
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved = '1'", $product_id ) );
+		set_transient( $count_cache_key, $count, HOUR_IN_SECONDS );
 	}
+
+	if ( $count == 0 ) {
+		esc_html_e( 'No reviews', 'f-shop' );
+
+		return;
+	}
+
+	$count_text = sprintf( _n( '%s review', '%s reviews', $count, 'f-shop' ), number_format_i18n( $count ) );
+
+	echo esc_html( apply_filters( 'fs_reviews_count_text', $count_text, $count ) );
 }
 
 if ( ! function_exists( 'fs_get_category_text' ) ) {
@@ -3733,14 +3744,21 @@ function fs_before_product_atts() {
  *
  * @return bool
  */
-function fs_in_category($category_id, $post_id = null) {
-    if (!$post_id) $post_id = get_the_ID();
-    $categories = get_the_terms($post_id, FS_Config::get_data('product_taxonomy'));
-    if (!$categories) return false;
-    foreach ($categories as $category) {
-        if ($category->term_id == $category_id) return true;
-    }
-    return false;
+function fs_in_category( $category_id, $post_id = null ) {
+	if ( ! $post_id ) {
+		$post_id = get_the_ID();
+	}
+	$categories = get_the_terms( $post_id, FS_Config::get_data( 'product_taxonomy' ) );
+	if ( ! $categories ) {
+		return false;
+	}
+	foreach ( $categories as $category ) {
+		if ( $category->term_id == $category_id ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 

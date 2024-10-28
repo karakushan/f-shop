@@ -24,7 +24,7 @@ msgid "%s review"
 msgstr "%s відгук"
 
 msgid "%s reviews"
-msgstr "%s відгуки"
+msgstr ""
 
 #: lib/FS_Config.php:210
 msgid ""
