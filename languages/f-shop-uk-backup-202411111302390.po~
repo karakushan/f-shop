@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2024-10-25 12:28+0000\n"
+"PO-Revision-Date: 2024-11-11 13:02+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,12 @@ msgstr ""
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
 msgstr "Здесь Вы можете указать, какими свойствами обладает товар."
+
+msgid "%s review"
+msgstr "%s відгук"
+
+msgid "%s reviews"
+msgstr "%s відгуки"
 
 #: lib/FS_Config.php:210
 msgid ""
@@ -2487,6 +2493,13 @@ msgstr "Це поле активне якщо ввімкнено мультив�
 #: lib/FS_Users.php:1132
 msgid "The form did not pass the security check!"
 msgstr "Форма не пройшла перевірку безпеки!"
+
+msgid ""
+"The login information you entered is incorrect. <a href=\"%s\">Password "
+"recovery</a>"
+msgstr ""
+"Дані для входу які ви ввели не пройшли перевірку. <a href=\"%s\">Скинути "
+"пароль</a>"
 
 #: templates/front-end/product/comments.php:210
 msgid "The maximum file size is 10 Mb"

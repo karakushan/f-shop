@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-10-28 06:27+0000\n"
+"PO-Revision-Date: 2024-11-11 13:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -2500,6 +2500,13 @@ msgstr "Это поле активно если Вы включили мульт
 #: lib/FS_Users.php:1132
 msgid "The form did not pass the security check!"
 msgstr "Форма не прошла проверку безопасности!"
+
+msgid ""
+"The login information you entered is incorrect. <a href=\"%s\">Password "
+"recovery</a>"
+msgstr ""
+"Данные которые Вы ввели для входа не верны. <a href=\"%s\">Сбросить "
+"пароль</a>"
 
 #: templates/front-end/product/comments.php:210
 msgid "The maximum file size is 10 Mb"

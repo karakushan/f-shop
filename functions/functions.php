@@ -3134,15 +3134,11 @@ function fs_product_average_rating( $product_id = 0, $default = 5 ) {
  * @return void
  */
 function fs_comments_count( $product_id = 0 ): void {
-	$product_id      = fs_get_product_id( $product_id );
-	$count_cache_key = 'fs_comments_count_' . $product_id;
-	$count           = get_transient( $count_cache_key );
+	$product_id = fs_get_product_id( $product_id );
+	global $wpdb;
+	$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved = '1'", $product_id ) );
 
-	if ( false === $count ) {
-		global $wpdb;
-		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved = '1'", $product_id ) );
-		set_transient( $count_cache_key, $count, HOUR_IN_SECONDS );
-	}
+	$count = apply_filters( 'fs_product_comments_count', $count, $product_id );
 
 	if ( $count == 0 ) {
 		esc_html_e( 'No reviews', 'f-shop' );

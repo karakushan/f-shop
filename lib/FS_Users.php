@@ -1032,7 +1032,11 @@ class FS_Users {
 			// Check for authentication errors
 			if ( is_wp_error( $auth ) ) {
 				// If there is an error, send the error message
-				wp_send_json_error( [ 'msg' => $auth->get_error_message() ] );
+				$reset_password_page_url = fs_option( 'page_lostpassword' )
+					? get_permalink( fs_option( 'page_lostpassword' ) ) : wp_lostpassword_url( home_url() );
+				wp_send_json_error( [
+					'msg' => sprintf( __( 'The login information you entered is incorrect. <a href="%s">Password recovery</a>', 'f-shop' ), $reset_password_page_url )
+				] );
 			} else {
 				// If the authentication is successful, clear the authentication cookie
 				nocache_headers();
