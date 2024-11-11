@@ -35,10 +35,38 @@ class FS_SEO {
 		// check if Yoast is installed
 		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
 			$this->yoast_integration = true;
-            new FS_Yoast_SEO();
-		}else{
+			new FS_Yoast_SEO();
+		} else {
 			add_filter( 'document_title_parts', array( $this, 'meta_title_filter' ), 10, 1 );
-        }
+		}
+
+		add_action( 'wp_head', array( $this, 'add_og_meta' ) );
+	}
+
+
+	public function add_og_meta() {
+		if ( fs_is_product_category() ) {
+			$term_id        = get_queried_object_id();
+			$og_title       = get_term_meta( $term_id, fs_localize_meta_key( '_seo_title' ), 1 ) ?: get_term_meta( $term_id, '_seo_title', 1 );
+			$og_description = get_term_meta( $term_id, fs_localize_meta_key( '_seo_description' ), 1 ) ?: get_term_meta( $term_id, '_seo_description', 1 );
+			$og_image       = fs_get_category_image( $term_id, 'full', [ 'return' => 'url' ] );
+			$og_url         = get_term_link( $term_id );
+
+			$properties = apply_filters( 'fs_og_properties', [
+				'og:type'        => 'article',
+				'og:title'       => $og_title,
+				'og:description' => $og_description,
+				'og:image'       => $og_image,
+				'og:url'         => $og_url
+			] );
+
+			foreach ( $properties as $property => $content ) {
+				if ( $content ) {
+					echo '<meta property="' . $property . '" content="' . $content . '" />';
+				}
+			}
+		}
+
 	}
 
 

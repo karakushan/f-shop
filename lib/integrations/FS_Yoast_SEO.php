@@ -8,10 +8,24 @@ class FS_Yoast_SEO {
 
 	public function __construct() {
 		// yoast seo meta description
-		add_filter( 'wpseo_title', [ $this, 'yoast_seo_title' ],11, 1 );
+		add_filter( 'wpseo_title', [ $this, 'yoast_seo_title' ], 11, 1 );
 		add_action( 'wpseo_metadesc', [ $this, 'yoast_seo_description' ] );
 		add_filter( 'wpseo_robots', [ $this, 'add_noindex_meta_tag' ] );
 		add_filter( 'wpseo_canonical', [ $this, 'replace_products_canonical' ], 10, 1 );
+
+		/* Remove all OpenGraph tags */
+		add_filter( 'wpseo_frontend_presenter_classes', [ $this, 'wpseo_remove_opengraph' ] );
+
+	}
+
+	function wpseo_remove_opengraph( $classes ) {
+		if ( fs_is_product_category() ) {
+			$classes = array_filter( $classes, function ( $class ) {
+				return strpos( $class, 'Open_Graph' ) === false;
+			} );
+		}
+
+		return $classes;
 	}
 
 	/**
@@ -58,9 +72,9 @@ class FS_Yoast_SEO {
 		if ( fs_is_catalog() && fs_option( '_fs_catalog_meta_title' ) != '' ) {
 			$title = esc_attr( apply_filters( 'the_title', fs_option( '_fs_catalog_meta_title' ) ) );
 		} elseif ( fs_is_product_category() ) {
-			$term_id        = get_queried_object_id();
-			$meta_title     = get_term_meta( $term_id, fs_localize_meta_key( '_seo_title' ), 1 ) ?: get_term_meta( $term_id, '_seo_title', 1 );
-			$title=esc_attr( apply_filters( 'the_title', $meta_title ) );
+			$term_id    = get_queried_object_id();
+			$meta_title = get_term_meta( $term_id, fs_localize_meta_key( '_seo_title' ), 1 ) ?: get_term_meta( $term_id, '_seo_title', 1 );
+			$title      = esc_attr( apply_filters( 'the_title', $meta_title ) );
 		}
 
 		return apply_filters( 'fs_meta_title', $title );
