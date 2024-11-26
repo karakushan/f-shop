@@ -374,26 +374,43 @@ class FS_Filters {
 	 * @return array
 	 */
 	public static function get_used_filters() {
-		$filters    = array();
+		$filters    = [];
 		$url_params = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY );
 		if ( ! is_string( $url_params ) ) {
 			return [];
 		}
-		parse_str( $url_params, $url_params );
-		$current_url = strtok( $_SERVER["REQUEST_URI"], '?' );
+		parse_str( $url_params, $url_params_array );
+		$current_url = site_url( $_SERVER['REQUEST_URI'] );
 
-		if ( isset( $_GET['attributes'] ) && is_array( $_GET['attributes'] ) ) {
-			foreach ( $_GET['attributes'] as $key => $value ) {
-				$term      = get_term_by( 'id', $value, FS_Config::get_data( 'features_taxonomy' ) );
-				$filters[] = [
-					'name'       => $term->name,
-					'value'      => $value,
-					'type'       => 'attributes',
-					'reset_link' => add_query_arg( [ 'attributes' => array_diff( $url_params['attributes'], [ $key => $value ] ) ], $current_url )
-				];
-			}
+		$attributes_ids = ! empty( $url_params_array['filter'] ) ? array_map( 'intval', explode( ',', $url_params_array['filter'] ) ) : [];
+		$attributes     = ! empty( $attributes_ids ) ? get_terms( array(
+			'taxonomy'   => FS_Config::get_data( 'features_taxonomy' ),
+			'hide_empty' => false,
+			'include'    => $attributes_ids
+		) ) : [];
+
+		if ( ! empty( $url_params_array['price_start'] ) && ! empty( $url_params_array['price_end'] ) ) {
+			$filters[] = [
+				'name'       => sprintf( __( 'Price: %s-%s %s', 'f-shop' ), $url_params_array['price_start'], $url_params_array['price_end'], fs_currency() ),
+				'value'      => $url_params_array['price_start'] . '-' . $url_params_array['price_end'],
+				'type'       => 'price',
+				'reset_link' => remove_query_arg( 'price_start', remove_query_arg( 'price_end', $current_url ) )
+			];
 		}
 
+
+		if ( ! empty( $attributes ) ) {
+			foreach ( $attributes as $key => $attribute ) {
+				$reset_link = add_query_arg( [ 'filter' => implode( array_diff( $attributes_ids, [ $attribute->term_id ] ) ) ], $current_url );
+				$filters[]  = [
+					'name'       => $attribute->name,
+					'value'      => $attribute->term_id,
+					'type'       => 'attributes',
+					'reset_link' => $reset_link
+				];
+
+			}
+		}
 
 		return $filters;
 	}

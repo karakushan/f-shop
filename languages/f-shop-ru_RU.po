@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-11-11 13:00+0000\n"
+"PO-Revision-Date: 2024-11-26 09:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -1938,6 +1938,9 @@ msgstr "Цена"
 #: lib/FS_Settings.php:388
 msgid "Price separator (default \".\")"
 msgstr "Разделитель копеек (по умолчанию \".\")"
+
+msgid "Price: %s-%s %s"
+msgstr "Цена: %s-%s %s"
 
 #: lib/FS_Orders.php:210
 msgid "Processed"
