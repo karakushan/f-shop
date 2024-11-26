@@ -246,7 +246,7 @@ class Attribute_Widget extends \WP_Widget {
                 <img src="<?php echo esc_url( FS_PLUGIN_URL ) ?>/assets/img/loader-circle.svg" alt="loader">
             </div>
             <div x-data="{
-            baseUrl: '<?php echo esc_url( fs_is_product_category() ? get_term_link( $current_category ) : fs_get_catalog_link() ) ?>',
+            baseUrl: '<?php echo esc_url( site_url( $_SERVER['REQUEST_URI'] ) ) ?>',
             checked: () => {
                     const params = new URLSearchParams(window.location.search);
                     if(!params.get('filter')) return [];

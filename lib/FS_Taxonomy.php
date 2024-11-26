@@ -287,7 +287,11 @@ class FS_Taxonomy {
 					$order_by['date'] = 'ASC';
 					break;
 				case 'action_price' :
-					$order_by['action_price'] = 'DESC';
+					$meta_query['action_price'] = [
+						'key'     => FS_Config::get_meta( 'action_price' ),
+						'compare' => 'EXISTS'
+					];
+					$order_by['action_price']   = 'DESC';
 					break;
 				case 'menu_order' :
 					$order_by['menu_order'] = 'ASC';
@@ -329,8 +333,6 @@ class FS_Taxonomy {
 					)
 				);
 			}
-
-			do_action( 'qm/debug' );
 
 			//Фильтруем по свойствам (атрибутам)
 			if ( ! empty( $_REQUEST['filter'] ) ) {
