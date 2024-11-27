@@ -284,19 +284,19 @@ class FS_Shortcode {
 		), $args );
 		$cart = [];
 		if ( is_singular( FS_Config::get_data( 'post_type' ) ) && ! empty( $args['product_id'] ) ) {
-			$cart = [ 'cart' => [ [ 'ID' => $args['product_id'], 'count' => 1 ] ] ];
+			$cart = [ [ 'ID' => $args['product_id'], 'count' => 1 ] ];
 		}
 		ob_start(); ?>
     <form action=""
           name="fs-order-send"
           class="<?php echo esc_attr( $args['class'] ) ?>"
           x-data="{ errors: [],msg: '' }"
-          x-on:submit.prevent="$store.FS.sendOrder($event,<?php echo ! empty( $cart ) ? htmlentities( json_encode( $cart ) ) : ''; ?>).then((r)=>{
-                if (!r.success) {
-                  errors = typeof r.data.errors !== 'undefined' ? r.data.errors : [];
-                  msg = typeof r.data.msg !== 'undefined' ?  r.data.msg : '';
-                } 
-              })"
+          x-on:submit.prevent='$store.FS.sendOrder( $event,{ cart: cart.items.length ? cart.items : <?php echo htmlentities( json_encode( $cart ) ) ?> }).then((r)=>{
+             if (!r.success) {
+                errors = typeof r.data.errors !== "undefined" ? r.data.errors : [];
+                msg = typeof r.data.msg !== "undefined" ?  r.data.msg : "";
+             }
+        })'
           method="POST">
 		<?php
 		$template = ob_get_clean();
