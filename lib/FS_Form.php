@@ -314,4 +314,24 @@ class FS_Form {
 
 		return $args;
 	}
+
+	/**
+	 * Phone number validity check
+	 *
+	 * @param $phone
+	 * @param string $country
+	 *
+	 * @return bool
+	 */
+	public static function validate_phone( $phone, $country = 'ua' ) {
+		// Clear the number of all characters except numbers
+		$cleaned_number = preg_replace( '/[^0-9]/', '', $phone );
+
+		// We check that the number starts with 380 and contains exactly 12 digits
+		if ( $country == 'ua' && ! preg_match( '/^380\d{9}$/', $cleaned_number ) ) {
+			return false;
+		}
+
+		return true; // Номер не валиден
+	}
 }

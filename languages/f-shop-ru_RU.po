@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-11-26 09:08+0000\n"
+"PO-Revision-Date: 2024-11-27 08:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -1336,6 +1336,9 @@ msgstr "Информация о заказе"
 #: lib/FS_Taxonomy.php:705
 msgid "International currency code"
 msgstr "Международный код валюты"
+
+msgid "Invalid phone number"
+msgstr "Неправильный формат номера телефона"
 
 #: templates/back-end/metabox/order/show.php:8
 msgid "IP"

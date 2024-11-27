@@ -920,8 +920,7 @@ class FS_Users {
 		if ( ! $user_id ) {
 			wp_send_json_error( array( 'msg' => __( 'User is not found', 'f-shop' ) ) );
 		}
-
-		// Сохраняем данные пользователя
+        
 		foreach ( $user_fields as $meta_key => $user_field ) {
 			$meta_value = trim( $_POST[ $meta_key ] );
 
@@ -941,21 +940,27 @@ class FS_Users {
 				continue;
 			}
 
-			// Сохраняем поля в данных ВП
-			if ( $meta_key == 'fs_first_name' ) {
-				wp_update_user( array(
-					'ID'         => $user_id,
-					'first_name' => $meta_value
-				) );
-				continue;
-			} elseif ( $meta_key == 'fs_last_name' ) {
-				wp_update_user( array(
-					'ID'        => $user_id,
-					'last_name' => $meta_value
-				) );
+			if ( $meta_key == 'fs_first_name' || $meta_key == 'fs_last_name' ) {
+				wp_update_user( [
+					'ID'                                => $user_id,
+					str_replace( 'fs_', '', $meta_key ) => $meta_value
+				] );
 				continue;
 			}
 
+			// Removing extra characters from phone
+			if ( $meta_key == 'fs_phone' ) {
+				if ( ! FS_Form::validate_phone( $meta_value ) ) {
+					wp_send_json_error( [ 'msg' => __( 'Invalid phone number', 'f-shop' ) ] );
+				}
+
+				$meta_value = preg_replace( '/[^0-9]/', '', $meta_value );
+			}
+
+			// Allows you to transform user data before saving
+			$meta_value = apply_filters( 'fs_user_meta_before_save', $meta_value, $meta_key, $user_id );
+
+			// Saving data
 			update_user_meta( $user_id, $meta_key, $meta_value );
 
 
@@ -967,7 +972,7 @@ class FS_Users {
 	}
 
 	/**
-	 * Защита личного кабинета от неавторизованных пользователей
+	 * Protecting your personal account from unauthorized users
 	 */
 	function cabinet_protect() {
 		$redirect_page = fs_option( 'page_cabinet' );
