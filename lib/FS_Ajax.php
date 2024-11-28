@@ -669,18 +669,14 @@ class FS_Ajax {
 			wp_send_json_error( [ 'msg' => __( 'Корзина пуста!', 'f-shop' ) ] );
 		}
 
+		$errors      = [];
 		$form_fields = array_filter( FS_Users::get_user_fields(), function ( $item ) {
 			return isset( $item['checkout'] ) && $item['checkout'] === true;
 		} );
 
 		foreach ( $form_fields as $key => $form_field ) {
 			if ( isset( $form_field['required'] ) && $form_field['required'] && trim( $_POST[ $key ] ) == '' ) {
-				wp_send_json_error( [
-					'msg'   => sprintf( __( 'The "%s" field is required!', 'f-shop' ), $form_field['name'] ),
-					'key'   => $key,
-					'value' => $_POST[ $key ]
-				] );
-				break;
+				$errors[ $key ] = sprintf( __( 'The "%s" field is required!', 'f-shop' ), $form_field['name'] );
 			}
 		}
 
@@ -694,6 +690,10 @@ class FS_Ajax {
 				$fields = trim( $_POST[ $key ] );
 			}
 		} );
+
+		if ( ! empty( $errors ) ) {
+			wp_send_json_error( [ 'errors' => $errors ] );
+		}
 
 		return $form_fields;
 	}
@@ -729,7 +729,7 @@ class FS_Ajax {
 		$fs_config                 = new FS_Config();
 		$order_create_time         = time();
 		$order_create_date_display = date_i18n( 'd.m.Y H:i', $order_create_time );
-		$update_user_meta          = ! isset( $_POST['fs_update_user_meta'] ) || boolval( $_POST['fs_update_user_meta'] );
+		$update_user_meta          = false; // Нужно ли обновлять данные вошедшего пользователя
 		$order_status_id           = intval( fs_option( 'fs_default_order_status' ) );
 		$customer_id               = 0;
 
@@ -770,31 +770,24 @@ class FS_Ajax {
 		$packing_cost       = fs_get_packing_cost( absint( $_POST['fs_delivery_methods'] ) );
 		$cart_cost          = fs_get_cart_cost();
 
-		// проверяем существование пользователя
+		// проверяем авторизован ли пользователь
 		if ( is_user_logged_in() ) {
 			$user    = wp_get_current_user();
 			$user_id = $user->ID;
-		} else {
-			if ( ! empty( $sanitize_field['fs_customer_register'] ) && $sanitize_field['fs_customer_register'] == 1 ) {
-				// Если пользователь не залогинен пробуем его зарегистрировать
-				$new_user = register_new_user( $sanitize_field['fs_email'], $sanitize_field['fs_email'] );
-				if ( ! is_wp_error( $new_user ) ) {
-					$user_id = $new_user;
-				} else {
-					if ( $new_user->get_error_code() == 'email_exists' || $new_user->get_error_code() == 'username_exists' ) {
-						$error_text = sprintf( __( 'User with such E-mail or Login is registered on the site. <a href="#fs-modal-login" data-fs-action="modal">Login to site</a>. <a href="%s">Forgot your password?</a>', 'f-shop' ), wp_lostpassword_url( get_permalink() ) );
-					} else {
-						$error_text = $new_user->get_error_message();
-					}
-
-					wp_send_json_error( [ 'msg' => $error_text ] );
-				}
-			}
-
 		}
 
-		// обновляем мета поля пользователя
-		if ( $user_id && $update_user_meta ) {
+		// получаем пользователя по email
+		if ( empty( $user_id ) && ! empty( $sanitize_field['fs_email'] ) ) {
+			$user_id = email_exists( $sanitize_field['fs_email'] );
+		}
+
+		//  Если стоит галочка "Зарегистрироваться" и пользователь не найден
+		if ( ! $user_id && ! empty( $sanitize_field['fs_customer_register'] ) && $sanitize_field['fs_customer_register'] == 1 ) {
+			$user_id = FS_Users::register_user( $sanitize_field['fs_email'], '', $sanitize_field );
+		}
+
+		// Обновляем данные пользователя
+		if ( $user_id ) {
 			$user_data = [
 				'ID' => $user_id,
 			];

@@ -156,7 +156,7 @@ class FS_Form {
 			'el'             => 'radio',
 			'first_option'   => __( 'Select' ),
 			'before'         => '',
-			'after'          => '',
+			'after'          => '<span class="fs-error" x-show="errors[\'' . $name . '\']" x-text="errors[\'' . $name . '\']"></span>',
 			'disabled'       => false,
 			'editor_args'    => array(
 				'textarea_rows' => 8,
@@ -253,10 +253,9 @@ class FS_Form {
 			'action'            => '',
 			'ajax_action'       => 'fs_save_data',
 			'validate'          => true,
-			'inline_attributes' => ''
+			'inline_attributes' => '',
+			'alpine_data'       => array(),
 		) );
-
-		$alpine_fields = self::alpine_map_fields_xdata();
 
 		$out = '<form';
 		$out .= ' action="' . esc_attr( $args['action'] ) . '"';
@@ -267,7 +266,7 @@ class FS_Form {
 		$out .= ' data-validation="' . esc_attr( $args['validate'] ) . '"';
 		$out .= ' enctype="' . esc_attr( $args['enctype'] ) . '"';
 		$out .= ' class="' . esc_attr( $args['class'] ) . '"';
-		$out .= ' x-data="{' . esc_attr( $alpine_fields ) . '}"';
+		$out .= ' x-data="' . esc_attr( json_encode( $args['alpine_data'] ) ) . '"';
 		$out .= ' id="' . esc_attr( $args['id'] ) . '"';
 		$out .= ' ' . $args['inline_attributes'];
 		$out .= ' >';

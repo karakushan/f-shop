@@ -261,7 +261,8 @@ class FS_Shortcode {
 			'name'              => 'fs-order-send',
 			'class'             => $args['class'],
 			'ajax_action'       => 'order_send',
-			'inline_attributes' => 'x-on:submit.prevent="Alpine.store(\'FS\').sendOrder($event);"'
+			'alpine_data'       => [ 'errors' => [] ],
+			'inline_attributes' => 'x-on:submit.prevent="Alpine.store(\'FS\').sendOrder($event).then((r)=>{ if(r.success === false) { errors =r.data.errors } });"'
 		) );
 		$template .= fs_frontend_template( 'checkout/checkout', array( 'vars' => array( 'cart' => FS_Cart::get_cart() ) ) );
 		$template .= FS_Form::form_close();

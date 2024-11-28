@@ -418,9 +418,9 @@ class FS_Users {
 				'value'       => fs_option( 'fs_autofill_form' ) && ! empty( $user->user_email ) ? $user->user_email : '',
 				'placeholder' => __( 'Your email', 'f-shop' ),
 				'title'       => __( 'Keep the correct email', 'f-shop' ),
-				'required'    => false,
 				'checkout'    => true,
-				'save_meta'   => false
+				'save_meta'   => false,
+				'required'    => true
 			),
 			'fs_first_name'             => array(
 				'name'        => __( 'First name', 'f-shop' ),
@@ -430,7 +430,8 @@ class FS_Users {
 				'placeholder' => __( 'First name', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'checkout'    => true,
-				'save_meta'   => false
+				'save_meta'   => false,
+				'required'    => true
 			),
 			'fs_last_name'              => array(
 				'name'        => __( 'Last name', 'f-shop' ),
@@ -439,9 +440,9 @@ class FS_Users {
 				'value'       => fs_option( 'fs_autofill_form' ) && ! empty( $user->last_name ) ? $user->last_name : '',
 				'placeholder' => __( 'Last name', 'f-shop' ),
 				'title'       => __( 'This field is required.', 'f-shop' ),
-				'required'    => false,
 				'checkout'    => true,
-				'save_meta'   => false
+				'save_meta'   => false,
+				'required'    => true
 			),
 			'fs_other_shipping_address' => array(
 				'name'        => __( 'Other shipping address', 'f-shop' ),
@@ -920,7 +921,7 @@ class FS_Users {
 		if ( ! $user_id ) {
 			wp_send_json_error( array( 'msg' => __( 'User is not found', 'f-shop' ) ) );
 		}
-        
+
 		foreach ( $user_fields as $meta_key => $user_field ) {
 			$meta_value = trim( $_POST[ $meta_key ] );
 
@@ -1056,7 +1057,12 @@ class FS_Users {
 		}
 	}
 
-	// создание профиля пользователя
+
+	/**
+	 * Создание профиля пользователя при регистрации
+	 *
+	 * @return void
+	 */
 	public function create_profile_callback() {
 
 		if ( ! FS_Config::verify_nonce() ) {
@@ -1155,6 +1161,76 @@ class FS_Users {
 			'msg' => sprintf( __( 'Congratulations! You have successfully registered! <a href="%s">Log in</a>', 'f-shop' ), esc_url( get_permalink( fs_option( 'page_auth' ) ) ) )
 		) );
 
+
+	}
+
+	/**
+	 * User registration in the system when placing an order
+	 *
+	 * @param $email -  user email
+	 * @param $password - user password
+	 * @param $mail_data - additional data for the letter
+	 *
+	 * @return int|\WP_Error
+	 */
+	public static function register_user( $email, $password = '', $mail_data = [] ) {
+		if ( ! is_email( $email ) ) {
+			wp_send_json_error( [
+				'errors' => [
+					'fs_email' => __( 'Email does not match format', 'f-shop' )
+				]
+			] );
+		}
+
+		if ( email_exists( $email ) ) {
+			wp_send_json_error( [
+				'errors' => [
+					'fs_email' => __( 'This email is already registered', 'f-shop' )
+				]
+			] );
+		}
+
+		$user_pass = ! empty( $password ) ? $password : wp_generate_password();
+		$user_id   = wp_create_user( $email, $user_pass, $email );
+
+		if ( is_wp_error( $user_id ) ) {
+			wp_send_json_error( [
+				'errors' => [
+					'fs_email' => $user_id->get_error_message()
+				]
+			] );
+		}
+
+		// Set user role and disable admin bar
+		wp_update_user( [
+			'ID'                   => $user_id,
+			'role'                 => 'customer',
+			'show_admin_bar_front' => false,
+			'display_name'         => ! empty( $mail_data['fs_first_name'] ) ? $mail_data['fs_first_name'] : '',
+		] );
+
+		// Set user data
+		$mail_data['first_name']  = $mail_data['fs_first_name'] ?: ''; // Add name to $mail_data
+		$mail_data['password']    = $user_pass; // Add password to $mail_data
+		$mail_data['email']       = $email; // Add email to $mail_data
+		$mail_data['login']       = $email; // Add login to $mail_data
+		$mail_data['cabinet_url'] = fs_account_url(); // Add dashboard url
+		$mail_data['site_name']   = get_bloginfo( 'name' ); // Add site name
+
+
+		// Send notification to the user
+		$notification = new FS_Notification();
+		$notification->set_subject( sprintf( __( 'Registration on the website «%s»', 'f-shop' ), get_bloginfo( 'name' ) ) );
+		$notification->set_recipients( [ $email ] );
+		$notification->set_template( 'mail/' . get_locale() . '/user-registration', $mail_data );
+		$notification->send();
+
+		// Send a letter to the admin
+		$notification->set_recipients( [ get_bloginfo( 'admin_email' ) ] );
+		$notification->set_template( 'mail/' . get_locale() . '/user-registration-admin', $mail_data );
+		$notification->send();
+
+		return $user_id;
 
 	}
 
