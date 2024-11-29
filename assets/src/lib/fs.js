@@ -16,6 +16,10 @@ class FS {
         this.filters = [];
     }
 
+    getMessage(key) {
+        return window.FS_DATA.langs && window.FS_DATA.langs[key] ? window.FS_DATA.langs[key] : null;
+    }
+
     // Sends a POST request using the fetch method
     post(action, params = {}, files = []) {
         let fData = params instanceof FormData ? params : new FormData();
@@ -209,6 +213,35 @@ class FS {
 
     commentLikeDislike(comment_id, type = 'like') {
         return this.post('fs_comment_like_dislike', {comment_id: comment_id, type: type})
+    }
+
+    // Sets the product rating
+    setRating(post_id, rating) {
+        let voted_products = localStorage.getItem('voted_products');
+        if (voted_products) voted_products = JSON.parse(voted_products);
+
+        // If you've already voted, we'll show an error.
+        if (voted_products && voted_products[post_id]) {
+            iziToast.error({
+                message: this.getMessage('ratingError'),
+                position: 'topCenter'
+            });
+            return;
+        }
+
+        if (!voted_products) voted_products = {};
+        voted_products[post_id] = rating;
+
+        this.post('fs_set_rating', {product: post_id, value: rating}).then(r => {
+            if (r.success) {
+                localStorage.setItem('voted_products', JSON.stringify(voted_products));
+                iziToast.success({
+                    title: r.data.title,
+                    message: r.data.msg,
+                    position: 'topCenter'
+                });
+            }
+        })
     }
 }
 

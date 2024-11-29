@@ -187,7 +187,9 @@ class FS_Product {
 			'echo'            => true,
 			'size'            => '16',
 			'voted_color'     => '#FFB91D',
-			'not_voted_color' => '#FFF'
+			'not_voted_color' => '#FFF',
+			'can_vote'        => 'auth', // all - любой пользователь, auth - только залогиненные
+
 		) );
 		if ( ! $args['echo'] ) {
 			ob_start();
@@ -210,23 +212,14 @@ class FS_Product {
         <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>">
 			<?php if ( $args['before'] )
 				echo $args['before'] ?>
-            <div class="star-rating" data-fs-element="rating">
-				<?php if ( $args['stars'] ) {
-					for ( $count = 1; $count <= $args['stars']; $count ++ ) {
-						if ( $count <= $args['default_value'] ) {
-							$star_class = $args['star_active_class'] . ' active';
-						} else {
-							$star_class = $args['star_class'];
-						}
 
-						echo '<span class="' . esc_attr( $star_class ) . '" data-fs-element="rating-item" data-rating="' . esc_attr( $count ) . '">';
-						include FS_PLUGIN_PATH . '/assets/img/icon/star.svg';
-						echo '</span>';
-					}
-				} ?>
-                <input type="hidden" name="fs-rating-value" data-product-id="<?php echo esc_attr( $product_id ) ?>"
-                       class="rating-value"
-                       value="<?php echo esc_attr( $args['default_value'] ) ?>">
+            <div class="star-rating"
+                 x-data="{rating: <?php echo esc_attr( $args['default_value'] ) ?>}" x-init="$watch('rating',()=>{
+                 Alpine.store('FS').setRating(<?php echo $product_id ?>,rating) })">
+                <template x-for="i in 5">
+                    <button :class="{'active': rating >= i}" <?php echo $args['can_vote'] == 'all' || ( $args['can_vote'] == 'auth' && is_user_logged_in() ) ? '@click="rating = i"' : 'disabled' ?>
+                    ><?php include FS_PLUGIN_PATH . '/assets/img/icon/star.svg'; ?></button>
+                </template>
             </div>
 			<?php if ( $args['after'] )
 				echo $args['after'] ?>

@@ -1165,7 +1165,7 @@ class FS_Users {
 	}
 
 	/**
-	 * User registration in the system when placing an order
+	 * User registration when placing an order
 	 *
 	 * @param $email -  user email
 	 * @param $password - user password
