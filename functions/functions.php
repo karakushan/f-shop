@@ -1066,15 +1066,14 @@ function fs_cart_url( $show = true ) {
  *
  * @return false|string
  */
-function fs_checkout_url( $echo = true ) {
+function fs_checkout_url( $echo = true, $query_args = [] ) {
 	$checkout_page_id = fs_option( 'page_checkout', 0 );
+	$base_url         = get_permalink( $checkout_page_id );
 	if ( $echo ) {
-		echo esc_url( get_permalink( $checkout_page_id ) );
+		echo esc_url( add_query_arg( $query_args, $base_url ) );
 	} else {
-		return get_permalink( $checkout_page_id );
+		return add_query_arg( $query_args, $base_url );
 	}
-
-
 }
 
 

@@ -968,7 +968,7 @@ class FS_Ajax {
 				)
 			);
 
-			// Создаем ссылку для оплаты
+			// Create a payment link
 			$redirect_to   = $pay_method && get_term_meta( $pay_method->term_id, '_fs_checkout_redirect', 1 ) ? 'page_payment' : 'page_success';
 			$redirect_link = fs_option( $redirect_to ) ? add_query_arg( [
 				'pay_method' => $pay_method->term_id,
@@ -980,8 +980,9 @@ class FS_Ajax {
 				'products' => $fs_products,
 				'order_id' => $order_id,
 				'sum'      => $sum,
-				'redirect' => $redirect_link
+				'redirect' => apply_filters( 'fs_after_checkout_redirect', $redirect_link, $order_id )
 			);
+
 			unset( $_SESSION['cart'] );
 			wp_send_json_success( $result );
 		}
