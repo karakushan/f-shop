@@ -805,6 +805,9 @@ function fs_base_price( $product_id = 0, $wrap = '%s <span>%s</span>', $args = a
 	) );
 	$product_id = fs_get_product_id( $product_id );
 	$price      = fs_get_base_price( $product_id );
+	if ( empty( $wrap ) ) {
+		$wrap = '%s <span>%s</span>';
+	}
 
 	if ( ! $price ) {
 		return null;

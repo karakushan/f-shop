@@ -1,4 +1,7 @@
 <?php
+if ( ! is_admin() || ! isset( $_GET['post'] ) ) {
+	return;
+}
 $post_id    = (int) $_GET['post'];
 $variations = get_post_meta( $post_id, \FS\FS_Config::get_meta( 'variations' ), 1 ) ?? [];
 ?>
@@ -83,9 +86,11 @@ $variations = get_post_meta( $post_id, \FS\FS_Config::get_meta( 'variations' ), 
 								<?php esc_html_e( 'Associated attributes', 'f-shop' ) ?>
                             </label>
                             <div class="fs-variations__item-attributes">
-                                <template x-for="productAttribute in productAttributes" >
-                                    <div class="fs-variations__item-attribute" x-show="productAttribute.children.length>0">
-                                        <div x-text="productAttribute.name" class="fs-variations__item-attribute-name"></div>
+                                <template x-for="productAttribute in productAttributes">
+                                    <div class="fs-variations__item-attribute"
+                                         x-show="productAttribute.children.length>0">
+                                        <div x-text="productAttribute.name"
+                                             class="fs-variations__item-attribute-name"></div>
                                         <ul>
                                             <template x-for="(children,i) in productAttribute.children">
                                                 <li>
@@ -93,7 +98,8 @@ $variations = get_post_meta( $post_id, \FS\FS_Config::get_meta( 'variations' ), 
                                                            :id="'att-'+'+index+'+'-'+productAttribute.id+'-'+children.id"
                                                            :checked="typeof variations[index].attributes==='object' && variations[index].attributes.includes(children.id.toString())"
                                                            :value="children.id">
-                                                    <label  x-text="children.name" :for="'att-'+'+index+'+'-'+productAttribute.id+'-'+children.id"></label>
+                                                    <label x-text="children.name"
+                                                           :for="'att-'+'+index+'+'-'+productAttribute.id+'-'+children.id"></label>
                                                 </li>
                                             </template>
                                         </ul>

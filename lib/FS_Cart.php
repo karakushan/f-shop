@@ -201,29 +201,23 @@ class FS_Cart {
 	}
 
 	/**
-	 * Уничтожает корзину полностью
+	 * Destroys the cart completely
 	 *
 	 * @return bool
 	 */
-	public static function remove_cart() {
+	public static function destroy_cart() {
 		unset( $_SESSION['cart'] );
 
-		if ( empty( $_SESSION['cart'] ) ) {
-			return true;
-		} else {
-			return false;
-		}
-
-
+		return true;
 	}
 
 	/**
-	 * Уничтожает корзину полностью через ajax
+	 * Destroys the cart completely via ajax
 	 *
 	 * @return bool
 	 */
 	function remove_cart_ajax() {
-		$remove = $this->remove_cart();
+		$remove = $this->destroy_cart();
 		if ( $remove ) {
 			wp_send_json_success( array( 'message' => __( 'All items have been successfully removed from the cart.', 'f-shop' ) ) );
 		} else {

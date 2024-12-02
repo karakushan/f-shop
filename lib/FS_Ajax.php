@@ -944,22 +944,27 @@ class FS_Ajax {
 			// NOTIFICATION
 			$notification = new FS_Notification();
 
-			// Отсылаем письмо с данными заказа заказчику
+			// We send a letter with order details to the customer
 			$notification->set_recipients( [ $sanitize_field['fs_email'] ] );
 			$notification->set_subject( $this->replace_mail_variables( $this->extract_text_by_locale( $customer_mail_subject ), $mail_data ) );
 			$notification->set_template( 'mail/' . get_locale() . '/user-create-order', $mail_data );
 			$notification->send();
 
-			//Отсылаем письмо админу
+			// Send a letter to the admin
 			if ( fs_option( 'fs_notify_telegram' ) ) {
 				$notification->push_channel( 'telegram' );
 			}
-			$notification->set_recipients( [ fs_option( 'manager_email', get_option( 'admin_email' ) ) ] );
-			$notification->set_subject( $this->replace_mail_variables( $this->extract_text_by_locale( $admin_mail_subject ), $mail_data ) );
-			$notification->set_template( 'mail/' . get_locale() . '/admin-create-order', $mail_data );
-			$notification->send();
 
-			/* обновляем название заказа для админки */
+			$admin_users = explode( ',', fs_option( 'manager_email', get_option( 'admin_email' ) ) );
+			$admin_users = array_filter( array_map( 'trim', $admin_users ), 'is_email' );
+			if ( count( $admin_users ) > 0 ) {
+				$notification->set_recipients( $admin_users );
+				$notification->set_subject( $this->replace_mail_variables( $this->extract_text_by_locale( $admin_mail_subject ), $mail_data ) );
+				$notification->set_template( 'mail/' . get_locale() . '/admin-create-order', $mail_data );
+				$notification->send();
+			}
+
+			/* updating the order name for the admin panel */
 			wp_update_post( array(
 					'ID'         => $order_id,
 					'post_title' => sprintf(
