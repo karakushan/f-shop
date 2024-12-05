@@ -299,6 +299,7 @@ class FS_Shortcode {
              }
         })'
           method="POST">
+            <input type="hidden" name="order_type" value="quick">
 		<?php
 		$template = ob_get_clean();
 		$template .= fs_frontend_template( 'order/quick-order', $args );

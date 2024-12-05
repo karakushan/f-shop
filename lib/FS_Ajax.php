@@ -669,8 +669,9 @@ class FS_Ajax {
 			wp_send_json_error( [ 'msg' => __( 'Корзина пуста!', 'f-shop' ) ] );
 		}
 
-		$errors      = [];
-		$form_fields = array_filter( FS_Users::get_user_fields(), function ( $item ) {
+		$errors          = [];
+		$checkout_fields = apply_filters( 'fs_checkout_validate_fields', FS_Users::get_user_fields() );
+		$form_fields     = array_filter( $checkout_fields, function ( $item ) {
 			return isset( $item['checkout'] ) && $item['checkout'] === true;
 		} );
 
@@ -729,7 +730,7 @@ class FS_Ajax {
 		$fs_config                 = new FS_Config();
 		$order_create_time         = time();
 		$order_create_date_display = date_i18n( 'd.m.Y H:i', $order_create_time );
-		$update_user_meta          = false; // Нужно ли обновлять данные вошедшего пользователя
+		$order_type                = ! empty( $_POST['order_type'] ) ? $_POST['order_type'] : 'standard'; // Тип заказа обычный или быстрый
 		$order_status_id           = intval( fs_option( 'fs_default_order_status' ) );
 		$customer_id               = 0;
 
@@ -846,6 +847,7 @@ class FS_Ajax {
 				'_order_discount'  => $discount,
 				'_packing_cost'    => $packing_cost,
 				'_customer_id'     => $customer_id,
+				'order_type'       => $order_type,
 				'_user'            => array(
 					'id'         => $user_id,
 					'first_name' => $sanitize_field['fs_first_name'],
