@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2024-10-28 06:26+0000\n"
+"POT-Creation-Date: 2024-11-27 08:27+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -3120,4 +3120,15 @@ msgid "%s reviews"
 msgstr ""
 
 msgid "%s review"
+msgstr ""
+
+msgid ""
+"The login information you entered is incorrect. <a href=\"%s\">Password "
+"recovery</a>"
+msgstr ""
+
+msgid "Price: %s-%s %s"
+msgstr ""
+
+msgid "Invalid phone number"
 msgstr ""

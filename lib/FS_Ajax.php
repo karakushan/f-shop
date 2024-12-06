@@ -847,7 +847,7 @@ class FS_Ajax {
 				'_order_discount'  => $discount,
 				'_packing_cost'    => $packing_cost,
 				'_customer_id'     => $customer_id,
-				'order_type'       => $order_type,
+				'_order_type'      => $order_type,
 				'_user'            => array(
 					'id'         => $user_id,
 					'first_name' => $sanitize_field['fs_first_name'],

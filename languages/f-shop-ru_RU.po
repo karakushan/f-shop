@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-11-27 08:28+0000\n"
+"PO-Revision-Date: 2024-12-05 07:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -2369,6 +2369,9 @@ msgstr "Сортировать товары в каталоге по"
 #: lib/FS_Users.php:182
 msgid "Space is not allow in password"
 msgstr "Пробел не допускается в пароле"
+
+msgid "Standard order"
+msgstr "Обычный заказ"
 
 #: lib/FS_Users.php:540 lib/FS_Users.php:544
 msgid "State"

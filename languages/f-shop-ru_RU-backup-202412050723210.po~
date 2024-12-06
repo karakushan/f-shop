@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-10-25 12:29+0000\n"
+"PO-Revision-Date: 2024-11-27 08:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -29,6 +29,12 @@ msgstr ""
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
 msgstr ""
+
+msgid "%s review"
+msgstr "%s отзыв"
+
+msgid "%s reviews"
+msgstr "%s отзывов"
 
 #: lib/FS_Config.php:210
 msgid ""
@@ -1331,6 +1337,9 @@ msgstr "Информация о заказе"
 msgid "International currency code"
 msgstr "Международный код валюты"
 
+msgid "Invalid phone number"
+msgstr "Неправильный формат номера телефона"
+
 #: templates/back-end/metabox/order/show.php:8
 msgid "IP"
 msgstr ""
@@ -1418,7 +1427,7 @@ msgstr "давно добавленные"
 
 #: templates/front-end/product/comments.php:29
 msgid "Leave a review"
-msgstr ""
+msgstr "Оставить отзыв"
 
 #: templates/front-end/product/comments.php:137
 #, fuzzy
@@ -1932,6 +1941,9 @@ msgstr "Цена"
 #: lib/FS_Settings.php:388
 msgid "Price separator (default \".\")"
 msgstr "Разделитель копеек (по умолчанию \".\")"
+
+msgid "Price: %s-%s %s"
+msgstr "Цена: %s-%s %s"
 
 #: lib/FS_Orders.php:210
 msgid "Processed"
@@ -2494,6 +2506,13 @@ msgstr "Это поле активно если Вы включили мульт
 #: lib/FS_Users.php:1132
 msgid "The form did not pass the security check!"
 msgstr "Форма не прошла проверку безопасности!"
+
+msgid ""
+"The login information you entered is incorrect. <a href=\"%s\">Password "
+"recovery</a>"
+msgstr ""
+"Данные которые Вы ввели для входа не верны. <a href=\"%s\">Сбросить "
+"пароль</a>"
 
 #: templates/front-end/product/comments.php:210
 msgid "The maximum file size is 10 Mb"

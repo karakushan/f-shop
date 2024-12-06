@@ -110,6 +110,7 @@ class FS_Order {
 	public $packing_cost = 0.0;
 	public $shipping_cost = 0.0;
 	public $cart_cost = 0.0;
+	public $order_type = 'standard';
 
 	/**
 	 * @var null
@@ -287,6 +288,7 @@ class FS_Order {
 		$this->customer_city = get_post_meta( $order_id, 'city', 1 );
 		$this->user          = (array) get_post_meta( $order_id, '_user', 1 );
 		$this->user['ip']    = get_post_meta( $order_id, '_customer_ip', 1 );
+		$this->order_type    = get_post_meta( $order_id, '_order_type', 1 ) ? get_post_meta( $order_id, '_order_type', 1 ) : 'standard';
 
 		$this->customer_ID = absint( get_post_meta( $order_id, '_customer_id', 1 ) );
 		$this->customer    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->customer_table} WHERE id = %d", $this->customer_ID ) );
@@ -451,7 +453,7 @@ class FS_Order {
 	 * @return array
 	 */
 	public function getItems() {
-		return(array) $this->items;
+		return (array) $this->items;
 	}
 
 	/**
@@ -468,7 +470,7 @@ class FS_Order {
 	 * @return void
 	 */
 	public function totalAmount( $format = '%s <span>%s</span>' ) {
-		 printf( $format, $this->getTotalAmount(), fs_currency() );
+		printf( $format, $this->getTotalAmount(), fs_currency() );
 	}
 
 	/**

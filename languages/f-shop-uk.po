@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2024-11-27 08:29+0000\n"
+"PO-Revision-Date: 2024-12-05 07:23+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -2363,6 +2363,9 @@ msgstr "Сортувати товари в каталозі по"
 #: lib/FS_Users.php:182
 msgid "Space is not allow in password"
 msgstr "У паролі заборонений пробіл"
+
+msgid "Standard order"
+msgstr "Звичайне замовлення"
 
 #: lib/FS_Users.php:540 lib/FS_Users.php:544
 msgid "State"
