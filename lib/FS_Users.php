@@ -442,7 +442,7 @@ class FS_Users {
 				'title'       => __( 'This field is required.', 'f-shop' ),
 				'checkout'    => true,
 				'save_meta'   => false,
-				'required'    => true
+				'required'    => false
 			),
 			'fs_other_shipping_address' => array(
 				'name'        => __( 'Other shipping address', 'f-shop' ),

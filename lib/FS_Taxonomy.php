@@ -17,6 +17,8 @@
 
 namespace FS;
 
+use WP_Query;
+
 class FS_Taxonomy {
 	public $taxonomy_name;
 
@@ -146,50 +148,26 @@ class FS_Taxonomy {
 	}
 
 	/**
-	 * Filtering products on the category page, in the product archives and in the search
+	 * Filters products based on taxonomy and other query parameters.
 	 *
-	 * @param $query
+	 * This method adjusts WP_Query by adding filtering and sorting rules for products
+	 * based on various query parameters such as taxonomy terms, price ranges, sorting,
+	 * stock availability, and other custom user-input criteria.
+	 *
+	 * @param WP_Query $query The instance of WP_Query containing the main query being filtered.
+	 *
+	 * @return void
 	 */
-	public static function taxonomy_filter_products( $query ) {
-		global $wpdb;
-
-		// Если это админка или не главный запрос
+	public static function taxonomy_filter_products( \WP_Query $query ) {
+		// Если это админка или не главный запрос - выходим
 		if ( $query->is_admin || ! $query->is_main_query() ) {
 			return;
 		}
 
 		// If we are on the search page
-		if ( $query->is_search() ) {
+		self::modify_search_query( $query );
 
-			// Search by sku
-			$search_query = str_replace( ' ', '%', get_search_query() );
-			$sku_products = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value LIKE '%s'", FS_Config::get_meta( 'sku' ), '%' . $search_query . '%' ) );
-
-			if ( $sku_products ) {
-				$query->set( 's', '' );
-				$query->set( 'post__in', $sku_products );
-			}
-			$query->set( 's', $search_query );
-			$query->set( 'post_type', FS_Config::get_data( 'post_type' ) );
-			$query->set( 'post_name', '' );
-			$query->set( 'post_status', 'publish' );
-			// отфильтровываем выключенные для показа товары в админке
-			/*$meta_query [] = [
-				'relation' => 'AND',
-				'exclude'  => [
-					'relation' => 'OR',
-					[
-						'key'     => FS_Config::get_meta( 'exclude_archive' ),
-						'compare' => 'NOT EXISTS'
-					],
-					[
-						'key'     => FS_Config::get_meta( 'exclude_archive' ),
-						'compare' => '!=',
-						'value'   => "1"
-					]
-				]
-			];*/
-		}
+		$meta_query = [];
 
 		if ( $query->is_tax( FS_Config::get_data( 'product_taxonomy' ) )
 		     || $query->is_post_type_archive( FS_Config::get_data( 'post_type' ) ) || is_search() ) {
@@ -217,11 +195,11 @@ class FS_Taxonomy {
 			}
 
 			//Устанавливаем страницу пагинации
-			if ( isset( $url['paged'] ) ) {
+			if ( ! empty( $url['paged'] ) ) {
 				$query->set( 'paged', $url['paged'] );
 			}
 
-			// фильтр товаров по признакам
+			// фильтр товаров по наличию акционной цены
 			if ( ! empty( $url['filter_by'] ) && $url['filter_by'] == 'action_price' ) {
 				$meta_query['action_price'] = array(
 					'key'     => FS_Config::get_meta( 'action_price' ),
@@ -235,94 +213,20 @@ class FS_Taxonomy {
 				? $url['order_type']
 				: fs_option( 'fs_product_sort_by', [ 'ID' => 'DESC' ] );
 
-			switch ( $url['order_type'] ) {
-
-				//sort by price in ascending order
-				case 'price_asc':
-					$meta_query['price'] = array(
-						'key'  => FS_Config::get_meta( 'price' ),
-						'type' => 'DECIMAL'
-					);
-					$order_by['price']   = 'ASC';
-					break;
-
-				// Сортировка по наличию, товары которых нет в наличии будут в конце
-				case 'stock_desc':
-					$meta_query['in_stock'] = [
-						'relation' => 'OR',
-						[
-							'key'     => FS_Config::get_meta( 'remaining_amount' ),
-							'type'    => 'NUMERIC',
-							'compare' => 'EXISTS',
-						]
-					];
-					$order_by               = [ 'in_stock' => 'ASC' ];
-					break;
-
-				case 'price_desc': //sort by price in a falling order
-					$meta_query['price'] = array(
-						'key'  => FS_Config::get_meta( 'price' ),
-						'type' => 'DECIMAL'
-					);
-					$order_by['price']   = 'DESC';
-					break;
-				case 'views_desc': //сортируем по просмотрам в спадающем порядке
-					$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
-					$order_by['views']   = 'DESC';
-					break;
-				case 'views_asc': //сортируем по просмотрам в спадающем порядке
-					$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
-					$order_by['views']   = 'ASC';
-					break;
-				case 'name_asc': //сортируем по названию по алфавиту
-					$order_by['title'] = 'ASC';
-					break;
-				case 'name_desc': //сортируем по названию по алфавиту в обратном порядке
-					$order_by['title'] = 'DESC';
-					break;
-				case 'date_desc':
-					$order_by['date'] = 'DESC';
-					break;
-				case 'date_asc':
-					$order_by['date'] = 'ASC';
-					break;
-				case 'action_price' :
-					$meta_query['action_price'] = [
-						'key'     => FS_Config::get_meta( 'action_price' ),
-						'compare' => 'EXISTS'
-					];
-					$order_by['action_price']   = 'DESC';
-					break;
-				case 'menu_order' :
-					$order_by['menu_order'] = 'ASC';
-					break;
-
-			}
+			FS_Taxonomy::set_order_query( $meta_query, $order_by, $url['order_type'] );
 
 			// Фильтрация по наличию
-			if ( isset( $url['availability'] ) && $url['availability'] != '' ) {
-				switch ( $url['availability'] ) {
-					case '1':
-						$meta_query['availability'] = array(
-							'key'     => FS_Config::get_meta( 'remaining_amount' ),
-							'compare' => '!=',
-							'value'   => '0'
-						);
-						break;
-					case '0':
-						$meta_query['availability'] = array(
-							'key'     => FS_Config::get_meta( 'remaining_amount' ),
-							'compare' => '==',
-							'value'   => '0'
-						);
-						break;
-				}
-
+			if ( ! empty( $url['availability'] ) ) {
+				$meta_query['availability'] = array(
+					'key'     => FS_Config::get_meta( 'remaining_amount' ),
+					'compare' => $url['availability'] == '1' ? '!=' : '==',
+					'value'   => '0'
+				);
 			}
 
 			// Фильтрация по производителю
-			if ( isset( $url['brands'] ) && ! empty( $url['brands'] ) ) {
-				$brands      = explode( ',', $url['brands'] );
+			if ( ! empty( $url['brands'] ) ) {
+				$brands      = explode( FS_Filters::get_param_separator(), sanitize_text_field( $url['brands'] ) );
 				$tax_query[] = array(
 					'relation' => 'AND',
 					array(
@@ -335,27 +239,29 @@ class FS_Taxonomy {
 			}
 
 			//Фильтруем по свойствам (атрибутам)
-			if ( ! empty( $_REQUEST['filter'] ) ) {
+			if ( ! empty( $url['filter'] ) ) {
+				$attributes  = explode( FS_Filters::get_param_separator(), sanitize_text_field( $url['filter'] ) );
 				$tax_query[] = array(
 					'relation' => 'AND',
 					array(
-						'taxonomy' => 'product-attributes',
+						'taxonomy' => FS_Config::get_data( 'features_taxonomy' ),
 						'field'    => 'id',
-						'terms'    => explode( ',', $_REQUEST['filter'] ),
+						'terms'    => array_filter( $attributes, 'intval' ),
 						'operator' => fs_option( 'fs_product_filter_type', 'AND' )
 					)
 				);
 			}
 
 			// Фильтруем по категориям
-			if ( isset( $url['categories'] ) && ! empty( $url['categories'] ) && is_array( $url['categories'] ) ) {
+			if ( ! empty( $url['categories'] ) ) {
+				$categories  = explode( FS_Filters::get_param_separator(), sanitize_text_field( $url['filter'] ) );
 				$tax_query[] = array(
 					'relation' => 'AND',
 					array(
 						'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
 						'field'    => 'id',
-						'terms'    => array_map( 'intval', $url['categories'] ),
-						'operator' => 'IN'
+						'terms'    => array_filter( $categories, 'intval' ),
+						'operator' => 'AND'
 					)
 				);
 			}
@@ -373,6 +279,122 @@ class FS_Taxonomy {
 			$query->set( 'orderby', $order_by ?: [ 'post_date' => 'DESC' ] );
 		}
 
+	}
+
+	/**
+	 * Modifies the search query to include additional filtering by SKU and restricts results to specific post types.
+	 *
+	 * @param WP_Query $query The WordPress query object passed by reference.
+	 *
+	 * @return void
+	 */
+	static function modify_search_query( &$query ) {
+		if ( $query->is_search() ) {
+			global $wpdb;
+			// Search by SKU
+			$search_query = str_replace( ' ', '%', get_search_query() );
+			$sku_products = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value LIKE '%s'",
+					FS_Config::get_meta( 'sku' ),
+					'%' . $search_query . '%'
+				)
+			);
+
+			if ( $sku_products ) {
+				$query->set( 's', '' );
+				$query->set( 'post__in', $sku_products );
+			}
+
+			$query->set( 's', $search_query );
+			$query->set( 'post_type', FS_Config::get_data( 'post_type' ) );
+			$query->set( 'post_name', '' );
+			$query->set( 'post_status', 'publish' );
+		}
+	}
+
+	/**
+	 * Modifies the meta query and order by parameters for sorting products based on the specified order type.
+	 *
+	 * @param array &$meta_query An associative array representing the meta query to modify.
+	 * @param array &$order_by An associative array representing the order by conditions to modify.
+	 * @param string $order_type The type of sorting to apply. Possible values include 'price_asc', 'stock_desc', 'price_desc',
+	 *                           'views_desc', 'views_asc', 'name_asc', 'name_desc', 'date_desc', 'date_asc', 'action_price',
+	 *                           and 'menu_order'.
+	 *
+	 * @return void
+	 */
+	static function set_order_query( &$meta_query, &$order_by, $order_type ) {
+		$meta_query = [];
+		$order_by   = [];
+
+		switch ( $order_type ) {
+			case 'price_asc': // Сортування за ціною за зростанням
+				$meta_query['price'] = array(
+					'key'  => FS_Config::get_meta( 'price' ),
+					'type' => 'DECIMAL'
+				);
+				$order_by['price']   = 'ASC';
+				break;
+
+			case 'stock_desc': // Сортування по наявності, товари без наявності в кінці
+				$meta_query['in_stock'] = [
+					'relation' => 'OR',
+					[
+						'key'     => FS_Config::get_meta( 'remaining_amount' ),
+						'type'    => 'NUMERIC',
+						'compare' => 'EXISTS',
+					]
+				];
+				$order_by               = [ 'in_stock' => 'ASC' ];
+				break;
+
+			case 'price_desc': // Сортування за ціною за спаданням
+				$meta_query['price'] = array(
+					'key'  => FS_Config::get_meta( 'price' ),
+					'type' => 'DECIMAL'
+				);
+				$order_by['price']   = 'DESC';
+				break;
+
+			case 'views_desc': // Сортування за кількістю переглядів за спаданням
+				$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
+				$order_by['views']   = 'DESC';
+				break;
+
+			case 'views_asc': // Сортування за кількістю переглядів за зростанням
+				$meta_query['views'] = array( 'key' => 'views', 'type' => 'NUMERIC' );
+				$order_by['views']   = 'ASC';
+				break;
+
+			case 'name_asc': // Сортування за назвою (за алфавітом)
+				$order_by['title'] = 'ASC';
+				break;
+
+			case 'name_desc': // Сортування за назвою (у зворотному алфавітному порядку)
+				$order_by['title'] = 'DESC';
+				break;
+
+			case 'date_desc': // Сортування за датою за спаданням
+				$order_by['date'] = 'DESC';
+				break;
+
+			case 'date_asc': // Сортування за датою за зростанням
+				$order_by['date'] = 'ASC';
+				break;
+
+			case 'action_price': // Сортування за товаром з акційною ціною
+				$meta_query['action_price'] = [
+					'key'     => FS_Config::get_meta( 'action_price' ),
+					'compare' => 'EXISTS'
+				];
+				$order_by['action_price']   = 'DESC';
+				break;
+
+			case 'menu_order': // Сортування за меню порядком
+				$order_by['menu_order'] = 'ASC';
+				break;
+		}
 	}
 
 	/**

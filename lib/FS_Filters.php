@@ -4,12 +4,14 @@ namespace FS;
 /**
  * Class FS_Filters
  *
- * Этот класс содержит хуки и фильтры, которые используются для фильтрации товаров и других сущностей
- * todo: методы не соответствующие контексту класса перенести в другие классы
- *
- * @package FS
+ * Handles various filtering, hooks, and actions for managing products.
  */
 class FS_Filters {
+	/**
+	 * Defines the separator used for parameter delimitation.
+	 */
+	private static $param_separator = ',';
+
 	function __construct() {
 		// Backend product filtering
 		add_action( 'pre_get_posts', array( $this, 'filter_products_admin' ), 10, 1 );
@@ -37,6 +39,22 @@ class FS_Filters {
 		 * Transliteration of text for use in the slug
 		 */
 		add_filter( 'fs_filter_meta_field', array( $this, 'transliteration_product_slug' ), 10, 3 );
+
+
+	}
+
+	/**
+	 * Retrieves the parameter separator used in filters and applies the 'fs_filters_param_separator' filter.
+	 *
+	 * @return string The parameter separator after applying any filters.
+	 */
+	public static function get_param_separator() {
+		$separator = apply_filters( 'fs_filters_param_separator', self::$param_separator );
+		if ( ! is_string( $separator ) ) {
+			$separator = ',';
+		}
+
+		return $separator;
 	}
 
 	/**
@@ -369,13 +387,18 @@ class FS_Filters {
 	}
 
 	/**
-	 * Returns an array with filters that are used on the product catalog page
+	 * Retrieves the active filters applied to a product catalog or listing.
+	 * The filters include categories, price range, and attributes, if specified in the request parameters.
 	 *
-	 * @return array
+	 * @return array An array of active filters, where each filter is represented as an associative array containing:
+	 *               - 'name': The name of the filter.
+	 *               - 'value': The value associated with the filter item.
+	 *               - 'type': The type of the filter ('categories', 'price', 'attributes').
+	 *               - 'reset_link': A URL to remove the specific filter from the current context.
 	 */
 	public static function get_used_filters() {
 		$filters    = [];
-		$url_params = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY );
+		$url_params = filter_var( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY ), FILTER_SANITIZE_STRING );
 		if ( ! is_string( $url_params ) ) {
 			return [];
 		}
@@ -389,6 +412,31 @@ class FS_Filters {
 			'include'    => $attributes_ids
 		) ) : [];
 
+
+		// фильтры по категориям
+		if ( ! empty( $url_params_array['categories'] ) ) {
+			$categories_ids = array_map( 'intval', explode( self::$param_separator, $url_params_array['categories'] ) );
+
+			$categories = get_terms( array(
+				'taxonomy'   => FS_Config::get_data( 'product_taxonomy' ),
+				'hide_empty' => false,
+				'include'    => $categories_ids
+			) );
+
+			if ( ! empty( $categories ) ) {
+				foreach ( $categories as $category ) {
+					$reset_link = add_query_arg( [ 'categories' => implode( self::$param_separator, array_diff( $categories_ids, [ $category->term_id ] ) ) ], $current_url );
+					$filters[]  = [
+						'name'       => $category->name,
+						'value'      => $category->term_id,
+						'type'       => 'categories',
+						'reset_link' => $reset_link
+					];
+				}
+			}
+		}
+
+		// фильтры по цене
 		if ( ! empty( $url_params_array['price_start'] ) && ! empty( $url_params_array['price_end'] ) ) {
 			$filters[] = [
 				'name'       => sprintf( __( 'Price: %s-%s %s', 'f-shop' ), $url_params_array['price_start'], $url_params_array['price_end'], fs_currency() ),
@@ -398,7 +446,7 @@ class FS_Filters {
 			];
 		}
 
-
+		// фильтры по атрибутам
 		if ( ! empty( $attributes ) ) {
 			foreach ( $attributes as $key => $attribute ) {
 				$reset_link = add_query_arg( [ 'filter' => implode( array_diff( $attributes_ids, [ $attribute->term_id ] ) ) ], $current_url );
