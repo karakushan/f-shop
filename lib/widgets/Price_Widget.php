@@ -77,10 +77,6 @@ class Price_Widget extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
-		if ( ! have_posts() ) {
-			return;
-		}
-
 		$title = fs_option( 'fs_multi_language_support' ) && isset( $instance[ 'title_' . get_locale() ] )
 			? $instance[ 'title_' . get_locale() ] : $instance['title'];
 

@@ -460,6 +460,30 @@ class FS_Filters {
 			}
 		}
 
+		// фильтр по брендам
+		if ( ! empty( $url_params_array['brands'] ) ) {
+			$brand_ids = array_map( 'intval', explode( self::$param_separator, $url_params_array['brands'] ) );
+
+			$brands = get_terms( array(
+				'taxonomy'   => FS_Config::get_data( 'brand_taxonomy' ),
+				// Replace 'brand_taxonomy' with the actual taxonomy for brands
+				'hide_empty' => false,
+				'include'    => $brand_ids
+			) );
+
+			if ( ! empty( $brands ) ) {
+				foreach ( $brands as $brand ) {
+					$reset_link = add_query_arg( [ 'brands' => implode( self::$param_separator, array_diff( $brand_ids, [ $brand->term_id ] ) ) ], $current_url );
+					$filters[]  = [
+						'name'       => $brand->name,
+						'value'      => $brand->term_id,
+						'type'       => 'brands',
+						'reset_link' => $reset_link
+					];
+				}
+			}
+		}
+
 		return $filters;
 	}
 }

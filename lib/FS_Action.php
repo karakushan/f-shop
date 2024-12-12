@@ -227,59 +227,60 @@ class FS_Action {
 			'wrapper_class' => 'noUiSlider-wrapper'
 		] );
 		$term_id = get_queried_object_id();
-		$data    = [
-			'fsRangeSlider' => null,
-			'price_min'     => 0,
-			'price_max'     => 10000,
-			'price_start'   => 0,
-			'price_end'     => 0,
-			'input_changed' => false,
-
-		];
 		?>
-    <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>"
-         x-data="<?php echo esc_attr( json_encode( $data ) ) ?>"
-         x-init="()=>{
-                window.applyFilters=(price_start,price_end)=>{
-                    const url = new URL(window.location.href);
-									url.searchParams.set('price_start', price_start);
-									url.searchParams.set('price_end', price_end);
-									window.location.href = url
+        <script>
+
+            const initSlider = async () => {
+                const slider = document.getElementById('fsRangeSlider');
+                const maxMinPrices = await Alpine.store('FS').getMaxMinPrice(<?php echo esc_attr( $term_id ) ?>).then(r => r.data);
+                const currentUrl = new URL(window.location.href);
+                const fsPriceStartInput = document.getElementById('fsPriceStartInput');
+                const fsPriceEndInput = document.getElementById('fsPriceEndInput');
+                let inputTimeout;
+                let isBlocked = false;
+
+                // set initial values from url or default
+                fsPriceStartInput.value = currentUrl.searchParams.get('price_start') || maxMinPrices.min;
+                fsPriceEndInput.value = currentUrl.searchParams.get('price_end') || maxMinPrices.max;
+
+                const applyFilters = () => {
+                    if (isBlocked) return;
+
+                    clearTimeout(inputTimeout);
+                    inputTimeout = setTimeout(() => {
+                        currentUrl.searchParams.set('price_start', fsPriceStartInput.value);
+                        currentUrl.searchParams.set('price_end', fsPriceEndInput.value);
+                        window.location.href = currentUrl.toString();
+                    }, 1000);
+
                 }
-                window.addEventListener('DOMContentLoaded', async (event) => {
-                  const prices =await Alpine.store('FS').getMaxMinPrice(<?php echo esc_attr( $term_id ) ?>).then(r=>r.data);
-                  price_min=parseInt(prices.min);
-                  price_max=parseInt(prices.max);
-                  const url = new URL(window.location.href);
-                  price_start=parseInt(url.searchParams.get('price_start')) || price_min;
-                  price_end=parseInt(url.searchParams.get('price_end')) || price_max;
-                   if(typeof noUiSlider === 'object'){
-								fsRangeSlider = noUiSlider.create($refs.fsRangeSlider, {
-									start: [price_start, price_end],
-									connect: true,
-									range: {
-									'min': price_min,
-									'max': price_max
-									}
-								});
-								fsRangeSlider.on('update', function (values, handle) {
-									price_start=parseInt(values[0]);
-									price_end=parseInt(values[1]);
-								});
-								fsRangeSlider.on('change', function (values, handle) {
-									const url = new URL(window.location.href);
-									url.searchParams.set('price_start', price_start);
-									url.searchParams.set('price_end', price_end);
-									window.location.href = url
-								
-								});
-				}
+
+
+                fsPriceStartInput.addEventListener('input', applyFilters);
+                fsPriceEndInput.addEventListener('input', applyFilters);
+
+                const fsRangeSlider = noUiSlider.create(slider, {
+                    start: [fsPriceStartInput.value, fsPriceEndInput.value],
+                    connect: true,
+                    range: {
+                        'min': maxMinPrices.min,
+                        'max': maxMinPrices.max
+                    }
                 });
+                fsRangeSlider.on('update', function (values, handle) {
+                    isBlocked = true;
+                    fsPriceStartInput.value = values[0];
+                    fsPriceEndInput.value = values[1];
+                    isBlocked = false;
+                });
+                fsRangeSlider.on('change', function (values, handle) {
+                    applyFilters();
+                });
+            }
 
-
-                }"
-
-    >
+            document.addEventListener('DOMContentLoaded', initSlider);
+        </script>
+        <div class="<?php echo esc_attr( $args['wrapper_class'] ) ?>">
 		<?php
 	}
 
