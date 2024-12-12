@@ -1,4 +1,5 @@
-<form method="post" class="fs-login-form" action="" x-data="{ errors: [], user: { login: '' , password: ''} }" x-on:submit.prevent="Alpine.store('FS').login(user).then((r)=>{
+<form method="post" class="fs-login-form" action="" x-data="{ errors: [], user: { username: '' , password: ''} }"
+      x-on:submit.prevent="Alpine.store('FS').login(user).then((r)=>{
     if(r.success===false) {
         errors.any=r.data.msg;
         msg=r.data.msg;
