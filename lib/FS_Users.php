@@ -1334,10 +1334,31 @@ class FS_Users {
 
 		$template = '';
 		if ( is_user_logged_in() ) {
+
 			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
 			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">В личный кабинет</a></p>';
 		} else {
+			ob_start();
+			?>
+            <form method="post" class="fs-login-form" action=""
+            x-data="{ errors: [], user: { username: '' , password: ''} }"
+            x-on:submit.prevent="Alpine.store('FS').login(user).then((r)=>{
+                        if(r.success===false) {
+                            errors.any=r.data.msg;
+                            msg=r.data.msg;
+                        }else if(r.success===true){
+                             msg=r.data.msg
+                             if (typeof r.data.redirect!=='undefined') {
+                                 window.location.href = r.data.redirect;
+                             }
+                        }
+                    })">
+
+            <div class="alert alert-danger" x-show="errors.any" x-text="errors.any"></div>
+			<?php
+			$template .= ob_get_clean();
 			$template .= fs_frontend_template( 'auth/login' );
+			$template .= '</form>';
 		}
 
 		if ( isset( $args['echo'] ) && $args['echo'] ) {
@@ -1371,7 +1392,22 @@ class FS_Users {
 			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
 			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
 		} else {
+			ob_start(); ?>
+            <form method="post" class="fs-login-form" action="" x-ref="registerForm" x-data="{ errors: [], msg: '' }"
+                  x-on:submit.prevent="Alpine.store('FS').register($event).then((r)=>{
+                       msg=typeof r.data.msg!=='undefined' ? r.data.msg : '';
+                       if(r.success===false) {
+                            errors=typeof r.data.errors!=='undefined' ? r.data.errors : [];
+                       }else
+                        if(r.success===true){
+                            $refs.registerForm.reset();
+                            if (typeof r.data.redirect!=='undefined') { window.location.href = r.data.redirect; }
+                        }
+                    })">
+			<?php
+			$template .= ob_get_clean();
 			$template .= fs_frontend_template( 'auth/register', array( 'field' => array() ) );
+			$template .= '</form>';
 		}
 
 		if ( isset( $args['echo'] ) && $args['echo'] ) {
