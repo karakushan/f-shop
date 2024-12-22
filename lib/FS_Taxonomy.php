@@ -681,7 +681,7 @@ class FS_Taxonomy {
 						'args' => array()
 					)
 				),
-			'fs-delivery-methods'                           =>
+			FS_Config::get_data( 'product_del_taxonomy' )   =>
 				array(
 					'_thumbnail_id'        => array(
 						'name' => __( 'Thumbnail', 'f-shop' ),
@@ -707,6 +707,12 @@ class FS_Taxonomy {
 					'_fs_add_packing_cost' => array(
 						'name' => __( 'Consider the cost of packaging', 'f-shop' ),
 						'type' => 'checkbox'
+					),
+					'_fs_term_order'       => array(
+						'name'    => __( 'Sort order', 'f-shop' ),
+						'type'    => 'text',
+						'subtype' => 'number',
+						'args'    => array( 'style' => 'width:72px;', 'step' => 0.01 )
 					)
 				),
 			'fs-currencies'                                 =>

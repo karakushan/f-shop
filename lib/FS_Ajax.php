@@ -727,12 +727,11 @@ class FS_Ajax {
 
 		global $wpdb;
 		$wpdb->show_errors( false );
-		$fs_config                 = new FS_Config();
-		$order_create_time         = time();
-		$order_create_date_display = date_i18n( 'd.m.Y H:i', $order_create_time );
-		$order_type                = ! empty( $_POST['order_type'] ) ? $_POST['order_type'] : 'standard'; // Тип заказа обычный или быстрый
-		$order_status_id           = intval( fs_option( 'fs_default_order_status' ) );
-		$customer_id               = 0;
+		$fs_config         = new FS_Config();
+		$current_date_i18n = date_i18n( 'd.m.Y H:i' );
+		$order_type        = ! empty( $_POST['order_type'] ) ? $_POST['order_type'] : 'standard'; // Тип заказа обычный или быстрый
+		$order_status_id   = intval( fs_option( 'fs_default_order_status' ) );
+		$customer_id       = 0;
 
 		// Set new order status
 		$order_status = 'new';
@@ -829,8 +828,9 @@ class FS_Ajax {
 
 		// Вставляем заказ в базу данных
 		$pay_method     = $sanitize_field['fs_payment_methods'] ? get_term( intval( $sanitize_field['fs_payment_methods'] ), $fs_config->data['product_pay_taxonomy'] ) : null;
+		$post_title     = sprintf( '%s  %s (%s)', $sanitize_field['fs_first_name'], $sanitize_field['fs_last_name'], $current_date_i18n );
 		$new_order_data = array(
-			'post_title'   => $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'] . ' / ' . date( 'd.m.Y H:i' ),
+			'post_title'   => $post_title,
 			'post_content' => '',
 			'post_status'  => $search_blacklist ? 'black_list' : $order_status,
 			'post_type'    => FS_Config::get_data( 'post_type_orders' ),
@@ -896,7 +896,7 @@ class FS_Ajax {
 			// Здесь мы определяем переменные для шаблона письма
 			$mail_data = [
 				// Cart data
-				'order_date'               => $order_create_date_display,
+				'order_date'               => $current_date_i18n,
 				'order_id'                 => $order_id,
 				'cart_discount'            => sprintf( '%s %s', apply_filters( 'fs_price_format', $discount ), fs_currency() ),
 				'cart_amount'              => sprintf( '%s %s', apply_filters( 'fs_price_format', $sum ), fs_currency() ),
@@ -971,7 +971,7 @@ class FS_Ajax {
 					'ID'         => $order_id,
 					'post_title' => sprintf(
 						__( 'Order #%d from %s %s (%s)', 'f-shop' ),
-						$order_id, $sanitize_field['fs_first_name'], $sanitize_field['fs_last_name'], date( 'd.m.y H:i', time() ) )
+						$order_id, $sanitize_field['fs_first_name'], $sanitize_field['fs_last_name'], $current_date_i18n )
 				)
 			);
 

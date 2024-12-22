@@ -17,7 +17,6 @@ class FS_Delivery {
 	public $delivery_service_number = 0;
 	public $term_id = 0;
 
-
 	/**
 	 * FS_Delivery constructor.
 	 *
@@ -51,18 +50,26 @@ class FS_Delivery {
 	}
 
 	/**
-	 * Returns available payment methods
+	 * Retrieves the available shipping methods based on the specified arguments.
 	 *
-	 * @param array $args
+	 * @param array $args Optional. Arguments to filter the shipping methods. Default values include:
+	 *                    'taxonomy'   => The taxonomy to query (default: FS_Config::get_data('product_del_taxonomy')).
+	 *                    'hide_empty' => Whether to hide terms not assigned to any posts (default: false).
+	 *                    'meta_key'   => Meta key for sorting (default: '_fs_term_order').
+	 *                    'orderby'    => Field to order terms by (default: 'meta_value_num').
+	 *                    'order'      => Order to retrieve terms in (default: 'ASC').
 	 *
-	 * @return array
+	 * @return array An array of shipping method objects with added price details from the term meta.
 	 */
-	public function get_shipping_methods( $args = [] ) {
+	public static function get_shipping_methods( $args = [] ) {
 
 		$args             = wp_parse_args( $args,
 			[
 				'taxonomy'   => FS_Config::get_data( 'product_del_taxonomy' ),
 				'hide_empty' => false,
+				'meta_key'   => '_fs_term_order',
+				'orderby'    => 'meta_value_num',
+				'order'      => 'ASC',
 			]
 		);
 		$methods          = [];
@@ -74,7 +81,7 @@ class FS_Delivery {
 			$methods[]     = $method;
 		}
 
-		return $methods;
+		return apply_filters( 'fs_shipping_methods', $methods );
 	}
 
 } 
