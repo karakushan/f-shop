@@ -31,6 +31,11 @@ class ProductEdit {
 		}
 	}
 
+	/**
+	 * Handles the creation and configuration of the product metabox for editing post meta fields.
+	 *
+	 * @return void
+	 */
 	function product_metabox_handle() {
 		$this->post_id = $_GET['post'] ?? null;
 		$container     = Container::make( 'post_meta', 'fs_metabox', __( 'Настройки товара' ) );

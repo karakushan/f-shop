@@ -2,6 +2,7 @@
 
 namespace FS;
 
+use FS\Admin\CommentMetabox;
 use FS\Admin\TermEdit;
 
 /**
@@ -37,7 +38,8 @@ class FS_Init {
 		FS_Customers::class,
 		FS_Form::class,
 		Admin\ProductEdit::class,
-		TermEdit::class
+		TermEdit::class,
+		CommentMetabox::class
 
 	];
 	protected static $instance = null;
