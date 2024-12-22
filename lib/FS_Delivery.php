@@ -26,6 +26,7 @@ class FS_Delivery {
 		if ( ! $order_id ) {
 			return;
 		}
+		
 		$delivery_method = get_post_meta( $order_id, '_delivery', 1 );
 		if ( ! isset( $delivery_method['method'] )
 		     || ! is_numeric( $delivery_method['method'] )

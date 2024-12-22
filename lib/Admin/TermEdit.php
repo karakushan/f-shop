@@ -8,6 +8,9 @@ use FS\FS_Config;
 use FS\FS_Taxonomy;
 
 class TermEdit {
+	/**
+	 *
+	 */
 	private $allowed_types = [
 		'media_gallery',
 		'text',
@@ -30,6 +33,15 @@ class TermEdit {
 		] );
 	}
 
+	/**
+	 * Registers term meta fields based on taxonomy settings and configurations.
+	 *
+	 * This function iterates through the taxonomy fields, creates a container
+	 * for term metadata, and adds appropriate fields based on the allowed types
+	 * as well as multilanguage configuration, if applicable.
+	 *
+	 * @return void
+	 */
 	function carbon_register_term_meta() {
 		$fields = FS_Taxonomy::get_taxonomy_fields();
 		foreach ( $fields as $key => $term_fields ) {
@@ -58,6 +70,15 @@ class TermEdit {
 		}
 	}
 
+	/**
+	 * Creates and configures a field object based on the provided parameters and field configuration.
+	 *
+	 * @param array $field An associative array defining the field's attributes, including type, width, required status, subtype, options, types, template, and help text.
+	 * @param string $name The name of the field.
+	 * @param string $label The label for the field.
+	 *
+	 * @return Field The configured field object.
+	 */
 	function make_field( $field, $name, $label ) {
 		$f = Field::make( $field['type'], mb_strtolower( $name ), $label );
 		if ( isset( $field['width'] ) ) {

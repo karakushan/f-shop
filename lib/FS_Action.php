@@ -219,7 +219,16 @@ class FS_Action {
 	}
 
 	/**
-	 * Callback before range slider
+	 * Initializes and renders the range slider for filtering with price input synchronization.
+	 *
+	 * @param array $args {
+	 *     Array of arguments to configure the range slider.
+	 *
+	 * @type array $data Additional data for the range slider.
+	 * @type string $wrapper_class CSS class applied to the wrapper element of the slider. Default 'noUiSlider-wrapper'.
+	 * }
+	 *
+	 * @return void The function outputs HTML and JavaScript for the range slider.
 	 */
 	public function fs_before_range_slider_callback( $args ) {
 		$args    = wp_parse_args( $args, [
@@ -229,7 +238,6 @@ class FS_Action {
 		$term_id = get_queried_object_id();
 		?>
         <script>
-
             const initSlider = async () => {
                 const slider = document.getElementById('fsRangeSlider');
                 const maxMinPrices = await Alpine.store('FS').getMaxMinPrice(<?php echo esc_attr( $term_id ) ?>).then(r => r.data);

@@ -38,23 +38,25 @@ function fs_get_taxonomy_hierarchy( $args ) {
 
 
 /**
- * @param integer $post_id -id записи
- * @param array $args -массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
+ * Outputs the product gallery for a specified product.
+ *
+ * @param int $post_id The ID of the product. Defaults to 0.
+ * @param array $args Optional arguments to customize the gallery display.
  */
-function fs_lightslider( $post_id = 0, $args = array() ) {
+function fs_product_gallery( $post_id = 0, $args = array() ) {
 	$post_id = fs_get_product_id( $post_id );
-	$galery  = new FS\FS_Images_Class();
-	$galery->lightslider( $post_id, $args );
+
+	return ( new FS\FS_Images_Class() )->product_gallery_list( $post_id, $args );
 }
 
 
 /**
- * Возвращает массив изображений галереи товара
+ * Retrieves slider images for a given post.
  *
- * @param int $post_id id поста
- * @param bool $thumbnail включать ли миниатюру поста в список
+ * @param int $post_id The ID of the post. Defaults to 0.
+ * @param array $args Additional arguments for retrieving images.
  *
- * @return array
+ * @return array An array of URLs for the slider images.
  */
 function fs_get_slider_images( $post_id = 0, $args = array() ) {
 	$post_id = fs_get_product_id( $post_id );
@@ -2527,16 +2529,20 @@ function fs_get_variated_count( $post_id = 0, $atts = array() ) {
 }
 
 /**
- * Возвращает ID товара
+ * Retrieves the product ID.
  *
- * @param integer $product ID поста
+ * @param int|object $product Product ID or product object. Defaults to 0.
  *
- * @return int
+ * @return int Returns the product ID. Returns 0 if the product ID cannot be determined.
  */
 function fs_get_product_id( $product = 0 ) {
 	if ( empty( $product ) ) {
 		global $post;
-		$product = $post->ID;
+		if ( isset( $post ) && isset( $post->ID ) ) {
+			$product = $post->ID;
+		} else {
+			return 0; // Або треба повернути значення за замовчуванням.
+		}
 	} elseif ( is_object( $product ) ) {
 		$product = $product->ID;
 	}

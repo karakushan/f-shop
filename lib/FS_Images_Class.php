@@ -6,9 +6,6 @@ namespace FS;
  * Store Image Class
  */
 class FS_Images_Class {
-	function __construct() {
-	}
-
 	/**
 	 * @param int $product_id
 	 *
@@ -16,7 +13,7 @@ class FS_Images_Class {
 	 *
 	 * @return bool|string
 	 */
-	public function list_gallery( $product_id = 0, $args = array() ) {
+	public function product_gallery_list( $product_id = 0, $args = array() ) {
 		$product_id = fs_get_product_id( $product_id );
 		$gallery    = $this->gallery_images_url( $product_id, $args );
 		$images_n   = '';
@@ -24,6 +21,7 @@ class FS_Images_Class {
 
 
 		if ( $gallery ) {
+
 			foreach ( $gallery as $image ) {
 				$images_n .= "<li data-thumb=\"$image\"  data-src=\"$image\" style=\"background_image( $image )\">";
 				$images_n .= "<a href=\"$image\" data-lightbox=\"roadtrip\" data-title=\"" . get_the_title( $product_id ) . "\">";
@@ -35,56 +33,40 @@ class FS_Images_Class {
 	}
 
 	/**
-	 * @param integer $product_id - id записи
-	 * @param array $args - массив аргументов: http://sachinchoolur.github.io/lightslider/settings.html
+	 * Displays the product gallery using specified arguments and settings.
+	 *
+	 * @param int $product_id The ID of the product. Defaults to 0.
+	 * @param array $args Array of arguments to customize the gallery display. Includes options like gallery layout, navigation elements, thumbnail settings, and additional configurations.
+	 *
+	 * @return void
 	 */
-	public function lightslider( $product_id = 0, $args = array() ) {
+	public static function product_gallery_display( $product_id = 0, $args = array() ) {
 		$product_id = fs_get_product_id( $product_id );
 
 		$default = array(
-			"gallery"        => true,
-			"item"           => 1,
-			"vertical"       => false,
-			"thumbItem"      => 3,
-			"prevHtml"       => '',
-			"nextHtml"       => '',
-			"attachments"    => false,
+			"gallery"            => true,
+			"item"               => 1,
+			"vertical"           => false,
+			"thumbItem"          => 5,
+			"prevHtml"           => '<div class="swiper-button-next"></div>',
+			"nextHtml"           => '<div class="swiper-button-prev"></div>',
+			"paginationHtml"     => '<div class="swiper-pagination"></div>',
+			"attachments"        => false,
 			"use_post_thumbnail" => true,
-			"verticalHeight" => 500,
-			"alt"            => get_the_title( $product_id ),
-			"title"          => get_the_title( $product_id )
+			"verticalHeight"     => 500,
+			"image_alt"          => get_the_title( $product_id ),
+			"image_title"        => get_the_title( $product_id ),
 		);
 		$args    = wp_parse_args( $args, $default );
 
-		$gallery_images = self::get_gallery( $product_id, $args['use_post_thumbnail'], $args['attachments'] );
+		$gallery_images_ids = self::get_gallery( $product_id, $args['use_post_thumbnail'], $args['attachments'] );
 
-		if ( empty( $gallery_images ) ) {
-			echo '<img src="' . FS_PLUGIN_URL . '/assets/img/no-photos.svg" alt="No Photo" class="fs-product-image-plug">';
-
-			return;
-		}
-
-		echo "<script>";
-		echo "var fs_lightslider_options=" . json_encode( $args );
-		echo "</script>";
-		echo "<div id=\"fs-product-slider-wrapper\">";
-		echo "<ul id=\"product_slider\">";
-		foreach ( $gallery_images as $gallery_image ) {
-			$image_url = wp_get_attachment_image_url( $gallery_image, 'full' );
-			$title     = get_the_title( $product_id );
-			echo "<li data-thumb=\"$image_url\"  data-src=\"$image_url\" style=\"background_image( $image_url )\">";
-			echo "<a href=\"$image_url\" data-lightbox=\"roadtrip\" data-title=\"$title\">";
-			echo wp_get_attachment_image( $gallery_image, 'full', false,[
-				'itemprop'        => 'image',
-				'data-zoom-image' => $image_url,
-				'alt'             => $args['alt'],
-				'title'           => $args['title']
-			] );
-			echo '</a></li>';
-
-		}
-		echo "</ul>";
-		echo "</div>";
+		echo fs_frontend_template( 'product/gallery', [
+			'vars' => [
+				'gallery_images_ids' => $gallery_images_ids,
+				'args'               => $args
+			]
+		] );
 	}
 
 	/**
@@ -136,8 +118,8 @@ class FS_Images_Class {
 			}
 		}
 
-		$gallery= array_filter( $gallery,function ($item){
-		    return (is_numeric( $item ) && $item > 0);
+		$gallery = array_filter( $gallery, function ( $item ) {
+			return ( is_numeric( $item ) && $item > 0 );
 		} );
 
 		return apply_filters( 'fs_custom_gallery', array_unique( $gallery ), $product_id );

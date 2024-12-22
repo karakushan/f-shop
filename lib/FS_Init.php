@@ -116,25 +116,17 @@ class FS_Init {
 	}
 
 	/**
-	 * Подключаем скрипты и стили во фронтэнде
+	 * Enqueues frontend scripts and styles for the plugin.
+	 *
+	 * The method registers and enqueues CSS and JavaScript files required
+	 * for the frontend. Additionally, localized script data is provided to
+	 * make PHP variables accessible in JavaScript.
+	 *
+	 * @return void
 	 */
 	public static function frontend_scripts_and_styles() {
-		$theme_info      = wp_get_theme();
-		$text_domain     = $theme_info->display( 'TextDomain' );
-		$post_type       = FS_Config::get_data( 'post_type' );
-		$taxonomy        = FS_Config::get_data( 'product_taxonomy' );
-		$jquery_ui_theme = 'base';
-
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', array(), FS_Config::get_data( 'plugin_ver' ), 'all' );
 		wp_enqueue_style( FS_PLUGIN_PREFIX . 'style', FS_PLUGIN_URL . 'assets/css/f-shop.css', array(), FS_Config::get_data( 'plugin_ver' ), 'all' );
-
-		// Скрипты на странице товара
-		if ( is_singular( $post_type ) ) {
-			wp_enqueue_script( FS_PLUGIN_PREFIX . 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/js/lightslider.min.js', array( 'jquery' ), null, true );
-			wp_enqueue_script( FS_PLUGIN_PREFIX . 'lightgallery', FS_PLUGIN_URL . "assets/plugins/lightGallery/dist/js/lightgallery-all.js", array( "jquery" ), null, true );
-			wp_enqueue_style( FS_PLUGIN_PREFIX . 'lightgallery', FS_PLUGIN_URL . 'assets/plugins/lightGallery/dist/css/lightgallery.min.css' );
-			wp_enqueue_style( FS_PLUGIN_PREFIX . 'lightslider', FS_PLUGIN_URL . 'assets/lightslider/dist/css/lightslider.min.css', array(), FS_Config::get_data( 'plugin_ver' ), 'all' );
-		}
 
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'domurl', FS_PLUGIN_URL . 'assets/js/url.min.js', array( 'jquery' ), null, true );
 		wp_enqueue_script( FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/js/iziToast.min.js', array( 'jquery' ), null, true );
@@ -176,7 +168,14 @@ class FS_Init {
 
 
 	/**
-	 *  Подключаем скрипты и стили во бэкэнде
+	 * Registers and enqueues scripts and styles for the admin interface.
+	 *
+	 * This method ensures that admin-specific CSS and JavaScript files are loaded,
+	 * including dependencies for features like the image uploader, tooltips, code editor,
+	 * and custom backend functionality. Scripts and styles are conditionally loaded
+	 * based on the current screen ID.
+	 *
+	 * @return void
 	 */
 	public function admin_scripts_and_styles() {
 		// необходимо для работы загрузчика изображений

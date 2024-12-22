@@ -1,5 +1,79 @@
 import "./scss/f-shop.scss";
 
+// GLightbox
+import FsLightbox from "fslightbox"
+
+import Swiper from 'swiper';
+import {Controller, Navigation, Pagination} from 'swiper/modules';
+
+window.Swiper = Swiper;
+
+document.addEventListener('DOMContentLoaded', function () {
+    const thumbsSwiper = new Swiper("#productGalleryThumbs", {
+        modules: [Controller],
+        direction: 'vertical',
+        slidesPerView: 5,
+        spaceBetween: 10,
+        grabCursor: true,
+        loop: false,
+        centeredSlidesBounds: true,
+        thumbs: {
+            swiper: mainGallerySwiper
+        }
+    });
+
+    const mainGallerySwiper = new Swiper("#productGallery", {
+        slidesPerView: 1,
+        loop: false,
+        modules: [Navigation, Pagination, Controller],
+
+        navigation: {
+            nextEl: '.fs-swiper-next',
+            prevEl: '.fs-swiper-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+        },
+        controller: {
+            control: thumbsSwiper
+        },
+        thumbs: {
+            swiper: thumbsSwiper
+        }
+    });
+
+
+// Ensure the current slide is set as active
+    mainGallerySwiper.on('slideChange', function () {
+        const activeIndex = mainGallerySwiper.activeIndex;
+        thumbsSwiper.slideTo(activeIndex);
+        // Activate the current thumbnail slide to match the main gallery
+        thumbsSwiper.slides.forEach(slide => slide.classList.remove('swiper-slide-active'));
+        const activeThumbnail = thumbsSwiper.slides[mainGallerySwiper.activeIndex];
+        if (activeThumbnail) {
+            activeThumbnail.classList.add('swiper-slide-active');
+        }
+
+    });
+
+    thumbsSwiper.on('click', function (swiper, event) {
+        const clickedIndex = swiper.clickedIndex;
+        if (clickedIndex !== undefined) {
+            mainGallerySwiper.slideTo(clickedIndex);
+        }
+
+        thumbsSwiper.slideTo(mainGallerySwiper.activeIndex);
+        // Activate the current thumbnail slide to match the main gallery
+        thumbsSwiper.slides.forEach(slide => slide.classList.remove('swiper-slide-active'));
+        const activeThumbnail = thumbsSwiper.slides[mainGallerySwiper.activeIndex];
+        if (activeThumbnail) {
+            activeThumbnail.classList.add('swiper-slide-active');
+        }
+    });
+
+    window.FsLightbox = FsLightbox;
+});
+
 jQuery(document).ready(function ($) {
     let fShop = Object.assign({
         getLang: function (string) {
@@ -134,23 +208,7 @@ jQuery(document).ready(function ($) {
 
         }
     }, window.fShop);
-
-    var slider = document.getElementById('slider');
-    if (slider) {
-        noUiSlider.create(slider, {
-            start: [0, 6000],
-            connect: true,
-            range: {
-                'min': 0,
-                'max': 10000
-            }
-        });
-
-        slider.noUiSlider.on('update', function (values, handle) {
-            $('#slider-min').text(Math.round(values[0]))
-            $('#slider-max').text(Math.round(values[1]))
-        });
-    }
+    
 
     $(document).on('click', '[data-fs-element="comment-like"]', function (event) {
         let commentId = $(this).data('comment-id');
@@ -719,14 +777,6 @@ jQuery(document).ready(function ($) {
         var modalParentlId = jQuery(this).parents('.fs-modal');
         jQuery(modalParentlId).fadeOut();
     });
-
-// слайдер товара
-    if (jQuery("#product_slider").length) {
-        jQuery("#product_slider").lightGallery();
-        if (typeof fs_lightslider_options != "undefined") {
-            window.lightSlider = jQuery('#product_slider').lightSlider(fs_lightslider_options);
-        }
-    }
 
 // Квантификатор товара
     jQuery(document).ready(function (jQuery) {
