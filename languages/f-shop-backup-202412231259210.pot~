@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2024-10-28 06:48+0000\n"
+"POT-Creation-Date: 2024-12-23 07:34+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -3116,8 +3116,37 @@ msgid ""
 "password is: %password%. If this was not you, please ignore this email."
 msgstr ""
 
-msgid "%d reviews"
+msgid "%s reviews"
 msgstr ""
 
-msgid "%d review"
+msgid "%s review"
+msgstr ""
+
+msgid ""
+"The login information you entered is incorrect. <a href=\"%s\">Password "
+"recovery</a>"
+msgstr ""
+
+msgid "Price: %s-%s %s"
+msgstr ""
+
+msgid "Invalid phone number"
+msgstr ""
+
+msgid "Standard order"
+msgstr ""
+
+msgid "Product not found in your wishlist."
+msgstr ""
+
+msgid "Product removed from your wishlist."
+msgstr ""
+
+msgid "Product added to your wishlist."
+msgstr ""
+
+msgid "Product is already in your wishlist."
+msgstr ""
+
+msgid "The product does not exist."
 msgstr ""

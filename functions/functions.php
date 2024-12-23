@@ -4,9 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 } // Exit if accessed directly
 
 use FS\FS_Cart;
-use \FS\FS_Config;
+use FS\FS_Config;
 use FS\FS_Order;
-use \FS\FS_Product;
+use FS\FS_Product;
 use FS\FS_Users;
 
 /**
@@ -724,17 +724,7 @@ function fs_delete_wishlist_position( $product_id = 0, $content = '🞫', $args 
 		'title' => sprintf( __( 'Remove from wishlist', 'f-shop' ), get_the_title( $product_id ) )
 	) );
 
-	$button = '<a';
-	$button .= ' href="' . esc_attr( add_query_arg( array(
-			'fs-api'     => 'fs_delete_wish_list_item',
-			'product_id' => $product_id
-		) ) ) . '"';
-	$button .= ' class="' . esc_attr( $args['class'] ) . '"';
-	$button .= ' title="' . esc_attr( $args['title'] ) . '">';
-	$button .= $content;
-	$button .= '</a>';
-
-	echo apply_filters( 'fs_delete_wish_list_position_button', $button );
+	echo '<button type="button" x-on:click.prevent="Alpine.store(\'FS\').removeWishlistItem(' . $product_id . ')" ' . fs_parse_attr( $args ) . '>' . $content . '</button>';
 }
 
 
@@ -1582,18 +1572,23 @@ function fs_price_min() {
 }
 
 /**
- * функция отображает кнопку "добавить в список желаний"
+ * Displays a button or link to add a product to the wishlist.
  *
- * @param integer $product_id -id записи
- * @param string $label -текст кнопки
- * @param array $args -дополнительные аргументы массивом
+ * @param int $product_id Product ID. If not specified, the current product is used.
+ * @param string $button_text Button or link text.
+ * @param array $args Additional parameters for button/link customization:
+ *  - 'attr'      (string) Custom attributes.
+ *  - 'type'      (string) Element type ('button' or 'link'). Default is 'button'.
+ *  - 'preloader' (string) HTML code for preloader, shown during loading.
+ *  - 'class'     (string) CSS classes for the element.
+ *  - 'id'        (string) HTML ID of the element.
+ *  - 'atts'      (string) Additional attributes for the element.
  *
+ * @return void
  */
-function fs_add_to_wishlist( $product_id = 0, $label = 'В список желаний', $args = array() ) {
-	$product_id  = fs_get_product_id( $product_id );
-	$in_wishlist = \FS\FS_Wishlist::contains( $product_id );
-	// определим параметры по умолчанию
-	$defaults  = array(
+function fs_add_to_wishlist( $product_id = 0, $button_text = 'В список желаний', $args = array() ) {
+	$product_id = fs_get_product_id( $product_id );
+	$defaults   = array(
 		'attr'      => '',
 		'type'      => 'button',
 		'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
@@ -1601,42 +1596,25 @@ function fs_add_to_wishlist( $product_id = 0, $label = 'В список жела
 		'id'        => 'fs-whishlist-btn-' . $product_id,
 		'atts'      => ''
 	);
-	$args      = wp_parse_args( $args, $defaults );
-	$html_atts = fs_parse_attr( array(), array(
-		'data-fs-action'  => "wishlist",
-		'class'           => $args['class'],
-		'id'              => $args['id'],
-		'data-name'       => get_the_title( $product_id ),
-		'title'           => __( 'Add to wishlist', 'f-shop' ),
-		'data-image'      => get_the_post_thumbnail_url( $product_id ),
-		'data-product-id' => $product_id,
-		'x-data'          => json_encode( [ 'inWishlist' => \FS\FS_Wishlist::contains( $product_id ) ] ),
-		'x-on:click'      => 'inWishlist=true',
-		'x-bind:class'    => '{"fs-in-wishlist":inWishlist}'
+	$args       = wp_parse_args( $args, $defaults );
+	$html_atts  = fs_parse_attr( array(), array(
+		'class'        => $args['class'],
+		'id'           => $args['id'],
+		'x-data'       => json_encode( [ 'inWishlist' => \FS\FS_Wishlist::contains( $product_id ) ] ),
+		'x-on:click'   => 'Alpine.store("FS").addToWishlist(' . $product_id . ');inWishlist=!inWishlist',
+		'x-bind:class' => '{"fs-in-wishlist":inWishlist}'
 	) );
 
 	switch ( $args['type'] ) {
 		case 'link':
-			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' ' . $args["atts"] . '>' . $label . '<span class="fs-atc-preloader" style="display:none">' . $args['preloader'] . '</span></a>';
+			echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' ' . $args["atts"] . '>' . $button_text . '<span class="fs-atc-preloader" style="display:none">' . $args['preloader'] . '</span></a>';
 			break;
 
 		case 'button':
-			echo '<button ' . $html_atts . ' ' . $args["atts"] . '>' . $label . '<span class="fs-atc-preloader" style="display:none">' . $args['preloader'] . '</span></button>';
+			echo '<button ' . $html_atts . ' ' . $args["atts"] . '>' . $button_text . '<span class="fs-atc-preloader" style="display:none">' . $args['preloader'] . '</span></button>';
 			break;
 	}
 
-}
-
-/**
- * Синоним функции fs_add_to_wishlist()
- * устаревшая функция
- *
- * @param int $post_id
- * @param string $label
- * @param array $args
- */
-function fs_wishlist_button( $post_id = 0, $label = 'В список желаний', $args = array() ) {
-	fs_add_to_wishlist( $post_id, $label, $args );
 }
 
 /**
@@ -2018,18 +1996,7 @@ function fs_parse_attr( $attr = array(), $default = array(), $exclude = [] ) {
  * @return array
  */
 function fs_get_wishlist( $args = array() ) {
-	if ( empty( $_SESSION['fs_wishlist'] ) || ! is_array( $_SESSION['fs_wishlist'] ) ) {
-		return [];
-	}
-
-	$args = wp_parse_args( $args, array(
-		'post_type'   => FS_Config::get_data( 'post_type' ),
-		'include'     => array_unique( array_values( $_SESSION['fs_wishlist'] ) ),
-		'numberposts' => - 1
-	) );
-
-
-	return get_posts( $args );
+	return \FS\FS_Wishlist::get_wishlist_products();
 }
 
 /**

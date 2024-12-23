@@ -19,18 +19,6 @@ class FS_Ajax {
 	function __construct() {
 
 		if ( wp_doing_ajax() ) {
-			//  Add to wishlist
-			add_action( 'wp_ajax_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
-			add_action( 'wp_ajax_nopriv_fs_addto_wishlist', array( $this, 'fs_addto_wishlist' ) );
-
-			// Remove from wish list
-			add_action( 'wp_ajax_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
-			add_action( 'wp_ajax_nopriv_fs_del_wishlist_pos', array( $this, 'fs_del_wishlist_pos' ) );
-
-			// Clean Wishlist
-			add_action( 'wp_ajax_fs_clean_wishlist', array( $this, 'fs_clean_wishlist' ) );
-			add_action( 'wp_ajax_nopriv_fs_clean_wishlist', array( $this, 'fs_clean_wishlist' ) );
-
 			add_action( 'wp_ajax_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
 			add_action( 'wp_ajax_nopriv_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
 
@@ -997,52 +985,6 @@ class FS_Ajax {
 		wp_send_json_error( [ 'msg' => __( 'Errors occurred while creating an order', 'f-shop' ) ] );
 	}
 
-	/**
-	 * Метод ajax добавления товара в список желаний
-	 */
-	public function fs_addto_wishlist() {
-		if ( ! FS_Config::verify_nonce() ) {
-			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
-		}
-		$product_id                             = (int) $_REQUEST['product_id'];
-		$_SESSION['fs_wishlist'][ $product_id ] = $product_id;
-
-		wp_send_json_success( array(
-			'body'   => fs_frontend_template( 'wishlist/wishlist' ),
-			'status' => true
-		) );
-	}
-
-	public function fs_del_wishlist_pos() {
-		$product_id = (int) $_REQUEST['position'];
-		$res        = '';
-		unset( $_SESSION['fs_user_settings']['fs_wishlist'][ $product_id ] );
-		$wishlist = ! empty( $_SESSION['fs_user_settings']['fs_wishlist'] ) ? $_SESSION['fs_user_settings']['fs_wishlist'] : array();
-		$count    = count( $wishlist );
-		$class    = $count == 0 ? '' : 'wishlist-show';
-		$res      .= '<a href="#" class="hvr-grow"><i class="icon icon-heart"></i><span>' . $count . '</span></a>
-<ul class="fs-wishlist-listing ' . $class . '">
-  <li class="wishlist-header">' . __( 'Wishlist', 'cube44' ) . ': <i class="fa fa-times-circle" aria-hidden="true"></i>
-  </li>
-  ';
-		foreach ( $_SESSION['fs_user_settings']['fs_wishlist'] as $key => $value ) {
-			$res .= "
-  <li><i class=\"fa fa-trash\" aria-hidden=\"true\" data-fs-action=\"wishlist-delete-position\" data-product-id=\"$key\"
-    data-product-name=\"" . get_the_title( $key ) . "\" ></i> <a href=\"" . get_permalink( $key ) . "\">" .
-			        get_the_title( $key ) . "</a></li>
-  ";
-		}
-		$res .= '
-</ul>';
-
-		if ( ! empty( $res ) ) {
-			echo json_encode( array(
-				'body' => $res,
-				'type' => 'success'
-			) );
-		}
-		exit;
-	}
 
 //  возвращает список постов определённого термина
 	public function get_taxonomy_posts() {
@@ -1149,19 +1091,6 @@ class FS_Ajax {
 		wp_send_json_success( $terms );
 	}
 
-	/**
-	 * Clears the wishlist
-	 *
-	 * @return void
-	 */
-	function fs_clean_wishlist() {
-		if ( ! FS_Config::verify_nonce() ) {
-			wp_send_json_error( array( 'msg' => __( 'Security check failed', 'f-shop' ) ) );
-		}
-
-		unset( $_SESSION['fs_wishlist'] );
-		wp_send_json_success();
-	}
 
 	/**
 	 * Adds all products from the wish list to the cart

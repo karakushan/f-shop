@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2024-12-05 07:22+0000\n"
+"POT-Creation-Date: 2024-12-23 12:59+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -3134,4 +3134,22 @@ msgid "Invalid phone number"
 msgstr ""
 
 msgid "Standard order"
+msgstr ""
+
+msgid "Product not found in your wishlist."
+msgstr ""
+
+msgid "Product removed from your wishlist."
+msgstr ""
+
+msgid "Product added to your wishlist."
+msgstr ""
+
+msgid "Product is already in your wishlist."
+msgstr ""
+
+msgid "The product does not exist."
+msgstr ""
+
+msgid "Product removed from wishlist"
 msgstr ""

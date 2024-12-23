@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2024-12-05 07:23+0000\n"
+"PO-Revision-Date: 2024-12-23 13:00+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -1806,7 +1806,7 @@ msgstr "Пароль не може бути пустим"
 
 #: lib/FS_Users.php:187
 msgid "Password is valid"
-msgstr ""
+msgstr "Пароль дійсний"
 
 #: lib/FS_Config.php:152
 msgid "Password reset"
@@ -1953,6 +1953,9 @@ msgstr "Товар"
 msgid "product"
 msgstr "товар"
 
+msgid "Product added to your wishlist."
+msgstr "Продукт додано до вашого списку бажань."
+
 #: lib/FS_Settings.php:667
 msgid "Product archive title"
 msgstr "Заголовок сторінки архіву товару"
@@ -1987,6 +1990,9 @@ msgstr "Фільтр категорії товарів"
 msgid "Product ID not found"
 msgstr "ID продукту не знайдено"
 
+msgid "Product is already in your wishlist."
+msgstr "Товар вже у вашому списку бажань."
+
 #: lib/FS_Settings.php:305
 msgid "Product link localization"
 msgstr "Локалізація посилань на товари"
@@ -1994,6 +2000,15 @@ msgstr "Локалізація посилань на товари"
 #: lib/FS_Init.php:267
 msgid "Product name, ID or SKU"
 msgstr "Назва товару, ID або артикул (SKU)"
+
+msgid "Product not found in your wishlist."
+msgstr "Продукт не знайдено у вашому списку бажань."
+
+msgid "Product removed from wishlist"
+msgstr "Товар видалено зі списку бажань"
+
+msgid "Product removed from your wishlist."
+msgstr "Продукт видалено зі списку бажань."
 
 #: lib/FS_SEO.php:175
 msgid "Product Reviews"
@@ -2532,6 +2547,9 @@ msgstr ""
 #: lib/FS_Order.php:636
 msgid "The order status is not defined"
 msgstr "Статус замовлення не визначено"
+
+msgid "The product does not exist."
+msgstr ""
 
 #: lib/FS_Settings.php:289
 msgid "The product must have all of the selected characteristics in the filter"

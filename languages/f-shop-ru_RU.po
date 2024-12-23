@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-12-05 07:23+0000\n"
+"PO-Revision-Date: 2024-12-23 13:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -283,11 +283,11 @@ msgstr "Связанное"
 
 #: templates/back-end/metabox/variants.php:83
 msgid "Associated attributes"
-msgstr ""
+msgstr "Связанные атрибуты"
 
 #: templates/front-end/product/comments.php:209
 msgid "Attach an image"
-msgstr ""
+msgstr "Прикрепить изображение"
 
 #: lib/FS_Taxonomy.php:1523
 msgid "Attribute"
@@ -1319,7 +1319,7 @@ msgstr "Показать метку \"Хит продаж\""
 
 #: lib/FS_Users.php:363
 msgid "Incorrect old password"
-msgstr ""
+msgstr "Неверный старый пароль"
 
 #: lib/FS_Cart.php:242
 msgid "Index not specified"
@@ -1517,6 +1517,8 @@ msgid ""
 "Messages are moderated. Comments containing profanity, insults, links to "
 "third-party resources, spam will not be published."
 msgstr ""
+"Сообщения модерируются. Комментарии, содержащие ненормативную лексику, "
+"оскорбления, ссылки на сторонние ресурсы, спам, не публикуются."
 
 #: lib/FS_Settings.php:679
 msgid "Meta description for product archive"
@@ -1569,7 +1571,7 @@ msgstr "Поле имя не может быть пустым"
 
 #: lib/FS_Ajax.php:1387
 msgid "Name is required"
-msgstr ""
+msgstr "Имя обязательно"
 
 #: lib/FS_Settings.php:456
 msgid "Name of the sender of letters"
@@ -1730,7 +1732,7 @@ msgstr "Номер заказа"
 
 #: lib/FS_Ajax.php:1517
 msgid "Order ID not found"
-msgstr ""
+msgstr "Идентификатор заказа не найден"
 
 #: lib/FS_Settings.php:646
 msgid "Order Information Page"
@@ -1785,7 +1787,7 @@ msgstr "Упаковка"
 #: templates/front-end/mail/user-create-order.php:535
 #: templates/front-end/mail/admin-create-order.php:535
 msgid "Packing"
-msgstr ""
+msgstr "Упаковка"
 
 #: lib/FS_Settings.php:362
 msgid "Packing cost"
@@ -1812,7 +1814,7 @@ msgstr "Пароль не может быть пустым"
 
 #: lib/FS_Users.php:187
 msgid "Password is valid"
-msgstr ""
+msgstr "Пароль действителен"
 
 #: lib/FS_Config.php:152
 msgid "Password reset"
@@ -1824,7 +1826,7 @@ msgstr "Сброс пароля на сайте"
 
 #: lib/FS_Users.php:368 lib/FS_Users.php:1064
 msgid "Passwords do not match"
-msgstr ""
+msgstr "Пароли не совпадают"
 
 #: templates/front-end/shortcode/fs-order-info.php:74
 msgid "pay now"
@@ -1959,6 +1961,9 @@ msgstr "Товар"
 msgid "product"
 msgstr "товар"
 
+msgid "Product added to your wishlist."
+msgstr "Товар добавлен в ваш список желаний."
+
 #: lib/FS_Settings.php:667
 msgid "Product archive title"
 msgstr "Заголовок страницы архива товаров"
@@ -1991,7 +1996,10 @@ msgstr "Фильтр по категориям товара"
 
 #: lib/FS_Ajax.php:1272 lib/FS_Ajax.php:1332 lib/FS_Ajax.php:1377
 msgid "Product ID not found"
-msgstr ""
+msgstr "Идентификатор продукта не найден"
+
+msgid "Product is already in your wishlist."
+msgstr "Товар уже в вашем списке желаний."
 
 #: lib/FS_Settings.php:305
 msgid "Product link localization"
@@ -2000,6 +2008,15 @@ msgstr "Локализация ссылки товара"
 #: lib/FS_Init.php:267
 msgid "Product name, ID or SKU"
 msgstr "Название товара, ID или артикул (SKU)"
+
+msgid "Product not found in your wishlist."
+msgstr "Товар не найден в вашем списке желаний."
+
+msgid "Product removed from wishlist"
+msgstr "Товар удален из списка желаний"
+
+msgid "Product removed from your wishlist."
+msgstr "Товар удален из вашего списка желаний."
 
 #: lib/FS_SEO.php:175
 msgid "Product Reviews"
@@ -2097,7 +2114,7 @@ msgstr "диапазон"
 
 #: templates/front-end/product/comments.php:169
 msgid "Rate the product"
-msgstr ""
+msgstr "Оцените продукт"
 
 #: lib/FS_Ajax.php:524
 msgid "Rating successfully set!"
@@ -2154,7 +2171,7 @@ msgstr "Дата регистрации"
 #: lib/FS_Users.php:1107
 #, php-format
 msgid "Registration on the website «%s»"
-msgstr ""
+msgstr "Регистрация на сайте «%s»"
 
 #: templates/back-end/metabox/related.php:2
 msgid "Related products"
@@ -2328,7 +2345,7 @@ msgstr "Магазин"
 
 #: templates/front-end/product/comments.php:112
 msgid "Show more"
-msgstr ""
+msgstr "Показать больше"
 
 #: lib/widgets/Attribute_Widget.php:146
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:32
@@ -2519,7 +2536,7 @@ msgstr ""
 
 #: templates/front-end/product/comments.php:210
 msgid "The maximum file size is 10 Mb"
-msgstr ""
+msgstr "Максимальный размер файла 10 Мб."
 
 #: templates/front-end/mail/user-create-order.php:566
 #: templates/front-end/mail/admin-create-order.php:566
@@ -2539,6 +2556,9 @@ msgstr ""
 #: lib/FS_Order.php:636
 msgid "The order status is not defined"
 msgstr "Статус заказа не определен"
+
+msgid "The product does not exist."
+msgstr "Товар не существует."
 
 #: lib/FS_Settings.php:289
 msgid "The product must have all of the selected characteristics in the filter"
@@ -2753,7 +2773,7 @@ msgstr "В список желаний"
 #: templates/front-end/mail/admin-create-order.php:485
 #: templates/front-end/mail/admin-create-order.php:537
 msgid "Total"
-msgstr ""
+msgstr "Общий"
 
 #: templates/front-end/shortcode/fs-order-info.php:38
 #: templates/front-end/shortcode/list-orders.php:11
@@ -3015,7 +3035,7 @@ msgstr "Вы выбрали все доступные товары со скла
 
 #: lib/FS_Users.php:1068
 msgid "You must accept the terms and conditions"
-msgstr ""
+msgstr "Вы должны принять положения и условия"
 
 #: lib/FS_Payment.php:72
 msgid "You or someone else paid for this order."
@@ -3085,7 +3105,7 @@ msgstr "Ваш заказ принят"
 
 #: lib/FS_Users.php:383
 msgid "Your password has been successfully changed"
-msgstr ""
+msgstr "Ваш пароль был успешно изменен"
 
 #: lib/FS_Users.php:868
 msgid ""

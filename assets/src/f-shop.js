@@ -208,7 +208,7 @@ jQuery(document).ready(function ($) {
 
         }
     }, window.fShop);
-    
+
 
     $(document).on('click', '[data-fs-element="comment-like"]', function (event) {
         let commentId = $(this).data('comment-id');
@@ -1057,94 +1057,6 @@ jQuery(document).ready(function ($) {
 
     }(jQuery));
 
-
-//добавление товара в список желаний
-    jQuery(document).on('click', '[data-fs-action="wishlist"]', function (event) {
-        event.preventDefault();
-        var product_id = jQuery(this).data('product-id');
-        var product_name = jQuery(this).data('name');
-        var curentBlock = jQuery(this);
-        jQuery.ajax({
-            type: 'POST',
-            url: fShop.ajaxurl,
-            data: fShop.ajaxData('fs_addto_wishlist', {product_id: product_id}),
-            beforeSend: function () {
-                curentBlock.find(".fs-atc-preloader").fadeIn();
-                // генерируем событие добавления в список желаний
-                var before_to_wishlist = new CustomEvent("fs_before_to_wishlist", {
-                    detail: {
-                        id: product_id, image: curentBlock.data('image'), name: product_name, button: curentBlock
-                    }
-                });
-                document.dispatchEvent(before_to_wishlist);
-            }
-        })
-            .done(function (result) {
-                if (result.success) {
-                    jQuery('[data-fs-element="whishlist-widget"]').html(result.data.body);
-                    // генерируем событие добавления в список желаний
-                    var add_to_wishlist = new CustomEvent("fs_add_to_wishlist", {
-                        detail: {
-                            id: product_id,
-                            name: product_name,
-                            button: curentBlock,
-                            image: curentBlock.data('image'),
-                            ajax_data: result.data
-                        }
-                    });
-                    document.dispatchEvent(add_to_wishlist);
-                }
-                curentBlock.find(".fs-atc-preloader").fadeOut();
-
-            });
-    });
-
-//удаление товара из списка желаний
-    jQuery('[data-fs-action="wishlist-delete-position"]').on('click', function (event) {
-        var product_id = jQuery(this).data('product-id');
-        var product_name = jQuery(this).data('product-name');
-        var parents = jQuery(this).parents('li');
-
-        if (confirm(fs_message.confirm_text.replace('%s', product_name))) {
-            jQuery.ajax({
-                url: fShop.ajaxurl, data: {
-                    action: 'fs_del_wishlist_pos', position: product_id
-                },
-            })
-                .done(function (success) {
-                    var data = jQuery.parseJSON(success);
-                    jQuery('#fs-wishlist').html(data.body);
-                });
-
-
-        }
-    });
-
-    // Живой поиск товаров
-    /*    $("[name=s]").on('input', function (e) {
-            let searchVal = $(this).val();
-            let form = $(this).parents('form');
-
-            $.ajax({
-                type: 'POST', url: fShop.ajaxurl, data: fShop.ajaxData('fs_livesearch', {
-                    search: searchVal
-                }), success: function (data) {
-                    if (data.success) {
-                        if (form.find('.fs-livesearch-data').length) {
-                            form.find('.fs-livesearch-data').replaceWith(data.data.html);
-                        } else {
-                            form.append(data.data.html);
-                        }
-                    }
-                }
-            });
-        })
-
-        $("[name=s]").focusout(function (e) {
-            $(".fs-livesearch-data").fadeOut(function () {
-            });
-        });*/
-
     // Активирует радио кнопки на странице оформления покупки
     $(".fs-field-wrap").each(function () {
         $(this).find('.radio').first().addClass('active').find('input').prop('checked', true)
@@ -1446,35 +1358,7 @@ jQuery(document).ready(function ($) {
         event.preventDefault();
     }, false);
 
-// Событие срабатывает перед добавлением товара в список желаний
-    document.addEventListener("fs_before_to_wishlist", function (event) {
-        // действие которое инициирует событие, здесь может быть любой ваш код
-        var button = event.detail.button;
-        button.find('.fs-wh-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader">');
-        event.preventDefault();
-    }, false);
-
-
-// Событие срабатывает после добавления товара в список желаний
-    document.addEventListener("fs_add_to_wishlist", function (event) {
-        // действие которое инициирует событие, здесь может быть любой ваш код
-        let button = event.detail.button;
-        button.find('.fs-wh-preloader').fadeOut();
-        let afterText = fShop.getLang('addToWishlist');
-        iziToast.show({
-            image: event.detail.image,
-            theme: 'light',
-            title: fShop.getLang('success'),
-            message: fShop.strReplace(fShop.getLang('addToWishlist'), {
-                '%product%': button.data('name'), '%wishlist_url%': fShop.getSettings('wishlistUrl')
-            }),
-            position: 'topCenter',
-
-        });
-        event.preventDefault();
-    }, false);
-
-// Срабатывает если покупатель пытается добавить отсуствующий товар в корзину
+    // Срабатывает если покупатель пытается добавить отсуствующий товар в корзину
     document.addEventListener("fsBuyNoAvailable", function (event) {
         iziToast.show({
             theme: 'light', /*icon: 'fas fa-info-circle',*/

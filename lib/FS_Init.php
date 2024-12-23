@@ -39,7 +39,8 @@ class FS_Init {
 		FS_Form::class,
 		Admin\ProductEdit::class,
 		TermEdit::class,
-		CommentMetabox::class
+		CommentMetabox::class,
+		FS_Wishlist::class
 
 	];
 	protected static $instance = null;

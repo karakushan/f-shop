@@ -43,6 +43,35 @@ class FS {
 
     // === WISHLIST ===
 
+
+    /**
+     * Adds an item to the wishlist by its identifier.
+     *
+     * @param {string|number} itemId - The identifier of the item to add to the wishlist.
+     * @return {Promise<void>} A Promise that resolves once the item is added and
+     *                         the appropriate response handling is completed.
+     */
+    addToWishlist(itemId) {
+        return this.post('fs_addto_wishlist', {product_id: itemId})
+            .then((response) => {
+                if (response.success) {
+                    iziToast.success({
+                        title: response.data.title ?? this.getMessage('success'),
+                        message: response.data.msg,
+                        position: 'topCenter'
+                    });
+                    const wishlistUpdatedEvent = new CustomEvent('fs-wishlist-item-added', {detail: {itemId: itemId}});
+                    window.dispatchEvent(wishlistUpdatedEvent);
+                } else {
+                    iziToast.error({
+                        title: response.data.title ?? this.getMessage('error'),
+                        message: response.data.msg,
+                        position: 'topCenter'
+                    });
+                }
+            });
+    }
+
     // Deletes the wishlist
     cleanWishlist() {
         this.post('fs_clean_wishlist', {})
@@ -51,7 +80,12 @@ class FS {
             })
     }
 
-    // Adds the entire wishlist to the cart
+    /**
+     * Adds all items from the wishlist to the cart by making a server request.
+     * Updates the cart information upon a successful operation and displays a success notification.
+     *
+     * @return {void} This method does not return a value.
+     */
     addWishListToCart() {
         this.post('fs_add_wishlist_to_cart', {})
             .then((response) => {
@@ -60,6 +94,35 @@ class FS {
                     title: response.data.title, message: response.data.message, position: 'topCenter'
                 });
             })
+    }
+
+
+    /**
+     * Removes an item from the wishlist by its identifier.
+     *
+     * @param {string|number} itemId - The identifier of the wishlist item to be removed.
+     * @return {Promise<void>} A Promise that resolves once the item is removed and
+     *                         the appropriate response handling is completed.
+     */
+    removeWishlistItem(itemId) {
+        return this.post('fs_del_wishlist_pos', {item_id: itemId})
+            .then((response) => {
+                if (response.success) {
+                    iziToast.success({
+                        title: response.data.title ?? this.getMessage('success'),
+                        message: response.data.msg,
+                        position: 'topCenter'
+                    });
+                    const wishlistUpdatedEvent = new CustomEvent('fs-wishlist-item-deleted', {detail: {itemId: itemId}});
+                    window.dispatchEvent(wishlistUpdatedEvent);
+                } else {
+                    iziToast.error({
+                        title: response.data.title ?? this.getMessage('error'),
+                        message: response.data.msg,
+                        position: 'topCenter'
+                    });
+                }
+            });
     }
 
     // === CART ===
