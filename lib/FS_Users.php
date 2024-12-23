@@ -1315,11 +1315,19 @@ class FS_Users {
 	}
 
 	/**
-	 * Возвращает html код формы входа в личный кабинет
+	 * Generates and optionally outputs a login form with specified attributes and functionality.
 	 *
-	 * @param array $args
+	 * @param array $args {
+	 *     Optional. An array of arguments to configure the login form.
 	 *
-	 * @return mixed|string|void
+	 * @type string $class The CSS class for the form container. Default 'fs-login-form'.
+	 * @type string $name The name attribute for the form. Default 'fs-login'.
+	 * @type string $method The HTTP method for form submission. Default 'post'.
+	 * @type string $data -logged-in-text Text displayed when the user is already logged in. Default 'You are already logged in.'.
+	 * @type bool $echo Whether to echo the output or return it. Default false.
+	 * @type string $inline_attributes Inline attributes for the form to handle Alpine.js interaction. Default predefined Alpine.js directive.
+	 * }
+	 * @return string|null The generated login form as a string, or null if `$args['echo']` is set to true.
 	 */
 	public static function login_form( $args = array() ) {
 		$args = wp_parse_args( $args, array(
@@ -1341,20 +1349,21 @@ class FS_Users {
 			ob_start();
 			?>
             <form method="post" class="fs-login-form" action=""
-            x-data="{ errors: [], user: { username: '' , password: ''} }"
-            x-on:submit.prevent="Alpine.store('FS').login(user).then((r)=>{
-                        if(r.success===false) {
-                            errors.any=r.data.msg;
-                            msg=r.data.msg;
-                        }else if(r.success===true){
-                             msg=r.data.msg
-                             if (typeof r.data.redirect!=='undefined') {
-                                 window.location.href = r.data.redirect;
-                             }
+            x-data="{ errors: [], user: { username: '' , password: ''}, msg:'', login() {
+                Alpine.store('FS').login(this.user).then((r) => {
+                    if (r.success === false) {
+                        this.errors.any=r.data.msg;
+                    } else if (r.success === true) {
+                        if (typeof r.data.redirect !== 'undefined') {
+                            window.location.href = r.data.redirect;
                         }
-                    })">
+                    }
+                })
+        } }"
+            x-on:keydown.enter.prevent="login()"
+            x-on:submit.prevent="login()">
 
-            <div class="alert alert-danger" x-show="errors.any" x-text="errors.any"></div>
+            <div class="alert alert-danger " x-show="errors.any" x-text="errors.any"></div>
 			<?php
 			$template .= ob_get_clean();
 			$template .= fs_frontend_template( 'auth/login' );
