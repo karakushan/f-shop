@@ -19,7 +19,7 @@ class FS_Ajax {
 	function __construct() {
 
 		if ( wp_doing_ajax() ) {
-			add_action( 'wp_ajax_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
+			add_action( 'wp_ajax_fs_a dd_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
 			add_action( 'wp_ajax_nopriv_fs_add_wishlist_to_cart', array( $this, 'fs_add_wishlist_to_cart' ) );
 
 			//  Getting related category posts
@@ -921,6 +921,7 @@ class FS_Ajax {
 				'client_first_name'        => $sanitize_field['fs_first_name'],
 				'client_last_name'         => $sanitize_field['fs_last_name'],
 				'client_id'                => $user_id,
+				'client_comment'           => $sanitize_field['fs_comment'],
 
 				// mail data
 				'admin_mail_title'         => __( 'Congratulations! A new order has appeared on your site.', 'f-shop' ),

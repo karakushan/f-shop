@@ -333,7 +333,7 @@
                                                      src="<?= /** @var string $mail_logo */
 												     $mail_logo ?>"
                                                      alt="<?= /** @var string $site_name */
-												     $site_name ?>"></a>
+												     $site_name ?>" style="height: 50px; width: auto;"></a>
                                         </td>
                                         <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
 											<?php /** @var array $social_links */
@@ -443,10 +443,13 @@
                                                             <td class="mini-block">
                                                                 <span class="header-sm">Оплата</span><br/>
 																<?php /** @var string $payment_method */
-																echo $payment_method ?> <br/> <br/>
+																echo $payment_method ?> <br/>
                                                                 <span class="header-sm">Время покупки</span><br/>
 																<?= /** @var string $order_date */
-																$order_date ?>
+																$order_date ?><br/>
+                                                                <span class="header-sm">Комментарий</span><br/>
+																<?= /** @var string $client_comment */
+																$client_comment ?>
                                                             </td>
                                                         </tr>
                                                     </table>

@@ -115,7 +115,8 @@ class FS_Notification {
 		             . "<b>Тип оплати:</b> %payment_method%\n"
 		             . "<b>Прізвище та ім’я:</b> %client_first_name% %client_last_name%\n"
 		             . "<b>E-mail:</b> %client_email%\n"
-		             . "<b>Телефон:</b> %client_phone%\n";
+		             . "<b>Телефон:</b> %client_phone%\n"
+		             . "<b>Коментар:</b> %client_comment%\n";
 
 		$telegram->send_message( $this->replace_mail_variables( $message ), $urlButton );
 	}
