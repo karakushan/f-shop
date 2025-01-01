@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2024-12-23 13:00+0000\n"
+"PO-Revision-Date: 2025-01-01 11:57+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -2547,6 +2547,9 @@ msgstr ""
 #: lib/FS_Order.php:636
 msgid "The order status is not defined"
 msgstr "Статус замовлення не визначено"
+
+msgid "The phone number must have at least 12 digits."
+msgstr "Номер телефону повинен містити не менше 12 цифр."
 
 msgid "The product does not exist."
 msgstr ""

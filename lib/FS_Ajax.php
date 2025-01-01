@@ -667,6 +667,9 @@ class FS_Ajax {
 			if ( isset( $form_field['required'] ) && $form_field['required'] && trim( $_POST[ $key ] ) == '' ) {
 				$errors[ $key ] = sprintf( __( 'The "%s" field is required!', 'f-shop' ), $form_field['name'] );
 			}
+			if ( $form_field['type'] === 'tel' && isset( $_POST[ $key ] ) && strlen( preg_replace( "/[^0-9]/", '', $_POST[ $key ] ) ) !== 12 ) {
+				$errors[ $key ] = __( 'The phone number must have at least 12 digits.', 'f-shop' );
+			}
 		}
 
 		array_walk( $form_fields, function ( &$fields, $key ) use ( $form_fields ) {

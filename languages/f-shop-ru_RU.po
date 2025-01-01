@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2024-12-23 13:03+0000\n"
+"PO-Revision-Date: 2025-01-01 11:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -2556,6 +2556,9 @@ msgstr ""
 #: lib/FS_Order.php:636
 msgid "The order status is not defined"
 msgstr "Статус заказа не определен"
+
+msgid "The phone number must have at least 12 digits."
+msgstr "Номер телефона должен содержать не менее 12 цифр."
 
 msgid "The product does not exist."
 msgstr "Товар не существует."
