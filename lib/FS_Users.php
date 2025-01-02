@@ -1363,7 +1363,7 @@ class FS_Users {
             x-on:keydown.enter.prevent="login()"
             x-on:submit.prevent="login()">
 
-            <div class="alert alert-danger " x-show="errors.any" x-text="errors.any"></div>
+            <div class="alert alert-danger " x-show="errors.any" x-html="errors.any"></div>
 			<?php
 			$template .= ob_get_clean();
 			$template .= fs_frontend_template( 'auth/login' );
