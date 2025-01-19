@@ -2029,6 +2029,17 @@ td.fs_photo.column-fs_photo img {
   }
 }
 
+/* Стили для сообщения о добавлении в избранное */
+.iziToast-message a {
+    font-weight: bold !important;
+    text-decoration: underline !important;
+
+	&:hover {
+		text-decoration: none !important;
+	}
+}
+
+
 @media (max-width: 768px) {
   .fs-dashboard-order__header span {
 	display: block;
