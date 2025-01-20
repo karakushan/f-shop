@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-01-01 11:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:04+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -3155,4 +3155,7 @@ msgid "Product removed from wishlist"
 msgstr ""
 
 msgid "The phone number must have at least 12 digits."
+msgstr ""
+
+msgid "Minimum order amount %s %s"
 msgstr ""

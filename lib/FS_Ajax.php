@@ -737,7 +737,7 @@ class FS_Ajax {
 		if ( fs_option( 'fs_minimum_order_amount', 0 )
 		     && fs_get_cart_cost() < fs_option( 'fs_minimum_order_amount', 0 ) ) {
 			wp_send_json_error( array(
-				'msg' => sprintf( __( 'Минимальная сумма заказа %s %s', 'f-shop' ),
+				'msg' => sprintf( __( 'Minimum order amount %s %s', 'f-shop' ),
 					fs_option( 'fs_minimum_order_amount', 0 ),
 					fs_currency()
 				)

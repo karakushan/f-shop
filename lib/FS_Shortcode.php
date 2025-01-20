@@ -262,8 +262,18 @@ class FS_Shortcode {
 			'class'             => $args['class'],
 			'ajax_action'       => 'order_send',
 			'alpine_data'       => [ 'errors' => [] ],
-			'inline_attributes' => 'x-on:submit.prevent="Alpine.store(\'FS\').sendOrder($event).then((r)=>{ if(r.success === false) { errors =r.data.errors } });"'
-		) );
+'inline_attributes' => 'x-on:submit.prevent="Alpine.store(\'FS\').sendOrder($event).then((r)=>{ 
+	if(r.success === false) { 
+		errors = r.data.errors;
+		if(r.data.msg) {
+			iziToast.error({
+				title: \''.__('Error!','f-shop').'\',
+				message: r.data.msg,
+				position: \'topCenter\'
+			});
+		}
+	} 
+});"'		) );
 		$template .= fs_frontend_template( 'checkout/checkout', array( 'vars' => array( 'cart' => FS_Cart::get_cart() ) ) );
 		$template .= FS_Form::form_close();
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2025-01-01 11:57+0000\n"
+"PO-Revision-Date: 2025-01-20 08:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -1535,6 +1535,9 @@ msgstr "Способ применения фильтра в каталоге"
 #: lib/FS_Taxonomy.php:758
 msgid "Minimum order amount"
 msgstr "Минимальная сумма заказа"
+
+msgid "Minimum order amount %s %s"
+msgstr "Минимальная сумма заказа %s %s"
 
 #: lib/FS_Taxonomy.php:633
 msgid "Minimum quantity of goods for order"
