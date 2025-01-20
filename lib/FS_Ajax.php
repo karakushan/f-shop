@@ -982,7 +982,8 @@ class FS_Ajax {
 				'redirect' => apply_filters( 'fs_after_checkout_redirect', $redirect_link, $order_id )
 			);
 
-			unset( $_SESSION['cart'] );
+			do_action('fs_destroy_cart'); 
+
 			wp_send_json_success( $result );
 		}
 

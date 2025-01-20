@@ -33,6 +33,9 @@ class FS_Cart {
 		add_action( 'wp_ajax_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 		add_action( 'wp_ajax_nopriv_fs_change_cart_count', array( $this, 'change_cart_item_count' ) );
 
+		// полное удаление корзины
+		add_action( 'fs_destroy_cart', array( $this, 'destroy_cart' ) );
+
 		// присваиваем переменной $cart содержимое корзины
 		if ( ! empty( $_SESSION['cart'] ) ) {
 			$this->cart = $_SESSION['cart'];
@@ -64,7 +67,7 @@ class FS_Cart {
 	 * позволяет использовать пользователям отображение корзины в нескольких местах одновременно
 	 */
 	function fs_get_cart_callback() {
-		wp_send_json_success( (array) $this->get_cart_object() );
+		wp_send_json_success( (array) self::get_cart_object() );
 
 	}
 
@@ -72,7 +75,7 @@ class FS_Cart {
 	 * Получает объект корзины
 	 * @return \stdClass
 	 */
-	function get_cart_object() {
+	public static function get_cart_object() {
 		$cart_items = self::get_cart();
 
 		$cart        = new \stdClass();
@@ -190,7 +193,7 @@ class FS_Cart {
 	 *
 	 * @return bool|\WP_Error
 	 */
-	public function fs_remove_product( $cart_item = 0 ) {
+	public static function delete_item( $cart_item = 0 ) {
 		if ( empty( $_SESSION['cart'] ) || ! is_array( $_SESSION['cart'] ) ) {
 			return new \WP_Error( __METHOD__, __( 'Cart is empty', 'f-shop' ) );
 		}
@@ -205,7 +208,8 @@ class FS_Cart {
 	 *
 	 * @return bool
 	 */
-	public static function destroy_cart() {
+	public static function destroy_cart($except = []) {
+
 		unset( $_SESSION['cart'] );
 
 		return true;
@@ -238,7 +242,7 @@ class FS_Cart {
 		unset( $_SESSION['cart'][ $_POST['index'] ] );
 		$_SESSION['cart'] = array_values( $_SESSION['cart'] );
 
-		wp_send_json_success( $this->get_cart_object() );
+		wp_send_json_success( self::get_cart_object() );
 	}
 
 	/**
