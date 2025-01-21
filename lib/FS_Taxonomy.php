@@ -241,14 +241,28 @@ class FS_Taxonomy {
 			//Фильтруем по свойствам (атрибутам)
 			if ( ! empty( $url['filter'] ) ) {
 				$attributes  = explode( FS_Filters::get_param_separator(), sanitize_text_field( $url['filter'] ) );
+				$attributes_grouped = array();
+				foreach ( $attributes as $term_id ) {
+					$term = get_term( $term_id );
+					if ( ! empty( $term ) && ! empty( $term->parent ) ) {
+						$attributes_grouped[ $term->parent ][] = $term_id;
+					}
+				}
+
+				$tax_queries=[];
+				foreach ( $attributes_grouped as $parent_id => $term_ids ) {
+					$tax_queries[] = array(
+							'taxonomy' => FS_Config::get_data( 'features_taxonomy' ),
+							'field'    => 'id',
+							'terms'    => array_filter( $term_ids, 'intval' ),
+							'operator' =>'IN'
+					
+					);
+				}
+				
 				$tax_query[] = array(
 					'relation' => 'AND',
-					array(
-						'taxonomy' => FS_Config::get_data( 'features_taxonomy' ),
-						'field'    => 'id',
-						'terms'    => array_filter( $attributes, 'intval' ),
-						'operator' => fs_option( 'fs_product_filter_type', 'AND' )
-					)
+					...$tax_queries
 				);
 			}
 
