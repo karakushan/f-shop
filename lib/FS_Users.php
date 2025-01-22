@@ -68,7 +68,7 @@ class FS_Users {
 		// Add the save action to user's own profile editing screen update.
 		add_action( 'edit_user_profile', [ $this, 'admin_profile_edit_fields' ] );
 
-		// Add the save action to user's own profile editing screen update.
+		// Add the save action to user profile editing screen update.
 		add_action( 'personal_options_update', [ $this, 'admin_profile_save_fields' ] );
 
 		// Add the save action to user profile editing screen update.
@@ -806,7 +806,10 @@ class FS_Users {
 				'placeholder' => __( 'Login', 'f-shop' ),
 				'value'       => fs_option( 'fs_autofill_form' ) ? $user->user_login : '',
 				'required'    => true,
-				'save_meta'   => false
+				'save_meta'   => false,
+				'attributes'  => array(
+					'autocomplete' => 'off'
+				)
 			),
 			'fs_password'          => array(
 				'name'        => __( 'Password', 'f-shop' ),
@@ -815,7 +818,10 @@ class FS_Users {
 				'label'       => '',
 				'value'       => '',
 				'required'    => true,
-				'save_meta'   => false
+				'save_meta'   => false,
+				'attributes'  => array(
+					'autocomplete' => 'off'
+				)
 			),
 			'fs_repeat_password'   => array(
 				'name'        => __( 'Confirm password', 'f-shop' ),
@@ -894,83 +900,191 @@ class FS_Users {
 
 
 	/**
-	 * Saves profile settings
+	 * Saves user data submitted through the form.
+	 *
+	 * This method validates the submitted data, checks for user authentication,
+	 * and proceeds to save or update various user-related fields, such as text, files,
+	 * and special fields like names and phone numbers. It includes nonce verification
+	 * for security, handles file uploads, and applies filters for data transformation.
+	 *
+	 * @return void Outputs a JSON response indicating success or failure with a corresponding message.
 	 */
-	public function save_user_data() {
-		if ( ! FS_Config::verify_nonce() ) {
-			wp_send_json_error( array( 'msg' => __( 'Failed verification of nonce form', 'f-shop' ) ) );
-		}
+	public function validate_user_data($data, $user_fields) {
+        $validated_data = array();
+        $errors = array();
+        
+        // Проверяем только те поля, которые пришли в POST запросе
+        foreach ($data as $meta_key => $meta_value) {
+            // Пропускаем служебные поля
+            if (!isset($user_fields[$meta_key])) {
+                continue;
+            }
+            
+            $user_field = $user_fields[$meta_key];
+            $field_errors = array();
+            
+            // Проверка обязательных полей
+            if (!empty($user_field['required']) && empty($meta_value)) {
+                $field_label = !empty($user_field['name']) ? $user_field['name'] : $meta_key;
+                $field_errors[] = sprintf(
+                    __('The "%s" field is required!', 'f-shop'),
+                    $field_label
+                );
+            }
+            
+            $meta_value = trim($meta_value);
+            
+            // Валидация телефона
+            if ($meta_key == 'fs_phone' && !empty($meta_value)) {
+                if (!FS_Form::validate_phone($meta_value)) {
+                    $field_errors[] = __('Invalid phone number', 'f-shop');
+                }
+            }
+            
+            // Валидация email
+            if ($user_field['type'] == 'email' && !empty($meta_value)) {
+                if (!is_email($meta_value)) {
+                    $field_errors[] = __('Invalid email address', 'f-shop');
+                }
+            }
+            
+            // Проверка длины поля
+            if (isset($user_field['minlength']) && strlen($meta_value) < $user_field['minlength']) {
+                $field_errors[] = sprintf(
+                    __('Minimum length is %d characters', 'f-shop'),
+                    $user_field['minlength']
+                );
+            }
+            
+            if (isset($user_field['maxlength']) && strlen($meta_value) > $user_field['maxlength']) {
+                $field_errors[] = sprintf(
+                    __('Maximum length is %d characters', 'f-shop'),
+                    $user_field['maxlength']
+                );
+            }
+            
+            // Если есть ошибки для поля, добавляем их в общий массив ошибок
+            if (!empty($field_errors)) {
+                $errors[$meta_key] = $field_errors;
+                continue;
+            }
+            
+            // Обработка значений по типу поля
+            switch ($user_field['type']) {
+                case 'checkbox':
+                    $meta_value = $meta_value == 1 || $meta_value === 'on' ? 1 : 0;
+                    break;
+                    
+                case 'phone':
+                    $meta_value = preg_replace('/[^0-9]/', '', $meta_value);
+                    break;
+                    
+                case 'number':
+                    $meta_value = filter_var($meta_value, FILTER_SANITIZE_NUMBER_INT);
+                    break;
+            }
+            
+            $validated_data[$meta_key] = $meta_value;
+        }
+        
+        return array(
+            'errors' => $errors,
+            'data' => $validated_data
+        );
+    }
 
-		$locale = isset( $_POST['locale'] ) ? sanitize_text_field( $_POST['locale'] ) : get_locale();
-		// Переключение на переданную локаль
-		switch_to_locale( $locale );
+    public function save_user_data() {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(array('msg' => __('Failed verification of nonce form', 'f-shop')));
+        }
 
-		$user_fields = self::get_user_fields();
-		$user_id     = get_current_user_id();
+        $locale = isset($_POST['locale']) ? sanitize_text_field($_POST['locale']) : get_locale();
+        switch_to_locale($locale);
 
-		require_once( ABSPATH . "wp-admin" . '/includes/image.php' );
-		require_once( ABSPATH . "wp-admin" . '/includes/file.php' );
-		require_once( ABSPATH . "wp-admin" . '/includes/media.php' );
+        $user_fields = self::get_user_fields();
+        $user_id = get_current_user_id();
 
-		// If for some reason the user’s fields have disappeared, although this is unlikely
-		if ( ! is_array( $user_fields ) || ! count( $user_fields ) ) {
-			wp_send_json_error( array( 'msg' => __( 'No fields found to save user data', 'f-shop' ) ) );
-		}
+        require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+        require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+        require_once(ABSPATH . "wp-admin" . '/includes/media.php');
 
-		// If the user is not logged in
-		if ( ! $user_id ) {
-			wp_send_json_error( array( 'msg' => __( 'User is not found', 'f-shop' ) ) );
-		}
+        if (!is_array($user_fields) || !count($user_fields)) {
+            wp_send_json_error(array('msg' => __('No fields found to save user data', 'f-shop')));
+        }
 
-		foreach ( $user_fields as $meta_key => $user_field ) {
-			$meta_value = trim( $_POST[ $meta_key ] );
+        if (!$user_id) {
+            wp_send_json_error(array('msg' => __('User is not found', 'f-shop')));
+        }
 
-			if ( $user_field['type'] == 'checkbox' && $meta_value != 1 ) {
-				$meta_value = 0;
-			}
+        // Проверяем, нужно ли валидировать только определенные поля
+        if (!empty($_POST['fs_validate_only'])) {
+            $validated_keys = explode(',', $_POST['fs_validate_only']);
+            
+            // Добавляем отсутствующие поля с дефолтными значениями
+            foreach ($validated_keys as $key) {
+                if (!isset($_POST[$key]) && isset($user_fields[$key])) {
+                    $default_value = '';
+                    
+                    // Устанавливаем дефолтные значения в зависимости от типа поля
+                    switch ($user_fields[$key]['type']) {
+                        case 'checkbox':
+                            $default_value = 0;
+                            break;
+                        default:
+                            $default_value = '';
+                    }
+                    
+                    $_POST[$key] = $default_value;
+                }
+            }
 
-			// Сохраняем аватарку
-			if ( $user_field['type'] == 'file' && ! empty( $_FILES[ $meta_key ] ) ) {
-				$attach_id = media_handle_upload( $meta_key, 0 );
+            // Фильтруем поля для валидации
+            $user_fields = array_filter($user_fields, function($key) use ($validated_keys) {
+                return in_array($key, $validated_keys);
+            }, ARRAY_FILTER_USE_KEY);
+        }
 
-				if ( is_wp_error( $attach_id ) ) {
-					wp_send_json_error( array( 'msg' => $attach_id->get_error_message() ) );
-				}
+        // Валидируем данные
+        $validation_result = $this->validate_user_data($_POST, $user_fields);
+        
+        // Если есть ошибки валидации, возвращаем их
+        if (!empty($validation_result['errors'])) {
+            wp_send_json_error(array(
+                'msg' => __('Validation failed', 'f-shop'),
+                'errors' => $validation_result['errors']
+            ));
+        }
 
-				update_user_meta( $user_id, $meta_key, intval( $attach_id ) );
-				continue;
-			}
+        // Сохраняем валидированные данные
+        foreach ($validation_result['data'] as $meta_key => $meta_value) {
+            // Обработка загрузки файлов
+            if (isset($user_fields[$meta_key]) && $user_fields[$meta_key]['type'] == 'file' && !empty($_FILES[$meta_key])) {
+                $attach_id = media_handle_upload($meta_key, 0);
+                if (is_wp_error($attach_id)) {
+                    wp_send_json_error(array('msg' => $attach_id->get_error_message()));
+                }
+                update_user_meta($user_id, $meta_key, intval($attach_id));
+                continue;
+            }
 
-			if ( $meta_key == 'fs_first_name' || $meta_key == 'fs_last_name' ) {
-				wp_update_user( [
-					'ID'                                => $user_id,
-					str_replace( 'fs_', '', $meta_key ) => $meta_value
-				] );
-				continue;
-			}
+            // Обновление имени и фамилии
+            if ($meta_key == 'fs_first_name' || $meta_key == 'fs_last_name') {
+                wp_update_user([
+                    'ID' => $user_id,
+                    str_replace('fs_', '', $meta_key) => $meta_value
+                ]);
+                continue;
+            }
 
-			// Removing extra characters from phone
-			if ( $meta_key == 'fs_phone' ) {
-				if ( ! FS_Form::validate_phone( $meta_value ) ) {
-					wp_send_json_error( [ 'msg' => __( 'Invalid phone number', 'f-shop' ) ] );
-				}
+            // Применяем фильтры и сохраняем мета-данные
+            $meta_value = apply_filters('fs_user_meta_before_save', $meta_value, $meta_key, $user_id);
+            update_user_meta($user_id, $meta_key, $meta_value);
+        }
 
-				$meta_value = preg_replace( '/[^0-9]/', '', $meta_value );
-			}
-
-			// Allows you to transform user data before saving
-			$meta_value = apply_filters( 'fs_user_meta_before_save', $meta_value, $meta_key, $user_id );
-
-			// Saving data
-			update_user_meta( $user_id, $meta_key, $meta_value );
-
-
-		}
-
-		wp_send_json_success( array(
-			'msg' => __( 'Your data has been successfully updated.', 'f-shop' )
-		) );
-	}
+        wp_send_json_success(array(
+            'msg' => __('Your data has been successfully updated.', 'f-shop')
+        ));
+    }
 
 	/**
 	 * Protecting your personal account from unauthorized users
@@ -1029,7 +1143,9 @@ class FS_Users {
 		// If the user does not exist, send an error message
 		if ( ! $user ) {
 			wp_send_json_error( [
-				'msg' => __( 'Unfortunately, a user with such data does not exist on the site', 'f-shop' )
+				'errors' => [
+					'username' => __( 'Unfortunately, a user with such data does not exist on the site', 'f-shop' )
+				]
 			] );
 		} else {
 			// Authenticate the user
@@ -1041,7 +1157,9 @@ class FS_Users {
 				$reset_password_page_url = fs_option( 'page_lostpassword' )
 					? get_permalink( fs_option( 'page_lostpassword' ) ) : wp_lostpassword_url( home_url() );
 				wp_send_json_error( [
-					'msg' => sprintf( __( 'The login information you entered is incorrect. <a href="%s">Password recovery</a>', 'f-shop' ), $reset_password_page_url )
+					'errors' => [
+						'password' => sprintf( __( 'The login information you entered is incorrect. <a href="%s">Password recovery</a>', 'f-shop' ), $reset_password_page_url )
+					]
 				] );
 			} else {
 				// If the authentication is successful, clear the authentication cookie
@@ -1146,8 +1264,8 @@ class FS_Users {
 
 		// Send notification to the user
 		$notification = new FS_Notification();
-		$notification->set_subject( sprintf( __( 'Registration on the website «%s»', 'f-shop' ), get_bloginfo( 'name' ) ) );
 		$notification->set_recipients( [ $save_fields['fs_email'] ] );
+		$notification->set_subject( sprintf( __( 'Registration on the website «%s»', 'f-shop' ), get_bloginfo( 'name' ) ) );
 		$notification->set_template( 'mail/' . get_locale() . '/user-registration', $replace_keys );
 		$notification->send();
 
@@ -1161,76 +1279,6 @@ class FS_Users {
 			'msg' => sprintf( __( 'Congratulations! You have successfully registered! <a href="%s">Log in</a>', 'f-shop' ), esc_url( get_permalink( fs_option( 'page_auth' ) ) ) )
 		) );
 
-
-	}
-
-	/**
-	 * User registration when placing an order
-	 *
-	 * @param $email -  user email
-	 * @param $password - user password
-	 * @param $mail_data - additional data for the letter
-	 *
-	 * @return int|\WP_Error
-	 */
-	public static function register_user( $email, $password = '', $mail_data = [] ) {
-		if ( ! is_email( $email ) ) {
-			wp_send_json_error( [
-				'errors' => [
-					'fs_email' => __( 'Email does not match format', 'f-shop' )
-				]
-			] );
-		}
-
-		if ( email_exists( $email ) ) {
-			wp_send_json_error( [
-				'errors' => [
-					'fs_email' => __( 'This email is already registered', 'f-shop' )
-				]
-			] );
-		}
-
-		$user_pass = ! empty( $password ) ? $password : wp_generate_password();
-		$user_id   = wp_create_user( $email, $user_pass, $email );
-
-		if ( is_wp_error( $user_id ) ) {
-			wp_send_json_error( [
-				'errors' => [
-					'fs_email' => $user_id->get_error_message()
-				]
-			] );
-		}
-
-		// Set user role and disable admin bar
-		wp_update_user( [
-			'ID'                   => $user_id,
-			'role'                 => 'customer',
-			'show_admin_bar_front' => false,
-			'display_name'         => ! empty( $mail_data['fs_first_name'] ) ? $mail_data['fs_first_name'] : '',
-		] );
-
-		// Set user data
-		$mail_data['first_name']  = $mail_data['fs_first_name'] ?: ''; // Add name to $mail_data
-		$mail_data['password']    = $user_pass; // Add password to $mail_data
-		$mail_data['email']       = $email; // Add email to $mail_data
-		$mail_data['login']       = $email; // Add login to $mail_data
-		$mail_data['cabinet_url'] = fs_account_url(); // Add dashboard url
-		$mail_data['site_name']   = get_bloginfo( 'name' ); // Add site name
-
-
-		// Send notification to the user
-		$notification = new FS_Notification();
-		$notification->set_subject( sprintf( __( 'Registration on the website «%s»', 'f-shop' ), get_bloginfo( 'name' ) ) );
-		$notification->set_recipients( [ $email ] );
-		$notification->set_template( 'mail/' . get_locale() . '/user-registration', $mail_data );
-		$notification->send();
-
-		// Send a letter to the admin
-		$notification->set_recipients( [ get_bloginfo( 'admin_email' ) ] );
-		$notification->set_template( 'mail/' . get_locale() . '/user-registration-admin', $mail_data );
-		$notification->send();
-
-		return $user_id;
 
 	}
 
@@ -1344,7 +1392,7 @@ class FS_Users {
 		if ( is_user_logged_in() ) {
 
 			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
-			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">В личный кабинет</a></p>';
+			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet' ) ) ) . '">В личный кабинет</a></p>';
 		} else {
 			ob_start();
 			?>
@@ -1399,7 +1447,7 @@ class FS_Users {
 		$template = '';
 		if ( is_user_logged_in() ) {
 			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
-			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
+			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet' ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
 		} else {
 			ob_start(); ?>
             <form method="post" class="fs-login-form" action="" x-ref="registerForm" x-data="{ errors: [], msg: '' }"
@@ -1447,7 +1495,7 @@ class FS_Users {
 		$template = '';
 		if ( is_user_logged_in() ) {
 			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
-			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet', 0 ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
+			$template .= '<p class="text-center"><a href="' . esc_url( get_the_permalink( fs_option( 'page_cabinet' ) ) ) . '">' . __( 'To personal account', 'f-shop' ) . '</a></p>';
 		} else {
 			$template = fs_frontend_template( 'auth/lostpassword', array( 'field' => array() ) );
 

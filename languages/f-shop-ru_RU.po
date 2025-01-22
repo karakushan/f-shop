@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2025-01-20 08:06+0000\n"
+"PO-Revision-Date: 2025-01-22 14:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -1015,6 +1015,12 @@ msgstr "Введите назввание"
 #: templates/back-end/metabox/select-product.php:30
 msgid "Enter product name, ID, SKU"
 msgstr "Введите название товара, ID или артикул"
+
+msgid "Error"
+msgstr "Ошибка"
+
+msgid "Error saving data"
+msgstr "Ошибка сохранения данных"
 
 #: lib/FS_Ajax.php:1234 lib/FS_Ajax.php:1243 lib/FS_Init.php:165
 msgid "Error!"
@@ -2908,6 +2914,9 @@ msgstr ""
 "Пользователь с таким адресом электронной почты или логином уже "
 "зарегистрирован на сайте. <a href=\"#fs-modal-login\" data-fs-"
 "action=\"modal\">Войти</a>. <a href=\"%s\">Забыли пароль?</a>"
+
+msgid "Validation failed"
+msgstr "Данные не прошли проверку"
 
 #: lib/FS_Taxonomy.php:1524 templates/back-end/metabox/attributes.php:103
 msgid "Value"

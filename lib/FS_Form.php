@@ -126,6 +126,11 @@ class FS_Form {
 		$field = ! empty( $fields[ $name ] ) && is_array( $fields[ $name ] )
 			? $fields[ $name ]
 			: array();
+			
+		// Удаляем required из поля, чтобы использовать только значение по умолчанию или из $args
+		if (isset($field['required'])) {
+			unset($field['required']);
+		}
 
 		$default = array_merge( array(
 			'type'           => 'text',
@@ -136,7 +141,7 @@ class FS_Form {
 			'label_class'    => 'fs-form-label',
 			'taxonomy'       => 'category',
 			'query_params'   => null,
-			'id'             => str_replace( array( '[', ']' ), array( '_' ), $name ),
+			'id'             => str_replace( array( '[', ']' ), array( '_', '' ), $name ),
 			'required'       => false,
 			'title'          => __( 'this field is required', 'f-shop' ),
 			'placeholder'    => null,
@@ -235,47 +240,81 @@ class FS_Form {
 
 
 	/**
-	 * Возвращает открывающий тег формы со скрытыми полями безопасности
+	 * Opens the form tag
 	 *
-	 * @param $args array дополнительные аргументы формы
-	 *
-	 * @return string
+	 * @param array $args - form parameters
 	 */
 	public static function form_open( $args = array() ) {
 		$args = wp_parse_args( $args, array(
-			'method'            => 'POST',
-			'autocomplete'      => 'off',
-			'ajax'              => 'off',
-			'class'             => 'fs-form',
-			'id'                => 'fs-form',
-			'name'              => 'fs-ajax',
-			'enctype'           => 'multipart/form-data',
 			'action'            => '',
-			'ajax_action'       => 'fs_save_data',
-			'validate'          => true,
-			'inline_attributes' => '',
-			'alpine_data'       => array(),
-		) );
+			'class'            => 'fs-form',
+			'id'               => uniqid( 'fs-form-' ),
+			'method'           => 'post',
+			'enctype'          => 'multipart/form-data',
+			'ajax_action'      => 'fs_save_data',
+			'validate'         => true,
+			'inline_attributes'=> sprintf('x-init="
+				$data.errors = {};
+				$data.loading = false;
+				$data.success = false;
+				$data.formData = {};
+				$el.onsubmit = async function(e) { 
+					e.preventDefault();
+					$data.loading = true;
+					$data.errors = {};
+					$data.success = false;
+					try {
+						const response = await Alpine.store(\'FS\').post(\'%s\', new FormData($el));
+						$data.loading = false;
+						if (response.success) {
+							$data.success = true;
+							iziToast.success({
+								title: response.data.title || \'' . esc_js(__('Success', 'f-shop')) . '\',
+								message: response.data.msg || \'' . esc_js(__('Data successfully saved', 'f-shop')) . '\',
+								position: \'topCenter\'
+							});
+						} else {
+							if (response.data && response.data.errors) {
+								$data.errors = response.data.errors;
+							}
+							iziToast.error({
+								title: response.data.title || \'' . esc_js(__('Error', 'f-shop')) . '\',
+								message: response.data.msg || \'' . esc_js(__('Error saving data', 'f-shop')) . '\',
+								position: \'topCenter\'
+							});
+						}
+					} catch(error) {
+						$data.loading = false;
+						console.error(\'Error:\', error);
+						iziToast.error({
+							title: \'' . esc_js(__('Error', 'f-shop')) . '\',
+							message: error.message,
+							position: \'topCenter\'
+						});
+					}
+				}"', $args['ajax_action']),
+			'alpine_data'      => array(),
+			'validate_only'    => []
+		));
 
-		$out = '<form';
-		$out .= ' action="' . esc_attr( $args['action'] ) . '"';
-		$out .= ' data-ajax="' . esc_attr( $args['ajax'] ) . '"';
-		$out .= ' name="' . esc_attr( $args['name'] ) . '"';
-		$out .= ' method="' . esc_attr( $args['method'] ) . '"';
-		$out .= ' autocomplete="' . esc_attr( $args['autocomplete'] ) . '"';
-		$out .= ' data-validation="' . esc_attr( $args['validate'] ) . '"';
-		$out .= ' enctype="' . esc_attr( $args['enctype'] ) . '"';
-		$out .= ' class="' . esc_attr( $args['class'] ) . '"';
-		$out .= ' x-data="' . esc_attr( json_encode( $args['alpine_data'] ) ) . '"';
-		$out .= ' id="' . esc_attr( $args['id'] ) . '"';
-		$out .= ' ' . $args['inline_attributes'];
-		$out .= ' >';
-		$out .= FS_Config::nonce_field();
+		printf(
+			'<form method="%s" action="%s" class="%s" id="%s" enctype="%s" x-data %s>',
+			esc_attr($args['method']),
+			esc_url($args['action']),
+			esc_attr($args['class']),
+			esc_attr($args['id']),
+			esc_attr($args['enctype']),
+			$args['inline_attributes']
+		);
 
-		$out .= '<input type="hidden" name="action" value="' . esc_attr( $args['ajax_action'] ) . '">';
-		$out .= '<input type="hidden" name="locale" value="' . esc_attr( get_locale() ) . '">';
+		if( $args['validate_only'] ) {
+			echo '<input type="hidden" name="fs_validate_only" value="'.esc_attr( implode(',', $args['validate_only']) ).'">';
+		}
 
-		return $out;
+		// Добавляем индикатор загрузки
+		echo '<div x-show="loading" class="fs-form-loading">
+			<div class="fs-loading-spinner"></div>
+		</div>';
 	}
 
 	/**
