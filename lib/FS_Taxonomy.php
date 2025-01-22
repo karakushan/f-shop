@@ -305,13 +305,16 @@ class FS_Taxonomy {
 	static function modify_search_query( &$query ) {
 		if ( $query->is_search() ) {
 			global $wpdb;
-			// Search by SKU
-			$search_query = str_replace( ' ', '%', get_search_query() );
+			// Get raw search query without any modifications
+			$search_query = get_search_query();
+			
+			// Search by exact SKU match
 			$sku_products = $wpdb->get_col(
 				$wpdb->prepare(
-					"SELECT post_id FROM $wpdb->postmeta WHERE meta_key='%s' AND meta_value LIKE '%s'",
-					FS_Config::get_meta( 'sku' ),
-					'%' . $search_query . '%'
+					"SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND (meta_value = %s OR meta_value LIKE %s)",
+					FS_Config::get_meta('sku'),
+					$search_query,
+					$wpdb->esc_like($search_query) . '%'
 				)
 			);
 
@@ -320,6 +323,7 @@ class FS_Taxonomy {
 				$query->set( 'post__in', $sku_products );
 			}
 
+			// Set original search query without modifications
 			$query->set( 's', $search_query );
 			$query->set( 'post_type', FS_Config::get_data( 'post_type' ) );
 			$query->set( 'post_name', '' );
@@ -1133,70 +1137,6 @@ class FS_Taxonomy {
 				echo '</tr>';
 			}
 		}
-	}
-
-	/**
-	 * Сохраняет значение мета - полей при добавлении нового термина
-	 *
-	 * @param $taxonomy
-	 */
-	function add_taxonomy_fields( $taxonomy ) {
-
-		$form   = new FS_Form();
-		$fields = self::get_taxonomy_fields();
-		if ( isset( $fields[ $taxonomy ] ) && is_array( $fields[ $taxonomy ] ) && count( $fields[ $taxonomy ] ) ) {
-			foreach ( $fields[ $taxonomy ] as $name => $field ) {
-				$id = str_replace( '_', '-', sanitize_title( 'fs-' . $name . '-' . $field['type'] ) );
-				echo '<div class="form-field ' . esc_attr( $name ) . '-wrap">';
-				echo '<label for="' . esc_attr( $id ) . '">' . esc_attr( $field['name'] ) . '</label>';
-				$form->render_field( $name, $field['type'], $field['args'] );
-				if ( ! empty( $field['help'] ) ) {
-					printf( '<p class="description">%s</p>', esc_html( $field['help'] ) );
-				}
-				echo '</div>';
-			}
-		}
-	}
-
-	/**
-	 * Preserves all metafields of taxonomy
-	 * if the value is empty, the field is removed from the database
-	 * TODO: удалить дубликаты этой функции
-	 *
-	 * @param $term_id
-	 *
-	 * @return void|null
-	 */
-	function save_taxonomy_fields( $term_id ) {
-		$fields            = self::get_taxonomy_fields();
-		$languages         = FS_Config::get_languages();
-		$term              = get_term( $term_id );
-		$multilang_support = fs_option( 'fs_multi_language_support' ) == '1' && ! empty( $languages );
-
-		if ( ! empty( $fields[ $term->taxonomy ] ) ) {
-			foreach ( $fields[ $term->taxonomy ] as $name => $field ) {
-				if ( $multilang_support && ! empty( $field['args']['multilang'] ) ) {
-					foreach ( $languages as $code => $language ) {
-						$meta_key = $name . '__' . $language['locale'];
-						if ( ( isset( $_POST[ $meta_key ] ) && $_POST[ $meta_key ] != '' ) || $name == '_seo_slug' ) {
-							$value = apply_filters( 'fs_transform_meta_value', $_POST[ $meta_key ], $name, $code, $term_id );
-							update_term_meta( $term_id, $meta_key, $value );
-						} else {
-							delete_term_meta( $term_id, $meta_key );
-						}
-					}
-				} else {
-					if ( isset( $_POST[ $name ] ) && $_POST[ $name ] != '' ) {
-						update_term_meta( $term_id, $name, $_POST[ $name ] );
-					} else {
-						delete_term_meta( $term_id, $name );
-					}
-				}
-			}
-		}
-
-		// Обновляем правила ЧПУ
-		flush_rewrite_rules();
 	}
 
 	/**
