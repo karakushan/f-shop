@@ -736,11 +736,16 @@ class FS_Ajax {
 		// Проверяем минимальную сумму заказа, если указано
 		if ( fs_option( 'fs_minimum_order_amount', 0 )
 		     && fs_get_cart_cost() < fs_option( 'fs_minimum_order_amount', 0 ) ) {
-			wp_send_json_error( array(
-				'msg' => sprintf( __( 'Minimum order amount %s %s', 'f-shop' ),
+			/* translators: 1: minimum order amount, 2: currency symbol */
+			$default_message = __( 'Minimum order amount must be at least %1$s %2$s', 'f-shop' );
+			$message = sprintf( $default_message,
 					fs_option( 'fs_minimum_order_amount', 0 ),
 					fs_currency()
-				)
+				);
+			wp_send_json_error( array(
+				'title' => apply_filters( 'fs_minimum_order_amount_title', __( 'Information!', 'f-shop' ) ),
+				'type' => apply_filters( 'fs_minimum_order_amount_type', 'warning' ),
+				'msg' => apply_filters( 'fs_minimum_order_amount_message', $message, fs_option( 'fs_minimum_order_amount', 0 ), fs_currency() ),
 			) );
 		}
 
@@ -1260,6 +1265,7 @@ class FS_Ajax {
 				}
 				break;
 			}
+
 		}
 
 		wp_send_json_success( [

@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2025-01-22 14:29+0000\n"
+"PO-Revision-Date: 2025-01-23 16:37+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -1331,6 +1331,9 @@ msgstr "Інформація по доставку"
 msgid "Information about order"
 msgstr "Інформація про замовлення"
 
+msgid "Information!"
+msgstr "Інформація!"
+
 #: lib/FS_Taxonomy.php:705
 msgid "International currency code"
 msgstr "Міжнародний код валюти (типу USD)"
@@ -1536,6 +1539,9 @@ msgstr "Минимальная сумма заказа"
 
 msgid "Minimum order amount %s %s"
 msgstr "Мінімальна сума замовлення %s %s"
+
+msgid "Minimum order amount must be at least %1$s %2$s"
+msgstr "Мінімальна сума замовлення має бути не менше %1$s %2$s"
 
 #: lib/FS_Taxonomy.php:633
 msgid "Minimum quantity of goods for order"
@@ -1914,6 +1920,9 @@ msgstr "Фото"
 #: lib/Admin/ProductEdit.php:86
 msgid "Physical"
 msgstr "Фізичний"
+
+msgid "Please check all form fields for validation errors"
+msgstr "Перевірте всі поля форми на наявність помилок перевірки"
 
 #: lib/FS_Ajax.php:412
 msgid "Please enter a valid email address"

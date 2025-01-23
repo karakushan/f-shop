@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-01-22 14:27+0000\n"
+"POT-Creation-Date: 2025-01-23 16:35+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -3167,4 +3167,13 @@ msgid "Error saving data"
 msgstr ""
 
 msgid "Validation failed"
+msgstr ""
+
+msgid "Minimum order amount must be at least %1$s %2$s"
+msgstr ""
+
+msgid "Information!"
+msgstr ""
+
+msgid "Please check all form fields for validation errors"
 msgstr ""

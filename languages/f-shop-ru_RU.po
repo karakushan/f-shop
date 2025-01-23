@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2025-01-22 14:28+0000\n"
+"PO-Revision-Date: 2025-01-23 16:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -1339,6 +1339,9 @@ msgstr "Информация о доставке"
 msgid "Information about order"
 msgstr "Информация о заказе"
 
+msgid "Information!"
+msgstr "Информация!"
+
 #: lib/FS_Taxonomy.php:705
 msgid "International currency code"
 msgstr "Международный код валюты"
@@ -1544,6 +1547,9 @@ msgstr "Минимальная сумма заказа"
 
 msgid "Minimum order amount %s %s"
 msgstr "Минимальная сумма заказа %s %s"
+
+msgid "Minimum order amount must be at least %1$s %2$s"
+msgstr "Минимальная сумма заказа должна быть не менее %1$s %2$s"
 
 #: lib/FS_Taxonomy.php:633
 msgid "Minimum quantity of goods for order"
@@ -1922,6 +1928,9 @@ msgstr "Фото"
 #: lib/Admin/ProductEdit.php:86
 msgid "Physical"
 msgstr "Физический"
+
+msgid "Please check all form fields for validation errors"
+msgstr "Пожалуйста, проверьте все поля формы на наличие ошибок проверки."
 
 #: lib/FS_Ajax.php:412
 msgid "Please enter a valid email address"

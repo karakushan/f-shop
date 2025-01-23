@@ -261,19 +261,46 @@ class FS_Shortcode {
 			'name'              => 'fs-order-send',
 			'class'             => $args['class'],
 			'ajax_action'       => 'order_send',
-			'alpine_data'       => [ 'errors' => [] ],
-'inline_attributes' => 'x-on:submit.prevent="Alpine.store(\'FS\').sendOrder($event).then((r)=>{ 
-	if(r.success === false) { 
-		errors = r.data.errors;
-		if(r.data.msg) {
-			iziToast.error({
-				title: \''.__('Error!','f-shop').'\',
-				message: r.data.msg,
-				position: \'topCenter\'
-			});
-		}
-	} 
-});"'		) );
+			'inline_attributes' => 'x-init="
+				$data.loading = false;
+				$data.errors = {};
+				$data.success = false;
+				$el.onsubmit = async function(e) { 
+					e.preventDefault();
+					$data.loading = true;
+					try {
+						const response = await Alpine.store(\'FS\').sendOrder(e);
+						$data.loading = false;
+						if (response.success) {
+							$data.success = true;
+							iziToast[response.data.type || \'success\']({
+								title: response.data.title || \''.__('Success', 'f-shop').'\',
+								message: response.data.msg || \''.__('Order successfully created', 'f-shop').'\',
+								position: \'topCenter\'
+							});
+						} else {
+							if (response.data && response.data.errors) {
+								$data.errors = response.data.errors;
+							}
+							iziToast[response.data.type || \'error\']({
+								title: response.data.title || \''.__('Error', 'f-shop').'\',
+								message: response.data.msg || \''.__('Please check all form fields for validation errors', 'f-shop').'\',
+								position: \'topCenter\',
+								timeout: response.data.type===\'warning\' ? 6000 : 4000,
+								overlay:response.data.type===\'warning\' ? true : false, 
+								maxWidth: response.data.type===\'warning\' ? 400 : null
+							});
+						}
+					} catch(error) {
+						$data.loading = false;
+						console.error(\'Error:\', error);
+						iziToast.error({
+							title: \''.__('Error', 'f-shop').'\',
+							message: error.message,
+							position: \'topCenter\'
+						});
+					}
+				}"'		) );
 		$template .= fs_frontend_template( 'checkout/checkout', array( 'vars' => array( 'cart' => FS_Cart::get_cart() ) ) );
 		$template .= FS_Form::form_close();
 
