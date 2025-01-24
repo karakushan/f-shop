@@ -288,7 +288,8 @@ class FS_Shortcode {
 								position: \'topCenter\',
 								timeout: response.data.type===\'warning\' ? 6000 : 4000,
 								overlay:response.data.type===\'warning\' ? true : false, 
-								maxWidth: response.data.type===\'warning\' ? 400 : null
+								maxWidth: response.data.type===\'warning\' ? 400 : null,
+								icon: \'\'
 							});
 						}
 					} catch(error) {
