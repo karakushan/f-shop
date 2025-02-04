@@ -909,14 +909,15 @@ class FS_Users {
 	 *
 	 * @return void Outputs a JSON response indicating success or failure with a corresponding message.
 	 */
-	public function validate_user_data($data, $user_fields) {
+	public function validate_user_data($data, $validate_only=[]) {
         $validated_data = array();
         $errors = array();
+		$user_fields = FS_Users::get_user_fields( );
         
         // Проверяем только те поля, которые пришли в POST запросе
         foreach ($data as $meta_key => $meta_value) {
-            // Пропускаем служебные поля
-            if (!isset($user_fields[$meta_key])) {
+            // Пропускаем поля указанные в переменной $validate_only
+            if (!empty($validate_only) && !in_array($meta_key, $validate_only)) {
                 continue;
             }
             
@@ -1112,20 +1113,6 @@ class FS_Users {
 	 * @return void
 	 */
 	function login_user() {
-		// Sanitize the username and password fields
-		$username = sanitize_text_field( $_POST['username'] );
-		$password = sanitize_text_field( $_POST['password'] );
-
-		// Get the cabinet page and its URL
-		$redirect_page = fs_option( 'page_cabinet' );
-		$redirect      = ! empty( $redirect_page ) ? get_permalink( $redirect_page ) : false;
-
-		// Check if the nonce is valid
-		if ( ! FS_Config::verify_nonce() ) {
-			// If the nonce is not valid, send an error message
-			wp_send_json_error( [ 'msg' => 'Неправильный проверочный код. Обратитесь к администратору сайта!' ] );
-		}
-
 		// If the user is already logged in, send an error message
 		if ( is_user_logged_in() ) {
 			$logout_url = wp_logout_url( $_SERVER['REQUEST_URI'] );
@@ -1133,23 +1120,45 @@ class FS_Users {
 			wp_send_json_error( [ 'msg' => $msg ] );
 		}
 
+		// Check if the nonce is valid
+		if ( ! FS_Config::verify_nonce() ) {
+			// If the nonce is not valid, send an error message
+			wp_send_json_error( [ 'msg' => 'Неправильный проверочный код. Обратитесь к администратору сайта!' ] );
+		}
+
+		// Validate the data
+		$validation_result = $this->validate_user_data($_POST,['fs_login', 'fs_password'] );
+		
+		// If there are errors, return them
+		if (!empty($validation_result['errors'])) {
+			wp_send_json_error(array(
+				'msg' => __('Validation failed', 'f-shop'),
+				'errors' => $validation_result['errors']
+			));
+		}
+
+		// Get the cabinet page and its URL
+		$redirect_page = fs_option( 'page_cabinet' );
+		$redirect      = ! empty( $redirect_page ) ? get_permalink( $redirect_page ) : false;
+
 		// Get the user based on the username
-		if ( is_email( $username ) ) {
-			$user = get_user_by( 'email', $username );
+		if ( is_email( $validation_result['data']['fs_login']) ) {
+			$user = get_user_by( 'email', $validation_result['data']['fs_login'] );
 		} else {
-			$user = get_user_by( 'login', $username );
+			$user = get_user_by( 'login', $validation_result['data']['fs_login'] );
 		}
 
 		// If the user does not exist, send an error message
 		if ( ! $user ) {
 			wp_send_json_error( [
 				'errors' => [
-					'username' => __( 'Unfortunately, a user with such data does not exist on the site', 'f-shop' )
+					'fs_email' => __( 'Unfortunately, a user with such data does not exist on the site', 'f-shop' ),
+					'fs_login' => __( 'Unfortunately, a user with such data does not exist on the site', 'f-shop' )
 				]
 			] );
 		} else {
 			// Authenticate the user
-			$auth = wp_authenticate( $username, $password );
+			$auth = wp_authenticate( $user->user_login	, $validation_result['data']['fs_password'] );
 
 			// Check for authentication errors
 			if ( is_wp_error( $auth ) ) {
@@ -1397,19 +1406,33 @@ class FS_Users {
 			ob_start();
 			?>
             <form method="post" class="fs-login-form" action=""
-            x-data="{ errors: [], user: { username: '' , password: ''}, msg:'', login() {
-                Alpine.store('FS').login(this.user).then((r) => {
-                    if (r.success === false) {
-                        this.errors.any=r.data.msg;
-                    } else if (r.success === true) {
-                        if (typeof r.data.redirect !== 'undefined') {
-                            window.location.href = r.data.redirect;
-                        }
-                    }
-                })
-        } }"
-            x-on:keydown.enter.prevent="login()"
-            x-on:submit.prevent="login()">
+            x-init="
+			$data.loading = false;$data.errors = {};
+			$data.success = false;
+			$el.onsubmit = async function($event) { 
+				$event.preventDefault();
+				$data.loading = true;
+				try {
+					const response = await Alpine.store('FS').login($event);
+					$data.loading = false;
+					if (response.success) {
+						$data.success = true;
+						if (typeof response.data.redirect !== 'undefined') {
+							window.location.href = response.data.redirect;
+						}
+						iziToast[response.data.type || 'success']({title: response.data.title || '<?php _e("Success", "f-shop"); ?>',message: response.data.msg || '<?php _e("Successfully logged in", "f-shop"); ?>',position: 'topCenter'});
+					} else {
+						if (response.data && response.data.errors) {
+							$data.errors = response.data.errors;
+						}
+						iziToast[response.data.type || 'error']({title: response.data.title || '<?php _e("Error", "f-shop"); ?>',message: response.data.msg || '<?php _e("Please check your login credentials", "f-shop"); ?>',position: 'topCenter',timeout: response.data.type==='warning' ? 6000 : 4000,overlay: response.data.type==='warning' ? true : false,maxWidth: response.data.type==='warning' ? 400 : null,icon: ''});}
+				} catch(error) {
+					$data.loading = false;
+					console.error('Error:', error);
+					iziToast.error({title: '<?php _e("Error", "f-shop"); ?>',message: error.message,position: 'topCenter'});
+				}
+			}">
+
 
             <div class="alert alert-danger " x-show="errors.any" x-html="errors.any"></div>
 			<?php

@@ -301,7 +301,8 @@ class FS_Shortcode {
 							position: \'topCenter\'
 						});
 					}
-				}"'		) );
+				}"'	
+					) );
 		$template .= fs_frontend_template( 'checkout/checkout', array( 'vars' => array( 'cart' => FS_Cart::get_cart() ) ) );
 		$template .= FS_Form::form_close();
 
