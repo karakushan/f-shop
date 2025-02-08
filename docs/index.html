@@ -1,36 +1,177 @@
----
-layout: default
-title: F-Shop Documentation
----
+<!DOCTYPE html>
+<html lang="ru">
 
-<h1>Документация f-shop</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F-Shop Documentation</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #24292e;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
 
-<p>Добро пожаловать в документацию f-shop! Здесь вы найдете всю необходимую информацию для эффективного использования
-    плагина.</p>
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
 
-<h2>Содержание</h2>
+        .sidebar {
+            width: 300px;
+            background: #f5f5f5;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid #e1e4e8;
+        }
 
-<ul>
-    <li><a href="installation.html">Установка</a></li>
-    <li><a href="usage.html">Использование</a></li>
-    <li><a href="configuration.html">Настройка</a></li>
-    <li>
-        <a href="integration.html">Интеграция</a>
-        <ul>
-            <li><a href="integration-single-product.html">Подключение страницы товара</a></li>
-            <li><a href="integration-archive-product.html">Подключение архива товаров</a></li>
-            <li><a href="integration-cart.html">Подключение корзины</a></li>
-            <li><a href="integration-wishlist.html">Подключение списка желаний</a></li>
-            <li><a href="integration-account.html">Подключение личного кабинета</a></li>
-        </ul>
-    </li>
-    <li>
-        <a href="developers.html">Для разработчиков</a>
-        <ul>
-            <li><a href="hooks.html">Хуки и фильтры</a></li>
-            <li><a href="template-functions.html">Функции шаблона</a></li>
-            <li><a href="api.html">API плагина</a></li>
-        </ul>
-    </li>
-    <li><a href="PUBLISHING.html">Публикация документации</a></li>
-</ul>
+        .main-content {
+            margin-left: 320px;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .sidebar h1 {
+            font-size: 1.5rem;
+            margin: 0 0 2rem 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul ul {
+            padding-left: 1.5rem;
+        }
+
+        .sidebar li {
+            margin: 0.5rem 0;
+        }
+
+        .sidebar a {
+            color: #24292e;
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background: #e1e4e8;
+        }
+
+        @media (max-width: 768px) {
+            .wrapper {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                margin-bottom: 2rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <h1>F-Shop Documentation</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="installation.html">Установка</a></li>
+                    <li><a href="usage.html">Использование</a></li>
+                    <li><a href="configuration.html">Настройка</a></li>
+                    <li>
+                        <a href="integration.html">Интеграция</a>
+                        <ul>
+                            <li><a href="integration-single-product.html">Страница товара</a></li>
+                            <li><a href="integration-archive-product.html">Архив товаров</a></li>
+                            <li><a href="integration-cart.html">Корзина</a></li>
+                            <li><a href="integration-wishlist.html">Список желаний</a></li>
+                            <li><a href="integration-account.html">Личный кабинет</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="developers.html">Для разработчиков</a>
+                        <ul>
+                            <li><a href="hooks.html">Хуки и фильтры</a></li>
+                            <li><a href="template-functions.html">Функции шаблона</a></li>
+                            <li><a href="api.html">API плагина</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="PUBLISHING.html">Публикация документации</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>Документация f-shop</h1>
+
+            <p>Добро пожаловать в документацию f-shop! Здесь вы найдете всю необходимую информацию для эффективного
+                использования плагина.</p>
+
+            <h2>Содержание</h2>
+
+            <ul>
+                <li><a href="installation.html">Установка</a></li>
+                <li><a href="usage.html">Использование</a></li>
+                <li><a href="configuration.html">Настройка</a></li>
+                <li>
+                    <a href="integration.html">Интеграция</a>
+                    <ul>
+                        <li><a href="integration-single-product.html">Подключение страницы товара</a></li>
+                        <li><a href="integration-archive-product.html">Подключение архива товаров</a></li>
+                        <li><a href="integration-cart.html">Подключение корзины</a></li>
+                        <li><a href="integration-wishlist.html">Подключение списка желаний</a></li>
+                        <li><a href="integration-account.html">Подключение личного кабинета</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="developers.html">Для разработчиков</a>
+                    <ul>
+                        <li><a href="hooks.html">Хуки и фильтры</a></li>
+                        <li><a href="template-functions.html">Функции шаблона</a></li>
+                        <li><a href="api.html">API плагина</a></li>
+                    </ul>
+                </li>
+                <li><a href="PUBLISHING.html">Публикация документации</a></li>
+            </ul>
+        </main>
+    </div>
+
+    <script>
+        // Подсветка текущего пункта меню
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPath = window.location.pathname;
+            const links = document.querySelectorAll('.sidebar a');
+            links.forEach(link => {
+                if (link.getAttribute('href') === currentPath.split('/').pop()) {
+                    link.style.backgroundColor = '#0366d6';
+                    link.style.color = 'white';
+                    const parentUl = link.closest('ul');
+                    if (parentUl && parentUl.parentElement.tagName === 'LI') {
+                        parentUl.style.display = 'block';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
