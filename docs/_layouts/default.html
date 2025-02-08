@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: " ru-RU" }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title | default: site.github.repository_name }}
+    </title>
+    <link rel="stylesheet" href="{{ " /assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <h1>{{ site.title }}</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="{{ '/' | relative_url }}">Главная</a></li>
+                    <li><a href="{{ '/installation' | relative_url }}">Установка</a></li>
+                    <li><a href="{{ '/usage' | relative_url }}">Использование</a></li>
+                    <li><a href="{{ '/configuration' | relative_url }}">Настройка</a></li>
+                    <li>
+                        <a href="{{ '/integration' | relative_url }}">Интеграция</a>
+                        <ul>
+                            <li><a href="{{ '/integration-single-product' | relative_url }}">Страница товара</a></li>
+                            <li><a href="{{ '/integration-archive-product' | relative_url }}">Архив товаров</a></li>
+                            <li><a href="{{ '/integration-cart' | relative_url }}">Корзина</a></li>
+                            <li><a href="{{ '/integration-wishlist' | relative_url }}">Список желаний</a></li>
+                            <li><a href="{{ '/integration-account' | relative_url }}">Личный кабинет</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{{ '/developers' | relative_url }}">Для разработчиков</a>
+                        <ul>
+                            <li><a href="{{ '/hooks' | relative_url }}">Хуки и фильтры</a></li>
+                            <li><a href="{{ '/template-functions' | relative_url }}">Функции шаблона</a></li>
+                            <li><a href="{{ '/api' | relative_url }}">API плагина</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            {{ content }}
+        </main>
+    </div>
+
+    <script>
+        // Подсветка текущего пункта меню
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPath = window.location.pathname;
+            const links = document.querySelectorAll('.sidebar-nav a');
+            links.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                    const parentLi = link.closest('li');
+                    if (parentLi.parentElement.tagName === 'UL') {
+                        parentLi.parentElement.style.display = 'block';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
