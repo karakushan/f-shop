@@ -5,9 +5,11 @@ plugins:
 title: F-Shop Documentation
 description: Документация WordPress плагина F-Shop
 show_downloads: false
+baseurl: "/f-shop"
 markdown: kramdown
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+  parse_block_html: true
 sass:
   style: compressed 

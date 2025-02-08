@@ -1,6 +1,7 @@
 ---
 layout: default
 title: F-Shop Documentation
+permalink: /
 ---
 
 # Документация f-shop
@@ -9,17 +10,17 @@ title: F-Shop Documentation
 
 ## Содержание
 
-- [Установка](installation)
-- [Использование](usage)
-- [Настройка](configuration)
-- [Интеграция](integration)
-  - [Подключение страницы товара](integration-single-product)
-  - [Подключение архива товаров](integration-archive-product)
-  - [Подключение корзины](integration-cart)
-  - [Подключение списка желаний](integration-wishlist)
-  - [Подключение личного кабинета](integration-account)
-- [Для разработчиков](developers)
-  - [Хуки и фильтры](hooks)
-  - [Функции шаблона](template-functions)
-  - [API плагина](api)
-- [Публикация документации](PUBLISHING)
+- [Установка](installation.html)
+- [Использование](usage.html)
+- [Настройка](configuration.html)
+- [Интеграция](integration.html)
+  - [Подключение страницы товара](integration-single-product.html)
+  - [Подключение архива товаров](integration-archive-product.html)
+  - [Подключение корзины](integration-cart.html)
+  - [Подключение списка желаний](integration-wishlist.html)
+  - [Подключение личного кабинета](integration-account.html)
+- [Для разработчиков](developers.html)
+  - [Хуки и фильтры](hooks.html)
+  - [Функции шаблона](template-functions.html)
+  - [API плагина](api.html)
+- [Публикация документации](PUBLISHING.html)
