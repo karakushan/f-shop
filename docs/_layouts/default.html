@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title | default: site.github.repository_name }}
     </title>
-    <link rel="stylesheet" href="{{ " /assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+    <link rel="stylesheet" href="{{ " /assets/css/style.css" | relative_url }}">
 </head>
 
 <body>
@@ -18,26 +18,26 @@
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="{{ '/' | relative_url }}">Главная</a></li>
-                    <li><a href="{{ '/installation' | relative_url }}">Установка</a></li>
-                    <li><a href="{{ '/usage' | relative_url }}">Использование</a></li>
-                    <li><a href="{{ '/configuration' | relative_url }}">Настройка</a></li>
+                    <li><a href="{{ site.baseurl }}/">Главная</a></li>
+                    <li><a href="{{ site.baseurl }}/installation.html">Установка</a></li>
+                    <li><a href="{{ site.baseurl }}/usage.html">Использование</a></li>
+                    <li><a href="{{ site.baseurl }}/configuration.html">Настройка</a></li>
                     <li>
-                        <a href="{{ '/integration' | relative_url }}">Интеграция</a>
+                        <a href="{{ site.baseurl }}/integration.html">Интеграция</a>
                         <ul>
-                            <li><a href="{{ '/integration-single-product' | relative_url }}">Страница товара</a></li>
-                            <li><a href="{{ '/integration-archive-product' | relative_url }}">Архив товаров</a></li>
-                            <li><a href="{{ '/integration-cart' | relative_url }}">Корзина</a></li>
-                            <li><a href="{{ '/integration-wishlist' | relative_url }}">Список желаний</a></li>
-                            <li><a href="{{ '/integration-account' | relative_url }}">Личный кабинет</a></li>
+                            <li><a href="{{ site.baseurl }}/integration-single-product.html">Страница товара</a></li>
+                            <li><a href="{{ site.baseurl }}/integration-archive-product.html">Архив товаров</a></li>
+                            <li><a href="{{ site.baseurl }}/integration-cart.html">Корзина</a></li>
+                            <li><a href="{{ site.baseurl }}/integration-wishlist.html">Список желаний</a></li>
+                            <li><a href="{{ site.baseurl }}/integration-account.html">Личный кабинет</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a href="{{ '/developers' | relative_url }}">Для разработчиков</a>
+                        <a href="{{ site.baseurl }}/developers.html">Для разработчиков</a>
                         <ul>
-                            <li><a href="{{ '/hooks' | relative_url }}">Хуки и фильтры</a></li>
-                            <li><a href="{{ '/template-functions' | relative_url }}">Функции шаблона</a></li>
-                            <li><a href="{{ '/api' | relative_url }}">API плагина</a></li>
+                            <li><a href="{{ site.baseurl }}/hooks.html">Хуки и фильтры</a></li>
+                            <li><a href="{{ site.baseurl }}/template-functions.html">Функции шаблона</a></li>
+                            <li><a href="{{ site.baseurl }}/api.html">API плагина</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -55,7 +55,9 @@
             const currentPath = window.location.pathname;
             const links = document.querySelectorAll('.sidebar-nav a');
             links.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
+                if (link.getAttribute('href') === currentPath ||
+                    link.getAttribute('href') === currentPath + '.html' ||
+                    (currentPath === '/' && link.getAttribute('href') === '/')) {
                     link.classList.add('active');
                     const parentLi = link.closest('li');
                     if (parentLi.parentElement.tagName === 'UL') {
