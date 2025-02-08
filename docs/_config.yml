@@ -6,6 +6,7 @@ title: F-Shop Documentation
 description: Документация WordPress плагина F-Shop
 show_downloads: false
 baseurl: "/f-shop"
+url: "https://karakushan.github.io"
 markdown: kramdown
 kramdown:
   input: GFM
