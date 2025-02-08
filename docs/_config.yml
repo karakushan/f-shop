@@ -4,8 +4,6 @@ plugins:
 title: F-Shop Documentation
 description: Документация WordPress плагина F-Shop
 show_downloads: false
-baseurl: "/f-shop"
-search_enabled: true
 markdown: kramdown
 kramdown:
   input: GFM
