@@ -738,14 +738,15 @@ class FS_Ajax {
 		     && fs_get_cart_cost() < fs_option( 'fs_minimum_order_amount', 0 ) ) {
 			/* translators: 1: minimum order amount, 2: currency symbol */
 			$default_message = __( 'Minimum order amount must be at least %1$s %2$s', 'f-shop' );
-			$message = sprintf( $default_message,
-					fs_option( 'fs_minimum_order_amount', 0 ),
-					fs_currency()
-				);
+			$message         = sprintf( $default_message,
+				fs_option( 'fs_minimum_order_amount', 0 ),
+				fs_currency()
+			);
 			wp_send_json_error( array(
+				'id'    => 'fs_minimum_order_amount',
 				'title' => apply_filters( 'fs_minimum_order_amount_title', __( 'Information!', 'f-shop' ) ),
-				'type' => apply_filters( 'fs_minimum_order_amount_type', 'warning' ),
-				'msg' => apply_filters( 'fs_minimum_order_amount_message', $message, fs_option( 'fs_minimum_order_amount', 0 ), fs_currency() ),
+				'type'  => apply_filters( 'fs_minimum_order_amount_type', 'warning' ),
+				'msg'   => apply_filters( 'fs_minimum_order_amount_message', $message, fs_option( 'fs_minimum_order_amount', 0 ), fs_currency() ),
 			) );
 		}
 
@@ -987,7 +988,7 @@ class FS_Ajax {
 				'redirect' => apply_filters( 'fs_after_checkout_redirect', $redirect_link, $order_id )
 			);
 
-			do_action('fs_destroy_cart'); 
+			do_action( 'fs_destroy_cart' );
 
 			wp_send_json_success( $result );
 		}
