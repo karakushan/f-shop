@@ -14,6 +14,20 @@ class FS {
     this.addWishListToCart = this.addWishListToCart.bind(this);
     this.cart = [];
     this.filters = [];
+    this.modal = {
+      modalID: null,
+      isOpen: false,
+      openModal(modalID) {
+        this.modalID = modalID;
+        this.isOpen = true;
+        document.body.style.overflow = 'hidden';
+      },
+      closeModal() {
+        this.modalID = null;
+        this.isOpen = false;
+        document.body.style.overflow = '';
+      }
+    };
   }
 
   getMessage(key) {
