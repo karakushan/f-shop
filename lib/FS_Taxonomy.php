@@ -357,13 +357,13 @@ class FS_Taxonomy
 		$order_by   = [];
 
 		switch ($order_type) {
-			case 'price_asc': // Сортування за ціною за зростанням
-				$meta_query['price'] = array(
-					'key'  => FS_Config::get_meta('price'),
-					'type' => 'DECIMAL'
-				);
-				$order_by['price']   = 'ASC';
-				break;
+				// case 'price_asc': // Сортування за ціною за зростанням
+				// 	$meta_query['price'] = array(
+				// 		'key'  => FS_Config::get_meta('price'),
+				// 		'type' => 'DECIMAL'
+				// 	);
+				// 	$order_by['price']   = 'ASC';
+				// 	break;
 
 			case 'stock_desc': // Сортування по наявності, товари без наявності в кінці
 				$meta_query['in_stock'] = [
@@ -440,44 +440,80 @@ class FS_Taxonomy
 		$min_price = isset($_GET['price_start']) ? floatval($_GET['price_start']) : false;
 		$max_price = isset($_GET['price_end']) ? floatval($_GET['price_end']) : false;
 
-		if ($min_price !== false || $max_price !== false) {
-			// Получаем валюты и их стоимость в базовой валюте
-			$currencies = get_terms([
-				'taxonomy'   => FS_Config::get_data('currencies_taxonomy'),
-				'hide_empty' => false
-			]);
+		// Получаем тип сортировки из GET или настроек по умолчанию
+		$order_type = isset($_GET['order_type'])
+			? $_GET['order_type']
+			: fs_option('fs_product_sort_by', 'ID');
 
-			// Формируем CASE для конвертации
-			$case_parts = [];
-			foreach ($currencies as $currency) {
-				$currency_cost = (float) get_term_meta($currency->term_id, '_fs_currency_cost', true);
-				if ($currency_cost == 0) {
-					continue;
-				}
-				$case_parts[] = "WHEN pm_currency.meta_value = '{$currency->term_id}' THEN pm_price.meta_value * {$currency_cost}";
+		$sort_by_price = in_array($order_type, ['price_asc', 'price_desc']);
+
+		// Если нет фильтрации по цене и нет сортировки - выходим
+		if (!$min_price && !$max_price && !$sort_by_price) {
+			// Если есть сортировка по умолчанию
+			if (!empty($clauses['orderby'])) {
+				return $clauses;
 			}
+			// Если нет сортировки, устанавливаем по ID DESC
+			$clauses['orderby'] = "{$wpdb->posts}.ID DESC";
+			return $clauses;
+		}
 
-			$price_conversion = "CASE " . implode(" ", $case_parts) . " ELSE pm_price.meta_value END";
+		// Получаем валюты и их курсы
+		$currencies = get_terms([
+			'taxonomy'   => FS_Config::get_data('currencies_taxonomy'),
+			'hide_empty' => false
+		]);
 
-			// Добавляем JOIN для цены и валюты
-			$price_meta_key = FS_Config::get_meta('price');
-			$currency_meta_key = FS_Config::get_meta('currency');
-			$clauses['join'] .= " LEFT JOIN {$wpdb->postmeta} AS pm_price ON ({$wpdb->posts}.ID = pm_price.post_id AND pm_price.meta_key = '{$price_meta_key}')";
-			$clauses['join'] .= " LEFT JOIN {$wpdb->postmeta} AS pm_currency ON ({$wpdb->posts}.ID = pm_currency.post_id AND pm_currency.meta_key = '{$currency_meta_key}')";
+		// Формируем CASE для конвертации цен в базовую валюту
+		$case_parts = [];
+		$default_currency_cost = 1;
 
-			// Формируем условия WHERE
+		foreach ($currencies as $currency) {
+			$currency_cost = (float) get_term_meta($currency->term_id, '_fs_currency_cost', true);
+			if ($currency_cost <= 0) {
+				continue;
+			}
+			if (get_term_meta($currency->term_id, '_fs_default_currency', true)) {
+				$default_currency_cost = $currency_cost;
+			}
+			$normalized_cost = $currency_cost / $default_currency_cost;
+			$case_parts[] = "WHEN pm_currency.meta_value = '{$currency->term_id}' THEN CAST(pm_price.meta_value AS DECIMAL(20,2)) * {$normalized_cost}";
+		}
+
+		$price_conversion = empty($case_parts)
+			? "CAST(pm_price.meta_value AS DECIMAL(20,2))"
+			: "CASE " . implode(" ", $case_parts) . " ELSE CAST(pm_price.meta_value AS DECIMAL(20,2)) END";
+
+		// Добавляем JOIN для цены и валюты
+		$price_meta_key = FS_Config::get_meta('price');
+		$currency_meta_key = FS_Config::get_meta('currency');
+		$clauses['join'] .= " LEFT JOIN {$wpdb->postmeta} AS pm_price ON ({$wpdb->posts}.ID = pm_price.post_id AND pm_price.meta_key = '{$price_meta_key}')";
+		$clauses['join'] .= " LEFT JOIN {$wpdb->postmeta} AS pm_currency ON ({$wpdb->posts}.ID = pm_currency.post_id AND pm_currency.meta_key = '{$currency_meta_key}')";
+
+		// Добавляем условия фильтрации по цене
+		if ($min_price !== false || $max_price !== false) {
 			$where_conditions = [];
 			if ($min_price !== false) {
-				$where_conditions[] = $price_conversion . " >= " . floatval($min_price);
+				$where_conditions[] = "({$price_conversion}) >= " . floatval($min_price);
 			}
 			if ($max_price !== false) {
-				$where_conditions[] = $price_conversion . " <= " . floatval($max_price);
+				$where_conditions[] = "({$price_conversion}) <= " . floatval($max_price);
 			}
-
 			if (!empty($where_conditions)) {
 				$clauses['where'] .= " AND (" . implode(" AND ", $where_conditions) . ")";
 			}
+		}
 
+		// Добавляем сортировку
+		if ($sort_by_price) {
+			$sort_direction = $order_type === 'price_asc' ? 'ASC' : 'DESC';
+			$clauses['orderby'] = "({$price_conversion}) {$sort_direction}";
+		} elseif (empty($clauses['orderby'])) {
+			// Если нет сортировки, устанавливаем по умолчанию
+			$clauses['orderby'] = "{$wpdb->posts}.ID DESC";
+		}
+
+		if (!empty($clauses['groupby'])) {
 			$clauses['groupby'] = "{$wpdb->posts}.ID";
 		}
 
