@@ -1775,6 +1775,8 @@ function fs_get_current_user()
 		$user->gender   = FS_Users::get_user_field('fs_gender');
 		$user->country  = FS_Users::get_user_field('fs_country');
 		$user->region   = FS_Users::get_user_field('fs_region');
+		$user->first_name = FS_Users::get_user_field('fs_first_name');
+		$user->last_name = FS_Users::get_user_field('fs_last_name');
 		//		$user->birth_day          = FS_Users::get_user_field('fs_address');
 		//		if ( ! empty( $user->birth_day ) ) {
 		//			$user->birth_day = $user->birth_day;

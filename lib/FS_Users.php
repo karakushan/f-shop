@@ -902,14 +902,11 @@ class FS_Users
 
 
 	/**
-	 * Saves user data submitted through the form.
+	 * Validates user data based on field rules and requirements
 	 *
-	 * This method validates the submitted data, checks for user authentication,
-	 * and proceeds to save or update various user-related fields, such as text, files,
-	 * and special fields like names and phone numbers. It includes nonce verification
-	 * for security, handles file uploads, and applies filters for data transformation.
-	 *
-	 * @return void Outputs a JSON response indicating success or failure with a corresponding message.
+	 * @param array $data Data to validate
+	 * @param array $validate_only Optional array of field keys to validate
+	 * @return array Array containing validation errors and validated data
 	 */
 	public function validate_user_data($data, $validate_only = [])
 	{
@@ -997,98 +994,171 @@ class FS_Users
 		);
 	}
 
+	/**
+	 * Saves user data submitted through the form
+	 * 
+	 * Processes POST request with user data, validates it and saves to database.
+	 * Supports file uploads and updating core user fields (first name, last name).
+	 *
+	 * @since 1.0.0
+	 * @return void JSON response with operation result
+	 */
 	public function save_user_data()
 	{
+		// Проверка nonce для безопасности
 		if (!FS_Config::verify_nonce()) {
-			wp_send_json_error(array('msg' => __('Failed verification of nonce form', 'f-shop')));
+			wp_send_json_error([
+				'msg' => __('Failed verification of nonce form', 'f-shop')
+			]);
 		}
 
-		$locale = isset($_POST['locale']) ? sanitize_text_field($_POST['locale']) : get_locale();
-		switch_to_locale($locale);
-
+		// Получаем поля пользователя и ID текущего пользователя
 		$user_fields = self::get_user_fields();
 		$user_id = get_current_user_id();
 
-		require_once(ABSPATH . "wp-admin" . '/includes/image.php');
-		require_once(ABSPATH . "wp-admin" . '/includes/file.php');
-		require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+		// Подключаем необходимые файлы для работы с медиа
+		require_once(ABSPATH . 'wp-admin/includes/image.php');
+		require_once(ABSPATH . 'wp-admin/includes/file.php');
+		require_once(ABSPATH . 'wp-admin/includes/media.php');
 
-		if (!is_array($user_fields) || !count($user_fields)) {
-			wp_send_json_error(array('msg' => __('No fields found to save user data', 'f-shop')));
+		// Проверяем наличие полей и пользователя
+		if (!is_array($user_fields) || empty($user_fields)) {
+			wp_send_json_error([
+				'msg' => __('No fields found to save user data', 'f-shop')
+			]);
 		}
 
 		if (!$user_id) {
-			wp_send_json_error(array('msg' => __('User is not found', 'f-shop')));
+			wp_send_json_error([
+				'msg' => __('User is not found', 'f-shop')
+			]);
 		}
 
-		// Проверяем, нужно ли валидировать только определенные поля
+		// Обработка частичной валидации полей
 		if (!empty($_POST['fs_validate_only'])) {
 			$validated_keys = explode(',', $_POST['fs_validate_only']);
-
-			// Добавляем отсутствующие поля с дефолтными значениями
-			foreach ($validated_keys as $key) {
-				if (!isset($_POST[$key]) && isset($user_fields[$key])) {
-					$default_value = '';
-
-					// Устанавливаем дефолтные значения в зависимости от типа поля
-					switch ($user_fields[$key]['type']) {
-						case 'checkbox':
-							$default_value = 0;
-							break;
-						default:
-							$default_value = '';
-					}
-
-					$_POST[$key] = $default_value;
-				}
-			}
-
-			// Фильтруем поля для валидации
-			$user_fields = array_filter($user_fields, function ($key) use ($validated_keys) {
-				return in_array($key, $validated_keys);
-			}, ARRAY_FILTER_USE_KEY);
+			$user_fields = $this->prepare_fields_for_validation($user_fields, $validated_keys);
 		}
 
-		// Валидируем данные
-		$validation_result = $this->validate_user_data($_POST, $user_fields);
+		// Валидация данных
+		$validation_result = $this->validate_user_data($_POST);
 
-		// Если есть ошибки валидации, возвращаем их
 		if (!empty($validation_result['errors'])) {
-			wp_send_json_error(array(
+			wp_send_json_error([
 				'msg' => __('Validation failed', 'f-shop'),
 				'errors' => $validation_result['errors']
-			));
+			]);
 		}
 
-		// Сохраняем валидированные данные
+		// Сохранение валидированных данных
 		foreach ($validation_result['data'] as $meta_key => $meta_value) {
 			// Обработка загрузки файлов
-			if (isset($user_fields[$meta_key]) && $user_fields[$meta_key]['type'] == 'file' && !empty($_FILES[$meta_key])) {
-				$attach_id = media_handle_upload($meta_key, 0);
-				if (is_wp_error($attach_id)) {
-					wp_send_json_error(array('msg' => $attach_id->get_error_message()));
-				}
-				update_user_meta($user_id, $meta_key, intval($attach_id));
+			if ($this->is_file_field($user_fields, $meta_key)) {
+				$this->handle_file_upload($meta_key, $user_id);
 				continue;
 			}
 
 			// Обновление имени и фамилии
-			if ($meta_key == 'fs_first_name' || $meta_key == 'fs_last_name') {
-				wp_update_user([
-					'ID' => $user_id,
-					str_replace('fs_', '', $meta_key) => $meta_value
-				]);
-				continue;
+			if ($this->is_name_field($meta_key)) {
+				$this->update_user_name($user_id, $meta_key, $meta_value);
 			}
 
-			// Применяем фильтры и сохраняем мета-данные
+			// Сохранение мета-данных
 			$meta_value = apply_filters('fs_user_meta_before_save', $meta_value, $meta_key, $user_id);
 			update_user_meta($user_id, $meta_key, $meta_value);
 		}
 
-		wp_send_json_success(array(
+		wp_send_json_success([
 			'msg' => __('Your data has been successfully updated.', 'f-shop')
-		));
+		]);
+	}
+
+	/**
+	 * Prepares fields for partial validation
+	 *
+	 * @param array $user_fields All user fields
+	 * @param array $validated_keys Keys of fields to validate
+	 * @return array Filtered fields
+	 */
+	private function prepare_fields_for_validation($user_fields, $validated_keys)
+	{
+		foreach ($validated_keys as $key) {
+			if (!isset($_POST[$key]) && isset($user_fields[$key])) {
+				$_POST[$key] = $this->get_default_field_value($user_fields[$key]);
+			}
+		}
+
+		return array_filter($user_fields, function ($key) use ($validated_keys) {
+			return in_array($key, $validated_keys);
+		}, ARRAY_FILTER_USE_KEY);
+	}
+
+	/**
+	 * Returns default value for a field
+	 *
+	 * @param array $field Field configuration
+	 * @return mixed Default value
+	 */
+	private function get_default_field_value($field)
+	{
+		return $field['type'] === 'checkbox' ? 0 : '';
+	}
+
+	/**
+	 * Checks if field is a file field
+	 *
+	 * @param array $user_fields All user fields
+	 * @param string $meta_key Field key
+	 * @return bool
+	 */
+	private function is_file_field($user_fields, $meta_key)
+	{
+		return isset($user_fields[$meta_key]) &&
+			$user_fields[$meta_key]['type'] == 'file' &&
+			!empty($_FILES[$meta_key]);
+	}
+
+	/**
+	 * Handles file upload
+	 *
+	 * @param string $meta_key Field key
+	 * @param int $user_id User ID
+	 */
+	private function handle_file_upload($meta_key, $user_id)
+	{
+		$attach_id = media_handle_upload($meta_key, 0);
+		if (is_wp_error($attach_id)) {
+			wp_send_json_error([
+				'msg' => $attach_id->get_error_message()
+			]);
+		}
+		update_user_meta($user_id, $meta_key, intval($attach_id));
+	}
+
+	/**
+	 * Checks if field is a name or surname field
+	 *
+	 * @param string $meta_key Field key
+	 * @return bool
+	 */
+	private function is_name_field($meta_key)
+	{
+		return in_array($meta_key, ['fs_first_name', 'fs_last_name']);
+	}
+
+	/**
+	 * Updates user's first or last name
+	 *
+	 * @param int $user_id User ID
+	 * @param string $meta_key Field key
+	 * @param string $meta_value Field value
+	 */
+	private function update_user_name($user_id, $meta_key, $meta_value)
+	{
+		wp_update_user([
+			'ID' => $user_id,
+			str_replace('fs_', '', $meta_key) => $meta_value
+		]);
 	}
 
 	/**
@@ -1110,19 +1180,23 @@ class FS_Users
 	}
 
 	/**
-	 * Authenticates a user based on the provided data.
-	 *
-	 * The 'username' field can contain either the login or the password.
+	 * Authenticates a user based on the provided data
+	 * 
+	 * The 'username' field can contain either the login or email.
 	 * The 'password' field contains the password.
 	 *
-	 * @return void
+	 * @return void JSON response with authentication result
 	 */
 	function login_user()
 	{
+		// Get the cabinet page and its URL first
+		$redirect_page = fs_option('page_cabinet');
+		$redirect = !empty($redirect_page) ? get_permalink($redirect_page) : false;
+
 		// If the user is already logged in, send an error message
 		if (is_user_logged_in()) {
 			$logout_url = wp_logout_url($_SERVER['REQUEST_URI']);
-			$msg        = 'Вы уже авторизованны на сайте. <a href="' . $logout_url . '">Выход</a>. <a href="' . $redirect . '">В кабинет</a>';
+			$msg = 'Вы уже авторизованны на сайте. <a href="' . $logout_url . '">Выход</a>. <a href="' . $redirect . '">В кабинет</a>';
 			wp_send_json_error(['msg' => $msg]);
 		}
 
@@ -1142,10 +1216,6 @@ class FS_Users
 				'errors' => $validation_result['errors']
 			));
 		}
-
-		// Get the cabinet page and its URL
-		$redirect_page = fs_option('page_cabinet');
-		$redirect      = ! empty($redirect_page) ? get_permalink($redirect_page) : false;
 
 		// Get the user based on the username
 		if (is_email($validation_result['data']['fs_login'])) {
@@ -1192,9 +1262,9 @@ class FS_Users
 
 
 	/**
-	 * Создание профиля пользователя при регистрации
+	 * Creates user profile during registration
 	 *
-	 * @return void
+	 * @return void JSON response with registration result
 	 */
 	public function create_profile_callback()
 	{
@@ -1376,92 +1446,17 @@ class FS_Users
 	}
 
 	/**
-	 * Generates and optionally outputs a login form with specified attributes and functionality.
+	 * Generates and optionally outputs a registration form with specified attributes
 	 *
 	 * @param array $args {
-	 *     Optional. An array of arguments to configure the login form.
-	 *
-	 * @type string $class The CSS class for the form container. Default 'fs-login-form'.
-	 * @type string $name The name attribute for the form. Default 'fs-login'.
-	 * @type string $method The HTTP method for form submission. Default 'post'.
-	 * @type string $data -logged-in-text Text displayed when the user is already logged in. Default 'You are already logged in.'.
-	 * @type bool $echo Whether to echo the output or return it. Default false.
-	 * @type string $inline_attributes Inline attributes for the form to handle Alpine.js interaction. Default predefined Alpine.js directive.
+	 *     Optional. Array of form configuration arguments.
+	 *     @type string $class CSS class for form container
+	 *     @type string $name Form name attribute
+	 *     @type string $method HTTP method for submission
+	 *     @type string $data-logged-in-text Text shown when user is logged in
+	 *     @type bool $echo Whether to echo or return the form
 	 * }
-	 * @return string|null The generated login form as a string, or null if `$args['echo']` is set to true.
-	 */
-	public static function login_form($args = array())
-	{
-		$args = wp_parse_args($args, array(
-			'class'               => 'fs-login-form',
-			'name'                => 'fs-login',
-			'method'              => 'post',
-			'data-logged-in-text' => __('You are already logged in.', 'f-shop'),
-			'echo'                => false,
-			'inline_attributes'   => 'x-data="{submit:() => console.log(\'submit\')}" x-on:submit.prevent="console.log(\'submit\')"'
-
-		));
-
-		$template = '';
-		if (is_user_logged_in()) {
-
-			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
-			$template .= '<p class="text-center"><a href="' . esc_url(get_the_permalink(fs_option('page_cabinet'))) . '">В личный кабинет</a></p>';
-		} else {
-			ob_start();
-		?>
-			<form method="post" class="fs-login-form" action=""
-				x-init="
-			$data.loading = false;$data.errors = {};
-			$data.success = false;
-			$el.onsubmit = async function($event) { 
-				$event.preventDefault();
-				$data.loading = true;
-				try {
-					const response = await Alpine.store('FS').login($event);
-					$data.loading = false;
-					if (response.success) {
-						$data.success = true;
-						if (typeof response.data.redirect !== 'undefined') {
-							window.location.href = response.data.redirect;
-						}
-						iziToast[response.data.type || 'success']({title: response.data.title || '<?php _e("Success", "f-shop"); ?>',message: response.data.msg || '<?php _e("Successfully logged in", "f-shop"); ?>',position: 'topCenter'});
-					} else {
-						if (response.data && response.data.errors) {
-							$data.errors = response.data.errors;
-						}
-						iziToast[response.data.type || 'error']({title: response.data.title || '<?php _e("Error", "f-shop"); ?>',message: response.data.msg || '<?php _e("Please check your login credentials", "f-shop"); ?>',position: 'topCenter',timeout: response.data.type==='warning' ? 6000 : 4000,overlay: response.data.type==='warning' ? true : false,maxWidth: response.data.type==='warning' ? 400 : null,icon: ''});}
-				} catch(error) {
-					$data.loading = false;
-					console.error('Error:', error);
-					iziToast.error({title: '<?php _e("Error", "f-shop"); ?>',message: error.message,position: 'topCenter'});
-				}
-			}">
-
-
-				<div class="alert alert-danger " x-show="errors.any" x-html="errors.any"></div>
-			<?php
-			$template .= ob_get_clean();
-			$template .= fs_frontend_template('auth/login');
-			$template .= '</form>';
-		}
-
-		if (isset($args['echo']) && $args['echo']) {
-			echo $template;
-
-			return null;
-		}
-
-		return $template;
-	}
-
-
-	/**
-	 * Шорткод формы регистрации
-	 *
-	 * @param array $args
-	 *
-	 * @return mixed|string|void
+	 * @return string|null Generated form HTML or null if echoed
 	 */
 	public static function register_form($args = array())
 	{
@@ -1479,8 +1474,8 @@ class FS_Users
 			$template .= '<p class="text-center"><a href="' . esc_url(get_the_permalink(fs_option('page_cabinet'))) . '">' . __('To personal account', 'f-shop') . '</a></p>';
 		} else {
 			ob_start(); ?>
-				<form method="post" class="fs-login-form" action="" x-ref="registerForm" x-data="{ errors: [], msg: '' }"
-					x-on:submit.prevent="Alpine.store('FS').register($event).then((r)=>{
+			<form method="post" class="fs-login-form" action="" x-ref="registerForm" x-data="{ errors: [], msg: '' }"
+				x-on:submit.prevent="Alpine.store('FS').register($event).then((r)=>{
                        msg=typeof r.data.msg!=='undefined' ? r.data.msg : '';
                        if(r.success===false) {
                             errors=typeof r.data.errors!=='undefined' ? r.data.errors : [];
@@ -1491,7 +1486,7 @@ class FS_Users
                             if (typeof r.data.redirect!=='undefined') { window.location.href = r.data.redirect; }
                         }
                     })">
-		<?php
+			<?php
 			$template .= ob_get_clean();
 			$template .= fs_frontend_template('auth/register', array('field' => array()));
 			$template .= '</form>';
@@ -1507,11 +1502,17 @@ class FS_Users
 	}
 
 	/**
-	 * Шорткод формы для сброса пароля
+	 * Generates and outputs password reset form
 	 *
-	 * @param array $args
-	 *
-	 * @return mixed|string|void
+	 * @param array $args {
+	 *     Optional. Array of form configuration arguments.
+	 *     @type string $class CSS class for form container
+	 *     @type string $name Form name attribute
+	 *     @type string $method HTTP method for submission
+	 *     @type string $action Form action URL
+	 *     @type string $data-logged-in-text Text shown when user is logged in
+	 * }
+	 * @return string Generated form HTML
 	 */
 	public static function lostpassword_form($args = array())
 	{
@@ -1535,24 +1536,10 @@ class FS_Users
 	}
 
 	/**
-	 * Выводит html код формы входа в личный кабинет
+	 * Returns current user information template
 	 *
-	 * @param array $args
+	 * @return string Generated user info HTML
 	 */
-	public static function login_form_show($args = array())
-	{
-		$args     = wp_parse_args($args, array(
-			'class'  => 'fs-login-form',
-			'name'   => 'fs-login',
-			'method' => 'posts'
-		));
-		$template = apply_filters('fs_form_header', $args, 'fs_login');
-		$template .= fs_frontend_template('auth/login', array('field' => array()));
-		$template .= apply_filters('fs_form_bottom', '');
-
-		echo $template;
-	}
-
 	public static function user_info()
 	{
 		$user     = fs_get_current_user();
@@ -1562,79 +1549,11 @@ class FS_Users
 	}
 
 	/**
-	 * Выводит информацию о текущем пользователе в виде списка
-	 */
-	public static function user_info_show()
-	{
-		echo self::user_info();
-	}
-
-	public static function profile_edit($args = array())
-	{
-		$user           = fs_get_current_user();
-		$default        = array(
-			'class' => 'fs-profile-edit',
-			'echo'  => false
-		);
-		$args           = wp_parse_args($args, $default);
-		$args['name']   = 'fs-profile-edit';
-		$args['method'] = 'post';
-		$template       = apply_filters('fs_form_header', $args, 'fs_profile_edit');
-		$template       .= fs_frontend_template('cabinet/profile-edit', array(
-			'user'  => $user,
-			'field' => FS_Config::$user_meta
-		));
-		$template       .= apply_filters('fs_form_bottom', '');
-		if (! $args['echo']) {
-			return $template;
-		} else {
-			echo $template;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Шорткод личного кабинета
+	 * Returns user avatar URL
 	 *
-	 * @return mixed|void
-	 */
-	public static function user_cabinet()
-	{
-
-		if (is_user_logged_in()) {
-			return self::user_cabinet_tabs();
-		} else {
-			return FS_Users::login_form();
-		}
-	}
-
-	/**
-	 * Отвечает за создание вкладок личного кабинета и их содержимого
-	 */
-	static function user_cabinet_tabs()
-	{
-		$user         = fs_get_current_user();
-		$wishlist     = isset($_SESSION['fs_wishlist']) && is_array($_SESSION['fs_wishlist']) ? $_SESSION['fs_wishlist'] : [];
-		$wishlist_ids = array_unique(array_values($wishlist));
-		$wishlist     = new \WP_Query([
-			'post_type'      => FS_Config::get_data('post_type'),
-			'post__in'       => count($wishlist_ids) ? $wishlist_ids : [0],
-			'posts_per_page' => -1
-		]);
-
-		return fs_frontend_template('dashboard/index', array(
-			'vars' => compact('user', 'wishlist')
-		));
-	}
-
-	/**
-	 * Возвращает аватарку пользователя
-	 *
-	 * @param int $user_id
-	 * @param string $size
-	 *
-	 * @return false|string
+	 * @param int $user_id User ID, defaults to current user
+	 * @param string $size Image size name
+	 * @return false|string Avatar URL or false if not found
 	 */
 	static public function get_user_avatar_url($user_id = 0, $size = 'thumbnail')
 	{
@@ -1648,10 +1567,161 @@ class FS_Users
 	}
 
 	/**
-	 * Выводит виджет с аватаром текущего пользователя
+	 * Displays user info
+	 */
+	public static function user_info_show()
+	{
+		echo self::user_info();
+	}
+
+	/**
+	 * Displays user profile edit form
+	 *
+	 * @param array $args {
+	 *     Optional. Array of form configuration arguments.
+	 *     @type string $class CSS class for form container
+	 *     @type bool $echo Whether to echo or return the form
+	 * }
+	 * @return string|bool Generated form HTML or true if echoed
+	 */
+	public static function profile_edit($args = array())
+	{
+		$user = fs_get_current_user();
+		$default = array(
+			'class' => 'fs-profile-edit',
+			'echo' => false
+		);
+		$args = wp_parse_args($args, $default);
+		$args['name'] = 'fs-profile-edit';
+		$args['method'] = 'post';
+
+		$template = apply_filters('fs_form_header', $args, 'fs_profile_edit');
+		$template .= fs_frontend_template('cabinet/profile-edit', array(
+			'user' => $user,
+			'field' => FS_Config::$user_meta
+		));
+		$template .= apply_filters('fs_form_bottom', '');
+
+		if (!$args['echo']) {
+			return $template;
+		}
+
+		echo $template;
+		return true;
+	}
+
+	/**
+	 * Returns user cabinet content
+	 * 
+	 * Shows login form for non-authenticated users
+	 * or cabinet tabs for authenticated users
+	 *
+	 * @return string Generated HTML content
+	 */
+	public static function user_cabinet()
+	{
+		if (is_user_logged_in()) {
+			return self::user_cabinet_tabs();
+		}
+
+		return self::login_form(); // Now we can call it directly as static method
+	}
+
+	/**
+	 * Handles user cabinet tabs and content
+	 * 
+	 * @return string Generated HTML for cabinet tabs
+	 */
+	static function user_cabinet_tabs()
+	{
+		$user = fs_get_current_user();
+		$wishlist = FS_Wishlist::get_wishlist_products();
+
+		return fs_frontend_template('dashboard/index', array(
+			'vars' => compact('user', 'wishlist')
+		));
+	}
+
+	/**
+	 * Displays user profile widget
 	 */
 	public function profile_widget()
 	{
 		echo fs_frontend_template('widget/profile/widget');
+	}
+
+	/**
+	 * Generates and optionally outputs a login form with specified attributes
+	 *
+	 * @param array $args {
+	 *     Optional. Array of form configuration arguments.
+	 *     @type string $class CSS class for form container
+	 *     @type string $name Form name attribute
+	 *     @type string $method HTTP method for submission
+	 *     @type string $data-logged-in-text Text shown when user is logged in
+	 *     @type bool $echo Whether to echo or return the form
+	 *     @type string $inline_attributes Additional form attributes
+	 * }
+	 * @return string|null Generated form HTML or null if echoed
+	 */
+	public static function login_form($args = array())
+	{
+		$args = wp_parse_args($args, array(
+			'class' => 'fs-login-form',
+			'name' => 'fs-login',
+			'method' => 'post',
+			'data-logged-in-text' => __('You are already logged in.', 'f-shop'),
+			'echo' => false,
+			'inline_attributes' => 'x-data="{submit:() => console.log(\'submit\')}" x-on:submit.prevent="console.log(\'submit\')"'
+		));
+
+		$template = '';
+		if (is_user_logged_in()) {
+			$template .= '<p class="text-center">' . $args['data-logged-in-text'] . '</p>';
+			$template .= '<p class="text-center"><a href="' . esc_url(get_the_permalink(fs_option('page_cabinet'))) . '">' . __('To personal account', 'f-shop') . '</a></p>';
+		} else {
+			ob_start();
+			?>
+				<form method="post" class="fs-login-form" action=""
+					x-init="
+				$data.loading = false;$data.errors = {};
+				$data.success = false;
+				$el.onsubmit = async function($event) { 
+					$event.preventDefault();
+					$data.loading = true;
+					try {
+						const response = await Alpine.store('FS').login($event);
+						$data.loading = false;
+						if (response.success) {
+							$data.success = true;
+							if (typeof response.data.redirect !== 'undefined') {
+								window.location.href = response.data.redirect;
+							}
+							iziToast[response.data.type || 'success']({title: response.data.title || '<?php _e("Success", "f-shop"); ?>',message: response.data.msg || '<?php _e("Successfully logged in", "f-shop"); ?>',position: 'topCenter'});
+						} else {
+							if (response.data && response.data.errors) {
+								$data.errors = response.data.errors;
+							}
+							iziToast[response.data.type || 'error']({title: response.data.title || '<?php _e("Error", "f-shop"); ?>',message: response.data.msg || '<?php _e("Please check your login credentials", "f-shop"); ?>',position: 'topCenter',timeout: response.data.type==='warning' ? 6000 : 4000,overlay: response.data.type==='warning' ? true : false,maxWidth: response.data.type==='warning' ? 400 : null,icon: ''});}
+					} catch(error) {
+						$data.loading = false;
+						console.error('Error:', error);
+						iziToast.error({title: '<?php _e("Error", "f-shop"); ?>',message: error.message,position: 'topCenter'});
+					}
+				}">
+
+					<div class="alert alert-danger " x-show="errors.any" x-html="errors.any"></div>
+		<?php
+			$template .= ob_get_clean();
+			$template .= fs_frontend_template('auth/login');
+			$template .= '</form>';
+		}
+
+		if (isset($args['echo']) && $args['echo']) {
+			echo $template;
+			return null;
+		}
+
+		return $template;
 	}
 }
