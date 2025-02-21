@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2025-01-23 16:36+0000\n"
+"PO-Revision-Date: 2025-02-21 14:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -214,6 +214,9 @@ msgstr "Адрес"
 #: lib/FS_Settings.php:306
 msgid "Adds a field for entering a slug in other languages"
 msgstr "Добавляет поле для ввода словаря на других языках"
+
+msgid "All items have been added to the cart"
+msgstr "Все товары было добавлено в корзину"
 
 #: lib/FS_Cart.php:228
 msgid "All items have been successfully removed from the cart."

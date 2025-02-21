@@ -107,13 +107,15 @@ class FS {
    * @return {void} This method does not return a value.
    */
   addWishListToCart() {
-    this.post("fs_add_wishlist_to_cart", {}).then((response) => {
-      this.updateCarts();
+    this.post("fs_add_wishlist_to_cart").then((response) => {
+      // this.updateCarts();
       iziToast.success({
         title: response.data.title,
         message: response.data.message,
         position: "topCenter",
       });
+    }).catch((error) => {
+      console.error(error);
     });
   }
 
