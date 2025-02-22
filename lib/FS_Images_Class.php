@@ -64,6 +64,10 @@ class FS_Images_Class
 
 		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']);
 
+		$gallery_images_ids = array_filter($gallery_images_ids, function ($item) {
+			return get_post($item);
+		});
+
 		echo fs_frontend_template('product/gallery', [
 			'vars' => [
 				'gallery_images_ids' => $gallery_images_ids,
