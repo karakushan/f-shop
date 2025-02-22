@@ -64,10 +64,6 @@ class FS_Images_Class
 
 		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']);
 
-		$gallery_images_ids = array_filter($gallery_images_ids, function ($item) {
-			return get_post($item);
-		});
-
 		echo fs_frontend_template('product/gallery', [
 			'vars' => [
 				'gallery_images_ids' => $gallery_images_ids,
@@ -127,7 +123,7 @@ class FS_Images_Class
 		}
 
 		$gallery = array_filter($gallery, function ($item) {
-			return (is_numeric($item) && $item > 0);
+			return (is_numeric($item) && $item > 0) && get_post($item);
 		});
 
 		return apply_filters('fs_custom_gallery', array_unique($gallery), $product_id);

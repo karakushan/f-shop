@@ -2357,6 +2357,7 @@ function fs_gallery_images_ids($post_id = 0, $thumbnail = true)
  */
 function fs_product_thumbnail($product_id = 0, $size = 'thumbnail', $args = [])
 {
+	$product_id = fs_get_product_id($product_id);
 	$args = wp_parse_args($args, [
 		'ignore_thumbnail' => false,
 		'class'            => ''
@@ -2364,7 +2365,7 @@ function fs_product_thumbnail($product_id = 0, $size = 'thumbnail', $args = [])
 
 	$img_class = new FS\FS_Images_Class();
 	$gallery   = $img_class->get_gallery($product_id, ! $args['ignore_thumbnail']);
-	if (has_post_thumbnail($product_id) && ! $args['ignore_thumbnail']) {
+	if (has_post_thumbnail($product_id) && ! $args['ignore_thumbnail'] && get_the_post_thumbnail($product_id, $size, $args)) {
 		echo get_the_post_thumbnail($product_id, $size, $args);
 	} elseif (count($gallery)) {
 		$attach_id = array_shift($gallery);
