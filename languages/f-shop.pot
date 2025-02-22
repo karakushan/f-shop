@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-02-21 14:15+0000\n"
+"POT-Creation-Date: 2025-02-22 09:44+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: templates/front-end/shortcode/order-detail.php:14
@@ -3179,4 +3179,7 @@ msgid "Please check all form fields for validation errors"
 msgstr ""
 
 msgid "All items have been added to the cart"
+msgstr ""
+
+msgid "Viewed products list has been cleared"
 msgstr ""

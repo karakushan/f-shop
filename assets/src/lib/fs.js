@@ -369,6 +369,30 @@ class FS {
       }
     );
   }
+
+  /**
+   * Cleans the viewed products list for the current user
+   * 
+   * @return {Promise} A promise that resolves when the viewed products are cleared
+   */
+  cleanViewedProducts() {
+    return this.post("fs_clean_viewed_products").then((response) => {
+      if (response.success) {
+        iziToast.success({
+          title: response.data.title ?? this.getMessage("success"),
+          message: response.data.msg,
+          position: "topCenter",
+        });
+        window.location.reload();
+      } else {
+        iziToast.error({
+          title: response.data.title ?? this.getMessage("error"), 
+          message: response.data.msg,
+          position: "topCenter",
+        });
+      }
+    });
+  }
 }
 
 export default FS;

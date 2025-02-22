@@ -158,6 +158,10 @@ class FS_Ajax
 			// fs_comment_like_dislike
 			add_action('wp_ajax_fs_comment_like_dislike', array($this, 'fs_comment_like_dislike'));
 			add_action('wp_ajax_nopriv_fs_comment_like_dislike', array($this, 'fs_comment_like_dislike'));
+
+			// Add action for cleaning viewed products
+			add_action('wp_ajax_fs_clean_viewed_products', array($this, 'fs_clean_viewed_products_callback'));
+			add_action('wp_ajax_nopriv_fs_clean_viewed_products', array($this, 'fs_clean_viewed_products_callback'));
 		}
 	}
 
@@ -1531,5 +1535,32 @@ class FS_Ajax
 		], get_permalink(fs_option('page_success'))) : '';
 
 		wp_send_json_success(['order_id' => $new_order_id, 'redirect' => $redirect_link]);
+	}
+
+	/**
+	 * Callback function for cleaning viewed products list
+	 */
+	public function fs_clean_viewed_products_callback()
+	{
+		if (!FS_Config::verify_nonce()) {
+			wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
+		}
+
+		$user_id = get_current_user_id();
+
+		if ($user_id) {
+			// For logged in users - clear from user meta
+			delete_user_meta($user_id, 'fs_viewed_products');
+		}
+
+		// Clear from session for both logged in and guest users
+		if (isset($_SESSION['fs_user_settings']['viewed_product'])) {
+			unset($_SESSION['fs_user_settings']['viewed_product']);
+		}
+
+		wp_send_json_success([
+			'msg' => __('Viewed products list has been cleared', 'f-shop'),
+			'title' => __('Success!', 'f-shop')
+		]);
 	}
 }
