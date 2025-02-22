@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2025-02-22 09:45+0000\n"
+"PO-Revision-Date: 2025-02-22 19:27+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -2346,7 +2346,10 @@ msgstr "Деталі доставки та оплати"
 
 #: lib/FS_Taxonomy.php:682
 msgid "Shipping Cost in Base Currency"
-msgstr "Вартысть доставки в основній валюті"
+msgstr "Вартість доставки в основній валюті"
+
+msgid "Shipping Cost Text"
+msgstr "Вартість доставки текст"
 
 #: lib/FS_Ajax.php:1077
 msgid "Shipping method not found"

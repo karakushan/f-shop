@@ -762,6 +762,13 @@ class FS_Taxonomy
 					'subtype' => 'number',
 					'args'    => array('style' => 'width:72px;', 'step' => 0.01)
 				),
+				'_fs_delivery_cost_text' => array(
+					'name' => __('Shipping Cost Text', 'f-shop'),
+					'type' => 'text',
+					'args' => [
+						'multilang' => true,
+					]
+				),
 				'_fs_disable_fields'   => array(
 					'name'    => __('Fields to disable when choosing this delivery method', 'f-shop'),
 					'type'    => 'multiselect',

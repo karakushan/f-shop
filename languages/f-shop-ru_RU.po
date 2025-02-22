@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2025-02-22 09:44+0000\n"
+"PO-Revision-Date: 2025-02-22 19:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -2355,6 +2355,9 @@ msgstr "Детали доставки и оплаты"
 #: lib/FS_Taxonomy.php:682
 msgid "Shipping Cost in Base Currency"
 msgstr "Стоимость доставки в базовой валюте"
+
+msgid "Shipping Cost Text"
+msgstr "Стоимость доставки текст"
 
 #: lib/FS_Ajax.php:1077
 msgid "Shipping method not found"
