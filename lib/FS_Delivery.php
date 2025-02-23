@@ -114,19 +114,49 @@ class FS_Delivery
 
 	/**
 	 * Возвращает стоимость доставки в текстовом формате
+	 *
+	 * @param string $format Формат вывода стоимости доставки. По умолчанию '%s <span>%s</span>'
+	 *                      Первый %s - цена, второй %s - валюта
+	 * 
+	 * @return string Отформатированная стоимость доставки или текст о бесплатной доставке
+	 */
+	public function get_shipping_cost_text($format = '%s <span>%s</span>')
+	{
+		$text = '';
+
+		// Получаем текст для бесплатной доставки из мета-данных
+		$free_shipping_text = fs_get_term_meta('_fs_delivery_cost_text', $this->term_id, 1, true);
+
+		// Если есть стоимость доставки и она больше 0
+		if (get_term_meta($this->term_id, '_fs_delivery_cost', 1) && $this->cost > 0) {
+			$text = sprintf(
+				$format,
+				apply_filters('fs_price_format', $this->cost),
+				fs_currency()
+			);
+		}
+		// Если есть текст для бесплатной доставки
+		elseif ($free_shipping_text) {
+			$text = $free_shipping_text;
+		}
+		// В остальных случаях выводим 0 в заданном формате
+		else {
+			$text = sprintf(
+				$format,
+				apply_filters('fs_price_format', 0),
+				fs_currency()
+			);
+		}
+
+		return $text;
+	}
+
+	/**
+	 * Возвращает стоимость доставки в текстовом формате
 	 * @return string
 	 */
 	public function shipping_cost_text($format = '%s <span>%s</span>')
 	{
-		$free_shipping_text = fs_get_term_meta('_fs_delivery_cost_text', $this->term_id, 1, true);
-
-		if (get_term_meta($this->term_id, '_fs_delivery_cost', 1) && $this->cost > 0) {
-			printf($format, apply_filters('fs_price_format', $this->cost), fs_currency());
-		} elseif ($free_shipping_text) {
-
-			echo $free_shipping_text;
-		} else {
-			printf($format, apply_filters('fs_price_format', 0), fs_currency());
-		}
+		echo $this->get_shipping_cost_text($format);
 	}
 }

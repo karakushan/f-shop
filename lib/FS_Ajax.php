@@ -917,7 +917,7 @@ class FS_Ajax
 				'order_id'                 => $order_id,
 				'cart_discount'            => sprintf('%s %s', apply_filters('fs_price_format', $discount), fs_currency()),
 				'cart_amount'              => sprintf('%s %s', apply_filters('fs_price_format', $sum), fs_currency()),
-				'delivery_cost'            => sprintf('%s %s', apply_filters('fs_price_format', $delivery_cost), fs_currency()),
+				'delivery_cost'            => (new FS_Delivery($order_id))->get_shipping_cost_text(),
 				'products_cost'            => sprintf('%s %s', apply_filters('fs_price_format', $cart_cost), fs_currency()),
 				'packing_cost'             => sprintf('%s %s', apply_filters('fs_price_format', $packing_cost), fs_currency()),
 				'delivery_method'          => $sanitize_field['fs_delivery_methods'] ? fs_get_delivery($sanitize_field['fs_delivery_methods']) : '',

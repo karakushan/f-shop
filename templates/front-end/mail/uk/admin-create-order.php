@@ -1,11 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title><?= /** @var string $order_title */
-		$order_title ?></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><?=
+            /** @var string $order_title */
+            $order_title ?></title>
 
     <style type="text/css">
         /* Take care of image borders and formatting, client hacks */
@@ -204,7 +205,6 @@
             line-height: 1px !important;
             font-size: 1px !important;
         }
-
     </style>
 
     <style type="text/css" media="screen">
@@ -213,6 +213,7 @@
 
     <style type="text/css" media="screen">
         @media screen {
+
             /* Thanks Outlook 2013! */
             * {
                 font-family: 'Oxygen', 'Helvetica Neue', 'Arial', 'sans-serif' !important;
@@ -302,19 +303,19 @@
 </head>
 
 <body bgcolor="#f7f7f7">
-<table align="center" cellpadding="0" cellspacing="0" class="container-for-gmail-android" width="100%">
-    <tr>
-        <td align="left" valign="top" width="100%"
-            style="background:repeat-x url(http://s3.amazonaws.com/swu-filepicker/4E687TRe69Ld95IDWyEg_bg_top_02.jpg) #ffffff;">
-            <center>
-                <img src="http://s3.amazonaws.com/swu-filepicker/SBb2fQPrQ5ezxmqUTgCr_transparent.png"
-                     class="force-width-gmail">
-                <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff"
-                       background="http://s3.amazonaws.com/swu-filepicker/4E687TRe69Ld95IDWyEg_bg_top_02.jpg"
-                       style="background-color:transparent">
-                    <tr>
-                        <td width="100%" height="80" valign="top" style="text-align: center; vertical-align:middle;">
-                            <!--[if gte mso 9]>
+    <table align="center" cellpadding="0" cellspacing="0" class="container-for-gmail-android" width="100%">
+        <tr>
+            <td align="left" valign="top" width="100%"
+                style="background:repeat-x url(http://s3.amazonaws.com/swu-filepicker/4E687TRe69Ld95IDWyEg_bg_top_02.jpg) #ffffff;">
+                <center>
+                    <img src="http://s3.amazonaws.com/swu-filepicker/SBb2fQPrQ5ezxmqUTgCr_transparent.png"
+                        class="force-width-gmail">
+                    <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff"
+                        background="http://s3.amazonaws.com/swu-filepicker/4E687TRe69Ld95IDWyEg_bg_top_02.jpg"
+                        style="background-color:transparent">
+                        <tr>
+                            <td width="100%" height="80" valign="top" style="text-align: center; vertical-align:middle;">
+                                <!--[if gte mso 9]>
                             <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false"
                                     style="mso-width-percent:1000;height:80px; v-text-anchor:middle;">
                                 <v:fill type="tile"
@@ -322,256 +323,270 @@
                                         color="#ffffff"/>
                                 <v:textbox inset="0,0,0,0">
                             <![endif]-->
-                            <center>
-                                <table cellpadding="0" cellspacing="0" width="600" class="w320">
-                                    <tr>
-                                        <td class="pull-left mobile-header-padding-left"
-                                            style="vertical-align: middle;">
-                                            <a href="<?= /** @var string $home_url */
-											$home_url ?>">
-                                                <img width="137" height="47"
-                                                     src="<?= /** @var string $mail_logo */
-												     $mail_logo ?>"
-                                                     alt="<?= /** @var string $site_name */
-												     $site_name ?>" style="height: 50px; width: auto;"></a>
-                                        </td>
-                                        <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
-											<?php /** @var array $social_links */
-											foreach ( $social_links as $social_link ): ?>
-                                                <a href="<?= $social_link['url'] ?>">
-                                                    <img width="44" height="47"
-                                                         src="<?= $social_link['img'] ?>"
-                                                         alt="<?= $social_link['name'] ?>"/>
-                                                </a>
-											<?php endforeach; ?>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </center>
-                            <!--[if gte mso 9]>
+                                <center>
+                                    <table cellpadding="0" cellspacing="0" width="600" class="w320">
+                                        <tr>
+                                            <td class="pull-left mobile-header-padding-left"
+                                                style="vertical-align: middle;">
+                                                <a href="<?=
+                                                            /** @var string $home_url */
+                                                            $home_url ?>">
+                                                    <img width="137" height="47"
+                                                        src="<?=
+                                                                /** @var string $mail_logo */
+                                                                $mail_logo ?>"
+                                                        alt="<?=
+                                                                /** @var string $site_name */
+                                                                $site_name ?>" style="height: 50px; width: auto;"></a>
+                                            </td>
+                                            <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
+                                                <?php /** @var array $social_links */
+                                                foreach ($social_links as $social_link): ?>
+                                                    <a href="<?= $social_link['url'] ?>">
+                                                        <img width="44" height="47"
+                                                            src="<?= $social_link['img'] ?>"
+                                                            alt="<?= $social_link['name'] ?>" />
+                                                    </a>
+                                                <?php endforeach; ?>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </center>
+                                <!--[if gte mso 9]>
                             </v:textbox>
                             </v:rect>
                             <![endif]-->
-                        </td>
-                    </tr>
-                </table>
-            </center>
-        </td>
-    </tr>
-    <tr>
-        <td align="center" valign="top" width="100%" style="background-color: #f7f7f7;" class="content-padding">
-            <center>
-                <table cellspacing="0" cellpadding="0" width="600" class="w320">
-                    <tr>
-                        <td class="header-lg">
-							<?= /** @var string $admin_mail_title */
-							$admin_mail_title ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="free-text">
-							<?=
-							/** @var string $admin_mail_message */
-							$admin_mail_message ?>
-                            <br/>
-							<?php if ( ! empty( $client_phone ) && ! empty( $clean_number ) ): ?>
-                                <a
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" valign="top" width="100%" style="background-color: #f7f7f7;" class="content-padding">
+                <center>
+                    <table cellspacing="0" cellpadding="0" width="600" class="w320">
+                        <tr>
+                            <td class="header-lg">
+                                <?=
+                                /** @var string $admin_mail_title */
+                                $admin_mail_title ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="free-text">
+                                <?=
+                                /** @var string $admin_mail_message */
+                                $admin_mail_message ?>
+                                <br />
+                                <?php if (! empty($client_phone) && ! empty($clean_number)): ?>
+                                    <a
                                         href="tel:<?= $clean_number ?>"><?= $client_phone ?></a>
-                                <br/>
-							<?php endif ?>
-							<?php if ( ! empty( $client_email ) ): ?>
-                                <a href="mailto:<?= $client_email ?>"><?= $client_email ?></a>
-							<?php endif ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="button">
-                            <div><!--[if mso]>
+                                    <br />
+                                <?php endif ?>
+                                <?php if (! empty($client_email)): ?>
+                                    <a href="mailto:<?= $client_email ?>"><?= $client_email ?></a>
+                                <?php endif ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="button">
+                                <div><!--[if mso]>
                                 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
                                              xmlns:w="urn:schemas-microsoft-com:office:word" href="<?php
-								/** @var string $order_edit_url */
-								echo $order_edit_url ?>"
+                                                                                                    /** @var string $order_edit_url */
+                                                                                                    echo $order_edit_url ?>"
                                              style="height:45px;v-text-anchor:middle;width:155px;" arcsize="15%"
                                              strokecolor="#ffffff" fillcolor="#ff6f6f">
                                     <w:anchorlock/>
                                     <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">
-                                        <?= __( 'View order', 'f-shop' ) ?>
+                                        <?= __('View order', 'f-shop') ?>
                                     </center>
                                 </v:roundrect>
                                 <![endif]--><a href="<?= $order_edit_url ?>"
-                                               style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;"><?= __( 'View order', 'f-shop' ) ?></a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="w320">
-                            <table cellpadding="0" cellspacing="0" width="100%">
-                                <tr>
-                                    <td class="mini-container-left">
-                                        <table cellpadding="0" cellspacing="0" width="100%">
-                                            <tr>
-                                                <td class="mini-block-padding">
-                                                    <table cellspacing="0" cellpadding="0" width="100%"
-                                                           style="border-collapse:separate !important;">
-                                                        <tr>
-                                                            <td class="mini-block">
-                                                                <span class="header-sm"><?= __( 'Delivery', 'f-shop' ) ?></span><br/>
-																<?= ! empty( $delivery_method ) ? sprintf( 'Спосіб доставки: %s<br>', $delivery_method ) : '' ?>
-																<?= ! empty( $delivery_number ) ? sprintf( 'Номер відділення: %s<br>', $delivery_number ) : '' ?>
-																<?= ! empty( $client_city ) ? sprintf( 'Місто: %s<br>', $client_city ) : '' ?>
-																<?= ! empty( $client_address ) ? sprintf( 'Адреса: %s<br>', $client_address ) : '' ?>
-																<?= ! empty( $address_street ) ? sprintf( 'Вулиця: %s<br>', $address_street ) : '' ?>
-																<?= ! empty( $address_house_number ) ? sprintf( 'Будинок: %s<br>', $address_house_number ) : '' ?>
-																<?= ! empty( $address_entrance_number ) ? sprintf( 'Під’їзд: %s<br>', $address_entrance_number ) : '' ?>
-																<?= ! empty( $address_apartment_number ) ? sprintf( 'Квартира: %s<br>', $address_apartment_number ) : '' ?>
-																<?= ! empty( $client_last_name ) || ! empty( $client_first_name ) ? sprintf( 'Прізвище та ім’я: %s %s<br>', $client_last_name ?? '', $client_first_name ?? '' ) : '' ?>
-																<?= ! empty( $client_email ) ? sprintf( 'E-mail: %s<br>', $client_email ) : '' ?>
-																<?= ! empty( $client_phone ) ? sprintf( 'Телефон: %s<br>', $client_phone ) : '' ?>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td class="mini-container-right">
-                                        <table cellpadding="0" cellspacing="0" width="100%">
-                                            <tr>
-                                                <td class="mini-block-padding">
-                                                    <table cellspacing="0" cellpadding="0" width="100%"
-                                                           style="border-collapse:separate !important;">
-                                                        <tr>
-                                                            <td class="mini-block">
-                                                                <span class="header-sm"><?= __( 'Payment', 'f-shop' ) ?></span><br/>
-																<?php /** @var string $payment_method */
-																echo $payment_method ?> <br/>
-                                                                <span class="header-sm"><?= __( 'Date Ordered', 'f-shop' ) ?></span><br/>
-																<?= /** @var string $order_date */
-																$order_date ?><br/>
-                                                                <span class="header-sm">Коментар</span><br/>
-																<?= /** @var string $client_comment */
-																$client_comment ?>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </center>
-        </td>
-    </tr>
-    <tr>
-        <td align="center" valign="top" width="100%"
-            style="background-color: #ffffff;  border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
-            <center>
-                <table cellpadding="0" cellspacing="0" width="600" class="w320">
-                    <tr>
-                        <td class="item-table">
-                            <table cellspacing="0" cellpadding="0" width="100%">
-                                <tr>
-                                    <td class="title-dark" width="300">
-										<?= __( 'Item', 'f-shop' ) ?>
-                                    </td>
-                                    <td class="title-dark" width="163">
-										<?= __( 'Qty', 'f-shop' ) ?>
-                                    </td>
-                                    <td class="title-dark" width="97">
-										<?= __( 'Total', 'f-shop' ) ?>
-                                    </td>
-                                </tr>
-
-								<?php /** @var array $cart_items */
-								foreach ( $cart_items as $item ): ?>
+                                        style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;"><?= __('View order', 'f-shop') ?></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w320">
+                                <table cellpadding="0" cellspacing="0" width="100%">
                                     <tr>
-                                        <td class="item-col item">
-                                            <table cellspacing="0" cellpadding="0" width="100%">
+                                        <td class="mini-container-left">
+                                            <table cellpadding="0" cellspacing="0" width="100%">
                                                 <tr>
-                                                    <td class="mobile-hide-img">
-                                                        <a href="<?= $item['link'] ?>" target="_blank">
-                                                            <img width="110" src="<?= $item['thumbnail_url'] ?>"
-                                                                 alt="<?= $item['name'] ?>">
-                                                        </a>
-                                                    </td>
-                                                    <td class="product">
-                                                        <a href="<?= $item['link'] ?>" target="_blank"
-                                                           style="color: #4d4d4d; font-weight:bold;"><?= $item['name'] ?></a>
-                                                        <br/>
-														<?php foreach ( $item['attr'] as $attribute ) {
-															echo $attribute['parent_name'] . ' : ' . $attribute['name'] . '<br/>';
-														} ?>
+                                                    <td class="mini-block-padding">
+                                                        <table cellspacing="0" cellpadding="0" width="100%"
+                                                            style="border-collapse:separate !important;">
+                                                            <tr>
+                                                                <td class="mini-block">
+                                                                    <span class="header-sm"><?= __('Delivery', 'f-shop') ?></span><br />
+                                                                    <?= ! empty($delivery_method) ? sprintf('Спосіб доставки: %s<br>', $delivery_method) : '' ?>
+                                                                    <?= ! empty($delivery_number) ? sprintf('Номер відділення: %s<br>', $delivery_number) : '' ?>
+                                                                    <?= ! empty($client_city) ? sprintf('Місто: %s<br>', $client_city) : '' ?>
+                                                                    <?= ! empty($client_address) ? sprintf('Адреса: %s<br>', $client_address) : '' ?>
+                                                                    <?= ! empty($address_street) ? sprintf('Вулиця: %s<br>', $address_street) : '' ?>
+                                                                    <?= ! empty($address_house_number) ? sprintf('Будинок: %s<br>', $address_house_number) : '' ?>
+                                                                    <?= ! empty($address_entrance_number) ? sprintf('Під’їзд: %s<br>', $address_entrance_number) : '' ?>
+                                                                    <?= ! empty($address_apartment_number) ? sprintf('Квартира: %s<br>', $address_apartment_number) : '' ?>
+                                                                    <?= ! empty($client_last_name) || ! empty($client_first_name) ? sprintf('Прізвище та ім’я: %s %s<br>', $client_last_name ?? '', $client_first_name ?? '') : '' ?>
+                                                                    <?= ! empty($client_email) ? sprintf('E-mail: %s<br>', $client_email) : '' ?>
+                                                                    <?= ! empty($client_phone) ? sprintf('Телефон: %s<br>', $client_phone) : '' ?>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td class="item-col quantity">
-											<?= $item['qty'] ?>
-                                        </td>
-                                        <td class="item-col">
-											<?= $item['all_price'] ?><?= $item['currency'] ?>
+                                        <td class="mini-container-right">
+                                            <table cellpadding="0" cellspacing="0" width="100%">
+                                                <tr>
+                                                    <td class="mini-block-padding">
+                                                        <table cellspacing="0" cellpadding="0" width="100%"
+                                                            style="border-collapse:separate !important;">
+                                                            <tr>
+                                                                <td class="mini-block">
+                                                                    <span class="header-sm"><?= __('Payment', 'f-shop') ?></span><br />
+                                                                    <?php /** @var string $payment_method */
+                                                                    echo $payment_method ?> <br />
+                                                                    <span class="header-sm"><?= __('Date Ordered', 'f-shop') ?></span><br />
+                                                                    <?=
+                                                                    /** @var string $order_date */
+                                                                    $order_date ?><br />
+                                                                    <span class="header-sm">Коментар</span><br />
+                                                                    <?=
+                                                                    /** @var string $client_comment */
+                                                                    $client_comment ?>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </td>
                                     </tr>
-								<?php endforeach; ?>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" valign="top" width="100%"
+                style="background-color: #ffffff;  border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+                <center>
+                    <table cellpadding="0" cellspacing="0" width="600" class="w320">
+                        <tr>
+                            <td class="item-table">
+                                <table cellspacing="0" cellpadding="0" width="100%">
+                                    <tr>
+                                        <td class="title-dark" width="300">
+                                            <?= __('Item', 'f-shop') ?>
+                                        </td>
+                                        <td class="title-dark" width="163">
+                                            <?= __('Qty', 'f-shop') ?>
+                                        </td>
+                                        <td class="title-dark" width="97">
+                                            <?= __('Total', 'f-shop') ?>
+                                        </td>
+                                    </tr>
 
-                                <tr>
-                                    <td class="item-col item mobile-row-padding"></td>
-                                    <td class="item-col quantity"></td>
-                                    <td class="item-col price"></td>
-                                </tr>
+                                    <?php /** @var array $cart_items */
+                                    foreach ($cart_items as $item): ?>
+                                        <tr>
+                                            <td class="item-col item">
+                                                <table cellspacing="0" cellpadding="0" width="100%">
+                                                    <tr>
+                                                        <td class="mobile-hide-img">
+                                                            <a href="<?= $item['link'] ?>" target="_blank">
+                                                                <img width="110" src="<?= $item['thumbnail_url'] ?>"
+                                                                    alt="<?= $item['name'] ?>">
+                                                            </a>
+                                                        </td>
+                                                        <td class="product">
+                                                            <a href="<?= $item['link'] ?>" target="_blank"
+                                                                style="color: #4d4d4d; font-weight:bold;"><?= $item['name'] ?></a>
+                                                            <br />
+                                                            <?php foreach ($item['attr'] as $attribute) {
+                                                                echo $attribute['parent_name'] . ' : ' . $attribute['name'] . '<br/>';
+                                                            } ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td class="item-col quantity">
+                                                <?= $item['qty'] ?>
+                                            </td>
+                                            <td class="item-col">
+                                                <?= $item['all_price'] ?><?= $item['currency'] ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
 
-                                <tr>
-                                    <td class="item-col item">
-                                    </td>
-                                    <td class="item-col quantity"
-                                        style="text-align:right; padding-right: 10px; border-top: 1px solid #cccccc;">
-                                        <span class="total-space"><?= __( 'Cost of goods', 'f-shop' ) ?></span> <br/>
-                                        <span class="total-space"><?= __( 'Cost of delivery', 'f-shop' ) ?></span> <br/>
-                                        <span class="total-space"><?= __( 'Discount', 'f-shop' ) ?></span> <br/>
-                                        <span class="total-space"><?= __( 'Packing', 'f-shop' ) ?></span> <br/>
-                                        <span class="total-space"
-                                              style="font-weight: bold; color: #4d4d4d"><?= __( 'Total', 'f-shop' ) ?></span>
-                                    </td>
-                                    <td class="item-col price" style="text-align: left; border-top: 1px solid #cccccc;">
-	                                    <span class="total-space"><?= /** @var string $products_cost */
-		                                    $products_cost ?></span> <br/>
-                                        <span class="total-space"><?= /** @var string $delivery_cost */
-											$delivery_cost ?></span> <br/>
-                                        <span class="total-space"><?= /** @var string $cart_discount */
-											$cart_discount ?></span> <br/>
-                                        <span class="total-space"><?= /** @var string $packing_cost */
-											$packing_cost ?></span> <br/>
-                                        <span class="total-space"
-                                              style="font-weight:bold; color: #4d4d4d"><?= /** @var string $cart_amount */
-											$cart_amount ?></span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </center>
-        </td>
-    </tr>
-    <tr>
-        <td align="center" valign="top" width="100%" style="background-color: #f7f7f7; height: 100px;">
-            <center>
-                <table cellspacing="0" cellpadding="0" width="600" class="w320">
-                    <tr>
-                        <td style="padding: 25px 0 25px">
-							<?= __( 'The online store works for', 'f-shop' ) ?> <strong><a
+                                    <tr>
+                                        <td class="item-col item mobile-row-padding"></td>
+                                        <td class="item-col quantity"></td>
+                                        <td class="item-col price"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="item-col item">
+                                        </td>
+                                        <td class="item-col quantity"
+                                            style="text-align:right; padding-right: 10px; border-top: 1px solid #cccccc;">
+                                            <span class="total-space"><?= __('Cost of goods', 'f-shop') ?></span> <br />
+                                            <span class="total-space"><?= __('Cost of delivery', 'f-shop') ?></span> <br />
+                                            <span class="total-space"><?= __('Discount', 'f-shop') ?></span> <br />
+                                            <span class="total-space"><?= __('Packing', 'f-shop') ?></span> <br />
+                                            <span class="total-space"
+                                                style="font-weight: bold; color: #4d4d4d"><?= __('Total', 'f-shop') ?></span>
+                                        </td>
+                                        <td class="item-col price" style="text-align: left; border-top: 1px solid #cccccc;">
+                                            <span class="total-space">
+                                                <?=
+                                                /** @var string $products_cost */
+                                                $products_cost ?>
+                                            </span> <br />
+                                            <span class="total-space"><?=
+                                                                        /** @var string $delivery_cost */
+                                                                        $delivery_cost ?></span> <br />
+                                            <span class="total-space"><?=
+                                                                        /** @var string $cart_discount */
+                                                                        $cart_discount ?></span> <br />
+                                            <span class="total-space"><?=
+                                                                        /** @var string $packing_cost */
+                                                                        $packing_cost ?></span> <br />
+                                            <span class="total-space"
+                                                style="font-weight:bold; color: #4d4d4d"><?=
+                                                                                            /** @var string $cart_amount */
+                                                                                            $cart_amount ?></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" valign="top" width="100%" style="background-color: #f7f7f7; height: 100px;">
+                <center>
+                    <table cellspacing="0" cellpadding="0" width="600" class="w320">
+                        <tr>
+                            <td style="padding: 25px 0 25px">
+                                <?= __('The online store works for', 'f-shop') ?> <strong><a
                                         href="https://f-shop.top/"
                                         target="_blank">F-SHOP</a></strong>
-                        </td>
-                    </tr>
-                </table>
-            </center>
-        </td>
-    </tr>
-</table>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+            </td>
+        </tr>
+    </table>
 </body>
+
 </html>
