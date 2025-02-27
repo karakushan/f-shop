@@ -253,24 +253,32 @@ class Attribute_Widget extends \WP_Widget
 			</div>
 			<div x-data="{
             baseUrl: '<?php echo esc_url(site_url($_SERVER['REQUEST_URI'])) ?>',
-            checked: () => {
-                    const params = new URLSearchParams(window.location.search);
-                    if(!params.get('filter')) return [];
-                    return params.get('filter').split(',');
-                }}" x-init="$watch('checked', (atts) => {
-                 const currentUrl = new URL(baseUrl);
-                 currentUrl.searchParams.set('filter',[...new Set(atts)].join(','));
-                window.location.href=currentUrl;
- } )">
+            selectedAtts: [],
+            init() {
+                const params = new URLSearchParams(window.location.search);
+                if(params.get('filter')) {
+                    this.selectedAtts = params.get('filter').split(',');
+                }
+            },
+            updateUrl: function() {
+                setTimeout(() => {
+                    const currentUrl = new URL(this.baseUrl);
+                    currentUrl.searchParams.set('filter', [...new Set(this.selectedAtts)].join(','));
+                    window.location.href = currentUrl;
+                }, 300);
+            }
+            }" x-init="init()">
 				<template x-for="attribute in attributes" :key="attribute.term_id">
-					<li :class="{'selected': checked().includes(attribute.term_id.toString())}">
-						<input type="checkbox"
-							:id="'filter-<?php echo $attr_group->slug ?>-'+attribute.term_id"
-							:name="'<?php echo $attr_group->slug ?>['+attribute.slug+']'"
-							:value="attribute.term_id"
-							x-model="checked">
-						<label :for="'filter-<?php echo $attr_group->slug ?>-'+attribute.term_id"
-							x-html="attribute.name"></label>
+					<li :class="{'selected': selectedAtts.includes(attribute.term_id.toString())}">
+						<label :for="'filter-<?php echo $attr_group->slug ?>-'+attribute.term_id">
+							<input type="checkbox"
+								:id="'filter-<?php echo $attr_group->slug ?>-'+attribute.term_id"
+								:name="'<?php echo $attr_group->slug ?>['+attribute.slug+']'"
+								:value="attribute.term_id"
+								x-model="selectedAtts"
+								@change="updateUrl">
+							<span x-html="attribute.name"></span>
+						</label>
 					</li>
 				</template>
 			</div>
