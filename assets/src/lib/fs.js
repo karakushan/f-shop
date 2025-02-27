@@ -14,6 +14,10 @@ class FS {
     this.addWishListToCart = this.addWishListToCart.bind(this);
     this.cart = [];
     this.filters = [];
+    this.wishlist = {
+      items: [],
+      count: 0
+    };
     this.modal = {
       modalID: null,
       isOpen: false,
@@ -62,6 +66,18 @@ class FS {
   // === WISHLIST ===
 
   /**
+   * Updates wishlist state by fetching latest data
+   */
+  updateWishlist() {
+    return this.post("fs_get_wishlist").then((response) => {
+      if (response.success) {
+        this.wishlist = response.data;
+      }
+      return response;
+    });
+  }
+
+  /**
    * Adds an item to the wishlist by its identifier.
    *
    * @param {string|number} itemId - The identifier of the item to add to the wishlist.
@@ -82,6 +98,7 @@ class FS {
             { detail: { itemId: itemId } }
           );
           window.dispatchEvent(wishlistUpdatedEvent);
+          this.updateWishlist();
         } else {
           iziToast.error({
             title: response.data.title ?? this.getMessage("error"),

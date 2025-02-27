@@ -1654,8 +1654,8 @@ function fs_add_to_wishlist($product_id = 0, $button_text = 'В список ж�
 		'class'        => $args['class'],
 		'id'           => $args['id'],
 		'x-data'       => json_encode(['inWishlist' => \FS\FS_Wishlist::contains($product_id)]),
-		'x-on:click'   => 'Alpine.store("FS").addToWishlist(' . $product_id . ');inWishlist=!inWishlist',
-		'x-bind:class' => '{"fs-in-wishlist":inWishlist}'
+		'x-on:click'   => 'Alpine.store("FS").addToWishlist(' . $product_id . '); inWishlist=!inWishlist',
+		'x-bind:class' => '{\'fs-in-wishlist\':inWishlist}'
 	));
 
 	switch ($args['type']) {

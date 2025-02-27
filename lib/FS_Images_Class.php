@@ -7,6 +7,14 @@ namespace FS;
  */
 class FS_Images_Class
 {
+	public function __construct()
+	{
+		// Регистрируем хук по умолчанию для отображения галереи
+		if (!has_action('fs_product_gallery')) {
+			add_action('fs_product_gallery', [$this, 'product_gallery_display'], 10, 2);
+		}
+	}
+
 	/**
 	 * @param int $product_id
 	 *
@@ -63,6 +71,8 @@ class FS_Images_Class
 		$args    = wp_parse_args($args, $default);
 
 		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']);
+
+		do_action('qm/debug', $gallery_images_ids);
 
 		echo fs_frontend_template('product/gallery', [
 			'vars' => [

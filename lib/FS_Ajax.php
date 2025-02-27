@@ -162,6 +162,10 @@ class FS_Ajax
 			// Add action for cleaning viewed products
 			add_action('wp_ajax_fs_clean_viewed_products', array($this, 'fs_clean_viewed_products_callback'));
 			add_action('wp_ajax_nopriv_fs_clean_viewed_products', array($this, 'fs_clean_viewed_products_callback'));
+
+			// Get wishlist data
+			add_action('wp_ajax_fs_get_wishlist', array($this, 'get_wishlist'));
+			add_action('wp_ajax_nopriv_fs_get_wishlist', array($this, 'get_wishlist'));
 		}
 	}
 
@@ -1260,6 +1264,10 @@ class FS_Ajax
 			wp_send_json_error(array('msg' => __('Attribute ID not found', 'f-shop')));
 		}
 
+		if (empty($_POST['category_id'])) {
+			wp_send_json_error(array('msg' => __('Category ID not found', 'f-shop')));
+		}
+
 		$attributes = fs_product_category_screen_attributes((int) $_POST['attribute_id'], (int) $_POST['category_id']);
 
 		wp_send_json_success([
@@ -1561,6 +1569,17 @@ class FS_Ajax
 		wp_send_json_success([
 			'msg' => __('Viewed products list has been cleared', 'f-shop'),
 			'title' => __('Success!', 'f-shop')
+		]);
+	}
+
+	/**
+	 * Returns current wishlist data
+	 */
+	public function get_wishlist()
+	{
+		wp_send_json_success([
+			'items' => FS_Wishlist::get_wishlist_items(),
+			'count' => FS_Wishlist::get_wishlist_count()
 		]);
 	}
 }
