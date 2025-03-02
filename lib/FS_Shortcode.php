@@ -290,6 +290,12 @@ class FS_Shortcode
 							    $dispatch(response.data.id+\'_callback\', response.data);
 							}
 						}
+													
+						window.dispatchEvent(new CustomEvent(\'fs-order-response\', {
+							detail: response
+						}));
+						
+
 					} catch(error) {
 						$data.loading = false;
 						iziToast.error({
