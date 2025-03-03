@@ -4,7 +4,8 @@ namespace FS;
 
 use FS\Services\Telegram;
 
-class FS_Notification {
+class FS_Notification
+{
 	protected $recipients;
 	protected $subject;
 	protected $message;
@@ -23,21 +24,22 @@ class FS_Notification {
 	 * @return \WP_Error
 	 * @throws \WP_Error If the specified channel does not exist.
 	 */
-	public function send() {
-		foreach ( $this->channels as $channel ) {
+	public function send()
+	{
+		foreach ($this->channels as $channel) {
 			// check if method exists
-			if ( ! method_exists( __CLASS__, 'send_via_' . $channel ) ) {
-				return new \WP_Error( 'fs_invalid_channel', 'Channel ' . $channel . ' does not exist' );
+			if (! method_exists(__CLASS__, 'send_via_' . $channel)) {
+				return new \WP_Error('fs_invalid_channel', 'Channel ' . $channel . ' does not exist');
 			}
 			$this->{'send_via_' . $channel}();
 		}
-
 	}
 
 	/**
 	 * @param mixed $recipients
 	 */
-	public function set_recipients( array $recipients ): void {
+	public function set_recipients(array $recipients): void
+	{
 		$this->recipients = $recipients;
 	}
 
@@ -47,7 +49,8 @@ class FS_Notification {
 	 * @param mixed $attachment
 	 * @param mixed $message
 	 */
-	public function set_message( $message, $replace = [] ): void {
+	public function set_message($message, $replace = []): void
+	{
 		$this->replace = $replace;
 		$this->message = $message;
 	}
@@ -57,7 +60,8 @@ class FS_Notification {
 	 *
 	 * @param mixed $subject
 	 */
-	public function set_subject( $subject ): void {
+	public function set_subject($subject): void
+	{
 		$this->subject = $subject;
 	}
 
@@ -69,12 +73,13 @@ class FS_Notification {
 	 *
 	 * @return void
 	 */
-	public function set_template( $template, $replace = [] ): void {
+	public function set_template($template, $replace = []): void
+	{
 		$this->template = $template;
 		$this->replace  = $replace;
-		$this->message  = fs_frontend_template( $template, [
+		$this->message  = fs_frontend_template($template, [
 			'vars' => $replace
-		] );
+		]);
 	}
 
 	/**
@@ -82,17 +87,18 @@ class FS_Notification {
 	 *
 	 * @return bool|mixed
 	 */
-	private function send_via_email() {
+	private function send_via_email()
+	{
 		$headers = array(
 			sprintf(
 				'From: %s <%s>',
-				fs_option( 'name_sender', get_bloginfo( 'name' ) ),
-				fs_option( 'email_sender', 'shop@' . $_SERVER['SERVER_NAME'] )
+				fs_option('name_sender', get_bloginfo('name')),
+				fs_option('email_sender', 'shop@' . $_SERVER['SERVER_NAME'])
 			),
 			'Content-type: text/html; charset=utf-8'
 		);
 
-		return wp_mail( $this->recipients, $this->subject, $this->replace_mail_variables( $this->message ), $headers, $this->attachment );
+		return wp_mail($this->recipients, $this->subject, $this->replace_mail_variables($this->message), $headers, $this->attachment);
 	}
 
 	/**
@@ -100,25 +106,26 @@ class FS_Notification {
 	 *
 	 * @return void
 	 */
-	private function send_via_telegram() {
+	private function send_via_telegram()
+	{
 		$urlButton = [
-			'text' => __( 'View order', 'f-shop' ),
+			'text' => __('View order', 'f-shop'),
 			'url'  => $this->replace['order_edit_url'],
 		];
 
 		$telegram = new Telegram();
 		$message  = "<b>Нове замовлення №%order_id% на сайті %site_name%</b>\n\n";
 		$message  .= "<b>Сума замовлення:</b> %cart_amount%\n"
-		             . "<b>Спосіб доставки:</b> %delivery_method%\n"
-		             . "<b>Відділення:</b> %delivery_number%\n"
-		             . "<b>Адреса:</b> %client_address%\n"
-		             . "<b>Тип оплати:</b> %payment_method%\n"
-		             . "<b>Прізвище та ім’я:</b> %client_first_name% %client_last_name%\n"
-		             . "<b>E-mail:</b> %client_email%\n"
-		             . "<b>Телефон:</b> %client_phone%\n"
-		             . "<b>Коментар:</b> %client_comment%\n";
+			. "<b>Спосіб доставки:</b> %delivery_method%\n"
+			. "<b>Відділення:</b> %delivery_number%\n"
+			. "<b>Адреса:</b> %client_address%\n"
+			. "<b>Тип оплати:</b> %payment_method%\n"
+			. "<b>Прізвище та ім’я:</b> %client_first_name% %client_last_name%\n"
+			. "<b>E-mail:</b> %client_email%\n"
+			. "<b>Телефон:</b> %client_phone%\n"
+			. "<b>Коментар:</b> %client_comment%\n";
 
-		$telegram->send_message( $this->replace_mail_variables( $message ), $urlButton );
+		$telegram->send_message($this->replace_mail_variables($message), $urlButton);
 	}
 
 	/**
@@ -128,10 +135,11 @@ class FS_Notification {
 	 *
 	 * @return array|string|string[]
 	 */
-	function replace_mail_variables( $message ) {
-		return str_replace( array_map( function ( $item ) {
+	function replace_mail_variables($message)
+	{
+		return str_replace(array_map(function ($item) {
 			return '%' . $item . '%';
-		}, array_keys( $this->replace ) ), array_values( $this->replace ), $message );
+		}, array_keys($this->replace)), array_values($this->replace), $message);
 	}
 
 
@@ -142,7 +150,8 @@ class FS_Notification {
 	 *
 	 * @return void
 	 */
-	function push_channel( $channel ) {
+	function push_channel($channel)
+	{
 		$this->channels[] = $channel;
 	}
 }

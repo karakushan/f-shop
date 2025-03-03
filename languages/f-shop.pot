@@ -9,6 +9,66 @@ msgstr ""
 "POT-Creation-Date: 2025-02-22 19:26+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
+#: templates/front-end/mail/admin-create-order.php:424
+#: templates/front-end/mail/user-create-order.php:424
+msgid "Delivery method"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:425
+#: templates/front-end/mail/user-create-order.php:425
+msgid "Department number"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:426
+#: templates/front-end/mail/user-create-order.php:426
+msgid "City"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:428
+#: templates/front-end/mail/user-create-order.php:428
+msgid "Street"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:429
+#: templates/front-end/mail/user-create-order.php:429
+msgid "House"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:430
+#: templates/front-end/mail/user-create-order.php:430
+msgid "Entrance"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:431
+#: templates/front-end/mail/user-create-order.php:431
+msgid "Apartment"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:432
+#: templates/front-end/mail/user-create-order.php:432
+msgid "Full name"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:433
+#: templates/front-end/mail/user-create-order.php:433
+msgid "E-mail"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:434
+#: templates/front-end/mail/user-create-order.php:434
+msgid "Phone"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:445
+#: templates/front-end/mail/user-create-order.php:445
+msgid "Comment"
+msgstr ""
+
+#: templates/front-end/mail/admin-create-order.php:500
+#: templates/front-end/mail/user-create-order.php:500
+msgid "The online store works on"
+msgstr ""
+
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
 msgstr ""
@@ -22,10 +82,10 @@ msgstr ""
 
 #: lib/FS_Orders.php:207
 msgid ""
-"About all orders with the status of “New” administrator receives "
+"About all orders with the status of "New" administrator receives "
 "notification by mail, which allows him to immediately contact the buyer. For "
 "the convenience of accounting for new orders, they are automatically placed "
-"in the “New” tab on the order management panel and are displayed as a list, "
+"in the "New" tab on the order management panel and are displayed as a list, "
 "sorted by the date added."
 msgstr ""
 
@@ -347,7 +407,7 @@ msgid "By default"
 msgstr ""
 
 #: lib/FS_Settings.php:464
-msgid "By default, this is the site administrator’s e-mail"
+msgid "By default, this is the site administrator's e-mail"
 msgstr ""
 
 #: lib/FS_Settings.php:275
@@ -2169,7 +2229,7 @@ msgstr ""
 #: templates/front-end/widget/reset-filter/reset-filter.php:3
 #, php-format
 msgid "Selected: %s product"
-msgid_plural "Selected: %s products"
+id_plural "Selected: %s products"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2410,7 +2470,7 @@ msgstr ""
 #: lib/FS_Orders.php:211
 msgid ""
 "The order is accepted and can be paid. The status is introduced mainly for "
-"the convenience of internal order management, not “New”, but not yet paid or "
+"the convenience of internal order management, not "New", but not yet paid or "
 "not sent for delivery;"
 msgstr ""
 
@@ -3185,4 +3245,44 @@ msgid "Viewed products list has been cleared"
 msgstr ""
 
 msgid "Shipping Cost Text"
+msgstr ""
+
+# Email template strings
+msgid "Delivery method: %s"
+msgstr ""
+
+msgid "Department number: %s"
+msgstr ""
+
+msgid "City: %s"
+msgstr ""
+
+msgid "Address: %s"
+msgstr ""
+
+msgid "Street: %s"
+msgstr ""
+
+msgid "House: %s"
+msgstr ""
+
+msgid "Entrance: %s"
+msgstr ""
+
+msgid "Apartment: %s"
+msgstr ""
+
+msgid "Full name: %s %s"
+msgstr ""
+
+msgid "E-mail: %s"
+msgstr ""
+
+msgid "Phone: %s"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "The online store works on"
 msgstr ""

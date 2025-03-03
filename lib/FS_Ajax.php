@@ -971,7 +971,7 @@ class FS_Ajax
 			// We send a letter with order details to the customer
 			$notification->set_recipients([$sanitize_field['fs_email']]);
 			$notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($customer_mail_subject), $mail_data));
-			$notification->set_template('mail/' . get_locale() . '/user-create-order', $mail_data);
+			$notification->set_template('mail/user-create-order', $mail_data);
 			$notification->send();
 
 			// Send a letter to the admin
@@ -984,7 +984,7 @@ class FS_Ajax
 			if (count($admin_users) > 0) {
 				$notification->set_recipients($admin_users);
 				$notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($admin_mail_subject), $mail_data));
-				$notification->set_template('mail/' . get_locale() . '/admin-create-order', $mail_data);
+				$notification->set_template('mail/admin-create-order', $mail_data);
 				$notification->send();
 			}
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2025-02-22 19:27+0000\n"
+"PO-Revision-Date: 2025-03-03 13:42+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -44,12 +44,19 @@ msgstr ""
 "пароль: %password%. Якщо це були не ви, то проігноруйте цей лист."
 
 #: lib/FS_Orders.php:207
+#, fuzzy
+#| msgid ""
+#| "About all orders with the status of \"New\" administrator receives "
+#| "notification by mail, which allows him to immediately contact the buyer. "
+#| "For the convenience of accounting for new orders, they are automatically "
+#| "placed in the \"New\" tab on the order management panel and are displayed "
+#| "as a list, sorted by the date added."
 msgid ""
-"About all orders with the status of “New” administrator receives "
+"About all orders with the status of \"New\" administrator receives "
 "notification by mail, which allows him to immediately contact the buyer. For "
 "the convenience of accounting for new orders, they are automatically placed "
-"in the “New” tab on the order management panel and are displayed as a list, "
-"sorted by the date added."
+"in the \"New\" tab on the order management panel and are displayed as a list,"
+" sorted by the date added."
 msgstr ""
 "Про всі замовлення зі статусом \"Нове\" адміністратор отримує повідомлення "
 "на свою електрону пошту, що дозволяє йому відразу зв'язатися з покупцем. Для "
@@ -160,7 +167,7 @@ msgid "Add tax"
 msgstr "Додати податок"
 
 msgid "Add to cart"
-msgstr "До кошика"
+msgstr "Додати в кошик"
 
 msgid "Add to wishlist"
 msgstr "Додати до списку бажань"
@@ -201,12 +208,15 @@ msgstr "Додатково"
 msgid "Address"
 msgstr "Адреса"
 
+msgid "Address: %s"
+msgstr "Адреса: %s"
+
 #: lib/FS_Settings.php:306
 msgid "Adds a field for entering a slug in other languages"
 msgstr "Додає поле для введення мітки іншими мовами"
 
 msgid "All items have been added to the cart"
-msgstr "Всі товари було додано в кошик"
+msgstr "Всі товари додано до кошика"
 
 #: lib/FS_Cart.php:228
 msgid "All items have been successfully removed from the cart."
@@ -258,9 +268,17 @@ msgid ""
 "An unexpected error occurred while attaching the attribute to the product."
 msgstr "Під час приєднання атрибуту до товару виникла  помилка."
 
+#: templates/front-end/mail/admin-create-order.php:431
+#: templates/front-end/mail/user-create-order.php:431
+msgid "Apartment"
+msgstr "Квартира"
+
 #: lib/FS_Users.php:666 lib/FS_Users.php:669
 msgid "Apartment number"
 msgstr "Номер квартири"
+
+msgid "Apartment: %s"
+msgstr "Квартира: %s"
 
 #: lib/FS_Settings.php:430
 msgid "Appears from the side"
@@ -389,7 +407,9 @@ msgid "By default"
 msgstr "За замовчуванням"
 
 #: lib/FS_Settings.php:464
-msgid "By default, this is the site administrator’s e-mail"
+#, fuzzy
+#| msgid "By default, this is the site administrator's e-mail"
+msgid "By default, this is the site administrator's e-mail"
 msgstr "За замовчуванням це електронна пошта адміністратора сайту"
 
 #: lib/FS_Settings.php:275
@@ -536,6 +556,9 @@ msgstr "Виберіть спосіб доставки"
 msgid "City"
 msgstr "Місто"
 
+msgid "City: %s"
+msgstr "Місто: %s"
+
 #: lib/FS_Config.php:92
 msgid "Client"
 msgstr "Клієнт"
@@ -556,6 +579,9 @@ msgstr "колір"
 #: lib/FS_Taxonomy.php:1205 lib/FS_Taxonomy.php:1295
 msgid "Color value"
 msgstr "Значення кольору"
+
+msgid "Comment"
+msgstr "Коментар"
 
 #: lib/FS_Ajax.php:1483
 msgid "Comment ID not found"
@@ -759,6 +785,10 @@ msgstr "Адреса доставки"
 msgid "Delivery method"
 msgstr "Спосіб доставки"
 
+# Email template strings
+msgid "Delivery method: %s"
+msgstr "Спосіб доставки: %s"
+
 #: lib/FS_Taxonomy.php:887 lib/FS_Taxonomy.php:889 lib/FS_Users.php:688
 msgid "Delivery methods"
 msgstr "Способи доставки"
@@ -792,6 +822,14 @@ msgstr "Спосіб доставки"
 #: lib/FS_Orders.php:230
 msgid "Denied"
 msgstr "Відмовлено"
+
+#: templates/front-end/mail/admin-create-order.php:425
+#: templates/front-end/mail/user-create-order.php:425
+msgid "Department number"
+msgstr "Номер відділення"
+
+msgid "Department number: %s"
+msgstr "Номер відділення: %s"
 
 #: lib/FS_Product.php:772
 msgid "Description"
@@ -900,11 +938,14 @@ msgstr "Не показувати на сторінці каталогу"
 #: templates/back-end/metabox/order/show.php:24
 #: templates/back-end/metabox/order/edit.php:120
 msgid "E-mail"
-msgstr ""
+msgstr "Електронна пошта"
 
 #: lib/FS_Taxonomy.php:650
 msgid "E-mail message to the buyer if the order is confirmed by the manager"
 msgstr "Повідомлення на e-mail якщо замовлення прийнято менеджером магазину"
+
+msgid "E-mail: %s"
+msgstr "E-mail: %s"
 
 #: lib/FS_Post_Types.php:101
 msgid "Edit Email Template"
@@ -1010,6 +1051,14 @@ msgstr "Введіть назву"
 #: templates/back-end/metabox/select-product.php:30
 msgid "Enter product name, ID, SKU"
 msgstr "Введіть назву товару, ID або код виробника"
+
+#: templates/front-end/mail/admin-create-order.php:430
+#: templates/front-end/mail/user-create-order.php:430
+msgid "Entrance"
+msgstr "Під'їзд"
+
+msgid "Entrance: %s"
+msgstr "Під'їзд: %s"
 
 msgid "Error"
 msgstr "Помилка"
@@ -1136,6 +1185,14 @@ msgstr "Від дорогих до дешевих"
 msgid "from expensive to cheap"
 msgstr "від дорогих до дешевих"
 
+#: templates/front-end/mail/admin-create-order.php:432
+#: templates/front-end/mail/user-create-order.php:432
+msgid "Full name"
+msgstr "Повне ім'я"
+
+msgid "Full name: %s %s"
+msgstr "Повне ім'я: %s %s"
+
 #: lib/Admin/ProductEdit.php:132 lib/Admin/ProductEdit.php:136
 msgid "Gallery"
 msgstr "Галерея"
@@ -1199,9 +1256,17 @@ msgstr "Тут ви можете керувати додатковими дан�
 msgid "Hide items out of stock"
 msgstr "Сховати товари яких немає в наявності із каталогу товарів"
 
+#: templates/front-end/mail/admin-create-order.php:429
+#: templates/front-end/mail/user-create-order.php:429
+msgid "House"
+msgstr "Будинок"
+
 #: lib/FS_Users.php:655 lib/FS_Users.php:658
 msgid "House number"
 msgstr "Номер будинку"
+
+msgid "House: %s"
+msgstr "Будинок: %s"
 
 #. URI of the plugin
 #. Author URI of the plugin
@@ -1908,6 +1973,9 @@ msgstr "Телефон"
 msgid "Phone number"
 msgstr "Номер телефону"
 
+msgid "Phone: %s"
+msgstr "Телефон: %s"
+
 #: lib/FS_Init.php:270 functions/filters.php:44
 #: templates/front-end/shortcode/fs-order-info.php:14
 #: templates/front-end/shortcode/order-detail.php:15
@@ -2091,7 +2159,7 @@ msgstr "Характеристики товаров на которые расп
 
 #: lib/FS_Settings.php:542
 msgid "Published on the website so that buyers can contact you"
-msgstr "Відображається на веб-сайті, щоб покупці могли з вами зв’язатися"
+msgstr "Відображається на веб-сайті, щоб покупці могли з вами зв'язатися"
 
 #: templates/front-end/shortcode/fs-order-info.php:8
 msgid "Purchased goods"
@@ -2212,7 +2280,7 @@ msgstr "обов'язкове"
 
 #: lib/FS_Taxonomy.php:693
 msgid "Required fields when choosing this delivery method"
-msgstr "Обов’язкові поля при виборі цього способу доставки"
+msgstr "Обов'язкові поля при виборі цього способу доставки"
 
 #: templates/front-end/widget/reset-filter/reset-filter.php:8
 msgid "Reset all"
@@ -2291,12 +2359,9 @@ msgid "selected"
 msgstr "вибрано"
 
 #: templates/front-end/widget/reset-filter/reset-filter.php:3
-#, php-format
+#, fuzzy, php-format
 msgid "Selected: %s product"
-msgid_plural "Selected: %s products"
-msgstr[0] "Вибрано: %s товар"
-msgstr[1] "Вибрано: %s товари"
-msgstr[2] "Вибрано: %s товарів"
+msgstr "Вибрано: %s товар"
 
 #: templates/front-end/order/quick-order.php:13
 #: templates/front-end/auth/register.php:30
@@ -2349,7 +2414,7 @@ msgid "Shipping Cost in Base Currency"
 msgstr "Вартість доставки в основній валюті"
 
 msgid "Shipping Cost Text"
-msgstr "Вартість доставки текст"
+msgstr "Текст вартості доставки"
 
 #: lib/FS_Ajax.php:1077
 msgid "Shipping method not found"
@@ -2404,7 +2469,7 @@ msgid "Space is not allow in password"
 msgstr "У паролі заборонений пробіл"
 
 msgid "Standard order"
-msgstr "Звичайне замовлення"
+msgstr "Стандартне замовлення"
 
 #: lib/FS_Users.php:540 lib/FS_Users.php:544
 msgid "State"
@@ -2440,6 +2505,14 @@ msgstr "Зберігати налаштування посилань"
 #: lib/FS_Settings.php:759 lib/FS_Settings.php:760 lib/FS_Settings.php:837
 msgid "Store settings"
 msgstr "Налаштування магазину"
+
+#: templates/front-end/mail/admin-create-order.php:428
+#: templates/front-end/mail/user-create-order.php:428
+msgid "Street"
+msgstr "Вулиця"
+
+msgid "Street: %s"
+msgstr "Вулиця: %s"
 
 #: lib/FS_Customers_List.php:170 lib/FS_Users.php:761
 msgid "Subscribe"
@@ -2483,7 +2556,7 @@ msgid "text"
 msgstr "текст"
 
 msgid "Thank you for your order"
-msgstr "Дякуємо за замовлення"
+msgstr "Дякуємо за ваше замовлення"
 
 #: lib/FS_Config.php:122
 msgid "Thank you for your purchase."
@@ -2558,14 +2631,22 @@ msgstr ""
 msgid "The online store works for"
 msgstr "Інтернет-магазин працює на"
 
+msgid "The online store works on"
+msgstr "Інтернет-магазин працює на"
+
 #: lib/FS_Orders.php:211
+#, fuzzy
+#| msgid ""
+#| "The order is accepted and can be paid. The status is introduced mainly "
+#| "for the convenience of internal order management, not \"New\", but not "
+#| "yet paid or not sent for delivery;"
 msgid ""
 "The order is accepted and can be paid. The status is introduced mainly for "
-"the convenience of internal order management, not “New”, but not yet paid or "
-"not sent for delivery;"
+"the convenience of internal order management, not \"New\", but not yet paid "
+"or not sent for delivery;"
 msgstr ""
 "Замовлення прийнято і може бути оплачене. Статус вводиться в основному для "
-"зручності внутрішнього управління замовленнями, а не “Новий”, але ще не "
+"зручності внутрішнього управління замовленнями, а не \"Новий\", але ще не "
 "оплачений або не відправлений на доставку;"
 
 #: lib/FS_Order.php:636
@@ -2623,7 +2704,7 @@ msgid ""
 "courier and paid in cash, the status can be used as a reporting;"
 msgstr ""
 "Статус присвоюється замовленню автоматично, якщо розрахунки здійснюються "
-"через платіжну систему онлайн. Якщо товари були доставлені кур’єром і "
+"через платіжну систему онлайн. Якщо товари були доставлені кур'єром і "
 "оплачені готівкою, то також можна присвоїти цей статус;"
 
 #: lib/FS_Settings.php:497

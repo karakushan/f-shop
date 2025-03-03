@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2025-02-22 19:27+0000\n"
+"PO-Revision-Date: 2025-03-03 13:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -28,7 +28,7 @@ msgstr ""
 
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
-msgstr ""
+msgstr "№"
 
 msgid "%s review"
 msgstr "%s отзыв"
@@ -54,12 +54,19 @@ msgstr ""
 "%password%. Если это были не вы, то проигнорируйте данное письмо."
 
 #: lib/FS_Orders.php:207
+#, fuzzy
+#| msgid ""
+#| "About all orders with the status of \"New\" administrator receives "
+#| "notification by mail, which allows him to immediately contact the buyer. "
+#| "For the convenience of accounting for new orders, they are automatically "
+#| "placed in the \"New\" tab on the order management panel and are displayed "
+#| "as a list, sorted by the date added."
 msgid ""
-"About all orders with the status of “New” administrator receives "
+"About all orders with the status of \"New\" administrator receives "
 "notification by mail, which allows him to immediately contact the buyer. For "
 "the convenience of accounting for new orders, they are automatically placed "
-"in the “New” tab on the order management panel and are displayed as a list, "
-"sorted by the date added."
+"in the \"New\" tab on the order management panel and are displayed as a list,"
+" sorted by the date added."
 msgstr ""
 "О всех заказах со статусом «Новый» администратор получает уведомление по "
 "почте, что позволяет ему немедленно связаться с покупателем. Для удобства "
@@ -211,6 +218,9 @@ msgstr "Дополнительно"
 msgid "Address"
 msgstr "Адрес"
 
+msgid "Address: %s"
+msgstr "Адрес: %s"
+
 #: lib/FS_Settings.php:306
 msgid "Adds a field for entering a slug in other languages"
 msgstr "Добавляет поле для ввода словаря на других языках"
@@ -268,9 +278,17 @@ msgid ""
 "An unexpected error occurred while attaching the attribute to the product."
 msgstr "Возникла ошибка при прикреплении атрибута к товару."
 
+#: templates/front-end/mail/admin-create-order.php:431
+#: templates/front-end/mail/user-create-order.php:431
+msgid "Apartment"
+msgstr "Квартира"
+
 #: lib/FS_Users.php:666 lib/FS_Users.php:669
 msgid "Apartment number"
 msgstr "Номер квартиры"
+
+msgid "Apartment: %s"
+msgstr "Квартира: %s"
 
 #: lib/FS_Settings.php:430
 msgid "Appears from the side"
@@ -302,7 +320,7 @@ msgstr "Характеристика добавлена"
 
 #: lib/FS_Ajax.php:1260
 msgid "Attribute ID not found"
-msgstr ""
+msgstr "ID атрибута не найден"
 
 #: lib/FS_Ajax.php:1189
 msgid "Attribute removed"
@@ -332,7 +350,7 @@ msgstr "Аватар"
 
 #: templates/front-end/product/comments.php:36
 msgid "average score"
-msgstr ""
+msgstr "средняя оценка"
 
 msgid "Back to home"
 msgstr "На главную"
@@ -399,7 +417,9 @@ msgid "By default"
 msgstr "По умолчанию"
 
 #: lib/FS_Settings.php:464
-msgid "By default, this is the site administrator’s e-mail"
+#, fuzzy
+#| msgid "By default, this is the site administrator's e-mail"
+msgid "By default, this is the site administrator's e-mail"
 msgstr "По умолчанию это e-mail администратора сайта"
 
 #: lib/FS_Settings.php:275
@@ -546,6 +566,9 @@ msgstr "Выберите способ доставки"
 msgid "City"
 msgstr "Город"
 
+msgid "City: %s"
+msgstr "Город: %s"
+
 #: lib/FS_Config.php:92
 msgid "Client"
 msgstr "Клиент"
@@ -567,13 +590,16 @@ msgstr "цвет"
 msgid "Color value"
 msgstr "Значение цвета"
 
+msgid "Comment"
+msgstr "Комментарий"
+
 #: lib/FS_Ajax.php:1483
 msgid "Comment ID not found"
-msgstr ""
+msgstr "ID комментария не найден"
 
 #: lib/FS_Ajax.php:1392
 msgid "Comment is required"
-msgstr ""
+msgstr "Комментарий обязателен"
 
 #: lib/FS_Users.php:741 lib/FS_Users.php:744
 msgid "Comment on the order"
@@ -769,6 +795,10 @@ msgstr "Адрес доставки"
 msgid "Delivery method"
 msgstr "Способ доставки"
 
+# Email template strings
+msgid "Delivery method: %s"
+msgstr "Способ доставки: %s"
+
 #: lib/FS_Taxonomy.php:887 lib/FS_Taxonomy.php:889 lib/FS_Users.php:688
 msgid "Delivery methods"
 msgstr "Способы доставки"
@@ -802,6 +832,14 @@ msgstr "Способ доставки"
 #: lib/FS_Orders.php:230
 msgid "Denied"
 msgstr "Отказан"
+
+#: templates/front-end/mail/admin-create-order.php:425
+#: templates/front-end/mail/user-create-order.php:425
+msgid "Department number"
+msgstr "Номер отделения"
+
+msgid "Department number: %s"
+msgstr "Номер отделения: %s"
 
 #: lib/FS_Product.php:772
 msgid "Description"
@@ -910,11 +948,14 @@ msgstr "Не показывать на странице каталога"
 #: templates/back-end/metabox/order/show.php:24
 #: templates/back-end/metabox/order/edit.php:120
 msgid "E-mail"
-msgstr ""
+msgstr "Электронная почта"
 
 #: lib/FS_Taxonomy.php:650
 msgid "E-mail message to the buyer if the order is confirmed by the manager"
 msgstr "Сообщение на e-mail покупателю, если заказ подтвержден менеджером"
+
+msgid "E-mail: %s"
+msgstr "E-mail: %s"
 
 #: lib/FS_Post_Types.php:101
 msgid "Edit Email Template"
@@ -1018,6 +1059,14 @@ msgstr "Введите назввание"
 #: templates/back-end/metabox/select-product.php:30
 msgid "Enter product name, ID, SKU"
 msgstr "Введите название товара, ID или артикул"
+
+#: templates/front-end/mail/admin-create-order.php:430
+#: templates/front-end/mail/user-create-order.php:430
+msgid "Entrance"
+msgstr "Подъезд"
+
+msgid "Entrance: %s"
+msgstr "Подъезд: %s"
 
 msgid "Error"
 msgstr "Ошибка"
@@ -1145,6 +1194,14 @@ msgstr "От дорогих к дешевым"
 msgid "from expensive to cheap"
 msgstr "от дорогих к дешевым"
 
+#: templates/front-end/mail/admin-create-order.php:432
+#: templates/front-end/mail/user-create-order.php:432
+msgid "Full name"
+msgstr "Полное имя"
+
+msgid "Full name: %s %s"
+msgstr "Полное имя: %s %s"
+
 #: lib/Admin/ProductEdit.php:132 lib/Admin/ProductEdit.php:136
 msgid "Gallery"
 msgstr "Галерея"
@@ -1208,9 +1265,17 @@ msgstr "Здесь Вы можете изменить дополнительны
 msgid "Hide items out of stock"
 msgstr "Скрыть товары товары которых нет на складе"
 
+#: templates/front-end/mail/admin-create-order.php:429
+#: templates/front-end/mail/user-create-order.php:429
+msgid "House"
+msgstr "Дом"
+
 #: lib/FS_Users.php:655 lib/FS_Users.php:658
 msgid "House number"
 msgstr "Номер дома"
+
+msgid "House: %s"
+msgstr "Дом: %s"
 
 #. URI of the plugin
 #. Author URI of the plugin
@@ -1350,7 +1415,7 @@ msgid "International currency code"
 msgstr "Международный код валюты"
 
 msgid "Invalid phone number"
-msgstr "Неправильный формат номера телефона"
+msgstr "Неверный номер телефона"
 
 #: templates/back-end/metabox/order/show.php:8
 msgid "IP"
@@ -1656,7 +1721,7 @@ msgid "Novelty"
 msgstr "Новинка"
 
 msgid "Now you can continue shopping."
-msgstr "Теперь вы можете продолжить покупки"
+msgstr "Теперь вы можете продолжить покупки."
 
 #: lib/FS_Settings.php:233
 msgid "Number of products per page"
@@ -1916,6 +1981,9 @@ msgstr "Телефон"
 msgid "Phone number"
 msgstr "Номер телефона"
 
+msgid "Phone: %s"
+msgstr "Телефон: %s"
+
 #: lib/FS_Init.php:270 functions/filters.php:44
 #: templates/front-end/shortcode/fs-order-info.php:14
 #: templates/front-end/shortcode/order-detail.php:15
@@ -2082,7 +2150,7 @@ msgstr ""
 
 #: templates/back-end/metabox/variants.php:60
 msgid "Promo Price"
-msgstr ""
+msgstr "Акционная цена"
 
 #: lib/FS_Config.php:62 lib/Admin/ProductEdit.php:107
 #: templates/back-end/metabox/product-variations/add-variation.php:62
@@ -2299,12 +2367,9 @@ msgid "selected"
 msgstr "выбрано"
 
 #: templates/front-end/widget/reset-filter/reset-filter.php:3
-#, php-format
+#, fuzzy, php-format
 msgid "Selected: %s product"
-msgid_plural "Selected: %s products"
-msgstr[0] "Выбран: %s товар"
-msgstr[1] "Выбрано: %s товара"
-msgstr[2] "Выбрано: %s товаров"
+msgstr "Выбран: %s товар"
 
 #: templates/front-end/order/quick-order.php:13
 #: templates/front-end/auth/register.php:30
@@ -2357,7 +2422,7 @@ msgid "Shipping Cost in Base Currency"
 msgstr "Стоимость доставки в базовой валюте"
 
 msgid "Shipping Cost Text"
-msgstr "Стоимость доставки текст"
+msgstr "Текст стоимости доставки"
 
 #: lib/FS_Ajax.php:1077
 msgid "Shipping method not found"
@@ -2448,6 +2513,14 @@ msgstr "Настройки ссылок магазина"
 #: lib/FS_Settings.php:759 lib/FS_Settings.php:760 lib/FS_Settings.php:837
 msgid "Store settings"
 msgstr "Настройки магазина"
+
+#: templates/front-end/mail/admin-create-order.php:428
+#: templates/front-end/mail/user-create-order.php:428
+msgid "Street"
+msgstr "Улица"
+
+msgid "Street: %s"
+msgstr "Улица: %s"
 
 #: lib/FS_Customers_List.php:170 lib/FS_Users.php:761
 msgid "Subscribe"
@@ -2567,11 +2640,19 @@ msgstr "Максимальный размер файла 10 Мб."
 msgid "The online store works for"
 msgstr "Интернет магазин работает на"
 
+msgid "The online store works on"
+msgstr "Интернет магазин работает на"
+
 #: lib/FS_Orders.php:211
+#, fuzzy
+#| msgid ""
+#| "The order is accepted and can be paid. The status is introduced mainly "
+#| "for the convenience of internal order management, not \"New\", but not "
+#| "yet paid or not sent for delivery;"
 msgid ""
 "The order is accepted and can be paid. The status is introduced mainly for "
-"the convenience of internal order management, not “New”, but not yet paid or "
-"not sent for delivery;"
+"the convenience of internal order management, not \"New\", but not yet paid "
+"or not sent for delivery;"
 msgstr ""
 "Заказ принят и может быть оплачен. Статус вводится в основном для удобства "
 "внутреннего управления заказами, а не «Новый», но еще не оплачен или не "
@@ -3112,7 +3193,7 @@ msgid "Your name"
 msgstr "Ваше имя"
 
 msgid "Your order #%d has been placed. We will contact you shortly."
-msgstr "Ваш заказ #%d был размещен. Мы свяжемся с вами в ближайшее время."
+msgstr "Ваш заказ #%d размещен. Мы свяжемся с вами в ближайшее время."
 
 #: lib/FS_Orders.php:342
 msgid ""

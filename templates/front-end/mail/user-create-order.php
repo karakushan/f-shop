@@ -369,15 +369,15 @@
                         <tr>
                             <td class="header-lg">
                                 <?=
-                                /** @var string $admin_mail_title */
-                                $admin_mail_title ?>
+                                /** @var string $customer_mail_title */
+                                $customer_mail_title ?>
                             </td>
                         </tr>
                         <tr>
                             <td class="free-text">
                                 <?=
-                                /** @var string $admin_mail_message */
-                                $admin_mail_message ?>
+                                /** @var string $customer_mail_message */
+                                $customer_mail_message ?>
                                 <br />
                                 <?php if (! empty($client_phone) && ! empty($clean_number)): ?>
                                     <a
@@ -394,8 +394,8 @@
                                 <div><!--[if mso]>
                                 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
                                              xmlns:w="urn:schemas-microsoft-com:office:word" href="<?php
-                                                                                                    /** @var string $order_edit_url */
-                                                                                                    echo $order_edit_url ?>"
+                                                                                                    /** @var string $dashboard_url */
+                                                                                                    echo $dashboard_url ?>"
                                              style="height:45px;v-text-anchor:middle;width:155px;" arcsize="15%"
                                              strokecolor="#ffffff" fillcolor="#ff6f6f">
                                     <w:anchorlock/>
@@ -403,7 +403,7 @@
                                         <?= __('View order', 'f-shop') ?>
                                     </center>
                                 </v:roundrect>
-                                <![endif]--><a href="<?= $order_edit_url ?>"
+                                <![endif]--><a href="<?= $dashboard_url ?>"
                                         style="background-color:#ff6f6f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;"><?= __('View order', 'f-shop') ?></a>
                                 </div>
                             </td>
@@ -421,17 +421,17 @@
                                                             <tr>
                                                                 <td class="mini-block">
                                                                     <span class="header-sm"><?= __('Delivery', 'f-shop') ?></span><br />
-                                                                    <?= ! empty($delivery_method) ? sprintf('Спосіб доставки: %s<br>', $delivery_method) : '' ?>
-                                                                    <?= ! empty($delivery_number) ? sprintf('Номер відділення: %s<br>', $delivery_number) : '' ?>
-                                                                    <?= ! empty($client_city) ? sprintf('Місто: %s<br>', $client_city) : '' ?>
-                                                                    <?= ! empty($client_address) ? sprintf('Адреса: %s<br>', $client_address) : '' ?>
-                                                                    <?= ! empty($address_street) ? sprintf('Вулиця: %s<br>', $address_street) : '' ?>
-                                                                    <?= ! empty($address_house_number) ? sprintf('Будинок: %s<br>', $address_house_number) : '' ?>
-                                                                    <?= ! empty($address_entrance_number) ? sprintf('Під’їзд: %s<br>', $address_entrance_number) : '' ?>
-                                                                    <?= ! empty($address_apartment_number) ? sprintf('Квартира: %s<br>', $address_apartment_number) : '' ?>
-                                                                    <?= ! empty($client_last_name) || ! empty($client_first_name) ? sprintf('Прізвище та ім’я: %s %s<br>', $client_last_name ?? '', $client_first_name ?? '') : '' ?>
-                                                                    <?= ! empty($client_email) ? sprintf('E-mail: %s<br>', $client_email) : '' ?>
-                                                                    <?= ! empty($client_phone) ? sprintf('Телефон: %s<br>', $client_phone) : '' ?>
+                                                                    <?= !empty($delivery_method) ? sprintf(__('Delivery method: %s', 'f-shop'), $delivery_method) . '<br>' : '' ?>
+                                                                    <?= !empty($delivery_number) ? sprintf(__('Department number: %s', 'f-shop'), $delivery_number) . '<br>' : '' ?>
+                                                                    <?= !empty($client_city) ? sprintf(__('City: %s', 'f-shop'), $client_city) . '<br>' : '' ?>
+                                                                    <?= !empty($client_address) ? sprintf(__('Address: %s', 'f-shop'), $client_address) . '<br>' : '' ?>
+                                                                    <?= !empty($address_street) ? sprintf(__('Street: %s', 'f-shop'), $address_street) . '<br>' : '' ?>
+                                                                    <?= !empty($address_house_number) ? sprintf(__('House: %s', 'f-shop'), $address_house_number) . '<br>' : '' ?>
+                                                                    <?= !empty($address_entrance_number) ? sprintf(__('Entrance: %s', 'f-shop'), $address_entrance_number) . '<br>' : '' ?>
+                                                                    <?= !empty($address_apartment_number) ? sprintf(__('Apartment: %s', 'f-shop'), $address_apartment_number) . '<br>' : '' ?>
+                                                                    <?= !empty($client_last_name) || !empty($client_first_name) ? sprintf(__('Full name: %s %s', 'f-shop'), $client_last_name ?? '', $client_first_name ?? '') . '<br>' : '' ?>
+                                                                    <?= !empty($client_email) ? sprintf(__('E-mail: %s', 'f-shop'), $client_email) . '<br>' : '' ?>
+                                                                    <?= !empty($client_phone) ? sprintf(__('Phone: %s', 'f-shop'), $client_phone) . '<br>' : '' ?>
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -454,7 +454,7 @@
                                                                     <?=
                                                                     /** @var string $order_date */
                                                                     $order_date ?><br />
-                                                                    <span class="header-sm">Коментар</span><br />
+                                                                    <span class="header-sm"><?= __('Comment', 'f-shop') ?></span><br />
                                                                     <?=
                                                                     /** @var string $client_comment */
                                                                     $client_comment ?>
@@ -526,42 +526,51 @@
                                     <?php endforeach; ?>
 
                                     <tr>
-                                        <td class="item-col item mobile-row-padding"></td>
-                                        <td class="item-col quantity"></td>
-                                        <td class="item-col price"></td>
-                                    </tr>
-
-                                    <tr>
                                         <td class="item-col item">
                                         </td>
-                                        <td class="item-col quantity"
-                                            style="text-align:right; padding-right: 10px; border-top: 1px solid #cccccc;">
-                                            <span class="total-space"><?= __('Cost of goods', 'f-shop') ?></span> <br />
-                                            <span class="total-space"><?= __('Cost of delivery', 'f-shop') ?></span> <br />
-                                            <span class="total-space"><?= __('Discount', 'f-shop') ?></span> <br />
-                                            <span class="total-space"><?= __('Packing', 'f-shop') ?></span> <br />
-                                            <span class="total-space"
-                                                style="font-weight: bold; color: #4d4d4d"><?= __('Total', 'f-shop') ?></span>
-                                        </td>
-                                        <td class="item-col price" style="text-align: left; border-top: 1px solid #cccccc;">
-                                            <span class="total-space">
-                                                <?=
-                                                /** @var string $products_cost */
-                                                $products_cost ?>
-                                            </span> <br />
-                                            <span class="total-space"><?=
-                                                                        /** @var string $delivery_cost */
-                                                                        $delivery_cost ?></span> <br />
-                                            <span class="total-space"><?=
-                                                                        /** @var string $cart_discount */
-                                                                        $cart_discount ?></span> <br />
-                                            <span class="total-space"><?=
-                                                                        /** @var string $packing_cost */
-                                                                        $packing_cost ?></span> <br />
-                                            <span class="total-space"
-                                                style="font-weight:bold; color: #4d4d4d"><?=
-                                                                                            /** @var string $cart_amount */
-                                                                                            $cart_amount ?></span>
+                                        <td class="item-col quantity" colspan="2" style="border-top: 1px solid #cccccc;">
+                                            <table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:separate !important;">
+                                                <tr>
+                                                    <td style="width: 70%; text-align: right; padding: 8px 15px 8px 0;">
+                                                        <?= __('Cost of goods', 'f-shop') ?>
+                                                    </td>
+                                                    <td style="width: 30%; text-align: right; padding: 8px 0;">
+                                                        <?= $products_cost ?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 70%; text-align: right; padding: 8px 15px 8px 0;">
+                                                        <?= __('Cost of delivery', 'f-shop') ?>
+                                                    </td>
+                                                    <td style="width: 30%; text-align: right; padding: 8px 0;">
+                                                        <?= $delivery_cost ?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 70%; text-align: right; padding: 8px 15px 8px 0;">
+                                                        <?= __('Discount', 'f-shop') ?>
+                                                    </td>
+                                                    <td style="width: 30%; text-align: right; padding: 8px 0;">
+                                                        <?= $cart_discount ?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 70%; text-align: right; padding: 8px 15px 8px 0;">
+                                                        <?= __('Packing', 'f-shop') ?>
+                                                    </td>
+                                                    <td style="width: 30%; text-align: right; padding: 8px 0;">
+                                                        <?= $packing_cost ?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 70%; text-align: right; padding: 8px 15px 8px 0; font-weight: bold; color: #4d4d4d">
+                                                        <?= __('Total', 'f-shop') ?>
+                                                    </td>
+                                                    <td style="width: 30%; text-align: right; padding: 8px 0; font-weight: bold; color: #4d4d4d">
+                                                        <?= $cart_amount ?>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </td>
                                     </tr>
                                 </table>
@@ -577,7 +586,7 @@
                     <table cellspacing="0" cellpadding="0" width="600" class="w320">
                         <tr>
                             <td style="padding: 25px 0 25px">
-                                <?= __('The online store works for', 'f-shop') ?> <strong><a
+                                <?= __('The online store works on', 'f-shop') ?> <strong><a
                                         href="https://f-shop.top/"
                                         target="_blank">F-SHOP</a></strong>
                             </td>
