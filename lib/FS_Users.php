@@ -1016,11 +1016,6 @@ class FS_Users
 		$user_fields = self::get_user_fields();
 		$user_id = get_current_user_id();
 
-		// Подключаем необходимые файлы для работы с медиа
-		require_once(ABSPATH . 'wp-admin/includes/image.php');
-		require_once(ABSPATH . 'wp-admin/includes/file.php');
-		require_once(ABSPATH . 'wp-admin/includes/media.php');
-
 		// Проверяем наличие полей и пользователя
 		if (!is_array($user_fields) || empty($user_fields)) {
 			wp_send_json_error([
@@ -1034,14 +1029,25 @@ class FS_Users
 			]);
 		}
 
+		// Фильтруем все поля, оставляя только те, которые зарегистрированы в user_fields
+		$allowed_field_keys = array_keys($user_fields);
+
+		// Фильтруем POST данные, оставляя только разрешенные поля
+		$post_data = array_intersect_key($_POST, array_flip($allowed_field_keys));
+
+		// Подключаем необходимые файлы для работы с медиа
+		require_once(ABSPATH . 'wp-admin/includes/image.php');
+		require_once(ABSPATH . 'wp-admin/includes/file.php');
+		require_once(ABSPATH . 'wp-admin/includes/media.php');
+
 		// Обработка частичной валидации полей
 		if (!empty($_POST['fs_validate_only'])) {
 			$validated_keys = explode(',', $_POST['fs_validate_only']);
-			$user_fields = $this->prepare_fields_for_validation($user_fields, $validated_keys);
+			$post_data = array_intersect_key($post_data, array_flip($validated_keys));
 		}
 
 		// Валидация данных
-		$validation_result = $this->validate_user_data($_POST);
+		$validation_result = $this->validate_user_data($post_data);
 
 		if (!empty($validation_result['errors'])) {
 			wp_send_json_error([
@@ -1071,37 +1077,6 @@ class FS_Users
 		wp_send_json_success([
 			'msg' => __('Your data has been successfully updated.', 'f-shop')
 		]);
-	}
-
-	/**
-	 * Prepares fields for partial validation
-	 *
-	 * @param array $user_fields All user fields
-	 * @param array $validated_keys Keys of fields to validate
-	 * @return array Filtered fields
-	 */
-	private function prepare_fields_for_validation($user_fields, $validated_keys)
-	{
-		foreach ($validated_keys as $key) {
-			if (!isset($_POST[$key]) && isset($user_fields[$key])) {
-				$_POST[$key] = $this->get_default_field_value($user_fields[$key]);
-			}
-		}
-
-		return array_filter($user_fields, function ($key) use ($validated_keys) {
-			return in_array($key, $validated_keys);
-		}, ARRAY_FILTER_USE_KEY);
-	}
-
-	/**
-	 * Returns default value for a field
-	 *
-	 * @param array $field Field configuration
-	 * @return mixed Default value
-	 */
-	private function get_default_field_value($field)
-	{
-		return $field['type'] === 'checkbox' ? 0 : '';
 	}
 
 	/**

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2025-03-03 13:41+0000\n"
+"PO-Revision-Date: 2025-03-04 10:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -664,7 +664,7 @@ msgstr "Стоимость в базвовой валюте"
 #: templates/front-end/mail/user-create-order.php:533
 #: templates/front-end/mail/admin-create-order.php:533
 msgid "Cost of delivery"
-msgstr ""
+msgstr "Стоимость доставки"
 
 #: lib/FS_Init.php:263 templates/front-end/mail/user-create-order.php:532
 #: templates/front-end/mail/admin-create-order.php:532
@@ -735,7 +735,7 @@ msgstr "Дата покупки"
 #: templates/front-end/mail/user-create-order.php:451
 #: templates/front-end/mail/admin-create-order.php:451
 msgid "Date Ordered"
-msgstr ""
+msgstr "Дата и время заказа"
 
 #: lib/FS_Settings.php:736
 msgid "Default currency"
@@ -1436,7 +1436,7 @@ msgstr "Похоже, ваш сайт еще не посещался."
 #: templates/front-end/mail/user-create-order.php:479
 #: templates/front-end/mail/admin-create-order.php:479
 msgid "Item"
-msgstr ""
+msgstr "Позиция"
 
 #: lib/FS_Init.php:168 lib/FS_Init.php:171
 msgid "Item &laquo;%product%&raquo; successfully added to cart."
@@ -2881,7 +2881,7 @@ msgstr "В список желаний"
 #: templates/front-end/mail/admin-create-order.php:485
 #: templates/front-end/mail/admin-create-order.php:537
 msgid "Total"
-msgstr "Общий"
+msgstr "Всего"
 
 #: templates/front-end/shortcode/fs-order-info.php:38
 #: templates/front-end/shortcode/list-orders.php:11

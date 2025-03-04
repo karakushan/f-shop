@@ -1763,30 +1763,76 @@ function fs_frontend_template($template, $args = array(), $extension = '.php')
 }
 
 
+/**
+ * Gets current user data with additional meta fields
+ *
+ * Retrieves WordPress user object and enhances it with custom meta fields
+ * from the F-Shop plugin.
+ *
+ * @since 1.0.0
+ * @return WP_User|null Enhanced user object or null if user doesn't exist
+ */
 function fs_get_current_user()
 {
 	$user = wp_get_current_user();
 	if ($user->exists()) {
 		$profile_update = empty($user->profile_update) ? strtotime($user->user_registered) : $user->profile_update;
-		$user->email    = $user->user_email;
-		$user->phone    = FS_Users::get_user_field('fs_phone');
-		$user->city     = FS_Users::get_user_field('fs_city');
-		$user->address  = FS_Users::get_user_field('fs_address');
-		$user->gender   = FS_Users::get_user_field('fs_gender');
-		$user->country  = FS_Users::get_user_field('fs_country');
-		$user->region   = FS_Users::get_user_field('fs_region');
+
+		// Basic user data
+		$user->email = $user->user_email;
 		$user->first_name = FS_Users::get_user_field('fs_first_name');
 		$user->last_name = FS_Users::get_user_field('fs_last_name');
-		//		$user->birth_day          = FS_Users::get_user_field('fs_address');
-		//		if ( ! empty( $user->birth_day ) ) {
-		//			$user->birth_day = $user->birth_day;
-		//		}
+
+		// Contact information
+		$user->phone = FS_Users::get_user_field('fs_phone');
+		$user->email = $user->user_email;
+
+		// Location data
+		$user->country = FS_Users::get_user_field('fs_country');
+		$user->region = FS_Users::get_user_field('fs_region');
+		$user->city = FS_Users::get_user_field('fs_city');
+		$user->address = FS_Users::get_user_field('fs_address');
+		$user->zip_code = FS_Users::get_user_field('fs_zip_code');
+
+		// Additional address fields
+		$user->street = FS_Users::get_user_field('fs_street');
+		$user->home_num = FS_Users::get_user_field('fs_home_num');
+		$user->apartment_num = FS_Users::get_user_field('fs_apartment_num');
+		$user->entrance_num = FS_Users::get_user_field('fs_entrance_num');
+
+		// Shipping information
+		$user->shipping_method_id = FS_Users::get_user_field('fs_delivery_methods');
+		$user->delivery_number = FS_Users::get_user_field('fs_delivery_number');
+
+		// Alternative shipping address
+		$user->other_shipping_address = FS_Users::get_user_field('fs_other_shipping_address');
+		$user->shipping_name = FS_Users::get_user_field('fs_shipping_name');
+		$user->shipping_first_name = FS_Users::get_user_field('fs_shipping_first_name');
+		$user->shipping_last_name = FS_Users::get_user_field('fs_shipping_last_name');
+		$user->shipping_email = FS_Users::get_user_field('fs_shipping_email');
+		$user->shipping_phone = FS_Users::get_user_field('fs_shipping_phone');
+		$user->shipping_address = FS_Users::get_user_field('fs_shipping_address');
+		$user->shipping_city = FS_Users::get_user_field('fs_shipping_city');
+		$user->shipping_state = FS_Users::get_user_field('fs_shipping_state');
+		$user->shipping_zip = FS_Users::get_user_field('fs_shipping_zip');
+
+		// Payment information
+		$user->payment_method_id = FS_Users::get_user_field('fs_payment_methods');
+
+		// Personal information
+		$user->gender = FS_Users::get_user_field('fs_gender');
+		$user->avatar = FS_Users::get_user_field('fs_user_avatar');
+
+		// Subscription preferences  
+		$user->subscribe_news = FS_Users::get_user_field('fs_subscribe_news');
+		$user->subscribe_cart = FS_Users::get_user_field('fs_subscribe_cart');
+
+		// Profile metadata
 		$user->profile_update = $profile_update;
 	}
 
 	return $user;
 }
-
 
 function fs_page_content()
 {
@@ -3512,10 +3558,10 @@ if (! function_exists('fs_convert_cyr_name')) {
 			"У" => "u",
 			"Ф" => "f",
 			"Х" => "kh",
-			"Ц" => "ts",
+			"Ц" => "c",
 			"Ч" => "ch",
 			"Ш" => "sh",
-			"Щ" => "sch",
+			"Щ" => "shch",
 			"Ъ" => "",
 			"Ы" => "y",
 			"Ь" => "",
@@ -3545,10 +3591,10 @@ if (! function_exists('fs_convert_cyr_name')) {
 			"у" => "u",
 			"ф" => "f",
 			"х" => "kh",
-			"ц" => "ts",
+			"ц" => "c",
 			"ч" => "ch",
 			"ш" => "sh",
-			"щ" => "sch",
+			"щ" => "shch",
 			"ъ" => "",
 			"ы" => "y",
 			"ь" => "",

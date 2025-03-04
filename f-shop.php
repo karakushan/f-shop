@@ -1,4 +1,6 @@
 <?php
+defined('ABSPATH') or die('No script kiddies please!');
+
 /*
 Plugin Name: F-Shop
 Plugin URI: https://f-shop.top/
@@ -71,6 +73,9 @@ define('FS_PLUGIN_NAME', 'f-shop'); // plugin Name
 // todo: убрать констаны ниже, так как они используют __FILE__ который определен в константе FS_PLUGIN_FILE
 define('FS_PLUGIN_PATH', plugin_dir_path(__FILE__)); // absolute system path
 define('FS_PLUGIN_URL', plugin_dir_url(__FILE__)); // absolute path with http (s)
+
+// Подключаем файл для исправления локализации в AJAX-запросах
+require_once __DIR__ . '/locale-fix.php';
 
 // Sometimes you need complete debugging, just do not forget to turn it off in combat mode
 if (defined('FS_DEBUG') && FS_DEBUG == true) {
