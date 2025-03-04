@@ -3286,3 +3286,30 @@ msgstr ""
 
 msgid "The online store works on"
 msgstr ""
+
+#: lib/FS_Users.php:123
+#. translators: 1: Logout link 2: Cabinet link
+msgid "You are already logged in. <a href=\"%1$s\">Logout</a>. <a href=\"%2$s\">Go to cabinet</a>"
+msgstr ""
+
+#: lib/FS_Users.php:132
+msgid "Invalid verification code. Please contact the site administrator!"
+msgstr ""
+
+#: lib/FS_Users.php:141
+msgid "Validation failed"
+msgstr ""
+
+#: lib/FS_Users.php:157
+msgid "Unfortunately, a user with such data does not exist on the site"
+msgstr ""
+
+#: lib/FS_Users.php:175
+#. translators: %s: Password reset URL
+msgid "The login information you entered is incorrect. <a href=\"%s\">Reset password</a>"
+msgstr ""
+
+#: lib/FS_Users.php:191
+#. translators: %s: User display name
+msgid "Welcome back, %s! You have successfully logged in."
+msgstr ""

@@ -1171,14 +1171,18 @@ class FS_Users
 		// If the user is already logged in, send an error message
 		if (is_user_logged_in()) {
 			$logout_url = wp_logout_url($_SERVER['REQUEST_URI']);
-			$msg = 'Вы уже авторизованны на сайте. <a href="' . $logout_url . '">Выход</a>. <a href="' . $redirect . '">В кабинет</a>';
+			$msg = sprintf(
+				/* translators: 1: Logout link 2: Cabinet link */
+				__('You are already logged in. <a href="%1$s">Logout</a>. <a href="%2$s">Go to cabinet</a>', 'f-shop'),
+				esc_url($logout_url),
+				esc_url($redirect)
+			);
 			wp_send_json_error(['msg' => $msg]);
 		}
 
 		// Check if the nonce is valid
 		if (! FS_Config::verify_nonce()) {
-			// If the nonce is not valid, send an error message
-			wp_send_json_error(['msg' => 'Неправильный проверочный код. Обратитесь к администратору сайта!']);
+			wp_send_json_error(['msg' => __('Invalid verification code. Please contact the site administrator!', 'f-shop')]);
 		}
 
 		// Validate the data
@@ -1215,10 +1219,16 @@ class FS_Users
 			if (is_wp_error($auth)) {
 				// If there is an error, send the error message
 				$reset_password_page_url = fs_option('page_lostpassword')
-					? get_permalink(fs_option('page_lostpassword')) : wp_lostpassword_url(home_url());
+					? get_permalink(fs_option('page_lostpassword'))
+					: wp_lostpassword_url(home_url());
+
 				wp_send_json_error([
 					'errors' => [
-						'password' => sprintf(__('The login information you entered is incorrect. <a href="%s">Password recovery</a>', 'f-shop'), $reset_password_page_url)
+						'password' => sprintf(
+							/* translators: %s: Password reset URL */
+							__('The login information you entered is incorrect. <a href="%s">Reset password</a>', 'f-shop'),
+							esc_url($reset_password_page_url)
+						)
 					]
 				]);
 			} else {
@@ -1230,7 +1240,14 @@ class FS_Users
 				wp_set_auth_cookie($auth->ID);
 
 				// Send a success message with the redirect URL
-				wp_send_json_success(['redirect' => $redirect]);
+				wp_send_json_success([
+					'msg' => sprintf(
+						/* translators: %s: User display name */
+						__('Welcome back, %s! You have successfully logged in.', 'f-shop'),
+						esc_html($auth->display_name)
+					),
+					'redirect' => $redirect
+				]);
 			}
 		}
 	}

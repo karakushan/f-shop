@@ -2,29 +2,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-01 20:25+0000\n"
-"PO-Revision-Date: 2025-03-04 10:09+0000\n"
+"POT-Creation-Date: 2025-03-04 11:05+0000\n"
+"PO-Revision-Date: 2025-03-04 11:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
-"n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-WPHeader: fast-shop.php\n"
-"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
-"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
-"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
-"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
-"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: *.js\n"
-"X-Loco-Target-Locale: ru_RU\n"
-"X-Loco-Version: 2.6.11; wp-6.4.2"
+"X-Loco-Version: 2.6.11; wp-6.4.2\n"
 
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
@@ -806,7 +795,7 @@ msgstr "Способы доставки"
 #: templates/front-end/mail/user-create-order.php:420
 #: templates/front-end/mail/admin-create-order.php:420
 msgid "Delivery number"
-msgstr ""
+msgstr "Номер отделения доставки"
 
 #: templates/back-end/metabox/order/show.php:36
 msgid "Delivery service address"
@@ -989,7 +978,7 @@ msgstr "E-mail не соответствует формату"
 
 #: lib/FS_Ajax.php:1382
 msgid "Email is not valid"
-msgstr ""
+msgstr "Недействительный адрес электронной почты"
 
 #: templates/front-end/auth/login.php:16
 msgid "Email or login"
@@ -1397,7 +1386,7 @@ msgstr "Неверный старый пароль"
 
 #: lib/FS_Cart.php:242
 msgid "Index not specified"
-msgstr ""
+msgstr "Индекс не указан"
 
 #: templates/front-end/checkout/checkout.php:96
 msgid "Information about delivery"
@@ -1416,6 +1405,11 @@ msgstr "Международный код валюты"
 
 msgid "Invalid phone number"
 msgstr "Неверный номер телефона"
+
+#: lib/FS_Users.php:132
+msgid "Invalid verification code. Please contact the site administrator!"
+msgstr ""
+"Неверный проверочный код. Пожалуйста, обратитесь к администратору сайта!"
 
 #: templates/back-end/metabox/order/show.php:8
 msgid "IP"
@@ -2631,6 +2625,13 @@ msgstr ""
 "Данные которые Вы ввели для входа не верны. <a href=\"%s\">Сбросить "
 "пароль</a>"
 
+#. translators: %s: Password reset URL
+#: lib/FS_Users.php:175
+msgid ""
+"The login information you entered is incorrect. <a href=\"%s\">Reset "
+"password</a>"
+msgstr "Введенные данные для входа неверны. <a href=\"%s\">Сбросить пароль</a>"
+
 #: templates/front-end/product/comments.php:210
 msgid "The maximum file size is 10 Mb"
 msgstr "Максимальный размер файла 10 Мб."
@@ -2927,7 +2928,7 @@ msgstr "Украинская гривна"
 msgid "Unavailable for payment"
 msgstr "Не доступен для оплаты"
 
-#: lib/FS_Users.php:999
+#: lib/FS_Users.php:157
 msgid "Unfortunately, a user with such data does not exist on the site"
 msgstr "К сожалению пользователя с таким данными не существует на сайте"
 
@@ -3011,8 +3012,9 @@ msgstr ""
 "зарегистрирован на сайте. <a href=\"#fs-modal-login\" data-fs-"
 "action=\"modal\">Войти</a>. <a href=\"%s\">Забыли пароль?</a>"
 
+#: lib/FS_Users.php:141
 msgid "Validation failed"
-msgstr "Данные не прошли проверку"
+msgstr "Проверка не пройдена"
 
 #: lib/FS_Taxonomy.php:1524 templates/back-end/metabox/attributes.php:103
 msgid "Value"
@@ -3062,6 +3064,11 @@ msgstr "Виртуальный товар"
 #. Author of the plugin
 msgid "Vitaliy Karakushan"
 msgstr "Виталий Каракушан"
+
+#. translators: %s: User display name
+#: lib/FS_Users.php:191
+msgid "Welcome back, %s! You have successfully logged in."
+msgstr "С возвращением, %s! Вы успешно вошли в систему."
 
 #: lib/FS_Settings.php:427
 msgid "What type of basket to show"
@@ -3117,6 +3124,15 @@ msgstr "Вы уже авторизованы"
 #: lib/FS_Users.php:1217 lib/FS_Users.php:1253 lib/FS_Users.php:1287
 msgid "You are already logged in."
 msgstr "Вы уже вошли на сайт"
+
+#. translators: 1: Logout link 2: Cabinet link
+#: lib/FS_Users.php:123
+msgid ""
+"You are already logged in. <a href=\"%1$s\">Logout</a>. <a href=\"%2$s\">Go "
+"to cabinet</a>"
+msgstr ""
+"Вы уже авторизованы. <a href=\"%1$s\">Выйти</a>. <a href=\"%2$s\">В "
+"кабинет</a>"
 
 #: templates/back-end/fields/gallery.php:18
 msgid "You can drag images to change positions in the gallery."
