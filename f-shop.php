@@ -10,6 +10,7 @@ Author: Vitaliy Karakushan
 Author URI: https://f-shop.top/
 License: GPL2
 Domain: f-shop
+Domain Path: /languages
 Requires at least: 5.0
 Requires PHP: 7.2
 */
@@ -76,6 +77,18 @@ define('FS_PLUGIN_URL', plugin_dir_url(__FILE__)); // absolute path with http (s
 
 // Подключаем файл для исправления локализации в AJAX-запросах
 require_once __DIR__ . '/locale-fix.php';
+/**
+ * Including localization files
+ */
+function fs_load_plugin_textdomain()
+{
+	$path = dirname(plugin_basename(__FILE__));
+
+	load_plugin_textdomain('f-shop', false, $path . '/languages');
+}
+
+add_action('init', 'fs_load_plugin_textdomain');
+add_action('plugins_loaded', 'fs_load_plugin_textdomain');
 
 // Sometimes you need complete debugging, just do not forget to turn it off in combat mode
 if (defined('FS_DEBUG') && FS_DEBUG == true) {
@@ -247,17 +260,7 @@ function fs_activate()
 	flush_rewrite_rules();
 }
 
-/**
- * Including localization files
- */
-function fs_load_plugin_textdomain()
-{
-	$path = dirname(plugin_basename(__FILE__));
-	load_plugin_textdomain('f-shop', false, $path . '/languages');
-}
 
-add_action('init', 'fs_load_plugin_textdomain');
-add_action('plugins_loaded', 'fs_load_plugin_textdomain');
 
 // Хук деактивации плагина
 register_deactivation_hook(__FILE__, 'fs_deactivate');

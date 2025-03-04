@@ -1154,6 +1154,7 @@ class FS_Ajax
 		}
 
 		wp_send_json_success([
+			'locale'  => get_locale(),
 			'message' => __('All items have been added to the cart', 'f-shop'),
 			'title'   => __('Success!', 'f-shop')
 		]);

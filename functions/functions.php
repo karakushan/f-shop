@@ -920,7 +920,14 @@ function fs_add_to_cart($product_id = 0, $label = 'Add to cart', $args = array()
 	}
 
 	$html_attributes = fs_parse_attr([], $args);
-	$html_attributes .= ' ' . $args['inline_attributes'];
+
+	// Проверяем, является ли inline_attributes массивом
+	if (isset($args['inline_attributes']) && !empty($args['inline_attributes'])) {
+		if (is_array($args['inline_attributes'])) {
+			$args['inline_attributes'] = implode(' ', $args['inline_attributes']);
+		}
+		$html_attributes .= ' ' . $args['inline_attributes'];
+	}
 
 	/* allow you to set different html elements as a button */
 	switch ($args['type']) {
@@ -2091,6 +2098,11 @@ function fs_parse_attr($attr = array(), $default = array(), $exclude = [])
 	foreach ($attr as $key => $attribute) {
 		if (in_array($key, $exclude)) {
 			continue;
+		}
+
+		// Проверяем, является ли $attribute массивом, и если да, преобразуем его в JSON-строку
+		if (is_array($attribute)) {
+			$attribute = json_encode($attribute);
 		}
 
 		$attributes[] = esc_attr($key) . '="' . esc_attr($attribute) . '"';
