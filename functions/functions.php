@@ -1785,57 +1785,19 @@ function fs_get_current_user()
 	if ($user->exists()) {
 		$profile_update = empty($user->profile_update) ? strtotime($user->user_registered) : $user->profile_update;
 
-		// Basic user data
+		// Get all user fields
+		$user_fields = FS_Users::get_user_fields();
+
+		// Set each field removing fs_ prefix
+		foreach ($user_fields as $field => $value) {
+			$field_name = str_replace('fs_', '', $field);
+			$user->$field_name = FS_Users::get_user_field($field);
+		}
+
+		// Set basic email from WP user
 		$user->email = $user->user_email;
-		$user->first_name = FS_Users::get_user_field('fs_first_name');
-		$user->last_name = FS_Users::get_user_field('fs_last_name');
-		$user->middle_name = FS_Users::get_user_field('fs_middle_name');
 
-		// Contact information
-		$user->phone = FS_Users::get_user_field('fs_phone');
-		$user->email = $user->user_email;
-
-		// Location data
-		$user->country = FS_Users::get_user_field('fs_country');
-		$user->region = FS_Users::get_user_field('fs_region');
-		$user->city = FS_Users::get_user_field('fs_city');
-		$user->address = FS_Users::get_user_field('fs_address');
-		$user->zip_code = FS_Users::get_user_field('fs_zip_code');
-
-		// Additional address fields
-		$user->street = FS_Users::get_user_field('fs_street');
-		$user->home_num = FS_Users::get_user_field('fs_home_num');
-		$user->apartment_num = FS_Users::get_user_field('fs_apartment_num');
-		$user->entrance_num = FS_Users::get_user_field('fs_entrance_num');
-
-		// Shipping information
-		$user->shipping_method_id = FS_Users::get_user_field('fs_delivery_methods');
-		$user->delivery_number = FS_Users::get_user_field('fs_delivery_number');
-
-		// Alternative shipping address
-		$user->other_shipping_address = FS_Users::get_user_field('fs_other_shipping_address');
-		$user->shipping_name = FS_Users::get_user_field('fs_shipping_name');
-		$user->shipping_first_name = FS_Users::get_user_field('fs_shipping_first_name');
-		$user->shipping_last_name = FS_Users::get_user_field('fs_shipping_last_name');
-		$user->shipping_email = FS_Users::get_user_field('fs_shipping_email');
-		$user->shipping_phone = FS_Users::get_user_field('fs_shipping_phone');
-		$user->shipping_address = FS_Users::get_user_field('fs_shipping_address');
-		$user->shipping_city = FS_Users::get_user_field('fs_shipping_city');
-		$user->shipping_state = FS_Users::get_user_field('fs_shipping_state');
-		$user->shipping_zip = FS_Users::get_user_field('fs_shipping_zip');
-
-		// Payment information
-		$user->payment_method_id = FS_Users::get_user_field('fs_payment_methods');
-
-		// Personal information
-		$user->gender = FS_Users::get_user_field('fs_gender');
-		$user->user_avatar = FS_Users::get_user_field('fs_user_avatar');
-
-		// Subscription preferences  
-		$user->subscribe_news = FS_Users::get_user_field('fs_subscribe_news');
-		$user->subscribe_cart = FS_Users::get_user_field('fs_subscribe_cart');
-
-		// Profile metadata
+		// Set profile update time
 		$user->profile_update = $profile_update;
 	}
 

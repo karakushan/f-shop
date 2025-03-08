@@ -418,6 +418,7 @@ class FS_Users
 				'value'       => fs_option('fs_autofill_form') && ! empty($user->user_email) ? $user->user_email : '',
 				'placeholder' => __('Your email', 'f-shop'),
 				'title'       => __('Keep the correct email', 'f-shop'),
+				'description' => 'Primary email address used for account notifications and communications',
 				'checkout'    => true,
 				'save_meta'   => false,
 				'required'    => true
@@ -429,6 +430,7 @@ class FS_Users
 				'value'       => fs_option('fs_autofill_form') && ! empty($user->first_name) ? $user->first_name : '',
 				'placeholder' => __('First name', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'Customer\'s first name used for personalization and shipping',
 				'checkout'    => true,
 				'save_meta'   => false,
 				'required'    => true
@@ -440,6 +442,7 @@ class FS_Users
 				'value'       => fs_option('fs_autofill_form') && ! empty($user->last_name) ? $user->last_name : '',
 				'placeholder' => __('Last name', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'Customer\'s last name used for shipping and account identification',
 				'checkout'    => true,
 				'save_meta'   => false,
 				'required'    => false
@@ -451,6 +454,7 @@ class FS_Users
 				'value'       => fs_option('fs_autofill_form') && ! empty($user->middle_name) ? $user->middle_name : '',
 				'placeholder' => __('Middle name', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'Customer\'s middle name for complete identification (optional)',
 				'checkout'    => true,
 				'save_meta'   => true,
 				'required'    => false
@@ -463,6 +467,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('Other shipping address', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'Option to specify an alternative shipping address different from billing address',
 				'required'    => false,
 				'checkout'    => true,
 				'alpine'      => 'fs_other_shipping_address:false',
@@ -475,6 +480,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('Delivery service name', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'Name of the preferred delivery service provider',
 				'checkout'    => true,
 				'save_meta'   => false
 			),
@@ -486,6 +492,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('First name', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'First name for alternative shipping address',
 				'attributes'  => [
 					'x-bind:required' => 'fs_other_shipping_address'
 				],
@@ -499,6 +506,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('Last name', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'Last name for alternative shipping address',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
@@ -510,6 +518,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('Your email', 'f-shop'),
 				'title'       => __('Keep the correct email', 'f-shop'),
+				'description' => 'Email address for shipping notifications and tracking updates',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
@@ -521,6 +530,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('Phone', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'Contact phone number for shipping-related communications',
 				'attributes'  => [
 					'x-bind:required' => 'fs_other_shipping_address'
 				],
@@ -534,6 +544,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('Address', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'Alternative shipping address street name and number',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
@@ -545,6 +556,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('City', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'City name for alternative shipping address',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => true
@@ -556,6 +568,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('State', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'State/province for alternative shipping address',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
@@ -567,6 +580,7 @@ class FS_Users
 				'value'       => '',
 				'placeholder' => __('Zip', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'ZIP/Postal code for alternative shipping address',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
@@ -578,6 +592,7 @@ class FS_Users
 				'label'       => '',
 				'placeholder' => __('Avatar', 'f-shop'),
 				'title'       => '',
+				'description' => 'Profile picture or avatar image for user account',
 				'required'    => false,
 				'save_meta'   => true
 			),
@@ -589,6 +604,7 @@ class FS_Users
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_phone', 1) : '',
 				'placeholder' => __('Phone number', 'f-shop'),
 				'title'       => __('Keep the correct phone number', 'f-shop'),
+				'description' => 'Primary contact phone number for order and account notifications',
 				'required'    => true,
 				'checkout'    => true,
 				'mask'        => fs_option('fs_phone_mask', '+380 (99) 999-99-99'),
@@ -604,6 +620,7 @@ class FS_Users
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_gender', 1) : '',
 				'placeholder' => __('Gender', 'f-shop'),
 				'title'       => '',
+				'description' => 'Customer\'s gender for personalization purposes',
 				'required'    => false
 			),
 			'fs_city'              => array(
@@ -612,6 +629,7 @@ class FS_Users
 				'label'       => '',
 				'placeholder' => __('City', 'f-shop'),
 				'title'       => __('This field is required.', 'f-shop'),
+				'description' => 'Primary city of residence for billing and default shipping',
 				'required'    => false,
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_city', 1) : '',
 				'checkout'    => true,
@@ -624,6 +642,7 @@ class FS_Users
 				'label'       => '',
 				'placeholder' => __('Country', 'f-shop'),
 				'title'       => '',
+				'description' => 'Country of residence for billing and default shipping',
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_country', 1) : '',
 				'required'    => false,
 				'checkout'    => true,
@@ -635,6 +654,7 @@ class FS_Users
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __('Zip Code', 'f-shop'),
+				'description' => 'ZIP/Postal code for billing and default shipping address',
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_zip_code', 1) : '',
 				'required'    => false,
 				'checkout'    => true,
@@ -647,6 +667,7 @@ class FS_Users
 				'label'       => '',
 				'title'       => __('This field is required.', 'f-shop'),
 				'placeholder' => __('State / province', 'f-shop'),
+				'description' => 'State or province for billing and default shipping address',
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_region', 1) : '',
 				'required'    => false,
 				'checkout'    => true,
@@ -658,17 +679,37 @@ class FS_Users
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __('Address', 'f-shop'),
+				'description' => 'Street address for billing and default shipping',
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_address', 1) : '',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => true
 
 			),
+			'fs_location_lat' => array(
+				'name'        => __('Location latitude', 'f-shop'),
+				'type'        => 'hidden',
+				'label'       => '',
+				'placeholder' => __('Location latitude', 'f-shop'),
+				'description' => 'Geographic latitude coordinate for precise location mapping and delivery calculations',
+				'save_meta'   => true,
+				'checkout'    => true,
+			),
+			'fs_location_lng' => array(
+				'name'        => __('Location longitude', 'f-shop'),
+				'type'        => 'hidden',
+				'label'       => '',
+				'placeholder' => __('Location longitude', 'f-shop'),
+				'description' => 'Geographic longitude coordinate for precise location mapping and delivery calculations',
+				'save_meta'   => true,
+				'checkout'    => true,
+			),
 			'fs_street'            => array(
 				'name'        => __('Street', 'f-shop'),
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __('Street', 'f-shop'),
+				'description' => 'Street name for detailed address information',
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_address', 1) : '',
 				'required'    => false,
 				'checkout'    => true,
@@ -679,6 +720,7 @@ class FS_Users
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __('House number', 'f-shop'),
+				'description' => 'Building or house number for precise delivery location',
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_home_num', 1) : '',
 				'required'    => false,
 				'checkout'    => true,
@@ -690,6 +732,7 @@ class FS_Users
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __('Apartment number', 'f-shop'),
+				'description' => 'Apartment or unit number for precise delivery location',
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_apartment_num', 1) : '',
 				'required'    => false,
 				'checkout'    => true,
@@ -701,6 +744,7 @@ class FS_Users
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __('Entrance number', 'f-shop'),
+				'description' => 'Building entrance number for complex delivery locations',
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_apartment_num', 1) : '',
 				'required'    => false,
 				'checkout'    => true,
@@ -712,6 +756,7 @@ class FS_Users
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __('Branch number', 'f-shop'),
+				'description' => 'Delivery service branch number for pickup points',
 				'value'       => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_delivery_number', 1) : '',
 				'required'    => false,
 				'checkout'    => true,
@@ -725,6 +770,7 @@ class FS_Users
 				'taxonomy'     => FS_Config::get_data('product_del_taxonomy'),
 				'icon'         => true,
 				'title'        => __('Choose shipping method', 'f-shop'),
+				'description'  => 'Preferred shipping method for order delivery',
 				'value'        => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_delivery_methods', 1) : '',
 				'values'       => get_terms(array(
 					'taxonomy'   => FS_Config::get_data('product_del_taxonomy'),
@@ -745,6 +791,7 @@ class FS_Users
 				'taxonomy'     => FS_Config::get_data('product_pay_taxonomy'),
 				'icon'         => true,
 				'title'        => __('Select a Payment Method', 'f-shop'),
+				'description'  => 'Preferred payment method for order transactions',
 				'value'        => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_payment_methods', 1) : '',
 				'values'       => get_terms(array(
 					'taxonomy'   => FS_Config::get_data('product_pay_taxonomy'),
@@ -776,6 +823,7 @@ class FS_Users
 				'type'        => 'textarea',
 				'label'       => '',
 				'placeholder' => __('Comment on the order', 'f-shop'),
+				'description' => 'Additional notes or special instructions for the order',
 				'required'    => false,
 				'checkout'    => true,
 				'save_meta'   => false
@@ -786,6 +834,7 @@ class FS_Users
 				'type'           => 'checkbox',
 				'label'          => __('Register on the site', 'f-shop'),
 				'label_position' => 'after',
+				'description'    => 'Option to create an account during checkout process',
 				'value'          => 0,
 				'required'       => false,
 				'checkout'       => true,
@@ -796,6 +845,7 @@ class FS_Users
 				'type'           => 'checkbox',
 				'label'          => __('Receive site news', 'f-shop'),
 				'label_position' => 'after',
+				'description'    => 'Opt-in for receiving newsletters and site updates',
 				'required'       => false,
 				'checkout'       => true,
 				'value'          => fs_option('fs_autofill_form') && get_user_meta($user->ID, 'fs_subscribe_news', 1) ? get_user_meta($user->ID, 'fs_subscribe_news', 1) : 0
@@ -806,6 +856,7 @@ class FS_Users
 				'type'           => 'checkbox',
 				'label'          => __('Receive a message about goods left in the basket', 'f-shop'),
 				'label_position' => 'after',
+				'description'    => 'Opt-in for abandoned cart reminder notifications',
 				'required'       => false,
 				'checkout'       => true,
 				'value'          => fs_option('fs_autofill_form') && get_user_meta($user->ID, 'fs_subscribe_cart', 1) ? get_user_meta($user->ID, 'fs_subscribe_cart', 1) : ''
@@ -816,6 +867,7 @@ class FS_Users
 				'type'        => 'text',
 				'label'       => '',
 				'placeholder' => __('Login', 'f-shop'),
+				'description' => 'Username for account login',
 				'value'       => fs_option('fs_autofill_form') ? $user->user_login : '',
 				'required'    => true,
 				'save_meta'   => false,
@@ -828,6 +880,7 @@ class FS_Users
 				'placeholder' => __('Password', 'f-shop'),
 				'type'        => 'password',
 				'label'       => '',
+				'description' => 'Account password for secure access',
 				'value'       => '',
 				'required'    => true,
 				'save_meta'   => false,
@@ -840,6 +893,7 @@ class FS_Users
 				'placeholder' => __('Confirm password', 'f-shop'),
 				'type'        => 'password',
 				'label'       => '',
+				'description' => 'Repeat password to ensure correct entry',
 				'value'       => '',
 				'required'    => true,
 				'save_meta'   => false
@@ -1007,13 +1061,93 @@ class FS_Users
 	}
 
 	/**
-	 * Saves user data submitted through the form
-	 * 
-	 * Processes POST request with user data, validates it and saves to database.
-	 * Supports file uploads and updating core user fields (first name, last name).
+	 * Handles file uploads for user fields
 	 *
-	 * @since 1.0.0
-	 * @return void JSON response with operation result
+	 * @param array $allowed_field_keys Array of allowed field keys
+	 * @param array $user_fields Array of user field definitions
+	 * @param int $user_id User ID
+	 * @return array Array with status and any errors
+	 */
+	private function handle_file_uploads($allowed_field_keys, $user_fields, $user_id)
+	{
+		// Подключаем необходимые файлы для работы с медиа
+		require_once(ABSPATH . 'wp-admin/includes/image.php');
+		require_once(ABSPATH . 'wp-admin/includes/file.php');
+		require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+		$file_errors = [];
+
+		if (empty($_FILES)) {
+			return ['success' => true, 'errors' => []];
+		}
+
+		foreach ($_FILES as $field_key => $file) {
+			// Проверяем, является ли поле разрешенным файловым полем
+			if (
+				!in_array($field_key, $allowed_field_keys) ||
+				!isset($user_fields[$field_key]) ||
+				!in_array($user_fields[$field_key]['type'], ['file', 'image'])
+			) {
+				continue;
+			}
+
+			// Проверяем наличие ошибок при загрузке
+			if ($file['error'] !== UPLOAD_ERR_OK) {
+				if ($file['error'] !== UPLOAD_ERR_NO_FILE) { // Игнорируем ошибку отсутствия файла
+					$file_errors[$field_key] = $this->get_file_error_message($file['error']);
+				}
+				continue;
+			}
+
+			// Проверяем тип файла
+			$allowed_types = apply_filters('fs_allowed_file_types', [
+				'image/jpeg',
+				'image/png',
+				'image/gif',
+				'application/pdf'
+			], $field_key);
+
+			if (!in_array($file['type'], $allowed_types)) {
+				$file_errors[$field_key] = __('Invalid file type. Allowed types: JPG, PNG, GIF, PDF', 'f-shop');
+				continue;
+			}
+
+			// Проверяем размер файла (по умолчанию максимум 5MB)
+			$max_size = apply_filters('fs_max_file_size', 5 * 1024 * 1024, $field_key);
+			if ($file['size'] > $max_size) {
+				$file_errors[$field_key] = sprintf(
+					__('File is too large. Maximum size is %s MB', 'f-shop'),
+					$max_size / (1024 * 1024)
+				);
+				continue;
+			}
+
+			// Загружаем файл в медиабиблиотеку WordPress
+			$attachment_id = media_handle_upload($field_key, 0);
+
+			if (is_wp_error($attachment_id)) {
+				$file_errors[$field_key] = $attachment_id->get_error_message();
+				continue;
+			}
+
+			// Удаляем старый файл, если он существует
+			$old_attachment_id = get_user_meta($user_id, $field_key, true);
+			if ($old_attachment_id) {
+				wp_delete_attachment($old_attachment_id, true);
+			}
+
+			// Сохраняем ID нового файла в мета-данных пользователя
+			update_user_meta($user_id, $field_key, $attachment_id);
+		}
+
+		return [
+			'success' => empty($file_errors),
+			'errors' => $file_errors
+		];
+	}
+
+	/**
+	 * Saves user data submitted through the form
 	 */
 	public function save_user_data()
 	{
@@ -1041,11 +1175,6 @@ class FS_Users
 			]);
 		}
 
-		// Подключаем необходимые файлы для работы с медиа
-		require_once(ABSPATH . 'wp-admin/includes/image.php');
-		require_once(ABSPATH . 'wp-admin/includes/file.php');
-		require_once(ABSPATH . 'wp-admin/includes/media.php');
-
 		// Фильтруем все поля, оставляя только те, которые зарегистрированы в user_fields
 		$allowed_field_keys = array_keys($user_fields);
 
@@ -1053,73 +1182,11 @@ class FS_Users
 		$post_data = array_intersect_key($_POST, array_flip($allowed_field_keys));
 
 		// Обработка загрузки файлов
-		$file_errors = [];
-		if (!empty($_FILES)) {
-			foreach ($_FILES as $field_key => $file) {
-				// Проверяем, является ли поле разрешенным файловым полем
-				if (
-					!in_array($field_key, $allowed_field_keys) ||
-					!isset($user_fields[$field_key]) ||
-					!in_array($user_fields[$field_key]['type'], ['file', 'image'])
-				) {
-					continue;
-				}
-
-				// Проверяем наличие ошибок при загрузке
-				if ($file['error'] !== UPLOAD_ERR_OK) {
-					if ($file['error'] !== UPLOAD_ERR_NO_FILE) { // Игнорируем ошибку отсутствия файла
-						$file_errors[$field_key] = $this->get_file_error_message($file['error']);
-					}
-					continue;
-				}
-
-				// Проверяем тип файла
-				$allowed_types = apply_filters('fs_allowed_file_types', [
-					'image/jpeg',
-					'image/png',
-					'image/gif',
-					'application/pdf'
-				], $field_key);
-
-				if (!in_array($file['type'], $allowed_types)) {
-					$file_errors[$field_key] = __('Invalid file type. Allowed types: JPG, PNG, GIF, PDF', 'f-shop');
-					continue;
-				}
-
-				// Проверяем размер файла (по умолчанию максимум 5MB)
-				$max_size = apply_filters('fs_max_file_size', 5 * 1024 * 1024, $field_key);
-				if ($file['size'] > $max_size) {
-					$file_errors[$field_key] = sprintf(
-						__('File is too large. Maximum size is %s MB', 'f-shop'),
-						$max_size / (1024 * 1024)
-					);
-					continue;
-				}
-
-				// Загружаем файл в медиабиблиотеку WordPress
-				$attachment_id = media_handle_upload($field_key, 0);
-
-				if (is_wp_error($attachment_id)) {
-					$file_errors[$field_key] = $attachment_id->get_error_message();
-					continue;
-				}
-
-				// Удаляем старый файл, если он существует
-				$old_attachment_id = get_user_meta($user_id, $field_key, true);
-				if ($old_attachment_id) {
-					wp_delete_attachment($old_attachment_id, true);
-				}
-
-				// Сохраняем ID нового файла в мета-данных пользователя
-				update_user_meta($user_id, $field_key, $attachment_id);
-			}
-		}
-
-		// Если есть ошибки при загрузке файлов, возвращаем их
-		if (!empty($file_errors)) {
+		$upload_result = $this->handle_file_uploads($allowed_field_keys, $user_fields, $user_id);
+		if (!$upload_result['success']) {
 			wp_send_json_error([
 				'msg' => __('File upload failed', 'f-shop'),
-				'errors' => $file_errors
+				'errors' => $upload_result['errors']
 			]);
 		}
 
