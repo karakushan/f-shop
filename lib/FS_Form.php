@@ -180,6 +180,16 @@ class FS_Form
 
 		$args = wp_parse_args($args, $default);
 
+		// Автозаполнение полей данными текущего пользователя
+		if ($args['autofill'] && is_user_logged_in()) {
+			$current_user = fs_get_current_user();
+			$field_name = str_replace('fs_', '', $name); // Убираем префикс fs_ если он есть
+
+			if (isset($current_user->data->$field_name)) {
+				$args['value'] = $current_user->data->$field_name;
+			}
+		}
+
 		$type = is_string($type) && $type != '' ? $type : $args['type'];
 
 		$field_path = FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';

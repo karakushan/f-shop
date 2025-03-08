@@ -257,20 +257,6 @@ jQuery(document).ready(function ($) {
         document.dispatchEvent(fsBuyOneClick);
     });
 
-    // Предпросмотр фото при загрузке в личном кабинете
-    jQuery("#fs_user_avatar").change(function () {
-        let bgImg = $(this).parent()
-        if (this.files && this.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function () {
-                var dataURL = reader.result;
-                bgImg.css("background-image", "url(" + dataURL + ")");
-            };
-            reader.readAsDataURL(this.files[0]);
-
-        }
-    });
-
     // Сохраняет данные пользователя методом AJAX
     $(document).on('submit', '[name=fs-save-user-data]', function (event) {
         event.preventDefault();

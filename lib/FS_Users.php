@@ -444,6 +444,18 @@ class FS_Users
 				'save_meta'   => false,
 				'required'    => false
 			),
+			'fs_middle_name' => array(
+				'name'        => __('Middle name', 'f-shop'),
+				'type'        => 'text',
+				'label'       => '',
+				'value'       => fs_option('fs_autofill_form') && ! empty($user->middle_name) ? $user->middle_name : '',
+				'placeholder' => __('Middle name', 'f-shop'),
+				'title'       => __('This field is required.', 'f-shop'),
+				'checkout'    => true,
+				'save_meta'   => true,
+				'required'    => false
+			),
+
 			'fs_other_shipping_address' => array(
 				'name'        => __('Other shipping address', 'f-shop'),
 				'type'        => 'checkbox',
@@ -562,12 +574,12 @@ class FS_Users
 
 			'fs_user_avatar' => array(
 				'name'        => __('Avatar', 'f-shop'),
-				'type'        => 'file',
+				'type'        => 'image',
 				'label'       => '',
-				'placeholder' => __('Gender', 'f-shop'),
+				'placeholder' => __('Avatar', 'f-shop'),
 				'title'       => '',
 				'required'    => false,
-				'save_meta'   => false
+				'save_meta'   => true
 			),
 
 			'fs_phone'             => array(
@@ -1029,16 +1041,87 @@ class FS_Users
 			]);
 		}
 
+		// Подключаем необходимые файлы для работы с медиа
+		require_once(ABSPATH . 'wp-admin/includes/image.php');
+		require_once(ABSPATH . 'wp-admin/includes/file.php');
+		require_once(ABSPATH . 'wp-admin/includes/media.php');
+
 		// Фильтруем все поля, оставляя только те, которые зарегистрированы в user_fields
 		$allowed_field_keys = array_keys($user_fields);
 
 		// Фильтруем POST данные, оставляя только разрешенные поля
 		$post_data = array_intersect_key($_POST, array_flip($allowed_field_keys));
 
-		// Подключаем необходимые файлы для работы с медиа
-		require_once(ABSPATH . 'wp-admin/includes/image.php');
-		require_once(ABSPATH . 'wp-admin/includes/file.php');
-		require_once(ABSPATH . 'wp-admin/includes/media.php');
+		// Обработка загрузки файлов
+		$file_errors = [];
+		if (!empty($_FILES)) {
+			foreach ($_FILES as $field_key => $file) {
+				// Проверяем, является ли поле разрешенным файловым полем
+				if (
+					!in_array($field_key, $allowed_field_keys) ||
+					!isset($user_fields[$field_key]) ||
+					!in_array($user_fields[$field_key]['type'], ['file', 'image'])
+				) {
+					continue;
+				}
+
+				// Проверяем наличие ошибок при загрузке
+				if ($file['error'] !== UPLOAD_ERR_OK) {
+					if ($file['error'] !== UPLOAD_ERR_NO_FILE) { // Игнорируем ошибку отсутствия файла
+						$file_errors[$field_key] = $this->get_file_error_message($file['error']);
+					}
+					continue;
+				}
+
+				// Проверяем тип файла
+				$allowed_types = apply_filters('fs_allowed_file_types', [
+					'image/jpeg',
+					'image/png',
+					'image/gif',
+					'application/pdf'
+				], $field_key);
+
+				if (!in_array($file['type'], $allowed_types)) {
+					$file_errors[$field_key] = __('Invalid file type. Allowed types: JPG, PNG, GIF, PDF', 'f-shop');
+					continue;
+				}
+
+				// Проверяем размер файла (по умолчанию максимум 5MB)
+				$max_size = apply_filters('fs_max_file_size', 5 * 1024 * 1024, $field_key);
+				if ($file['size'] > $max_size) {
+					$file_errors[$field_key] = sprintf(
+						__('File is too large. Maximum size is %s MB', 'f-shop'),
+						$max_size / (1024 * 1024)
+					);
+					continue;
+				}
+
+				// Загружаем файл в медиабиблиотеку WordPress
+				$attachment_id = media_handle_upload($field_key, 0);
+
+				if (is_wp_error($attachment_id)) {
+					$file_errors[$field_key] = $attachment_id->get_error_message();
+					continue;
+				}
+
+				// Удаляем старый файл, если он существует
+				$old_attachment_id = get_user_meta($user_id, $field_key, true);
+				if ($old_attachment_id) {
+					wp_delete_attachment($old_attachment_id, true);
+				}
+
+				// Сохраняем ID нового файла в мета-данных пользователя
+				update_user_meta($user_id, $field_key, $attachment_id);
+			}
+		}
+
+		// Если есть ошибки при загрузке файлов, возвращаем их
+		if (!empty($file_errors)) {
+			wp_send_json_error([
+				'msg' => __('File upload failed', 'f-shop'),
+				'errors' => $file_errors
+			]);
+		}
 
 		// Обработка частичной валидации полей
 		if (!empty($_POST['fs_validate_only'])) {
@@ -1058,9 +1141,8 @@ class FS_Users
 
 		// Сохранение валидированных данных
 		foreach ($validation_result['data'] as $meta_key => $meta_value) {
-			// Обработка загрузки файлов
+			// Пропускаем файловые поля, так как они уже обработаны
 			if ($this->is_file_field($user_fields, $meta_key)) {
-				$this->handle_file_upload($meta_key, $user_id);
 				continue;
 			}
 
@@ -1080,6 +1162,32 @@ class FS_Users
 	}
 
 	/**
+	 * Возвращает сообщение об ошибке загрузки файла
+	 *
+	 * @param int $error_code Код ошибки загрузки файла
+	 * @return string Сообщение об ошибке
+	 */
+	private function get_file_error_message($error_code)
+	{
+		switch ($error_code) {
+			case UPLOAD_ERR_INI_SIZE:
+				return __('The uploaded file exceeds the upload_max_filesize directive in php.ini', 'f-shop');
+			case UPLOAD_ERR_FORM_SIZE:
+				return __('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form', 'f-shop');
+			case UPLOAD_ERR_PARTIAL:
+				return __('The uploaded file was only partially uploaded', 'f-shop');
+			case UPLOAD_ERR_NO_TMP_DIR:
+				return __('Missing a temporary folder', 'f-shop');
+			case UPLOAD_ERR_CANT_WRITE:
+				return __('Failed to write file to disk', 'f-shop');
+			case UPLOAD_ERR_EXTENSION:
+				return __('A PHP extension stopped the file upload', 'f-shop');
+			default:
+				return __('Unknown upload error', 'f-shop');
+		}
+	}
+
+	/**
 	 * Checks if field is a file field
 	 *
 	 * @param array $user_fields All user fields
@@ -1091,23 +1199,6 @@ class FS_Users
 		return isset($user_fields[$meta_key]) &&
 			$user_fields[$meta_key]['type'] == 'file' &&
 			!empty($_FILES[$meta_key]);
-	}
-
-	/**
-	 * Handles file upload
-	 *
-	 * @param string $meta_key Field key
-	 * @param int $user_id User ID
-	 */
-	private function handle_file_upload($meta_key, $user_id)
-	{
-		$attach_id = media_handle_upload($meta_key, 0);
-		if (is_wp_error($attach_id)) {
-			wp_send_json_error([
-				'msg' => $attach_id->get_error_message()
-			]);
-		}
-		update_user_meta($user_id, $meta_key, intval($attach_id));
 	}
 
 	/**
@@ -1627,6 +1718,7 @@ class FS_Users
 	static function user_cabinet_tabs()
 	{
 		$user = fs_get_current_user();
+
 		$wishlist = FS_Wishlist::get_wishlist_products();
 
 		return fs_frontend_template('dashboard/index', array(

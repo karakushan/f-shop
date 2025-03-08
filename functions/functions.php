@@ -1789,6 +1789,7 @@ function fs_get_current_user()
 		$user->email = $user->user_email;
 		$user->first_name = FS_Users::get_user_field('fs_first_name');
 		$user->last_name = FS_Users::get_user_field('fs_last_name');
+		$user->middle_name = FS_Users::get_user_field('fs_middle_name');
 
 		// Contact information
 		$user->phone = FS_Users::get_user_field('fs_phone');
@@ -1828,7 +1829,7 @@ function fs_get_current_user()
 
 		// Personal information
 		$user->gender = FS_Users::get_user_field('fs_gender');
-		$user->avatar = FS_Users::get_user_field('fs_user_avatar');
+		$user->user_avatar = FS_Users::get_user_field('fs_user_avatar');
 
 		// Subscription preferences  
 		$user->subscribe_news = FS_Users::get_user_field('fs_subscribe_news');

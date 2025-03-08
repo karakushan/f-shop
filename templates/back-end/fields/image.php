@@ -1,28 +1,71 @@
 <?php
+
 /**
  * Image field template.
  *
  * @var array $args
  * @var string $name
  */
+
 ?>
 
-<figure class="<?php echo esc_attr( $args['class'] ) ?>"
-        id="<?php echo esc_attr( $args['id'] ) ?>" <?php if ( ! empty( $args['value'] ) ) {
-	echo 'style="background-image: url(' . wp_get_attachment_image_url( intval( $args['value'] ) ) . ');"';
-} ?>>
-    <div class="controls">
-        <button type="button" class="button dashicons dashicons-camera"
-                title="<?php echo esc_attr_e( 'Add / Replace', 'f-shop' ) ?>" data-fs-action="select-image"></button>
-        <button type="button" <?php if ( empty( $args['value'] ) ) {
-			echo 'style="display: none;"';
-		} ?> class="button dashicons dashicons-trash"
-                title="<?php echo esc_attr_e( 'Delete', 'f-shop' ) ?>" data-fs-action="delete-image"
-                data-text="<?php echo esc_attr_e( 'Are you sure you want to delete the image?', 'f-shop' ) ?>"
-                data-noimage="/wp-content/plugins/f-shop/assets/img/no-image.png"></button>
-    </div>
+<div x-data="{
+    imageUrl: '<?php echo !empty($args['value']) ? esc_url(wp_get_attachment_image_url($args['value'])) : ''; ?>',
+    handleFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        if (file.type.match('image.*')) {
+            this.imageUrl = URL.createObjectURL(file);
+        }
+    }
+}" class="fs-field-image">
+        <!-- Превью изображения -->
+        <div class="fs-field-image__preview">
+                <template x-if="imageUrl">
+                        <img :src="imageUrl"
+                                class="fs-field-image__preview-img"
+                                alt="<?php esc_attr_e('Превью', 'f-shop'); ?>">
+                </template>
+                <template x-if="!imageUrl">
+                        <img src="<?php echo esc_url(plugin_dir_url(FS_PLUGIN_FILE) . 'assets/img/add-img.svg'); ?>"
+                                class="fs-field-image__preview-img"
+                                alt="<?php esc_attr_e('Заглушка', 'f-shop'); ?>">
+                </template>
+        </div>
 
-    <input type="hidden" name="<?php echo esc_attr( $name ) ?>"
-           value="<?php echo esc_html( $args['value'] ) ?>">
-</figure>
+        <!-- Поле загрузки -->
+        <label class="fs-field-image__button">
+                <span><?php esc_html_e('Виберіть фотографію', 'f-shop'); ?></span>
+                <input type="file"
+                        @change="handleFile($event)"
+                        class="fs-field-image__input"
+                        name="<?php echo esc_attr($name); ?>"
+                        accept="image/*"
+                        <?php echo !empty($args['attributes']) ? fs_parse_attr($args['attributes']) : ''; ?>>
+        </label>
 
+        <!-- Скрытое поле для текущего значения -->
+        <input type="hidden"
+                name="<?php echo esc_attr($name); ?>_current"
+                value="<?php echo esc_attr($args['value']); ?>">
+</div>
+
+<script>
+        document.addEventListener('alpine:init', () => {
+                Alpine.data('imagePreview', () => ({
+                        imageUrl: '<?php echo !empty($args['value']) ? esc_url(wp_get_attachment_image_url($args['value'])) : ''; ?>',
+
+                        handleFile(event) {
+                                const file = event.target.files[0];
+                                console.log('File:', file);
+                                if (!file) return;
+
+                                if (file.type.match('image.*')) {
+                                        this.imageUrl = URL.createObjectURL(file);
+                                        console.log('New image URL:', this.imageUrl);
+                                }
+                        }
+                }));
+        });
+</script>
