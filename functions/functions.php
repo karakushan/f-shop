@@ -3260,7 +3260,11 @@ function fs_comments_count($product_id = 0): void
 		return;
 	}
 
-	$count_text = sprintf(_n('%s review', '%s reviews', $count, 'f-shop'), number_format_i18n($count));
+	$count_text = sprintf(
+		/* translators: %s: number of reviews */
+		_nx('%s review', '%s reviews', $count, 'reviews count', 'f-shop'),
+		number_format_i18n($count)
+	);
 
 	echo esc_html(apply_filters('fs_reviews_count_text', $count_text, $count));
 }

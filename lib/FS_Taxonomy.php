@@ -277,7 +277,9 @@ class FS_Taxonomy
 
 			// Фильтруем по категориям
 			if (! empty($url['categories'])) {
-				$categories  = explode(FS_Filters::get_param_separator(), sanitize_text_field($url['filter']));
+
+				$categories  = explode(FS_Filters::get_param_separator(), sanitize_text_field($url['categories']));
+
 				$tax_query[] = array(
 					'relation' => 'AND',
 					array(
@@ -357,13 +359,13 @@ class FS_Taxonomy
 		$order_by   = [];
 
 		switch ($order_type) {
-				// case 'price_asc': // Сортування за ціною за зростанням
-				// 	$meta_query['price'] = array(
-				// 		'key'  => FS_Config::get_meta('price'),
-				// 		'type' => 'DECIMAL'
-				// 	);
-				// 	$order_by['price']   = 'ASC';
-				// 	break;
+			// case 'price_asc': // Сортування за ціною за зростанням
+			// 	$meta_query['price'] = array(
+			// 		'key'  => FS_Config::get_meta('price'),
+			// 		'type' => 'DECIMAL'
+			// 	);
+			// 	$order_by['price']   = 'ASC';
+			// 	break;
 
 			case 'stock_desc': // Сортування по наявності, товари без наявності в кінці
 				$meta_query['in_stock'] = [

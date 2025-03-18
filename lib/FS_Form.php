@@ -328,6 +328,12 @@ class FS_Form
 			$args['inline_attributes']
 		);
 
+		// Добавляем nonce-поле для обеспечения безопасности
+		echo \FS\FS_Config::nonce_field();
+
+		// Добавляем поле для AJAX действия
+		echo '<input type="hidden" name="action" value="' . esc_attr($args['ajax_action']) . '">';
+
 		if ($args['validate_only']) {
 			echo '<input type="hidden" name="fs_validate_only" value="' . esc_attr(implode(',', $args['validate_only'])) . '">';
 		}
