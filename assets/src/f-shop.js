@@ -5,6 +5,151 @@ import FsLightbox from "fslightbox"
 
 import Swiper from 'swiper';
 import {Controller, Navigation, Pagination} from 'swiper/modules';
+import FS from './lib/fs';
+
+// Initialize Alpine Store for FS
+if (typeof Alpine !== 'undefined') {
+    Alpine.store('FS', new FS());
+    Alpine.store('FS').loading = false;
+    Alpine.store('FS').showNoAvailableModal = false;
+    Alpine.store('FS').noAvailableProductData = null;
+    
+    // Add no-available modal template to the page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Create modal template if it doesn't exist
+        if (!document.getElementById('fs-no-available-modal')) {
+            const modalTemplate = document.createElement('div');
+            modalTemplate.id = 'fs-no-available-modal';
+            modalTemplate.innerHTML = `
+                <div 
+                    x-data 
+                    x-show="$store.FS.showNoAvailableModal" 
+                    x-transition.opacity 
+                    class="fs-modal-overlay"
+                    style="display: none;"
+                >
+                    <div class="fs-modal-container">
+                        <div class="fs-modal-header">
+                            <h3>Сообщить о наличии</h3>
+                            <button @click="$store.FS.showNoAvailableModal = false" class="fs-modal-close">&times;</button>
+                        </div>
+                        <div class="fs-modal-body">
+                            <p>Товара &laquo;<span x-text="$store.FS.noAvailableProductData ? $store.FS.noAvailableProductData.name : ''"></span>&raquo; нет на складе.</p>
+                            <p>Оставьте Ваш E-mail и мы сообщим когда товар будет в наличии.</p>
+                            <form @submit.prevent="
+                                $store.FS.post('fs_report_availability', {
+                                    email: $event.target.email.value,
+                                    product_id: $store.FS.noAvailableProductData['product-id'],
+                                    product_name: $store.FS.noAvailableProductData.name,
+                                    product_url: $store.FS.noAvailableProductData.url,
+                                    variation: $store.FS.noAvailableProductData.variation,
+                                    count: $store.FS.noAvailableProductData.count
+                                }).then(result => {
+                                    if (result.success) {
+                                        $refs.formContainer.style.display = 'none';
+                                        $refs.successMessage.textContent = result.data.msg;
+                                        $refs.successMessage.style.display = 'block';
+                                        setTimeout(() => {
+                                            $store.FS.showNoAvailableModal = false;
+                                        }, 3000);
+                                    } else {
+                                        $refs.errorMessage.textContent = result.data.msg;
+                                        $refs.errorMessage.style.display = 'block';
+                                    }
+                                })
+                            ">
+                                <div x-ref="formContainer">
+                                    <div class="fs-form-group">
+                                        <input type="email" name="email" placeholder="Ваш E-mail" required class="fs-form-control">
+                                    </div>
+                                    <div class="fs-form-group">
+                                        <button type="submit" class="fs-btn fs-btn-primary">Отправить</button>
+                                    </div>
+                                </div>
+                                <div x-ref="successMessage" class="fs-alert fs-alert-success" style="display: none;"></div>
+                                <div x-ref="errorMessage" class="fs-alert fs-alert-danger" style="display: none;"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalTemplate);
+            
+            // Add basic styles if they don't exist
+            if (!document.getElementById('fs-modal-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'fs-modal-styles';
+                styles.textContent = `
+                    .fs-modal-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 9999;
+                    }
+                    .fs-modal-container {
+                        background-color: white;
+                        border-radius: 5px;
+                        max-width: 500px;
+                        width: 90%;
+                        padding: 20px;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                    }
+                    .fs-modal-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 15px;
+                    }
+                    .fs-modal-close {
+                        background: none;
+                        border: none;
+                        font-size: 24px;
+                        cursor: pointer;
+                    }
+                    .fs-form-group {
+                        margin-bottom: 15px;
+                    }
+                    .fs-form-control {
+                        width: 100%;
+                        padding: 8px 12px;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                    }
+                    .fs-btn {
+                        padding: 8px 16px;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    }
+                    .fs-btn-primary {
+                        background-color: #4CAF50;
+                        color: white;
+                    }
+                    .fs-alert {
+                        padding: 12px;
+                        border-radius: 4px;
+                        margin-bottom: 15px;
+                    }
+                    .fs-alert-success {
+                        background-color: #d4edda;
+                        color: #155724;
+                    }
+                    .fs-alert-danger {
+                        background-color: #f8d7da;
+                        color: #721c24;
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+        }
+    });
+}
 
 window.Swiper = Swiper;
 
@@ -301,90 +446,9 @@ jQuery(document).ready(function ($) {
     });
 
 
-//добавление товара в корзину (сессию)
-    jQuery(document).on('click', '[data-action=add-to-cart]', function (event) {
-        event.preventDefault();
-        let el = jQuery(this);
-        let productData = el.data();
-        let product_id = el.data('product-id');
-        let variation = el.attr('data-variation');
-        let count = Number(el.attr('data-count'));
-
-        if (productData.available == false && fShop.getSettings('preorderWindow') == 1) {
-            // создаём событие
-            let fsBuyNoAvailable = new CustomEvent("fsBuyNoAvailable", {
-                detail: productData
-            });
-            document.dispatchEvent(fsBuyNoAvailable);
-            return;
-        }
-
-        if (el.attr("data-disabled") == 'true') {
-            iziToast.warning({
-                position: "topCenter", title: fShop.getLang('error'), message: el.attr("data-disabled-message"),
-            });
-            return;
-        }
-
-        // подтягиваем атрибуты товаров
-        var attr = {};
-        jQuery('[data-fs-element="attr"]').each(function () {
-            if (jQuery(this).data("product-id") == product_id && jQuery(this).prop("checked")) {
-                attr[jQuery(this).attr("name")] = jQuery(this).val();
-            }
-        });
-
-
-        // объект передаваемый в события
-        var detail = {
-            button: el,
-            id: product_id,
-            name: el.data('name'),
-            price: el.data('price'),
-            variation: variation,
-            currency: el.data('currency'),
-            sku: el.data('sku'),
-            category: el.data('category'),
-            count: count,
-            attr: attr,
-            image: el.data('image'),
-            success: true,
-            text: {
-                success: el.data('success'), error: el.data('error')
-            }
-        };
-
-
-        var productObject = {
-            "attr": attr, "count": count, "variation": variation, 'post_id': product_id
-        }
-
-        jQuery.ajax({
-            url: fShop.ajaxurl,
-            data: fShop.ajaxData('add_to_cart', productObject),
-            type: "POST",
-            beforeSend: function () {
-                // создаём событие
-                var before_add_product = new CustomEvent("fs_before_add_product", {
-                    detail: detail
-                });
-                document.dispatchEvent(before_add_product);
-                return before_add_product.success;
-            }
-        })
-            .done(function (result) {
-                // создаём событие
-                let add_to_cart = new CustomEvent("fs_add_to_cart", {
-                    detail: detail
-                });
-                document.dispatchEvent(add_to_cart);
-
-                const cartUpdatedEvent = new CustomEvent('fs-cart-updated',);
-                window.dispatchEvent(cartUpdatedEvent);
-            });
-
-    });
-
+//добавление товара в корзину (сессию) - удаляем этот обработчик, так как теперь используем Alpine.js функционал
+// Старый код jQuery обработчика убираем, так как он будет заменен на Alpine.js функционал
+// через атрибут x-on:click в HTML
 
 // изменяем атрибуты товара по изменению input radio
     jQuery('[data-action="change-attr"]').on('change', function () {
@@ -1287,104 +1351,88 @@ jQuery(document).ready(function ($) {
 
     // Событие срабатывает перед добавлением товара в корзину
     document.addEventListener("fs_before_add_product", function (event) {
-        // действие которое инициирует событие, здесь может быть любой ваш код
-        var button = event.detail.button;
-        button.find('.fs-atc-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader" width="16">');
-        event.preventDefault();
-    }, false);
-
-// Событие срабатывает когда товар добавлен в корзину
-    document.addEventListener("fs_add_to_cart", function (event) {
-
-        // действие которое инициирует событие
-
-        var button = event.detail.button;
-
-        // Show the basket as a modal window
-        if (fShop.getSettings('fs_cart_type') == 'modal') {
-            iziToast.show({
-                image: event.detail.image,
-                imageWidth: $(window).width() > 768 ? 150 : 90,
-                theme: 'light',
-                timeout: false,
-                maxWidth: 540,
-                closeOnEscape: true,
-                title: fShop.getLang('added'),
-                message: fShop.strReplace(fShop.getLang('addToCartButtons'), {
-                    '%product%': button.data('name'),
-                    '%price%': button.data('price'),
-                    '%currency%': button.data('currency')
-                }),
-                position: 'topCenter',
-
-            });
-        } else
-            // Show the cart as a sidebar
-        if (fShop.getSettings('fs_cart_type') == 'side') {
-
-            let cartWrap = $("[data-fs-action=\"showCart\"]");
-
-            cartWrap.fadeIn(200, function () {
-            });
-
-            $("[data-fs-action=\"showCart\"]").on('click', '.close-cart', function (event) {
-                event.preventDefault();
-                $("[data-fs-action=\"showCart\"]").fadeOut(800, function () {
-                    cartWrap.find('[data-fs-element="cart-widget"]').html('');
-                });
-            });
-
+        // Set loading state
+        if (typeof Alpine !== 'undefined') {
+            Alpine.store('FS').loading = true;
         }
-
-        button.find('.fs-atc-preloader').fadeOut();
-        setTimeout(function () {
-            button.find('.fs-atc-info').fadeOut();
-        }, 4000);
-
+        
+        // действие которое инициирует событие, здесь может быть любой ваш код
+        if (event.detail.button) {
+            const button = event.detail.button;
+            button.find('.fs-atc-preloader').fadeIn().html('<img src="/wp-content/plugins/f-shop/assets/img/ajax-loader.gif" alt="preloader" width="16">');
+        }
         event.preventDefault();
     }, false);
 
     // Срабатывает если покупатель пытается добавить отсуствующий товар в корзину
     document.addEventListener("fsBuyNoAvailable", function (event) {
-        iziToast.show({
-            theme: 'light', /*icon: 'fas fa-info-circle',*/
-            timeout: false,
-            maxWidth: 340,
-            overlay: true,
-            title: 'Сообщить о наличии',
-            message: 'Товара &laquo;' + event.detail.name + '&raquo; нет на складе.<br> Оставьте Ваш E-mail и мы сообщим когда товар будет в наличии. <br>',
-            position: 'topCenter',
-            id: 'report-availability',
-            buttons: [['<input type="email" name="userEmail" placeholder="Ваш E-mail">', function (instance, toast) {
-                console.log(instance) // using the name of input to get the value
-            }, 'input'], ['<button>Отправить</button>', function (instance, toast) {
-                let userEmail = $(toast).find('[name="userEmail"]').val();
-                $.ajax({
-                    type: 'POST', url: fShop.ajaxurl, data: fShop.ajaxData('fs_report_availability', {
-                        "email": userEmail,
-                        "product_id": event.detail['product-id'],
-                        "product_name": event.detail.name,
-                        "product_url": event.detail.url,
-                        "variation": event.detail.variation,
-                        "count": event.detail.count
-                    }), success: function (result) {
-                        if (result.success) {
-                            $(toast).find('.iziToast-message').addClass('success').html(result.data.msg);
-                            $(toast).find('.iziToast-buttons').hide();
+        // Check if we have Alpine.js
+        if (typeof Alpine !== 'undefined') {
+            Alpine.store('FS').noAvailableProductData = event.detail;
+            Alpine.store('FS').showNoAvailableModal = true;
+        } else {
+            // Fallback to iziToast if Alpine is not available
+            iziToast.show({
+                theme: 'light',
+                timeout: false,
+                maxWidth: 340,
+                overlay: true,
+                title: 'Сообщить о наличии',
+                message: 'Товара &laquo;' + event.detail.name + '&raquo; нет на складе.<br> Оставьте Ваш E-mail и мы сообщим когда товар будет в наличии. <br>',
+                position: 'topCenter',
+                id: 'report-availability',
+                buttons: [
+                    ['<input type="email" name="userEmail" placeholder="Ваш E-mail">', function (instance, toast) {
+                        // Using the name of input to get the value
+                    }, 'input'], 
+                    ['<button>Отправить</button>', function (instance, toast) {
+                        const userEmail = toast.querySelector('[name="userEmail"]').value;
+                        
+                        if (typeof Alpine !== 'undefined') {
+                            Alpine.store('FS').post('fs_report_availability', {
+                                "email": userEmail,
+                                "product_id": event.detail['product-id'],
+                                "product_name": event.detail.name,
+                                "product_url": event.detail.url,
+                                "variation": event.detail.variation,
+                                "count": event.detail.count
+                            }).then(result => {
+                                if (result.success) {
+                                    toast.querySelector('.iziToast-message').classList.add('success');
+                                    toast.querySelector('.iziToast-message').innerHTML = result.data.msg;
+                                    toast.querySelector('.iziToast-buttons').style.display = 'none';
+                                } else {
+                                    toast.querySelector('.iziToast-message').classList.add('error');
+                                    toast.querySelector('.iziToast-message').innerHTML = result.data.msg;
+                                }
+                            });
                         } else {
-                            $(toast).find('.iziToast-message').addClass('error').html(result.data.msg);
+                            // Fallback to jQuery if Alpine is not available
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: fShop.ajaxurl,
+                                data: fShop.ajaxData('fs_report_availability', {
+                                    "email": userEmail,
+                                    "product_id": event.detail['product-id'],
+                                    "product_name": event.detail.name,
+                                    "product_url": event.detail.url,
+                                    "variation": event.detail.variation,
+                                    "count": event.detail.count
+                                }),
+                                success: function (result) {
+                                    if (result.success) {
+                                        jQuery(toast).find('.iziToast-message').addClass('success').html(result.data.msg);
+                                        jQuery(toast).find('.iziToast-buttons').hide();
+                                    } else {
+                                        jQuery(toast).find('.iziToast-message').addClass('error').html(result.data.msg);
+                                    }
+                                }
+                            });
                         }
-                    }, error: function (xhr, ajaxOptions, thrownError) {
-                        console.log('error...', xhr);
-                        //error logging
-                    }, complete: function () {
-                        //afer ajax call is completed
-                    }
-                });
-
-            }]]
-
-        });
+                    }]
+                ]
+            });
+        }
     });
 
     $(document).on('click', '#buyOneClickPopup input', function (event) {

@@ -14,6 +14,7 @@ class FS {
     this.addWishListToCart = this.addWishListToCart.bind(this);
     this.cart = [];
     this.filters = [];
+    this.cartType = 'modal';
     this.wishlist = {
       items: [],
       count: 0
@@ -32,6 +33,31 @@ class FS {
         document.body.style.overflow = '';
       }
     };
+  }
+  
+  getSetting(settingName) {
+    if (window.FS_DATA) {
+      return typeof window.FS_DATA[settingName] !== 'undefined' ? window.FS_DATA[settingName] : null;
+    }
+    return null;
+  }
+  
+  getLang(key) {
+    if (window.fShop && typeof window.fShop.getLang === 'function') {
+      return window.fShop.getLang(key);
+    }
+    return this.getMessage(key);
+  }
+  
+  strReplace(string, replacements) {
+    if (window.fShop && typeof window.fShop.strReplace === 'function') {
+      return window.fShop.strReplace(string, replacements);
+    }
+    
+    for (const key in replacements) {
+      string = string.replace(new RegExp(key, 'g'), replacements[key]);
+    }
+    return string;
   }
 
   getMessage(key) {
@@ -265,8 +291,148 @@ class FS {
     return this.post("fs_clone_order", { order_id: orderId });
   }
 
-  addToCart(productId, count = 1) {
-    return this.cart.push({ ID: productId, count: count });
+  /**
+   * Добавляет товар в корзину
+   * 
+   * @param {number|string} productId - ID товара
+   * @param {number} count - количество товара
+   * @param {number|null} variation - ID вариации товара
+   * @param {object} attr - атрибуты товара
+   * @returns {Promise} - промис с результатом запроса
+   */
+  addToCart(productId, count = 1, variation = null, attr = {}) {
+    // Подготавливаем объект с данными товара для событий
+    const detail = {
+      id: productId,
+      count: count,
+      variation: variation,
+      attr: attr,
+      success: true
+    };
+    
+    // Вызываем событие перед добавлением товара в корзину
+    document.dispatchEvent(new CustomEvent("fs_before_add_product", { detail }));
+    
+    // Делаем AJAX запрос для добавления товара в корзину
+    return this.post('add_to_cart', {
+      post_id: productId,
+      count: count,
+      variation: variation,
+      attr: JSON.stringify(attr)
+    }).then(result => {
+      if (result.success) {
+        // Добавляем детали товара из результата запроса
+        this._updateProductDetails(detail, result);
+        
+        // Вызываем события успешного добавления товара в корзину
+        this._triggerCartEvents(detail, result.data.product);
+        
+        // Отображаем уведомление или корзину в зависимости от настроек
+        this._showCartNotification(detail);
+        
+        return result;
+      } else {
+        return result;
+      }
+    });
+  }
+  
+  /**
+   * Обновляет детали товара из результата запроса
+   * 
+   * @param {object} detail - объект с деталями товара
+   * @param {object} result - результат запроса
+   * @private
+   */
+  _updateProductDetails(detail, result) {
+    if (result.data && result.data.product) {
+      detail.name = result.data.product.name;
+      detail.price = result.data.product.price;
+      detail.currency = result.data.product.currency;
+      detail.image = result.data.product.thumbnail;
+    }
+  }
+  
+  /**
+   * Вызывает события успешного добавления товара в корзину
+   * 
+   * @param {object} detail - объект с деталями товара
+   * @private
+   */
+  _triggerCartEvents(detail, product) {
+    // Событие добавления товара в корзину
+    document.dispatchEvent(new CustomEvent("fs_add_to_cart", {detail: {
+      product: product,
+      data: detail
+    }}));
+    
+    // Событие обновления корзины
+    window.dispatchEvent(new CustomEvent('fs-cart-updated'));
+  }
+  
+  /**
+   * Отображает уведомление или корзину в зависимости от настроек
+   * 
+   * @param {object} detail - объект с деталями товара
+   * @private
+   */
+  _showCartNotification(detail) {
+    // Получаем тип отображения корзины из настроек или используем значение по умолчанию
+    const cartType = this.getSetting('fs_cart_type') || this.cartType;
+    
+    if (cartType === 'modal') {
+      // Отображаем всплывающее окно с информацией о добавленном товаре
+      this._showModalNotification(detail);
+    }
+  }
+  
+  /**
+   * Отображает всплывающее окно с информацией о добавленном товаре
+   * 
+   * @param {object} detail - объект с деталями товара
+   * @private
+   */
+  _showModalNotification(detail) {
+    iziToast.show({
+      image: detail.image,
+      imageWidth: window.innerWidth > 768 ? 150 : 90,
+      theme: 'light',
+      timeout: false,
+      maxWidth: 540,
+      closeOnEscape: true,
+      title: this.getLang('added'),
+      message: this.strReplace(this.getLang('addToCartButtons'), {
+        '%product%': detail.name,
+        '%price%': detail.price,
+        '%currency%': detail.currency
+      }),
+      position: 'topCenter',
+    });
+  }
+  
+  /**
+   * Отображает корзину как боковую панель
+   * 
+   * @private
+   */
+  _showSideCart() {
+    const cartWrap = document.querySelector("[data-fs-action=\"showCart\"]");
+    if (cartWrap) {
+      cartWrap.style.display = 'block';
+      
+      // Обработка кнопки закрытия боковой корзины
+      const closeBtn = cartWrap.querySelector('.close-cart');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          cartWrap.style.display = 'none';
+          const cartWidget = cartWrap.querySelector('[data-fs-element="cart-widget"]');
+          if (cartWidget) {
+            cartWidget.innerHTML = '';
+          }
+        });
+      }
+    }
   }
 
   getCategoryAttributes(attributeId, categoryId = null) {

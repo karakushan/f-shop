@@ -890,25 +890,18 @@ function fs_add_to_cart($product_id = 0, $label = 'Add to cart', $args = array()
 		'inline_attributes' => ''
 	));
 
-	// Смешиваем параметры  для вывода текскот в качестве атрибутов кнопки
+	// Смешиваем параметры для вывода текстов в качестве атрибутов кнопки
 	$args = array_merge($args, [
-		'data-category'   => fs_get_product_category_name($product_id),
-		'data-url'        => get_the_permalink($product_id),
-		'data-sku'        => fs_get_product_code($product_id),
-		'data-action'     => 'add-to-cart',
-		'data-product-id' => $product_id,
-		'data-available'  => fs_in_stock($product_id),
-		'data-name'       => get_the_title($product_id),
-		'data-price'      => apply_filters('fs_price_format', fs_get_price($product_id)),
-		'data-currency'   => fs_currency(),
-		'data-image'      => esc_url(get_the_post_thumbnail_url($product_id)),
-		'data-attr'       => json_encode(new stdClass()),
-		'x-data'          => json_encode(['inCart' => FS_Cart::contains($product_id)]),
-		'x-on:click'      => 'inCart=true'
+		'x-data'          => json_encode([
+			'inCart' => FS_Cart::contains($product_id),
+			'productId' => $product_id,
+			'count' => fs_get_product_min_qty($product_id),
+			'variation' => fs_get_first_variation($product_id, 'key')
+		]),
+		'x-on:click'      => 'Alpine.store("FS").addToCart(productId, Number(count || 1), $el.dataset.variation || null, JSON.parse($el.dataset.attr || "{}")); inCart=true; $event.preventDefault()'
 	]);
 
-
-	$atc_after = '<span class="fs-atc-preloader" style="display:none"></span>';
+	$atc_after = '<span class="fs-atc-preloader" style="display:none" x-show="$store.FS.loading"></span>';
 
 	if (fs_is_variated($product_id)) {
 		$args['data-variated']  = 1;
