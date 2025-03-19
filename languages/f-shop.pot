@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-03-08 07:22+0000\n"
+"POT-Creation-Date: 2025-03-19 09:39+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: functions/functions.php:3264
@@ -35,11 +35,11 @@ msgstr ""
 
 #: lib/FS_Orders.php:207
 msgid ""
-"About all orders with the status of "New" administrator receives "
+"About all orders with the status of \"New\" administrator receives "
 "notification by mail, which allows him to immediately contact the buyer. For "
 "the convenience of accounting for new orders, they are automatically placed "
-"in the "New" tab on the order management panel and are displayed as a list, "
-"sorted by the date added."
+"in the \"New\" tab on the order management panel and are displayed as a list,"
+" sorted by the date added."
 msgstr ""
 
 #: templates/front-end/dashboard/personal_info.php:112
@@ -2614,8 +2614,8 @@ msgstr ""
 #: lib/FS_Orders.php:211
 msgid ""
 "The order is accepted and can be paid. The status is introduced mainly for "
-"the convenience of internal order management, not "New", but not yet paid or "
-"not sent for delivery;"
+"the convenience of internal order management, not \"New\", but not yet paid "
+"or not sent for delivery;"
 msgstr ""
 
 #: lib/FS_Order.php:788
@@ -3330,4 +3330,7 @@ msgid "товари схожі на основний"
 msgstr ""
 
 msgid "Middle name"
+msgstr ""
+
+msgid "No reviews"
 msgstr ""

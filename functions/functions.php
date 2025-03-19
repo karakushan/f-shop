@@ -3225,11 +3225,11 @@ function fs_product_rating($product_id = 0, $args = array())
  *
  * @return void
  */
-function fs_product_average_rating($product_id = 0, $default = 5)
+function fs_product_average_rating($product_id = 0)
 {
 	$product_id = fs_get_product_id($product_id);
 	$rating     = FS_Product::get_average_rating($product_id);
-	echo $rating > 0 ? $rating : $default;
+	echo $rating > 0 ? $rating : 0;
 }
 
 /**
@@ -3259,7 +3259,22 @@ function fs_comments_count($product_id = 0): void
 		number_format_i18n($count)
 	);
 
-	echo esc_html(apply_filters('fs_reviews_count_text', $count_text, $count));
+	echo $count_text;
+}
+
+/**
+ * Returns the average rating of the product
+ *
+ * @param int $product_id Product ID
+ * 
+ * @return float Product rating (0-5)
+ */
+function fs_get_product_rating($product_id = 0)
+{
+	$product_id = fs_get_product_id($product_id);
+	$rating     = FS_Product::get_average_rating($product_id);
+
+	return $rating > 0 ? (float)$rating : 0;
 }
 
 if (! function_exists('fs_get_category_text')) {
