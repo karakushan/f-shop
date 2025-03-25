@@ -1149,13 +1149,13 @@ class FS_Ajax
         if (!empty($wishlist)) {
             // Получаем текущую корзину перед добавлением товаров
             $cart = isset($_SESSION['cart']) ? (array) $_SESSION['cart'] : [];
-            
+
             foreach ($wishlist as $product_id) {
                 // Проверяем, существует ли товар
                 if (!get_post($product_id)) {
                     continue;
                 }
-                
+
                 // Добавляем товар в корзину
                 $item = [
                     'ID' => $product_id,
@@ -1163,13 +1163,13 @@ class FS_Ajax
                     'attr' => [],
                     'variation' => null,
                 ];
-                
+
                 array_push($cart, $item);
             }
-            
+
             // Сохраняем обновленную корзину в сессию
             $_SESSION['cart'] = $cart;
-            
+
             // Обновляем счетчики в корзине после добавления всех товаров
             do_action('fs_after_add_to_cart');
         }
@@ -1509,6 +1509,19 @@ class FS_Ajax
         ]);
     }
 
+    /**
+     * Handles like and dislike functionality for comments.
+     *
+     * This method allows users to like or dislike comments. Each user can only have
+     * one active reaction (like OR dislike) per comment. Clicking the same button twice
+     * will remove the reaction. Clicking the opposite button will switch the reaction.
+     *
+     * Required POST parameters:
+     * - comment_id: The ID of the comment to like/dislike
+     * - type: The type of action, either 'like' or 'dislike'
+     *
+     * @return void JSON response with updated like/dislike counts and user state
+     */
     public function fs_comment_like_dislike()
     {
         $comment_id = (int) $_POST['comment_id'];
@@ -1517,22 +1530,87 @@ class FS_Ajax
             wp_send_json_error(['msg' => __('Comment ID not found', 'f-shop')]);
         }
 
+        // Get user identifier (user ID for logged in users, IP address for guests)
+        $user_id = get_current_user_id();
+        $user_identifier = $user_id ? 'user_'.$user_id : $_SERVER['REMOTE_ADDR'];
+
+        // Get current like/dislike counts
         $likes = (int) get_comment_meta($comment_id, 'fs_likes', true);
         $dislikes = (int) get_comment_meta($comment_id, 'fs_dislikes', true);
 
-        if ($_POST['type'] == 'like') {
-            ++$likes;
-            update_comment_meta($comment_id, 'fs_likes', $likes);
+        // Get lists of users who liked/disliked
+        $liked_users = get_comment_meta($comment_id, 'fs_liked_users', true) ?: [];
+        $disliked_users = get_comment_meta($comment_id, 'fs_disliked_users', true) ?: [];
+
+        $action_type = $_POST['type'];
+        $user_liked = in_array($user_identifier, $liked_users);
+        $user_disliked = in_array($user_identifier, $disliked_users);
+
+        // Handle like button click
+        if ($action_type == 'like') {
+            // If user already liked this comment - remove the like (toggle off)
+            if ($user_liked) {
+                $likes = max(0, $likes - 1);
+                update_comment_meta($comment_id, 'fs_likes', $likes);
+                $liked_users = array_diff($liked_users, [$user_identifier]);
+                update_comment_meta($comment_id, 'fs_liked_users', $liked_users);
+                $user_liked = false;
+            }
+            // If user hadn't liked this comment - add a like
+            else {
+                // If user had a dislike - remove it first
+                if ($user_disliked) {
+                    $dislikes = max(0, $dislikes - 1);
+                    update_comment_meta($comment_id, 'fs_dislikes', $dislikes);
+                    $disliked_users = array_diff($disliked_users, [$user_identifier]);
+                    update_comment_meta($comment_id, 'fs_disliked_users', $disliked_users);
+                    $user_disliked = false;
+                }
+
+                // Add the like
+                ++$likes;
+                update_comment_meta($comment_id, 'fs_likes', $likes);
+                $liked_users[] = $user_identifier;
+                update_comment_meta($comment_id, 'fs_liked_users', $liked_users);
+                $user_liked = true;
+            }
+        }
+        // Handle dislike button click
+        elseif ($action_type == 'dislike') {
+            // If user already disliked this comment - remove the dislike (toggle off)
+            if ($user_disliked) {
+                $dislikes = max(0, $dislikes - 1);
+                update_comment_meta($comment_id, 'fs_dislikes', $dislikes);
+                $disliked_users = array_diff($disliked_users, [$user_identifier]);
+                update_comment_meta($comment_id, 'fs_disliked_users', $disliked_users);
+                $user_disliked = false;
+            }
+            // If user hadn't disliked this comment - add a dislike
+            else {
+                // If user had a like - remove it first
+                if ($user_liked) {
+                    $likes = max(0, $likes - 1);
+                    update_comment_meta($comment_id, 'fs_likes', $likes);
+                    $liked_users = array_diff($liked_users, [$user_identifier]);
+                    update_comment_meta($comment_id, 'fs_liked_users', $liked_users);
+                    $user_liked = false;
+                }
+
+                // Add the dislike
+                ++$dislikes;
+                update_comment_meta($comment_id, 'fs_dislikes', $dislikes);
+                $disliked_users[] = $user_identifier;
+                update_comment_meta($comment_id, 'fs_disliked_users', $disliked_users);
+                $user_disliked = true;
+            }
         }
 
-        if ($_POST['type'] == 'dislike') {
-            ++$dislikes;
-            update_comment_meta($comment_id, 'fs_dislikes', $dislikes);
-        }
-
+        // Return updated counts and user state
         wp_send_json_success([
             'likes' => $likes,
             'dislikes' => $dislikes,
+            'user_liked' => $user_liked,
+            'user_disliked' => $user_disliked,
         ]);
     }
 
