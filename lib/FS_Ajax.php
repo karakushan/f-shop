@@ -53,10 +53,6 @@ class FS_Ajax
             add_action('wp_ajax_fs_update_position', [$this, 'fs_update_position_callback']);
             add_action('wp_ajax_nopriv_fs_update_position', [$this, 'fs_update_position_callback']);
 
-            // Returns the HTML code of the template located at /templates/front-end/checkout/shipping-fields.php
-            add_action('wp_ajax_fs_show_shipping', [$this, 'fs_show_shipping_callback']);
-            add_action('wp_ajax_nopriv_fs_show_shipping', [$this, 'fs_show_shipping_callback']);
-
             // Returns a template, works based on get_template_part ()
             add_action('wp_ajax_fs_get_template_part', [$this, 'fs_get_template_part']);
             add_action('wp_ajax_nopriv_fs_get_template_part', [$this, 'fs_get_template_part']);
@@ -1053,63 +1049,6 @@ class FS_Ajax
 
         echo json_encode(['body' => $body]);
         exit;
-    }
-
-    /**
-     * Подгружает стоимость доставки, поля которые нужно скрыть в оформлении покупки.
-     */
-    public function fs_show_shipping_callback()
-    {
-        if (!FS_Config::verify_nonce()) {
-            wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
-        }
-
-        // Setting the shipping method
-        $shipping_method_id = isset($_POST['fs_delivery_methods']) ? absint($_POST['fs_delivery_methods']) : 0;
-        if (!$shipping_method_id) {
-            $shipping_methods = get_terms([
-                'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
-                'hide_empty' => false,
-            ]);
-            $shipping_method_id = $shipping_methods[0]->term_id ?? 0;
-        }
-
-        if (!$shipping_method_id) {
-            wp_send_json_error(['msg' => __('Shipping method not found', 'f-shop')]);
-        }
-
-        $delivery_cost_clean = floatval(get_term_meta($shipping_method_id, '_fs_delivery_cost', 1));
-        $delivery_cost = sprintf('%s <span>%s</span>', apply_filters('fs_price_format', $delivery_cost_clean), fs_currency());
-        $total_amount = sprintf('%s <span>%s</span>', apply_filters('fs_price_format', fs_get_total_amount($delivery_cost_clean)), fs_currency());
-        $total = $delivery_cost_clean + fs_get_cart_cost();
-
-        ob_start();
-        fs_taxes_list(['wrapper' => false], $total);
-        $taxes_out = ob_get_clean();
-
-        $disable_fields = get_term_meta($shipping_method_id, '_fs_disable_fields', 1);
-        $disable_fields = $disable_fields ?: [];
-
-        $required_fields = get_term_meta($shipping_method_id, '_fs_required_fields', 1);
-        $required_fields = $required_fields ?: [];
-
-        $packing_cost = fs_option('fs_include_packing_cost') && $shipping_method_id ? fs_get_packing_cost($shipping_method_id) : 0;
-        $packing_cost = sprintf('%s <span>%s</span>', apply_filters('fs_price_format', $packing_cost), fs_currency());
-
-        ob_start();
-        fs_load_template('checkout/shipping-fields');
-        $html = ob_get_clean();
-
-        wp_send_json_success([
-            'method_id' => $shipping_method_id,
-            'disableFields' => $disable_fields,
-            'html' => $html,
-            'requiredFields' => $required_fields,
-            'taxes' => $taxes_out,
-            'price' => $delivery_cost,
-            'packing_cost' => $packing_cost,
-            'total' => $total_amount,
-        ]);
     }
 
     /**

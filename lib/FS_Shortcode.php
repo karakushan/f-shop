@@ -245,6 +245,22 @@ class FS_Shortcode
             return fs_frontend_template('checkout/checkout-no-items');
         }
 
+        $shipping_methods = array_map(function ($method) {
+            return [
+                'id' => $method->term_id,
+                'name' => $method->name,
+                'description' => $method->description,
+                'disableFields' => (array) get_term_meta($method->term_id, '_fs_disable_fields', 1),
+                'requiredFields' => (array) get_term_meta($method->term_id, '_fs_required_fields', 1),
+            ];
+        }, get_terms([
+            'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
+            'hide_empty' => false,
+            'orderby' => 'meta_value_num',
+            'meta_key' => '_fs_term_order',
+            'order' => 'ASC',
+        ]));
+
         $template = FS_Form::form_open([
             'name' => 'fs-order-send',
             'class' => $args['class'],
@@ -253,6 +269,9 @@ class FS_Shortcode
 				$data.loading = false;
 				$data.errors = {};
 				$data.success = false;
+				$data.shipping_methods = JSON.parse(\''.esc_js(json_encode($shipping_methods, JSON_UNESCAPED_UNICODE)).'\');
+				console.log($data.shipping_methods);
+				$data.fs_delivery_method = $data.shipping_methods && $data.shipping_methods.length ? $data.shipping_methods[0].id : null;
 				$el.onsubmit = async function(e) { 
 					e.preventDefault();
 					$data.loading = true;

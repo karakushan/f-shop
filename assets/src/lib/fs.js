@@ -600,6 +600,10 @@ class FS {
       }
     });
   }
+
+  getShippingMethods() {
+    return this.post("fs_show_shipping");
+  }
 }
 
 export default FS;
