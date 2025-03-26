@@ -659,7 +659,7 @@ class FS_Ajax
      *
      * @return array
      */
-    public static function validate_checkout_fields()
+    public static function validate_checkout_fields($exclude = [])
     {
         if (FS_Cart::has_empty()) {
             wp_send_json_error(['msg' => __('Корзина пуста!', 'f-shop')]);
@@ -667,9 +667,13 @@ class FS_Ajax
 
         $errors = [];
         $checkout_fields = apply_filters('fs_checkout_validate_fields', FS_Users::get_user_fields());
-        $form_fields = array_filter($checkout_fields, function ($item) {
-            return isset($item['checkout']) && $item['checkout'] === true;
-        });
+        $form_fields = array_filter($checkout_fields, function ($item, $key) use ($exclude) {
+            return isset($item['checkout'])
+                   && $item['checkout'] === true
+                   && !array_filter($exclude, function ($exclude_value) use ($key) {
+                       return strpos($key, $exclude_value) !== false;
+                   });
+        }, ARRAY_FILTER_USE_BOTH);
 
         foreach ($form_fields as $key => $form_field) {
             if (isset($form_field['required']) && $form_field['required'] && trim($_POST[$key]) == '') {
@@ -725,14 +729,15 @@ class FS_Ajax
             wp_send_json_error(['msg' => __('Failed verification of nonce form', 'f-shop')]);
         }
 
+        $order_type = !empty($_POST['order_type']) ? $_POST['order_type'] : 'standard'; // Тип заказа обычный или быстрый
+
         // Validation of order submission form data
-        $sanitize_field = self::validate_checkout_fields();
+        $sanitize_field = self::validate_checkout_fields($order_type == 'quick' ? ['fs_email'] : []);
 
         global $wpdb;
         $wpdb->show_errors(false);
         $fs_config = new FS_Config();
         $current_date_i18n = date_i18n('d.m.Y H:i');
-        $order_type = !empty($_POST['order_type']) ? $_POST['order_type'] : 'standard'; // Тип заказа обычный или быстрый
         $order_status_id = intval(fs_option('fs_default_order_status'));
         $customer_id = 0;
 
