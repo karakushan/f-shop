@@ -1599,6 +1599,7 @@ function fs_add_to_wishlist($product_id = 0, $button_text = 'В список ж�
         'class' => 'fs-whishlist-btn',
         'id' => 'fs-whishlist-btn-'.$product_id,
         'atts' => '',
+        'title' => esc_html__('Add to wishlist', 'f-shop'),
     ];
     $args = wp_parse_args($args, $defaults);
     $html_atts = fs_parse_attr([], [
@@ -1607,6 +1608,7 @@ function fs_add_to_wishlist($product_id = 0, $button_text = 'В список ж�
         'x-data' => json_encode(['inWishlist' => FS\FS_Wishlist::contains($product_id)]),
         'x-on:click' => 'Alpine.store("FS").addToWishlist('.$product_id.'); inWishlist=!inWishlist',
         'x-bind:class' => '{\'fs-in-wishlist\':inWishlist}',
+        'title' => $args['title'],
     ]);
 
     switch ($args['type']) {

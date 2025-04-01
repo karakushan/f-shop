@@ -1581,13 +1581,15 @@ class FS_Users
             $template .= '<p class="text-center"><a href="'.esc_url(get_the_permalink(fs_option('page_cabinet'))).'">'.__('To personal account', 'f-shop').'</a></p>';
         } else {
             ob_start(); ?>
-			<form method="post" class="fs-login-form" action="" x-ref="registerForm" x-data="{ errors: [], msg: '' }"
+			<form method="post" class="fs-login-form" action="" x-ref="registerForm" x-data="{ errors: [], msg: '', success: false }"
 				x-on:submit.prevent="Alpine.store('FS').register($event).then((r)=>{
                        msg=typeof r.data.msg!=='undefined' ? r.data.msg : '';
                        if(r.success===false) {
                             errors=typeof r.data.errors!=='undefined' ? r.data.errors : [];
+                            success=false;
                        }else
                         if(r.success===true){
+                            success=true;
 							errors = [];
                             $refs.registerForm.reset();
                             if (typeof r.data.redirect!=='undefined') { window.location.href = r.data.redirect; }
