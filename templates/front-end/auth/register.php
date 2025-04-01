@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <div :class="success===true ? 'fs-success-message' : 'fs-error-message'" x-show="msg && msg.length > 0" x-text="msg"></div>
+    <div :class="success===true ? 'fs-success-message' : 'fs-error-message'" x-show="msg && msg.length > 0" x-html="msg"></div>
 
     <div class="form-group">
 		<?php fs_form_submit(__('Send', 'f-shop'), ['class' => 'bsm:w-auto w-full bg-theme-blue1 text-xl font-semibold px-[30px] py-[18px] leading-6 text-white rounded-[35px] inline-flex items-center justify-center']); ?>
