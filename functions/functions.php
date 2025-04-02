@@ -879,7 +879,7 @@ function fs_add_to_cart($product_id = 0, $label = 'Add to cart', $args = [])
         'x-on:click' => 'Alpine.store("FS").addToCart(productId, Number(count || 1), $el.dataset.variation || null, JSON.parse($el.dataset.attr || "{}")); inCart=true; $event.preventDefault()',
     ]);
 
-    $atc_after = '<span class="fs-atc-preloader" style="display:none" x-show="$store.FS.loading"></span>';
+    $atc_after = '<span class="fs-atc-preloader" style="display:none" x-show="$store?.FS?.loading"></span>';
 
     if (fs_is_variated($product_id)) {
         $args['data-variated'] = 1;
@@ -974,7 +974,7 @@ function fs_order_send($label = 'Отправить заказ', $attr = [])
         'preloader_src' => FS_PLUGIN_URL.'assets/img/form-preloader.svg',
         'preloader_width' => 32,
     ]);
-    $preloader = '<img class="fs-atc-preloader" style="display:none" x-show="loading" src="'.esc_attr($args['preloader_src']).'" width="'.esc_attr($args['preloader_width']).'" alt="preloader">';
+    $preloader = '<img class="fs-atc-preloader" style="display:none" x-show="typeof loading !== \'undefined\' && loading" src="'.esc_attr($args['preloader_src']).'" width="'.esc_attr($args['preloader_width']).'" alt="preloader">';
     $inline_attributes = fs_parse_attr($attr, $args, ['preloader_src', 'preloader_width']);
 
     printf('<button type="submit" x-on:fs-checkout-start-submit.window="loading = true" x-on:fs-checkout-finish-submit.window="loading = false" x-data="{loading: false }" %s><span>%s</span> '.$preloader.'</button>', $inline_attributes, $label);

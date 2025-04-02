@@ -355,6 +355,14 @@ class FS {
     });
   }
 
+  setCart(cart) {
+    if (!Array.isArray(cart)) {
+      console.error("Cart must be an array");
+      return;
+    }
+    this.cart = cart;
+  }
+
   /**
    * Обновляет детали товара из результата запроса
    *
