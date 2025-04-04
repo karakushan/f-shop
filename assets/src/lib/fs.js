@@ -14,10 +14,10 @@ class FS {
     this.addWishListToCart = this.addWishListToCart.bind(this);
     this.cart = [];
     this.filters = [];
-    this.cartType = 'modal';
+    this.cartType = "modal";
     this.wishlist = {
       items: [],
-      count: 0
+      count: 0,
     };
     this.modal = {
       modalID: null,
@@ -25,37 +25,39 @@ class FS {
       openModal(modalID) {
         this.modalID = modalID;
         this.isOpen = true;
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = "hidden";
       },
       closeModal() {
         this.modalID = null;
         this.isOpen = false;
-        document.body.style.overflow = '';
-      }
+        document.body.style.overflow = "";
+      },
     };
   }
-  
+
   getSetting(settingName) {
     if (window.FS_DATA) {
-      return typeof window.FS_DATA[settingName] !== 'undefined' ? window.FS_DATA[settingName] : null;
+      return typeof window.FS_DATA[settingName] !== "undefined"
+        ? window.FS_DATA[settingName]
+        : null;
     }
     return null;
   }
-  
+
   getLang(key) {
-    if (window.fShop && typeof window.fShop.getLang === 'function') {
+    if (window.fShop && typeof window.fShop.getLang === "function") {
       return window.fShop.getLang(key);
     }
     return this.getMessage(key);
   }
-  
+
   strReplace(string, replacements) {
-    if (window.fShop && typeof window.fShop.strReplace === 'function') {
+    if (window.fShop && typeof window.fShop.strReplace === "function") {
       return window.fShop.strReplace(string, replacements);
     }
-    
+
     for (const key in replacements) {
-      string = string.replace(new RegExp(key, 'g'), replacements[key]);
+      string = string.replace(new RegExp(key, "g"), replacements[key]);
     }
     return string;
   }
@@ -150,16 +152,30 @@ class FS {
    * @return {void} This method does not return a value.
    */
   addWishListToCart() {
-    this.post("fs_add_wishlist_to_cart").then((response) => {
-      // this.updateCarts();
-      iziToast.success({
-        title: response.data.title,
-        message: response.data.message,
-        position: "topCenter",
+    this.post("fs_add_wishlist_to_cart")
+      .then((response) => {
+        if (response.success) {
+          // Обновляем данные корзины после добавления товаров
+          this.getCart().then((cartResponse) => {
+            if (cartResponse.success) {
+              this.cart = cartResponse.data;
+              // Вызываем событие обновления корзины для оповещения интерфейса
+              const cartUpdatedEvent = new CustomEvent("fs-cart-updated");
+              window.dispatchEvent(cartUpdatedEvent);
+            }
+          });
+
+          // Показываем уведомление об успешном добавлении
+          iziToast.success({
+            title: response.data.title,
+            message: response.data.message,
+            position: "topCenter",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
       });
-    }).catch((error) => {
-      console.error(error);
-    });
   }
 
   /**
@@ -293,7 +309,7 @@ class FS {
 
   /**
    * Добавляет товар в корзину
-   * 
+   *
    * @param {number|string} productId - ID товара
    * @param {number} count - количество товара
    * @param {number|null} variation - ID вариации товара
@@ -307,39 +323,49 @@ class FS {
       count: count,
       variation: variation,
       attr: attr,
-      success: true
+      success: true,
     };
-    
+
     // Вызываем событие перед добавлением товара в корзину
-    document.dispatchEvent(new CustomEvent("fs_before_add_product", { detail }));
-    
+    document.dispatchEvent(
+      new CustomEvent("fs_before_add_product", { detail })
+    );
+
     // Делаем AJAX запрос для добавления товара в корзину
-    return this.post('add_to_cart', {
+    return this.post("add_to_cart", {
       post_id: productId,
       count: count,
       variation: variation,
-      attr: JSON.stringify(attr)
-    }).then(result => {
+      attr: JSON.stringify(attr),
+    }).then((result) => {
       if (result.success) {
         // Добавляем детали товара из результата запроса
         this._updateProductDetails(detail, result);
-        
+
         // Вызываем события успешного добавления товара в корзину
         this._triggerCartEvents(detail, result.data.product);
-        
+
         // Отображаем уведомление или корзину в зависимости от настроек
         this._showCartNotification(detail);
-        
+
         return result;
       } else {
         return result;
       }
     });
   }
-  
+
+  setCart(cart) {
+    if (!Array.isArray(cart)) {
+      console.error("Cart must be an array");
+      return;
+    }
+    this.cart = cart;
+  }
+
   /**
    * Обновляет детали товара из результата запроса
-   * 
+   *
    * @param {object} detail - объект с деталями товара
    * @param {object} result - результат запроса
    * @private
@@ -352,43 +378,47 @@ class FS {
       detail.image = result.data.product.thumbnail;
     }
   }
-  
+
   /**
    * Вызывает события успешного добавления товара в корзину
-   * 
+   *
    * @param {object} detail - объект с деталями товара
    * @private
    */
   _triggerCartEvents(detail, product) {
     // Событие добавления товара в корзину
-    document.dispatchEvent(new CustomEvent("fs_add_to_cart", {detail: {
-      product: product,
-      data: detail
-    }}));
-    
+    document.dispatchEvent(
+      new CustomEvent("fs_add_to_cart", {
+        detail: {
+          product: product,
+          data: detail,
+        },
+      })
+    );
+
     // Событие обновления корзины
-    window.dispatchEvent(new CustomEvent('fs-cart-updated'));
+    window.dispatchEvent(new CustomEvent("fs-cart-updated"));
   }
-  
+
   /**
    * Отображает уведомление или корзину в зависимости от настроек
-   * 
+   *
    * @param {object} detail - объект с деталями товара
    * @private
    */
   _showCartNotification(detail) {
     // Получаем тип отображения корзины из настроек или используем значение по умолчанию
-    const cartType = this.getSetting('fs_cart_type') || this.cartType;
-    
-    if (cartType === 'modal') {
+    const cartType = this.getSetting("fs_cart_type") || this.cartType;
+
+    if (cartType === "modal") {
       // Отображаем всплывающее окно с информацией о добавленном товаре
       this._showModalNotification(detail);
     }
   }
-  
+
   /**
    * Отображает всплывающее окно с информацией о добавленном товаре
-   * 
+   *
    * @param {object} detail - объект с деталями товара
    * @private
    */
@@ -396,39 +426,41 @@ class FS {
     iziToast.show({
       image: detail.image,
       imageWidth: window.innerWidth > 768 ? 150 : 90,
-      theme: 'light',
+      theme: "light",
       timeout: false,
       maxWidth: 540,
       closeOnEscape: true,
-      title: this.getLang('added'),
-      message: this.strReplace(this.getLang('addToCartButtons'), {
-        '%product%': detail.name,
-        '%price%': detail.price,
-        '%currency%': detail.currency
+      title: this.getLang("added"),
+      message: this.strReplace(this.getLang("addToCartButtons"), {
+        "%product%": detail.name,
+        "%price%": detail.price,
+        "%currency%": detail.currency,
       }),
-      position: 'topCenter',
+      position: "topCenter",
     });
   }
-  
+
   /**
    * Отображает корзину как боковую панель
-   * 
+   *
    * @private
    */
   _showSideCart() {
-    const cartWrap = document.querySelector("[data-fs-action=\"showCart\"]");
+    const cartWrap = document.querySelector('[data-fs-action="showCart"]');
     if (cartWrap) {
-      cartWrap.style.display = 'block';
-      
+      cartWrap.style.display = "block";
+
       // Обработка кнопки закрытия боковой корзины
-      const closeBtn = cartWrap.querySelector('.close-cart');
+      const closeBtn = cartWrap.querySelector(".close-cart");
       if (closeBtn) {
-        closeBtn.addEventListener('click', function(e) {
+        closeBtn.addEventListener("click", function (e) {
           e.preventDefault();
-          cartWrap.style.display = 'none';
-          const cartWidget = cartWrap.querySelector('[data-fs-element="cart-widget"]');
+          cartWrap.style.display = "none";
+          const cartWidget = cartWrap.querySelector(
+            '[data-fs-element="cart-widget"]'
+          );
           if (cartWidget) {
-            cartWidget.innerHTML = '';
+            cartWidget.innerHTML = "";
           }
         });
       }
@@ -555,7 +587,7 @@ class FS {
 
   /**
    * Cleans the viewed products list for the current user
-   * 
+   *
    * @return {Promise} A promise that resolves when the viewed products are cleared
    */
   cleanViewedProducts() {
@@ -569,12 +601,16 @@ class FS {
         window.location.reload();
       } else {
         iziToast.error({
-          title: response.data.title ?? this.getMessage("error"), 
+          title: response.data.title ?? this.getMessage("error"),
           message: response.data.msg,
           position: "topCenter",
         });
       }
     });
+  }
+
+  getShippingMethods() {
+    return this.post("fs_show_shipping");
   }
 }
 

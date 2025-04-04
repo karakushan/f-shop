@@ -879,7 +879,7 @@ function fs_add_to_cart($product_id = 0, $label = 'Add to cart', $args = [])
         'x-on:click' => 'Alpine.store("FS").addToCart(productId, Number(count || 1), $el.dataset.variation || null, JSON.parse($el.dataset.attr || "{}")); inCart=true; $event.preventDefault()',
     ]);
 
-    $atc_after = '<span class="fs-atc-preloader" style="display:none" x-show="$store.FS.loading"></span>';
+    $atc_after = '<span class="fs-atc-preloader" style="display:none" x-show="$store?.FS?.loading"></span>';
 
     if (fs_is_variated($product_id)) {
         $args['data-variated'] = 1;
@@ -3154,8 +3154,6 @@ function fs_product_average_rating($product_id = 0)
  * Выводит к-во комментариев к товару.
  *
  * @param int $product_id
- *
- * @return void
  */
 function fs_comments_count($product_id = 0, $return = false)
 {

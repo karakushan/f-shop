@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-04 11:05+0000\n"
-"PO-Revision-Date: 2025-03-19 09:39+0000\n"
+"PO-Revision-Date: 2025-03-25 08:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -2289,6 +2289,9 @@ msgstr "удалить"
 #: templates/back-end/fields/gallery.php:28
 msgid "Remove from gallery"
 msgstr "Удалить из галереи"
+
+msgid "Remove from wishlist"
+msgstr "Удалить из списка желаний"
 
 #: templates/back-end/metabox/product-variations/add-variation.php:10
 msgid "remove variant"

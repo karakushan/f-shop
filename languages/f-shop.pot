@@ -6,7 +6,7 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"POT-Creation-Date: 2025-03-19 09:39+0000\n"
+"POT-Creation-Date: 2025-03-31 09:05+0000\n"
 "X-Generator: Loco https://localise.biz/"
 
 #: functions/functions.php:3264
@@ -3333,4 +3333,13 @@ msgid "Middle name"
 msgstr ""
 
 msgid "No reviews"
+msgstr ""
+
+msgid "Remove from wishlist"
+msgstr ""
+
+msgid "Add to wishlist"
+msgstr ""
+
+msgid "Add to cart"
 msgstr ""
