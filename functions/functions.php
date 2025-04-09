@@ -152,9 +152,9 @@ function fs_the_price($product_id = 0, $wrap = '%s %s', $args = [])
     $cur_symb = fs_currency($product_id);
     $product_id = fs_get_product_id($product_id);
     $price = fs_get_price($product_id);
-    $price = apply_filters('fs_price_format', $price);
+    $price_formatted = apply_filters('fs_price_format', $price);
 
-    printf('<span class="'.esc_attr($args['class']).'">'.$wrap.'</span>', '<span x-text="typeof price===\'number\' ? price : \''.$price.'\' ">'.esc_attr($price).'</span>', '<span x-text="typeof currency!==\'undefined\' ? currency : \''.esc_attr($cur_symb).'\'">'.esc_attr($cur_symb).'</span>');
+    printf('<span class="'.esc_attr($args['class']).'">'.$wrap.'</span>', '<span x-text="typeof price===\'number\' && price_formatted ? price_formatted : \''.$price_formatted.'\' ">'.esc_attr($price_formatted).'</span>', '<span x-text="typeof currency!==\'undefined\' ? currency : \''.esc_attr($cur_symb).'\'">'.esc_attr($cur_symb).'</span>');
 }
 
 /**
@@ -874,17 +874,11 @@ function fs_add_to_cart($product_id = 0, $label = 'Add to cart', $args = [])
             'inCart' => FS_Cart::contains($product_id),
             'productId' => $product_id,
             'count' => fs_get_product_min_qty($product_id),
-            'variation' => fs_get_first_variation($product_id, 'key'),
         ]),
-        'x-on:click' => 'Alpine.store("FS").addToCart(productId, Number(count || 1), $el.dataset.variation || null, JSON.parse($el.dataset.attr || "{}")); inCart=true; $event.preventDefault()',
+        'x-on:click' => 'Alpine.store("FS").addToCart(productId, Number(count || 1), typeof variationId !== "undefined" ? variationId : null, typeof attributes !== "undefined" ? attributes : {}); inCart=true; $event.preventDefault()',
     ]);
 
     $atc_after = '<span class="fs-atc-preloader" style="display:none" x-show="$store?.FS?.loading"></span>';
-
-    if (fs_is_variated($product_id)) {
-        $args['data-variated'] = 1;
-        $args['data-variation'] = fs_get_first_variation($product_id, 'key');
-    }
 
     if ($args['type'] == 'link') {
         $args['href'] = add_query_arg(['fs-api' => 'add_to_cart', 'product_id' => $product_id]);
@@ -2471,7 +2465,7 @@ function fs_is_variated($product_id = 0)
 }
 
 /**
- * Получает вариативную цену.
+ * Возвращает цену вариации товара на основании её идентификатора.
  *
  * @param int $product_id
  * @param int $variation_id
@@ -2483,6 +2477,51 @@ function fs_get_variated_price($product_id = 0, $variation_id)
     $product_class = new FS_Product();
 
     return $product_class->get_variation_price($product_id, $variation_id);
+}
+
+/**
+ * Find product variation by specified attributes.
+ *
+ * @param int   $product_id Product ID
+ * @param array $attributes Array of attribute term IDs
+ *
+ * @return array|null Returns variation data or null if not found
+ */
+function fs_get_variation_by_attributes($product_id = 0, $attributes = [])
+{
+    if (empty($product_id) || empty($attributes) || !is_array($attributes)) {
+        return null;
+    }
+
+    $product_id = fs_get_product_id($product_id);
+    $attributes = array_map('intval', $attributes);
+
+    $product = new FS_Product();
+    $variations = $product->get_product_variations($product_id);
+
+    if (empty($variations)) {
+        return null;
+    }
+
+    // Поиск вариации, соответствующей выбранным атрибутам
+    foreach ($variations as $variation_id => $variation) {
+        if (empty($variation['attributes'])) {
+            continue;
+        }
+
+        $variation_attributes = array_map('intval', $variation['attributes']);
+        $intersect = array_intersect($attributes, $variation_attributes);
+
+        // Проверяем, содержит ли вариация все выбранные атрибуты
+        if (count($intersect) == count($attributes)) {
+            return [
+                'variation_id' => $variation_id,
+                'variation' => $variation,
+            ];
+        }
+    }
+
+    return null;
 }
 
 /**
@@ -3767,20 +3806,36 @@ function fs_before_product_atts()
         $attributes[$newKey] = $value['children'][0]['term_id'];
     });
 
+    // Получаем ID первой вариации для инициализации
+    $first_variation_id = fs_get_first_variation($product_id, 'key');
+
     echo ' x-data=\''.json_encode([
         'attributes' => $attributes,
         'count' => 1,
-        'price' => apply_filters('fs_price_format', fs_get_price($product_id)),
-        'old_price' => apply_filters('fs_price_format', fs_get_base_price($product_id)),
+        'variationId' => $first_variation_id, // Добавляем ID первой вариации
+        'price_formatted' => apply_filters('fs_price_format', fs_get_price($product_id)),
+        'old_price_formatted' => apply_filters('fs_price_format', fs_get_base_price($product_id)),
+        'price' => fs_get_price($product_id),
+        'old_price' => fs_get_base_price($product_id),
         'currency' => fs_currency($product_id),
     ]).' \'';
 
-    echo ' x-init="$watch(\'attributes\',(val)=>Alpine.store(\'FS\').calculatePrice('.$product_id.',val).then(r=>{
-	    if(r.success){
-	        price=r.data.price;
-	        sale_price=r.data.sale_price;
-	    }
-	} ))" ';
+    echo ' x-init="
+        // Загружаем вариации товара при инициализации страницы
+        Alpine.store(\'FS\').loadProductVariations('.$product_id.');
+        
+        // Следим за изменениями атрибутов и обновляем цену
+        $watch(\'attributes\',(val)=>Alpine.store(\'FS\').calculatePrice('.$product_id.',val).then(r=>{
+            if(r.success){
+                price=r.data.price;
+                sale_price=r.data.sale_price;
+                price_formatted=r.data.price_formatted;
+                old_price_formatted=r.data.old_price_formatted;
+                price=r.data.price;
+                old_price=r.data.old_price;
+            }
+        }))
+    " ';
 }
 
 /**

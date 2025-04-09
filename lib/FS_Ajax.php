@@ -159,6 +159,105 @@ class FS_Ajax
             // Get wishlist data
             add_action('wp_ajax_fs_get_wishlist', [$this, 'get_wishlist']);
             add_action('wp_ajax_nopriv_fs_get_wishlist', [$this, 'get_wishlist']);
+
+            // Возвращает все вариации товара по его ID
+            add_action('wp_ajax_fs_get_product_variations', [$this, 'fs_get_product_variations_callback']);
+            add_action('wp_ajax_nopriv_fs_get_product_variations', [$this, 'fs_get_product_variations_callback']);
+
+            // Поиск вариации товара по атрибутам
+            add_action('wp_ajax_fs_find_variation', [$this, 'fs_find_variation_callback']);
+            add_action('wp_ajax_nopriv_fs_find_variation', [$this, 'fs_find_variation_callback']);
+
+            // Получить вариацию товара по атрибутам
+            add_action('wp_ajax_fs_get_variation_by_attributes', [$this, 'fs_get_variation_by_attributes_callback']);
+            add_action('wp_ajax_nopriv_fs_get_variation_by_attributes', [$this, 'fs_get_variation_by_attributes_callback']);
+        }
+    }
+
+    /**
+     * Получает вариацию товара по указанным атрибутам
+     *
+     * @return void
+     */
+    public function fs_get_variation_by_attributes_callback()
+    {
+        if (!isset($_POST['product_id']) || !isset($_POST['attributes'])) {
+            wp_send_json_error(['msg' => __('Не указаны необходимые параметры', 'f-shop')]);
+        }
+
+        $product_id = intval($_POST['product_id']);
+
+        // Декодируем JSON-строку атрибутов в массив
+        $attributes = json_decode(stripslashes($_POST['attributes']), true);
+
+        if (!is_array($attributes)) {
+            wp_send_json_error(['msg' => __('Атрибуты не являются допустимым массивом', 'f-shop')]);
+        }
+
+        $variation = fs_get_variation_by_attributes($product_id, $attributes);
+
+        if ($variation) {
+            wp_send_json_success($variation);
+        } else {
+            wp_send_json_error(['msg' => __('Вариация не найдена', 'f-shop')]);
+        }
+    }
+
+    /**
+     * Поиск подходящей вариации товара по атрибутам
+     *
+     * @return void
+     */
+    public function fs_find_variation_callback()
+    {
+        if (!isset($_POST['product_id']) || !isset($_POST['attributes'])) {
+            wp_send_json_error(['msg' => __('Не указаны необходимые параметры', 'f-shop')]);
+        }
+
+        $product_id = intval($_POST['product_id']);
+
+        // Декодируем JSON-строку атрибутов в массив
+        $post_attributes = json_decode(stripslashes($_POST['attributes']), true);
+
+        if (!is_array($post_attributes)) {
+            wp_send_json_error(['msg' => __('Атрибуты не являются допустимым массивом', 'f-shop')]);
+        }
+
+        $post_attributes = array_map('intval', $post_attributes);
+        $product = new FS_Product();
+        $variations = $product->get_product_variations($product_id);
+
+        if (empty($variations)) {
+            wp_send_json_error(['msg' => __('Товар не имеет вариаций', 'f-shop')]);
+        }
+
+        $found_variation_id = null;
+        $found_variation = null;
+
+        // Поиск вариации, соответствующей выбранным атрибутам
+        foreach ($variations as $variation_id => $variation) {
+            if (empty($variation['attributes'])) {
+                continue;
+            }
+
+            $variation_attributes = array_map('intval', $variation['attributes']);
+            $intersect = array_intersect($post_attributes, $variation_attributes);
+
+            // Проверяем, содержит ли вариация все выбранные атрибуты
+            if (count($intersect) == count($post_attributes)) {
+                $found_variation_id = $variation_id;
+                $found_variation = $variation;
+                break;
+            }
+        }
+
+        if ($found_variation_id !== null) {
+            wp_send_json_success([
+                'variation_id' => $found_variation_id,
+                'variation' => $found_variation,
+            ]);
+        } else {
+            wp_send_json_error(['msg' => __('Вариация не найдена', 'f-shop')]);
         }
     }
 
@@ -1256,8 +1355,10 @@ class FS_Ajax
 
         if (!$variations) {
             wp_send_json_success([
-                'price' => apply_filters('fs_price_format', $price),
-                'old_price' => apply_filters('fs_price_format', $old_price),
+                'price_formatted' => apply_filters('fs_price_format', $price),
+                'old_price_formatted' => apply_filters('fs_price_format', $old_price),
+                'price' => $price,
+                'old_price' => $old_price,
             ]);
         }
 
@@ -1278,8 +1379,10 @@ class FS_Ajax
         }
 
         wp_send_json_success([
-            'price' => apply_filters('fs_price_format', $price),
-            'old_price' => $old_price > 0 ? apply_filters('fs_price_format', $old_price) : '',
+            'price_formatted' => apply_filters('fs_price_format', $price),
+            'old_price_formatted' => $old_price > 0 ? apply_filters('fs_price_format', $old_price) : '',
+            'price' => $price,
+            'old_price' => $old_price,
         ]);
     }
 
@@ -1620,6 +1723,34 @@ class FS_Ajax
         wp_send_json_success([
             'items' => FS_Wishlist::get_wishlist_items(),
             'count' => FS_Wishlist::get_wishlist_count(),
+        ]);
+    }
+
+    /**
+     * Возвращает все вариации товара по его ID.
+     *
+     * @return void
+     */
+    public function fs_get_product_variations_callback()
+    {
+        if (!isset($_POST['product_id'])) {
+            wp_send_json_error(['msg' => __('Product ID not found', 'f-shop')]);
+        }
+
+        $product_id = intval($_POST['product_id']);
+        $product = new FS_Product();
+        $variations = $product->get_product_variations($product_id);
+
+        if (empty($variations)) {
+            wp_send_json_success([
+                'variations' => [],
+                'has_variations' => false,
+            ]);
+        }
+
+        wp_send_json_success([
+            'variations' => $variations,
+            'has_variations' => true,
         ]);
     }
 }

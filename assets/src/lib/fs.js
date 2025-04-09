@@ -33,6 +33,10 @@ class FS {
         document.body.style.overflow = "";
       },
     };
+    this.loading = false;
+    this.variation = null;
+    this.variations = {}; // Хранилище вариаций по ID
+    this.attributes = {}; // Хранилище атрибутов
   }
 
   getSetting(settingName) {
@@ -611,6 +615,49 @@ class FS {
 
   getShippingMethods() {
     return this.post("fs_show_shipping");
+  }
+
+  /**
+   * Загружает все вариации товара и сохраняет их в хранилище Alpine
+   *
+   * @param {number} productId - идентификатор товара
+   * @returns {Promise} - промис с результатом запроса
+   */
+  loadProductVariations(productId) {
+    return this.post("fs_get_product_variations", {
+      product_id: productId,
+    }).then((result) => {
+      if (result.success && result.data.variations) {
+        // Сохраняем вариации в хранилище
+        this.variations = result.data.variations;
+        return result.data.variations;
+      }
+      return {};
+    });
+  }
+
+  /**
+   * Получает подходящую вариацию по выбранным атрибутам
+   *
+   * @param {number} productId - ID товара
+   * @param {Array|Object} attributes - массив или объект с выбранными атрибутами
+   * @returns {Promise} - промис с результатом запроса
+   */
+  findVariation(productId, attributes) {
+    const attributeValues = Array.isArray(attributes)
+      ? attributes
+      : Object.values(attributes);
+
+    return this.post("fs_find_variation", {
+      product_id: productId,
+      attributes: JSON.stringify(attributeValues),
+    }).then((result) => {
+      if (result.success && result.data.variation_id !== null) {
+        this.variation = result.data.variation_id;
+        return result.data;
+      }
+      return null;
+    });
   }
 }
 
