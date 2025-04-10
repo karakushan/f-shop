@@ -104,6 +104,9 @@ class FS_Cart
             $cart->count += $item['count'];
         }
 
+        $cart->total_display = apply_filters('fs_price_format', $cart->total).' '.fs_currency();
+        $cart->total = floatval($cart->total);
+
         return $cart;
     }
 

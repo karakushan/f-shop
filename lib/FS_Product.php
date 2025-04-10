@@ -279,10 +279,12 @@ class FS_Product
         $variation = $this->get_variation($product_id, $variation_id);
         $price = floatval($variation['price']);
 
+        // если есть цена со скидкой и она меньше чем цена без скидки, то берем цену со скидкой
         if (!empty($variation['sale_price']) && $price > floatval($variation['sale_price'])) {
             $price = floatval($variation['sale_price']);
         }
 
+        // Преобразовывем цену в стоимость в валюте товара
         return apply_filters('fs_price_filter', $price, $product_id);
     }
 
@@ -303,6 +305,7 @@ class FS_Product
         $sale_price = floatval($variation['sale_price']) > 0 ? floatval($variation['sale_price']) : null;
         $base_price = $sale_price ? floatval($variation['price']) : null;
 
+        // преобразуем цену в стоимость в валюте товара
         return !is_null($base_price) ? apply_filters('fs_price_filter', $base_price, $product_id) : null;
     }
 
