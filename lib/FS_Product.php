@@ -459,12 +459,12 @@ class FS_Product
         $this->set_item_id($item_id);
         $variation = null;
 
-        if (fs_is_variated($this->id) && isset($product['variation']) && is_numeric($product['variation'])) {
+        if (fs_is_variated($this->id) && isset($product['variation']) && is_numeric($product['variation']) && !empty($product['variation'])) {
             $this->setVariation($product['variation']);
             $variation = $this->get_variation();
             $this->attributes = !empty($variation['attr']) ? $variation['attr'] : [];
-            $this->price = $this->get_variation_price($this->id, $variation['variation']);
-            $this->base_price = $this->get_variation_base_price($this->id, $variation['variation']) ?: null;
+            $this->price = $this->get_variation_price($this->id, $variation['variation']) ?: fs_get_price($this->id);
+            $this->base_price = $this->get_variation_base_price($this->id, $variation['variation']) ?: fs_get_base_price($this->id);
         } else {
             $this->price = fs_get_price($this->id);
             $this->base_price = fs_get_base_price($this->id);
