@@ -60,8 +60,6 @@ class FS_Taxonomy
 
         add_action('fs_product_category_filter', [$this, 'product_category_filter']);
 
-        add_filter('posts_clauses', [$this, 'fs_filter_by_price_clause'], 10, 2);
-
         // Add action hook to clear currency cache when currency terms are updated/deleted
         add_action('edited_'.FS_Config::get_data('currencies_taxonomy'), [__CLASS__, 'clear_currency_cache']);
         add_action('delete_'.FS_Config::get_data('currencies_taxonomy'), [__CLASS__, 'clear_currency_cache']);
@@ -427,13 +425,13 @@ class FS_Taxonomy
         $order_by = [];
 
         switch ($order_type) {
-            // case 'price_asc': // Сортування за ціною за зростанням
-            // 	$meta_query['price'] = array(
-            // 		'key'  => FS_Config::get_meta('price'),
-            // 		'type' => 'DECIMAL'
-            // 	);
-            // 	$order_by['price']   = 'ASC';
-            // 	break;
+            case 'price_asc': // Сортування за ціною за зростанням
+                $meta_query['price'] = [
+                    'key' => FS_Config::get_meta('price_sort'),
+                    'type' => 'DECIMAL',
+                ];
+                $order_by['price'] = 'ASC';
+                break;
 
             case 'stock_desc': // Сортування по наявності, товари без наявності в кінці
                 $meta_query['in_stock'] = [
@@ -449,7 +447,7 @@ class FS_Taxonomy
 
             case 'price_desc': // Сортування за ціною за спаданням
                 $meta_query['price'] = [
-                    'key' => FS_Config::get_meta('price'),
+                    'key' => FS_Config::get_meta('price_sort'),
                     'type' => 'DECIMAL',
                 ];
                 $order_by['price'] = 'DESC';
@@ -493,121 +491,6 @@ class FS_Taxonomy
                 $order_by['menu_order'] = 'ASC';
                 break;
         }
-    }
-
-    /**
-     * Forms a request for filtering by price for products with different currencies
-     * Adds necessary JOIN, WHERE, ORDER BY and GROUP BY clauses.
-     *
-     * @param array    $clauses the array of query clauses
-     * @param WP_Query $query   the WP_Query instance
-     *
-     * @return array modified clauses
-     */
-    public function fs_filter_by_price_clause($clauses, $query)
-    {
-        // Exit if not the main query, admin, or relevant archive/tax page
-        if (
-            $query->is_admin || !isset($_REQUEST['fs_filter'])
-        ) {
-            return $clauses;
-        }
-
-        global $wpdb;
-
-        $min_price = isset($_REQUEST['price_start']) ? floatval($_REQUEST['price_start']) : false;
-        $max_price = isset($_REQUEST['price_end']) ? floatval($_REQUEST['price_end']) : false;
-
-        // Get sort type from REQUEST or default settings
-        $order_type = isset($_REQUEST['order_type'])
-            ? sanitize_key($_REQUEST['order_type']) // Sanitize input
-            : fs_option('fs_product_sort_by', 'date_desc'); // Use a safe default like date
-
-        $sort_by_price = in_array($order_type, ['price_asc', 'price_desc']);
-
-        // Exit if no price filtering or sorting is requested
-        if ($min_price === false && $max_price === false && !$sort_by_price) {
-            // Ensure default sorting if nothing else is set
-            if (empty($clauses['orderby'])) {
-                $clauses['orderby'] = "{$wpdb->posts}.post_date DESC"; // More standard default
-            }
-
-            return $clauses;
-        }
-
-        // Get normalized currency costs (cached)
-        $normalized_costs = self::get_normalized_currency_costs();
-
-        // Build CASE statement for price conversion to base currency
-        $case_parts = [];
-        foreach ($normalized_costs as $term_id => $normalized_cost) {
-            // Skip currencies with invalid normalized cost
-            if ($normalized_cost === null || $normalized_cost <= 0) {
-                continue;
-            }
-            // Ensure term_id is integer for safe SQL injection
-            $term_id_int = intval($term_id);
-            $case_parts[] = $wpdb->prepare('WHEN pm_currency.meta_value = %d THEN CAST(pm_price.meta_value AS DECIMAL(20,2)) * %f', $term_id_int, $normalized_cost);
-        }
-
-        // Fallback: Use raw price if no currency meta or no valid currency match
-        $price_conversion = empty($case_parts)
-            ? 'CAST(pm_price.meta_value AS DECIMAL(20,2))'
-            : '(CASE '.implode(' ', $case_parts).' ELSE CAST(pm_price.meta_value AS DECIMAL(20,2)) END)';
-        // Alternative fallback: could return NULL or a very high/low number if currency conversion fails, depending on desired behavior
-
-        // Add JOINs for price and currency meta
-        $price_meta_key = FS_Config::get_meta('price');
-        $currency_meta_key = FS_Config::get_meta('currency');
-
-        // Check if joins already exist to avoid duplicates (though unlikely with specific aliases)
-        if (strpos($clauses['join'], 'AS pm_price') === false) {
-            $clauses['join'] .= $wpdb->prepare(" LEFT JOIN {$wpdb->postmeta} AS pm_price ON ({$wpdb->posts}.ID = pm_price.post_id AND pm_price.meta_key = %s)", $price_meta_key);
-        }
-        if (strpos($clauses['join'], 'AS pm_currency') === false) {
-            $clauses['join'] .= $wpdb->prepare(" LEFT JOIN {$wpdb->postmeta} AS pm_currency ON ({$wpdb->posts}.ID = pm_currency.post_id AND pm_currency.meta_key = %s)", $currency_meta_key);
-        }
-
-        // Add WHERE conditions for price filtering
-        if ($min_price !== false || $max_price !== false) {
-            $where_conditions = [];
-            if ($min_price !== false) {
-                // Use $wpdb->prepare for values, though floatval already sanitizes. $price_conversion is constructed safely above.
-                $where_conditions[] = $wpdb->prepare("($price_conversion) >= %f", $min_price);
-            }
-            if ($max_price !== false) {
-                $where_conditions[] = $wpdb->prepare("($price_conversion) <= %f", $max_price);
-            }
-            if (!empty($where_conditions)) {
-                // Append conditions safely
-                $clauses['where'] .= ' AND ('.implode(' AND ', $where_conditions).')';
-            }
-        }
-
-        // Add ORDER BY for price sorting
-        if ($sort_by_price) {
-            $sort_direction = ($order_type === 'price_asc') ? 'ASC' : 'DESC';
-            // Order by the calculated price. Ensure this overrides previous orderby if needed, or appends.
-            // Overriding might be safer if price sort is explicitly chosen.
-            $clauses['orderby'] = "$price_conversion $sort_direction, {$wpdb->posts}.ID $sort_direction"; // Add secondary sort by ID for stability
-        } elseif (empty($clauses['orderby'])) {
-            // Fallback default sorting if nothing else specified and price filter was active
-            $clauses['orderby'] = "{$wpdb->posts}.post_date DESC";
-        }
-
-        // Ensure grouping by post ID to prevent duplicates from JOINs
-        // Only add if not already grouped or if our joins potentially cause duplicates
-        // A common practice is to always group by ID when joining meta tables this way.
-        if (strpos($clauses['groupby'], "{$wpdb->posts}.ID") === false) {
-            if (!empty($clauses['groupby'])) {
-                // Append to existing group by if any, although rare in WP_Query default clauses
-                $clauses['groupby'] .= ", {$wpdb->posts}.ID";
-            } else {
-                $clauses['groupby'] = "{$wpdb->posts}.ID";
-            }
-        }
-
-        return $clauses;
     }
 
     /**

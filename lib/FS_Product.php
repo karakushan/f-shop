@@ -61,7 +61,11 @@ class FS_Product
     public static function get_product_variations($product_id = 0)
     {
         $product_id = fs_get_product_id($product_id);
-        $variations = get_post_meta($product_id, FS_Config::get_meta('variations'), 1);
+        $variations = (array) get_post_meta($product_id, FS_Config::get_meta('variations'), 1);
+
+        $variations = array_filter($variations, function ($variation) {
+            return !empty($variation['price']);
+        });
 
         return !empty($variations) ? $variations : [];
     }
