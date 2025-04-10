@@ -1759,11 +1759,27 @@ function fs_page_content()
  */
 function fs_get_product_code($product_id = 0)
 {
-    $config = new FS_Config();
     $product_id = fs_get_product_id($product_id);
-    $sku = get_post_meta($product_id, $config->meta['sku'], 1);
 
-    return $sku ? $sku : $product_id;
+    // Проверяем, является ли товар вариативным
+    if (fs_is_variated($product_id)) {
+        // Получаем первую вариацию
+        $first_variation = fs_get_first_variation($product_id);
+
+        // Если первая вариация существует и у нее есть ID
+        if (!empty($first_variation) && isset($first_variation['sku'])) {
+            // Проверяем, есть ли у вариации артикул
+
+            if (!empty($first_variation['sku'])) {
+                return $first_variation['sku'];
+            }
+        }
+    }
+
+    // Если товар не вариативный или у вариации нет артикула, используем артикул основного товара
+    $sku = get_post_meta($product_id, FS_Config::get_meta('sku'), true);
+
+    return $sku ? $sku : '';
 }
 
 /**
