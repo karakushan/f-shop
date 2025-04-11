@@ -3343,3 +3343,75 @@ msgstr ""
 
 msgid "Add to cart"
 msgstr ""
+
+#: templates/back-end/fields/image.php:67
+msgid "Invalid file format. Please select an image"
+msgstr ""
+
+#: templates/back-end/fields/image.php:74
+msgid "File is too large. Maximum size:"
+msgstr ""
+
+#: templates/back-end/fields/image.php:84
+msgid "Select Image"
+msgstr ""
+
+#: templates/back-end/fields/image.php:86
+msgid "Use This Image"
+msgstr ""
+
+#: templates/back-end/fields/image.php:108
+msgid "Network error during file upload"
+msgstr ""
+
+#: templates/back-end/fields/image.php:122
+msgid "Error uploading file"
+msgstr ""
+
+#: templates/back-end/fields/image.php:132
+msgid "File exceeds maximum upload size limit"
+msgstr ""
+
+#: templates/back-end/fields/image.php:134
+msgid "File is too large for server processing"
+msgstr ""
+
+#: templates/back-end/fields/image.php:136
+msgid "An error occurred while uploading the file"
+msgstr ""
+
+#: templates/back-end/fields/image.php:182
+msgid "Preview"
+msgstr ""
+
+#: templates/back-end/fields/image.php:188
+msgid "Uploading..."
+msgstr ""
+
+#: templates/back-end/fields/image.php:196
+msgid "Placeholder"
+msgstr ""
+
+#: templates/back-end/fields/image.php:197
+msgid "No image selected"
+msgstr ""
+
+#: templates/back-end/fields/image.php:213
+msgid "Current maximum file size: %s MB. Contact your server administrator to increase limits."
+msgstr ""
+
+#: templates/back-end/fields/image.php:225
+msgid "Upload"
+msgstr ""
+
+#: templates/back-end/fields/image.php:243
+msgid "Media Library"
+msgstr ""
+
+#: templates/back-end/fields/image.php:254
+msgid "Remove"
+msgstr ""
+
+#: templates/back-end/fields/image.php:262
+msgid "Maximum file size: %s MB"
+msgstr ""

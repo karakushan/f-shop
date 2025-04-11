@@ -146,36 +146,18 @@ class FS_Settings
     }
 
     /**
-     * The method contains an array of basic settings of the plugin.
+     * Returns an array of plugin settings organized by sections.
      *
-     * @return array
+     * Each section contains field definitions for the settings form.
+     *
+     * @return array The complete settings array structure
      */
-    public function get_register_settings()
+    public function get_register_settings(): array
     {
         $fs_config = new FS_Config();
         $export_class = new FS_Export_Class();
 
-        // Дебаг сессий
-        ob_start();
-        echo '<code class="fs-code"><pre>';
-        print_r($_SESSION);
-        echo '</pre></code>';
-        $session = ob_get_clean();
-
-        // Дебаг COOKIE
-        ob_start();
-        echo '<code class="fs-code"><pre>';
-        print_r($_COOKIE);
-        echo '</pre></code>';
-        $cookie = ob_get_clean();
-
-        // php settings
-        ob_start();
-        echo '<code class="fs-code"><pre>';
-        print_r(fs_phpinfo_to_array());
-        echo '</pre></code>';
-        $phpinfo = ob_get_clean();
-
+        // Generate feed links for product exports
         $feed_link = add_query_arg([
             'feed' => $export_class->feed_name,
         ], home_url('/'));
@@ -183,579 +165,19 @@ class FS_Settings
         $feed_link_permalink = sprintf(home_url('/feed/%s/'), $export_class->feed_name);
 
         $settings = [
-            'general' => [
-                'name' => __('Basic settings', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'discounts_on',
-                        'label' => __('Activate discount system', 'f-shop'),
-                        'help' => __('Allows you to create conditions under which the cost of goods in the basket will decrease', 'f-shop'),
-                        'value' => fs_option('discounts_on'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'multi_currency_on',
-                        'label' => __('Activate multicurrency', 'f-shop'),
-                        'help' => __('It is necessary for the cost of the goods to be converted automatically at the established rate.', 'f-shop'),
-                        'value' => fs_option('multi_currency_on'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_multi_language_support',
-                        'label' => __('Multi-language support', 'f-shop'),
-                        'help' => '',
-                        'value' => fs_option('fs_multi_language_support'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_test_mode',
-                        'label' => __('Test mode', 'f-shop'),
-                        'help' => __('In test mode, orders come only to the administrator\'s mail', 'f-shop'),
-                        'value' => fs_option('fs_test_mode'),
-                    ],
-                ],
-            ],
-            'products' => [
-                'name' => __('Products', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'number',
-                        'name' => 'fs_catalog_show_items',
-                        'label' => __('Number of products per page', 'f-shop'),
-                        'help' => __('This parameter configures the number of products that will be displayed on the catalog page or product category', 'f-shop'),
-                        'value' => fs_option('fs_catalog_show_items', 30),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_not_aviable_hidden',
-                        'label' => __('Hide items out of stock', 'f-shop'),
-                        'help' => __('Goods that are not available Budus hidden in the archives and catalog. These products are available by direct link..', 'f-shop'),
-                        'value' => fs_option('fs_not_aviable_hidden'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_preorder_services',
-                        'label' => __('Enable the service of notification of receipt of goods to the warehouse', 'f-shop'),
-                        'help' => __('When adding a product to the cart which is not available, the buyer will be shown a window asking for contact information', 'f-shop'),
-                        'value' => fs_option('fs_preorder_services'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_in_stock_manage',
-                        'label' => __('Enable inventory management', 'f-shop'),
-                        'help' => __('If this option is enabled, the stock of goods will decrease automatically with each purchase.', 'f-shop'),
-                        'value' => fs_option('fs_in_stock_manage'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_product_sort_on',
-                        'label' => __('Enable item sorting by dragging', 'f-shop'),
-                        'help' => 'Allows you to quickly change the position of goods on the site by dragging them into the admin panel',
-                        'value' => fs_option('fs_product_sort_on'),
-                    ],
-                    [
-                        'type' => 'select',
-                        'name' => 'fs_product_sort_by',
-                        'values' => [
-                            'none' => __('By default', 'f-shop'),
-                            'menu_order' => __('By sorting field', 'f-shop'),
-                            'price_asc' => __('By price from lowest to highest', 'f-shop'),
-                            'price_desc' => __('By price from larger to smaller', 'f-shop'),
-                            'views_desc' => __('By popularity', 'f-shop'),
-                            'name_asc' => __('By title from A to Z', 'f-shop'),
-                            'name_desc' => __('By name from Z to A', 'f-shop'),
-                            'date_desc' => __('recently added', 'f-shop'),
-                            'date_asc' => __('later added', 'f-shop'),
-                            'stock_desc' => __('In stock', 'f-shop'),
-                        ],
-                        'label' => __('Sort items in the catalog by', 'f-shop'),
-                        'help' => __('This determines the order in which products are displayed on the site. By default, Wordpress sorts by ID.', 'f-shop'),
-                        'value' => fs_option('fs_product_sort_by'),
-                    ],
-                    [
-                        'type' => 'radio',
-                        'name' => 'fs_product_filter_type',
-                        'values' => [
-                            'IN' => __('The product must have at least one of the selected characteristics in the filter', 'f-shop'),
-                            'AND' => __('The product must have all of the selected characteristics in the filter', 'f-shop'),
-                        ],
-                        'label' => __('Method of applying filters in the catalog', 'f-shop'),
-                        'help' => null,
-                        'value' => fs_option('fs_product_filter_type', 'IN'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_total_discount_percent',
-                        'label' => __('Total discount on products as a percentage', 'f-shop'),
-                        'help' => null,
-                        'value' => fs_option('fs_total_discount_percent'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_localize_product_url',
-                        'label' => __('Product link localization', 'f-shop'),
-                        'help' => __('Adds a field for entering a slug in other languages', 'f-shop'),
-                        'value' => fs_option('fs_localize_product_url'),
-                    ],
-                ],
-            ],
-            'product_category' => [
-                'name' => __('Product Categories', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_disable_taxonomy_slug',
-                        'label' => __('Disable taxonomy slug in permalink', 'f-shop'),
-                        'help' => '',
-                        'value' => fs_option('fs_disable_taxonomy_slug'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_localize_slug',
-                        'label' => __('Localize Cyrillic slug', 'f-shop'),
-                        'help' => '',
-                        'value' => fs_option('fs_localize_slug'),
-                    ],
-                ],
-            ],
-            'cart' => [
-                'name' => __('Basket', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_autofill_form',
-                        'label' => __('Fill in the data of the authorized user automatically', 'f-shop'),
-                        'help' => __('Used when placing the order, if the user is authorized', 'f-shop'),
-                        'value' => fs_option('fs_autofill_form'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_free_delivery_cost',
-                        'label' => __('The amount of goods in the basket at which free shipping is activated', 'f-shop'),
-                        'help' => null,
-                        'value' => fs_option('fs_free_delivery_cost'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_include_packing_cost',
-                        'label' => __('Add packaging cost to order', 'f-shop'),
-                        'help' => __('When choosing this option, the cost of packaging will also be added to the order value.', 'f-shop'),
-                        'value' => fs_option('fs_include_packing_cost'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_packing_cost_value',
-                        'label' => __('Packing cost', 'f-shop'),
-                        'help' => __('You can enter a fixed cost or as a percentage, for example "5%"', 'f-shop'),
-                        'value' => fs_option('fs_packing_cost_value'),
-                    ],
-                ],
-            ],
-            'currencies' => [
-                'name' => __('Currencies', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'text',
-                        'name' => 'currency_symbol',
-                        'label' => __('Currency sign ($ displayed by default)', 'f-shop'),
-                        'value' => fs_option('currency_symbol', '$'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_currency_code',
-                        'label' => __('Three-digit currency code', 'f-shop'),
-                        'value' => fs_option('fs_currency_code', 'UAH'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'currency_delimiter',
-                        'label' => __('Price separator (default ".")', 'f-shop'),
-                        'value' => fs_option('currency_delimiter', '.'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'price_cents',
-                        'label' => __('Use a penny?', 'f-shop'),
-                        'value' => fs_option('price_cents', '0'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'price_conversion',
-                        'label' => __('Conversion of the cost of goods depending on the language', 'f-shop'),
-                        'help' => __('If selected, the price will be automatically converted into the required currency. Important! In order for this to work, you must specify the locale in the currency settings.', 'f-shop'),
-                        'value' => fs_option('price_conversion', '0'),
-                    ],
-                ],
-            ],
-            'templates' => [
-                'name' => __('Templates', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_overdrive_templates',
-                        'label' => __('Do not override standard templates.', 'f-shop'),
-                        'help' => __('This checkbox is needed if you will not store templates in the "f-shop" directory of your theme.', 'f-shop'),
-                        'value' => fs_option('fs_overdrive_templates', '0'),
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_disable_messages',
-                        'label' => __('Disable js event handling by the plugin', 'f-shop'),
-                        'help' => __('This checkbox should be noted if you intend to process events triggered by the plugin yourself', 'f-shop'),
-                        'value' => fs_option('fs_disable_messages', 0),
-                    ],
-                    [
-                        'type' => 'radio',
-                        'name' => 'fs_cart_type',
-                        'label' => __('What type of basket to show', 'f-shop'),
-                        'values' => [
-                            'modal' => __('Modal window', 'f-shop'),
-                            'side' => __('Appears from the side', 'f-shop'),
-                            'disable' => __('Turn off the appearance of the basket', 'f-shop'),
-                        ],
-                        'value' => fs_option('fs_cart_type', 'modal'),
-                    ],
-                ],
-            ],
-            'letters' => [
-                'name' => __('Orders', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'text',
-                        'name' => 'manager_email',
-                        'label' => __('Recipients of letters', 'f-shop'),
-                        'help' => __('You can specify multiple recipients separated by commas.', 'f-shop'),
-                        'value' => fs_option('manager_email', get_option('admin_email')),
-                    ],
-                    [
-                        'type' => 'image',
-                        'name' => 'fs_email_logo',
-                        'label' => __('Letter Logo', 'f-shop'),
-                        'value' => fs_option('fs_email_logo'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'name_sender',
-                        'label' => __('Name of the sender of letters', 'f-shop'),
-                        'value' => fs_option('name_sender', get_bloginfo('name')),
-                    ],
-                    [
-                        'type' => 'email',
-                        'name' => 'email_sender',
-                        'label' => __('Email sender', 'f-shop'),
-                        'value' => fs_option('email_sender', get_option('admin_email')),
-                        'help' => __('By default, this is the site administrator\'s e-mail', 'f-shop'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'admin_mail_header',
-                        'label' => __('Title in the order letter to the administrator', 'f-shop'),
-                        'value' => fs_option('admin_mail_header'),
-                        'help' => '',
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'customer_mail_header',
-                        'label' => __('Title in the order letter to the buyer', 'f-shop'),
-                        'value' => fs_option('customer_mail_header'),
-                        'help' => '',
-                    ],
-                    [
-                        'type' => 'dropdown_posts',
-                        'name' => 'register_mail_template',
-                        'label' => __('Email template for user when creating an account', 'f-shop'),
-                        'value' => fs_option('register_mail_template'),
-                        'post_type' => 'fs-mail-template',
-                    ],
-                    [
-                        'type' => 'dropdown_posts',
-                        'name' => 'create_order_mail_template',
-                        'label' => __('Letter template to the user when creating a new order', 'f-shop'),
-                        'value' => fs_option('create_order_mail_template'),
-                        'post_type' => 'fs-mail-template',
-                    ],
-                    [
-                        'type' => 'select',
-                        'name' => 'fs_default_order_status',
-                        'label' => __('The status that is assigned to a new order', 'f-shop'),
-                        'value' => fs_option('fs_default_order_status', 'new'),
-                        'values' => get_terms([
-                            'taxonomy' => FS_Config::get_data('order_statuses_taxonomy'),
-                            'fields' => 'id=>name',
-                            'hide_empty' => 0,
-                            'parent' => 0,
-                        ]),
-                        'post_type' => 'fs-mail-template',
-                    ],
-                    [
-                        'type' => 'number',
-                        'name' => 'fs_minimum_order_amount',
-                        'label' => sprintf(__('Минимальная сумма заказа (%s)', 'f-shop'), fs_currency()),
-                        'value' => fs_option('fs_minimum_order_amount', 0),
-                        'attributes' => [
-                            'min' => 0,
-                        ],
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_notify_telegram',
-                        'label' => __('Notifications in telegram', 'f-shop'),
-                        'value' => fs_option('fs_notify_telegram', 0),
-                        'after' => sprintf(__('Щоб отримувати повідомлення в телеграмі додайте бота <a href="%s" target="_blank">@FShopOfficialBot</a> та напишіть будь-яке повідомлення типу "Привіт"', 'f-shop'), 'https://t.me/FShopOfficialBot'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_telegram_bot_token',
-                        'label' => __('Telegram bot token', 'f-shop'),
-                        'value' => fs_option('fs_telegram_bot_token'),
-                        'after' => '',
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_telegram_chat_id',
-                        'label' => __('Telegram chat id', 'f-shop'),
-                        'value' => fs_option('fs_telegram_chat_id'),
-                        'after' => '',
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_telegram_user_id',
-                        'label' => __('Telegram user id', 'f-shop'),
-                        'value' => fs_option('fs_telegram_user_id'),
-                        'after' => sprintf(__('Щоб дізнатися "user id" можна скористатися ботом <a href="%s" target="_blank">@getmyid_bot</a>', 'f-shop'), 'https://t.me/getmyid_bot'),
-                    ],
-                ],
-            ],
-            'contacts' => [
-                'name' => __('Контакты', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'text',
-                        'name' => 'contact_type',
-                        'label' => __('Тип магазина', 'f-shop'),
-                        'help' => __('Используется для микроразметки', 'f-shop'),
-                        'value' => fs_option('contact_type'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'contact_name',
-                        'label' => __('Название магазина', 'f-shop'),
-                        'help' => __('Используется для микроразметки', 'f-shop'),
-                        'value' => fs_option('contact_name'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'contact_phone',
-                        'label' => __('Телефон для связи', 'f-shop'),
-                        'help' => __('Published on the website so that buyers can contact you', 'f-shop'),
-                        'value' => fs_option('contact_phone'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'contact_country',
-                        'label' => __('Страна', 'f-shop'),
-                        'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
-                        'value' => fs_option('contact_country'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'contact_zip',
-                        'label' => __('Почтовый индекс', 'f-shop'),
-                        'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
-                        'value' => fs_option('contact_zip'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'contact_city',
-                        'label' => __('Город', 'f-shop'),
-                        'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
-                        'value' => fs_option('contact_city'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'contact_address',
-                        'label' => __('Физический адрес магазина', 'f-shop'),
-                        'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
-                        'value' => fs_option('contact_address'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'opening_hours',
-                        'label' => __('Время работы', 'f-shop'),
-                        'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
-                        'value' => fs_option('opening_hours'),
-                    ],
-                ],
-            ],
-            'pages' => [
-                'name' => __('Service pages', 'f-shop'),
-                'description' => __('Service pages are created and installed automatically when the plugin is activated. Can you also override them here', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_cart',
-                        'label' => __('Cart page', 'f-shop'),
-                        'value' => fs_option('page_cart'),
-                    ],
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_checkout',
-                        'label' => __('Checkout Page', 'f-shop'),
-                        'value' => fs_option('page_checkout'),
-                    ],
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_payment',
-                        'label' => __('Payment page', 'f-shop'),
-                        'value' => fs_option('page_payment'),
-                    ],
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_success',
-                        'label' => __('Successful ordering page', 'f-shop'),
-                        'value' => fs_option('page_success'),
-                    ],
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_whishlist',
-                        'label' => __('Wish List Page', 'f-shop'),
-                        'value' => fs_option('page_whishlist'),
-                    ],
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_cabinet',
-                        'label' => __('Personal account page', 'f-shop'),
-                        'value' => fs_option('page_cabinet'),
-                    ],
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_auth',
-                        'label' => __('Login page', 'f-shop'),
-                        'value' => fs_option('page_auth'),
-                    ],
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_register',
-                        'label' => __('Register page', 'f-shop'),
-                        'value' => fs_option('page_register'),
-                    ],
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_lostpassword',
-                        'label' => __('Forgot your password?', 'f-shop'),
-                        'value' => fs_option('page_lostpassword'),
-                    ],
-                    [
-                        'type' => 'pages',
-                        'name' => 'page_order_detail',
-                        'label' => __('Order Information Page', 'f-shop'),
-                        'value' => fs_option('page_order_detail'),
-                    ],
-                ],
-            ],
-            'seo' => [
-                'name' => __('SEO', 'f-shop'),
-                'description' => __('Basic SEO settings for your store', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'checkbox',
-                        'name' => '_fs_adwords_remarketing',
-                        'label' => __('Support for Google Adwords Remarketing Events', 'f-shop'),
-                        //						'help'   => __( 'Your export file will contain additional settings', 'f-shop' ),
-                        'value' => fs_option('_fs_adwords_remarketing'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => '_fs_catalog_title',
-                        'label' => __('Product archive title', 'f-shop'),
-                        'value' => fs_option('_fs_catalog_title'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => '_fs_catalog_meta_title',
-                        'label' => __('Meta title for product archive', 'f-shop'),
-                        'value' => fs_option('_fs_catalog_meta_title'),
-                    ],
-                    [
-                        'type' => 'textarea',
-                        'name' => '_fs_catalog_meta_description',
-                        'label' => __('Meta description for product archive', 'f-shop'),
-                        'value' => fs_option('_fs_catalog_meta_description'),
-                    ],
-                ],
-            ],
-            'export' => [
-                'name' => __('Export of goods', 'f-shop'),
-                'description' => sprintf(__('Link to product feed in YML format: <a href="%s" target="_blank">%s</a> or <a href="%s" target="_blank">%s</a>', 'f-shop'), $feed_link, $feed_link, $feed_link_permalink, $feed_link_permalink),
-                'fields' => [
-                    [
-                        'type' => 'radio',
-                        'name' => '_fs_export_prom',
-                        'label' => __('Export to the site', 'f-shop'),
-                        'values' => [
-                            'rozetka' => __('Розетка', 'f-shop'),
-                            'prom' => __('Prom.ua', 'f-shop'),
-                        ],
-                        //						'help'   => __( 'Your export file will contain additional settings', 'f-shop' ),
-                        'value' => fs_option('_fs_export_prom', 'rozetka'),
-                    ],
-                ],
-            ],
-            'marketing' => [
-                'name' => __('Marketing', 'f-shop'),
-                'description' => __('Allows you to set analytics and marketing codes', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'textarea',
-                        'name' => 'fs_marketing_code_header',
-                        'label' => __('Коды аналитики в шапке', 'f-shop'),
-                        'value' => fs_option('fs_marketing_code_header'),
-                    ],
-                    [
-                        'type' => 'textarea',
-                        'name' => 'fs_marketing_code_footer',
-                        'label' => __('Коды аналитики в футере', 'f-shop'),
-                        'value' => fs_option('fs_marketing_code_footer'),
-                    ],
-                ],
-            ],
-            'testing' => [
-                'name' => __('Testing', 'f-shop'),
-                'description' => __('Settings for testing functionality', 'f-shop'),
-                'fields' => [
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'fs_enable_mailtrap',
-                        'label' => __('Enable email testing with Mailtrap.io', 'f-shop'),
-                        'value' => fs_option('fs_enable_mailtrap'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_mailtrap_username',
-                        'label' => __('Mailtrap Username', 'f-shop'),
-                        'value' => fs_option('fs_mailtrap_username'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_mailtrap_password',
-                        'label' => __('Mailtrap Password', 'f-shop'),
-                        'value' => fs_option('fs_mailtrap_password'),
-                    ],
-                    [
-                        'type' => 'text',
-                        'name' => 'fs_mailtrap_host',
-                        'label' => __('Mailtrap Host', 'f-shop'),
-                        'value' => fs_option('fs_mailtrap_host', 'smtp.mailtrap.io'),
-                    ],
-                    [
-                        'type' => 'number',
-                        'name' => 'fs_mailtrap_port',
-                        'label' => __('Mailtrap Port', 'f-shop'),
-                        'value' => fs_option('fs_mailtrap_port', '2525'),
-                    ],
-                ],
-            ],
+            'general' => $this->get_general_settings(),
+            'products' => $this->get_products_settings(),
+            'product_category' => $this->get_product_category_settings(),
+            'cart' => $this->get_cart_settings(),
+            'currencies' => $this->get_currencies_settings(),
+            'templates' => $this->get_templates_settings(),
+            'letters' => $this->get_letters_settings(),
+            'contacts' => $this->get_contacts_settings(),
+            'pages' => $this->get_pages_settings(),
+            'seo' => $this->get_seo_settings(),
+            'export' => $this->get_export_settings($feed_link, $feed_link_permalink),
+            'marketing' => $this->get_marketing_settings(),
+            'testing' => $this->get_testing_settings(),
         ];
 
         if (taxonomy_exists($fs_config->data['currencies_taxonomy'])) {
@@ -767,9 +189,146 @@ class FS_Settings
                 'value' => fs_option('default_currency'),
             ];
         }
+
+        // Allow plugins to modify settings
         $settings = apply_filters('fs_plugin_settings', $settings);
 
         return $settings;
+    }
+
+    /**
+     * Get general settings section.
+     *
+     * @return array General settings array
+     */
+    private function get_general_settings(): array
+    {
+        return [
+            'name' => __('Basic settings', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'checkbox',
+                    'name' => 'discounts_on',
+                    'label' => __('Activate discount system', 'f-shop'),
+                    'help' => __('Allows you to create conditions under which the cost of goods in the basket will decrease', 'f-shop'),
+                    'value' => fs_option('discounts_on'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'multi_currency_on',
+                    'label' => __('Activate multicurrency', 'f-shop'),
+                    'help' => __('It is necessary for the cost of the goods to be converted automatically at the established rate.', 'f-shop'),
+                    'value' => fs_option('multi_currency_on'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_multi_language_support',
+                    'label' => __('Multi-language support', 'f-shop'),
+                    'help' => '',
+                    'value' => fs_option('fs_multi_language_support'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_test_mode',
+                    'label' => __('Test mode', 'f-shop'),
+                    'help' => __('In test mode, orders come only to the administrator\'s mail', 'f-shop'),
+                    'value' => fs_option('fs_test_mode'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get products settings section.
+     *
+     * @return array Products settings array
+     */
+    private function get_products_settings(): array
+    {
+        return [
+            'name' => __('Products', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'number',
+                    'name' => 'fs_catalog_show_items',
+                    'label' => __('Number of products per page', 'f-shop'),
+                    'help' => __('This parameter configures the number of products that will be displayed on the catalog page or product category', 'f-shop'),
+                    'value' => fs_option('fs_catalog_show_items', 30),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_not_aviable_hidden',
+                    'label' => __('Hide items out of stock', 'f-shop'),
+                    'help' => __('Goods that are not available Budus hidden in the archives and catalog. These products are available by direct link..', 'f-shop'),
+                    'value' => fs_option('fs_not_aviable_hidden'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_preorder_services',
+                    'label' => __('Enable the service of notification of receipt of goods to the warehouse', 'f-shop'),
+                    'help' => __('When adding a product to the cart which is not available, the buyer will be shown a window asking for contact information', 'f-shop'),
+                    'value' => fs_option('fs_preorder_services'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_in_stock_manage',
+                    'label' => __('Enable inventory management', 'f-shop'),
+                    'help' => __('If this option is enabled, the stock of goods will decrease automatically with each purchase.', 'f-shop'),
+                    'value' => fs_option('fs_in_stock_manage'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_product_sort_on',
+                    'label' => __('Enable item sorting by dragging', 'f-shop'),
+                    'help' => 'Allows you to quickly change the position of goods on the site by dragging them into the admin panel',
+                    'value' => fs_option('fs_product_sort_on'),
+                ],
+                [
+                    'type' => 'select',
+                    'name' => 'fs_product_sort_by',
+                    'values' => [
+                        'none' => __('By default', 'f-shop'),
+                        'menu_order' => __('By sorting field', 'f-shop'),
+                        'price_asc' => __('By price from lowest to highest', 'f-shop'),
+                        'price_desc' => __('By price from larger to smaller', 'f-shop'),
+                        'views_desc' => __('By popularity', 'f-shop'),
+                        'name_asc' => __('By title from A to Z', 'f-shop'),
+                        'name_desc' => __('By name from Z to A', 'f-shop'),
+                        'date_desc' => __('recently added', 'f-shop'),
+                        'date_asc' => __('later added', 'f-shop'),
+                        'stock_desc' => __('In stock', 'f-shop'),
+                    ],
+                    'label' => __('Sort items in the catalog by', 'f-shop'),
+                    'help' => __('This determines the order in which products are displayed on the site. By default, Wordpress sorts by ID.', 'f-shop'),
+                    'value' => fs_option('fs_product_sort_by'),
+                ],
+                [
+                    'type' => 'radio',
+                    'name' => 'fs_product_filter_type',
+                    'values' => [
+                        'IN' => __('The product must have at least one of the selected characteristics in the filter', 'f-shop'),
+                        'AND' => __('The product must have all of the selected characteristics in the filter', 'f-shop'),
+                    ],
+                    'label' => __('Method of applying filters in the catalog', 'f-shop'),
+                    'help' => null,
+                    'value' => fs_option('fs_product_filter_type', 'IN'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_total_discount_percent',
+                    'label' => __('Total discount on products as a percentage', 'f-shop'),
+                    'help' => null,
+                    'value' => fs_option('fs_total_discount_percent'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_localize_product_url',
+                    'label' => __('Product link localization', 'f-shop'),
+                    'help' => __('Adds a field for entering a slug in other languages', 'f-shop'),
+                    'value' => fs_option('fs_localize_product_url'),
+                ],
+            ],
+        ];
     }
 
     public function settings_section_description()
@@ -966,5 +525,567 @@ class FS_Settings
         $args[1]['label_position'] = 'after';
 
         $form_class->render_field($args[0], $args[1]['type'], $args[1]);
+    }
+
+    /**
+     * Get SEO settings section.
+     *
+     * @return array SEO settings array
+     */
+    private function get_seo_settings(): array
+    {
+        return [
+            'name' => __('SEO', 'f-shop'),
+            'description' => __('Basic SEO settings for your store', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'checkbox',
+                    'name' => '_fs_adwords_remarketing',
+                    'label' => __('Support for Google Adwords Remarketing Events', 'f-shop'),
+                    'value' => fs_option('_fs_adwords_remarketing'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => '_fs_catalog_title',
+                    'label' => __('Product archive title', 'f-shop'),
+                    'value' => fs_option('_fs_catalog_title'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => '_fs_catalog_meta_title',
+                    'label' => __('Meta title for product archive', 'f-shop'),
+                    'value' => fs_option('_fs_catalog_meta_title'),
+                ],
+                [
+                    'type' => 'textarea',
+                    'name' => '_fs_catalog_meta_description',
+                    'label' => __('Meta description for product archive', 'f-shop'),
+                    'value' => fs_option('_fs_catalog_meta_description'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get export settings section.
+     *
+     * @param string $feed_link           Direct feed link
+     * @param string $feed_link_permalink Permalink structure feed link
+     *
+     * @return array Export settings array
+     */
+    private function get_export_settings(string $feed_link, string $feed_link_permalink): array
+    {
+        return [
+            'name' => __('Export of goods', 'f-shop'),
+            'description' => sprintf(
+                __('Link to product feed in YML format: <a href="%s" target="_blank">%s</a> or <a href="%s" target="_blank">%s</a>', 'f-shop'),
+                $feed_link,
+                $feed_link,
+                $feed_link_permalink,
+                $feed_link_permalink
+            ),
+            'fields' => [
+                [
+                    'type' => 'radio',
+                    'name' => '_fs_export_prom',
+                    'label' => __('Export to the site', 'f-shop'),
+                    'values' => [
+                        'rozetka' => __('Розетка', 'f-shop'),
+                        'prom' => __('Prom.ua', 'f-shop'),
+                    ],
+                    'value' => fs_option('_fs_export_prom', 'rozetka'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get product category settings section.
+     *
+     * @return array Product category settings array
+     */
+    private function get_product_category_settings(): array
+    {
+        return [
+            'name' => __('Product Categories', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_disable_taxonomy_slug',
+                    'label' => __('Disable taxonomy slug in permalink', 'f-shop'),
+                    'help' => '',
+                    'value' => fs_option('fs_disable_taxonomy_slug'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_localize_slug',
+                    'label' => __('Localize Cyrillic slug', 'f-shop'),
+                    'help' => '',
+                    'value' => fs_option('fs_localize_slug'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get cart settings section.
+     *
+     * @return array Cart settings array
+     */
+    private function get_cart_settings(): array
+    {
+        return [
+            'name' => __('Basket', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_autofill_form',
+                    'label' => __('Fill in the data of the authorized user automatically', 'f-shop'),
+                    'help' => __('Used when placing the order, if the user is authorized', 'f-shop'),
+                    'value' => fs_option('fs_autofill_form'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_free_delivery_cost',
+                    'label' => __('The amount of goods in the basket at which free shipping is activated', 'f-shop'),
+                    'help' => null,
+                    'value' => fs_option('fs_free_delivery_cost'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_include_packing_cost',
+                    'label' => __('Add packaging cost to order', 'f-shop'),
+                    'help' => __('When choosing this option, the cost of packaging will also be added to the order value.', 'f-shop'),
+                    'value' => fs_option('fs_include_packing_cost'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_packing_cost_value',
+                    'label' => __('Packing cost', 'f-shop'),
+                    'help' => __('You can enter a fixed cost or as a percentage, for example "5%"', 'f-shop'),
+                    'value' => fs_option('fs_packing_cost_value'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get marketing settings section.
+     *
+     * @return array Marketing settings array
+     */
+    private function get_marketing_settings(): array
+    {
+        return [
+            'name' => __('Marketing', 'f-shop'),
+            'description' => __('Allows you to set analytics and marketing codes', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'textarea',
+                    'name' => 'fs_marketing_code_header',
+                    'label' => __('Коды аналитики в шапке', 'f-shop'),
+                    'value' => fs_option('fs_marketing_code_header'),
+                ],
+                [
+                    'type' => 'textarea',
+                    'name' => 'fs_marketing_code_footer',
+                    'label' => __('Коды аналитики в футере', 'f-shop'),
+                    'value' => fs_option('fs_marketing_code_footer'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get testing settings section.
+     *
+     * @return array Testing settings array
+     */
+    private function get_testing_settings(): array
+    {
+        return [
+            'name' => __('Testing', 'f-shop'),
+            'description' => __('Settings for testing functionality', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_enable_mailtrap',
+                    'label' => __('Enable email testing with Mailtrap.io', 'f-shop'),
+                    'value' => fs_option('fs_enable_mailtrap'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_mailtrap_username',
+                    'label' => __('Mailtrap Username', 'f-shop'),
+                    'value' => fs_option('fs_mailtrap_username'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_mailtrap_password',
+                    'label' => __('Mailtrap Password', 'f-shop'),
+                    'value' => fs_option('fs_mailtrap_password'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_mailtrap_host',
+                    'label' => __('Mailtrap Host', 'f-shop'),
+                    'value' => fs_option('fs_mailtrap_host', 'smtp.mailtrap.io'),
+                ],
+                [
+                    'type' => 'number',
+                    'name' => 'fs_mailtrap_port',
+                    'label' => __('Mailtrap Port', 'f-shop'),
+                    'value' => fs_option('fs_mailtrap_port', '2525'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get currencies settings section.
+     *
+     * @return array Currencies settings array
+     */
+    private function get_currencies_settings(): array
+    {
+        return [
+            'name' => __('Currencies', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'text',
+                    'name' => 'currency_symbol',
+                    'label' => __('Currency sign ($ displayed by default)', 'f-shop'),
+                    'value' => fs_option('currency_symbol', '$'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_currency_code',
+                    'label' => __('Three-digit currency code', 'f-shop'),
+                    'value' => fs_option('fs_currency_code', 'UAH'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'currency_delimiter',
+                    'label' => __('Price separator (default ".")', 'f-shop'),
+                    'value' => fs_option('currency_delimiter', '.'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'price_cents',
+                    'label' => __('Use a penny?', 'f-shop'),
+                    'value' => fs_option('price_cents', '0'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'price_conversion',
+                    'label' => __('Conversion of the cost of goods depending on the language', 'f-shop'),
+                    'help' => __('If selected, the price will be automatically converted into the required currency. Important! In order for this to work, you must specify the locale in the currency settings.', 'f-shop'),
+                    'value' => fs_option('price_conversion', '0'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get templates settings section.
+     *
+     * @return array Templates settings array
+     */
+    private function get_templates_settings(): array
+    {
+        return [
+            'name' => __('Templates', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_overdrive_templates',
+                    'label' => __('Do not override standard templates.', 'f-shop'),
+                    'help' => __('This checkbox is needed if you will not store templates in the "f-shop" directory of your theme.', 'f-shop'),
+                    'value' => fs_option('fs_overdrive_templates', '0'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_disable_messages',
+                    'label' => __('Disable js event handling by the plugin', 'f-shop'),
+                    'help' => __('This checkbox should be noted if you intend to process events triggered by the plugin yourself', 'f-shop'),
+                    'value' => fs_option('fs_disable_messages', 0),
+                ],
+                [
+                    'type' => 'radio',
+                    'name' => 'fs_cart_type',
+                    'label' => __('What type of basket to show', 'f-shop'),
+                    'values' => [
+                        'modal' => __('Modal window', 'f-shop'),
+                        'side' => __('Appears from the side', 'f-shop'),
+                        'disable' => __('Turn off the appearance of the basket', 'f-shop'),
+                    ],
+                    'value' => fs_option('fs_cart_type', 'modal'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get letters settings section.
+     *
+     * @return array Letters settings array
+     */
+    private function get_letters_settings(): array
+    {
+        return [
+            'name' => __('Orders', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'text',
+                    'name' => 'manager_email',
+                    'label' => __('Recipients of letters', 'f-shop'),
+                    'help' => __('You can specify multiple recipients separated by commas.', 'f-shop'),
+                    'value' => fs_option('manager_email', get_option('admin_email')),
+                ],
+                [
+                    'type' => 'image',
+                    'name' => 'fs_email_logo',
+                    'label' => __('Letter Logo', 'f-shop'),
+                    'value' => fs_option('fs_email_logo'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'name_sender',
+                    'label' => __('Name of the sender of letters', 'f-shop'),
+                    'value' => fs_option('name_sender', get_bloginfo('name')),
+                ],
+                [
+                    'type' => 'email',
+                    'name' => 'email_sender',
+                    'label' => __('Email sender', 'f-shop'),
+                    'value' => fs_option('email_sender', get_option('admin_email')),
+                    'help' => __('By default, this is the site administrator\'s e-mail', 'f-shop'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'admin_mail_header',
+                    'label' => __('Title in the order letter to the administrator', 'f-shop'),
+                    'value' => fs_option('admin_mail_header'),
+                    'help' => '',
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'customer_mail_header',
+                    'label' => __('Title in the order letter to the buyer', 'f-shop'),
+                    'value' => fs_option('customer_mail_header'),
+                    'help' => '',
+                ],
+                [
+                    'type' => 'dropdown_posts',
+                    'name' => 'register_mail_template',
+                    'label' => __('Email template for user when creating an account', 'f-shop'),
+                    'value' => fs_option('register_mail_template'),
+                    'post_type' => 'fs-mail-template',
+                ],
+                [
+                    'type' => 'dropdown_posts',
+                    'name' => 'create_order_mail_template',
+                    'label' => __('Letter template to the user when creating a new order', 'f-shop'),
+                    'value' => fs_option('create_order_mail_template'),
+                    'post_type' => 'fs-mail-template',
+                ],
+                [
+                    'type' => 'select',
+                    'name' => 'fs_default_order_status',
+                    'label' => __('The status that is assigned to a new order', 'f-shop'),
+                    'value' => fs_option('fs_default_order_status', 'new'),
+                    'values' => get_terms([
+                        'taxonomy' => FS_Config::get_data('order_statuses_taxonomy'),
+                        'fields' => 'id=>name',
+                        'hide_empty' => 0,
+                        'parent' => 0,
+                    ]),
+                    'post_type' => 'fs-mail-template',
+                ],
+                [
+                    'type' => 'number',
+                    'name' => 'fs_minimum_order_amount',
+                    'label' => sprintf(__('Минимальная сумма заказа (%s)', 'f-shop'), fs_currency()),
+                    'value' => fs_option('fs_minimum_order_amount', 0),
+                    'attributes' => [
+                        'min' => 0,
+                    ],
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => 'fs_notify_telegram',
+                    'label' => __('Notifications in telegram', 'f-shop'),
+                    'value' => fs_option('fs_notify_telegram', 0),
+                    'after' => sprintf(__('Щоб отримувати повідомлення в телеграмі додайте бота <a href="%s" target="_blank">@FShopOfficialBot</a> та напишіть будь-яке повідомлення типу "Привіт"', 'f-shop'), 'https://t.me/FShopOfficialBot'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_telegram_bot_token',
+                    'label' => __('Telegram bot token', 'f-shop'),
+                    'value' => fs_option('fs_telegram_bot_token'),
+                    'after' => '',
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_telegram_chat_id',
+                    'label' => __('Telegram chat id', 'f-shop'),
+                    'value' => fs_option('fs_telegram_chat_id'),
+                    'after' => '',
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'fs_telegram_user_id',
+                    'label' => __('Telegram user id', 'f-shop'),
+                    'value' => fs_option('fs_telegram_user_id'),
+                    'after' => sprintf(__('Щоб дізнатися "user id" можна скористатися ботом <a href="%s" target="_blank">@getmyid_bot</a>', 'f-shop'), 'https://t.me/getmyid_bot'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get contacts settings section.
+     *
+     * @return array Contacts settings array
+     */
+    private function get_contacts_settings(): array
+    {
+        return [
+            'name' => __('Контакты', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'text',
+                    'name' => 'contact_type',
+                    'label' => __('Тип магазина', 'f-shop'),
+                    'help' => __('Используется для микроразметки', 'f-shop'),
+                    'value' => fs_option('contact_type'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'contact_name',
+                    'label' => __('Название магазина', 'f-shop'),
+                    'help' => __('Используется для микроразметки', 'f-shop'),
+                    'value' => fs_option('contact_name'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'contact_phone',
+                    'label' => __('Телефон для связи', 'f-shop'),
+                    'help' => __('Published on the website so that buyers can contact you', 'f-shop'),
+                    'value' => fs_option('contact_phone'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'contact_country',
+                    'label' => __('Страна', 'f-shop'),
+                    'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
+                    'value' => fs_option('contact_country'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'contact_zip',
+                    'label' => __('Почтовый индекс', 'f-shop'),
+                    'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
+                    'value' => fs_option('contact_zip'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'contact_city',
+                    'label' => __('Город', 'f-shop'),
+                    'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
+                    'value' => fs_option('contact_city'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'contact_address',
+                    'label' => __('Физический адрес магазина', 'f-shop'),
+                    'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
+                    'value' => fs_option('contact_address'),
+                ],
+                [
+                    'type' => 'text',
+                    'name' => 'opening_hours',
+                    'label' => __('Время работы', 'f-shop'),
+                    'help' => __('Используется для микроразметки, и в других целях', 'f-shop'),
+                    'value' => fs_option('opening_hours'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get pages settings section.
+     *
+     * @return array Pages settings array
+     */
+    private function get_pages_settings(): array
+    {
+        return [
+            'name' => __('Service pages', 'f-shop'),
+            'description' => __('Service pages are created and installed automatically when the plugin is activated. Can you also override them here', 'f-shop'),
+            'fields' => [
+                [
+                    'type' => 'pages',
+                    'name' => 'page_cart',
+                    'label' => __('Cart page', 'f-shop'),
+                    'value' => fs_option('page_cart'),
+                ],
+                [
+                    'type' => 'pages',
+                    'name' => 'page_checkout',
+                    'label' => __('Checkout Page', 'f-shop'),
+                    'value' => fs_option('page_checkout'),
+                ],
+                [
+                    'type' => 'pages',
+                    'name' => 'page_payment',
+                    'label' => __('Payment page', 'f-shop'),
+                    'value' => fs_option('page_payment'),
+                ],
+                [
+                    'type' => 'pages',
+                    'name' => 'page_success',
+                    'label' => __('Successful ordering page', 'f-shop'),
+                    'value' => fs_option('page_success'),
+                ],
+                [
+                    'type' => 'pages',
+                    'name' => 'page_whishlist',
+                    'label' => __('Wish List Page', 'f-shop'),
+                    'value' => fs_option('page_whishlist'),
+                ],
+                [
+                    'type' => 'pages',
+                    'name' => 'page_cabinet',
+                    'label' => __('Personal account page', 'f-shop'),
+                    'value' => fs_option('page_cabinet'),
+                ],
+                [
+                    'type' => 'pages',
+                    'name' => 'page_auth',
+                    'label' => __('Login page', 'f-shop'),
+                    'value' => fs_option('page_auth'),
+                ],
+                [
+                    'type' => 'pages',
+                    'name' => 'page_register',
+                    'label' => __('Register page', 'f-shop'),
+                    'value' => fs_option('page_register'),
+                ],
+                [
+                    'type' => 'pages',
+                    'name' => 'page_lostpassword',
+                    'label' => __('Forgot your password?', 'f-shop'),
+                    'value' => fs_option('page_lostpassword'),
+                ],
+                [
+                    'type' => 'pages',
+                    'name' => 'page_order_detail',
+                    'label' => __('Order Information Page', 'f-shop'),
+                    'value' => fs_option('page_order_detail'),
+                ],
+            ],
+        ];
     }
 }

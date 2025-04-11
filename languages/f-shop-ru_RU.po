@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-04 11:05+0000\n"
-"PO-Revision-Date: 2025-03-25 08:54+0000\n"
+"PO-Revision-Date: 2025-04-11 08:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -40,10 +40,10 @@ msgstr ""
 #: lib/FS_Orders.php:207
 #, fuzzy
 #| msgid ""
-#| "About all orders with the status of “New” administrator receives "
+#| "About all orders with the status of \"New\" administrator receives "
 #| "notification by mail, which allows him to immediately contact the buyer. "
 #| "For the convenience of accounting for new orders, they are automatically "
-#| "placed in the “New” tab on the order management panel and are displayed "
+#| "placed in the \"New\" tab on the order management panel and are displayed "
 #| "as a list, sorted by the date added."
 msgid ""
 "About all orders with the status of \"New\" administrator receives "
@@ -160,6 +160,12 @@ msgstr "Добавление свойства/группы свойств"
 msgid "Add tax"
 msgstr "Добавить налог"
 
+msgid "Add to cart"
+msgstr ""
+
+msgid "Add to wishlist"
+msgstr ""
+
 #: templates/back-end/metabox/up-sell.php:3
 msgid "Add up-sell products"
 msgstr "Добавить апселл  товар"
@@ -252,6 +258,10 @@ msgstr "Сумма"
 msgid ""
 "An error occurred while removing items from the cart or the cart is empty."
 msgstr "Возникла ошибка при удалении товаров из корзины или корзина пуста"
+
+#: templates/back-end/fields/image.php:136
+msgid "An error occurred while uploading the file"
+msgstr ""
 
 #: lib/FS_Ajax.php:550 lib/FS_Ajax.php:558
 msgid ""
@@ -397,7 +407,7 @@ msgstr "По умолчанию"
 
 #: lib/FS_Settings.php:464
 #, fuzzy
-#| msgid "By default, this is the site administrator’s e-mail"
+#| msgid "By default, this is the site administrator's e-mail"
 msgid "By default, this is the site administrator's e-mail"
 msgstr "По умолчанию это e-mail администратора сайта"
 
@@ -699,6 +709,12 @@ msgstr "Язык валюты (локаль)"
 #: lib/FS_Settings.php:376
 msgid "Currency sign ($ displayed by default)"
 msgstr "Символ или знак валюты (по умолчанию \"$\")"
+
+#: templates/back-end/fields/image.php:213
+msgid ""
+"Current maximum file size: %s MB. Contact your server administrator to "
+"increase limits."
+msgstr ""
 
 #: lib/FS_Customers_List.php:13 functions/filters.php:105
 msgid "Customer"
@@ -1067,6 +1083,10 @@ msgstr "Ошибка"
 msgid "Error saving data"
 msgstr "Ошибка сохранения данных"
 
+#: templates/back-end/fields/image.php:122
+msgid "Error uploading file"
+msgstr ""
+
 #: lib/FS_Ajax.php:1237 lib/FS_Ajax.php:1246 lib/FS_Init.php:153
 msgid "Error!"
 msgstr "Ошибка!"
@@ -1122,6 +1142,18 @@ msgstr "Поля не указаны!"
 #: lib/FS_Taxonomy.php:773
 msgid "Fields to disable when choosing this delivery method"
 msgstr "Поля которые будут отключены при выборе этого способа доставки"
+
+#: templates/back-end/fields/image.php:132
+msgid "File exceeds maximum upload size limit"
+msgstr ""
+
+#: templates/back-end/fields/image.php:134
+msgid "File is too large for server processing"
+msgstr ""
+
+#: templates/back-end/fields/image.php:74
+msgid "File is too large. Maximum size:"
+msgstr ""
 
 #: lib/FS_Settings.php:341
 msgid "Fill in the data of the authorized user automatically"
@@ -1415,6 +1447,10 @@ msgstr "Международный код валюты"
 msgid "Invalid email address"
 msgstr ""
 
+#: templates/back-end/fields/image.php:67
+msgid "Invalid file format. Please select an image"
+msgstr ""
+
 #: lib/FS_Users.php:941
 msgid "Invalid phone number"
 msgstr "Неверный номер телефона"
@@ -1585,8 +1621,16 @@ msgstr "Производители"
 msgid "Marketing"
 msgstr "Маркетинг"
 
+#: templates/back-end/fields/image.php:262
+msgid "Maximum file size: %s MB"
+msgstr ""
+
 #: lib/FS_Users.php:962
 msgid "Maximum length is %d characters"
+msgstr ""
+
+#: templates/back-end/fields/image.php:243
+msgid "Media Library"
 msgstr ""
 
 #: templates/front-end/dashboard/personal_info.php:8
@@ -1676,6 +1720,10 @@ msgstr "Имя обязательно"
 msgid "Name of the sender of letters"
 msgstr "Имя отправителя писем"
 
+#: templates/back-end/fields/image.php:108
+msgid "Network error during file upload"
+msgstr ""
+
 #: lib/FS_Orders.php:206
 msgid "New"
 msgstr "Новый"
@@ -1695,6 +1743,10 @@ msgstr "Без описания"
 #: lib/FS_Users.php:1022
 msgid "No fields found to save user data"
 msgstr "Не найдено полей для сохранения"
+
+#: templates/back-end/fields/image.php:197
+msgid "No image selected"
+msgstr ""
 
 #: lib/FS_Payment.php:38
 msgid "No order number specified."
@@ -2020,6 +2072,10 @@ msgstr "Фото"
 msgid "Physical"
 msgstr "Физический"
 
+#: templates/back-end/fields/image.php:196
+msgid "Placeholder"
+msgstr ""
+
 #: lib/FS_Users.php:1697
 msgid "Please check your login credentials"
 msgstr ""
@@ -2035,6 +2091,10 @@ msgstr "Популярные товары"
 #: lib/FS_Config.php:82
 msgid "Position on the map"
 msgstr "Позиция на карте"
+
+#: templates/back-end/fields/image.php:182
+msgid "Preview"
+msgstr ""
 
 #: lib/FS_Filters.php:134 lib/FS_Init.php:254 functions/filters.php:41
 #: templates/front-end/shortcode/fs-order-info.php:16
@@ -2282,6 +2342,10 @@ msgstr "Регистрация на сайте «%s»"
 msgid "Related products"
 msgstr "Похожие товары"
 
+#: templates/back-end/fields/image.php:254
+msgid "Remove"
+msgstr ""
+
 #: templates/back-end/metabox/related.php:22
 msgid "remove"
 msgstr "удалить"
@@ -2380,6 +2444,10 @@ msgstr "Выберите метод оплаты"
 #: templates/back-end/metabox/attributes.php:164
 msgid "Select from the list"
 msgstr "Выбрать из списка"
+
+#: templates/back-end/fields/image.php:84
+msgid "Select Image"
+msgstr ""
 
 #: lib/FS_Taxonomy.php:1287 lib/FS_Taxonomy.php:1340
 msgid "select image"
@@ -2700,8 +2768,8 @@ msgstr "Интернет магазин работает на"
 #, fuzzy
 #| msgid ""
 #| "The order is accepted and can be paid. The status is introduced mainly "
-#| "for the convenience of internal order management, not “New”, but not yet "
-#| "paid or not sent for delivery;"
+#| "for the convenience of internal order management, not \"New\", but not "
+#| "yet paid or not sent for delivery;"
 msgid ""
 "The order is accepted and can be paid. The status is introduced mainly for "
 "the convenience of internal order management, not \"New\", but not yet paid "
@@ -3000,6 +3068,14 @@ msgstr "Апселл товары"
 msgid "Update Date"
 msgstr "Дата обновления"
 
+#: templates/back-end/fields/image.php:225
+msgid "Upload"
+msgstr ""
+
+#: templates/back-end/fields/image.php:188
+msgid "Uploading..."
+msgstr ""
+
 #: lib/Admin/ProductEdit.php:162
 msgid "Upsell products"
 msgstr ""
@@ -3016,6 +3092,10 @@ msgstr "Использовать копейки?"
 msgid "Use the number of purchased goods to compare with this attribute."
 msgstr ""
 "Использовать количество товаров в корзине для сравнения с этим атрибутом."
+
+#: templates/back-end/fields/image.php:86
+msgid "Use This Image"
+msgstr ""
 
 #: lib/FS_Settings.php:342
 msgid "Used when placing the order, if the user is authorized"
