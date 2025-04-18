@@ -806,21 +806,10 @@ class FS_Settings
                 ],
                 [
                     'type' => 'checkbox',
-                    'name' => 'fs_disable_messages',
-                    'label' => __('Disable js event handling by the plugin', 'f-shop'),
-                    'help' => __('This checkbox should be noted if you intend to process events triggered by the plugin yourself', 'f-shop'),
-                    'value' => fs_option('fs_disable_messages', 0),
-                ],
-                [
-                    'type' => 'radio',
-                    'name' => 'fs_cart_type',
-                    'label' => __('What type of basket to show', 'f-shop'),
-                    'values' => [
-                        'modal' => __('Modal window', 'f-shop'),
-                        'side' => __('Appears from the side', 'f-shop'),
-                        'disable' => __('Turn off the appearance of the basket', 'f-shop'),
-                    ],
-                    'value' => fs_option('fs_cart_type', 'modal'),
+                    'name' => 'fs_disable_modals',
+                    'label' => __('Disable standard modal windows', 'f-shop'),
+                    'help' => __('Check this option to disable default plugin modal windows (cart, wishlist, etc.) if you want to use your own custom modals', 'f-shop'),
+                    'value' => fs_option('fs_disable_modals', 0),
                 ],
             ],
         ];
