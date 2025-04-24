@@ -56,9 +56,9 @@ class FS_Cart
             $product_id = (int) $_SESSION['cart'][$item_id]['ID'];
             $sum = fs_get_price($product_id) * $product_count;
             wp_send_json_success([
-                'sum' => apply_filters('fs_price_format', $sum).' '.fs_currency(),
-                'cost' => apply_filters('fs_price_format', fs_get_cart_cost()).' '.fs_currency(),
-                'total' => fs_get_total_amount().' '.fs_currency(),
+                'sum' => apply_filters('fs_price_format', $sum) . ' ' . fs_currency(),
+                'cost' => apply_filters('fs_price_format', fs_get_cart_cost()) . ' ' . fs_currency(),
+                'total' => fs_get_total_amount() . ' ' . fs_currency(),
             ]);
         }
         wp_send_json_error();
@@ -104,7 +104,7 @@ class FS_Cart
             $cart->count += $item['count'];
         }
 
-        $cart->total_display = apply_filters('fs_price_format', $cart->total).' '.fs_currency();
+        $cart->total_display = apply_filters('fs_price_format', $cart->total) . ' ' . fs_currency();
         $cart->total = floatval($cart->total);
 
         return $cart;
@@ -141,54 +141,83 @@ class FS_Cart
         ]);
 
         $cart = self::get_cart();
+        $item_exists = false;
 
-        array_push($cart, $data);
+        // Проходим по корзине и проверяем наличие такого же товара
+        foreach ($cart as $key => $item) {
+            // Если товар вариативный, проверяем совпадение ID и variation
+            if ($data['variation'] !== null) {
+                if ($item['ID'] == $data['ID'] && $item['variation'] == $data['variation']) {
+                    $cart[$key]['count'] += $data['count'];
+                    $item_exists = true;
+                    break;
+                }
+            }
+            // Если товар не вариативный, проверяем только ID
+            elseif ($item['ID'] == $data['ID'] && $item['variation'] === null) {
+                $cart[$key]['count'] += $data['count'];
+                $item_exists = true;
+                break;
+            }
+        }
+
+        // Если товар не найден в корзине, добавляем его
+        if (!$item_exists) {
+            array_push($cart, $data);
+        }
+
         $_SESSION['cart'] = $cart;
 
         return true;
     }
 
     // ajax обработка добавления в корзину
+    /**
+     * Handles AJAX request for adding a product to the cart.
+     * 
+     * Processes the request data, validates it, and adds the product to the cart.
+     * If a similar product already exists in the cart, it updates the quantity.
+     * Supports product variations and attributes.
+     * 
+     * @return void Sends JSON response with success or error message
+     */
     public function add_to_cart_ajax()
     {
+        // Проверка nonce
         if (!FS_Config::verify_nonce()) {
             wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
         }
-        $product_class = new FS_Product();
-        $attr = !empty($_POST['attr']) ? $_POST['attr'] : [];
+
+        // Проверка на наличие count или установка значения по умолчанию 1
+        if (!empty($_POST['count'])) {
+            $count = intval($_POST['count']) > 0 ? intval($_POST['count']) : 1;
+        }
+
+        // Проверка на наличие product_id
+        if (!is_numeric($_POST['post_id']) || empty($_POST['post_id'])) {
+            wp_send_json_error(['msg' => __('Product ID not specified', 'f-shop')]);
+        }
+
         $product_id = intval($_POST['post_id']);
-        $variation = !empty($_POST['variation']) ? intval($_POST['variation']) : null;
-        $count = floatval($_POST['count']);
-        $variations = $product_class->get_product_variations($product_id, false);
-        $is_variated = count($variations) ? true : false;
-        $search_item = -1;
+        $attr = !empty($_POST['attr']) ? $_POST['attr'] : [];
+        $product_class = new FS_Product();
 
-        // Выполняем поиск подобной позиции в корзине
-        if (!empty($_SESSION['cart'])) {
-            foreach ($_SESSION['cart'] as $key => $item) {
-                if ($is_variated && $item['ID'] == $product_id && $item['variation'] == $variation) {
-                    $search_item = $key;
-                } elseif (!$is_variated && $item['ID'] == $product_id) {
-                    $search_item = $key;
-                }
-            }
+        // Получение вариаций продукта
+        $variation = null;
+        $is_variated = false;
+        $variation_id = 0;
+        if ($product_class->is_variable_product($product_id) && is_numeric($_POST['variation_id'])) {
+            $variation_id = intval($_POST['variation_id']);
+            $variation = $product_class->get_variation($product_id, $variation_id);
+            $is_variated = true;
         }
 
-        if ($search_item != -1 && !empty($_SESSION['cart'])) {
-            $_SESSION['cart'][$search_item] = [
-                'ID' => $product_id,
-                'count' => floatval($_SESSION['cart'][$search_item]['count'] + $count),
-                'attr' => $attr,
-                'variation' => $variation,
-            ];
-        } else {
-            $_SESSION['cart'][] = [
-                'ID' => $product_id,
-                'count' => $count,
-                'attr' => $attr,
-                'variation' => !empty($variations[$variation]) ? $variation : null,
-            ];
-        }
+        self::push_item([
+            'ID' => $product_id,
+            'count' => $count,
+            'attr' => $attr,
+            'variation' => $variation_id,
+        ]);
 
         // Получаем данные о товаре
         $product = get_post($product_id);
@@ -197,12 +226,25 @@ class FS_Cart
             // Базовая информация о товаре
             $product->name = apply_filters('the_title', $product->post_title);
 
-            // Цена товара
-            if ($variation) {
-                $price = $product_class->get_variation_price($product_id, $variation);
-            } else {
-                $price = \fs_get_price($product_id);
+            if ($is_variated && !empty($variation)) {
+                $attributes = get_terms([
+                    'taxonomy' => FS_Config::get_data('features_taxonomy'),
+                    'include' => $variation['attributes'],
+                ]);
+                $product->name .= ' (' . implode(', ', array_map(function ($attribute) {
+                    return $attribute->name;
+                }, $attributes)) . ')';
             }
+
+            // SKU или артикул товара
+            if ($is_variated && !empty($variation) && !empty($variation['sku'])) {
+                $product->sku = $variation['sku'];
+            } else {
+                $product->sku = fs_get_product_code($product_id);
+            }
+
+            // Цена товара
+            $price = fs_get_price($product_id, $variation_id);
             $product->price = apply_filters('fs_price_format', $price);
             $product->price_raw = $price;
 

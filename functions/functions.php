@@ -93,39 +93,36 @@ function fs_has_sale_price($product_id = 0)
     return (bool) get_post_meta($product_id, FS_Config::get_meta('action_price'), 1);
 }
 
-// Получает текущую цену с учётом скидки
 /**
- * @param int $product_id -id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
+ * Получает текущую цену с учётом скидки
+ * 
+ * @param int $product_id - id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
+ * @param int $variation_id - id вариации
  *
- * @return float $price-значение цены
+ * @return float $price - значение цены
  */
-function fs_get_price($product_id = 0)
+function fs_get_price($product_id = 0, $variation_id = 0)
 {
     $product_id = fs_get_product_id($product_id);
-    $is_variable = false;
+    $product_class = new FS_Product();
 
-    // получаем возможные типы цен
-    $price = get_post_meta($product_id, FS_Config::get_meta('price'), true); // базовая цена
-    $action_price = get_post_meta($product_id, FS_Config::get_meta('action_price'), true); // акционная цена
-    $price = floatval(str_replace(',', '.', $price));
-    $action_price = floatval(str_replace(',', '.', $action_price));
+    // Если товар вариативный, то возвращаем цену вариации
+    if ($product_class->is_variable_product($product_id)) {
+        $variation = $product_class->get_variation($product_id, $variation_id);
+        $variation_price = floatval($variation['price']);
+        $variation_sale_price = floatval($variation['sale_price']);
+        if ($variation_sale_price > 0 && $variation_sale_price < $variation_price) {
+            $price = $variation_sale_price;
+        } elseif ($variation_price > 0) {
+            $price = $variation_price;
+        }
+    } else {
+        $price = get_post_meta($product_id, FS_Config::get_meta('price'), true);
+        $action_price = get_post_meta($product_id, FS_Config::get_meta('action_price'), true);
+        $price = floatval(str_replace(',', '.', $price));
+        $action_price = floatval(str_replace(',', '.', $action_price));
 
-    if ($action_price && $action_price < $price) {
-        $price = $action_price;
-    }
-
-    // Если товар вариативный, то цена равна цене первой вариации
-    $first_variation = fs_get_first_variation($product_id);
-
-    if (isset($first_variation['price']) && is_numeric($first_variation['price'])) {
-        $price = floatval($first_variation['price']);
-        $is_variable = true;
-    }
-
-    // Если товар вариативный и у первой вариации есть акционная цена, то возвращаем ее
-    if ($is_variable && isset($first_variation['sale_price']) && is_numeric($first_variation['sale_price'])) {
-        $action_price = floatval($first_variation['sale_price']);
-        if ($action_price < $price) {
+        if ($action_price && $action_price < $price) {
             $price = $action_price;
         }
     }
@@ -874,7 +871,7 @@ function fs_add_to_cart($product_id = 0, $label = 'Add to cart', $args = [])
             'inCart' => FS_Cart::contains($product_id),
             'productId' => $product_id,
         ]),
-        'x-on:click' => 'Alpine.store("FS").addToCart(productId, Number(typeof count!== "undefined"? count : 1), typeof variationId !== "undefined" ? variationId : null, typeof attributes !== "undefined" ? attributes : {}); inCart=true; $event.preventDefault()',
+        'x-on:click' => 'Alpine.store("FS").addToCart(productId, Number(typeof count!== "undefined"? count : 1), typeof variationId !== "undefined" ? variationId : null, typeof attributes !== "undefined" ? attributes : {}); inCart=true; $event.preventDefault(); console.log( variationId)',
     ]);
 
     $atc_after = '<span class="fs-atc-preloader" style="display:none" x-show="$store?.FS?.loading"></span>';
@@ -3825,7 +3822,7 @@ function fs_before_product_atts()
     echo ' x-data=\'' . json_encode([
         'attributes' => $attributes,
         'count' => 1,
-        'variationId' => $first_variation_id, // Добавляем ID первой вариации
+        'variationId' => 0, // Добавляем ID первой вариации
         'price_formatted' => apply_filters('fs_price_format', fs_get_price($product_id)),
         'old_price_formatted' => apply_filters('fs_price_format', fs_get_base_price($product_id)),
         'price' => fs_get_price($product_id),
@@ -3833,12 +3830,18 @@ function fs_before_product_atts()
         'currency' => fs_currency($product_id),
     ]) . ' \'';
 
-    echo ' x-init="
-        // Загружаем вариации товара при инициализации страницы
-        Alpine.store(\'FS\').loadProductVariations(' . $product_id . ');
-        
-        // Следим за изменениями атрибутов и обновляем цену
-        $watch(\'attributes\',(val)=>Alpine.store(\'FS\').calculatePrice(' . $product_id . ',val).then(r=>{
+    echo ' x-init="async()=>{
+      const store = Alpine.store(\'FS\');
+      await store.loadProductVariations(' . $product_id . ');
+    
+      $watch(\'attributes\',async(val)=>{
+        const result = await store.findVariation(' . $product_id . ', val);
+        console.log(result);
+        if (result) {
+            variationId = result.variation_id;
+        }
+
+        store.calculatePrice(' . $product_id . ',val).then(r=>{
             if(r.success){
                 price=r.data.price;
                 sale_price=r.data.sale_price;
@@ -3847,7 +3850,9 @@ function fs_before_product_atts()
                 price=r.data.price;
                 old_price=r.data.old_price;
             }
-        }))
+        })
+      })
+    }
     " ';
 }
 

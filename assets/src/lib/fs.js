@@ -339,8 +339,8 @@ class FS {
     return this.post("add_to_cart", {
       post_id: productId,
       count: count,
-      variation: variation,
-      attr: JSON.stringify(attr),
+      variation_id: variation,
+      attr: Object.values(attr),
     }).then((result) => {
       if (result.success) {
         // Добавляем детали товара из результата запроса

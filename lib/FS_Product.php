@@ -44,12 +44,12 @@ class FS_Product
     public static function product_comment_likes($comment_id = 0)
     {
         $comment_like_count = (int) get_comment_meta($comment_id, 'fs_like_count', 1); ?>
-		<div class="comment-like" data-fs-element="comment-like"
-			data-comment-id="<?php echo esc_attr($comment_id); ?>">
-			<i class="icon icon-like"></i> <span class="comment-like__count"
-				data-fs-element="comment-like-count"><?php echo esc_html($comment_like_count); ?></span>
-		</div>
-	<?php }
+        <div class="comment-like" data-fs-element="comment-like"
+            data-comment-id="<?php echo esc_attr($comment_id); ?>">
+            <i class="icon icon-like"></i> <span class="comment-like__count"
+                data-fs-element="comment-like-count"><?php echo esc_html($comment_like_count); ?></span>
+        </div>
+    <?php }
 
     /**
      * Возвращает массив вариаций товара.
@@ -84,7 +84,7 @@ class FS_Product
         $product_id = fs_get_product_id($product_id);
         $variations = $this->get_product_variations($product_id);
 
-        return count($variations) ? true : false;
+        return count($variations) > 0 ? true : false;
     }
 
     /**
@@ -204,35 +204,35 @@ class FS_Product
         if (!$args['echo']) {
             ob_start();
         }
-        ?>
-		<div class="<?php echo esc_attr($args['wrapper_class']); ?>">
-			<?php if ($args['before']) {
-			    echo $args['before'];
-			} ?>
+    ?>
+        <div class="<?php echo esc_attr($args['wrapper_class']); ?>">
+            <?php if ($args['before']) {
+                echo $args['before'];
+            } ?>
 
-			<div class="star-rating"
-				x-data="{
+            <div class="star-rating"
+                x-data="{
 					rating: <?php echo esc_attr($args['default_value']); ?>,
 					stars: <?php echo esc_attr($args['stars']); ?>
 				}">
-				<template x-for="i in stars">
-					<button
-						disabled
-						style="width: <?php echo esc_attr($args['size']); ?>px; height: <?php echo esc_attr($args['size']); ?>px; background: none; border: none; padding: 0; margin: 0 2px; cursor: default;"
-						x-effect="
+                <template x-for="i in stars">
+                    <button
+                        disabled
+                        style="width: <?php echo esc_attr($args['size']); ?>px; height: <?php echo esc_attr($args['size']); ?>px; background: none; border: none; padding: 0; margin: 0 2px; cursor: default;"
+                        x-effect="
 							$el.querySelectorAll('svg path, svg g path').forEach(path => {
 								path.setAttribute('fill', rating >= i ? '<?php echo esc_attr($args['voted_color']); ?>' : '<?php echo esc_attr($args['not_voted_color']); ?>');
 							})
 						">
-						<?php include FS_PLUGIN_PATH.'/assets/img/icon/star.svg'; ?>
-					</button>
-				</template>
-			</div>
-			<?php if ($args['after']) {
-			    echo $args['after'];
-			} ?>
-		</div>
-		<?php
+                        <?php include FS_PLUGIN_PATH . '/assets/img/icon/star.svg'; ?>
+                    </button>
+                </template>
+            </div>
+            <?php if ($args['after']) {
+                echo $args['after'];
+            } ?>
+        </div>
+        <?php
         if (!$args['echo']) {
             return ob_get_clean();
         }
@@ -350,7 +350,7 @@ class FS_Product
 
             // Если есть информация об атрибутах, добавляем их к заголовку в скобках
             if (!empty($attributes_info)) {
-                $title .= ' ('.implode(', ', $attributes_info).')';
+                $title .= ' (' . implode(', ', $attributes_info) . ')';
             }
         }
 
@@ -388,7 +388,7 @@ class FS_Product
     public function the_sku($format = '%s')
     {
         if ($this->get_sku($this->id, $this->variation)) {
-            printf('<span data-fs-element="sku" class="fs-sku">'.$format.'</span>', esc_html($this->get_sku()));
+            printf('<span data-fs-element="sku" class="fs-sku">' . $format . '</span>', esc_html($this->get_sku()));
         }
     }
 
@@ -401,7 +401,7 @@ class FS_Product
     {
         $format = !empty($format) ? $format : $this->price_format;
 
-        printf('<span class="fs-price">'.$format.'</span>', apply_filters('fs_price_format', $this->price), $this->currency);
+        printf('<span class="fs-price">' . $format . '</span>', apply_filters('fs_price_format', $this->price), $this->currency);
     }
 
     /**
@@ -413,7 +413,7 @@ class FS_Product
     {
         $format = !empty($format) ? $format : $this->price_format;
         if ($this->base_price > $this->price) {
-            printf('<del class="fs-base-price">'.$format.'</del>', apply_filters('fs_price_format', $this->base_price), $this->currency);
+            printf('<del class="fs-base-price">' . $format . '</del>', apply_filters('fs_price_format', $this->base_price), $this->currency);
         }
     }
 
@@ -463,7 +463,7 @@ class FS_Product
         $this->set_item_id($item_id);
         $variation = null;
 
-        if (fs_is_variated($this->id) && isset($product['variation']) && is_numeric($product['variation']) && !empty($product['variation'])) {
+        if (fs_is_variated($this->id) && isset($product['variation']) && is_numeric($product['variation'])) {
             $this->setVariation($product['variation']);
             $variation = $this->get_variation();
             $this->attributes = !empty($variation['attr']) ? $variation['attr'] : [];
@@ -478,7 +478,7 @@ class FS_Product
         $this->sku = $this->get_sku();
 
         $this->base_price_display = $this->base_price > 0 ? apply_filters('fs_price_format', $this->base_price) : '';
-        $this->price_display = apply_filters('fs_price_format', $this->price).' '.fs_currency($this->id);
+        $this->price_display = apply_filters('fs_price_format', $this->price) . ' ' . fs_currency($this->id);
         $this->permalink = $this->get_permalink();
         $this->count = floatval($product['count']);
         $this->cost = floatval($this->count * $this->price);
@@ -522,7 +522,7 @@ class FS_Product
      * @param int  $product_id
      * @param null $variation_id
      *
-     * @return null
+     * @return array|null
      */
     public function get_variation($product_id = 0, $variation_id = null)
     {
@@ -537,6 +537,69 @@ class FS_Product
         }
 
         return $variation;
+    }
+
+    /**
+     * Finds a product variation by matching attributes.
+     * 
+     * This method searches through all variations of a product and returns
+     * the first variation that contains all the specified attributes.
+     * 
+     * @param int $product_id The ID of the product
+     * @param array $attributes Array of term_ids from product-attributes taxonomy
+     * 
+     * @return array|null The matching variation or null if not found
+     */
+    public function find_variation_by_attributes($product_id = 0, $attributes = [])
+    {
+        $product_id = $product_id ? $product_id : $this->id;
+
+        // If no attributes provided, return null
+        if (empty($attributes) || !is_array($attributes)) {
+            return null;
+        }
+
+        // Get all variations for the product
+        $variations = $this->get_product_variations($product_id, false);
+
+        if (empty($variations)) {
+            return null;
+        }
+
+        // Convert attributes array to a format that's easier to compare
+        $search_attributes = [];
+        foreach ($attributes as $attr_id) {
+            if (is_numeric($attr_id)) {
+                $search_attributes[] = (int)$attr_id;
+            }
+        }
+
+        // Loop through variations to find a match
+        foreach ($variations as $variation_id => $variation) {
+            if (empty($variation['attributes']) || !is_array($variation['attributes'])) {
+                continue;
+            }
+
+            // Convert variation attributes to integers for comparison
+            $variation_attributes = array_map('intval', $variation['attributes']);
+
+            // Check if all search attributes are in this variation's attributes
+            $all_attributes_found = true;
+            foreach ($search_attributes as $attr_id) {
+                if (!in_array($attr_id, $variation_attributes)) {
+                    $all_attributes_found = false;
+                    break;
+                }
+            }
+
+            // If all attributes found, return this variation with its ID
+            if ($all_attributes_found) {
+                $variation['variation_id'] = $variation_id;
+                return $variation;
+            }
+        }
+
+        return null;
     }
 
     public function setVariation($variation)
@@ -613,14 +676,14 @@ class FS_Product
                     $is_multilang = isset($field['multilang']) && $field['multilang'] && fs_option('fs_multi_language_support');
                     if (!in_array($field['type'], ['checkbox']) && $is_multilang) {
                         foreach (FS_Config::get_languages() as $code => $language) {
-                            $meta_key = $key.'__'.$language['locale'];
+                            $meta_key = $key . '__' . $language['locale'];
                             if ((isset($_POST[$meta_key]) && $_POST[$meta_key] != '')
                                 || ($key == 'fs_seo_slug' && isset($_POST[$meta_key]))
                             ) {
                                 $value = apply_filters('fs_transform_meta_value', $_POST[$meta_key], $key, $code, $post_id);
-                                update_post_meta($post_id, $key.'__'.$language['locale'], $value);
+                                update_post_meta($post_id, $key . '__' . $language['locale'], $value);
                             } else {
-                                delete_post_meta($post_id, $key.'__'.$language['locale']);
+                                delete_post_meta($post_id, $key . '__' . $language['locale']);
                             }
                         }
                     } else {
@@ -660,26 +723,26 @@ class FS_Product
     public function after_product_tabs(\WP_Post $post)
     {
         ?>
-		<div id="fs-upsell-dialog" class="hidden fs-select-products-dialog" style="max-width:420px">
-			<?php
+        <div id="fs-upsell-dialog" class="hidden fs-select-products-dialog" style="max-width:420px">
+            <?php
             $args = [
                 'posts_per_page' => -1,
                 'post_type' => FS_Config::get_data('post_type'),
             ];
-        $query = new \WP_Query($args);
-        if ($query->have_posts()) {
-            echo '<ul>';
-            while ($query->have_posts()) {
-                $query->the_post();
-                the_title('<li><span>', '</span><button class="button add-product" data-id="'.esc_attr($post->ID).'" data-field="fs_up_sell" data-name="'.esc_attr(get_the_title()).'">'.esc_html__('choose', 'f-shop').'</button></li>');
+            $query = new \WP_Query($args);
+            if ($query->have_posts()) {
+                echo '<ul>';
+                while ($query->have_posts()) {
+                    $query->the_post();
+                    the_title('<li><span>', '</span><button class="button add-product" data-id="' . esc_attr($post->ID) . '" data-field="fs_up_sell" data-name="' . esc_attr(get_the_title()) . '">' . esc_html__('choose', 'f-shop') . '</button></li>');
+                }
+                echo '</ul>';
             }
-            echo '</ul>';
-        }
-        wp_reset_query();
-        ?>
-		</div>
+            wp_reset_query();
+            ?>
+        </div>
 
-		<div class="fs-mb-preloader"></div>
+        <div class="fs-mb-preloader"></div>
 <?php
     }
 
@@ -847,7 +910,7 @@ class FS_Product
         $default_tabs = apply_filters('fs_product_tabs_items', $default_tabs, $product_id);
 
         if (is_array($default_tabs) && !empty($default_tabs)) {
-            $html = '<div class="'.esc_attr($args['wrapper_class']).'">';
+            $html = '<div class="' . esc_attr($args['wrapper_class']) . '">';
             $html .= $args['before'];
             $html .= '<ul class="nav nav-tabs" id="fs-product-tabs-nav" role="tablist">';
 
@@ -855,8 +918,8 @@ class FS_Product
             $counter = 0;
             foreach ($default_tabs as $id => $tab) {
                 $class = !$counter ? ' active' : '';
-                $html .= '<li class="nav-item '.$class.'">';
-                $html .= '<a class="nav-link'.esc_attr($class).'" id="fs-product-tab-nav-'.esc_attr($id).'" data-toggle="tab" href="#fs-product-tab-'.esc_attr($id).'" role="tab" aria-controls="'.esc_attr($id).'" aria-selected="true">'.esc_html($tab['title']).'</a>';
+                $html .= '<li class="nav-item ' . $class . '">';
+                $html .= '<a class="nav-link' . esc_attr($class) . '" id="fs-product-tab-nav-' . esc_attr($id) . '" data-toggle="tab" href="#fs-product-tab-' . esc_attr($id) . '" role="tab" aria-controls="' . esc_attr($id) . '" aria-selected="true">' . esc_html($tab['title']) . '</a>';
                 $html .= '</li>';
                 ++$counter;
             }
@@ -869,7 +932,7 @@ class FS_Product
             $counter = 0;
             foreach ($default_tabs as $id => $tab) {
                 $class = !$counter ? ' active' : '';
-                $html .= '<div class="tab-pane'.esc_attr($class).'" id="fs-product-tab-'.esc_attr($id).'" role="tabpanel" aria-labelledby="'.esc_attr($id).'-tab">';
+                $html .= '<div class="tab-pane' . esc_attr($class) . '" id="fs-product-tab-' . esc_attr($id) . '" role="tabpanel" aria-labelledby="' . esc_attr($id) . '-tab">';
                 $html .= $tab['content'];
                 $html .= '</div>';
                 ++$counter;
