@@ -37,6 +37,20 @@ class FS {
     this.variation = null;
     this.variations = {}; // Хранилище вариаций по ID
     this.attributes = {}; // Хранилище атрибутов
+
+    // Инициализация списка избранного при создании экземпляра класса
+    this.initWishlist();
+  }
+
+  // Инициализация списка избранного
+  initWishlist() {
+    this.updateWishlist()
+      .then(() => {
+        console.log("Wishlist initialized with", this.wishlist.count, "items");
+      })
+      .catch((error) => {
+        console.error("Failed to initialize wishlist:", error);
+      });
   }
 
   getSetting(settingName) {
@@ -95,6 +109,45 @@ class FS {
     }).then((r) => r.json());
   }
 
+  /**
+   * Централизованный метод для показа модальных окон с проверкой настройки fs_disable_modals
+   *
+   * @param {string} type - Тип уведомления (success, error, warning, info)
+   * @param {object} options - Опции для iziToast
+   * @returns {boolean} - true если уведомление было показано, false если модальные окна отключены
+   */
+  showToast(type, options) {
+    // Проверяем, не отключены ли модальные окна
+    if (this.getSetting("fs_disable_modals") === "1") {
+      return false;
+    }
+
+    // Устанавливаем позицию по умолчанию
+    if (!options.position) {
+      options.position = "topCenter";
+    }
+
+    // Вызываем соответствующий метод iziToast в зависимости от типа
+    switch (type) {
+      case "success":
+        iziToast.success(options);
+        break;
+      case "error":
+        iziToast.error(options);
+        break;
+      case "warning":
+        iziToast.warning(options);
+        break;
+      case "info":
+        iziToast.info(options);
+        break;
+      default:
+        iziToast.show(options);
+    }
+
+    return true;
+  }
+
   // === WISHLIST ===
 
   /**
@@ -120,22 +173,34 @@ class FS {
     return this.post("fs_addto_wishlist", { product_id: itemId }).then(
       (response) => {
         if (response.success) {
-          iziToast.success({
+          // Обновляем данные избранного в свойстве this.wishlist
+          this.updateWishlist().then(() => {
+            // Вызываем событие для обновления интерфейса с данными товара
+
+            const wishlistUpdatedEvent = new CustomEvent(
+              "fs-wishlist-item-added",
+              {
+                detail: {
+                  action: response.data.action,
+                  itemId: itemId,
+                  product: response.data.product, // Передаем данные о товаре из ответа
+                  wishlist: this.wishlist,
+                },
+              }
+            );
+            window.dispatchEvent(wishlistUpdatedEvent);
+          });
+
+          // Показываем уведомление об успешном добавлении
+          this.showToast("success", {
             title: response.data.title ?? this.getMessage("success"),
             message: response.data.msg,
-            position: "topCenter",
           });
-          const wishlistUpdatedEvent = new CustomEvent(
-            "fs-wishlist-item-added",
-            { detail: { itemId: itemId } }
-          );
-          window.dispatchEvent(wishlistUpdatedEvent);
-          this.updateWishlist();
         } else {
-          iziToast.error({
+          // Показываем уведомление об ошибке
+          this.showToast("error", {
             title: response.data.title ?? this.getMessage("error"),
             message: response.data.msg,
-            position: "topCenter",
           });
         }
       }
@@ -145,6 +210,7 @@ class FS {
   // Deletes the wishlist
   cleanWishlist() {
     this.post("fs_clean_wishlist", {}).then((data) => {
+      this.wishlist = { items: [], count: 0 };
       window.location.reload();
     });
   }
@@ -170,10 +236,9 @@ class FS {
           });
 
           // Показываем уведомление об успешном добавлении
-          iziToast.success({
+          this.showToast("success", {
             title: response.data.title,
             message: response.data.message,
-            position: "topCenter",
           });
         }
       })
@@ -193,21 +258,26 @@ class FS {
     return this.post("fs_del_wishlist_pos", { item_id: itemId }).then(
       (response) => {
         if (response.success) {
-          iziToast.success({
+          // Обновляем данные избранного в свойстве this.wishlist
+          this.updateWishlist().then(() => {
+            // Вызываем событие для обновления интерфейса
+            const wishlistUpdatedEvent = new CustomEvent(
+              "fs-wishlist-item-deleted",
+              { detail: { itemId: itemId, wishlist: this.wishlist } }
+            );
+            window.dispatchEvent(wishlistUpdatedEvent);
+          });
+
+          // Показываем уведомление об успешном удалении
+          this.showToast("success", {
             title: response.data.title ?? this.getMessage("success"),
             message: response.data.msg,
-            position: "topCenter",
           });
-          const wishlistUpdatedEvent = new CustomEvent(
-            "fs-wishlist-item-deleted",
-            { detail: { itemId: itemId } }
-          );
-          window.dispatchEvent(wishlistUpdatedEvent);
         } else {
-          iziToast.error({
+          // Показываем уведомление об ошибке
+          this.showToast("error", {
             title: response.data.title ?? this.getMessage("error"),
             message: response.data.msg,
-            position: "topCenter",
           });
         }
       }
@@ -427,7 +497,7 @@ class FS {
    * @private
    */
   _showModalNotification(detail) {
-    iziToast.show({
+    this.showToast("show", {
       image: detail.image,
       imageWidth: window.innerWidth > 768 ? 150 : 90,
       theme: "light",
@@ -562,9 +632,8 @@ class FS {
 
     // If you've already voted, we'll show an error.
     if (voted_products && voted_products[post_id]) {
-      iziToast.error({
+      this.showToast("error", {
         message: this.getMessage("ratingError"),
-        position: "topCenter",
       });
       return;
     }
@@ -579,10 +648,9 @@ class FS {
             "voted_products",
             JSON.stringify(voted_products)
           );
-          iziToast.success({
+          this.showToast("success", {
             title: r.data.title,
             message: r.data.msg,
-            position: "topCenter",
           });
         }
       }
@@ -597,17 +665,15 @@ class FS {
   cleanViewedProducts() {
     return this.post("fs_clean_viewed_products").then((response) => {
       if (response.success) {
-        iziToast.success({
+        this.showToast("success", {
           title: response.data.title ?? this.getMessage("success"),
           message: response.data.msg,
-          position: "topCenter",
         });
         window.location.reload();
       } else {
-        iziToast.error({
+        this.showToast("error", {
           title: response.data.title ?? this.getMessage("error"),
           message: response.data.msg,
-          position: "topCenter",
         });
       }
     });

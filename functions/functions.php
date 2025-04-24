@@ -3200,6 +3200,30 @@ function fs_product_average_rating($product_id = 0)
 }
 
 /**
+ * Displays the number of comments for a product.
+ *
+ * @param int $product_id Product ID
+ * @param bool $return Whether to return or echo the count
+ * 
+ * @return int|void Returns count if $return is true, otherwise echoes the count
+ */
+function fs_comments_count_number($product_id = 0, $return = false)
+{
+    $product_id = fs_get_product_id($product_id);
+    global $wpdb;
+    $count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved = '1'", $product_id));
+
+    $count = apply_filters('fs_product_comments_count_number', $count, $product_id);
+
+    if ($return) {
+        return (int) $count;
+    }
+
+    echo (int) $count;
+}
+
+
+/**
  * Выводит к-во комментариев к товару.
  *
  * @param int $product_id

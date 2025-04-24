@@ -168,7 +168,7 @@ class FS_Init
                 ),
                 'addToWishlist' => __('Item &laquo;%product%&raquo; successfully added to wishlist. <a href="%wishlist_url%">Go to wishlist</a>', 'f-shop'),
             ],
-            'fs_cart_type' => fs_option('fs_cart_type', 'modal'),
+            'fs_disable_modals' => fs_option('fs_disable_modals', 0),
         ];
         wp_localize_script(FS_PLUGIN_PREFIX.'main', 'fShop', $l10n);
         wp_enqueue_script(FS_PLUGIN_PREFIX.'frontend', FS_PLUGIN_URL.'assets/js/fs-frontend.js', [], null, false);
