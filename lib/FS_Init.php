@@ -63,7 +63,7 @@ class FS_Init
 
         add_action('wp_enqueue_scripts', [$this, 'frontend_scripts_and_styles']);
         add_action('admin_enqueue_scripts', [$this, 'admin_scripts_and_styles']);
-        add_filter('plugin_action_links_'.plugin_basename(FS_PLUGIN_FILE), [
+        add_filter('plugin_action_links_' . plugin_basename(FS_PLUGIN_FILE), [
             $this,
             'plugin_settings_link',
         ]);
@@ -114,7 +114,7 @@ class FS_Init
      */
     public function plugin_settings_link($links)
     {
-        $settings_link = '<a href="edit.php?post_type=product&page=f-shop-settings">'.__('Settings').'</a>';
+        $settings_link = '<a href="edit.php?post_type=product&page=f-shop-settings">' . __('Settings') . '</a>';
         array_unshift($links, $settings_link);
 
         return $links;
@@ -131,13 +131,16 @@ class FS_Init
      */
     public static function frontend_scripts_and_styles()
     {
-        wp_enqueue_style(FS_PLUGIN_PREFIX.'izi-toast', FS_PLUGIN_URL.'assets/css/iziToast.min.css', [], FS_Config::get_data('plugin_ver'), 'all');
-        wp_enqueue_style(FS_PLUGIN_PREFIX.'style', FS_PLUGIN_URL.'assets/css/f-shop.css', [], FS_Config::get_data('plugin_ver'), 'all');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', [], FS_Config::get_data('plugin_ver'), 'all');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'style', FS_PLUGIN_URL . 'assets/css/f-shop.css', [], FS_Config::get_data('plugin_ver'), 'all');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', [], null, 'all');
 
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'domurl', FS_PLUGIN_URL.'assets/js/url.min.js', ['jquery'], null, true);
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'izi-toast', FS_PLUGIN_URL.'assets/js/iziToast.min.js', ['jquery'], null, true);
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'domurl', FS_PLUGIN_URL . 'assets/js/url.min.js', ['jquery'], null, true);
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/js/iziToast.min.js', ['jquery'], null, true);
 
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'main', FS_PLUGIN_URL.'assets/js/f-shop.js', [
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], null, true);
+
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', [
             'jquery',
         ], null, true);
 
@@ -170,9 +173,9 @@ class FS_Init
             ],
             'fs_disable_modals' => fs_option('fs_disable_modals', 0),
         ];
-        wp_localize_script(FS_PLUGIN_PREFIX.'main', 'fShop', $l10n);
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'frontend', FS_PLUGIN_URL.'assets/js/fs-frontend.js', [], null, false);
-        wp_localize_script(FS_PLUGIN_PREFIX.'frontend', 'FS_DATA', $l10n);
+        wp_localize_script(FS_PLUGIN_PREFIX . 'main', 'fShop', $l10n);
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', [], null, false);
+        wp_localize_script(FS_PLUGIN_PREFIX . 'frontend', 'FS_DATA', $l10n);
     }
 
     /**
@@ -192,61 +195,61 @@ class FS_Init
             wp_enqueue_media();
         }
 
-        wp_enqueue_style(FS_PLUGIN_PREFIX.'spectrum', FS_PLUGIN_URL.'assets/css/spectrum.css');
-        wp_enqueue_style(FS_PLUGIN_PREFIX.'fs-tooltipster', FS_PLUGIN_URL.'assets/plugins/tooltipster-master/dist/css/tooltipster.main.min.css');
-        wp_enqueue_style(FS_PLUGIN_PREFIX.'fs-tooltipster-bundle', FS_PLUGIN_URL.'assets/plugins/tooltipster-master/dist/css/tooltipster.bundle.min.css');
-        wp_enqueue_style(FS_PLUGIN_PREFIX.'fs-tooltipster-theme', FS_PLUGIN_URL.'assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'spectrum', FS_PLUGIN_URL . 'assets/css/spectrum.css');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'fs-tooltipster', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/css/tooltipster.main.min.css');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'fs-tooltipster-bundle', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/css/tooltipster.bundle.min.css');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'fs-tooltipster-theme', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css');
         wp_enqueue_style('wp-jquery-ui-dialog');
-        wp_enqueue_style(FS_PLUGIN_PREFIX.'select2', FS_PLUGIN_URL.'assets/plugins/bower_components/select2/dist/css/select2.min.css');
-        wp_enqueue_style(FS_PLUGIN_PREFIX.'fs-material-fonts', '//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons');
-        wp_enqueue_style(FS_PLUGIN_PREFIX.'fs-admin', FS_PLUGIN_URL.'assets/css/fs-admin.css');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'select2', FS_PLUGIN_URL . 'assets/plugins/bower_components/select2/dist/css/select2.min.css');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'fs-material-fonts', '//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons');
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'fs-admin', FS_PLUGIN_URL . 'assets/css/fs-admin.css');
 
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'spectrum', FS_PLUGIN_URL.'assets/js/spectrum.js', ['jquery'], null, true);
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'js-cookie', FS_PLUGIN_URL.'assets/js/js.cookie.js', ['jquery'], null, true);
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'spectrum', FS_PLUGIN_URL . 'assets/js/spectrum.js', ['jquery'], null, true);
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'js-cookie', FS_PLUGIN_URL . 'assets/js/js.cookie.js', ['jquery'], null, true);
 
         $screen = get_current_screen();
         if ($screen->id == 'edit-product') {
-            wp_enqueue_script(FS_PLUGIN_PREFIX.'quick-edit', FS_PLUGIN_URL.'assets/js/quick-edit.js', ['jquery'], null, true);
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'quick-edit', FS_PLUGIN_URL . 'assets/js/quick-edit.js', ['jquery'], null, true);
         } elseif ($screen->id == 'product') {
-            wp_enqueue_script(FS_PLUGIN_PREFIX.'jquery-validate', FS_PLUGIN_URL.'assets/js/jquery.validate.min.js', ['jquery'], null, true);
-            wp_enqueue_script(FS_PLUGIN_PREFIX.'product-edit', FS_PLUGIN_URL.'assets/js/product-edit.js', [
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'jquery-validate', FS_PLUGIN_URL . 'assets/js/jquery.validate.min.js', ['jquery'], null, true);
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'product-edit', FS_PLUGIN_URL . 'assets/js/product-edit.js', [
                 'jquery',
-                FS_PLUGIN_PREFIX.'jquery-validate',
+                FS_PLUGIN_PREFIX . 'jquery-validate',
             ], null, true);
         } elseif ($screen->id == 'fs-mail-template') {
-            wp_enqueue_script(FS_PLUGIN_PREFIX.'codemirror', FS_PLUGIN_URL.'assets/plugins/codemirror-5.61.0/lib/codemirror.js', ['jquery'], null, true);
-            wp_enqueue_script(FS_PLUGIN_PREFIX.'codemirror-xml', FS_PLUGIN_URL.'assets/plugins/codemirror-5.61.0/mode/xml/xml.js', ['jquery'], null, true);
-            wp_enqueue_script(FS_PLUGIN_PREFIX.'codemirror-xml-fold', FS_PLUGIN_URL.'assets/plugins/codemirror-5.61.0/addon/fold/xml-fold.js', ['jquery'], null, true);
-            wp_enqueue_script(FS_PLUGIN_PREFIX.'codemirror-matchtags', FS_PLUGIN_URL.'assets/plugins/codemirror-5.61.0/addon/edit/matchtags.js', [
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/lib/codemirror.js', ['jquery'], null, true);
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-xml', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/mode/xml/xml.js', ['jquery'], null, true);
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-xml-fold', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/addon/fold/xml-fold.js', ['jquery'], null, true);
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-matchtags', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/addon/edit/matchtags.js', [
                 'jquery',
-                FS_PLUGIN_PREFIX.'codemirror-xml-fold',
+                FS_PLUGIN_PREFIX . 'codemirror-xml-fold',
             ], null, true);
-            wp_enqueue_style(FS_PLUGIN_PREFIX.'codemirror', FS_PLUGIN_URL.'assets/plugins/codemirror-5.61.0/lib/codemirror.css');
-            wp_enqueue_script(FS_PLUGIN_PREFIX.'codemirror-init', FS_PLUGIN_URL.'assets/js/codemirror.js', [
+            wp_enqueue_style(FS_PLUGIN_PREFIX . 'codemirror', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/lib/codemirror.css');
+            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-init', FS_PLUGIN_URL . 'assets/js/codemirror.js', [
                 'jquery',
-                FS_PLUGIN_PREFIX.'codemirror',
-                FS_PLUGIN_PREFIX.'codemirror-xml',
-                FS_PLUGIN_PREFIX.'codemirror-matchtags',
+                FS_PLUGIN_PREFIX . 'codemirror',
+                FS_PLUGIN_PREFIX . 'codemirror-xml',
+                FS_PLUGIN_PREFIX . 'codemirror-matchtags',
             ], null, true);
         }
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'tooltipster', FS_PLUGIN_URL.'assets/plugins/tooltipster-master/dist/js/tooltipster.bundle.min.js', ['jquery'], null, true);
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'tooltipster', FS_PLUGIN_URL.'wp-content/plugins/f-shop/assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css', ['jquery'], null, true);
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'select2', FS_PLUGIN_URL.'assets/plugins/bower_components/select2/dist/js/select2.min.js', ['jquery'], null, true);
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/js/tooltipster.bundle.min.js', ['jquery'], null, true);
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'wp-content/plugins/f-shop/assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css', ['jquery'], null, true);
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'select2', FS_PLUGIN_URL . 'assets/plugins/bower_components/select2/dist/js/select2.min.js', ['jquery'], null, true);
 
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'admin', FS_PLUGIN_URL.'assets/js/fs-admin.js', [
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'admin', FS_PLUGIN_URL . 'assets/js/fs-admin.js', [
             'jquery',
             'jquery-ui-dialog',
-            FS_PLUGIN_PREFIX.'js-cookie',
+            FS_PLUGIN_PREFIX . 'js-cookie',
         ], time(), true);
 
         $l10n = [
             'allowedImagesType' => fs_allowed_images_type('json'),
             'mediaNonce' => wp_create_nonce('media-form'),
         ];
-        wp_localize_script(FS_PLUGIN_PREFIX.'admin', 'fShop', $l10n);
+        wp_localize_script(FS_PLUGIN_PREFIX . 'admin', 'fShop', $l10n);
 
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'backend', FS_PLUGIN_URL.'assets/js/fs-backend.js', [], null, true);
-        wp_localize_script(FS_PLUGIN_PREFIX.'backend', 'FS_BACKEND', [
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'backend', FS_PLUGIN_URL . 'assets/js/fs-backend.js', [], null, true);
+        wp_localize_script(FS_PLUGIN_PREFIX . 'backend', 'FS_BACKEND', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('f-shop'),
             'currency' => fs_currency(),
@@ -289,9 +292,9 @@ class FS_Init
         }
         // Переопределение шаблона на странице архива типа "product"
         if (is_archive() && (get_query_var('post_type') || get_query_var('catalog'))) {
-            $template = locate_template([FS_PLUGIN_NAME.'/archive-product/archive.php']);
-            if (empty($template) && file_exists(FS_PLUGIN_PATH.'templates/front-end/archive-product/archive.php')) {
-                $template = FS_PLUGIN_PATH.'templates/front-end/archive-product/archive.php';
+            $template = locate_template([FS_PLUGIN_NAME . '/archive-product/archive.php']);
+            if (empty($template) && file_exists(FS_PLUGIN_PATH . 'templates/front-end/archive-product/archive.php')) {
+                $template = FS_PLUGIN_PATH . 'templates/front-end/archive-product/archive.php';
             }
         }
 
@@ -303,9 +306,9 @@ class FS_Init
      */
     public function footer_plugin_code()
     {
-        echo PHP_EOL.'<div class="fs-side-cart-wrap" data-fs-action="showCart">';
+        echo PHP_EOL . '<div class="fs-side-cart-wrap" data-fs-action="showCart">';
         echo '<div data-fs-element="cart-widget" data-template="cart-widget/side-cart"></div>';
-        echo '</div>'.PHP_EOL;
+        echo '</div>' . PHP_EOL;
 
         echo fs_option('fs_marketing_code_footer');
     }

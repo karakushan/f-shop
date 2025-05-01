@@ -3,8 +3,6 @@ import "./scss/f-shop.scss";
 // GLightbox
 import FsLightbox from "fslightbox";
 
-import Swiper from "swiper";
-import { Controller, Navigation, Pagination } from "swiper/modules";
 import FS from "./lib/fs";
 
 // Initialize Alpine Store for FS
@@ -15,73 +13,7 @@ if (typeof Alpine !== "undefined") {
   Alpine.store("FS").noAvailableProductData = null;
 }
 
-window.Swiper = Swiper;
-
 document.addEventListener("DOMContentLoaded", function () {
-  const thumbsSwiper = new Swiper("#productGalleryThumbs", {
-    modules: [Controller],
-    direction: "vertical",
-    slidesPerView: 5,
-    spaceBetween: 10,
-    grabCursor: true,
-    loop: false,
-    centeredSlidesBounds: true,
-    thumbs: {
-      swiper: mainGallerySwiper,
-    },
-  });
-
-  const mainGallerySwiper = new Swiper("#productGallery", {
-    slidesPerView: 1,
-    loop: false,
-    modules: [Navigation, Pagination, Controller],
-
-    navigation: {
-      nextEl: ".fs-swiper-next",
-      prevEl: ".fs-swiper-prev",
-    },
-    pagination: {
-      el: ".swiper-pagination",
-    },
-    controller: {
-      control: thumbsSwiper,
-    },
-    thumbs: {
-      swiper: thumbsSwiper,
-    },
-  });
-
-  // Ensure the current slide is set as active
-  mainGallerySwiper.on("slideChange", function () {
-    const activeIndex = mainGallerySwiper.activeIndex;
-    thumbsSwiper.slideTo(activeIndex);
-    // Activate the current thumbnail slide to match the main gallery
-    thumbsSwiper.slides.forEach((slide) =>
-      slide.classList.remove("swiper-slide-active")
-    );
-    const activeThumbnail = thumbsSwiper.slides[mainGallerySwiper.activeIndex];
-    if (activeThumbnail) {
-      activeThumbnail.classList.add("swiper-slide-active");
-    }
-  });
-
-  thumbsSwiper.on("click", function (swiper, event) {
-    const clickedIndex = swiper.clickedIndex;
-    if (clickedIndex !== undefined) {
-      mainGallerySwiper.slideTo(clickedIndex);
-    }
-
-    thumbsSwiper.slideTo(mainGallerySwiper.activeIndex);
-    // Activate the current thumbnail slide to match the main gallery
-    thumbsSwiper.slides.forEach((slide) =>
-      slide.classList.remove("swiper-slide-active")
-    );
-    const activeThumbnail = thumbsSwiper.slides[mainGallerySwiper.activeIndex];
-    if (activeThumbnail) {
-      activeThumbnail.classList.add("swiper-slide-active");
-    }
-  });
-
   window.FsLightbox = FsLightbox;
 });
 

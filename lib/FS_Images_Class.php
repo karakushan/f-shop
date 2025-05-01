@@ -53,33 +53,74 @@ class FS_Images_Class
 	public static function product_gallery_display($product_id = 0, $args = array())
 	{
 		$product_id = fs_get_product_id($product_id);
+		$big_gallery_id = uniqid('fs-product-gallery-');
+		$thumbs_gallery_id = uniqid('fs-product-gallery-thumbs-');
 
 		$default = array(
+			"big_gallery_id"                 => $big_gallery_id,
+			"thumbs_gallery_id"            => $thumbs_gallery_id,
 			"gallery"            => true,
 			"item"               => 1,
 			"vertical"           => false,
-			"thumbItem"          => 5,
+			"thumbItem"          => 7,
+			"height"             => 500,
 			"nextHtml"           => '<div class="swiper-button-next fs-swiper-next"></div>',
 			"prevHtml"           => '<div class="swiper-button-prev fs-swiper-prev"></div>',
 			"paginationHtml"     => '<div class="swiper-pagination"></div>',
 			"attachments"        => false,
 			"use_post_thumbnail" => true,
-			"verticalHeight"     => 500,
 			"image_alt"          => get_the_title($product_id),
 			"image_title"        => get_the_title($product_id),
 		);
 		$args    = wp_parse_args($args, $default);
 
-		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']);
+		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']); ?>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				// Затем инициализируем слайдер с миниатюрами
+				const thumbsSwiper = new Swiper("#<?php echo $thumbs_gallery_id; ?>", {
+					direction: "vertical",
+					slidesPerView: <?php echo esc_attr($args['thumbItem']); ?>,
+					spaceBetween: 10,
 
-		do_action('qm/debug', $gallery_images_ids);
+					loop: false,
 
-		echo fs_frontend_template('product/gallery', [
-			'vars' => [
-				'gallery_images_ids' => $gallery_images_ids,
-				'args'               => $args
-			]
-		]);
+					height: <?php echo esc_attr($args['height']); ?>,
+					watchSlidesProgress: true,
+
+				});
+				// Сначала инициализируем основной слайдер
+				const mainGallerySwiper = new Swiper("#<?php echo $big_gallery_id; ?>", {
+					slidesPerView: 1,
+					loop: false,
+					thumbs: {
+						swiper: thumbsSwiper,
+					},
+					grabCursor: true,
+					height: <?php echo esc_attr($args['height']); ?>,
+					navigation: {
+						nextEl: ".fs-swiper-next",
+						prevEl: ".fs-swiper-prev",
+					}
+				});
+
+				setTimeout(() => {
+					mainGallerySwiper.slideTo(1);
+					mainGallerySwiper.slideTo(0);
+				}, 500);
+			});
+		</script>
+		<div class="fs-product-gallery">
+			<?php
+			echo fs_frontend_template('product/gallery', [
+				'vars' => [
+					'gallery_images_ids' => $gallery_images_ids,
+					'args'               => $args
+				]
+			]);
+			?>
+		</div>
+<?php
 	}
 
 	/**

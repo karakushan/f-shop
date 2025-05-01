@@ -199,7 +199,9 @@ class FS_Product
             'echo' => true,
             'size' => '16',
             'voted_color' => '#FFB91D',
-            'not_voted_color' => '#FFFFFF',
+            'not_voted_color' => '#ccc',
+            'use_svg' => true,
+            'icon_class' => 'fa-solid fa-star',
         ]);
         if (!$args['echo']) {
             ob_start();
@@ -217,14 +219,26 @@ class FS_Product
 				}">
                 <template x-for="i in stars">
                     <button
-                        disabled
-                        style="width: <?php echo esc_attr($args['size']); ?>px; height: <?php echo esc_attr($args['size']); ?>px; background: none; border: none; padding: 0; margin: 0 2px; cursor: default;"
+                        class="star-rating__button"
+                        :class="{
+                           'active': rating >= i
+                        }"
+                        :style="{
+                            width: '<?php echo esc_attr($args['size']); ?>px',
+                            height: '<?php echo esc_attr($args['size']); ?>px',
+                        }"
                         x-effect="
 							$el.querySelectorAll('svg path, svg g path').forEach(path => {
 								path.setAttribute('fill', rating >= i ? '<?php echo esc_attr($args['voted_color']); ?>' : '<?php echo esc_attr($args['not_voted_color']); ?>');
 							})
 						">
-                        <?php include FS_PLUGIN_PATH . '/assets/img/icon/star.svg'; ?>
+                        <?php if ($args['use_svg']) { ?>
+                            <?php include FS_PLUGIN_PATH . '/assets/img/icon/star.svg'; ?>
+                        <?php } else { ?>
+                            <i class="<?php echo esc_attr($args['icon_class']); ?>" :style="{
+                                color: rating >= i ? '<?php echo esc_attr($args['voted_color']); ?>' : '<?php echo esc_attr($args['not_voted_color']); ?>'
+                            }"></i>
+                        <?php } ?>
                     </button>
                 </template>
             </div>
