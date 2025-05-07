@@ -37,6 +37,7 @@ class FS_Form
             'dropdown_posts',
             'file',
             'html',
+            'button'
         ];
 
         return apply_filters('fs_registered_field_types', $types);
@@ -49,10 +50,10 @@ class FS_Form
      */
     public function field_label($args)
     {
-        echo '<label for="'.esc_attr($args['id']).'" class="'.esc_attr($args['label_class']).'">'.esc_html($args['label']);
+        echo '<label for="' . esc_attr($args['id']) . '" class="' . esc_attr($args['label_class']) . '">' . esc_html($args['label']);
         echo $args['required'] ? ' <i>*</i>' : '';
         if ($args['help']) {
-            echo '<span class="tooltip dashicons dashicons-editor-help" title="'.esc_html($args['help']).'"></span>';
+            echo '<span class="tooltip dashicons dashicons-editor-help" title="' . esc_html($args['help']) . '"></span>';
         }
         echo '</label>';
     }
@@ -65,7 +66,7 @@ class FS_Form
     public function before_render_field($args = [])
     {
         if (!empty($args['wrapper'])) {
-            echo '<div class="fs-field-wrap '.esc_attr($args['wrapper_class'] ?? '').'">';
+            echo '<div class="fs-field-wrap ' . esc_attr($args['wrapper_class'] ?? '') . '">';
         }
     }
 
@@ -77,7 +78,7 @@ class FS_Form
     public function after_render_field($args = [])
     {
         if (!empty($args['after'])) {
-            echo '<div class="fs-field-after">'.$args['after'].'</div>';
+            echo '<div class="fs-field-after">' . $args['after'] . '</div>';
         }
 
         if (!empty($args['wrapper'])) {
@@ -88,11 +89,11 @@ class FS_Form
     /**
      * Sending Email.
      *
-     * @param string $email       почта на которую отправляется письмо
-     * @param string $subject     тема письма
-     * @param array  $message     отправляемое сообщение
-     * @param array  $headers     заголовки письма
-     * @param array  $attachments файлы, вложения
+     * @param string $email почта на которую отправляется письмо
+     * @param string $subject тема письма
+     * @param array $message отправляемое сообщение
+     * @param array $headers заголовки письма
+     * @param array $attachments файлы, вложения
      *
      * @return bool
      */
@@ -102,7 +103,7 @@ class FS_Form
             sprintf(
                 'From: %s <%s>',
                 fs_option('name_sender', get_bloginfo('name')),
-                fs_option('email_sender', 'shop@'.$_SERVER['SERVER_NAME'])
+                fs_option('email_sender', 'shop@' . $_SERVER['SERVER_NAME'])
             ),
             'Content-type: text/html; charset=utf-8',
         ]);
@@ -114,7 +115,7 @@ class FS_Form
      * Displays a field of a certain type.
      *
      * @param string $type
-     * @param array  $args
+     * @param array $args
      */
     public function render_field($name, $type = '', $args = [])
     {
@@ -134,7 +135,7 @@ class FS_Form
             'class' => 'fs-input form-control',
             'wrapper' => true,
             'autofill' => true,
-            'wrapper_class' => 'form-group '.str_replace('_', '-', $name).'-wrap',
+            'wrapper_class' => 'form-group ' . str_replace('_', '-', $name) . '-wrap',
             'label_class' => 'fs-form-label',
             'taxonomy' => 'category',
             'query_params' => null,
@@ -158,7 +159,7 @@ class FS_Form
             'el' => 'radio',
             'first_option' => __('Select'),
             'before' => '',
-            'after' => '<span class="fs-error" x-show="errors[\''.$name.'\']" x-text="errors[\''.$name.'\']"></span>',
+            'after' => '<span class="fs-error" x-show="errors[\'' . $name . '\']" x-text="errors[\'' . $name . '\']"></span>',
             'disabled' => false,
             'x-model' => null,
             'attributes' => [],
@@ -184,13 +185,12 @@ class FS_Form
 
         $type = is_string($type) && $type != '' ? $type : $args['type'];
 
-        $field_path = FS_PLUGIN_PATH.'templates/back-end/fields/'.$type.'.php';
+        $field_path = FS_PLUGIN_PATH . 'templates/back-end/fields/' . $type . '.php';
 
         // Проверяем наличие x-model атрибута с прямым приоритетом
         if (!empty($args['x-model'])) {
             $args['attributes']['x-model'] = $args['x-model'];
-        }
-        // Поддержка старого способа через параметр alpine
+        } // Поддержка старого способа через параметр alpine
         elseif (!empty($args['alpine'])) {
             $alpine_args = explode(':', $args['alpine']);
             $args['attributes']['x-model'] = $alpine_args[0];
@@ -285,8 +285,8 @@ class FS_Form
 						if (response.success) {
 							$data.success = true;
 							iziToast.success({
-								title: response.data.title || \''.esc_js(__('Success', 'f-shop')).'\',
-								message: response.data.msg || \''.esc_js(__('Data successfully saved', 'f-shop')).'\',
+								title: response.data.title || \'' . esc_js(__('Success', 'f-shop')) . '\',
+								message: response.data.msg || \'' . esc_js(__('Data successfully saved', 'f-shop')) . '\',
 								position: \'topCenter\'
 							});
 						} else {
@@ -294,8 +294,8 @@ class FS_Form
 								$data.errors = response.data.errors;
 							}
 							iziToast.error({
-								title: response.data.title || \''.esc_js(__('Error', 'f-shop')).'\',
-								message: response.data.msg || \''.esc_js(__('Error saving data', 'f-shop')).'\',
+								title: response.data.title || \'' . esc_js(__('Error', 'f-shop')) . '\',
+								message: response.data.msg || \'' . esc_js(__('Error saving data', 'f-shop')) . '\',
 								position: \'topCenter\'
 							});
 						}
@@ -303,7 +303,7 @@ class FS_Form
 						$data.loading = false;
 						console.error(\'Error:\', error);
 						iziToast.error({
-							title: \''.esc_js(__('Error', 'f-shop')).'\',
+							title: \'' . esc_js(__('Error', 'f-shop')) . '\',
 							message: error.message,
 							position: \'topCenter\'
 						});
@@ -328,10 +328,10 @@ class FS_Form
         echo FS_Config::nonce_field();
 
         // Добавляем поле для AJAX действия
-        echo '<input type="hidden" name="action" value="'.esc_attr($args['ajax_action']).'">';
+        echo '<input type="hidden" name="action" value="' . esc_attr($args['ajax_action']) . '">';
 
         if ($args['validate_only']) {
-            echo '<input type="hidden" name="fs_validate_only" value="'.esc_attr(implode(',', $args['validate_only'])).'">';
+            echo '<input type="hidden" name="fs_validate_only" value="' . esc_attr(implode(',', $args['validate_only'])) . '">';
         }
 
         // Добавляем индикатор загрузки
@@ -354,7 +354,7 @@ class FS_Form
      * Возвращает кнопку для отправки формы.
      *
      * @param string $label
-     * @param array  $args
+     * @param array $args
      *
      * @return string
      */
@@ -365,7 +365,7 @@ class FS_Form
         }
         $inline_attributes = fs_parse_attr($args, ['class' => 'fs-submit', 'type' => 'submit']);
 
-        return '<button '.$inline_attributes.'>'.esc_html($label).'</button>';
+        return '<button ' . $inline_attributes . '>' . esc_html($label) . '</button>';
     }
 
     public function render_field_args($args, $name, $type)
@@ -373,8 +373,7 @@ class FS_Form
         // Проверяем наличие x-model атрибута с прямым приоритетом
         if (!empty($args['x-model'])) {
             $args['attributes']['x-model'] = $args['x-model'];
-        }
-        // Поддержка старого способа через параметр alpine
+        } // Поддержка старого способа через параметр alpine
         elseif (!empty($args['alpine'])) {
             $alpine_args = explode(':', $args['alpine']);
             $args['attributes']['x-model'] = $alpine_args[0];

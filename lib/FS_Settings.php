@@ -58,7 +58,7 @@ class FS_Settings
             </tr>
             </tbody>
         </table>
-		<?php
+        <?php
     }
 
     /**
@@ -97,7 +97,7 @@ class FS_Settings
                 </li>
             </ul>
         </div>
-		<?php $sub_menu = ob_get_clean();
+        <?php $sub_menu = ob_get_clean();
 
         $wp_admin_bar->add_menu([
             'id' => 'fs-top',
@@ -416,7 +416,7 @@ class FS_Settings
                 </p>
             </form>
         </div>
-		<?php
+        <?php
     }
 
     /**
@@ -425,7 +425,7 @@ class FS_Settings
     public function settings_page()
     {
         echo ' <div class="wrap f-shop-settings"> ';
-        echo ' <h2> '.esc_html__('Store settings', 'f-shop').' </h2> ';
+        echo ' <h2> ' . esc_html__('Store settings', 'f-shop') . ' </h2> ';
         settings_errors();
         $settings = $this->get_register_settings();
         $settings_keys = array_keys($settings);
@@ -433,13 +433,13 @@ class FS_Settings
         if (!empty($_GET['tab'])) {
             $tab = esc_attr($_GET['tab']);
         }
-        echo ' <form method="post" action="'.esc_url(add_query_arg(['tab' => $tab], 'options.php')).'"> ';
+        echo ' <form method="post" action="' . esc_url(add_query_arg(['tab' => $tab], 'options.php')) . '"> ';
         echo '<div class="fs-mb-preloader"></div>';
         echo ' <h2 class="nav-tab-wrapper"> ';
 
         foreach ($settings as $key => $setting) {
             $class = $tab == $key ? 'nav-tab-active' : '';
-            echo ' <a href="'.esc_url(add_query_arg(['tab' => $key])).'" class="nav-tab '.esc_attr($class).'"> '.esc_html($setting['name']).' </a> ';
+            echo ' <a href="' . esc_url(add_query_arg(['tab' => $key])) . '" class="nav-tab ' . esc_attr($class) . '"> ' . esc_html($setting['name']) . ' </a> ';
         }
         echo '</h2>';
         settings_fields("fs_{$tab}_section");
@@ -569,7 +569,7 @@ class FS_Settings
     /**
      * Get export settings section.
      *
-     * @param string $feed_link           Direct feed link
+     * @param string $feed_link Direct feed link
      * @param string $feed_link_permalink Permalink structure feed link
      *
      * @return array Export settings array
@@ -750,7 +750,7 @@ class FS_Settings
     private function get_currencies_settings(): array
     {
         return [
-            'name' => __('Currencies', 'f-shop'),
+            'name' => __('Currencies and prices', 'f-shop'),
             'fields' => [
                 [
                     'type' => 'text',
@@ -782,6 +782,14 @@ class FS_Settings
                     'label' => __('Conversion of the cost of goods depending on the language', 'f-shop'),
                     'help' => __('If selected, the price will be automatically converted into the required currency. Important! In order for this to work, you must specify the locale in the currency settings.', 'f-shop'),
                     'value' => fs_option('price_conversion', '0'),
+                ],
+                [
+                    'type' => 'button',
+                    'name' => 'fs_update_currencies',
+                    'label' => __('Update prices', 'f-shop'),
+                    'text' => __('Update', 'f-shop'),
+                    'value' => 'fs_update_currencies',
+                    'class' => 'button',
                 ],
             ],
         ];
