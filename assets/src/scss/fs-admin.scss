@@ -2283,6 +2283,11 @@ td.fs_menu_order.column-fs_menu_order {
 // Стилі для списку замовлень
 .post-type-orders {
   .wp-list-table {
+    // Заборона переносу слів для всіх заголовків колонок
+    th {
+      white-space: nowrap;
+    }
+
     .column-fs_order_status {
       width: 120px;
       text-align: center;
@@ -2291,6 +2296,7 @@ td.fs_menu_order.column-fs_menu_order {
     // Центрування заголовка колонки статусу включно з посиланням
     th.column-fs_order_status {
       text-align: center;
+      white-space: nowrap;
 
       a {
         display: flex;
@@ -2298,6 +2304,7 @@ td.fs_menu_order.column-fs_menu_order {
         width: 100%;
         justify-content: center;
         align-items: center;
+        white-space: nowrap;
       }
     }
 
