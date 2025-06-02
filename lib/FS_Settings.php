@@ -424,8 +424,8 @@ class FS_Settings
      */
     public function settings_page()
     {
-        echo ' <div class="wrap f-shop-settings"> ';
-        echo ' <h2> ' . esc_html__('Store settings', 'f-shop') . ' </h2> ';
+        echo '<div class="wrap f-shop-settings f-shop-vertical-tabs">';
+        echo '<h2>'.esc_html__('Store settings', 'f-shop').'</h2>';
         settings_errors();
         $settings = $this->get_register_settings();
         $settings_keys = array_keys($settings);
@@ -433,19 +433,32 @@ class FS_Settings
         if (!empty($_GET['tab'])) {
             $tab = esc_attr($_GET['tab']);
         }
-        echo ' <form method="post" action="' . esc_url(add_query_arg(['tab' => $tab], 'options.php')) . '"> ';
-        echo '<div class="fs-mb-preloader"></div>';
-        echo ' <h2 class="nav-tab-wrapper"> ';
 
+        echo '<div class="fs-settings-container">';
+        echo '<div class="fs-settings-tabs-vertical">';
+
+        // Вертикальная навигация по вкладкам
+        echo '<div class="fs-settings-nav-vertical">';
         foreach ($settings as $key => $setting) {
-            $class = $tab == $key ? 'nav-tab-active' : '';
-            echo ' <a href="' . esc_url(add_query_arg(['tab' => $key])) . '" class="nav-tab ' . esc_attr($class) . '"> ' . esc_html($setting['name']) . ' </a> ';
+            $class = $tab == $key ? 'fs-tab-active' : '';
+            echo '<a href="'.esc_url(add_query_arg(['tab' => $key])).'" class="fs-tab-link '.esc_attr($class).'">'.esc_html($setting['name']).'</a>';
         }
-        echo '</h2>';
+        echo '</div>';
+
+        // Контент вкладки
+        echo '<div class="fs-settings-content-vertical">';
+        echo '<form method="post" action="'.esc_url(add_query_arg(['tab' => $tab], 'options.php')).'">';
+        echo '<div class="fs-mb-preloader"></div>';
+
         settings_fields("fs_{$tab}_section");
         do_settings_sections($this->settings_page);
         submit_button(null, 'button button-primary button-large');
-        echo ' </form></div> ';
+
+        echo '</form>';
+        echo '</div>'; // fs-settings-content-vertical
+        echo '</div>'; // fs-settings-tabs-vertical
+        echo '</div>'; // fs-settings-container
+        echo '</div>'; // wrap
     }
 
     /**
@@ -498,9 +511,16 @@ class FS_Settings
                         continue;
                     }
                     $settings_id = $field['name'];
+
+                    // Формируем label с tooltip для левой колонки
+                    $label = $field['label'];
+                    if (!empty($field['help'])) {
+                        $label .= ' <span class="tooltip dashicons dashicons-editor-help" title="'.esc_attr($field['help']).'"></span>';
+                    }
+
                     add_settings_field(
                         $settings_id,
-                        $field['label'],
+                        $label,
                         [$this, 'setting_field_callback'],
                         $this->settings_page,
                         $section,
@@ -521,8 +541,15 @@ class FS_Settings
         if (in_array($args[1]['type'], ['text', 'email', 'number'])) {
             $args[1]['class'] = 'regular-text';
         }
+
+        // Скрываем label и устанавливаем позицию label_position как 'none' для настроек
+        // чтобы tooltip отображался только в левой колонке WordPress settings API
         $args[1]['label'] = '';
-        $args[1]['label_position'] = 'after';
+        $args[1]['label_position'] = 'none';
+
+        // Убираем help из render_field, так как tooltip уже отображается в левой колонке
+        $original_help = $args[1]['help'] ?? '';
+        $args[1]['help'] = '';
 
         $form_class->render_field($args[0], $args[1]['type'], $args[1]);
     }
@@ -569,7 +596,7 @@ class FS_Settings
     /**
      * Get export settings section.
      *
-     * @param string $feed_link Direct feed link
+     * @param string $feed_link           Direct feed link
      * @param string $feed_link_permalink Permalink structure feed link
      *
      * @return array Export settings array

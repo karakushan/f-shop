@@ -101,6 +101,7 @@ function fs_edit_orders_columns($columns)
     $new_columns = [
         //		'fs_order_id'     => __( 'ID', 'f-shop'),
         'fs_order_amount' => __('Total cost', 'f-shop'),
+        'fs_order_status' => __('Status', 'f-shop'),
         'fs_user' => __('Customer', 'f-shop'),
     ];
 
@@ -113,6 +114,16 @@ function add_views_sortable_column($sortable_columns)
 {
     $sortable_columns['fs_price'] = 'fs_price';
     $sortable_columns['fs_id'] = 'ID';
+
+    return $sortable_columns;
+}
+
+// добавляем возможность сортировать колонки заказов
+add_filter('manage_edit-orders_sortable_columns', 'add_orders_sortable_columns');
+function add_orders_sortable_columns($sortable_columns)
+{
+    $sortable_columns['fs_order_amount'] = 'fs_order_amount';
+    $sortable_columns['fs_order_status'] = 'post_status';
 
     return $sortable_columns;
 }

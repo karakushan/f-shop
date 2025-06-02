@@ -1155,10 +1155,10 @@ progress {
 .tooltip {
   cursor: pointer;
   color: #0073aa;
-  font-size: 26px;
+  font-size: 20px;
   height: 25px;
   border: none;
-  margin-left: 5px;
+  margin-left: 8px;
 
   &:before {
     content: "\f223";
@@ -2055,6 +2055,293 @@ td.fs_menu_order.column-fs_menu_order {
     &__button {
       width: 100%;
       justify-content: center;
+    }
+  }
+}
+
+// Вертикальные вкладки настроек F-Shop
+.f-shop-vertical-tabs .fs-settings-container {
+  display: flex;
+  margin-top: 20px;
+}
+
+.f-shop-vertical-tabs .fs-settings-tabs-vertical {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.f-shop-vertical-tabs .fs-settings-nav-vertical {
+  width: 200px;
+  min-width: 200px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  padding: 0;
+  margin: 0;
+
+  .fs-tab-link {
+    display: block;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #0073aa;
+    border-bottom: 1px solid #ddd;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #fff;
+      color: #135e96;
+      text-decoration: none;
+      box-shadow: none;
+    }
+
+    &.fs-tab-active {
+      background: #fff;
+      color: #000;
+      border-right: 2px solid #0073aa;
+      font-weight: 600;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -1px;
+        bottom: 0;
+        width: 1px;
+        background: #fff;
+      }
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.f-shop-vertical-tabs .fs-settings-content-vertical {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  padding: 20px;
+  min-height: 600px;
+
+  form {
+    margin: 0;
+  }
+
+  h2 {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .form-table {
+    margin-top: 0;
+
+    th {
+      width: 200px;
+      padding-left: 0;
+
+      // Стили для tooltip в левой колонке
+      .tooltip {
+        cursor: pointer;
+        color: #0073aa;
+        font-size: 18px;
+        margin-left: 5px;
+        vertical-align: middle;
+
+        &:hover {
+          color: #135e96;
+        }
+
+        &::before {
+          content: "\f223";
+          color: inherit;
+        }
+      }
+    }
+
+    td {
+      padding-left: 25px;
+    }
+  }
+}
+
+// Адаптивность для мобильных устройств
+@media screen and (max-width: 768px) {
+  .f-shop-vertical-tabs .fs-settings-tabs-vertical {
+    flex-direction: column;
+  }
+
+  .f-shop-vertical-tabs .fs-settings-nav-vertical {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+
+    .fs-tab-link {
+      padding: 10px 15px;
+      border-bottom: 1px solid #ddd;
+      border-right: none !important;
+
+      &.fs-tab-active {
+        border-right: none;
+        border-bottom: 2px solid #0073aa;
+
+        &::after {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .f-shop-vertical-tabs .fs-settings-content-vertical {
+    border-left: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    min-height: auto;
+
+    .form-table th {
+      .tooltip {
+        font-size: 18px;
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+// Бейджі статусу замовлень
+.fs-order-status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 3px;
+  margin-left: 8px;
+  white-space: nowrap;
+  min-width: 75px;
+  text-align: center;
+
+  // Стиль за замовчуванням, якщо колір не встановлений через inline стилі
+  background-color: #3498db;
+  color: #fff;
+
+  // Статуси замовлений з різними кольорами (залишаємо для зворотної сумісності)
+  &.status-new {
+    background-color: #3498db;
+    color: #fff;
+  }
+
+  &.status-processed {
+    background-color: #f39c12;
+    color: #fff;
+  }
+
+  &.status-pay {
+    background-color: #9b59b6;
+    color: #fff;
+  }
+
+  &.status-paid {
+    background-color: #27ae60;
+    color: #fff;
+  }
+
+  &.status-for-delivery {
+    background-color: #16a085;
+    color: #fff;
+  }
+
+  &.status-delivered {
+    background-color: #2ecc71;
+    color: #fff;
+  }
+
+  &.status-refused {
+    background-color: #e74c3c;
+    color: #fff;
+  }
+
+  &.status-canceled {
+    background-color: #95a5a6;
+    color: #fff;
+  }
+
+  &.status-return {
+    background-color: #e67e22;
+    color: #fff;
+  }
+
+  &.status-black_list {
+    background-color: #34495e;
+    color: #fff;
+  }
+}
+
+// Стилі для списку замовлень
+.post-type-orders {
+  .wp-list-table {
+    .column-fs_order_status {
+      width: 120px;
+      text-align: center;
+    }
+
+    .column-fs_order_amount {
+      width: 100px;
+      text-align: right;
+    }
+
+    .column-fs_user {
+      width: 200px;
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+          margin: 2px 0;
+          font-size: 12px;
+
+          a {
+            text-decoration: none;
+            color: #0073aa;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Адаптивність для мобільних пристроїв
+@media screen and (max-width: 768px) {
+  .fs-order-status-badge {
+    display: block;
+    margin-left: 0;
+    margin-top: 4px;
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .post-type-orders .wp-list-table {
+    .column-fs_order_status {
+      width: auto;
+      text-align: left;
+    }
+
+    .column-fs_order_amount {
+      width: auto;
+      text-align: left;
+    }
+
+    .column-fs_user {
+      width: auto;
     }
   }
 }
