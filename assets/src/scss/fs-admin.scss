@@ -2288,9 +2288,15 @@ td.fs_menu_order.column-fs_menu_order {
       text-align: center;
     }
 
-    // Центрування заголовка колонки статусу
+    // Центрування заголовка колонки статусу включно з посиланням
     th.column-fs_order_status {
       text-align: center;
+
+      a {
+        display: block;
+        text-align: center;
+        width: 100%;
+      }
     }
 
     .column-fs_order_amount {
