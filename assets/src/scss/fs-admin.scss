@@ -2289,8 +2289,9 @@ td.fs_menu_order.column-fs_menu_order {
     }
 
     .column-fs_order_status {
-      width: 120px;
+      width: 180px;
       text-align: center;
+      vertical-align: middle;
     }
 
     // Центрування заголовка колонки статусу включно з посиланням
@@ -2309,8 +2310,17 @@ td.fs_menu_order.column-fs_menu_order {
     }
 
     .column-fs_order_amount {
-      width: 100px;
+      width: auto;
       text-align: right;
+
+      a {
+        display: flex;
+        text-align: right;
+        width: 100%;
+        justify-content: flex-end;
+        align-items: center;
+        white-space: nowrap;
+      }
     }
 
     .column-fs_user {
