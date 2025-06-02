@@ -2284,9 +2284,12 @@ td.fs_menu_order.column-fs_menu_order {
 .post-type-orders {
   .wp-list-table {
     .column-fs_order_status {
-      width: auto;
-      min-width: 120px;
-      max-width: 200px;
+      width: 120px;
+      text-align: center;
+    }
+
+    // Центрування заголовка колонки статусу
+    th.column-fs_order_status {
       text-align: center;
     }
 
