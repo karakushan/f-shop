@@ -539,8 +539,10 @@ class FS_Order
 
         if ($item['id'] == 'change_order_status') {
             $user = get_user_by('ID', $item['initiator_id']);
-            $order_statuses = FS_Orders::default_order_statuses();
-            $order_status = isset($order_statuses[$item['data']['status']]['name']) ? $order_statuses[$item['data']['status']]['name'] : $item['data']['status'];
+
+            // Використовуємо нову функцію для отримання найкращої назви статусу
+            $order_status = FS_Orders::get_status_display_name($item['data']['status']);
+
             $detail = sprintf(__('User "%s" changed order status to "%s"', 'f-shop'), $user->display_name, $order_status);
         } elseif ($item['id'] == 'adding_a_comment') {
             $user = get_user_by('ID', $item['initiator_id']);

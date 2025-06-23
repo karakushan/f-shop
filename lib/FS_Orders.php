@@ -20,8 +20,8 @@ class FS_Orders
 
     public function __construct()
     {
-        // Initialize order statuses
-        $this->order_statuses = self::default_order_statuses();
+        // Initialize order statuses with registered WordPress statuses
+        $this->order_statuses = self::get_registered_order_statuses();
 
         add_filter('pre_get_posts', [$this, 'filter_orders_by_search']);
 
@@ -104,20 +104,7 @@ class FS_Orders
      */
     private function get_status_name($status)
     {
-        $statuses = self::default_order_statuses();
-
-        if (isset($statuses[$status])) {
-            return $statuses[$status]['name'];
-        }
-
-        // Якщо статус не знайдено в default_order_statuses, спробуємо отримати його з таксономії
-        $term = get_term_by('slug', $status, FS_Config::get_data('order_statuses_taxonomy'));
-        if ($term && !is_wp_error($term)) {
-            return $term->name;
-        }
-
-        // Якщо нічого не знайдено, повертаємо статус як є
-        return ucfirst(str_replace(['-', '_'], ' ', $status));
+        return self::get_status_display_name($status);
     }
 
     /**
@@ -260,9 +247,10 @@ class FS_Orders
     }
 
     /**
-     * Returns order status.
+     * Returns default F-Shop order statuses only.
+     * These statuses are registered when plugin is activated.
      *
-     * @return array
+     * @return array Array of default statuses with 'name' and 'description' keys
      */
     public static function default_order_statuses()
     {
@@ -309,23 +297,69 @@ class FS_Orders
             ],
         ];
 
-        $user_post_statuses = get_terms([
-            'taxonomy' => FS_Config::get_data('order_statuses_taxonomy'),
-            'hide_empty' => false,
-        ]);
+        return apply_filters('fs_default_order_statuses', $order_statuses);
+    }
 
-        // Если есть статусы добавленные пользователем
-        if ($user_post_statuses) {
-            $order_statuses = [];
-            foreach ($user_post_statuses as $status) {
-                $order_statuses[$status->slug] = [
-                    'name' => $status->name,
-                    'description' => $status->description,
-                ];
+    /**
+     * Returns all registered order statuses from WordPress.
+     * Gets statuses that are actually registered in WordPress system.
+     *
+     * @return array Array of registered statuses with 'name' and 'description' keys
+     */
+    public static function get_registered_order_statuses()
+    {
+        $registered_statuses = [];
+
+        // Получаем все зарегистрированные статусы постов WordPress
+        $wp_post_statuses = get_post_stati(['internal' => false], 'objects');
+
+        foreach ($wp_post_statuses as $status_name => $status_object) {
+            // Исключаем стандартные WordPress статусы, которые не относятся к заказам
+            if (in_array($status_name, ['publish', 'draft', 'auto-draft', 'inherit'])) {
+                continue;
             }
+
+            $registered_statuses[$status_name] = [
+                'name' => $status_object->label,
+                'description' => isset($status_object->description) ? $status_object->description : '',
+                'public' => $status_object->public,
+                'show_in_admin_status_list' => $status_object->show_in_admin_status_list,
+            ];
         }
 
-        return apply_filters('fs_order_statuses', $order_statuses);
+        return apply_filters('fs_registered_order_statuses', $registered_statuses);
+    }
+
+    /**
+     * Get the best available status name for display.
+     * Checks WordPress registered statuses first, then defaults, then taxonomy.
+     *
+     * @param string $status
+     *
+     * @return string
+     */
+    public static function get_status_display_name($status)
+    {
+        // Спочатку шукаємо в зареєстрованих WordPress статусах
+        $status_object = get_post_status_object($status);
+        if ($status_object) {
+            return $status_object->label;
+        }
+
+        // Якщо не знайдено в WordPress, шукаємо в дефолтних статусах F-Shop
+        $default_statuses = self::default_order_statuses();
+        if (isset($default_statuses[$status])) {
+            return $default_statuses[$status]['name'];
+        }
+
+        // Якщо не знайдено в дефолтних, спробуємо отримати з таксономії
+        $term = get_term_by('slug', $status, FS_Config::get_data('order_statuses_taxonomy'));
+        if ($term && !is_wp_error($term)) {
+            return $term->name;
+        }
+
+        // Якщо нічого не знайдено, повертаємо статус як є
+        return ucfirst(str_replace(['-', '_'], ' ', $status));
     }
 
     /**
@@ -336,10 +370,11 @@ class FS_Orders
         global $post;
         echo '<p><span class="dashicons dashicons-calendar-alt"></span> '.esc_html__('Date of purchase', 'f-shop').': <b> '.esc_html(get_the_date('j.m.Y H:i')).'</b></p>';
         echo '<p><span class="dashicons dashicons-calendar-alt"></span> '.esc_html__('Last modified', 'f-shop').':  <b>'.esc_html(get_the_modified_date('j.m.Y H:i')).'</b></p>';
-        if (self::default_order_statuses()) {
+        $registered_statuses = self::get_registered_order_statuses();
+        if ($registered_statuses) {
             echo '<p><label for="fs-post_status"><span class="dashicons dashicons-post-status"></span> '.esc_html__('Status').'</label>';
             echo '<p><select id="fs-post_status" name="post_status">';
-            foreach (self::default_order_statuses() as $key => $order_status) {
+            foreach ($registered_statuses as $key => $order_status) {
                 echo '<option value="'.esc_attr($key).'" '.selected(get_post_status($post->ID), $key, 0).'>'.esc_attr($order_status['name']).'</option>';
             }
             echo '</select></p>';
@@ -433,20 +468,18 @@ Good luck!', 'f-shop');
             }
         }
 
-        if ($post->post_status != $new_status) {
-            $order = new FS_Order($post->ID);
-            $current_user = wp_get_current_user();
+        $order = new FS_Order($post->ID);
+        $current_user = wp_get_current_user();
 
-            $order->add_history_event($post->ID, [
-                'id' => 'change_order_status',
-                'initiator_id' => $current_user->ID,
-                'initiator_name' => $current_user->display_name,
-                'time' => current_time('timestamp'),
-                'data' => [
-                    'status' => $new_status,
-                ],
-            ]);
-        }
+        $order->add_history_event($post->ID, [
+            'id' => 'change_order_status',
+            'initiator_id' => $current_user->ID,
+            'initiator_name' => $current_user->display_name,
+            'time' => current_time('timestamp'),
+            'data' => [
+                'status' => $new_status,
+            ],
+        ]);
     }
 
     public function true_status_display($statuses)
@@ -457,8 +490,9 @@ Good luck!', 'f-shop');
             return $statuses;
         } // end if
         global $post;
-        if (self::default_order_statuses()) {
-            foreach (self::default_order_statuses() as $key => $status) {
+        $registered_statuses = self::get_registered_order_statuses();
+        if ($registered_statuses) {
+            foreach ($registered_statuses as $key => $status) {
                 if (get_query_var('post_status') != $key) {
                     if ($post->post_status == $key) {
                         $statuses[] = $status['name'];
@@ -471,35 +505,53 @@ Good luck!', 'f-shop');
     }
 
     /**
-     * Registers custom order statuses based on taxonomy terms
-     * This method is called on admin_init to ensure all statuses are properly registered.
+     * Registers default F-Shop order statuses in WordPress.
+     * This method is called on admin_init to ensure default statuses are properly registered.
      */
     public function order_status_custom()
     {
-        $statuses = self::default_order_statuses();
+        // Register default F-Shop statuses
+        $default_statuses = self::default_order_statuses();
 
-        if (count($statuses)) {
-            foreach ($statuses as $key => $status) {
-                register_post_status($key, [
-                    'label' => $status['name'],
-                    'label_count' => _n_noop($status['name'].' <span class="count">(%s)</span>', $status['name'].' <span
-        class="count">(%s)</span>'),
-                    'public' => true,
-                    'show_in_admin_status_list' => true,
-                ]);
+        if (count($default_statuses)) {
+            foreach ($default_statuses as $key => $status) {
+                // Skip if already registered by WordPress
+                if (!get_post_status_object($key)) {
+                    register_post_status($key, [
+                        'label' => $status['name'],
+                        'label_count' => _n_noop(
+                            $status['name'].' <span class="count">(%s)</span>',
+                            $status['name'].' <span class="count">(%s)</span>'
+                        ),
+                        'public' => true,
+                        'show_in_admin_status_list' => true,
+                    ]);
+                }
             }
         }
 
-        // Also register any additional statuses from taxonomy that might not be in default list
-        $taxonomy_statuses = get_terms([
+        // Register statuses from taxonomy terms
+        $this->register_taxonomy_statuses();
+
+        // Also sync any existing statuses that might have been missed
+        $this->sync_all_taxonomy_statuses();
+    }
+
+    /**
+     * Registers post statuses for all terms in the order statuses taxonomy.
+     * This ensures all custom statuses from taxonomy are available as WordPress post statuses.
+     */
+    public function register_taxonomy_statuses()
+    {
+        $taxonomy_terms = get_terms([
             'taxonomy' => FS_Config::get_data('order_statuses_taxonomy'),
             'hide_empty' => false,
         ]);
 
-        if ($taxonomy_statuses && !is_wp_error($taxonomy_statuses)) {
-            foreach ($taxonomy_statuses as $term) {
-                // Only register if not already registered by default statuses
-                if (!isset($statuses[$term->slug])) {
+        if ($taxonomy_terms && !is_wp_error($taxonomy_terms)) {
+            foreach ($taxonomy_terms as $term) {
+                // Skip if already registered by WordPress
+                if (!get_post_status_object($term->slug)) {
                     register_post_status($term->slug, [
                         'label' => $term->name,
                         'label_count' => _n_noop(
@@ -510,6 +562,33 @@ Good luck!', 'f-shop');
                         'show_in_admin_status_list' => true,
                     ]);
                 }
+            }
+        }
+    }
+
+    /**
+     * Synchronizes all taxonomy terms with WordPress post statuses.
+     * Ensures that all existing taxonomy terms have corresponding post statuses registered.
+     */
+    public function sync_all_taxonomy_statuses()
+    {
+        $taxonomy_terms = get_terms([
+            'taxonomy' => FS_Config::get_data('order_statuses_taxonomy'),
+            'hide_empty' => false,
+        ]);
+
+        if ($taxonomy_terms && !is_wp_error($taxonomy_terms)) {
+            foreach ($taxonomy_terms as $term) {
+                // Always register/update the post status for this term
+                register_post_status($term->slug, [
+                    'label' => $term->name,
+                    'label_count' => _n_noop(
+                        $term->name.' <span class="count">(%s)</span>',
+                        $term->name.' <span class="count">(%s)</span>'
+                    ),
+                    'public' => true,
+                    'show_in_admin_status_list' => true,
+                ]);
             }
         }
     }

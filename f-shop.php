@@ -371,7 +371,8 @@ function fs_sync_order_status_on_term_change($term_id, $tt_id = null, $taxonomy 
         return;
     }
 
-    // Register the post status for this term
+    // Always register/update the post status for this term
+    // WordPress allows re-registering statuses with updated parameters
     register_post_status($term->slug, [
         'label' => $term->name,
         'label_count' => _n_noop(
@@ -381,6 +382,11 @@ function fs_sync_order_status_on_term_change($term_id, $tt_id = null, $taxonomy 
         'public' => true,
         'show_in_admin_status_list' => true,
     ]);
+
+    // Log that we registered/updated the status
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log("F-Shop: Registered/updated post status '{$term->slug}' for term '{$term->name}'");
+    }
 }
 
 /**
@@ -404,9 +410,12 @@ function fs_remove_order_status_on_term_delete($term_id, $tt_id, $taxonomy, $del
 }
 
 // Hook into taxonomy term creation and editing
-add_action('created_'.FS_Config::get_data('order_statuses_taxonomy'), 'fs_sync_order_status_on_term_change', 10, 3);
-add_action('edited_'.FS_Config::get_data('order_statuses_taxonomy'), 'fs_sync_order_status_on_term_change', 10, 3);
-add_action('delete_'.FS_Config::get_data('order_statuses_taxonomy'), 'fs_remove_order_status_on_term_delete', 10, 4);
+// Use plugins_loaded to ensure hooks are registered early
+add_action('plugins_loaded', function () {
+    add_action('created_'.FS_Config::get_data('order_statuses_taxonomy'), 'fs_sync_order_status_on_term_change', 10, 3);
+    add_action('edited_'.FS_Config::get_data('order_statuses_taxonomy'), 'fs_sync_order_status_on_term_change', 10, 3);
+    add_action('delete_'.FS_Config::get_data('order_statuses_taxonomy'), 'fs_remove_order_status_on_term_delete', 10, 4);
+});
 
 // Хук деактивации плагина
 register_deactivation_hook(__FILE__, 'fs_deactivate');
