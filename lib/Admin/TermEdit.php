@@ -47,8 +47,11 @@ class TermEdit
         $fields = FS_Taxonomy::get_taxonomy_fields();
         foreach ($fields as $key => $term_fields) {
             $container = Container::make('term_meta', __('Додаткові налаштування'));
-            $container->set_datastore(new TermMetaDatastore());
-            $container->where('term_taxonomy', '=', $key);
+
+            // Create datastore instance for multilingual fields
+            $multilingual_datastore = new TermMetaDatastore();
+            $multilingual_fields = [];
+
             $fs = [];
             foreach ($term_fields as $name => $field) {
                 if (!in_array($field['type'], $this->allowed_types)) {
@@ -56,17 +59,33 @@ class TermEdit
                 }
 
                 if (isset($field['args']['multilang']) && $field['args']['multilang'] == true) {
-                    foreach (FS_Config::get_languages() as $language) {
-                        if (!empty($field['args']['disable_default_locale']) && $language['locale'] === FS_Config::default_locale()) {
-                            continue;
-                        }
-                        $fs[] = $this->make_field($field, $name.'__'.$language['locale'], $field['name'].' ('.$language['name'].')');
+                    // Add to multilingual fields array
+                    $multilingual_fields[] = mb_strtolower($name);
+
+                    // Get current language for display
+                    $current_lang = 'ua'; // Default
+                    if (is_admin() && isset($_GET['edit_lang'])) {
+                        $current_lang = sanitize_text_field($_GET['edit_lang']);
+                    } elseif (function_exists('wpm_get_language')) {
+                        $current_lang = wpm_get_language();
                     }
+
+                    // Create single field with language indicator in label
+                    $label = $field['name'].' ('.strtoupper($current_lang).')';
+                    $f = $this->make_field($field, $name, $label);
+                    $f->set_datastore($multilingual_datastore);
+                    $fs[] = $f;
                 } else {
                     $fs[] = $this->make_field($field, $name, $field['name']);
                 }
             }
 
+            // Set multilingual fields if any exist
+            if (!empty($multilingual_fields)) {
+                $multilingual_datastore->set_multilingual_fields($multilingual_fields);
+            }
+
+            $container->where('term_taxonomy', '=', $key);
             $container->add_fields($fs);
         }
     }

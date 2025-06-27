@@ -84,8 +84,8 @@ class FS_Taxonomy
 
         foreach ($taxonomies_with_meta as $taxonomy) {
             // Хуки для редагування термінів
-            add_action($taxonomy.'_edit_form_fields', [$this, 'edit_taxonomy_fields'], 10, 2);
-            add_action($taxonomy.'_add_form_fields', [$this, 'add_taxonomy_fields'], 10, 1);
+            // add_action($taxonomy.'_edit_form_fields', [$this, 'edit_taxonomy_fields'], 10, 2);
+            // add_action($taxonomy.'_add_form_fields', [$this, 'add_taxonomy_fields'], 10, 1);
 
             // Хуки для збереження мета даних
             add_action('created_'.$taxonomy, [$this, 'save_taxonomy_meta'], 10, 2);
@@ -528,47 +528,63 @@ class FS_Taxonomy
      */
     public function taxonomy_rewrite_rules($wp_rewrite)
     {
-        $rules = [];
-        $terms = get_terms(['taxonomy' => $this->taxonomy_name, 'hide_empty' => false]);
-        if (fs_option('fs_disable_taxonomy_slug')) {
-            foreach (FS_Config::get_languages() as $language_name => $language) {
-                $meta_key = '_seo_slug__'.mb_strtolower($language['locale']);
-                foreach ($terms as $term) {
-                    $localize_slug = get_term_meta($term->term_id, $meta_key, 1);
-                    if ($language['locale'] == FS_Config::default_locale()) {
-                        $rules[$term->slug.'/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug;
-                        $rules[$term->slug.'/page/(\d+)/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]';
-                        $rules[$term->slug.'/page-(\d+)/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]';
-                    } elseif ($language['locale'] != FS_Config::default_locale() && $localize_slug) {
-                        $rules[$localize_slug.'/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug;
-                        $rules[$localize_slug.'/page/(\d+)/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]';
-                        $rules[$localize_slug.'/page-(\d+)/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]';
-                    }
-                }
-            }
-        } else {
-            foreach (FS_Config::get_languages() as $language) {
-                if ($language['locale'] == FS_Config::default_locale()) {
-                    continue;
-                }
-                foreach ($terms as $term) {
-                    $meta_key = $language['locale'] != FS_Config::default_locale() ? '_seo_slug__'.$language['locale'] : '_seo_slug';
-                    $localize_slug = get_term_meta($term->term_id, $meta_key, 1);
-                    if ($localize_slug) {
-                        $rules[$term->taxonomy.'/'.$localize_slug.'/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug;
-                        $rules[$term->taxonomy.'/'.$localize_slug.'/page/(\d+)/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]';
-                        $rules[$term->taxonomy.'/'.$localize_slug.'/page-(\d+)/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]';
-                    }
-                }
-            }
+        // Get all languages
+        if (!function_exists('wpm_get_languages')) {
+            return $wp_rewrite;
         }
 
-        // Rewriting rules for products in other languages
-        foreach (FS_Config::get_languages() as $language_name => $language) {
-            if ($language['locale'] == FS_Config::default_locale()) {
-                continue;
+        $languages = wpm_get_languages();
+        $default_lang = wpm_get_default_language();
+        global $wpdb;
+        $rules = [];
+
+        foreach ($languages as $lang_code => $lang_data) {
+            // Process all languages, including default
+            // Get all terms for all taxonomies that might have custom slugs
+            $taxonomies = ['category', 'catalog']; // Add other taxonomies if needed
+
+            foreach ($taxonomies as $taxonomy) {
+                $terms = get_terms([
+                    'taxonomy' => $taxonomy,
+                    'hide_empty' => false,
+                    'meta_query' => [
+                        [
+                            'key' => '_seo_slug',
+                            'compare' => 'EXISTS',
+                        ],
+                    ],
+                ]);
+
+                // Skip if no terms found
+                if (is_wp_error($terms) || empty($terms)) {
+                    continue;
+                }
+
+                foreach ($terms as $term) {
+                    $custom_slug = $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$wpdb->termmeta} WHERE term_id = %d AND meta_key = '_seo_slug'", $term->term_id));
+                    $ml_array = wpm_string_to_ml_array($custom_slug);
+                    $lang_slug = isset($ml_array[$lang_code]) ? $ml_array[$lang_code] : '';
+
+                    if (empty($lang_slug)) {
+                        continue;
+                    }
+
+                    $tax_object = get_taxonomy($taxonomy);
+                    if (!$tax_object || empty($tax_object->query_var)) {
+                        continue;
+                    }
+                    $query_var = $tax_object->query_var;
+
+                    $slug_prefix = '';
+                    if ($lang_code !== $default_lang && isset($lang_data['slug'])) {
+                        $slug_prefix = $lang_data['slug'].'/';
+                    }
+
+                    // Add rewrite rule for this term in this language
+                    $rules['^'.$slug_prefix.$lang_slug.'/?$'] = 'index.php?'.$query_var.'='.$term->slug.'&lang='.$lang_code;
+                    $rules['^'.$slug_prefix.$lang_slug.'/page/([0-9]{1,})/?$'] = 'index.php?'.$query_var.'='.$term->slug.'&paged=$matches[1]&lang='.$lang_code;
+                }
             }
-            $rules[$language_name.'/product/([^/]+)(?:/([0-9]+))?/?$'] = 'index.php?product=$matches[1]&page=$matches[2]';
         }
 
         $wp_rewrite->rules = $rules + $wp_rewrite->rules;
@@ -584,22 +600,39 @@ class FS_Taxonomy
     public function redirect_to_localized_url()
     {
         global $wp_query;
-        if (!fs_is_product_category() || count($wp_query->query) > 1 || get_locale() == FS_Config::default_locale()) {
+
+        // Run only for taxonomies with custom rewrite rules, on frontend, when wpm is active.
+        if (is_admin() || !is_tax(['category', 'catalog']) || !function_exists('wpm_get_languages')) {
             return;
         }
 
         $term = get_queried_object();
-        $default_locale = FS_Config::default_locale();
-        $locale = get_locale();
+        if (!$term || is_wp_error($term)) {
+            return;
+        }
 
-        $localized_slug = get_term_meta($term->term_id, '_seo_slug__'.mb_strtolower($locale), 1);
+        // Get the custom multilingual slugs for this term.
+        $custom_slug_raw = get_term_meta($term->term_id, '_seo_slug', true);
+        if (!$custom_slug_raw || !function_exists('wpm_string_to_ml_array')) {
+            return;
+        }
+        $ml_slugs = wpm_string_to_ml_array($custom_slug_raw);
 
-        $url_slug = explode('/', $_SERVER['REQUEST_URI'])[2];
+        // Extract the term slug part from the URL, removing pagination.
+        $request_uri_path = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $term_url_part = preg_replace('~/(page|paged)/.*$~', '', $request_uri_path);
+        $path_parts = array_values(array_filter(explode('/', $term_url_part)));
+        $url_term_slug = end($path_parts);
 
-        if ($locale != $default_locale && $localized_slug != '' && $url_slug != $localized_slug) {
-            $redirect_url = fs_localize_category_url($term->term_id);
-            wp_redirect($redirect_url);
-            exit;
+        // Find which language our URL slug belongs to.
+        $slug_lang_code = array_search($url_term_slug, $ml_slugs);
+        $current_lang_code = wpm_get_language();
+
+        if ($slug_lang_code && $slug_lang_code !== $current_lang_code) {
+            $wp_query->set_404();
+            status_header(404);
+
+            return;
         }
     }
 
@@ -610,18 +643,49 @@ class FS_Taxonomy
      */
     public function replace_taxonomy_slug_filter($term_link, $term, $taxonomy)
     {
-        if ($taxonomy != $this->taxonomy_name) {
+        $supported_taxonomies = [$this->taxonomy_name, 'category'];
+        // Ensure we are only modifying the correct taxonomy links
+        if (!in_array($taxonomy, $supported_taxonomies)) {
             return $term_link;
         }
 
-        $meta_key = get_locale() != FS_Config::default_locale() ? '_seo_slug__'.mb_strtolower(get_locale()) : '_seo_slug';
+        // Check if WP-Multilang functions are available
+        if (function_exists('wpm_get_language') && function_exists('wpm_get_default_language') && function_exists('wpm_get_languages')) {
+            $lang_code = wpm_get_language();
+            $default_lang = wpm_get_default_language();
 
-        // Remove the taxonomy prefix in links
+            $custom_slug_raw = get_term_meta($term->term_id, '_seo_slug', true);
+
+            if ($custom_slug_raw && function_exists('wpm_string_to_ml_array')) {
+                $ml_array = wpm_string_to_ml_array($custom_slug_raw);
+
+                if (isset($ml_array[$lang_code]) && !empty($ml_array[$lang_code])) {
+                    $lang_seo_slug = $ml_array[$lang_code];
+                    $site_url = site_url();
+
+                    if ($lang_code !== $default_lang) {
+                        $languages = wpm_get_languages();
+                        $lang_url_prefix = isset($languages[$lang_code]['slug']) ? $languages[$lang_code]['slug'] : $lang_code;
+
+                        return $site_url.'/'.$lang_url_prefix.'/'.$lang_seo_slug.'/';
+                    } else {
+                        return $site_url.'/'.$lang_seo_slug.'/';
+                    }
+                }
+            }
+        }
+
+        // --- Fallback Logic ---
+        // If we're here, it means it's the default language, or no custom slug was found,
+        // or WP-Multilang is not active. Use the old logic.
+
+        // Remove the taxonomy prefix in links if the option is enabled
         if (fs_option('fs_disable_taxonomy_slug')) {
             $term_link = str_replace('/'.$taxonomy.'/', '/', $term_link);
         }
 
-        // Convert the link in accordance with the Cyrillic name
+        // This part is the original F-Shop logic for localization, which we can keep as a final fallback.
+        $meta_key = get_locale() != FS_Config::default_locale() ? '_seo_slug__'.mb_strtolower(get_locale()) : '_seo_slug';
         if (get_locale() != FS_Config::default_locale() && fs_option('fs_localize_slug') && get_term_meta($term->term_id, $meta_key, 1)) {
             $localize_slug = get_term_meta($term->term_id, $meta_key, 1);
             $term_link = str_replace($term->slug, $localize_slug, $term_link);
@@ -831,7 +895,6 @@ class FS_Taxonomy
                 ],
                 'fs_min_order_amount' => [
                     'name' => __('Minimum order amount', 'f-shop'),
-                    'type' => 'text',
                     'help' => __('It is applied if the order amount has exceeded the value specified in this field'),
                     'args' => [
                         'min' => 1,
