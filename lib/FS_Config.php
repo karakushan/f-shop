@@ -24,6 +24,9 @@ class FS_Config
     protected static $nonce_field = 'fs_secret';
     private static $telegram_bot = 'FShopOfficialBot';
 
+    public const META_CURRENCY_LOCALE = '__fs_currency_locale';
+    public const META_CURRENCY_DISPLAY = '__fs_currency_display';
+
     /**
      * FS_Config constructor.
      */
@@ -527,7 +530,9 @@ class FS_Config
             'zu_ZA' => 'Zulu (South Africa)',
         ];
 
-        return apply_filters('fs_locales', $all_locales);
+        $all_locales = apply_filters('fs_locales', $all_locales);
+
+        return $all_locales;
     }
 
     /**

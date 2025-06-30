@@ -547,12 +547,12 @@ class FS_Taxonomy
                 $terms = get_terms([
                     'taxonomy' => $taxonomy,
                     'hide_empty' => false,
-                    'meta_query' => [
-                        [
-                            'key' => '_seo_slug',
-                            'compare' => 'EXISTS',
-                        ],
-                    ],
+                    // 'meta_query' => [
+                    //     [
+                    //         'key' => '_seo_slug',
+                    //         'compare' => 'EXISTS',
+                    //     ],
+                    // ],
                 ]);
 
                 // Skip if no terms found
@@ -565,15 +565,15 @@ class FS_Taxonomy
                     $ml_array = wpm_string_to_ml_array($custom_slug);
                     $lang_slug = isset($ml_array[$lang_code]) ? $ml_array[$lang_code] : '';
 
-                    if (empty($lang_slug)) {
-                        continue;
-                    }
+                    // If the term has no custom slug, or the language is the default language, use the term slug
+                    if (empty($lang_slug) || $lang_code === $default_lang) {
+                        $lang_slug = $term->slug;
+                        // Add rewrite rule for this term in this language
+                        $rules['^'.$lang_slug.'/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&lang='.$lang_code;
+                        $rules['^'.$lang_slug.'/page/([0-9]{1,})/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]&lang='.$lang_code;
 
-                    $tax_object = get_taxonomy($taxonomy);
-                    if (!$tax_object || empty($tax_object->query_var)) {
                         continue;
                     }
-                    $query_var = $tax_object->query_var;
 
                     $slug_prefix = '';
                     if ($lang_code !== $default_lang && isset($lang_data['slug'])) {
@@ -581,8 +581,8 @@ class FS_Taxonomy
                     }
 
                     // Add rewrite rule for this term in this language
-                    $rules['^'.$slug_prefix.$lang_slug.'/?$'] = 'index.php?'.$query_var.'='.$term->slug.'&lang='.$lang_code;
-                    $rules['^'.$slug_prefix.$lang_slug.'/page/([0-9]{1,})/?$'] = 'index.php?'.$query_var.'='.$term->slug.'&paged=$matches[1]&lang='.$lang_code;
+                    $rules['^'.$slug_prefix.$lang_slug.'/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&lang='.$lang_code;
+                    $rules['^'.$slug_prefix.$lang_slug.'/page/([0-9]{1,})/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]&lang='.$lang_code;
                 }
             }
         }
@@ -654,41 +654,33 @@ class FS_Taxonomy
             $lang_code = wpm_get_language();
             $default_lang = wpm_get_default_language();
 
+            if ($lang_code === $default_lang) {
+                // Remove the taxonomy prefix in links if the option is enabled
+                if (fs_option('fs_disable_taxonomy_slug')) {
+                    $term_link = str_replace('/'.$taxonomy.'/', '/', $term_link);
+                }
+
+                return $term_link;
+            }
+
             $custom_slug_raw = get_term_meta($term->term_id, '_seo_slug', true);
 
-            if ($custom_slug_raw && function_exists('wpm_string_to_ml_array')) {
+            if ($custom_slug_raw && function_exists('wpm_string_to_ml_array') && $lang_code !== $default_lang) {
                 $ml_array = wpm_string_to_ml_array($custom_slug_raw);
 
                 if (isset($ml_array[$lang_code]) && !empty($ml_array[$lang_code])) {
                     $lang_seo_slug = $ml_array[$lang_code];
                     $site_url = site_url();
 
-                    if ($lang_code !== $default_lang) {
-                        $languages = wpm_get_languages();
-                        $lang_url_prefix = isset($languages[$lang_code]['slug']) ? $languages[$lang_code]['slug'] : $lang_code;
+                    $lang_url_prefix = isset($languages[$lang_code]['slug']) ? $languages[$lang_code]['slug'] : $lang_code;
 
-                        return $site_url.'/'.$lang_url_prefix.'/'.$lang_seo_slug.'/';
-                    } else {
-                        return $site_url.'/'.$lang_seo_slug.'/';
-                    }
+                    return $site_url.'/'.$lang_url_prefix.'/'.$lang_seo_slug.'/';
                 }
             }
         }
 
-        // --- Fallback Logic ---
-        // If we're here, it means it's the default language, or no custom slug was found,
-        // or WP-Multilang is not active. Use the old logic.
-
-        // Remove the taxonomy prefix in links if the option is enabled
         if (fs_option('fs_disable_taxonomy_slug')) {
             $term_link = str_replace('/'.$taxonomy.'/', '/', $term_link);
-        }
-
-        // This part is the original F-Shop logic for localization, which we can keep as a final fallback.
-        $meta_key = get_locale() != FS_Config::default_locale() ? '_seo_slug__'.mb_strtolower(get_locale()) : '_seo_slug';
-        if (get_locale() != FS_Config::default_locale() && fs_option('fs_localize_slug') && get_term_meta($term->term_id, $meta_key, 1)) {
-            $localize_slug = get_term_meta($term->term_id, $meta_key, 1);
-            $term_link = str_replace($term->slug, $localize_slug, $term_link);
         }
 
         return $term_link;
@@ -860,8 +852,9 @@ class FS_Taxonomy
                 ],
                 '_fs_currency_locale' => [
                     'name' => __('Currency Language (locale)', 'f-shop'),
-                    'type' => 'select',
-                    'args' => ['values' => FS_Config::get_locales()],
+                    'type' => 'multiselect',
+                    'options' => self::get_currency_locales(),
+                    'args' => [],
                 ],
             ],
             // Дополнительные поля налога
@@ -979,6 +972,73 @@ class FS_Taxonomy
         ];
 
         return (array) apply_filters('fs_taxonomy_fields', $fields);
+    }
+
+    /**
+     * Получает список доступных локалей для валют.
+     * Проверяет наличие плагина wp-multilang и использует его языки,
+     * иначе возвращает стандартные локали из FS_Config.
+     *
+     * @return array массив локалей в формате код => название
+     */
+    public static function get_currency_locales()
+    {
+        // Проверяем, установлен ли плагин wp-multilang
+        if (function_exists('wpm_get_languages')) {
+            $languages = wpm_get_languages();
+            $locales = [];
+
+            if (!empty($languages)) {
+                foreach ($languages as $lang_code => $lang_data) {
+                    // Преобразуем код языка в полный локаль
+                    $locale = self::get_locale_from_language_code($lang_code);
+                    $name = isset($lang_data['name']) ? $lang_data['name'] : $lang_code;
+                    $locales[$lang_data['locale']] = $name;
+                }
+
+                return $locales;
+            }
+        }
+
+        // Fallback к ограниченному списку популярных локалей
+        return [
+            'uk_UA' => 'Українська (Україна)',
+            'ru_RU' => 'Русский (Россия)',
+            'en_US' => 'English (United States)',
+            'en_GB' => 'English (United Kingdom)',
+            'pl_PL' => 'Polski (Polska)',
+            'de_DE' => 'Deutsch (Deutschland)',
+            'fr_FR' => 'Français (France)',
+            'es_ES' => 'Español (España)',
+            'it_IT' => 'Italiano (Italia)',
+        ];
+    }
+
+    /**
+     * Преобразует код языка в локаль.
+     *
+     * @param string $lang_code код языка (например, 'uk', 'en')
+     *
+     * @return string полный локаль (например, 'uk_UA', 'en_US')
+     */
+    private static function get_locale_from_language_code($lang_code)
+    {
+        $mapping = [
+            'uk' => 'uk_UA',
+            'ru' => 'ru_RU',
+            'en' => 'en_US',
+            'pl' => 'pl_PL',
+            'de' => 'de_DE',
+            'fr' => 'fr_FR',
+            'es' => 'es_ES',
+            'it' => 'it_IT',
+            'pt' => 'pt_PT',
+            'nl' => 'nl_NL',
+            'cs' => 'cs_CZ',
+            'sk' => 'sk_SK',
+        ];
+
+        return isset($mapping[$lang_code]) ? $mapping[$lang_code] : $lang_code.'_'.strtoupper($lang_code);
     }
 
     /**

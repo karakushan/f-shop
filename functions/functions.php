@@ -94,9 +94,9 @@ function fs_has_sale_price($product_id = 0)
 }
 
 /**
- * Получает текущую цену с учётом скидки
- * 
- * @param int $product_id - id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
+ * Получает текущую цену с учётом скидки.
+ *
+ * @param int $product_id   - id поста, в данном случае товара (по умолчанию берётся из глобальной переменной $post)
  * @param int $variation_id - id вариации
  *
  * @return float $price - значение цены
@@ -151,7 +151,7 @@ function fs_the_price($product_id = 0, $wrap = '%s %s', $args = [])
     $price = fs_get_price($product_id);
     $price_formatted = apply_filters('fs_price_format', $price);
 
-    printf('<span class="' . esc_attr($args['class']) . '">' . $wrap . '</span>', '<span x-text="typeof price===\'number\' && price_formatted ? price_formatted : \'' . $price_formatted . '\' ">' . esc_attr($price_formatted) . '</span>', '<span x-text="typeof currency!==\'undefined\' ? currency : \'' . esc_attr($cur_symb) . '\'">' . esc_attr($cur_symb) . '</span>');
+    printf('<span class="'.esc_attr($args['class']).'">'.$wrap.'</span>', '<span x-text="typeof price===\'number\' && price_formatted ? price_formatted : \''.$price_formatted.'\' ">'.esc_attr($price_formatted).'</span>', '<span x-text="typeof currency!==\'undefined\' ? currency : \''.esc_attr($cur_symb).'\'">'.esc_attr($cur_symb).'</span>');
 }
 
 /**
@@ -200,7 +200,7 @@ function fs_total_amount($wrap = '%s <span>%s</span>', $delivery_cost = false)
 {
     $total = fs_get_total_amount($delivery_cost);
     $total = apply_filters('fs_price_format', $total);
-    printf('<span data-fs-element="total-amount">' . $wrap . '</span>', esc_attr($total), esc_attr(fs_currency()));
+    printf('<span data-fs-element="total-amount">'.$wrap.'</span>', esc_attr($total), esc_attr(fs_currency()));
 }
 
 /**
@@ -303,7 +303,7 @@ function fs_total_amount_without_discount($wrap = '%s <span>%s</span>')
     }
 
     $total = apply_filters('fs_price_format', $total);
-    printf('<span data-fs-element="total-amount">' . $wrap . '</span>', esc_attr($total), esc_attr(fs_currency()));
+    printf('<span data-fs-element="total-amount">'.$wrap.'</span>', esc_attr($total), esc_attr(fs_currency()));
 }
 
 /**
@@ -513,7 +513,7 @@ function fs_packing_cost($format = '%s <span>%s</span>', $args = [])
 
     if (fs_option('fs_include_packing_cost')) {
         printf(
-            '<div class="%s" data-fs-element="packing-cost">' . $format . '</div>',
+            '<div class="%s" data-fs-element="packing-cost">'.$format.'</div>',
             esc_attr($args['class']),
             apply_filters('fs_price_format', fs_get_packing_cost()),
             fs_currency()
@@ -571,7 +571,7 @@ function fs_total_discount($wrap = '%s <span>%s</span>')
 {
     $discount = fs_get_total_discount('');
     $discount = apply_filters('fs_price_format', $discount);
-    printf('<span data-fs-element="total-discount">' . $wrap . '</span>', esc_attr($discount), esc_html(fs_currency()));
+    printf('<span data-fs-element="total-discount">'.$wrap.'</span>', esc_attr($discount), esc_html(fs_currency()));
 }
 
 /**
@@ -635,7 +635,7 @@ function fs_get_cart($args = [])
                 /* @deprecated */
                 'thumb' => $product_image_url,
                 'thumbnail_url' => $product_image_url,
-                'thumbnail' => '<img src="' . esc_attr($product_image_url) . '" alt="' . esc_attr($offer->title) . '" title="' . esc_attr($offer->title) . '">',
+                'thumbnail' => '<img src="'.esc_attr($product_image_url).'" alt="'.esc_attr($offer->title).'" title="'.esc_attr($offer->title).'">',
                 'attr' => $offer->attributes,
                 'link' => $offer->permalink,
                 'price' => $offer->price_display,
@@ -684,10 +684,10 @@ function fs_delete_position($cart_item = 0, $args = [])
 
     switch ($args['type']) {
         case 'link':
-            echo '<a href="javascript:void()" ' . $atts . '>' . $args['content'] . '</a>';
+            echo '<a href="javascript:void()" '.$atts.'>'.$args['content'].'</a>';
             break;
         case 'button':
-            echo '<button type="button" ' . $atts . '>' . $args['content'] . '</button>';
+            echo '<button type="button" '.$atts.'>'.$args['content'].'</button>';
             break;
     }
 }
@@ -719,7 +719,7 @@ function fs_delete_wishlist_position($product_id = 0, $content = '🞫', $args =
         'title' => sprintf(__('Remove from wishlist', 'f-shop'), get_the_title($product_id)),
     ]);
 
-    echo '<button type="button" x-on:click.prevent="Alpine.store(\'FS\').removeWishlistItem(' . $product_id . ')" ' . fs_parse_attr($args) . '>' . $content . '</button>';
+    echo '<button type="button" x-on:click.prevent="Alpine.store(\'FS\').removeWishlistItem('.$product_id.')" '.fs_parse_attr($args).'>'.$content.'</button>';
 }
 
 /**
@@ -859,7 +859,7 @@ function fs_add_to_cart($product_id = 0, $label = 'Add to cart', $args = [])
     $args = wp_parse_args($args, [
         'type' => 'button',
         'title' => __('Add to cart', 'f-shop'),
-        'id' => 'fs-atc-' . $product_id,
+        'id' => 'fs-atc-'.$product_id,
         'data-count' => fs_get_product_min_qty($product_id),
         'class' => 'fs-add-to-cart',
         'inline_attributes' => '',
@@ -887,7 +887,7 @@ function fs_add_to_cart($product_id = 0, $label = 'Add to cart', $args = [])
         if (is_array($args['inline_attributes'])) {
             $args['inline_attributes'] = implode(' ', $args['inline_attributes']);
         }
-        $html_attributes .= ' ' . $args['inline_attributes'];
+        $html_attributes .= ' '.$args['inline_attributes'];
     }
 
     /* allow you to set different html elements as a button */
@@ -930,7 +930,7 @@ function fs_add_to_comparison($post_id = 0, $label = '', $attr = [])
         'data-action' => 'add-to-comparison',
         'data-product-id' => $post_id,
         'data-product-name' => get_the_title($post_id),
-        'id' => 'fs-atc-' . $post_id,
+        'id' => 'fs-atc-'.$post_id,
         'data-success' => $attr['success'],
         'data-error' => $attr['error'],
         'class' => $attr['class'],
@@ -961,13 +961,13 @@ function fs_order_send($label = 'Отправить заказ', $attr = [])
 {
     $args = wp_parse_args($attr, [
         'class' => 'fs-order-send btn btn-success btn-lg',
-        'preloader_src' => FS_PLUGIN_URL . 'assets/img/form-preloader.svg',
+        'preloader_src' => FS_PLUGIN_URL.'assets/img/form-preloader.svg',
         'preloader_width' => 32,
     ]);
-    $preloader = '<img class="fs-atc-preloader" style="display:none" x-show="loading" src="' . esc_attr($args['preloader_src']) . '" width="' . esc_attr($args['preloader_width']) . '" alt="preloader">';
+    $preloader = '<img class="fs-atc-preloader" style="display:none" x-show="loading" src="'.esc_attr($args['preloader_src']).'" width="'.esc_attr($args['preloader_width']).'" alt="preloader">';
     $inline_attributes = fs_parse_attr($attr, $args, ['preloader_src', 'preloader_width']);
 
-    printf('<button type="submit" x-on:fs-checkout-start-submit.window="loading = true" x-on:fs-checkout-finish-submit.window="loading = false" x-data="{loading: false }" %s><span>%s</span> ' . $preloader . '</button>', $inline_attributes, $label);
+    printf('<button type="submit" x-on:fs-checkout-start-submit.window="loading = true" x-on:fs-checkout-finish-submit.window="loading = false" x-data="{loading: false }" %s><span>%s</span> '.$preloader.'</button>', $inline_attributes, $label);
 }
 
 /**
@@ -1017,7 +1017,7 @@ function fs_cart_widget($args = [])
         'tag' => 'a',
     ]);
 
-    $template = '<' . $args['tag'] . ' href="' . fs_cart_url(false) . '" data-fs-element="cart-widget" class="' . esc_attr($args['class']) . '">';
+    $template = '<'.$args['tag'].' href="'.fs_cart_url(false).'" data-fs-element="cart-widget" class="'.esc_attr($args['class']).'">';
 
     // если параметр  $args['empty']  == true это значит использовать отдельный шаблон для пустой корзины
     if ($args['empty']) {
@@ -1030,7 +1030,7 @@ function fs_cart_widget($args = [])
         $template .= fs_frontend_template('cart-widget/widget');
     }
 
-    $template .= '</' . $args['tag'] . '>';
+    $template .= '</'.$args['tag'].'>';
 
     echo apply_filters('fs_cart_widget_template', $template);
 }
@@ -1167,8 +1167,8 @@ function fs_quantity_product($product_id = 0, $args = [])
     ]);
 
     $pluss = sprintf('<button x-on:click.prevent="count=count+1" type="button" class="%s">%s</button> ', $args['pluss_class'], $args['pluss_content']);
-    $minus = sprintf('<button x-on:click.prevent="count=count>parseInt(' . $args['min'] . ') ? count-1 : 1" type="button" class="%s">%s</button>', $args['minus_class'], $args['minus_content']);
-    $input = '<input  ' . $data_atts . '>';
+    $minus = sprintf('<button x-on:click.prevent="count=count>parseInt('.$args['min'].') ? count-1 : 1" type="button" class="%s">%s</button>', $args['minus_class'], $args['minus_content']);
+    $input = '<input  '.$data_atts.'>';
 
     $quantity = str_replace(['%pluss%', '%input%', '%minus%'], [
         $minus,
@@ -1212,9 +1212,9 @@ function fs_cart_quantity(int $item_id, float $value, array $args = [])
         ]
     );
 
-    $pluss = '<button type="button" class="' . $args['pluss']['class'] . '" data-fs-count="pluss" data-target="#product-quantify-' . $item_id . '">' . $args['pluss']['content'] . '</button> ';
-    $minus = '<button type="button" class="' . $args['minus']['class'] . '" data-fs-count="minus" data-target="#product-quantify-' . $item_id . '">' . $args['minus']['content'] . '</button>';
-    $input = '<input   ' . $input_atts . '     >';
+    $pluss = '<button type="button" class="'.$args['pluss']['class'].'" data-fs-count="pluss" data-target="#product-quantify-'.$item_id.'">'.$args['pluss']['content'].'</button> ';
+    $minus = '<button type="button" class="'.$args['minus']['class'].'" data-fs-count="minus" data-target="#product-quantify-'.$item_id.'">'.$args['minus']['content'].'</button>';
+    $input = '<input   '.$input_atts.'     >';
     $quantity = str_replace(['%pluss%', '%minus%', '%input%'], [
         $pluss,
         $minus,
@@ -1300,7 +1300,9 @@ function fs_get_product_currency($product_id = 0)
     $fs_config = new FS_Config();
     $product_id = fs_get_product_id($product_id);
     $product_currency_id = intval(get_post_meta($product_id, $fs_config->meta['currency'], 1));
-    $product_currency_code = get_term_meta($product_currency_id, 'currency-code', 1);
+    $product_currency_code = get_term_meta($product_currency_id, '__fs_currency_code', 1);
+    $product_currency_symbol = get_term_meta($product_currency_id, '__fs_currency_display', 1);
+    $product_currency_locales = carbon_get_term_meta($product_currency_id, '_fs_currency_locale');
     $site_currency_id = intval(fs_option('default_currency', 0));
 
     // если у товара не найден ID валюта возвращаем  ID валюты по умолчанию
@@ -1308,11 +1310,14 @@ function fs_get_product_currency($product_id = 0)
         $product_currency_id = $site_currency_id;
     }
 
-    return [
+    $currency = [
         'id' => $product_currency_id,
-        'symbol' => fs_option('currency_symbol', '$'),
-        'code' => $product_currency_code ? $product_currency_code : 'USD',
+        'symbol' => $product_currency_symbol ?: fs_option('currency_symbol', '$'),
+        'code' => $product_currency_code ?: 'USD',
+        'locales' => $product_currency_locales ?: ['uk'],
     ];
+
+    return $currency;
 }
 
 /**
@@ -1324,14 +1329,64 @@ function fs_get_product_currency($product_id = 0)
  */
 function fs_currency($product_id = 0)
 {
-    if ($product_id) {
-        $product_currency = fs_get_product_currency($product_id);
+    if (!$product_id) {
+        $currency = fs_option('currency_symbol', '$');
+
+        return apply_filters('fs_currency', $currency);
+    }
+
+    if (function_exists('wpm_get_language') && function_exists('wpm_get_lang_option')) {
+        $current_lang_code = wpm_get_language();
+        $languages = wpm_get_lang_option();
+        $locale = isset($languages[$current_lang_code]['locale']) ? $languages[$current_lang_code]['locale'] : get_locale();
+    } else {
+        $locale = get_locale();
+    }
+
+    $product_currency = fs_get_product_currency($product_id);
+
+    if (in_array($locale, $product_currency['locales'])) {
         $currency = $product_currency['symbol'];
     } else {
-        $currency = fs_option('currency_symbol', '$');
+        $currency = _fs_get_currency_symbol_for_locale($locale) ?: $product_currency['symbol'];
     }
 
     return apply_filters('fs_currency', $currency);
+}
+
+/**
+ * Gets the currency symbol for a specific locale.
+ * Caches the database query and the result.
+ *
+ * @param string $locale
+ *
+ * @return string|null
+ */
+function _fs_get_currency_symbol_for_locale($locale)
+{
+    global $wpdb;
+
+    $id_cache_key = 'fs_currency_id_for_locale_'.$locale;
+    $locale_currency_id = wp_cache_get($id_cache_key, 'f-shop');
+
+    if (false === $locale_currency_id) {
+        $locale_currency_id = $wpdb->get_var($wpdb->prepare("SELECT term_id FROM $wpdb->termmeta WHERE meta_key LIKE %s AND meta_value = %s", $wpdb->esc_like(FS_Config::META_CURRENCY_LOCALE).'%', $locale));
+        wp_cache_set($id_cache_key, $locale_currency_id, 'f-shop');
+    }
+
+    if (!$locale_currency_id) {
+        return null;
+    }
+
+    $symbol_cache_key = 'fs_currency_symbol_'.$locale_currency_id;
+    $currency_symbol = wp_cache_get($symbol_cache_key, 'f-shop');
+
+    if (false === $currency_symbol) {
+        $currency_symbol = get_term_meta($locale_currency_id, FS_Config::META_CURRENCY_DISPLAY, true);
+        wp_cache_set($symbol_cache_key, $currency_symbol, 'f-shop');
+    }
+
+    return $currency_symbol;
 }
 
 /**
@@ -1410,10 +1465,10 @@ function fs_delete_cart($args = [])
     ]);
     switch ($args['type']) {
         case 'button':
-            echo '<button ' . $html_att . '>' . $args['text'] . '</button> ';
+            echo '<button '.$html_att.'>'.$args['text'].'</button> ';
             break;
         case 'link':
-            echo '<a href="#" ' . $html_att . '>' . $args['text'] . '</a> ';
+            echo '<a href="#" '.$html_att.'>'.$args['text'].'</a> ';
             break;
     }
 }
@@ -1432,9 +1487,9 @@ function fs_amount_discount($product_id = 0, $echo = true, $wrap = '<span>%s</sp
     global $post;
     $config = new FS_Config();
     $product_id = empty($product_id) ? $post->ID : $product_id;
-    $action_symbol = isset($config->options['action_count']) && $config->options['action_count'] == 1 ? '<span>%</span>' : '<span>' . fs_currency() . '</span>';
+    $action_symbol = isset($config->options['action_count']) && $config->options['action_count'] == 1 ? '<span>%</span>' : '<span>'.fs_currency().'</span>';
     $discount_meta = (float) get_post_meta($product_id, $config->meta['discount'], 1);
-    $discount = empty($discount_meta) ? '' : sprintf($wrap, $discount_meta . ' ' . $action_symbol);
+    $discount = empty($discount_meta) ? '' : sprintf($wrap, $discount_meta.' '.$action_symbol);
     $discount_return = empty($discount_meta) ? 0 : $discount_meta;
     if ($echo) {
         echo $discount;
@@ -1490,7 +1545,7 @@ function fs_price_max($term_id)
     if ($term_id) {
         $term = get_term($term_id);
         $taxonomy_name = FS_Config::get_data('product_taxonomy');
-        $max = wp_cache_get('fs_max_price_term_' . $term->term_id);
+        $max = wp_cache_get('fs_max_price_term_'.$term->term_id);
         if (!$max) {
             // get max price form meta value price in product category
             $max = $wpdb->get_var($wpdb->prepare("
@@ -1505,7 +1560,7 @@ function fs_price_max($term_id)
 				AND tt.term_id = %d
 				AND pm.meta_key = %s
 			", FS_Config::get_data('post_type'), $taxonomy_name, $term->term_id, FS_Config::get_meta('price')));
-            wp_cache_set('fs_max_price_term_' . $term->term_id, $max);
+            wp_cache_set('fs_max_price_term_'.$term->term_id, $max);
         }
     } elseif (fs_is_catalog() || is_search()) {
         $max = wp_cache_get('fs_max_price_archive');
@@ -1531,7 +1586,7 @@ function fs_price_min()
 
     if (fs_is_product_category()) {
         $term = get_queried_object();
-        $min = wp_cache_get('fs_min_price_term_' . $term->term_id);
+        $min = wp_cache_get('fs_min_price_term_'.$term->term_id);
         $taxonomy_name = FS_Config::get_data('product_taxonomy');
         if (!$min) {
             $products = get_posts([
@@ -1548,7 +1603,7 @@ function fs_price_min()
             foreach ($products as $product) {
             }
 
-            wp_cache_set('fs_min_price_term_' . $term->term_id, $min);
+            wp_cache_set('fs_min_price_term_'.$term->term_id, $min);
         }
     } elseif (fs_is_catalog()) {
         $min = wp_cache_get('fs_min_price_archive');
@@ -1583,9 +1638,9 @@ function fs_add_to_wishlist($product_id = 0, $button_text = 'В список ж�
     $defaults = [
         'attr' => '',
         'type' => 'button',
-        'preloader' => '<img src="' . FS_PLUGIN_URL . '/assets/img/ajax-loader.gif" alt="preloader">',
+        'preloader' => '<img src="'.FS_PLUGIN_URL.'/assets/img/ajax-loader.gif" alt="preloader">',
         'class' => 'fs-whishlist-btn',
-        'id' => 'fs-whishlist-btn-' . $product_id,
+        'id' => 'fs-whishlist-btn-'.$product_id,
         'atts' => '',
     ];
     $args = wp_parse_args($args, $defaults);
@@ -1593,17 +1648,17 @@ function fs_add_to_wishlist($product_id = 0, $button_text = 'В список ж�
         'class' => $args['class'],
         'id' => $args['id'],
         'x-data' => json_encode(['inWishlist' => FS\FS_Wishlist::contains($product_id)]),
-        'x-on:click' => 'Alpine.store("FS").addToWishlist(' . $product_id . '); inWishlist=!inWishlist',
+        'x-on:click' => 'Alpine.store("FS").addToWishlist('.$product_id.'); inWishlist=!inWishlist',
         'x-bind:class' => '{\'fs-in-wishlist\':inWishlist}',
     ]);
 
     switch ($args['type']) {
         case 'link':
-            echo '<a href="#fs-whishlist-btn"  ' . $html_atts . ' ' . $args['atts'] . '>' . $button_text . '<span class="fs-atc-preloader" style="display:none">' . $args['preloader'] . '</span></a>';
+            echo '<a href="#fs-whishlist-btn"  '.$html_atts.' '.$args['atts'].'>'.$button_text.'<span class="fs-atc-preloader" style="display:none">'.$args['preloader'].'</span></a>';
             break;
 
         case 'button':
-            echo '<button ' . $html_atts . ' ' . $args['atts'] . '>' . $button_text . '<span class="fs-atc-preloader" style="display:none">' . $args['preloader'] . '</span></button>';
+            echo '<button '.$html_atts.' '.$args['atts'].'>'.$button_text.'<span class="fs-atc-preloader" style="display:none">'.$args['preloader'].'</span></button>';
             break;
     }
 }
@@ -1677,12 +1732,12 @@ function fs_transliteration($s)
 function fs_frontend_template($template, $args = [], $extension = '.php')
 {
     $args = wp_parse_args($args, [
-        'theme_base_path' => TEMPLATEPATH . DIRECTORY_SEPARATOR . 'f-shop' . DIRECTORY_SEPARATOR,
-        'plugin_base_path' => FS_PLUGIN_PATH . 'templates' . DIRECTORY_SEPARATOR . 'front-end' . DIRECTORY_SEPARATOR,
+        'theme_base_path' => TEMPLATEPATH.DIRECTORY_SEPARATOR.'f-shop'.DIRECTORY_SEPARATOR,
+        'plugin_base_path' => FS_PLUGIN_PATH.'templates'.DIRECTORY_SEPARATOR.'front-end'.DIRECTORY_SEPARATOR,
         'vars' => [],
     ]);
-    $template_plugin = $args['plugin_base_path'] . $template . $extension;
-    $template_theme = $args['theme_base_path'] . $template . $extension;
+    $template_plugin = $args['plugin_base_path'].$template.$extension;
+    $template_theme = $args['theme_base_path'].$template.$extension;
     extract($args['vars']);
 
     ob_start();
@@ -1738,7 +1793,7 @@ function fs_page_content()
     $page = filter_input(INPUT_GET, 'fs-page', FILTER_SANITIZE_URL);
     $pages = ['profile', 'conditions'];
     if (in_array($page, $pages)) {
-        echo fs_frontend_template('auth/' . $page);
+        echo fs_frontend_template('auth/'.$page);
     } else {
         echo fs_frontend_template('auth/profile');
     }
@@ -1788,7 +1843,7 @@ function fs_product_code($product_id = 0, $wrap = '%s')
 {
     $articul = fs_get_product_code($product_id);
     if ($articul) {
-        printf('<span class="fs-sku" data-fs-element="sku">' . $wrap . '</span>', esc_html($articul));
+        printf('<span class="fs-sku" data-fs-element="sku">'.$wrap.'</span>', esc_html($articul));
     }
 }
 
@@ -2010,7 +2065,7 @@ function fs_parse_attr($attr = [], $default = [], $exclude = [])
             $attribute = json_encode($attribute);
         }
 
-        $attributes[] = esc_attr($key) . '="' . esc_attr($attribute) . '"';
+        $attributes[] = esc_attr($key).'="'.esc_attr($attribute).'"';
     }
 
     if (count($attributes)) {
@@ -2148,7 +2203,7 @@ function fs_mail_keys($keys = [])
     $email_variable = [];
     if ($keys) {
         foreach ($keys as $key => $value) {
-            $email_variable[] = '%' . $key . '%';
+            $email_variable[] = '%'.$key.'%';
         }
     }
 
@@ -2223,7 +2278,7 @@ function fs_the_atts_list($post_id = 0, $args = [])
                 $second_term[] = apply_filters('the_title', $s->name);
             }
 
-            $list .= '<li><span class="first">' . apply_filters('the_title', $primary_term->name) . ': </span><span class="last">' . implode(', ', $second_term) . ' </span></li > ';
+            $list .= '<li><span class="first">'.apply_filters('the_title', $primary_term->name).': </span><span class="last">'.implode(', ', $second_term).' </span></li > ';
         }
     }
 
@@ -2331,7 +2386,7 @@ function fs_product_thumbnail($product_id = 0, $size = 'thumbnail', $args = [])
         $attach_id = array_shift($gallery);
         echo wp_get_attachment_image($attach_id, $size, false, $args);
     } else {
-        echo '<img src="' . esc_url(FS_PLUGIN_URL . 'assets/img/no-image.jpg') . '" alt="' . esc_attr__('No image', 'f-shop') . '">';
+        echo '<img src="'.esc_url(FS_PLUGIN_URL.'assets/img/no-image.jpg').'" alt="'.esc_attr__('No image', 'f-shop').'">';
     }
 }
 
@@ -2354,7 +2409,7 @@ function fs_get_product_thumbnail_url($product_id = 0, $size = 'thumbnail')
         $attach_id = array_shift($gallery);
         $url = wp_get_attachment_image_url($attach_id, $size, false);
     } else {
-        $url = FS_PLUGIN_URL . 'assets/img/image.svg';
+        $url = FS_PLUGIN_URL.'assets/img/image.svg';
     }
 
     return $url;
@@ -2439,7 +2494,7 @@ function fs_order_by_links($args = [])
                 $html .= ' class="active"';
             }
             $html .= '>';
-            $html .= esc_html($order_by_arr['name']) . '</a>';
+            $html .= esc_html($order_by_arr['name']).'</a>';
             // выводим код после ссылки
             if ($args['after']) {
                 $html .= $args['after'];
@@ -2789,13 +2844,13 @@ function fs_get_category_image($term_id = 0, $size = 'thumbnail', $args = [])
     $args = wp_parse_args($args, [
         'return' => 'image',
         'attr' => [],
-        'default' => FS_PLUGIN_URL . 'assets/img/no-image.jpg',
+        'default' => FS_PLUGIN_URL.'assets/img/no-image.jpg',
     ]);
     $image_id = get_term_meta($term_id, '_thumbnail_id', 1);
     $image_id = intval($image_id);
     if ($args['return'] == 'image') {
         if (!$image_id) {
-            $image = '<img src="' . esc_attr($args['default']) . '" alt="no image">';
+            $image = '<img src="'.esc_attr($args['default']).'" alt="no image">';
         } else {
             $image = wp_get_attachment_image($image_id, $size, false, $args['attr']);
         }
@@ -2831,7 +2886,7 @@ function fs_get_category_icon($term_id = 0, $size = 'thumbnail', $args = [])
     $args = wp_parse_args($args, [
         'return' => 'image',
         'attr' => [],
-        'default' => FS_PLUGIN_URL . 'assets/img/add-img.svg',
+        'default' => FS_PLUGIN_URL.'assets/img/add-img.svg',
     ]);
 
     $image_id = (int) get_term_meta($term_id, '_icon_id', 1);
@@ -2840,10 +2895,10 @@ function fs_get_category_icon($term_id = 0, $size = 'thumbnail', $args = [])
         if ($image_id) {
             $image = wp_get_attachment_image($image_id, $size, false, $args['attr']);
         } elseif (!$image_id && !empty($args['default'])) {
-            $image = '<img ' . fs_parse_attr(array_merge([
+            $image = '<img '.fs_parse_attr(array_merge([
                 'alt' => 'No image',
                 'src' => $args['default'],
-            ], $args['attr'])) . '>';
+            ], $args['attr'])).'>';
         }
     } elseif ($args['return'] == 'url') {
         if ($image_id) {
@@ -2893,7 +2948,7 @@ function fs_taxes_list($args = [], $total = 0.0)
 
             $taxes_html = '';
             if ($args['wrapper']) {
-                $taxes_html = '<' . esc_attr($args['wrapper']) . ' data-fs-element="taxes-list" class="' . esc_attr($args['wrapper_class']) . '">';
+                $taxes_html = '<'.esc_attr($args['wrapper']).' data-fs-element="taxes-list" class="'.esc_attr($args['wrapper_class']).'">';
             }
 
             $replace = [
@@ -2905,7 +2960,7 @@ function fs_taxes_list($args = [], $total = 0.0)
             $taxes_html .= str_replace(array_keys($replace), array_values($replace), $args['format']);
 
             if ($args['wrapper']) {
-                $taxes_html .= '</' . esc_html($args['wrapper']) . '>';
+                $taxes_html .= '</'.esc_html($args['wrapper']).'>';
             }
 
             echo apply_filters('fs_taxex_list', $taxes_html);
@@ -2963,19 +3018,19 @@ function fs_list_variations($product_id = 0, $args = [])
     $product = new FS_Product();
     $variations = $product->get_product_variations($product_id);
     if (!empty($variations)) {
-        echo '<ul class="' . esc_attr($args['class']) . '">';
+        echo '<ul class="'.esc_attr($args['class']).'">';
         $count = 0;
         foreach ($variations as $var_id => $variation) {
             echo '<li class="radiobtn">';
-            echo '<input type="radio" name="fs_variation" data-max="' . esc_attr($variation['count']) . '" data-fs-element="select-variation" data-product-id="' . esc_attr($product_id) . '" value="' . esc_attr($var_id) . '" ' . checked(0, $count, 0) . ' id="fs-var-' . esc_attr($var_id) . '">';
-            echo '<label for="fs-var-' . esc_attr($var_id) . '">';
+            echo '<input type="radio" name="fs_variation" data-max="'.esc_attr($variation['count']).'" data-fs-element="select-variation" data-product-id="'.esc_attr($product_id).'" value="'.esc_attr($var_id).'" '.checked(0, $count, 0).' id="fs-var-'.esc_attr($var_id).'">';
+            echo '<label for="fs-var-'.esc_attr($var_id).'">';
             // Показываем название в зависимости от настроек
             if ($args['show_name'] && !empty($variation['name'])) {
-                echo '<span class="fs-variant-name">' . esc_html($variation['name']) . '</span>';
+                echo '<span class="fs-variant-name">'.esc_html($variation['name']).'</span>';
             }
             // Показываем артикул в зависимости от настроек
             if ($args['show_sku'] && !empty($variation['sku'])) {
-                echo '<span class="fs-variant-sku  fs-var-container">(' . esc_attr($variation['sku']) . ')</span>';
+                echo '<span class="fs-variant-sku  fs-var-container">('.esc_attr($variation['sku']).')</span>';
             }
             if (!empty($variation['attr'])) {
                 foreach ($variation['attr'] as $attr) {
@@ -2990,15 +3045,15 @@ function fs_list_variations($product_id = 0, $args = [])
                         $image_id = get_term_meta($term->term_id, 'fs_att_image_value', 1);
                         if ($image_id) {
                             $image_url = wp_get_attachment_image_url($image_id, 'full');
-                            $att_show = '<span class="fs-attr-image" style="background-image:url(' . esc_url($image_url) . ');"></span>';
+                            $att_show = '<span class="fs-attr-image" style="background-image:url('.esc_url($image_url).');"></span>';
                         }
                     } elseif ($att_type == 'color') {
                         $color = get_term_meta($term->term_id, 'fs_att_color_value', 1);
                         if ($color) {
-                            $att_show = '<span class="fs-attr-color" style="background-color:' . esc_attr($color) . ';"></span>';
+                            $att_show = '<span class="fs-attr-color" style="background-color:'.esc_attr($color).';"></span>';
                         }
                     }
-                    echo '<span class="fs-inline-flex align-items-center fs-var-container">' . esc_html($term_parent_name) . ': ' . $att_show . '</span> ';
+                    echo '<span class="fs-inline-flex align-items-center fs-var-container">'.esc_html($term_parent_name).': '.$att_show.'</span> ';
                 }
             }
             // Если включено показывать цену
@@ -3008,12 +3063,12 @@ function fs_list_variations($product_id = 0, $args = [])
                     $price = apply_filters('fs_price_format', $price);
                     $action_price = apply_filters('fs_price_filter', $variation['action_price'], $product_id);
                     $action_price = apply_filters('fs_price_format', $action_price);
-                    echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf('%s <span>%s</span>', esc_attr($action_price), esc_attr(fs_currency())) . '</span>';
-                    echo '<del class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf('%s <span>%s</span>', esc_attr($price), esc_attr(fs_currency())) . '</del>';
+                    echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">'.sprintf('%s <span>%s</span>', esc_attr($action_price), esc_attr(fs_currency())).'</span>';
+                    echo '<del class="fs-inline-flex align-items-center fs-variation-price fs-var-container">'.sprintf('%s <span>%s</span>', esc_attr($price), esc_attr(fs_currency())).'</del>';
                 } else {
                     $price = apply_filters('fs_price_filter', $variation['price'], $product_id);
                     $price = apply_filters('fs_price_format', $price);
-                    echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">' . sprintf('%s <span>%s</span>', esc_attr($price), esc_attr(fs_currency())) . '</span>';
+                    echo '<span class="fs-inline-flex align-items-center fs-variation-price fs-var-container">'.sprintf('%s <span>%s</span>', esc_attr($price), esc_attr(fs_currency())).'</span>';
                 }
             }
             echo '</label></li>';
@@ -3065,11 +3120,11 @@ function fs_set_order(WP_Post $post)
  */
 function fs_load_template($template_path)
 {
-    $base_template = FS_PLUGIN_NAME . DIRECTORY_SEPARATOR . $template_path;
-    if (file_exists(get_template_directory() . DIRECTORY_SEPARATOR . $base_template . '.php')) {
+    $base_template = FS_PLUGIN_NAME.DIRECTORY_SEPARATOR.$template_path;
+    if (file_exists(get_template_directory().DIRECTORY_SEPARATOR.$base_template.'.php')) {
         get_template_part($base_template);
-    } elseif (file_exists(FS_PLUGIN_PATH . 'templates/front-end/' . $template_path . '.php')) {
-        load_template(FS_PLUGIN_PATH . 'templates/front-end/' . $template_path . '.php', false);
+    } elseif (file_exists(FS_PLUGIN_PATH.'templates/front-end/'.$template_path.'.php')) {
+        load_template(FS_PLUGIN_PATH.'templates/front-end/'.$template_path.'.php', false);
     } else {
         esc_html_e('File "%s" not found', 'f-shop');
     }
@@ -3169,7 +3224,7 @@ function fs_get_delivery_cost($delivery_method = 0)
 function fs_delivery_cost($format = '%s <span>%s</span>', $delivery_method = 0)
 {
     $cost = fs_get_delivery_cost($delivery_method);
-    printf('<span data-fs-element="delivery-cost">' . $format . '</span>', esc_attr($cost), esc_html(fs_currency()));
+    printf('<span data-fs-element="delivery-cost">'.$format.'</span>', esc_attr($cost), esc_html(fs_currency()));
 }
 
 /**
@@ -3202,9 +3257,9 @@ function fs_product_average_rating($product_id = 0)
 /**
  * Displays the number of comments for a product.
  *
- * @param int $product_id Product ID
- * @param bool $return Whether to return or echo the count
- * 
+ * @param int  $product_id Product ID
+ * @param bool $return     Whether to return or echo the count
+ *
  * @return int|void Returns count if $return is true, otherwise echoes the count
  */
 function fs_comments_count_number($product_id = 0, $return = false)
@@ -3221,7 +3276,6 @@ function fs_comments_count_number($product_id = 0, $return = false)
 
     echo (int) $count;
 }
-
 
 /**
  * Выводит к-во комментариев к товару.
@@ -3323,7 +3377,7 @@ if (!function_exists('fs_phpinfo_to_array')) {
             return trim(html_entity_decode($entitiesToUtf8(strip_tags($input))));
         };
         $titlePlainText = function ($input) use ($plainText) {
-            return '# ' . $plainText($input);
+            return '# '.$plainText($input);
         };
 
         ob_start();
@@ -3340,7 +3394,7 @@ if (!function_exists('fs_phpinfo_to_array')) {
         $matches = [];
 
         if (preg_match_all(
-            '#(?:<h2.*?>(?:<a.*?>)?(.*?)(?:<\/a>)?<\/h2>)|' .
+            '#(?:<h2.*?>(?:<a.*?>)?(.*?)(?:<\/a>)?<\/h2>)|'.
                 '(?:<tr.*?><t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>(?:<t[hd].*?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
             $input,
             $matches,
@@ -3381,7 +3435,7 @@ function fs_buy_one_click($product_id = 0, $text = 'Купить в 1 клик',
         'data-currency' => fs_currency($product_id),
         'data-thumbnail' => fs_get_product_thumbnail_url($product_id, 'medium'),
     ]);
-    echo '<button ' . $atts . '>' . esc_html($text) . '</button>';
+    echo '<button '.$atts.'>'.esc_html($text).'</button>';
 }
 
 /**
@@ -3394,7 +3448,7 @@ function fs_buy_one_click($product_id = 0, $text = 'Купить в 1 клик',
 function fs_get_term_meta(string $meta_key, $term_id = 0, $type = 1, $multilang = true)
 {
     $term_id = $term_id ?: get_queried_object_id();
-    $meta_key = $multilang ? $meta_key . '__' . mb_strtolower(get_locale()) : $meta_key;
+    $meta_key = $multilang ? $meta_key.'__'.mb_strtolower(get_locale()) : $meta_key;
 
     return get_term_meta($term_id, $meta_key, $type);
 }
@@ -3412,19 +3466,19 @@ function fs_get_term_meta(string $meta_key, $term_id = 0, $type = 1, $multilang 
 function fs_action_message($title, $text, $status = 'info', $args = [])
 {
     $args = wp_parse_args($args, [
-        'icon' => '<img src="' . esc_url(FS_PLUGIN_URL . 'assets/img/icon/info-' . $status . '.svg') . '" alt="icon">',
-        'class' => 'fs-action-message fs-action-' . $status,
+        'icon' => '<img src="'.esc_url(FS_PLUGIN_URL.'assets/img/icon/info-'.$status.'.svg').'" alt="icon">',
+        'class' => 'fs-action-message fs-action-'.$status,
         'echo' => true,
         'button' => null,
     ]);
 
-    $html = '<div class="' . esc_attr($args['class']) . '">';
+    $html = '<div class="'.esc_attr($args['class']).'">';
     $html .= '<div class="fs-action-message__left">';
     $html .= $args['icon'];
     $html .= '</div>';
     $html .= '<div class="fs-action-message__right">';
-    $html .= '<h4>' . esc_html($title) . '</h4>';
-    $html .= '<p>' . esc_html($text) . '</p>';
+    $html .= '<h4>'.esc_html($title).'</h4>';
+    $html .= '<p>'.esc_html($text).'</p>';
 
     if ($args['button']) {
         $html .= $args['button'];
@@ -3616,7 +3670,7 @@ if (!function_exists('fs_form_submit')) {
             'class' => 'btn btn-success btn-lg',
         ]);
 
-        echo '<button type="submit" ' . fs_parse_attr($args) . '>' . $text . '</button>';
+        echo '<button type="submit" '.fs_parse_attr($args).'>'.$text.'</button>';
     }
 }
 
@@ -3631,7 +3685,7 @@ if (!function_exists('fs_localize_meta_key')) {
     function fs_localize_meta_key($meta_key = '')
     {
         if (fs_option('fs_multi_language_support')) {
-            $meta_key = $meta_key . '__' . mb_strtolower(get_locale());
+            $meta_key = $meta_key.'__'.mb_strtolower(get_locale());
         }
 
         return $meta_key;
@@ -3710,8 +3764,8 @@ if (!function_exists('fs_localize_category_url')) {
         ]);
 
         $prefix = FS_Config::default_locale() != $locale ? $args['prefixes'][$locale] : '';
-        $slug = FS_Config::default_locale() != $locale && get_term_meta($term_id, '_seo_slug__' . mb_strtolower($locale), 1)
-            ? get_term_meta($term_id, '_seo_slug__' . mb_strtolower($locale), 1) : $term->slug;
+        $slug = FS_Config::default_locale() != $locale && get_term_meta($term_id, '_seo_slug__'.mb_strtolower($locale), 1)
+            ? get_term_meta($term_id, '_seo_slug__'.mb_strtolower($locale), 1) : $term->slug;
 
         $url_components = [$prefix];
 
@@ -3720,7 +3774,7 @@ if (!function_exists('fs_localize_category_url')) {
         }
         array_push($url_components, $slug);
 
-        return site_url(implode('/', $url_components) . '/');
+        return site_url(implode('/', $url_components).'/');
     }
 }
 
@@ -3750,7 +3804,7 @@ function fs_remove_url_param($param, $group = '', $url = '')
         unset($output[$param]);
     }
 
-    return $query['path'] . '?' . http_build_query($output);
+    return $query['path'].'?'.http_build_query($output);
 }
 
 /**
@@ -3816,7 +3870,7 @@ function fs_body_open($data = [])
         ],
     ], $data));
     $json = str_replace('"', "'", $json);
-?>
+    ?>
     x-data="<?php echo esc_attr($json); ?>"
     x-on:fs-cart-updated.window="Alpine.store('FS')?.getCart().then(r=>cart=r.data)"
     x-init="Alpine.store('FS')?.getCart().then(r=>cart=r.data)"
@@ -3843,7 +3897,7 @@ function fs_before_product_atts()
     // Получаем ID первой вариации для инициализации
     $first_variation_id = fs_get_first_variation($product_id, 'key');
 
-    echo ' x-data=\'' . json_encode([
+    echo ' x-data=\''.json_encode([
         'attributes' => $attributes,
         'count' => 1,
         'variationId' => 0, // Добавляем ID первой вариации
@@ -3852,20 +3906,20 @@ function fs_before_product_atts()
         'price' => fs_get_price($product_id),
         'old_price' => fs_get_base_price($product_id),
         'currency' => fs_currency($product_id),
-    ]) . ' \'';
+    ]).' \'';
 
     echo ' x-init="async()=>{
       const store = Alpine.store(\'FS\');
-      await store.loadProductVariations(' . $product_id . ');
+      await store.loadProductVariations('.$product_id.');
     
       $watch(\'attributes\',async(val)=>{
-        const result = await store.findVariation(' . $product_id . ', val);
+        const result = await store.findVariation('.$product_id.', val);
         console.log(result);
         if (result) {
             variationId = result.variation_id;
         }
 
-        store.calculatePrice(' . $product_id . ',val).then(r=>{
+        store.calculatePrice('.$product_id.',val).then(r=>{
             if(r.success){
                 price=r.data.price;
                 sale_price=r.data.sale_price;
