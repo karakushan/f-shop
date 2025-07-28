@@ -385,6 +385,36 @@ class FS_Taxonomy
                 ];
             }
 
+            // Фильтрация по цене
+            if (!empty($url['price_start']) || !empty($url['price_end'])) {
+                $price_query = [
+                    'key' => FS_Config::get_meta('price_sort'),
+                    'type' => 'DECIMAL',
+                ];
+
+                if (!empty($url['price_start'])) {
+                    $price_query['value'] = (float) $url['price_start'];
+                    $price_query['compare'] = '>=';
+                }
+
+                if (!empty($url['price_end'])) {
+                    if (!empty($url['price_start'])) {
+                        // Если указаны обе границы, создаем диапазон
+                        $price_query['value'] = [
+                            (float) $url['price_start'],
+                            (float) $url['price_end'],
+                        ];
+                        $price_query['compare'] = 'BETWEEN';
+                    } else {
+                        // Если указана только верхняя граница
+                        $price_query['value'] = (float) $url['price_end'];
+                        $price_query['compare'] = '<=';
+                    }
+                }
+
+                $meta_query['price_filter'] = $price_query;
+            }
+
             if (!empty($meta_query)) {
                 $query->set('meta_query', $meta_query);
             }
