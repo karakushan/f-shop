@@ -1325,50 +1325,50 @@ class FS_Users
         // If the user does not exist, send an error message
         if (!$user) {
             wp_send_json_error([
+                'msg' => __('Дані не пройшли перевірку', 'f-shop'),
                 'errors' => [
-                    'fs_email' => __('Unfortunately, a user with such data does not exist on the site', 'f-shop'),
-                    'fs_login' => __('Unfortunately, a user with such data does not exist on the site', 'f-shop'),
+                    'fs_login' => [
+                        __('На жаль, користувача з такими даними не існує на сайті', 'f-shop'),
+                    ],
                 ],
             ]);
-        } else {
-            // Authenticate the user
-            $auth = wp_authenticate($user->user_login, $validation_result['data']['fs_password']);
-
-            // Check for authentication errors
-            if (is_wp_error($auth)) {
-                // If there is an error, send the error message
-                $reset_password_page_url = fs_option('page_lostpassword')
-                    ? get_permalink(fs_option('page_lostpassword'))
-                    : wp_lostpassword_url(home_url());
-
-                wp_send_json_error([
-                    'errors' => [
-                        'password' => sprintf(
-                            /* translators: %s: Password reset URL */
-                            __('The login information you entered is incorrect. <a href="%s">Reset password</a>', 'f-shop'),
-                            esc_url($reset_password_page_url)
-                        ),
-                    ],
-                ]);
-            } else {
-                // If the authentication is successful, clear the authentication cookie
-                nocache_headers();
-                wp_clear_auth_cookie();
-
-                // Set the authentication cookie for the authenticated user
-                wp_set_auth_cookie($auth->ID);
-
-                // Send a success message with the redirect URL
-                wp_send_json_success([
-                    'msg' => sprintf(
-                        /* translators: %s: User display name */
-                        __('Welcome back, %s! You have successfully logged in.', 'f-shop'),
-                        esc_html($auth->display_name)
-                    ),
-                    'redirect' => $redirect,
-                ]);
-            }
         }
+        // Authenticate the user
+        $auth = wp_authenticate($user->user_login, $validation_result['data']['fs_password']);
+
+        // Check for authentication errors
+        if (is_wp_error($auth)) {
+            // If there is an error, send the error message
+            $reset_password_page_url = fs_option('page_lostpassword')
+                ? get_permalink(fs_option('page_lostpassword'))
+                : wp_lostpassword_url(home_url());
+
+            wp_send_json_error([
+                'msg' => __('Дані не пройшли перевірку', 'f-shop'),
+                'errors' => [
+                    'fs_password' => [
+                        __('Введені вами дані для входу невірні. Забули пароль? Скористайтесь формою відновлення паролю.', 'f-shop'),
+                    ],
+                ],
+            ]);
+        }
+
+        // If the authentication is successful, clear the authentication cookie
+        nocache_headers();
+        wp_clear_auth_cookie();
+
+        // Set the authentication cookie for the authenticated user
+        wp_set_auth_cookie($auth->ID);
+
+        // Send a success message with the redirect URL
+        wp_send_json_success([
+            'msg' => sprintf(
+                /* translators: %s: User display name */
+                __('Welcome back, %s! You have successfully logged in.', 'f-shop'),
+                esc_html($auth->display_name)
+            ),
+            'redirect' => $redirect,
+        ]);
     }
 
     /**
@@ -1423,7 +1423,10 @@ class FS_Users
 
         // If there are validation errors, send an error message
         if (!empty($validation_errors)) {
-            wp_send_json_error(['errors' => $validation_errors]);
+            wp_send_json_error([
+                'msg' => __('Дані не пройшли перевірку', 'f-shop'),
+                'errors' => $validation_errors,
+            ]);
         }
 
         // Adding a user to the database

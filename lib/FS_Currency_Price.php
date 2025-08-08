@@ -16,10 +16,10 @@ class FS_Currency_Price
     public function __construct()
     {
         // Save prices in all supported currencies when product is saved
-        add_action('save_post_' . FS_Config::get_data('post_type'), [$this, 'update_product_prices'], 20, 3);
+        add_action('save_post_'.FS_Config::get_data('post_type'), [$this, 'update_product_prices'], 20, 3);
 
         // Update all product prices when currency rates change
-        add_action('edited_' . FS_Config::get_data('currencies_taxonomy'), [$this, 'schedule_update_all_products'], 10, 2);
+        add_action('edited_'.FS_Config::get_data('currencies_taxonomy'), [$this, 'schedule_update_all_products'], 10, 2);
 
         add_action('fs_update_all_prices', [$this, 'update_all_products']);
 
@@ -32,7 +32,7 @@ class FS_Currency_Price
      * Schedule update of all products when currency rates change.
      *
      * @param int $term_id Term ID
-     * @param int $tt_id Term taxonomy ID
+     * @param int $tt_id   Term taxonomy ID
      */
     public function schedule_update_all_products($term_id, $tt_id)
     {
@@ -74,9 +74,9 @@ class FS_Currency_Price
     /**
      * Update product prices when the product is saved.
      *
-     * @param int $post_id Post ID
-     * @param \WP_Post $post Post object
-     * @param bool $update Whether this is an existing post being updated
+     * @param int      $post_id Post ID
+     * @param \WP_Post $post    Post object
+     * @param bool     $update  Whether this is an existing post being updated
      */
     public function update_product_prices($post_id, $post, $update)
     {
@@ -99,12 +99,7 @@ class FS_Currency_Price
             return;
         }
 
-        // Skip if product is variated
-        if (fs_is_variated($post_id)) {
-            return;
-        }
-
-        // Update prices for this product
+        // Update prices for this product (including variated products)
         $this->update_product_currency_prices($post_id);
     }
 
@@ -115,11 +110,21 @@ class FS_Currency_Price
      */
     public function update_product_currency_prices($product_id)
     {
-        // Skip if product is variated
+        // Check if product is variated
         if (fs_is_variated($product_id)) {
-            return;
+            $this->update_variated_product_price($product_id);
+        } else {
+            $this->update_simple_product_price($product_id);
         }
+    }
 
+    /**
+     * Update price_sort field for a simple (non-variated) product.
+     *
+     * @param int $product_id Product ID
+     */
+    private function update_simple_product_price($product_id)
+    {
         // Получаем цену товара (базовая или акционная)
         $base_price = apply_filters('fs_price_filter', floatval(get_post_meta($product_id, FS_Config::get_meta('price'), true)), $product_id);
         $action_price = apply_filters('fs_price_filter', floatval(get_post_meta($product_id, FS_Config::get_meta('action_price'), true)), $product_id);
@@ -134,6 +139,58 @@ class FS_Currency_Price
 
         // Сохраняем сконвертированную цену в поле price_sort
         update_post_meta($product_id, FS_Config::get_meta('price_sort'), $price_to_use);
+    }
+
+    /**
+     * Update price_sort field for a variated product based on minimum variation price.
+     *
+     * @param int $product_id Product ID
+     */
+    private function update_variated_product_price($product_id)
+    {
+        $product = new FS_Product();
+        $variations = $product->get_product_variations($product_id);
+
+        if (empty($variations)) {
+            return;
+        }
+
+        // Get base product price as fallback
+        $base_price = apply_filters('fs_price_filter', floatval(get_post_meta($product_id, FS_Config::get_meta('price'), true)), $product_id);
+        $action_price = apply_filters('fs_price_filter', floatval(get_post_meta($product_id, FS_Config::get_meta('action_price'), true)), $product_id);
+        $fallback_price = ($action_price > 0 && $action_price < $base_price) ? $action_price : $base_price;
+
+        $min_price = null;
+        $has_variation_with_price = false;
+
+        // Find the minimum price among all variations
+        foreach ($variations as $variation_id => $variation) {
+            $variation_price = 0;
+
+            // If variation has its own price, use it
+            if (!empty($variation['price'])) {
+                $variation_price = $product->get_variation_price($product_id, $variation_id);
+                $has_variation_with_price = true;
+            } else {
+                // If variation doesn't have price, use fallback price or 0
+                $variation_price = $fallback_price > 0 ? $fallback_price : 0;
+            }
+
+            // Update minimum price if this variation has a lower price
+            if ($variation_price > 0 && ($min_price === null || $variation_price < $min_price)) {
+                $min_price = $variation_price;
+            }
+        }
+
+        // If no variations have prices and fallback price is 0, set price_sort to 0
+        if (!$has_variation_with_price && $fallback_price <= 0) {
+            $min_price = 0;
+        }
+
+        // Save the minimum price to price_sort field
+        if ($min_price !== null) {
+            update_post_meta($product_id, FS_Config::get_meta('price_sort'), $min_price);
+        }
     }
 }
 

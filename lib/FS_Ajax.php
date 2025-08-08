@@ -171,8 +171,6 @@ class FS_Ajax
             // Получить вариацию товара по атрибутам
             add_action('wp_ajax_fs_get_variation_by_attributes', [$this, 'fs_get_variation_by_attributes_callback']);
             add_action('wp_ajax_nopriv_fs_get_variation_by_attributes', [$this, 'fs_get_variation_by_attributes_callback']);
-
-            
         }
     }
 
@@ -284,7 +282,7 @@ class FS_Ajax
     {
         $ip = $_SERVER['HTTP_CLIENT_IP'] ? $_SERVER['HTTP_CLIENT_IP']
             : ($_SERVER['HTTP_X_FORWARDED_FOR'] ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
-        $comment_id = (int)$_POST['comment_id'];
+        $comment_id = (int) $_POST['comment_id'];
         $like_user_ips = get_comment_meta($comment_id, 'fs_like_user');
 
         if (in_array($ip, $like_user_ips)) {
@@ -293,7 +291,7 @@ class FS_Ajax
             ]);
         }
 
-        $comment_like_count = (int)get_comment_meta($comment_id, 'fs_like_count', 1);
+        $comment_like_count = (int) get_comment_meta($comment_id, 'fs_like_count', 1);
         ++$comment_like_count;
         update_comment_meta($comment_id, 'fs_like_count', $comment_like_count);
 
@@ -310,7 +308,7 @@ class FS_Ajax
      */
     public function fs_add_custom_attribute_callback()
     {
-        $post_id = (int)$_POST['post_id'];
+        $post_id = (int) $_POST['post_id'];
         $attribute_name = trim($_POST['name']);
         $attribute_value = trim($_POST['value']);
         $attribute_tax = FS_Config::get_data('features_taxonomy');
@@ -341,11 +339,11 @@ class FS_Ajax
 
         if (is_wp_error($term_child)) {
             wp_send_json_error([
-                'message' => $attribute_value . ': ' . $term_child->get_error_message(),
+                'message' => $attribute_value.': '.$term_child->get_error_message(),
             ]);
         }
 
-        $value_term_id = (int)$term_child['term_id'];
+        $value_term_id = (int) $term_child['term_id'];
         $set_terms = wp_set_object_terms($post_id, [
             $term_parent['term_id'],
             $value_term_id,
@@ -511,7 +509,7 @@ class FS_Ajax
             sprintf(
                 'From: %s <%s>',
                 fs_option('name_sender', get_bloginfo('name')),
-                fs_option('email_sender', 'shop@' . $_SERVER['SERVER_NAME'])
+                fs_option('email_sender', 'shop@'.$_SERVER['SERVER_NAME'])
             ),
         ];
         if (wp_mail(fs_option('manager_email', get_option('admin_email')), $subject, $msg, $headers)) {
@@ -546,7 +544,7 @@ class FS_Ajax
                 foreach ($variations[$variation_id]['gallery'] as $image) {
                     $image = wp_get_attachment_image_url($image, 'full');
                     $title = get_the_title($product_id);
-                    $gallery .= '<li data-thumb="' . esc_url($image) . '"  data-src="' . esc_url($image) . '"><a href="' . esc_url($image) . '" data-lightbox="roadtrip" data-title="' . esc_attr($title) . '"><img src="' . esc_url($image) . '" alt="' . esc_attr($title) . '" itemprop="' . esc_url($image) . '" data-zoom-image="' . esc_url($image) . '"></a></li>';
+                    $gallery .= '<li data-thumb="'.esc_url($image).'"  data-src="'.esc_url($image).'"><a href="'.esc_url($image).'" data-lightbox="roadtrip" data-title="'.esc_attr($title).'"><img src="'.esc_url($image).'" alt="'.esc_attr($title).'" itemprop="'.esc_url($image).'" data-zoom-image="'.esc_url($image).'"></a></li>';
                 }
             }
         } else {
@@ -569,7 +567,7 @@ class FS_Ajax
     {
         ob_start();
         $index = intval($_POST['index']);
-        require_once FS_PLUGIN_PATH . 'templates/back-end/metabox/product-variations/single-attr.php';
+        require_once FS_PLUGIN_PATH.'templates/back-end/metabox/product-variations/single-attr.php';
         $template = ob_get_clean();
         wp_send_json_success(['template' => $template]);
     }
@@ -702,7 +700,7 @@ class FS_Ajax
      */
     public function fs_add_variant_callback()
     {
-        $template_path = FS_PLUGIN_PATH . 'templates/back-end/metabox/product-variations/add-variation.php';
+        $template_path = FS_PLUGIN_PATH.'templates/back-end/metabox/product-variations/add-variation.php';
         if (file_exists($template_path)) {
             ob_start();
             $index = intval($_POST['index']);
@@ -722,7 +720,7 @@ class FS_Ajax
     {
         $fs_config = new FS_Config();
         $output = array_map('sanitize_text_field', $_POST);
-        $remove = wp_remove_object_terms((int)$output['product_id'], (int)$output['term_id'], $fs_config->data['features_taxonomy']);
+        $remove = wp_remove_object_terms((int) $output['product_id'], (int) $output['term_id'], $fs_config->data['features_taxonomy']);
         if ($remove) {
             wp_send_json_success();
         }
@@ -737,10 +735,10 @@ class FS_Ajax
     {
         session_start();
         unset($_SESSION['fs_comparison_list']);
-        if (!empty($_SESSION['fs_comparison_list']) && is_array($_SESSION['fs_comparison_list']) && !in_array((int)$_POST['product_id'], $_SESSION['fs_comparison_list'])) {
-            $_SESSION['fs_comparison_list'] = array_unshift($_SESSION['fs_comparison_list'], (int)$_POST['product_id']);
+        if (!empty($_SESSION['fs_comparison_list']) && is_array($_SESSION['fs_comparison_list']) && !in_array((int) $_POST['product_id'], $_SESSION['fs_comparison_list'])) {
+            $_SESSION['fs_comparison_list'] = array_unshift($_SESSION['fs_comparison_list'], (int) $_POST['product_id']);
         } else {
-            $_SESSION['fs_comparison_list'][] = (int)$_POST['product_id'];
+            $_SESSION['fs_comparison_list'][] = (int) $_POST['product_id'];
         }
 
         // Устанавливаем Cookie до конца сессии:
@@ -802,14 +800,14 @@ class FS_Ajax
     public function replace_mail_variables($message, $mail_data)
     {
         return str_replace(array_map(function ($item) {
-            return '%' . $item . '%';
+            return '%'.$item.'%';
         }, array_keys($mail_data)), array_values($mail_data), $message);
     }
 
     public function extract_text_by_locale($text, $locale = '')
     {
         $locale = $locale ? $locale : get_locale();
-        preg_match('/<' . $locale . '>(.*?)<\/' . $locale . '>/', $text, $matches);
+        preg_match('/<'.$locale.'>(.*?)<\/'.$locale.'>/', $text, $matches);
 
         return isset($matches[1]) ? $matches[1] : $text;
     }
@@ -923,7 +921,7 @@ class FS_Ajax
 
         // Добавляем покупателя в базу
         try {
-            $wpdb->insert($wpdb->prefix . 'fs_customers', [
+            $wpdb->insert($wpdb->prefix.'fs_customers', [
                 'user_id' => $user_id,
                 'first_name' => $sanitize_field['fs_first_name'],
                 'last_name' => $sanitize_field['fs_last_name'],
@@ -1020,7 +1018,7 @@ class FS_Ajax
                 'payment_method' => $pay_method && isset($pay_method->name) ? $pay_method->name : '',
                 'cart_items' => fs_get_cart(),
                 'order_title' => $customer_mail_subject,
-                'order_edit_url' => admin_url('post.php?post=' . $order_id . '&action=edit'),
+                'order_edit_url' => admin_url('post.php?post='.$order_id.'&action=edit'),
 
                 // Site data
                 'site_name' => get_bloginfo('name'),
@@ -1049,7 +1047,7 @@ class FS_Ajax
 
                 // mail data
                 'admin_mail_title' => __('Congratulations! A new order has appeared on your site.', 'f-shop'),
-                'admin_mail_message' => sprintf(__('On your site "%s" user %s created a new order #%d. Please contact the customer for this data:', 'f-shop'), get_bloginfo('name'), $sanitize_field['fs_first_name'] . ' ' . $sanitize_field['fs_last_name'], $order_id),
+                'admin_mail_message' => sprintf(__('On your site "%s" user %s created a new order #%d. Please contact the customer for this data:', 'f-shop'), get_bloginfo('name'), $sanitize_field['fs_first_name'].' '.$sanitize_field['fs_last_name'], $order_id),
                 'customer_mail_title' => __('Thank you for your order', 'f-shop'),
                 'customer_mail_message' => sprintf(__('Your order #%d has been placed. We will contact you shortly.', 'f-shop'), $order_id),
             ];
@@ -1102,7 +1100,14 @@ class FS_Ajax
 
             $result = [
                 'msg' => sprintf(__('Order #%d successfully added', 'f-shop'), $order_id),
-                'products' => $fs_products,
+                'products' => array_map(function ($product) {
+                    return [
+                        'ID' => $product['ID'],
+                        'count' => $product['count'],
+                        'price' => fs_get_price($product['ID']),
+                        'title' => get_the_title($product['ID']),
+                    ];
+                }, $fs_products),
                 'order_id' => $order_id,
                 'sum' => $sum,
                 'redirect' => apply_filters('fs_after_checkout_redirect', $redirect_link, $order_id),
@@ -1119,8 +1124,8 @@ class FS_Ajax
     //  возвращает список постов определённого термина
     public function get_taxonomy_posts()
     {
-        $term_id = (int)$_POST['term_id'];
-        $post_id = (int)$_POST['post'];
+        $term_id = (int) $_POST['term_id'];
+        $post_id = (int) $_POST['post'];
         $body = '';
         $posts = get_posts([
             'post_type' => 'product',
@@ -1142,7 +1147,7 @@ class FS_Ajax
         if ($posts) {
             foreach ($posts as $key => $post) {
                 $body .= '
-  <option value="' . $post->ID . '">' . $post->post_title . '</option>
+  <option value="'.$post->ID.'">'.$post->post_title.'</option>
   ';
             }
         }
@@ -1193,7 +1198,7 @@ class FS_Ajax
 
         if (!empty($wishlist)) {
             // Получаем текущую корзину перед добавлением товаров
-            $cart = isset($_SESSION['cart']) ? (array)$_SESSION['cart'] : [];
+            $cart = isset($_SESSION['cart']) ? (array) $_SESSION['cart'] : [];
 
             foreach ($wishlist as $product_id) {
                 // Проверяем, существует ли товар
@@ -1335,10 +1340,10 @@ class FS_Ajax
             wp_send_json_error(['msg' => __('Category ID not found', 'f-shop')]);
         }
 
-        $attributes = fs_product_category_screen_attributes((int)$_POST['attribute_id'], (int)$_POST['category_id']);
+        $attributes = fs_product_category_screen_attributes((int) $_POST['attribute_id'], (int) $_POST['category_id']);
 
         wp_send_json_success([
-            'attributes' => (array)$attributes,
+            'attributes' => (array) $attributes,
         ]);
     }
 
@@ -1371,7 +1376,7 @@ class FS_Ajax
             if (count($intersect) == count($post_attributes)) {
                 $price = apply_filters('fs_price_filter', $variation['price'], $product_id);
                 $price = round(floatval($price), $use_pennies);
-                $sale_price = apply_filters('fs_price_filter', (float)$variation['sale_price'], $product_id);
+                $sale_price = apply_filters('fs_price_filter', (float) $variation['sale_price'], $product_id);
                 if ($sale_price > 0 && $sale_price < $price) {
                     $old_price = $price;
                     $price = $sale_price;
@@ -1390,7 +1395,7 @@ class FS_Ajax
 
     public function fs_get_max_min_price_callback()
     {
-        $term_id = (int)$_POST['term_id'];
+        $term_id = (int) $_POST['term_id'];
         wp_send_json_success([
             'max' => FS_Products::get_max_price_in_category($term_id),
             'min' => FS_Products::get_min_price_in_category($term_id),
@@ -1399,7 +1404,7 @@ class FS_Ajax
 
     public function fs_get_category_brands_callback()
     {
-        $term_id = (int)$_POST['term_id'];
+        $term_id = (int) $_POST['term_id'];
         $brands = FS_Products::get_category_brands($term_id);
 
         wp_send_json_success($brands);
@@ -1407,8 +1412,8 @@ class FS_Ajax
 
     public function fs_get_product_comments()
     {
-        $product_id = (int)$_POST['post_id'];
-        $per_page = (int)$_POST['per_page'] ?: 10; // per_page
+        $product_id = (int) $_POST['post_id'];
+        $per_page = (int) $_POST['per_page'] ?: 10; // per_page
 
         if (!$product_id) {
             wp_send_json_error(['msg' => __('Product ID not found', 'f-shop')]);
@@ -1424,8 +1429,8 @@ class FS_Ajax
 
         $comments = array_map(function ($comment) {
             $images = get_comment_meta($comment->comment_ID, 'fs_images', true) ?? [];
-            $likes = (int)get_comment_meta($comment->comment_ID, 'fs_likes', true);
-            $dislikes = (int)get_comment_meta($comment->comment_ID, 'fs_dislikes', true);
+            $likes = (int) get_comment_meta($comment->comment_ID, 'fs_likes', true);
+            $dislikes = (int) get_comment_meta($comment->comment_ID, 'fs_dislikes', true);
             $comment->author_avatar = get_avatar($comment->comment_author_email, 50);
             $comment->date = date_i18n('d F Y H:i', strtotime($comment->comment_date));
             $comment->content = apply_filters('comment_text', $comment->comment_content);
@@ -1452,7 +1457,7 @@ class FS_Ajax
      */
     public function fs_send_product_comment()
     {
-        $product_id = (int)$_POST['post_id'];
+        $product_id = (int) $_POST['post_id'];
         $wp_upload_dir = wp_upload_dir();
         $errors = [];
 
@@ -1488,7 +1493,7 @@ class FS_Ajax
             // Loop through each uploaded file
             foreach ($uploaded_files['tmp_name'] as $key => $tmp_name) {
                 $file = [
-                    'name' => uniqid() . '-' . basename($uploaded_files['name'][$key]),
+                    'name' => uniqid().'-'.basename($uploaded_files['name'][$key]),
                     'type' => $uploaded_files['type'][$key],
                     'tmp_name' => $tmp_name,
                     'error' => $uploaded_files['error'][$key],
@@ -1501,7 +1506,7 @@ class FS_Ajax
                 if ($movefile && !isset($movefile['error'])) {
                     // add to database
                     $attachment = [
-                        'guid' => $wp_upload_dir['url'] . '/' . basename($movefile['file']),
+                        'guid' => $wp_upload_dir['url'].'/'.basename($movefile['file']),
                         'post_mime_type' => $movefile['type'],
                         'post_title' => preg_replace('/\.[^.]+$/', '', basename($movefile['file'])),
                         'post_content' => '',
@@ -1515,7 +1520,7 @@ class FS_Ajax
                     } else {
                         $files[] = $attach_id;
                     }
-                    // Do something with the file path, like save it to the database
+                // Do something with the file path, like save it to the database
                 } else {
                     // Error handling for file upload
                     wp_send_json_error(['files' => $movefile['error']]);
@@ -1540,7 +1545,7 @@ class FS_Ajax
             'user_id' => get_current_user_id(),
             'comment_date' => current_time('mysql'),
             'comment_approved' => 0,
-            'comment_karma' => (int)$_POST['rating'],
+            'comment_karma' => (int) $_POST['rating'],
         ];
 
         $comment_id = wp_insert_comment($comment);
@@ -1573,7 +1578,7 @@ class FS_Ajax
      */
     public function fs_comment_like_dislike()
     {
-        $comment_id = (int)$_POST['comment_id'];
+        $comment_id = (int) $_POST['comment_id'];
 
         if (!$comment_id) {
             wp_send_json_error(['msg' => __('Comment ID not found', 'f-shop')]);
@@ -1581,11 +1586,11 @@ class FS_Ajax
 
         // Get user identifier (user ID for logged in users, IP address for guests)
         $user_id = get_current_user_id();
-        $user_identifier = $user_id ? 'user_' . $user_id : $_SERVER['REMOTE_ADDR'];
+        $user_identifier = $user_id ? 'user_'.$user_id : $_SERVER['REMOTE_ADDR'];
 
         // Get current like/dislike counts
-        $likes = (int)get_comment_meta($comment_id, 'fs_likes', true);
-        $dislikes = (int)get_comment_meta($comment_id, 'fs_dislikes', true);
+        $likes = (int) get_comment_meta($comment_id, 'fs_likes', true);
+        $dislikes = (int) get_comment_meta($comment_id, 'fs_dislikes', true);
 
         // Get lists of users who liked/disliked
         $liked_users = get_comment_meta($comment_id, 'fs_liked_users', true) ?: [];

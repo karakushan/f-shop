@@ -369,10 +369,31 @@ class FS {
       });
 
     return this.post("order_send", formData).then((r) => {
-      window.dispatchEvent(new CustomEvent("fs-checkout-finish-submit"));
+      document.dispatchEvent(
+        new CustomEvent("fs-checkout-finish", {
+          detail: {
+            order: order,
+            responseData: r.data,
+            type: formData.get("order_type") || "checkout",
+          },
+        })
+      );
+
       if (r.success) {
-        if (r.data.redirect.length) window.location.href = r.data.redirect;
+        document.dispatchEvent(
+          new CustomEvent("fs-checkout-success", {
+            detail: {
+              order: order,
+              responseData: r.data,
+              type: formData.get("order_type") || "checkout",
+            },
+          })
+        );
+        setTimeout(() => {
+          if (r.data.redirect.length) window.location.href = r.data.redirect;
+        }, 1000);
       }
+
       return r;
     });
   }
