@@ -3085,10 +3085,21 @@ function fs_load_template($template_path)
  */
 function fs_get_shipping_methods()
 {
-    return get_terms([
+    $all_methods = get_terms([
         'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
         'hide_empty' => false,
     ]);
+    
+    $active_methods = [];
+    foreach ($all_methods as $method) {
+        // Check if delivery method is inactive
+        $is_inactive = get_term_meta($method->term_id, '_fs_delivery_inactive', true);
+        if ($is_inactive !== 'yes') {
+            $active_methods[] = $method;
+        }
+    }
+    
+    return $active_methods;
 }
 
 function fs_get_payment_methods()
@@ -3138,10 +3149,19 @@ function fs_get_delivery_cost($delivery_method = 0)
 {
     $fs_config = new FS_Config();
 
-    $delivery_methods = get_terms([
+    $all_delivery_methods = get_terms([
         'taxonomy' => $fs_config->data['product_del_taxonomy'],
         'hide_empty' => false,
     ]);
+    
+    $delivery_methods = [];
+    foreach ($all_delivery_methods as $method) {
+        // Check if delivery method is inactive
+        $is_inactive = get_term_meta($method->term_id, '_fs_delivery_inactive', true);
+        if ($is_inactive !== 'yes') {
+            $delivery_methods[] = $method;
+        }
+    }
 
     $cost = 0.0;
 

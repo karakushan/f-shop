@@ -83,6 +83,11 @@ class FS_Taxonomy
         ];
 
         foreach ($taxonomies_with_meta as $taxonomy) {
+            // Skip own fields for delivery methods taxonomy (use Carbon Fields instead)
+            if ($taxonomy === FS_Config::get_data('product_del_taxonomy')) {
+                continue;
+            }
+            
             // Хуки для редагування термінів
             add_action($taxonomy.'_edit_form_fields', [$this, 'edit_taxonomy_fields'], 10, 2);
             add_action($taxonomy.'_add_form_fields', [$this, 'add_taxonomy_fields'], 10, 1);
@@ -800,6 +805,13 @@ class FS_Taxonomy
                 '_fs_add_packing_cost' => [
                     'name' => __('Consider the cost of packaging', 'f-shop'),
                     'type' => 'checkbox',
+                    'args' => [],
+                ],
+                '_fs_delivery_inactive' => [
+                    'name' => __('Unavailable for delivery', 'f-shop'),
+                    'help' => __('If you turn off, then the delivery method will not be visible to users, only in the admin panel.', 'f-shop'),
+                    'type' => 'checkbox',
+                    'args' => [],
                 ],
                 '_fs_term_order' => [
                     'name' => __('Sort order', 'f-shop'),
@@ -1189,7 +1201,8 @@ class FS_Taxonomy
 
         $meta_value = get_term_meta($term_id, $meta_key, $single);
 
-        if ($single == 1 && $meta_value == '' && $default != '') {
+        // For checkbox fields, we need to handle 0 values properly
+        if ($single == 1 && $meta_value === '' && $default !== null) {
             $meta_value = $default;
         }
 
@@ -1210,7 +1223,13 @@ class FS_Taxonomy
 
         if (isset($fields[$taxonomy]) && count($fields[$taxonomy])) {
             foreach ($fields[$taxonomy] as $name => $field) {
-                $field['args']['value'] = self::fs_get_term_meta($term->term_id, $name, 1, $field['args']['default'] ?? '');
+                // Handle checkbox fields differently for value setting
+                if ($field['type'] === 'checkbox') {
+                    $field['args']['value'] = self::fs_get_term_meta($term->term_id, $name, 1, 0);
+                } else {
+                    $field['args']['value'] = self::fs_get_term_meta($term->term_id, $name, 1, ($field['args']['default'] ?? '') ?? '');
+                }
+                
                 echo '<tr class="form-field taxonomy-thumbnail-wrap">';
                 echo '<th scope="row"><label for="taxonomy-thumbnail">'.esc_attr($field['name']).'</label></th>';
 
@@ -1219,10 +1238,9 @@ class FS_Taxonomy
                 $form->render_field(
                     $name,
                     $field['type'],
-                    array_merge($field['args'], [
+                    array_merge($field['args'] ?? [], [
                         'source' => 'term_meta',
                         'term_id' => $term->term_id,
-                        'default' => get_term_meta($term->term_id, $name, 1) ?: ($field['args']['default'] ?? ''),
                     ])
                 );
                 if (!empty($field['help'])) {
@@ -1250,9 +1268,9 @@ class FS_Taxonomy
                 $form->render_field(
                     $name,
                     $field['type'],
-                    array_merge($field['args'], [
+                    array_merge($field['args'] ?? [], [
                         'source' => 'term_meta',
-                        'default' => $field['args']['default'] ?? '',
+                        'default' => ($field['args']['default'] ?? '') ?? '',
                     ])
                 );
 
@@ -1277,9 +1295,18 @@ class FS_Taxonomy
         $fields = self::get_taxonomy_fields();
         $taxonomy = $term->taxonomy;
 
+        // Skip saving if Carbon Fields is handling this taxonomy
+        if (class_exists('Carbon_Fields\\Container\\Term_Meta_Container')) {
+            return;
+        }
+        
         if (isset($fields[$taxonomy])) {
             foreach ($fields[$taxonomy] as $name => $field) {
-                if (isset($_POST[$name])) {
+                // Handle checkbox fields differently
+                if ($field['type'] === 'checkbox') {
+                    $value = isset($_POST[$name]) && $_POST[$name] !== '' ? 1 : 0;
+                    update_term_meta($term_id, $name, $value);
+                } elseif (isset($_POST[$name])) {
                     $value = sanitize_text_field($_POST[$name]);
                     update_term_meta($term_id, $name, $value);
                 }

@@ -100,10 +100,17 @@ class FS_Delivery
 				'order'      => 'ASC',
 			]
 		);
+		
 		$methods          = [];
 		$shipping_methods = get_terms($args);
 
 		foreach ($shipping_methods as $shipping_method) {
+			// Check if delivery method is inactive
+			$is_inactive = get_term_meta($shipping_method->term_id, '_fs_delivery_inactive', true);
+			if ($is_inactive === 'yes') {
+				continue; // Skip inactive delivery methods
+			}
+			
 			$method        = $shipping_method;
 			$method->price = floatval(get_term_meta($shipping_method->term_id, '_fs_delivery_cost', 1));
 			$methods[]     = $method;

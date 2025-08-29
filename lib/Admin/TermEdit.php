@@ -46,6 +46,7 @@ class TermEdit
     {
         $fields = FS_Taxonomy::get_taxonomy_fields();
         foreach ($fields as $key => $term_fields) {
+            
             $container = Container::make('term_meta', __('Додаткові налаштування'));
             $container->set_datastore(new TermMetaDatastore());
             $container->where('term_taxonomy', '=', $key);
@@ -93,6 +94,15 @@ class TermEdit
 
         if (isset($field['subtype'])) {
             $f->set_attribute('type', $field['subtype']);
+        }
+
+        // Handle checkbox fields specifically
+        if ($field['type'] === 'checkbox') {
+            /* @var \Carbon_Fields\Field\Checkbox_Field $f */
+            // Set default value for checkbox if provided
+            if (isset($field['args']['default'])) {
+                $f->set_default_value($field['args']['default']);
+            }
         }
 
         if (in_array($field['type'], ['select', 'radio', 'multiselect']) && isset($field['options'])) {

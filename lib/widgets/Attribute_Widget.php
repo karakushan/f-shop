@@ -213,7 +213,6 @@ class Attribute_Widget extends \WP_Widget
      */
     public function widget($args, $instance)
     {
-        do_action('qm/debug', $instance);
         $title = fs_option('fs_multi_language_support') && isset($instance['title_'.get_locale()])
             ? $instance['title_'.get_locale()] : $instance['title'];
 

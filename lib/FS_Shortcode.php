@@ -253,13 +253,26 @@ class FS_Shortcode
                 'disableFields' => (array) get_term_meta($method->term_id, '_fs_disable_fields', 1),
                 'requiredFields' => (array) get_term_meta($method->term_id, '_fs_required_fields', 1),
             ];
-        }, get_terms([
-            'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
-            'hide_empty' => false,
-            'orderby' => 'meta_value_num',
-            'meta_key' => '_fs_term_order',
-            'order' => 'ASC',
-        ]));
+        }, (function() {
+            $all_methods = get_terms([
+                'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
+                'hide_empty' => false,
+                'orderby' => 'meta_value_num',
+                'meta_key' => '_fs_term_order',
+                'order' => 'ASC',
+            ]);
+            
+            $active_methods = [];
+            foreach ($all_methods as $method) {
+                // Check if delivery method is inactive
+                $is_inactive = get_term_meta($method->term_id, '_fs_delivery_inactive', true);
+                if ($is_inactive !== 'yes') {
+                    $active_methods[] = $method;
+                }
+            }
+            
+            return $active_methods;
+        })());
 
         $template = FS_Form::form_open([
             'name' => 'fs-order-send',
