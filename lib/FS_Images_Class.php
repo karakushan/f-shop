@@ -43,7 +43,13 @@ class FS_Images_Class
      * Displays the product gallery using specified arguments and settings.
      *
      * @param int   $product_id The ID of the product. Defaults to 0.
-     * @param array $args       Array of arguments to customize the gallery display. Includes options like gallery layout, navigation elements, thumbnail settings, and additional configurations.
+     * @param array $args       Array of arguments to customize the gallery display. Includes options like gallery layout, navigation elements, thumbnail settings, loop mode, and additional configurations.
+     *                          Available options:
+     *                          - loop: bool - Enable/disable loop mode for slider (default: false)
+     *                          - prevHtml: string - Custom previous button HTML
+     *                          - nextHtml: string - Custom next button HTML
+     *                          - thumbItem: int - Number of thumbnail items to show
+     *                          - height: int - Gallery height in pixels
      *
      * @return void
      */
@@ -68,6 +74,7 @@ class FS_Images_Class
             'use_post_thumbnail' => true,
             'image_alt' => get_the_title($product_id),
             'image_title' => get_the_title($product_id),
+            'loop' => false,
         ];
         $args = wp_parse_args($args, $default);
 
@@ -79,17 +86,15 @@ class FS_Images_Class
 					direction: "vertical",
 					slidesPerView: <?php echo esc_attr($args['thumbItem']); ?>,
 					spaceBetween: 10,
-
-					loop: false,
-
+					loop: <?php echo $args['loop'] ? 'true' : 'false'; ?>,
 					height: <?php echo esc_attr($args['height']); ?>,
 					watchSlidesProgress: true,
-
 				});
+				
 				// Сначала инициализируем основной слайдер
 				const mainGallerySwiper = new Swiper("#<?php echo $big_gallery_id; ?>", {
 					slidesPerView: 1,
-					loop: false,
+					loop: <?php echo $args['loop'] ? 'true' : 'false'; ?>,
 					thumbs: {
 						swiper: thumbsSwiper,
 					},
@@ -98,12 +103,32 @@ class FS_Images_Class
 					navigation: {
 						nextEl: ".fs-swiper-next",
 						prevEl: ".fs-swiper-prev",
+					},
+					on: {
+						init: function() {
+							// Убеждаемся, что кнопки навигации работают после инициализации
+							setTimeout(() => {
+								if (this.navigation && this.navigation.nextEl && this.navigation.prevEl) {
+									this.navigation.update();
+								}
+							}, 100);
+						},
+						afterInit: function() {
+							// Дополнительная проверка после полной инициализации
+							setTimeout(() => {
+								if (this.navigation) {
+									this.navigation.update();
+								}
+							}, 200);
+						}
 					}
 				});
 
+				// Обновляем навигацию после полной загрузки
 				setTimeout(() => {
-					mainGallerySwiper.slideTo(1);
-					mainGallerySwiper.slideTo(0);
+					if (mainGallerySwiper.navigation) {
+						mainGallerySwiper.navigation.update();
+					}
 				}, 500);
 			});
 		</script>

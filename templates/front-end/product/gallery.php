@@ -34,10 +34,10 @@
                     </div>
                 <?php endforeach; ?>
             </div>
-            <!-- navigation buttons -->
-            <?php echo $args['nextHtml'] ?: '' ?>
-            <?php echo $args['prevHtml'] ?: '' ?>
-            <?php echo $args['paginationHtml'] ?: '' ?>
         </div>
+        <!-- navigation buttons -->
+        <?php echo $args['nextHtml'] ?: '' ?>
+        <?php echo $args['prevHtml'] ?: '' ?>
+        <?php echo $args['paginationHtml'] ?: '' ?>
     </div>
 </div>

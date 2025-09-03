@@ -389,8 +389,8 @@ a.ui-button:active,
 }
 
 .fast-shop-settings .wp-person a:focus .gravatar,
-a:focus,
-a:focus .media-icon img {
+.fast-shop-settings a:focus,
+.fast-shop-settings a:focus .media-icon img {
   color: #124964;
   box-shadow: none;
 }

@@ -962,7 +962,7 @@ function fs_add_to_comparison($post_id = 0, $label = '', $attr = [])
 function fs_order_send($label = 'Отправить заказ', $attr = [])
 {
     $args = wp_parse_args($attr, [
-        'class' => 'fs-order-send btn btn-success btn-lg',
+        'class' => 'fs-order-send btn btn-success btn-lg transition-all duration-200 ease-in-out hover:bg-yellow-600 hover:shadow-lg active:scale-95 cursor-pointer',
         'preloader_src' => FS_PLUGIN_URL.'assets/img/form-preloader.svg',
         'preloader_width' => 32,
     ]);
