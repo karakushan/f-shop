@@ -851,9 +851,9 @@ class FS_Taxonomy
                     'args' => [],
                 ],
                 '_fs_currency_locale' => [
-                    'name' => __('Currency Language (locale)', 'f-shop'),
+                    'name' => __('Currency Country', 'f-shop'),
                     'type' => 'multiselect',
-                    'options' => self::get_currency_locales(),
+                    'options' => FS_Countries::getSelectOptions(),
                     'args' => [],
                 ],
             ],
@@ -993,15 +993,15 @@ class FS_Taxonomy
                     // Преобразуем код языка в полный локаль
                     $locale = self::get_locale_from_language_code($lang_code);
                     $name = isset($lang_data['name']) ? $lang_data['name'] : $lang_code;
-                    $locales[$lang_data['locale']] = $name;
+                    $locales[$locale] = $name;
                 }
 
-                return $locales;
+                return apply_filters('fs_currency_locales', $locales);
             }
         }
 
         // Fallback к ограниченному списку популярных локалей
-        return [
+        $default_locales = [
             'uk_UA' => 'Українська (Україна)',
             'ru_RU' => 'Русский (Россия)',
             'en_US' => 'English (United States)',
@@ -1012,6 +1012,8 @@ class FS_Taxonomy
             'es_ES' => 'Español (España)',
             'it_IT' => 'Italiano (Italia)',
         ];
+
+        return apply_filters('fs_currency_locales', $default_locales);
     }
 
     /**

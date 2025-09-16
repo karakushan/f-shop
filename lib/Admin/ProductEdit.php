@@ -217,6 +217,7 @@ class ProductEdit
                         'label' => __('SEO slug', 'f-shop'),
                         'type' => 'text',
                         'multilang' => true,
+                        'default_value' => '',
                         'hidden_default_language' => true,
                         'help' => __('Allows you to set multilingual url', 'f-shop'),
                     ],
@@ -251,7 +252,7 @@ class ProductEdit
         ];
 
         $tabs = array_filter($tabs, function ($tab) {
-            return isset($tab['on']) && $tab['on'] == true;
+            return isset($tab['on']) && $tab['on'] === true;
         });
 
         return apply_filters('fs_product_tabs_admin', $tabs);
@@ -275,6 +276,10 @@ class ProductEdit
 
         if (isset($field['required'])) {
             $f->set_required($field['required']);
+        }
+
+        if (isset($field['default_value'])) {
+            $f->set_default_value($field['default_value']);
         }
 
         if (in_array($field['type'], ['select', 'radio']) && isset($field['options'])) {

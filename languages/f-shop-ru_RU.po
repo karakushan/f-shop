@@ -148,6 +148,34 @@ msgstr "Добавить стоимость упаковки к заказу"
 msgid "Add product"
 msgstr "Добавить товар"
 
+#: lib/FS_Products.php:62
+msgid "Add new product"
+msgstr "Добавить новый товар"
+
+#: lib/FS_Products.php:64
+msgid "New product"
+msgstr "Новый товар"
+
+#: lib/FS_Products.php:65
+msgid "View product"
+msgstr "Просмотр товара"
+
+#: lib/FS_Products.php:66
+msgid "Search products"
+msgstr "Поиск товаров"
+
+#: lib/FS_Products.php:67
+msgid "No products found"
+msgstr "Товары не найдены"
+
+#: lib/FS_Products.php:68
+msgid "No products found in trash"
+msgstr "В корзине товары не найдены"
+
+#: lib/FS_Products.php:69
+msgid "Parent product:"
+msgstr "Родительский товар:"
+
 #: templates/back-end/metabox/product-variations/add-variation.php:41
 msgid "add property"
 msgstr "добавить свойство"

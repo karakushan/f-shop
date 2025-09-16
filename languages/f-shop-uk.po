@@ -149,6 +149,34 @@ msgstr "Додавати вартість упаковки до замовлен
 msgid "Add product"
 msgstr "Додати товар"
 
+#: lib/FS_Products.php:62
+msgid "Add new product"
+msgstr "Додати новий товар"
+
+#: lib/FS_Products.php:64
+msgid "New product"
+msgstr "Новий товар"
+
+#: lib/FS_Products.php:65
+msgid "View product"
+msgstr "Перегляд товару"
+
+#: lib/FS_Products.php:66
+msgid "Search products"
+msgstr "Пошук товарів"
+
+#: lib/FS_Products.php:67
+msgid "No products found"
+msgstr "Товари не знайдені"
+
+#: lib/FS_Products.php:68
+msgid "No products found in trash"
+msgstr "У кошику товари не знайдені"
+
+#: lib/FS_Products.php:69
+msgid "Parent product:"
+msgstr "Батьківський товар:"
+
 #: templates/back-end/metabox/product-variations/add-variation.php:41
 msgid "add property"
 msgstr "додати властивість"

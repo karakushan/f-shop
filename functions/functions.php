@@ -1323,35 +1323,25 @@ function fs_get_product_currency($product_id = 0)
 /**
  * Return the currency symbol.
  *
- * @param int $product_id Item ID (default ID is taken from global $post)
- *
  * @return string
  */
-function fs_currency($product_id = 0)
+function fs_currency()
 {
-    if (!$product_id) {
-        $currency = fs_option('currency_symbol', '$');
+    $currency_symbol = fs_option('currency_symbol', '$');
 
-        return apply_filters('fs_currency', $currency);
+    if (fs_option('multi_currency_on')) { 
+        global $wpdb;
+        $default_country = FS_Config::get_data('default_country');
+        $current_country = apply_filters('fs_current_country', $default_country);
+
+        $locale_currency_id = $wpdb->get_var($wpdb->prepare("SELECT term_id FROM $wpdb->termmeta WHERE meta_key LIKE %s AND meta_value = %s", $wpdb->esc_like('__fs_currency_locale').'%', $current_country));
+
+        if ($locale_currency_id) {
+            $currency_symbol = get_term_meta($locale_currency_id, '__fs_currency_display', 1);
+        }
     }
 
-    if (function_exists('wpm_get_language') && function_exists('wpm_get_lang_option')) {
-        $current_lang_code = wpm_get_language();
-        $languages = wpm_get_lang_option();
-        $locale = isset($languages[$current_lang_code]['locale']) ? $languages[$current_lang_code]['locale'] : get_locale();
-    } else {
-        $locale = get_locale();
-    }
-
-    $product_currency = fs_get_product_currency($product_id);
-
-    if (in_array($locale, $product_currency['locales'])) {
-        $currency = $product_currency['symbol'];
-    } else {
-        $currency = _fs_get_currency_symbol_for_locale($locale) ?: $product_currency['symbol'];
-    }
-
-    return apply_filters('fs_currency', $currency);
+    return apply_filters('fs_currency', $currency_symbol);
 }
 
 /**

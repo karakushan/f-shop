@@ -224,36 +224,29 @@ function fs_price_filter_callback($price, $post_id)
     $default_currency_id = fs_option('default_currency'); // id валюты установленной в настройках
     $product_currency = fs_get_product_currency($post_id);
     $product_currency_id = $product_currency['id']; // id валюты товара
-    if (function_exists('wpm_get_language') && function_exists('wpm_get_lang_option')) {
-        $current_lang_code = wpm_get_language();
-        $languages = wpm_get_lang_option();
-        $locale = isset($languages[$current_lang_code]['locale']) ? $languages[$current_lang_code]['locale'] : get_locale();
-    } else {
-        $locale = get_locale();
-    }
 
     // Если установлена галочка "конвертация стоимости в зависимости от языка"
     if (fs_option('price_conversion')) {
-        // если в валюте товара не указаны локали или текущая локаль не входит в список разрешённых
-        if (empty($product_currency['locales']) || !in_array($locale, $product_currency['locales'])) {
-            // получаем валюту текущей локали
-            $locale_currency_id = $wpdb->get_var($wpdb->prepare("SELECT term_id FROM $wpdb->termmeta WHERE meta_key LIKE %s AND meta_value = %s", $wpdb->esc_like('__fs_currency_locale').'%', $locale));
+        $default_country = FS_Config::get_data('default_country');
+        $current_country = apply_filters('fs_current_country', $default_country);
 
-            if (!$locale_currency_id) {
-                $locale_currency_id = $default_currency_id;
+        // получаем валюту текущей локали
+        $locale_currency_id = $wpdb->get_var($wpdb->prepare("SELECT term_id FROM $wpdb->termmeta WHERE meta_key LIKE %s AND meta_value = %s", $wpdb->esc_like('__fs_currency_locale').'%', $current_country));
+
+        if (!$locale_currency_id) {
+            $locale_currency_id = $default_currency_id;
+        }
+        $locale_currency_cost = get_term_meta($locale_currency_id, '__fs_currency_cost', true);
+
+        if ($product_currency_id != $locale_currency_id) {
+            $product_currency_cost = floatval(get_term_meta($product_currency_id, '__fs_currency_cost', true));
+            // конвертируем в базовую валюту
+            if ($product_currency_cost) {
+                $price = $price * $product_currency_cost;
             }
-            $locale_currency_cost = get_term_meta($locale_currency_id, '__fs_currency_cost', true);
-
-            if ($product_currency_id != $locale_currency_id) {
-                $product_currency_cost = floatval(get_term_meta($product_currency_id, '__fs_currency_cost', true));
-                // конвертируем в базовую валюту
-                if ($product_currency_cost) {
-                    $price = $price * $product_currency_cost;
-                }
-                // Конвертируем в валюту локали
-                if ($locale_currency_cost && $locale_currency_id != $default_currency_id) {
-                    $price = $price * $locale_currency_cost;
-                }
+            // Конвертируем в валюту локали
+            if ($locale_currency_cost && $locale_currency_id != $default_currency_id) {
+                $price = $price * $locale_currency_cost;
             }
         }
 
@@ -263,18 +256,6 @@ function fs_price_filter_callback($price, $post_id)
 
         return $price;
     }
-
-    //  Если установлена валюта у товара отличная от валюты сайта, то конвертируем её
-    // if ($product_currency_id && $product_currency_id != $default_currency_id) {
-    //     $product_currency_cost = floatval(get_term_meta($product_currency_id, '_fs_currency_cost', true));
-    //     if ($product_currency_cost) {
-    //         $price = $price * $product_currency_cost;
-
-    //         // округляем цену к ближайшему целому если установлена галочка "округлять цену"
-    //         $cents = fs_option('price_cents') == 1 ? 2 : 0;
-    //         $price = round($price, $cents);
-    //     }
-    // }
 
     return $price;
 }

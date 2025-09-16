@@ -10,9 +10,11 @@ class FS_Products
         if (fs_option('fs_localize_product_url')) {
             add_action('template_redirect', [$this, 'redirect_to_localize_url']);
             add_filter('post_type_link', [$this, 'product_link_localize'], 99, 4);
+            add_action('pre_get_posts', [$this, 'pre_get_posts_product'], 10, 1);
         }
 
         add_action('init', [$this, 'init'], 12);
+       
         /* We set the real price with the discount and currency */
         add_action('fs_after_save_meta_fields', [$this, 'set_real_product_price'], 10, 1);
         add_filter('use_block_editor_for_post_type', [$this, 'prefix_disable_gutenberg'], 10, 2);
@@ -57,14 +59,14 @@ class FS_Products
                     'name' => __('Products', 'f-shop'),
                     'singular_name' => __('Product', 'f-shop'),
                     'add_new' => __('Add product', 'f-shop'),
-                    'add_new_item' => '',
+                    'add_new_item' => __('Add new product', 'f-shop'),
                     'edit_item' => __('Edit product', 'f-shop'),
-                    'new_item' => '',
-                    'view_item' => '',
-                    'search_items' => '',
-                    'not_found' => '',
-                    'not_found_in_trash' => '',
-                    'parent_item_colon' => '',
+                    'new_item' => __('New product', 'f-shop'),
+                    'view_item' => __('View product', 'f-shop'),
+                    'search_items' => __('Search products', 'f-shop'),
+                    'not_found' => __('No products found', 'f-shop'),
+                    'not_found_in_trash' => __('No products found in trash', 'f-shop'),
+                    'parent_item_colon' => __('Parent product:', 'f-shop'),
                     'menu_name' => __('Products', 'f-shop'),
                 ],
                 'public' => true,
@@ -194,6 +196,7 @@ class FS_Products
             if ($post_name) {
                 $query->set('name', $post_name);
                 $query->set('product', $post_name);
+                $query->set('product_name', $post_name);
                 $query->set('post_type', $post_type);
                 $query->set('do_not_redirect', 1);
             }
