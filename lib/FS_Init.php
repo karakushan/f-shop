@@ -216,21 +216,6 @@ class FS_Init
                 'jquery',
                 FS_PLUGIN_PREFIX . 'jquery-validate',
             ], null, true);
-        } elseif ($screen->id == 'fs-mail-template') {
-            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/lib/codemirror.js', ['jquery'], null, true);
-            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-xml', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/mode/xml/xml.js', ['jquery'], null, true);
-            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-xml-fold', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/addon/fold/xml-fold.js', ['jquery'], null, true);
-            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-matchtags', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/addon/edit/matchtags.js', [
-                'jquery',
-                FS_PLUGIN_PREFIX . 'codemirror-xml-fold',
-            ], null, true);
-            wp_enqueue_style(FS_PLUGIN_PREFIX . 'codemirror', FS_PLUGIN_URL . 'assets/plugins/codemirror-5.61.0/lib/codemirror.css');
-            wp_enqueue_script(FS_PLUGIN_PREFIX . 'codemirror-init', FS_PLUGIN_URL . 'assets/js/codemirror.js', [
-                'jquery',
-                FS_PLUGIN_PREFIX . 'codemirror',
-                FS_PLUGIN_PREFIX . 'codemirror-xml',
-                FS_PLUGIN_PREFIX . 'codemirror-matchtags',
-            ], null, true);
         }
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'assets/plugins/tooltipster-master/dist/js/tooltipster.bundle.min.js', ['jquery'], null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'tooltipster', FS_PLUGIN_URL . 'wp-content/plugins/f-shop/assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css', ['jquery'], null, true);
@@ -318,6 +303,13 @@ class FS_Init
      */
     public function marketing_code_header()
     {
+        // Google Fonts with deferred loading for F-Shop
+        echo '<!-- F-Shop Google Fonts - Deferred Loading -->' . PHP_EOL;
+        echo '<link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">' . PHP_EOL;
+        echo '<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"></noscript>' . PHP_EOL;
+        echo '<link rel="preload" href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&display=swap" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">' . PHP_EOL;
+        echo '<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&display=swap"></noscript>' . PHP_EOL;
+        
         echo fs_option('fs_marketing_code_header');
     }
 
