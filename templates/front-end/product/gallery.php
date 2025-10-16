@@ -6,6 +6,7 @@
  */
 ?>
 <div class="fs-product-gallery">
+    <?php if ($args['thumbItem'] > 0) : ?>
     <div class="fs-product-gallery__thumbs">
         <div class="swiper" id="<?php echo $args['thumbs_gallery_id']; ?>">
             <div class="swiper-wrapper">
@@ -19,6 +20,7 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
     <div class="fs-product-gallery__main">
         <div class="swiper" id="<?php echo $args['big_gallery_id']; ?>">

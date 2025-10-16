@@ -81,7 +81,8 @@ class FS_Images_Class
         $gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']); ?>
 		<script>
 			document.addEventListener("DOMContentLoaded", function() {
-				// Затем инициализируем слайдер с миниатюрами
+				<?php if ($args['thumbItem'] > 0) : ?>
+				// Инициализируем слайдер с миниатюрами только если thumbItem > 0
 				const thumbsSwiper = new Swiper("#<?php echo $thumbs_gallery_id; ?>", {
 					direction: "vertical",
 					slidesPerView: <?php echo esc_attr($args['thumbItem']); ?>,
@@ -91,7 +92,7 @@ class FS_Images_Class
 					watchSlidesProgress: true,
 				});
 				
-				// Сначала инициализируем основной слайдер
+				// Инициализируем основной слайдер с миниатюрами
 				const mainGallerySwiper = new Swiper("#<?php echo $big_gallery_id; ?>", {
 					slidesPerView: 1,
 					loop: <?php echo $args['loop'] ? 'true' : 'false'; ?>,
@@ -123,6 +124,37 @@ class FS_Images_Class
 						}
 					}
 				});
+				<?php else : ?>
+				// Инициализируем основной слайдер без миниатюр
+				const mainGallerySwiper = new Swiper("#<?php echo $big_gallery_id; ?>", {
+					slidesPerView: 1,
+					loop: <?php echo $args['loop'] ? 'true' : 'false'; ?>,
+					grabCursor: true,
+					height: <?php echo esc_attr($args['height']); ?>,
+					navigation: {
+						nextEl: ".fs-swiper-next",
+						prevEl: ".fs-swiper-prev",
+					},
+					on: {
+						init: function() {
+							// Убеждаемся, что кнопки навигации работают после инициализации
+							setTimeout(() => {
+								if (this.navigation && this.navigation.nextEl && this.navigation.prevEl) {
+									this.navigation.update();
+								}
+							}, 100);
+						},
+						afterInit: function() {
+							// Дополнительная проверка после полной инициализации
+							setTimeout(() => {
+								if (this.navigation) {
+									this.navigation.update();
+								}
+							}, 200);
+						}
+					}
+				});
+				<?php endif; ?>
 
 				// Обновляем навигацию после полной загрузки
 				setTimeout(() => {

@@ -118,7 +118,7 @@
             <tr>
                 <th><?php _e( 'Last name', 'f-shop' ) ?></th>
                 <td>
-                    <input type="text" name="order[_order_type]"
+                    <input type="text" name="user[last_name]"
                            value="<?php if ( isset( $order->customer->last_name ) ) {
 						       echo esc_attr( $order->customer->last_name );
 					       } ?>">

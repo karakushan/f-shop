@@ -1414,17 +1414,29 @@ class FS_Ajax
     {
         $product_id = (int) $_POST['post_id'];
         $per_page = (int) $_POST['per_page'] ?: 10; // per_page
+        $page = (int) $_POST['page'] ?: 1; // current page
 
         if (!$product_id) {
             wp_send_json_error(['msg' => __('Product ID not found', 'f-shop')]);
         }
 
+        // Calculate offset for pagination
+        $offset = ($page - 1) * $per_page;
+
         $comments = get_comments([
             'post_id' => $product_id,
             'status' => 'approve',
             'number' => $per_page,
+            'offset' => $offset,
             'orderby' => 'comment_date_gmt',
             'order' => 'DESC',
+        ]);
+
+        // Get total comments count to check if there are more
+        $total_comments = get_comments([
+            'post_id' => $product_id,
+            'status' => 'approve',
+            'count' => true,
         ]);
 
         $comments = array_map(function ($comment) {
@@ -1433,17 +1445,26 @@ class FS_Ajax
             $dislikes = (int) get_comment_meta($comment->comment_ID, 'fs_dislikes', true);
             $comment->author_avatar = get_avatar($comment->comment_author_email, 50);
             $comment->date = date_i18n('d F Y H:i', strtotime($comment->comment_date));
-            $comment->content = apply_filters('comment_text', $comment->comment_content);
-            $comment->images = array_map(function ($id) {
-                return wp_get_attachment_image_url($id, 'full');
-            }, $images);
+            $comment->content = apply_filters('comment_text', $comment->comment_content, $comment->comment_ID);
+            
+            // Ensure images is an array and filter out empty values
+            if (!is_array($images)) {
+                $images = [];
+            }
+            $comment->images = array_filter(array_map(function ($id) {
+                $url = wp_get_attachment_image_url($id, 'full');
+                return $url ? $url : null;
+            }, $images));
             $comment->likes = $likes ?: 0;
             $comment->dislikes = $dislikes ?: 0;
 
             return $comment;
         }, $comments);
 
-        wp_send_json_success($comments);
+        wp_send_json_success([
+            'data' => $comments,
+            'has_more' => ($offset + count($comments)) < $total_comments
+        ]);
     }
 
     /**

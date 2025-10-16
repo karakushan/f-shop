@@ -1318,6 +1318,14 @@ class FS_Users
         }
 
         // Validate the data
+        // Handle username field conversion for login
+        if (isset($_POST['username']) && !isset($_POST['fs_login'])) {
+            $_POST['fs_login'] = $_POST['username'];
+        }
+        if (isset($_POST['password']) && !isset($_POST['fs_password'])) {
+            $_POST['fs_password'] = $_POST['password'];
+        }
+        
         $validation_result = $this->validate_user_data($_POST, ['fs_login', 'fs_password']);
 
         // If there are errors, return them
@@ -1335,6 +1343,11 @@ class FS_Users
             $user = get_user_by('login', $validation_result['data']['fs_login']);
         }
 
+        // Debug: log the search attempt
+        error_log('FS Login attempt: ' . $validation_result['data']['fs_login']);
+        error_log('FS Is email: ' . (is_email($validation_result['data']['fs_login']) ? 'yes' : 'no'));
+        error_log('FS User found: ' . ($user ? 'yes' : 'no'));
+        
         // If the user does not exist, send an error message
         if (!$user) {
             wp_send_json_error([

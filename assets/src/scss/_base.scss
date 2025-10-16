@@ -33,3 +33,12 @@
   display: -ms-inline-flexbox;
   display: inline-flex;
 }
+.cf-container__tabs {
+  width: 236px;
+  max-width: 100%;
+}
+
+
+.cf-container__tabs-list {
+  flex-direction: column;
+}

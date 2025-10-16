@@ -618,9 +618,10 @@ class FS {
     return this.post("fs_get_category_brands", { term_id: term_id });
   }
 
-  getProductComments(post_id, per_page) {
+  getProductComments(post_id, page = 1, per_page = 1) {
     return this.post("fs_get_product_comments", {
       post_id: post_id,
+      page: page,
       per_page: per_page,
     });
   }
