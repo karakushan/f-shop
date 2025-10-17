@@ -326,7 +326,7 @@ class FS_Taxonomy
             FS_Taxonomy::set_order_query($meta_query, $order_by, $url['order_type']);
 
             // Фильтрация по наличию
-            if (!empty($url['availability'])) {
+            if (isset($url['availability']) && $url['availability'] != '') {
                 $meta_query['availability'] = [
                     'key' => FS_Config::get_meta('remaining_amount'),
                     'compare' => $url['availability'] == '1' ? '!=' : '==',
