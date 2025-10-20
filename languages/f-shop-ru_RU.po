@@ -1623,7 +1623,7 @@ msgstr "Маркетинг"
 
 #: templates/back-end/fields/image.php:262
 msgid "Maximum file size: %s MB"
-msgstr ""
+msgstr "Максимальный размер файла: %s МБ"
 
 #: lib/FS_Users.php:962
 msgid "Maximum length is %d characters"
@@ -1631,7 +1631,7 @@ msgstr ""
 
 #: templates/back-end/fields/image.php:243
 msgid "Media Library"
-msgstr ""
+msgstr "Медиабиблиотека"
 
 #: templates/front-end/dashboard/personal_info.php:8
 #: templates/front-end/dashboard/personal_info.php:65
@@ -2344,7 +2344,7 @@ msgstr "Похожие товары"
 
 #: templates/back-end/fields/image.php:254
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: templates/back-end/metabox/related.php:22
 msgid "remove"
@@ -3070,11 +3070,11 @@ msgstr "Дата обновления"
 
 #: templates/back-end/fields/image.php:225
 msgid "Upload"
-msgstr ""
+msgstr "Загрузить"
 
 #: templates/back-end/fields/image.php:188
 msgid "Uploading..."
-msgstr ""
+msgstr "Загрузка..."
 
 #: lib/Admin/ProductEdit.php:162
 msgid "Upsell products"

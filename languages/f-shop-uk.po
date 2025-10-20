@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: Українська\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"PO-Revision-Date: 2025-04-11 08:09+0000\n"
+"PO-Revision-Date: 2025-10-17 08:06+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -1626,7 +1626,7 @@ msgstr "Маркетинг"
 
 #: templates/back-end/fields/image.php:262
 msgid "Maximum file size: %s MB"
-msgstr ""
+msgstr "Максимальний розмір файлу: %s МБ"
 
 #: lib/FS_Users.php:962
 msgid "Maximum length is %d characters"
@@ -1634,7 +1634,7 @@ msgstr ""
 
 #: templates/back-end/fields/image.php:243
 msgid "Media Library"
-msgstr ""
+msgstr "Медіатека"
 
 #: templates/front-end/dashboard/personal_info.php:8
 #: templates/front-end/dashboard/personal_info.php:65
@@ -1809,7 +1809,7 @@ msgstr "Не відображати"
 
 #: lib/widgets/Availability_Widget.php:93
 msgid "On order"
-msgstr "Під заказ"
+msgstr "Під замовлення"
 
 #: lib/FS_Ajax.php:961
 #, php-format
@@ -2347,7 +2347,7 @@ msgstr "Схожі товари"
 
 #: templates/back-end/fields/image.php:254
 msgid "Remove"
-msgstr ""
+msgstr "Видалити"
 
 #: templates/back-end/metabox/related.php:22
 msgid "remove"
@@ -3072,11 +3072,11 @@ msgstr "Дата оновлення"
 
 #: templates/back-end/fields/image.php:225
 msgid "Upload"
-msgstr ""
+msgstr "Завантажити"
 
 #: templates/back-end/fields/image.php:188
 msgid "Uploading..."
-msgstr ""
+msgstr "Завантаження..."
 
 #: lib/Admin/ProductEdit.php:162
 msgid "Upsell products"

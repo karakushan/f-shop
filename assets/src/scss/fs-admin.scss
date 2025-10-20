@@ -1891,8 +1891,9 @@ td.fs_menu_order.column-fs_menu_order {
 
   &__controls {
     display: flex;
-    gap: 10px;
+    gap: 20px;
     flex-wrap: wrap;
+    margin-bottom: 15px;
   }
 
   &__button {
@@ -2050,11 +2051,12 @@ td.fs_menu_order.column-fs_menu_order {
 
     &__controls {
       flex-direction: column;
+      gap: 15px;
     }
 
     &__button {
-      width: 100%;
       justify-content: center;
+      width: 100%;
     }
   }
 }

@@ -738,14 +738,14 @@ class FS_Users
                 'title' => __('Choose shipping method', 'f-shop'),
                 'description' => 'Preferred shipping method for order delivery',
                 'value' => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_delivery_methods', 1) : '',
-                'values' => function() {
+                'values' => function () {
                     $all_methods = get_terms([
                         'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
                         'fields' => 'id=>name',
                         'hide_empty' => 0,
                         'parent' => 0,
                     ]);
-                    
+
                     $active_methods = [];
                     foreach ($all_methods as $id => $name) {
                         // Check if delivery method is inactive
@@ -754,7 +754,7 @@ class FS_Users
                             $active_methods[$id] = $name;
                         }
                     }
-                    
+
                     return $active_methods;
                 },
                 'required' => false,
@@ -903,7 +903,7 @@ class FS_Users
             wp_send_json_error(['msg' => __('Failed verification of nonce form', 'f-shop')]);
         }
 
-        $user_email = sanitize_email($_POST['fs_email']);
+        $user_email = sanitize_email($_POST['user_login']);
 
         if (!email_exists($user_email)) {
             wp_send_json_error(['msg' => __('This user does not exist on the site', 'f-shop')]);
