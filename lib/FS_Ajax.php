@@ -1323,19 +1323,31 @@ class FS_Ajax
 
     public function fs_get_category_attributes()
     {
-        if (!FS_Config::verify_nonce()) {
+        // Verify nonce - allow both POST and GET methods
+        $nonce_field = 'fs_secret';
+        $nonce_verified = false;
+        if (isset($_POST[$nonce_field])) {
+            $nonce_verified = FS_Config::verify_nonce('post');
+        } elseif (isset($_GET[$nonce_field])) {
+            $nonce_verified = FS_Config::verify_nonce('get');
+        }
+        
+        if (!$nonce_verified) {
             wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
         }
 
-        if (empty($_POST['attribute_id'])) {
+        if (empty($_POST['attribute_id']) && empty($_GET['attribute_id'])) {
             wp_send_json_error(['msg' => __('Attribute ID not found', 'f-shop')]);
         }
 
-        if (empty($_POST['category_id'])) {
+        if (empty($_POST['category_id']) && empty($_GET['category_id'])) {
             wp_send_json_error(['msg' => __('Category ID not found', 'f-shop')]);
         }
 
-        $attributes = fs_product_category_screen_attributes((int)$_POST['attribute_id'], (int)$_POST['category_id']);
+        $attribute_id = !empty($_POST['attribute_id']) ? (int)$_POST['attribute_id'] : (int)$_GET['attribute_id'];
+        $category_id = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : (int)$_GET['category_id'];
+
+        $attributes = fs_product_category_screen_attributes($attribute_id, $category_id);
 
         wp_send_json_success([
             'attributes' => (array)$attributes,
