@@ -57,6 +57,10 @@ class FS_Users
         add_action('wp_ajax_fs_change_password', [$this, 'change_password']);
         add_action('wp_ajax_nopriv_fs_change_password', [$this, 'change_password']);
 
+        // Reset password (set new password)
+        add_action('wp_ajax_fs_resetpass', [$this, 'reset_password_ajax']);
+        add_action('wp_ajax_nopriv_fs_resetpass', [$this, 'reset_password_ajax']);
+
         // Protection of personal account from unauthorized users
         add_action('template_redirect', [$this, 'cabinet_protect']);
 
@@ -74,6 +78,147 @@ class FS_Users
 
         // User registration form
         add_action('fs_register_form', [$this, 'register_form']);
+
+        // Filter password reset email to customize subject, message and format
+        add_filter('retrieve_password_title', [$this, 'custom_password_reset_title'], 10, 3);
+        add_filter('retrieve_password_notification_email', [$this, 'custom_password_reset_email'], 10, 4);
+    }
+
+    /**
+     * Customize password reset email subject.
+     *
+     * @param string  $title      Email subject.
+     * @param string  $user_login The username for the user.
+     * @param WP_User $user_data  WP_User object.
+     *
+     * @return string Modified subject.
+     */
+    public function custom_password_reset_title($title, $user_login, $user_data)
+    {
+        $site_name = get_bloginfo('name');
+        return sprintf(__('Скинути пароль', 'f-shop'), $site_name);
+    }
+
+    /**
+     * Customize password reset email with HTML format and button.
+     *
+     * @param array   $defaults  Default email arguments.
+     * @param string  $key       The activation key.
+     * @param string  $user_login The username for the user.
+     * @param WP_User $user_data  WP_User object.
+     *
+     * @return array Modified email arguments.
+     */
+    public function custom_password_reset_email($defaults, $key, $user_login, $user_data)
+    {
+        // Get lost password page URL
+        $lostpassword_page_id = fs_option('page_lostpassword');
+        if ($lostpassword_page_id) {
+            $reset_url = get_permalink($lostpassword_page_id);
+        } else {
+            $reset_url = site_url('/lostpassword/');
+        }
+
+        // Ensure URL is absolute and doesn't have duplicates
+        $reset_url = esc_url_raw($reset_url);
+        
+        // Remove any existing query parameters from base URL
+        $reset_url = strtok($reset_url, '?');
+        
+        // Build custom reset URL with key and login parameters
+        $reset_url = add_query_arg([
+            'key' => $key,
+            'login' => rawurlencode($user_login),
+        ], $reset_url);
+
+        $site_name = get_bloginfo('name');
+        $site_url = home_url();
+        $requester_ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+
+        // Create HTML email with button
+        $html_message = '
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>' . esc_html__('Скинути пароль', 'f-shop') . '</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f4f4f4;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <tr>
+                        <td style="padding: 40px 40px 20px;">
+                            <h1 style="margin: 0 0 20px; color: #333333; font-size: 24px; font-weight: bold;">
+                                ' . esc_html__('Скинути пароль', 'f-shop') . '
+                            </h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px 20px;">
+                            <p style="margin: 0 0 15px; color: #666666; font-size: 16px; line-height: 1.5;">
+                                ' . esc_html__('Хтось захотів скинути пароль наступного облікового запису:', 'f-shop') . '
+                            </p>
+                            <p style="margin: 0 0 15px; color: #666666; font-size: 16px; line-height: 1.5;">
+                                <strong>' . esc_html__('Назва сайту:', 'f-shop') . '</strong> ' . esc_html($site_name) . '<br>
+                                <strong>' . esc_html__('Ім\'я користувача:', 'f-shop') . '</strong> ' . esc_html($user_login) . '
+                            </p>
+                            <p style="margin: 0 0 30px; color: #666666; font-size: 16px; line-height: 1.5;">
+                                ' . esc_html__('Якщо сталася помилка, просто проігноруйте цей лист, і нічого не станеться.', 'f-shop') . '
+                            </p>
+                            <p style="margin: 0 0 20px; color: #666666; font-size: 16px; line-height: 1.5;">
+                                ' . esc_html__('Щоб скинути свій пароль, натисніть кнопку нижче:', 'f-shop') . '
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px 30px; text-align: center;">
+                            <a href="' . esc_url($reset_url) . '" style="display: inline-block; padding: 14px 40px; background-color: #75bc00; color: #ffffff; text-decoration: none; border-radius: 35px; font-size: 16px; font-weight: bold; text-transform: uppercase;">
+                                ' . esc_html__('Скинути пароль', 'f-shop') . '
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 40px 30px;">
+                            <p style="margin: 0 0 10px; color: #999999; font-size: 14px; line-height: 1.5;">
+                                ' . esc_html__('Або скопіюйте та вставте цю адресу у ваш браузер:', 'f-shop') . '
+                            </p>
+                            <p style="margin: 0; word-break: break-all;">
+                                <a href="' . esc_url($reset_url) . '" style="color: #75bc00; text-decoration: underline; font-size: 14px;">' . esc_html($reset_url) . '</a>
+                            </p>
+                        </td>
+                    </tr>';
+
+        if ($requester_ip) {
+            $html_message .= '
+                    <tr>
+                        <td style="padding: 0 40px 40px;">
+                            <p style="margin: 0; color: #999999; font-size: 12px; line-height: 1.5;">
+                                ' . sprintf(esc_html__('Запит на скидання паролю надійшов з ІР адреси: %s.', 'f-shop'), esc_html($requester_ip)) . '
+                            </p>
+                        </td>
+                    </tr>';
+        }
+
+        $html_message .= '
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>';
+
+        // Set HTML content type
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+
+        return [
+            'to' => $defaults['to'],
+            'subject' => sprintf(__('Скинути пароль', 'f-shop'), $site_name),
+            'message' => $html_message,
+            'headers' => $headers,
+        ];
     }
 
     /**
@@ -882,7 +1027,7 @@ class FS_Users
     }
 
     /**
-     * Password reset.
+     * Password reset - sends reset link to email.
      */
     public static function lost_password_ajax()
     {
@@ -902,25 +1047,116 @@ class FS_Users
 
         $user = get_user_by('email', $user_email);
 
-        $new_password = wp_generate_password();
+        if (!$user) {
+            wp_send_json_error(['msg' => __('This user does not exist on the site', 'f-shop')]);
+        }
 
-        wp_set_password($new_password, $user->ID);
+        // Use WordPress standard function to retrieve password reset key
+        $result = retrieve_password($user->user_login);
 
-        $replace_keys = [
-            'site_url' => get_bloginfo('url'),
-            'site_name' => get_bloginfo('name'),
-            'admin_email' => get_bloginfo('admin_email'),
-            'password' => $new_password,
-            'first_name' => $user->first_name,
-        ];
+        if (is_wp_error($result)) {
+            $error_code = $result->get_error_code();
+            $error_message = $result->get_error_message();
+            
+            // Get more detailed error information if available
+            global $phpmailer;
+            $detailed_error = '';
+            
+            if (isset($phpmailer) && is_object($phpmailer) && !empty($phpmailer->ErrorInfo)) {
+                $detailed_error = $phpmailer->ErrorInfo;
+            }
+            
+            // Log error for debugging
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('Password reset email error: ' . $error_message);
+                if ($detailed_error) {
+                    error_log('PHPMailer error: ' . $detailed_error);
+                }
+            }
+            
+            // Check if Mailtrap is configured
+            $mailtrap_enabled = fs_option('fs_enable_mailtrap');
+            $mailtrap_username = fs_option('fs_mailtrap_username');
+            $mailtrap_password = fs_option('fs_mailtrap_password');
+            
+            if ($error_code === 'retrieve_password_email_failure') {
+                $msg = __('Failed to send password reset email.', 'f-shop');
+                
+                if ($mailtrap_enabled && (empty($mailtrap_username) || empty($mailtrap_password))) {
+                    $msg .= ' ' . __('Mailtrap is enabled but credentials are not configured.', 'f-shop');
+                } elseif (!$mailtrap_enabled) {
+                    $msg .= ' ' . __('Please check your email configuration.', 'f-shop');
+                }
+                
+                if ($detailed_error && defined('WP_DEBUG') && WP_DEBUG) {
+                    $msg .= ' ' . __('Error details:', 'f-shop') . ' ' . esc_html($detailed_error);
+                }
+                
+                wp_send_json_error(['msg' => $msg]);
+            }
+            
+            wp_send_json_error(['msg' => $error_message]);
+        }
 
-        $notification = new FS_Notification();
-        $notification->set_recipients([$user_email]);
-        $notification->set_subject(__('Password reset on the site', 'f-shop'));
-        $notification->set_message(__('A password reset request was received on the site "%site_name%". Your new password is: %password%. If this was not you, please ignore this email.', 'f-shop'), $replace_keys);
-        $notification->send($user_email, 'user-lost-password', $replace_keys);
+        wp_send_json_success(['msg' => __('Password reset link has been sent to your email address.', 'f-shop')]);
+    }
 
-        wp_send_json_success(['msg' => __('Your password has been successfully reset. Password sent to your e-mail.', 'f-shop')]);
+    /**
+     * Reset password - sets new password after validation.
+     */
+    public function reset_password_ajax()
+    {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(['msg' => __('Failed verification of nonce form', 'f-shop')]);
+        }
+
+        $rp_key = isset($_POST['rp_key']) ? sanitize_text_field($_POST['rp_key']) : '';
+        $rp_login = isset($_POST['rp_login']) ? sanitize_text_field($_POST['rp_login']) : '';
+        $pass1 = isset($_POST['pass1']) ? $_POST['pass1'] : '';
+        $pass2 = isset($_POST['pass2']) ? $_POST['pass2'] : '';
+
+        if (empty($rp_key) || empty($rp_login)) {
+            wp_send_json_error(['msg' => __('Invalid reset key.', 'f-shop')]);
+        }
+
+        // Validate reset key
+        $user = check_password_reset_key($rp_key, $rp_login);
+
+        if (is_wp_error($user)) {
+            $error_code = $user->get_error_code();
+            if ($error_code === 'expired_key') {
+                wp_send_json_error(['msg' => __('Password reset link has expired. Please request a new one.', 'f-shop')]);
+            } else {
+                wp_send_json_error(['msg' => __('Invalid password reset link.', 'f-shop')]);
+            }
+        }
+
+        // Validate passwords
+        if (empty($pass1)) {
+            wp_send_json_error(['msg' => __('Password cannot be empty.', 'f-shop')]);
+        }
+
+        if (trim($pass1) !== $pass1) {
+            wp_send_json_error(['msg' => __('Password cannot be a space or all spaces.', 'f-shop')]);
+        }
+
+        if ($pass1 !== $pass2) {
+            wp_send_json_error(['msg' => __('Passwords do not match.', 'f-shop')]);
+        }
+
+        // Validate password strength
+        $password_validation = $this->password_validation($pass1);
+        if ($password_validation['status'] === false) {
+            wp_send_json_error(['msg' => $password_validation['msg']]);
+        }
+
+        // Reset password
+        reset_password($user, $pass1);
+
+        wp_send_json_success([
+            'msg' => __('Your password has been successfully reset.', 'f-shop'),
+            'redirect' => get_permalink(fs_option('page_auth')),
+        ]);
     }
 
     /**

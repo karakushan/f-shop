@@ -290,7 +290,7 @@ msgstr "Виникла помилка з видаленням товарів і�
 
 #: templates/back-end/fields/image.php:136
 msgid "An error occurred while uploading the file"
-msgstr ""
+msgstr "Сталася помилка під час завантаження файлу"
 
 #: lib/FS_Ajax.php:550 lib/FS_Ajax.php:558
 msgid ""
@@ -743,7 +743,7 @@ msgstr "Символ або знак валюти ($ за замовчуванн
 msgid ""
 "Current maximum file size: %s MB. Contact your server administrator to "
 "increase limits."
-msgstr ""
+msgstr "Поточний максимальний розмір файлу: %s МБ. Зверніться до адміністратора сервера для збільшення лімітів."
 
 #: lib/FS_Customers_List.php:13 functions/filters.php:105
 msgid "Customer"
@@ -1116,7 +1116,7 @@ msgstr "Помилка збереження даних"
 
 #: templates/back-end/fields/image.php:122
 msgid "Error uploading file"
-msgstr ""
+msgstr "Помилка під час завантаження файлу"
 
 #: lib/FS_Ajax.php:1237 lib/FS_Ajax.php:1246 lib/FS_Init.php:153
 msgid "Error!"
@@ -1176,15 +1176,15 @@ msgstr "Поля, які потрібно вимкнути при виборі �
 
 #: templates/back-end/fields/image.php:132
 msgid "File exceeds maximum upload size limit"
-msgstr ""
+msgstr "Файл перевищує максимальний дозволений розмір завантаження"
 
 #: templates/back-end/fields/image.php:134
 msgid "File is too large for server processing"
-msgstr ""
+msgstr "Файл занадто великий для обробки сервером"
 
 #: templates/back-end/fields/image.php:74
 msgid "File is too large. Maximum size:"
-msgstr ""
+msgstr "Файл завеликий. Максимальний розмір:"
 
 #: lib/FS_Settings.php:341
 msgid "Fill in the data of the authorized user automatically"
@@ -1480,7 +1480,7 @@ msgstr ""
 
 #: templates/back-end/fields/image.php:67
 msgid "Invalid file format. Please select an image"
-msgstr ""
+msgstr "Неприпустимий формат файлу. Будь ласка, оберіть зображення."
 
 #: lib/FS_Users.php:941
 msgid "Invalid phone number"
@@ -1654,7 +1654,7 @@ msgstr "Маркетинг"
 
 #: templates/back-end/fields/image.php:262
 msgid "Maximum file size: %s MB"
-msgstr ""
+msgstr "Максимальний розмір файлу: %s МБ"
 
 #: lib/FS_Users.php:962
 msgid "Maximum length is %d characters"
@@ -1662,7 +1662,7 @@ msgstr ""
 
 #: templates/back-end/fields/image.php:243
 msgid "Media Library"
-msgstr ""
+msgstr "Медіатека"
 
 #: templates/front-end/dashboard/personal_info.php:8
 #: templates/front-end/dashboard/personal_info.php:65
@@ -1753,7 +1753,7 @@ msgstr "Ім'я відправника"
 
 #: templates/back-end/fields/image.php:108
 msgid "Network error during file upload"
-msgstr ""
+msgstr "Помилка мережі під час завантаження файлу"
 
 #: lib/FS_Orders.php:206
 msgid "New"
@@ -1777,7 +1777,7 @@ msgstr "Не знайдено даних для збереження"
 
 #: templates/back-end/fields/image.php:197
 msgid "No image selected"
-msgstr ""
+msgstr "Зображення не вибрано"
 
 #: lib/FS_Payment.php:38
 msgid "No order number specified."
@@ -2105,7 +2105,7 @@ msgstr "Фізичний"
 
 #: templates/back-end/fields/image.php:196
 msgid "Placeholder"
-msgstr ""
+msgstr "Заповнювач"
 
 #: lib/FS_Users.php:1697
 msgid "Please check your login credentials"
@@ -2125,7 +2125,7 @@ msgstr "Позиція на карті"
 
 #: templates/back-end/fields/image.php:182
 msgid "Preview"
-msgstr ""
+msgstr "Попередній перегляд"
 
 #: lib/FS_Filters.php:134 lib/FS_Init.php:254 functions/filters.php:41
 #: templates/front-end/shortcode/fs-order-info.php:16
@@ -2375,7 +2375,7 @@ msgstr "Схожі товари"
 
 #: templates/back-end/fields/image.php:254
 msgid "Remove"
-msgstr ""
+msgstr "Видалити"
 
 #: templates/back-end/metabox/related.php:22
 msgid "remove"
@@ -2478,7 +2478,7 @@ msgstr "Виберіть із списку"
 
 #: templates/back-end/fields/image.php:84
 msgid "Select Image"
-msgstr ""
+msgstr "Вибрати зображення"
 
 #: lib/FS_Taxonomy.php:1287 lib/FS_Taxonomy.php:1340
 msgid "select image"
@@ -3100,11 +3100,11 @@ msgstr "Дата оновлення"
 
 #: templates/back-end/fields/image.php:225
 msgid "Upload"
-msgstr ""
+msgstr "Завантажити"
 
 #: templates/back-end/fields/image.php:188
 msgid "Uploading..."
-msgstr ""
+msgstr "Завантаження..."
 
 #: lib/Admin/ProductEdit.php:162
 msgid "Upsell products"
@@ -3126,7 +3126,7 @@ msgstr ""
 
 #: templates/back-end/fields/image.php:86
 msgid "Use This Image"
-msgstr ""
+msgstr "Використати це зображення"
 
 #: lib/FS_Settings.php:342
 msgid "Used when placing the order, if the user is authorized"
@@ -3581,3 +3581,331 @@ msgstr "додаткові товари, які можна запропонув�
 #: lib/Admin/ProductEdit.php:168
 msgid "товари схожі на основний"
 msgstr "товари схожі на основний"
+
+#: lib/FS_Post_Types.php:252
+msgid "Available Variables"
+msgstr "Доступні змінні"
+
+#: lib/FS_Post_Types.php:253
+msgid "Template Settings"
+msgstr "Налаштування шаблону"
+
+#: lib/FS_Post_Types.php:127
+msgid "Variables"
+msgstr "Змінні"
+
+#: lib/FS_Post_Types.php:127
+msgid "Insert mail variable"
+msgstr "Вставити змінну листа"
+
+#: lib/FS_Post_Types.php:338
+msgid "Click on any variable to copy it to clipboard"
+msgstr "Натисніть на будь-яку змінну, щоб скопіювати її в буфер обміну"
+
+#: lib/FS_Post_Types.php:350
+msgid "Click to copy"
+msgstr "Натисніть, щоб скопіювати"
+
+#: lib/FS_Post_Types.php:394
+msgid "Copied!"
+msgstr "Скопійовано!"
+
+#: lib/FS_Post_Types.php:284
+msgid "Order Information:"
+msgstr "Інформація про замовлення:"
+
+#: lib/FS_Post_Types.php:291
+msgid "Cart Information:"
+msgstr "Інформація про кошик:"
+
+#: lib/FS_Post_Types.php:298
+msgid "Client Information:"
+msgstr "Інформація про клієнта:"
+
+#: lib/FS_Post_Types.php:308
+msgid "Delivery Information:"
+msgstr "Інформація про доставку:"
+
+#: lib/FS_Post_Types.php:316
+msgid "Payment Information:"
+msgstr "Інформація про оплату:"
+
+#: lib/FS_Post_Types.php:319
+msgid "Site Information:"
+msgstr "Інформація про сайт:"
+
+#: lib/FS_Post_Types.php:328
+msgid "Email Content:"
+msgstr "Вміст листа:"
+
+#: lib/FS_Post_Types.php:439
+msgid "Where to use this template:"
+msgstr "Де використовувати цей шаблон:"
+
+#: lib/FS_Post_Types.php:444
+msgid "-- Select --"
+msgstr "-- Оберіть --"
+
+#: lib/FS_Post_Types.php:447
+msgid "Admin notification when order is created"
+msgstr "Сповіщення адміністратора при створенні замовлення"
+
+#: lib/FS_Post_Types.php:448
+msgid "Customer notification when order is created"
+msgstr "Сповіщення клієнта при створенні замовлення"
+
+#: lib/FS_Post_Types.php:449
+msgid "User registration notification"
+msgstr "Сповіщення при реєстрації користувача"
+
+#: lib/FS_Post_Types.php:450
+msgid "Admin notification when user registers"
+msgstr "Сповіщення адміністратора при реєстрації користувача"
+
+#: lib/FS_Post_Types.php:451
+msgid "Password reset notification"
+msgstr "Сповіщення про скидання пароля"
+
+#: lib/FS_Post_Types.php:464
+msgid "Template Type:"
+msgstr "Тип шаблону:"
+
+#: lib/FS_Post_Types.php:470
+msgid "Customer Email"
+msgstr "Лист клієнту"
+
+#: lib/FS_Post_Types.php:473
+msgid "Admin Email"
+msgstr "Лист адміністратору"
+
+#: lib/FS_Post_Types.php:480
+msgid "Email Subject:"
+msgstr "Тема листа:"
+
+#: lib/FS_Post_Types.php:489
+msgid "e.g., Order #%order_id% on %site_name%"
+msgstr "наприклад, Замовлення #%order_id% на %site_name%"
+
+#: lib/FS_Post_Types.php:491
+msgid "Use variables like %order_id%, %site_name%, etc."
+msgstr "Використовуйте змінні типу %order_id%, %site_name% тощо"
+
+#: lib/FS_Post_Types.php:497
+msgid "Email Title:"
+msgstr "Заголовок листа:"
+
+#: lib/FS_Post_Types.php:506
+msgid "e.g., Thank you for your order"
+msgstr "наприклад, Дякуємо за ваше замовлення"
+
+#: lib/FS_Post_Types.php:511
+msgid "Email Message:"
+msgstr "Повідомлення листа:"
+
+#: lib/FS_Post_Types.php:519
+msgid "Short message text"
+msgstr "Короткий текст повідомлення"
+
+#: lib/FS_Post_Types.php:140
+msgid "Content"
+msgstr "Вміст"
+
+#: lib/FS_Post_Types.php:72
+msgid "Order ID"
+msgstr "ID замовлення"
+
+#: lib/FS_Post_Types.php:73
+msgid "Order date"
+msgstr "Дата замовлення"
+
+#: lib/FS_Post_Types.php:74
+msgid "Order title"
+msgstr "Назва замовлення"
+
+#: lib/FS_Post_Types.php:75
+msgid "Admin order edit URL"
+msgstr "URL редагування замовлення адміністратором"
+
+#: lib/FS_Post_Types.php:76
+msgid "Customer dashboard URL"
+msgstr "URL особистого кабінету клієнта"
+
+#: lib/FS_Post_Types.php:77
+msgid "Total cart amount"
+msgstr "Загальна сума кошика"
+
+#: lib/FS_Post_Types.php:78
+msgid "Products cost"
+msgstr "Вартість товарів"
+
+#: lib/FS_Post_Types.php:79
+msgid "Delivery cost"
+msgstr "Вартість доставки"
+
+#: lib/FS_Post_Types.php:81
+msgid "Cart discount"
+msgstr "Знижка кошика"
+
+#: lib/FS_Post_Types.php:82
+msgid "Client user ID"
+msgstr "ID користувача клієнта"
+
+#: lib/FS_Post_Types.php:83
+msgid "Client email"
+msgstr "Email клієнта"
+
+#: lib/FS_Post_Types.php:84
+msgid "Client phone"
+msgstr "Телефон клієнта"
+
+#: lib/FS_Post_Types.php:85
+msgid "Client first name"
+msgstr "Ім'я клієнта"
+
+#: lib/FS_Post_Types.php:86
+msgid "Client last name"
+msgstr "Прізвище клієнта"
+
+#: lib/FS_Post_Types.php:87
+msgid "Client city"
+msgstr "Місто клієнта"
+
+#: lib/FS_Post_Types.php:88
+msgid "Client address"
+msgstr "Адреса клієнта"
+
+#: lib/FS_Post_Types.php:89
+msgid "Client comment"
+msgstr "Коментар клієнта"
+
+#: lib/FS_Post_Types.php:91
+msgid "Delivery department number"
+msgstr "Номер відділення доставки"
+
+#: lib/FS_Post_Types.php:92
+msgid "Street address"
+msgstr "Адреса вулиці"
+
+#: lib/FS_Post_Types.php:98
+msgid "Home URL"
+msgstr "Головна URL"
+
+#: lib/FS_Post_Types.php:99
+msgid "Admin email"
+msgstr "Email адміністратора"
+
+#: lib/FS_Post_Types.php:100
+msgid "Contact email"
+msgstr "Контактний email"
+
+#: lib/FS_Post_Types.php:101
+msgid "Contact phone"
+msgstr "Контактний телефон"
+
+#: lib/FS_Post_Types.php:102
+msgid "Contact address"
+msgstr "Контактна адреса"
+
+#: lib/FS_Post_Types.php:103
+msgid "Email logo URL"
+msgstr "URL логотипу листа"
+
+#: lib/FS_Post_Types.php:104
+msgid "Admin email title"
+msgstr "Заголовок листа адміністратору"
+
+#: lib/FS_Post_Types.php:105
+msgid "Admin email message"
+msgstr "Повідомлення листа адміністратору"
+
+#: lib/FS_Post_Types.php:106
+msgid "Customer email title"
+msgstr "Заголовок листа клієнту"
+
+#: lib/FS_Post_Types.php:107
+msgid "Customer email message"
+msgstr "Повідомлення листа клієнту"
+
+#: lib/FS_Post_Types.php:260
+msgid "Email Header"
+msgstr "Заголовок листа"
+
+#: lib/FS_Post_Types.php:270
+msgid "Email Footer"
+msgstr "Нижній колонтитул листа"
+
+#: lib/FS_Post_Types.php:616
+msgid "Email Header HTML:"
+msgstr "HTML заголовка листа:"
+
+#: lib/FS_Post_Types.php:624
+msgid "HTML code for email header (e.g., opening &lt;html&gt;, &lt;head&gt;, &lt;body&gt; tags, styles, etc.)"
+msgstr "HTML код заголовка листа (наприклад, відкриваючі теги &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, стилі тощо)"
+
+#: lib/FS_Post_Types.php:627
+msgid "This header will be prepended to the main email content. Include opening HTML tags, head section with styles, and opening body tag."
+msgstr "Цей заголовок буде додано перед основним вмістом листа. Включіть відкриваючі HTML теги, секцію head зі стилями та відкриваючий тег body."
+
+#: lib/FS_Post_Types.php:643
+msgid "Email Footer HTML:"
+msgstr "HTML нижнього колонтитула листа:"
+
+#: lib/FS_Post_Types.php:651
+msgid "HTML code for email footer (e.g., closing &lt;/body&gt;, &lt;/html&gt; tags, etc.)"
+msgstr "HTML код нижнього колонтитула листа (наприклад, закриваючі теги &lt;/body&gt;, &lt;/html&gt; тощо)"
+
+#: lib/FS_Post_Types.php:654
+msgid "This footer will be appended to the main email content. Include closing body and html tags."
+msgstr "Цей нижній колонтитул буде додано після основного вмісту листа. Включіть закриваючі теги body та html."
+
+#: lib/FS_Post_Types.php
+msgid "Test Email"
+msgstr "Тестове повідомлення"
+
+#: lib/FS_Post_Types.php
+msgid "Select order for test:"
+msgstr "Виберіть замовлення для тесту:"
+
+#: lib/FS_Post_Types.php
+msgid "-- Select order --"
+msgstr "-- Виберіть замовлення --"
+
+#: lib/FS_Post_Types.php
+msgid "Order #%d - %s"
+msgstr "Замовлення #%d - %s"
+
+#: lib/FS_Post_Types.php
+msgid "Send Test Email"
+msgstr "Відправити тестове повідомлення"
+
+#: lib/FS_Post_Types.php
+msgid "Test email will be sent to admin email address."
+msgstr "Тестове повідомлення буде відправлено на адресу адміністратора."
+
+#: lib/FS_Post_Types.php
+msgid "Test email is available only for order-related templates."
+msgstr "Тестове повідомлення доступне тільки для шаблонів, пов'язаних із замовленнями."
+
+#: lib/FS_Post_Types.php
+msgid "Sending..."
+msgstr "Відправка..."
+
+#: lib/FS_Post_Types.php
+msgid "Test email sent successfully to %s"
+msgstr "Тестове повідомлення успішно відправлено на %s"
+
+#: lib/FS_Post_Types.php
+msgid "Test Email: New Order"
+msgstr "Тестове повідомлення: Нове замовлення"
+
+#: lib/FS_Post_Types.php
+msgid "Test Email: Thank you for your order"
+msgstr "Тестове повідомлення: Дякуємо за ваше замовлення"
+
+#: lib/FS_Post_Types.php
+msgid "This is a test email sent from email template editor."
+msgstr "Це тестове повідомлення, відправлене з редактора шаблонів листів."
+
+#: lib/FS_Post_Types.php
+msgid "Cart items table (editable template)"
+msgstr "Таблиця товарів (редагується через шаблон)"

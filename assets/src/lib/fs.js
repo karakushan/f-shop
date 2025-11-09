@@ -576,6 +576,12 @@ class FS {
     return this.post("fs_lostpassword", formData);
   }
 
+  resetPass($event) {
+    const formData = new FormData($event.target);
+
+    return this.post("fs_resetpass", formData);
+  }
+
   liveSearch(query) {
     return this.post("fs_livesearch", { search: query });
   }

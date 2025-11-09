@@ -13,6 +13,11 @@ $args = wp_parse_args( $args, [
 	'multiple' => false
 ] );
 
+// Support custom options via 'options' parameter (alternative to 'values')
+if ( ! empty( $args['options'] ) && empty( $args['values'] ) ) {
+	$args['values'] = $args['options'];
+}
+
 if ( $args['multiple'] && ! is_array( $args['value'] ) ) {
 	$args['value'] = [];
 	$name          = $name . '[]';

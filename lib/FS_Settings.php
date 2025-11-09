@@ -725,44 +725,49 @@ class FS_Settings
     }
 
     /**
-     * Get testing settings section.
+     * Get development mode settings section.
      *
-     * @return array Testing settings array
+     * @return array Development mode settings array
      */
     private function get_testing_settings(): array
     {
         return [
-            'name' => __('Testing', 'f-shop'),
-            'description' => __('Settings for testing functionality', 'f-shop'),
+            'name' => __('Development mode', 'f-shop'),
+            'description' => __('Settings for development and testing functionality', 'f-shop'),
             'fields' => [
                 [
                     'type' => 'checkbox',
                     'name' => 'fs_enable_mailtrap',
                     'label' => __('Enable email testing with Mailtrap.io', 'f-shop'),
+                    'help' => __('When enabled, all emails will be sent through Mailtrap sandbox for testing purposes', 'f-shop'),
                     'value' => fs_option('fs_enable_mailtrap'),
                 ],
                 [
                     'type' => 'text',
                     'name' => 'fs_mailtrap_username',
                     'label' => __('Mailtrap Username', 'f-shop'),
+                    'help' => __('Your Mailtrap username from sandbox settings', 'f-shop'),
                     'value' => fs_option('fs_mailtrap_username'),
                 ],
                 [
                     'type' => 'text',
                     'name' => 'fs_mailtrap_password',
                     'label' => __('Mailtrap Password', 'f-shop'),
+                    'help' => __('Your Mailtrap password from sandbox settings', 'f-shop'),
                     'value' => fs_option('fs_mailtrap_password'),
                 ],
                 [
                     'type' => 'text',
                     'name' => 'fs_mailtrap_host',
                     'label' => __('Mailtrap Host', 'f-shop'),
-                    'value' => fs_option('fs_mailtrap_host', 'smtp.mailtrap.io'),
+                    'help' => __('Mailtrap SMTP host address', 'f-shop'),
+                    'value' => fs_option('fs_mailtrap_host', 'sandbox.smtp.mailtrap.io'),
                 ],
                 [
                     'type' => 'number',
                     'name' => 'fs_mailtrap_port',
                     'label' => __('Mailtrap Port', 'f-shop'),
+                    'help' => __('Mailtrap SMTP port (usually 2525 for sandbox)', 'f-shop'),
                     'value' => fs_option('fs_mailtrap_port', '2525'),
                 ],
             ],

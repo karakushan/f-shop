@@ -3580,3 +3580,331 @@ msgstr ""
 #: lib/Admin/ProductEdit.php:168
 msgid "товари схожі на основний"
 msgstr ""
+
+#: lib/FS_Post_Types.php:252
+msgid "Available Variables"
+msgstr "Доступные переменные"
+
+#: lib/FS_Post_Types.php:253
+msgid "Template Settings"
+msgstr "Настройки шаблона"
+
+#: lib/FS_Post_Types.php:127
+msgid "Variables"
+msgstr "Переменные"
+
+#: lib/FS_Post_Types.php:127
+msgid "Insert mail variable"
+msgstr "Вставить переменную письма"
+
+#: lib/FS_Post_Types.php:338
+msgid "Click on any variable to copy it to clipboard"
+msgstr "Нажмите на любую переменную, чтобы скопировать её в буфер обмена"
+
+#: lib/FS_Post_Types.php:350
+msgid "Click to copy"
+msgstr "Нажмите, чтобы скопировать"
+
+#: lib/FS_Post_Types.php:394
+msgid "Copied!"
+msgstr "Скопировано!"
+
+#: lib/FS_Post_Types.php:284
+msgid "Order Information:"
+msgstr "Информация о заказе:"
+
+#: lib/FS_Post_Types.php:291
+msgid "Cart Information:"
+msgstr "Информация о корзине:"
+
+#: lib/FS_Post_Types.php:298
+msgid "Client Information:"
+msgstr "Информация о клиенте:"
+
+#: lib/FS_Post_Types.php:308
+msgid "Delivery Information:"
+msgstr "Информация о доставке:"
+
+#: lib/FS_Post_Types.php:316
+msgid "Payment Information:"
+msgstr "Информация об оплате:"
+
+#: lib/FS_Post_Types.php:319
+msgid "Site Information:"
+msgstr "Информация о сайте:"
+
+#: lib/FS_Post_Types.php:328
+msgid "Email Content:"
+msgstr "Содержимое письма:"
+
+#: lib/FS_Post_Types.php:439
+msgid "Where to use this template:"
+msgstr "Где использовать этот шаблон:"
+
+#: lib/FS_Post_Types.php:444
+msgid "-- Select --"
+msgstr "-- Выберите --"
+
+#: lib/FS_Post_Types.php:447
+msgid "Admin notification when order is created"
+msgstr "Уведомление администратора при создании заказа"
+
+#: lib/FS_Post_Types.php:448
+msgid "Customer notification when order is created"
+msgstr "Уведомление клиента при создании заказа"
+
+#: lib/FS_Post_Types.php:449
+msgid "User registration notification"
+msgstr "Уведомление при регистрации пользователя"
+
+#: lib/FS_Post_Types.php:450
+msgid "Admin notification when user registers"
+msgstr "Уведомление администратора при регистрации пользователя"
+
+#: lib/FS_Post_Types.php:451
+msgid "Password reset notification"
+msgstr "Уведомление о сбросе пароля"
+
+#: lib/FS_Post_Types.php:464
+msgid "Template Type:"
+msgstr "Тип шаблона:"
+
+#: lib/FS_Post_Types.php:470
+msgid "Customer Email"
+msgstr "Письмо клиенту"
+
+#: lib/FS_Post_Types.php:473
+msgid "Admin Email"
+msgstr "Письмо администратору"
+
+#: lib/FS_Post_Types.php:480
+msgid "Email Subject:"
+msgstr "Тема письма:"
+
+#: lib/FS_Post_Types.php:489
+msgid "e.g., Order #%order_id% on %site_name%"
+msgstr "например, Заказ #%order_id% на %site_name%"
+
+#: lib/FS_Post_Types.php:491
+msgid "Use variables like %order_id%, %site_name%, etc."
+msgstr "Используйте переменные типа %order_id%, %site_name% и т.д."
+
+#: lib/FS_Post_Types.php:497
+msgid "Email Title:"
+msgstr "Заголовок письма:"
+
+#: lib/FS_Post_Types.php:506
+msgid "e.g., Thank you for your order"
+msgstr "например, Спасибо за ваш заказ"
+
+#: lib/FS_Post_Types.php:511
+msgid "Email Message:"
+msgstr "Сообщение письма:"
+
+#: lib/FS_Post_Types.php:519
+msgid "Short message text"
+msgstr "Короткий текст сообщения"
+
+#: lib/FS_Post_Types.php:140
+msgid "Content"
+msgstr "Содержимое"
+
+#: lib/FS_Post_Types.php:72
+msgid "Order ID"
+msgstr "ID заказа"
+
+#: lib/FS_Post_Types.php:73
+msgid "Order date"
+msgstr "Дата заказа"
+
+#: lib/FS_Post_Types.php:74
+msgid "Order title"
+msgstr "Название заказа"
+
+#: lib/FS_Post_Types.php:75
+msgid "Admin order edit URL"
+msgstr "URL редактирования заказа администратором"
+
+#: lib/FS_Post_Types.php:76
+msgid "Customer dashboard URL"
+msgstr "URL личного кабинета клиента"
+
+#: lib/FS_Post_Types.php:77
+msgid "Total cart amount"
+msgstr "Общая сумма корзины"
+
+#: lib/FS_Post_Types.php:78
+msgid "Products cost"
+msgstr "Стоимость товаров"
+
+#: lib/FS_Post_Types.php:79
+msgid "Delivery cost"
+msgstr "Стоимость доставки"
+
+#: lib/FS_Post_Types.php:81
+msgid "Cart discount"
+msgstr "Скидка корзины"
+
+#: lib/FS_Post_Types.php:82
+msgid "Client user ID"
+msgstr "ID пользователя клиента"
+
+#: lib/FS_Post_Types.php:83
+msgid "Client email"
+msgstr "Email клиента"
+
+#: lib/FS_Post_Types.php:84
+msgid "Client phone"
+msgstr "Телефон клиента"
+
+#: lib/FS_Post_Types.php:85
+msgid "Client first name"
+msgstr "Имя клиента"
+
+#: lib/FS_Post_Types.php:86
+msgid "Client last name"
+msgstr "Фамилия клиента"
+
+#: lib/FS_Post_Types.php:87
+msgid "Client city"
+msgstr "Город клиента"
+
+#: lib/FS_Post_Types.php:88
+msgid "Client address"
+msgstr "Адрес клиента"
+
+#: lib/FS_Post_Types.php:89
+msgid "Client comment"
+msgstr "Комментарий клиента"
+
+#: lib/FS_Post_Types.php:91
+msgid "Delivery department number"
+msgstr "Номер отделения доставки"
+
+#: lib/FS_Post_Types.php:92
+msgid "Street address"
+msgstr "Адрес улицы"
+
+#: lib/FS_Post_Types.php:98
+msgid "Home URL"
+msgstr "Главная URL"
+
+#: lib/FS_Post_Types.php:99
+msgid "Admin email"
+msgstr "Email администратора"
+
+#: lib/FS_Post_Types.php:100
+msgid "Contact email"
+msgstr "Контактный email"
+
+#: lib/FS_Post_Types.php:101
+msgid "Contact phone"
+msgstr "Контактный телефон"
+
+#: lib/FS_Post_Types.php:102
+msgid "Contact address"
+msgstr "Контактный адрес"
+
+#: lib/FS_Post_Types.php:103
+msgid "Email logo URL"
+msgstr "URL логотипа письма"
+
+#: lib/FS_Post_Types.php:104
+msgid "Admin email title"
+msgstr "Заголовок письма администратору"
+
+#: lib/FS_Post_Types.php:105
+msgid "Admin email message"
+msgstr "Сообщение письма администратору"
+
+#: lib/FS_Post_Types.php:106
+msgid "Customer email title"
+msgstr "Заголовок письма клиенту"
+
+#: lib/FS_Post_Types.php:107
+msgid "Customer email message"
+msgstr "Сообщение письма клиенту"
+
+#: lib/FS_Post_Types.php:260
+msgid "Email Header"
+msgstr "Заголовок письма"
+
+#: lib/FS_Post_Types.php:270
+msgid "Email Footer"
+msgstr "Нижний колонтитул письма"
+
+#: lib/FS_Post_Types.php:616
+msgid "Email Header HTML:"
+msgstr "HTML заголовка письма:"
+
+#: lib/FS_Post_Types.php:624
+msgid "HTML code for email header (e.g., opening &lt;html&gt;, &lt;head&gt;, &lt;body&gt; tags, styles, etc.)"
+msgstr "HTML код заголовка письма (например, открывающие теги &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, стили и т.д.)"
+
+#: lib/FS_Post_Types.php:627
+msgid "This header will be prepended to the main email content. Include opening HTML tags, head section with styles, and opening body tag."
+msgstr "Этот заголовок будет добавлен перед основным содержимым письма. Включите открывающие HTML теги, секцию head со стилями и открывающий тег body."
+
+#: lib/FS_Post_Types.php:643
+msgid "Email Footer HTML:"
+msgstr "HTML нижнего колонтитула письма:"
+
+#: lib/FS_Post_Types.php:651
+msgid "HTML code for email footer (e.g., closing &lt;/body&gt;, &lt;/html&gt; tags, etc.)"
+msgstr "HTML код нижнего колонтитула письма (например, закрывающие теги &lt;/body&gt;, &lt;/html&gt; и т.д.)"
+
+#: lib/FS_Post_Types.php:654
+msgid "This footer will be appended to the main email content. Include closing body and html tags."
+msgstr "Этот нижний колонтитул будет добавлен после основного содержимого письма. Включите закрывающие теги body и html."
+
+#: lib/FS_Post_Types.php
+msgid "Test Email"
+msgstr "Тестовое письмо"
+
+#: lib/FS_Post_Types.php
+msgid "Select order for test:"
+msgstr "Выберите заказ для теста:"
+
+#: lib/FS_Post_Types.php
+msgid "-- Select order --"
+msgstr "-- Выберите заказ --"
+
+#: lib/FS_Post_Types.php
+msgid "Order #%d - %s"
+msgstr "Заказ #%d - %s"
+
+#: lib/FS_Post_Types.php
+msgid "Send Test Email"
+msgstr "Отправить тестовое письмо"
+
+#: lib/FS_Post_Types.php
+msgid "Test email will be sent to admin email address."
+msgstr "Тестовое письмо будет отправлено на адрес администратора."
+
+#: lib/FS_Post_Types.php
+msgid "Test email is available only for order-related templates."
+msgstr "Тестовое письмо доступно только для шаблонов, связанных с заказами."
+
+#: lib/FS_Post_Types.php
+msgid "Sending..."
+msgstr "Отправка..."
+
+#: lib/FS_Post_Types.php
+msgid "Test email sent successfully to %s"
+msgstr "Тестовое письмо успешно отправлено на %s"
+
+#: lib/FS_Post_Types.php
+msgid "Test Email: New Order"
+msgstr "Тестовое письмо: Новый заказ"
+
+#: lib/FS_Post_Types.php
+msgid "Test Email: Thank you for your order"
+msgstr "Тестовое письмо: Спасибо за ваш заказ"
+
+#: lib/FS_Post_Types.php
+msgid "This is a test email sent from email template editor."
+msgstr "Это тестовое письмо, отправленное из редактора шаблонов писем."
+
+#: lib/FS_Post_Types.php
+msgid "Cart items table (editable template)"
+msgstr "Таблица товаров (редактируется через шаблон)"

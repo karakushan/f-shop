@@ -93,7 +93,44 @@ class FS_Filters {
 	}
 
 	function sender_email( $original_email_address ) {
-		return fs_option( 'email_sender', $original_email_address );
+		$email = fs_option( 'email_sender', '' );
+		
+		// If email is not set in options, use admin email or create valid email from site domain
+		if ( empty( $email ) || ! is_email( $email ) ) {
+			$admin_email = get_option( 'admin_email' );
+			
+			// Always prefer admin email if it's valid
+			if ( is_email( $admin_email ) ) {
+				$email = $admin_email;
+			} else {
+				// Create valid email from site domain
+				$sitename = wp_parse_url( network_home_url(), PHP_URL_HOST );
+				if ( $sitename && $sitename !== 'localhost' && ! empty( $sitename ) ) {
+					// Remove www. prefix if present
+					if ( strpos( $sitename, 'www.' ) === 0 ) {
+						$sitename = substr( $sitename, 4 );
+					}
+					$email = 'noreply@' . $sitename;
+				} else {
+					// For localhost or invalid sitename, use admin email or a safe default
+					$email = ! empty( $admin_email ) ? $admin_email : 'noreply@example.com';
+				}
+			}
+		}
+		
+		// Validate email before returning - PHPMailer requires valid email format
+		if ( ! is_email( $email ) ) {
+			// Last resort: use admin email or a safe default
+			$admin_email = get_option( 'admin_email' );
+			if ( is_email( $admin_email ) ) {
+				$email = $admin_email;
+			} else {
+				// Use a valid default email that PHPMailer will accept
+				$email = 'noreply@example.com';
+			}
+		}
+		
+		return $email;
 	}
 
 	function sender_name( $original_email_from ) {
@@ -330,9 +367,13 @@ class FS_Filters {
 	 * @return void              выводит html элемент типа select
 	 */
 	public static function fs_types_sort_filter( $attr = array() ) {
-		$attr = wp_parse_args( $attr, array(
+		$default_args = array(
 			'class' => 'fs-types-sort-filter'
-		) );
+		);
+
+		// Apply filter to get custom arguments
+		$filter_args = apply_filters( 'fs_types_sort_filter_args', array() );
+		$attr = wp_parse_args( $filter_args, wp_parse_args( $attr, $default_args ) );
 
 		$sorting_types = apply_filters( 'fs_catalog_sorting_criteria', [
 			'date_desc'  => [
@@ -354,6 +395,15 @@ class FS_Filters {
 				'name' => __( 'by title Z to A', 'f-shop' ) // по названию от Я до А
 			]
 		] );
+
+		// Apply custom option labels from filter if provided
+		if ( ! empty( $filter_args['option_labels'] ) && is_array( $filter_args['option_labels'] ) ) {
+			foreach ( $filter_args['option_labels'] as $key => $label ) {
+				if ( isset( $sorting_types[ $key ] ) ) {
+					$sorting_types[ $key ]['name'] = $label;
+				}
+			}
+		}
 
 		if ( empty( $sorting_types ) ) {
 			return;
