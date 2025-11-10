@@ -61,6 +61,93 @@ jQuery(document).ready(function ($) {
     FS.init();
     window.FS = FS;
 
+    // Save and restore active tab for Carbon Fields vertical tabs
+    (function() {
+        const STORAGE_KEY = 'fs_product_edit_active_tab';
+        
+        // Save active tab when clicking on tab
+        $(document).on('click', '.fs-vertical-tabs .cf-container__tabs-item', function() {
+            const tabIndex = $(this).index();
+            const tabText = $(this).text().trim();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                index: tabIndex,
+                text: tabText
+            }));
+        });
+        
+        // Also observe when Carbon Fields sets active tab
+        function observeTabChanges() {
+            const $tabs = $('.fs-vertical-tabs .cf-container__tabs-item');
+            if ($tabs.length === 0) return;
+            
+            // Use MutationObserver to watch for class changes
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        const $target = $(mutation.target);
+                        if ($target.hasClass('cf-container__tabs-item--current')) {
+                            const tabIndex = $target.index();
+                            const tabText = $target.text().trim();
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                                index: tabIndex,
+                                text: tabText
+                            }));
+                        }
+                    }
+                });
+            });
+            
+            // Observe all tabs
+            $tabs.each(function() {
+                observer.observe(this, {
+                    attributes: true,
+                    attributeFilter: ['class']
+                });
+            });
+        }
+        
+        // Restore active tab on page load
+        function restoreActiveTab() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return;
+            
+            try {
+                const tabData = JSON.parse(saved);
+                const $tabs = $('.fs-vertical-tabs .cf-container__tabs-item');
+                
+                if ($tabs.length > 0 && tabData.index !== undefined && tabData.index >= 0) {
+                    const $targetTab = $tabs.eq(tabData.index);
+                    if ($targetTab.length && !$targetTab.hasClass('cf-container__tabs-item--current')) {
+                        // Trigger native click on the tab element
+                        setTimeout(function() {
+                            if ($targetTab[0]) {
+                                $targetTab[0].click();
+                            }
+                        }, 100);
+                    }
+                }
+            } catch (e) {
+                console.error('Error restoring active tab:', e);
+            }
+        }
+        
+        // Initialize on page load
+        $(document).ready(function() {
+            // Wait for Carbon Fields to fully initialize
+            setTimeout(function() {
+                restoreActiveTab();
+                observeTabChanges();
+            }, 800);
+        });
+        
+        // Also try after window load as fallback
+        $(window).on('load', function() {
+            setTimeout(function() {
+                restoreActiveTab();
+            }, 500);
+        });
+    })();
+
 
     if (typeof inlineEditPost !== 'undefined') {
         // we create a copy of the WP inline edit post function

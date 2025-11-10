@@ -88,6 +88,10 @@ class FS_Ajax
             add_action('wp_ajax_fs_add_custom_attribute', [$this, 'fs_add_custom_attribute_callback']);
             add_action('wp_ajax_nopriv_fs_add_custom_attribute', [$this, 'fs_add_custom_attribute_callback']);
 
+            // fs_create_new_attribute
+            add_action('wp_ajax_fs_create_new_attribute', [$this, 'fs_create_new_attribute_callback']);
+            add_action('wp_ajax_nopriv_fs_create_new_attribute', [$this, 'fs_create_new_attribute_callback']);
+
             // fs_add_child_attribute action
             add_action('wp_ajax_fs_add_child_attribute', [$this, 'fs_add_child_attribute_callback']);
             add_action('wp_ajax_nopriv_fs_add_child_attribute', [$this, 'fs_add_child_attribute_callback']);
@@ -103,6 +107,10 @@ class FS_Ajax
             // fs_attach_attribute
             add_action('wp_ajax_fs_attach_attribute', [$this, 'fs_attach_attribute_callback']);
             add_action('wp_ajax_nopriv_fs_attach_attribute', [$this, 'fs_attach_attribute_callback']);
+
+            // fs_update_attribute_position
+            add_action('wp_ajax_fs_update_attribute_position', [$this, 'fs_update_attribute_position_callback']);
+            add_action('wp_ajax_nopriv_fs_update_attribute_position', [$this, 'fs_update_attribute_position_callback']);
 
             add_action('wp_ajax_fs_get_admin_attributes_table', [
                 'FS\FS_Taxonomy',
@@ -380,6 +388,76 @@ class FS_Ajax
 
         wp_send_json_error([
             'message' => __('Возникла ошибка при добавлении атрибута к товару', 'f-shop'),
+        ]);
+    }
+
+    /**
+     * Creates a new parent attribute (without value) and attaches it to the product.
+     *
+     * @return void
+     */
+    public function fs_create_new_attribute_callback()
+    {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
+        }
+
+        $post_id = intval($_POST['post_id']);
+        $attribute_name = trim($_POST['attribute_name']);
+        $attribute_tax = FS_Config::get_data('features_taxonomy');
+
+        if (empty($attribute_name)) {
+            wp_send_json_error([
+                'message' => __('Attribute name cannot be empty', 'f-shop'),
+            ]);
+        }
+
+        // Check if attribute already exists
+        $term_parent = term_exists($attribute_name, $attribute_tax, 0);
+
+        if (!$term_parent) {
+            // Create new parent term
+            $term_parent = wp_insert_term($attribute_name, $attribute_tax, [
+                'parent' => 0,
+            ]);
+
+            if (is_wp_error($term_parent)) {
+                wp_send_json_error([
+                    'message' => $term_parent->get_error_message(),
+                ]);
+            }
+        } else {
+            // If term exists, get its ID
+            $term_parent = [
+                'term_id' => $term_parent['term_id'],
+                'term_taxonomy_id' => $term_parent['term_taxonomy_id'],
+            ];
+        }
+
+        // Attach attribute to product
+        $set_terms = wp_set_object_terms($post_id, [$term_parent['term_id']], $attribute_tax, true);
+
+        if (is_wp_error($set_terms)) {
+            wp_send_json_error([
+                'message' => $set_terms->get_error_message(),
+            ]);
+        }
+
+        // Get the created term with position
+        $term = get_term($term_parent['term_id'], $attribute_tax);
+        $position = get_term_meta($term_parent['term_id'], 'fs_att_position', true);
+        $position = $position !== '' ? intval($position) : 0;
+
+        wp_send_json_success([
+            'term' => [
+                'id' => $term->term_id,
+                'name' => str_replace(['\'', '"'], ['ʼ'], $term->name),
+                'parent' => $term->parent,
+                'position' => $position,
+                'children' => [],
+                'children_all' => [],
+            ],
+            'message' => __('Attribute successfully created and added!', 'f-shop'),
         ]);
     }
 
@@ -942,6 +1020,14 @@ class FS_Ajax
         // Вставляем заказ в базу данных
         $pay_method = $sanitize_field['fs_payment_methods'] ? get_term(intval($sanitize_field['fs_payment_methods']), $fs_config->data['product_pay_taxonomy']) : null;
         $post_title = sprintf('%s  %s (%s)', $sanitize_field['fs_first_name'], $sanitize_field['fs_last_name'], $current_date_i18n);
+        
+        // Get current user language for order
+        $order_language = 'ua';
+        if (function_exists('wpm_get_language')) {
+            $order_language = wpm_get_language();
+            $order_language = strtolower($order_language);
+        }
+        
         $new_order_data = [
             'post_title' => $post_title,
             'post_content' => '',
@@ -961,6 +1047,7 @@ class FS_Ajax
                 '_packing_cost' => $packing_cost,
                 '_customer_id' => $customer_id,
                 '_order_type' => $order_type,
+                '_order_language' => $order_language, // Save order language
                 '_user' => [
                     'id' => $user_id,
                     'first_name' => $sanitize_field['fs_first_name'],
@@ -1056,12 +1143,21 @@ class FS_Ajax
 
             $mail_data = apply_filters('fs_create_order_mail_data', $mail_data);
 
+            // Set global mail_data for template override filter
+            global $fs_current_mail_data;
+            $fs_current_mail_data = $mail_data;
+
             // NOTIFICATION
             $notification = new FS_Notification();
 
             // We send a letter with order details to the customer
             $notification->set_recipients([$sanitize_field['fs_email']]);
             $notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($customer_mail_subject), $mail_data));
+            
+            // Set global template path for fs_override_frontend_template filter
+            global $fs_current_template_path;
+            $fs_current_template_path = 'mail/user-create-order';
+            
             $notification->set_template('mail/user-create-order', $mail_data);
             $notification->send();
 
@@ -1075,6 +1171,10 @@ class FS_Ajax
             if (count($admin_users) > 0) {
                 $notification->set_recipients($admin_users);
                 $notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($admin_mail_subject), $mail_data));
+                
+                // Set global template path for fs_override_frontend_template filter
+                $fs_current_template_path = 'mail/admin-create-order';
+                
                 $notification->set_template('mail/admin-create-order', $mail_data);
                 $notification->send();
             }
@@ -1277,6 +1377,27 @@ class FS_Ajax
 
         wp_send_json_success([
             'message' => __('Attribute added', 'f-shop'),
+            'title' => __('Success!', 'f-shop'),
+        ]);
+    }
+
+    /**
+     * Updates attribute position.
+     *
+     * @return void
+     */
+    public function fs_update_attribute_position_callback()
+    {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
+        }
+        $attribute_id = intval($_POST['attribute_id']);
+        $position = intval($_POST['position']);
+
+        update_term_meta($attribute_id, 'fs_att_position', $position);
+
+        wp_send_json_success([
+            'message' => __('Position updated', 'f-shop'),
             'title' => __('Success!', 'f-shop'),
         ]);
     }

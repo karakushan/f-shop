@@ -37,6 +37,36 @@ class FS_Post_Types
     }
 
     /**
+     * Hide Discussion and Comments metaboxes for mail templates.
+     *
+     * @return void
+     */
+    public function hide_discussion_metabox()
+    {
+        global $typenow;
+
+        $current_post_type = $typenow;
+
+        if (empty($current_post_type) && isset($_GET['post_type'])) {
+            $current_post_type = sanitize_text_field(wp_unslash($_GET['post_type']));
+        }
+
+        if (empty($current_post_type) && isset($_GET['post'])) {
+            $post_id = (int) $_GET['post'];
+            if ($post_id > 0) {
+                $current_post_type = get_post_type($post_id);
+            }
+        }
+
+        if ($current_post_type !== 'fs-mail-template') {
+            return;
+        }
+
+        remove_meta_box('commentstatusdiv', 'fs-mail-template', 'normal');
+        remove_meta_box('commentsdiv', 'fs-mail-template', 'normal');
+    }
+
+    /**
      * Disable visual editor for mail templates
      */
     public function disable_visual_editor_for_mail_templates($can_richedit)
@@ -712,9 +742,25 @@ class FS_Post_Types
         
         $usage = get_post_meta($post->ID, '_mail_template_usage', true);
         $type = get_post_meta($post->ID, '_mail_template_type', true);
-        $subject = get_post_meta($post->ID, '_mail_subject', true);
-        $title = get_post_meta($post->ID, '_mail_title', true);
-        $message = get_post_meta($post->ID, '_mail_message', true);
+        
+        // Get current language for multilingual support
+        $lang = $this->get_current_template_language();
+        
+        // Get meta fields with language suffix, fallback to default if not exists
+        $subject = get_post_meta($post->ID, '_mail_subject__' . $lang, true);
+        if (empty($subject)) {
+            $subject = get_post_meta($post->ID, '_mail_subject', true); // Fallback to old format
+        }
+        
+        $title = get_post_meta($post->ID, '_mail_title__' . $lang, true);
+        if (empty($title)) {
+            $title = get_post_meta($post->ID, '_mail_title', true); // Fallback to old format
+        }
+        
+        $message = get_post_meta($post->ID, '_mail_message__' . $lang, true);
+        if (empty($message)) {
+            $message = get_post_meta($post->ID, '_mail_message', true); // Fallback to old format
+        }
         
         // Convert array to single value if needed (for backward compatibility)
         if (is_array($usage) && !empty($usage)) {
@@ -843,39 +889,43 @@ class FS_Post_Types
             update_post_meta($post_id, '_mail_template_type', sanitize_text_field($_POST['mail_template_type']));
         }
 
-        // Save subject
+        // Get current language for multilingual support
+        $lang = $this->get_current_template_language();
+        
+        // Save subject with language suffix
         if (isset($_POST['mail_subject'])) {
-            update_post_meta($post_id, '_mail_subject', sanitize_text_field($_POST['mail_subject']));
+            $meta_key = '_mail_subject__' . $lang;
+            update_post_meta($post_id, $meta_key, sanitize_text_field($_POST['mail_subject']));
         }
 
-        // Save title
+        // Save title with language suffix
         if (isset($_POST['mail_title'])) {
-            update_post_meta($post_id, '_mail_title', sanitize_text_field($_POST['mail_title']));
+            $meta_key = '_mail_title__' . $lang;
+            update_post_meta($post_id, $meta_key, sanitize_text_field($_POST['mail_title']));
         }
 
-        // Save message
+        // Save message with language suffix
         if (isset($_POST['mail_message'])) {
-            update_post_meta($post_id, '_mail_message', sanitize_textarea_field($_POST['mail_message']));
+            $meta_key = '_mail_message__' . $lang;
+            update_post_meta($post_id, $meta_key, sanitize_textarea_field($_POST['mail_message']));
         }
 
-        // Save header - use wp_unslash and store raw HTML for email templates
+        // Save header with language suffix - use wp_unslash and store raw HTML for email templates
         if (isset($_POST['mail_template_header'])) {
             $header_content = wp_unslash($_POST['mail_template_header']);
+            $meta_key = '_mail_template_header__' . $lang;
             // Store raw HTML without strict sanitization for email templates
             // Only basic sanitization to prevent XSS but preserve HTML structure
-            update_post_meta($post_id, '_mail_template_header', $header_content);
-        } else {
-            delete_post_meta($post_id, '_mail_template_header');
+            update_post_meta($post_id, $meta_key, $header_content);
         }
 
-        // Save footer - use wp_unslash and store raw HTML for email templates
+        // Save footer with language suffix - use wp_unslash and store raw HTML for email templates
         if (isset($_POST['mail_template_footer'])) {
             $footer_content = wp_unslash($_POST['mail_template_footer']);
+            $meta_key = '_mail_template_footer__' . $lang;
             // Store raw HTML without strict sanitization for email templates
             // Only basic sanitization to prevent XSS but preserve HTML structure
-            update_post_meta($post_id, '_mail_template_footer', $footer_content);
-        } else {
-            delete_post_meta($post_id, '_mail_template_footer');
+            update_post_meta($post_id, $meta_key, $footer_content);
         }
     }
 
@@ -886,8 +936,19 @@ class FS_Post_Types
     {
         wp_nonce_field('fs_mail_template_save', 'fs_mail_template_nonce');
         
-        $header = get_post_meta($post->ID, '_mail_template_header', true);
-        $footer = get_post_meta($post->ID, '_mail_template_footer', true);
+        // Get current language for multilingual support
+        $lang = $this->get_current_template_language();
+        
+        // Get header and footer with language suffix, fallback to default if not exists
+        $header = get_post_meta($post->ID, '_mail_template_header__' . $lang, true);
+        if (empty($header)) {
+            $header = get_post_meta($post->ID, '_mail_template_header', true); // Fallback to old format
+        }
+        
+        $footer = get_post_meta($post->ID, '_mail_template_footer__' . $lang, true);
+        if (empty($footer)) {
+            $footer = get_post_meta($post->ID, '_mail_template_footer', true); // Fallback to old format
+        }
         
         // Use wp_unslash to get raw HTML content without escaping
         $header = wp_unslash($header);
@@ -1120,6 +1181,26 @@ class FS_Post_Types
             'customer_mail_message' => __('This is a test email sent from email template editor.', 'f-shop'),
         ];
 
+        // Get language for test email (from edit_lang GET parameter or current admin language)
+        $test_lang = 'ua';
+        if (isset($_POST['edit_lang'])) {
+            $test_lang = sanitize_text_field($_POST['edit_lang']);
+            $test_lang = strtolower($test_lang);
+        } elseif (isset($_GET['edit_lang'])) {
+            $test_lang = sanitize_text_field($_GET['edit_lang']);
+            $test_lang = strtolower($test_lang);
+        } elseif (function_exists('wpm_get_language')) {
+            $test_lang = strtolower(wpm_get_language());
+        }
+        
+        // Add language to mail_data for template selection
+        $mail_data['_test_language'] = $test_lang;
+        
+        // Temporarily set language for template loading
+        if (function_exists('wpm_set_language')) {
+            wpm_set_language($test_lang);
+        }
+        
         // Apply filters to get custom template data
         $mail_data = apply_filters('fs_create_order_mail_data', $mail_data);
 
@@ -1324,4 +1405,32 @@ class FS_Post_Types
         return apply_filters('fs_register_custom_post_types', $types);
     }
 
+    /**
+     * Get current language for template editing
+     * Checks edit_lang GET parameter, POST parameter, or falls back to wp-multilang
+     *
+     * @return string Language code
+     */
+    private function get_current_template_language()
+    {
+        // Check edit_lang GET parameter (format: ua-ru)
+        if (isset($_GET['edit_lang'])) {
+            $lang = sanitize_text_field($_GET['edit_lang']);
+            return strtolower($lang);
+        }
+        
+        // Check POST parameter (for form submissions)
+        if (isset($_POST['edit_lang'])) {
+            $lang = sanitize_text_field($_POST['edit_lang']);
+            return strtolower($lang);
+        }
+        
+        // Fallback to wp-multilang current language
+        if (function_exists('wpm_get_language')) {
+            return strtolower(wpm_get_language());
+        }
+        
+        // Default to Ukrainian
+        return 'ua';
+    }
 }

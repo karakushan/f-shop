@@ -2244,6 +2244,8 @@ function fs_the_atts_list($post_id = 0, $args = [])
         'wrapper_class' => 'fs-atts-list',
         'exclude' => [],
         'parent' => 0,
+        'limit' => 0, // 0 means no limit
+        'grouped' => false, // If true, display attributes grouped by parent categories with headers
     ]);
     $term_args = [
         'hide_empty' => false,
@@ -2260,22 +2262,105 @@ function fs_the_atts_list($post_id = 0, $args = [])
         }
     }
     if ($parents) {
+        // Get parent terms with positions for sorting
+        $parent_terms = [];
         foreach ($parents as $k => $parent) {
             $primary_term = get_term($k, $fs_config->data['features_taxonomy']);
-            $second_term = [];
-            foreach ($parent as $p) {
-                $s = get_term($p, $fs_config->data['features_taxonomy']);
-                $second_term[] = apply_filters('the_title', $s->name);
+            if (is_wp_error($primary_term) || !$primary_term) {
+                continue;
             }
+            $position = get_term_meta($k, 'fs_att_position', true);
+            $position = $position !== '' ? intval($position) : 0;
+            $parent_terms[] = [
+                'term' => $primary_term,
+                'position' => $position,
+                'children' => $parent
+            ];
+        }
+        
+        // Sort by position
+        usort($parent_terms, function ($a, $b) {
+            if ($a['position'] == $b['position']) {
+                return 0;
+            }
+            return ($a['position'] < $b['position']) ? -1 : 1;
+        });
+        
+        // Apply limit if specified
+        if ($args['limit'] > 0) {
+            $parent_terms = array_slice($parent_terms, 0, $args['limit']);
+        }
+        
+        // If grouped format is requested, display with headers and two-column grid
+        if ($args['grouped']) {
+            foreach ($parent_terms as $parent_data) {
+                $primary_term = $parent_data['term'];
+                $parent = $parent_data['children'];
+                $attributes = [];
+                foreach ($parent as $p) {
+                    $s = get_term($p, $fs_config->data['features_taxonomy']);
+                    if (!is_wp_error($s) && $s) {
+                        $attributes[] = [
+                            'name' => apply_filters('the_title', $s->name),
+                            'value' => apply_filters('the_title', $s->name)
+                        ];
+                    }
+                }
+                
+                if (empty($attributes)) {
+                    continue;
+                }
+                
+                // Group header
+                $list .= '<div class="fs-atts-group">';
+                $list .= '<h3 class="fs-atts-group__title">' . esc_html(apply_filters('the_title', $primary_term->name)) . '</h3>';
+                $list .= '<div class="fs-atts-group__grid">';
+                
+                // Attributes in two columns - each child term is a separate attribute
+                // Each child term name is both label and value (as shown in screenshot)
+                foreach ($attributes as $attr) {
+                    $list .= '<div class="fs-atts-group__item">';
+                    $list .= '<span class="fs-atts-group__label">' . esc_html($attr['name']) . ':</span>';
+                    $list .= '<span class="fs-atts-group__value">' . esc_html($attr['name']) . '</span>';
+                    $list .= '</div>';
+                }
+                
+                $list .= '</div>'; // .fs-atts-group__grid
+                $list .= '</div>'; // .fs-atts-group
+            }
+        } else {
+            // Original format for backward compatibility
+            foreach ($parent_terms as $parent_data) {
+                $primary_term = $parent_data['term'];
+                $parent = $parent_data['children'];
+                $second_term = [];
+                foreach ($parent as $p) {
+                    $s = get_term($p, $fs_config->data['features_taxonomy']);
+                    if (!is_wp_error($s) && $s) {
+                        $second_term[] = apply_filters('the_title', $s->name);
+                    }
+                }
 
-            $list .= '<li><span class="first">'.apply_filters('the_title', $primary_term->name).': </span><span class="last">'.implode(', ', $second_term).' </span></li > ';
+                if (!empty($second_term)) {
+                    $list .= '<li><span class="first">'.apply_filters('the_title', $primary_term->name).': </span><span class="last">'.implode(', ', $second_term).' </span></li > ';
+                }
+            }
         }
     }
 
-    $html_atts = fs_parse_attr([], [
-        'class' => $args['wrapper_class'],
-    ]);
-    printf(' <%s % s >%s </%s > ', $args['wrapper'], $html_atts, $list, $args['wrapper']);
+    if ($args['grouped']) {
+        // For grouped format, output div wrapper
+        $html_atts = fs_parse_attr([], [
+            'class' => $args['wrapper_class'] . ' fs-atts-list--grouped',
+        ]);
+        printf('<div %s>%s</div>', $html_atts, $list);
+    } else {
+        // Original format
+        $html_atts = fs_parse_attr([], [
+            'class' => $args['wrapper_class'],
+        ]);
+        printf(' <%s % s >%s </%s > ', $args['wrapper'], $html_atts, $list, $args['wrapper']);
+    }
 }
 
 /**
@@ -3126,12 +3211,13 @@ function fs_load_template($template_path)
  *
  * @return array|int|WP_Error
  */
-function fs_get_shipping_methods()
+function fs_get_shipping_methods($args = [])
 {
-    return get_terms([
+    $args = wp_parse_args($args, [
         'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
         'hide_empty' => false,
     ]);
+    return get_terms($args);
 }
 
 function fs_get_payment_methods()

@@ -26,11 +26,71 @@ $attributes = get_terms( [
 	            name: "",
 	            value: ""
 	        },
+			newAttributeName: "",
+			showCreateNewForm: false,
 			attributes: <?php echo htmlentities(json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? [])) ?>,
 			showAddForm: false,
+			draggedIndex: null,
+			dragOverIndex: null,
 			getAttributes(){
 				 $store.FS?.getAttributes(<?php echo $post_id ?>)
 				    .then((response) => { this.attributes = response.data; });
+			},
+			handleDragStart(index){
+				this.draggedIndex = index;
+			},
+			handleDragOver(event, index){
+				event.preventDefault();
+				this.dragOverIndex = index;
+			},
+			handleDragLeave(){
+				this.dragOverIndex = null;
+			},
+			handleDrop(event, dropIndex){
+				event.preventDefault();
+				if(this.draggedIndex === null || this.draggedIndex === dropIndex){
+					this.dragOverIndex = null;
+					this.draggedIndex = null;
+					return;
+				}
+				
+				// Reorder attributes array
+				const draggedItem = this.attributes[this.draggedIndex];
+				this.attributes.splice(this.draggedIndex, 1);
+				this.attributes.splice(dropIndex, 0, draggedItem);
+				
+				// Update positions
+				this.updatePositions();
+				
+				this.dragOverIndex = null;
+				this.draggedIndex = null;
+			},
+			updatePositions(){
+				this.attributes.forEach((attr, index) => {
+					if(attr.position !== index){
+						this.$store.FS?.updateAttributePosition(attr.id, index);
+					}
+				});
+				// Refresh list after a short delay to ensure positions are saved
+				setTimeout(() => {
+					this.getAttributes();
+				}, 300);
+			},
+			createNewAttribute(){
+				if(this.newAttributeName.trim().length < 1){
+					alert("<?php _e('Attribute name cannot be empty', 'f-shop'); ?>");
+					return;
+				}
+				this.$store.FS?.createNewAttribute(this.createAttribute.postId, this.newAttributeName)
+					.then((response) => {
+						if(response.success){
+							this.newAttributeName = "";
+							this.showCreateNewForm = false;
+							this.getAttributes();
+						} else {
+							alert(response.data?.message || "<?php _e('Error creating attribute', 'f-shop'); ?>");
+						}
+					});
 			},
 			validateAttribute(ctx,exclude = []){
 				this[ctx] = [];
@@ -91,6 +151,34 @@ $attributes = get_terms( [
 		</select>
 		<button  class="button button-primary button-large"
 		        x-on:click.prevent="selectedAttribute ? attachAttribute(selectedAttribute) : showAddForm=true"><?php _e( 'Add', 'f-shop' ) ?></button>
+		<button class="button button-large" 
+		        x-on:click.prevent="showCreateNewForm = true"
+		        style="margin-left: 10px;"><?php _e('Create New', 'f-shop'); ?></button>
+	</div>
+
+	<div class="fs-attributes__create-new fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap" 
+	     x-show="showCreateNewForm"
+	     x-transition
+	     style="margin-top: 15px; padding: 15px; background: #f5f5f5; border-radius: 4px; gap: 15px;">
+		<div class="fs-attributes__create-field fs-flex-1">
+			<label for="new-attribute-name" style="display: block; margin-bottom: 5px;"><?php _e('Attribute Name:', 'f-shop'); ?></label>
+			<input type="text" 
+			       id="new-attribute-name"
+			       class="fs-attributes__input" 
+			       x-model="newAttributeName"
+			       @keyup.enter="createNewAttribute()"
+			       placeholder="<?php _e('Enter attribute name', 'f-shop'); ?>"
+			       style="width: 100%;">
+		</div>
+		<div class="fs-attributes__create-field" style="display: flex; flex-direction: column; gap: 10px; justify-content: flex-start; align-items: flex-start;">
+			<label style="display: block; margin-bottom: 5px; visibility: hidden;">&nbsp;</label>
+			<div style="display: flex; gap: 10px;">
+				<button class="button button-primary button-large"
+				        x-on:click.prevent="createNewAttribute()"><?php _e('OK', 'f-shop'); ?></button>
+				<button class="button button-large"
+				        x-on:click.prevent="showCreateNewForm = false; newAttributeName = ''"><?php _e('Cancel', 'f-shop'); ?></button>
+			</div>
+		</div>
 	</div>
 
 	<div class="fs-attributes__create fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap" x-show="showAddForm"
@@ -120,11 +208,34 @@ $attributes = get_terms( [
 
 	<div class="fs-attributes__list">
 		<template x-for="(attribute, attributeIndex) in attributes" :key="'attribute-'+attributeIndex">
-			<div class="fs-attributes__item " x-data="{ open:false }">
+			<div class="fs-attributes__item" 
+			     x-data="{ open:false, isDragging: false }"
+			     draggable="true"
+			     @dragstart="handleDragStart(attributeIndex); isDragging = true"
+			     @dragend="isDragging = false; draggedIndex = null"
+			     @dragover.prevent="handleDragOver($event, attributeIndex)"
+			     @dragleave="handleDragLeave()"
+			     @drop="handleDrop($event, attributeIndex)"
+			     :class="{ 'fs-attributes__item--dragging': isDragging, 'fs-attributes__item--drag-over': dragOverIndex === attributeIndex }"
+			     style="cursor: move; position: relative;">
 				<div class="fs-attributes__item-header fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap">
 					<div class="fs-attributes__item-name fs-flex fs-flex-1 fs-flex-items-center fs-gap-0-5">
+						<span class="fs-attributes__drag-handle dashicons dashicons-menu-alt" 
+						      style="cursor: move; opacity: 0; transition: opacity 0.2s; color: #666;"
+						      @mouseenter="$el.style.opacity = '1'"
+						      @mouseleave="$el.style.opacity = '0'"
+						      title="<?php _e('Drag to reorder', 'f-shop'); ?>"></span>
 						<span class="dashicons dashicons-category"></span>
 						<span x-text="attribute.name+' ('+attribute.children.length+')'"></span>
+					</div>
+					<div class="fs-attributes__item-position fs-flex fs-flex-items-center fs-gap-0-5" style="margin-right: 10px;">
+						<label style="margin: 0; white-space: nowrap;"><?php _e('Position:', 'f-shop'); ?></label>
+						<input type="number" 
+						       :value="attribute.position || 0" 
+						       @change="$store.FS?.updateAttributePosition(attribute.id, $event.target.value).then(() => { getAttributes(); })"
+						       style="width: 60px; padding: 2px 5px;"
+						       min="0"
+						       step="1">
 					</div>
 					<div class="fs-attributes__item-actions">
 						<button class="fs-text-error" title="<?php _e('Delete the attribute and all its values','f-shop'); ?>"

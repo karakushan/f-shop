@@ -998,10 +998,14 @@ class FS_Product
                 return $child->parent === $attribute->term_id;
             }));
 
+            $position = get_term_meta($attribute->term_id, 'fs_att_position', true);
+            $position = $position !== '' ? intval($position) : 0;
+
             return [
                 'id' => $attribute->term_id,
                 'name' => str_replace(['\'', '"'], ['ʼ'], $attribute->name),
                 'parent' => $attribute->parent,
+                'position' => $position,
                 'children' => array_map(function ($child) {
                     return [
                         'id' => $child->term_id,
@@ -1018,6 +1022,16 @@ class FS_Product
                 }, get_terms(['parent' => $attribute->term_id, 'hide_empty' => false, 'taxonomy' => $tax])),
             ];
         }, $parents);
+
+        // Sort by position
+        usort($groped, function ($a, $b) {
+            $pos_a = isset($a['position']) ? intval($a['position']) : 0;
+            $pos_b = isset($b['position']) ? intval($b['position']) : 0;
+            if ($pos_a === $pos_b) {
+                return 0;
+            }
+            return ($pos_a < $pos_b) ? -1 : 1;
+        });
 
         return array_values($groped);
     }

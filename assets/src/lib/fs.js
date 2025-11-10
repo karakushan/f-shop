@@ -354,6 +354,20 @@ class FS {
     });
   }
 
+  createNewAttribute(postId, attributeName) {
+    return this.post("fs_create_new_attribute", {
+      post_id: postId,
+      attribute_name: attributeName,
+    });
+  }
+
+  updateAttributePosition(attributeId, position) {
+    return this.post("fs_update_attribute_position", {
+      attribute_id: attributeId,
+      position: position,
+    });
+  }
+
   sendOrder($event, order = { cart: [] }) {
     window.dispatchEvent(new CustomEvent("fs-checkout-start-submit"));
     const formData = new FormData($event.target);
