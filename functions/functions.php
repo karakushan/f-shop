@@ -2364,6 +2364,143 @@ function fs_the_atts_list($post_id = 0, $args = [])
 }
 
 /**
+ * Gets product attributes as array data structure
+ *
+ * @param int $post_id Product post ID. Default 0 (current post)
+ * @param array $args {
+ *     Optional. Array of arguments.
+ *     @type array $exclude Array of term IDs to exclude
+ *     @type int $parent Parent term ID to filter by. Default 0 (all parents)
+ *     @type int $limit Maximum number of attribute groups to return. Default 0 (no limit)
+ *     @type bool $grouped If true, returns grouped structure with parent names. Default false
+ * }
+ * @return array Array of attribute groups with their children. Empty array if no attributes found.
+ */
+function fs_get_atts_list($post_id = 0, $args = [])
+{
+    global $post;
+    $fs_config = new FS_Config();
+    $post_id = !empty($post_id) ? $post_id : $post->ID;
+    $args = wp_parse_args($args, [
+        'exclude' => [],
+        'parent' => 0,
+        'limit' => 0, // 0 means no limit
+        'grouped' => false, // If true, returns grouped structure with parent names
+    ]);
+    
+    $term_args = [
+        'hide_empty' => false,
+        'exclude_tree' => $args['exclude'],
+    ];
+    
+    $post_terms = wp_get_object_terms($post_id, $fs_config->data['features_taxonomy'], $term_args);
+    $parents = [];
+    
+    if ($post_terms) {
+        foreach ($post_terms as $post_term) {
+            if ($post_term->parent == 0 || ($args['parent'] != 0 && $args['parent'] != $post_term->parent)) {
+                continue;
+            }
+            $parents[$post_term->parent][$post_term->term_id] = $post_term->term_id;
+        }
+    }
+    
+    if (empty($parents)) {
+        return [];
+    }
+    
+    // Get parent terms with positions for sorting
+    $parent_terms = [];
+    foreach ($parents as $k => $parent) {
+        $primary_term = get_term($k, $fs_config->data['features_taxonomy']);
+        if (is_wp_error($primary_term) || !$primary_term) {
+            continue;
+        }
+        $position = get_term_meta($k, 'fs_att_position', true);
+        $position = $position !== '' ? intval($position) : 0;
+        $parent_terms[] = [
+            'term' => $primary_term,
+            'position' => $position,
+            'children' => $parent
+        ];
+    }
+    
+    // Sort by position
+    usort($parent_terms, function ($a, $b) {
+        if ($a['position'] == $b['position']) {
+            return 0;
+        }
+        return ($a['position'] < $b['position']) ? -1 : 1;
+    });
+    
+    // Apply limit if specified
+    if ($args['limit'] > 0) {
+        $parent_terms = array_slice($parent_terms, 0, $args['limit']);
+    }
+    
+    $result = [];
+    
+    foreach ($parent_terms as $parent_data) {
+        $primary_term = $parent_data['term'];
+        $parent = $parent_data['children'];
+        $attributes = [];
+        
+        foreach ($parent as $p) {
+            $s = get_term($p, $fs_config->data['features_taxonomy']);
+            if (!is_wp_error($s) && $s) {
+                $attr_type = get_term_meta($s->term_id, 'fs_att_type', true);
+                $attr_value = $s->name;
+                
+                // Get attribute value based on type
+                if ($attr_type == 'color') {
+                    $attr_value = get_term_meta($s->term_id, 'fs_att_color_value', true);
+                } elseif ($attr_type == 'image') {
+                    $image_id = get_term_meta($s->term_id, 'fs_att_image_value', true);
+                    $attr_value = $image_id ? wp_get_attachment_url($image_id) : $s->name;
+                }
+                
+                $attributes[] = [
+                    'id' => $s->term_id,
+                    'name' => apply_filters('the_title', $s->name),
+                    'slug' => $s->slug,
+                    'value' => apply_filters('the_title', $attr_value),
+                    'type' => $attr_type ? $attr_type : 'text',
+                ];
+            }
+        }
+        
+        if (empty($attributes)) {
+            continue;
+        }
+        
+        if ($args['grouped']) {
+            // Grouped structure with parent name
+            $result[] = [
+                'parent_id' => $primary_term->term_id,
+                'parent_name' => apply_filters('the_title', $primary_term->name),
+                'parent_slug' => $primary_term->slug,
+                'position' => $parent_data['position'],
+                'attributes' => $attributes,
+            ];
+        } else {
+            // Flat structure: parent name as key, attributes as value
+            $result[] = [
+                'parent_id' => $primary_term->term_id,
+                'parent_name' => apply_filters('the_title', $primary_term->name),
+                'parent_slug' => $primary_term->slug,
+                'position' => $parent_data['position'],
+                'values' => array_map(function($attr) {
+                    return $attr['name'];
+                }, $attributes),
+                'attributes' => $attributes,
+            ];
+        }
+    }
+    
+    return $result;
+}
+
+/**
  * Получает информацию обо всех зарегистрированных размерах картинок.
  *
  * @param bool [$unset_disabled=true] Удалить из списка размеры с 0 высотой и шириной?

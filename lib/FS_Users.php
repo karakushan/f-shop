@@ -1686,19 +1686,52 @@ class FS_Users
             'email' => $save_fields['fs_email'],
             'admin_email' => get_bloginfo('admin_email'),
             'site_url' => get_bloginfo('url'),
+            'home_url' => home_url('/'),
             'login' => $save_fields['fs_email'],
-            'cabinet_url' => fs_account_url(),
+            'cabinet_url' => get_the_permalink(intval(fs_option('page_cabinet'))),
+            'dashboard_url' => get_the_permalink(intval(fs_option('page_cabinet'))),
+            'user_id' => $user_id,
+            'client_id' => $user_id,
+            // Add client_* variables for compatibility with templates
+            'client_first_name' => $save_fields['fs_first_name'],
+            'client_last_name' => '',
+            'client_email' => $save_fields['fs_email'],
+            'client_phone' => '',
         ];
+
+        // Get user language for template selection
+        $user_lang = 'ua';
+        if (function_exists('wpm_get_language')) {
+            $user_lang = strtolower(wpm_get_language());
+        }
+        // Try to get language from user meta if available
+        $saved_user_lang = get_user_meta($user_id, 'user_lang', true);
+        if (!empty($saved_user_lang)) {
+            $user_lang = strtolower($saved_user_lang);
+        }
+
+        // Set global mail_data for template override
+        global $fs_current_mail_data;
+        $fs_current_mail_data = $replace_keys;
 
         // Send notification to the user
         $notification = new FS_Notification();
         $notification->set_recipients([$save_fields['fs_email']]);
         $notification->set_subject(sprintf(__('Registration on the website «%s»', 'f-shop'), get_bloginfo('name')));
+        
+        // Set global template path for fs_override_frontend_template filter
+        global $fs_current_template_path;
+        $fs_current_template_path = 'mail/user-registration';
+        
         $notification->set_template('mail/user-registration', $replace_keys);
         $notification->send();
 
         // Send a letter to the admin
         $notification->set_recipients([get_bloginfo('admin_email')]);
+        
+        // Set global template path for admin template
+        $fs_current_template_path = 'mail/user-registration-admin';
+        
         $notification->set_template('mail/user-registration-admin', $replace_keys);
         $notification->send();
 

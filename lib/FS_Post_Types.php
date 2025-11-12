@@ -530,6 +530,7 @@ class FS_Post_Types
                 'nonce' => wp_create_nonce('fs_mail_template_save'),
                 'strings' => [
                     'selectOrder' => __('Please select an order', 'f-shop'),
+                    'selectUser' => __('Please select a user', 'f-shop'),
                     'sending' => __('Sending...', 'f-shop'),
                     'sendTestEmail' => __('Send Test Email', 'f-shop'),
                     'errorSending' => __('Error sending email', 'f-shop'),
@@ -545,31 +546,47 @@ class FS_Post_Types
                         e.preventDefault();
                         
                         var \$button = $(this);
-                        var orderId = $('#test_order_id').val();
+                        var orderId = $('#test_order_id').length ? $('#test_order_id').val() : '';
+                        var userId = $('#test_user_id').val();
                         var templateId = \$button.data('template-id');
                         var templateUsage = \$button.data('template-usage');
                         var templateType = \$button.data('template-type');
                         var \$result = $('#fs-test-email-result');
                         
-                        if (!orderId) {
+                        // Check if order is required (for order-related templates)
+                        var isOrderTemplate = ['order_create_admin', 'order_create_customer'].indexOf(templateUsage) !== -1;
+                        if (isOrderTemplate && !orderId) {
                             alert(fsMailTemplate.strings.selectOrder);
+                            return;
+                        }
+                        
+                        // User is always required
+                        if (!userId) {
+                            alert(fsMailTemplate.strings.selectUser);
                             return;
                         }
                         
                         \$button.prop('disabled', true).text(fsMailTemplate.strings.sending);
                         \$result.hide();
                         
+                        var ajaxData = {
+                            action: 'fs_send_test_email',
+                            nonce: fsMailTemplate.nonce,
+                            user_id: userId,
+                            template_id: templateId,
+                            template_usage: templateUsage,
+                            template_type: templateType
+                        };
+                        
+                        // Add order_id only if it exists
+                        if (orderId) {
+                            ajaxData.order_id = orderId;
+                        }
+                        
                         $.ajax({
                             url: fsMailTemplate.ajaxurl,
                             type: 'POST',
-                            data: {
-                                action: 'fs_send_test_email',
-                                nonce: fsMailTemplate.nonce,
-                                order_id: orderId,
-                                template_id: templateId,
-                                template_usage: templateUsage,
-                                template_type: templateType
-                            },
+                            data: ajaxData,
                             success: function(response) {
                                 if (response.success) {
                                     \$result.html('<div class=\"notice notice-success\"><p>' + response.data.msg + '</p></div>').show();
@@ -1011,23 +1028,29 @@ class FS_Post_Types
         $usage = get_post_meta($post->ID, '_mail_template_usage', true);
         $type = get_post_meta($post->ID, '_mail_template_type', true);
         
-        // Only show for order-related templates
-        if (!in_array($usage, ['order_create_admin', 'order_create_customer'])) {
-            ?>
-            <p><?php esc_html_e('Test email is available only for order-related templates.', 'f-shop'); ?></p>
-            <?php
-            return;
-        }
+        // Check if template is order-related
+        $is_order_template = in_array($usage, ['order_create_admin', 'order_create_customer']);
         
-        // Get recent orders
-        $orders = get_posts([
-            'post_type' => FS_Config::get_data('post_type_orders'),
-            'posts_per_page' => 50,
-            'post_status' => 'any',
-            'orderby' => 'date',
+        // Get users for selection
+        $users = get_users([
+            'number' => 100,
+            'orderby' => 'registered',
             'order' => 'DESC',
         ]);
+        
+        // Get recent orders for order-related templates
+        $orders = [];
+        if ($is_order_template) {
+            $orders = get_posts([
+                'post_type' => FS_Config::get_data('post_type_orders'),
+                'posts_per_page' => 50,
+                'post_status' => 'any',
+                'orderby' => 'date',
+                'order' => 'DESC',
+            ]);
+        }
         ?>
+        <?php if ($is_order_template): ?>
         <p>
             <label for="test_order_id">
                 <strong><?php esc_html_e('Select order for test:', 'f-shop'); ?></strong>
@@ -1043,6 +1066,27 @@ class FS_Post_Types
                 <?php endforeach; ?>
             </select>
         </p>
+        <?php endif; ?>
+        
+        <p>
+            <label for="test_user_id">
+                <strong><?php esc_html_e('Select user to send test email:', 'f-shop'); ?></strong>
+            </label>
+        </p>
+        <p>
+            <select name="test_user_id" id="test_user_id" style="width: 100%;">
+                <option value=""><?php esc_html_e('-- Select user --', 'f-shop'); ?></option>
+                <?php foreach ($users as $user): ?>
+                    <option value="<?php echo esc_attr($user->ID); ?>" data-email="<?php echo esc_attr($user->user_email); ?>">
+                        <?php 
+                        $display_name = !empty($user->display_name) ? $user->display_name : $user->user_login;
+                        echo esc_html(sprintf(__('%s (%s)', 'f-shop'), $display_name, $user->user_email)); 
+                        ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </p>
+        
         <p>
             <button type="button" 
                     id="fs-send-test-email" 
@@ -1054,7 +1098,7 @@ class FS_Post_Types
             </button>
         </p>
         <p class="description">
-            <?php esc_html_e('Test email will be sent to admin email address.', 'f-shop'); ?>
+            <?php esc_html_e('Test email will be sent to selected user email address.', 'f-shop'); ?>
         </p>
         <div id="fs-test-email-result" style="margin-top: 10px; display: none;"></div>
         <?php
@@ -1076,110 +1120,176 @@ class FS_Post_Types
         }
 
         $order_id = isset($_POST['order_id']) ? intval($_POST['order_id']) : 0;
+        $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
         $template_id = isset($_POST['template_id']) ? intval($_POST['template_id']) : 0;
         $template_usage = isset($_POST['template_usage']) ? sanitize_text_field($_POST['template_usage']) : '';
         $template_type = isset($_POST['template_type']) ? sanitize_text_field($_POST['template_type']) : '';
 
-        if (!$order_id || !$template_id) {
-            wp_send_json_error(['msg' => __('Order ID and Template ID are required', 'f-shop')]);
+        if (!$template_id) {
+            wp_send_json_error(['msg' => __('Template ID is required', 'f-shop')]);
         }
 
-        // Get order data
-        $order = new \FS\FS_Order($order_id);
-        if (!$order->ID) {
-            wp_send_json_error(['msg' => __('Order not found', 'f-shop')]);
-        }
-
-        // Prepare mail_data similar to FS_Ajax::create_order
-        $order_meta = get_post_meta($order_id);
-        $order_data = $order->get_order_data();
-        
-        // Get delivery and payment methods
-        $delivery_method = '';
-        $payment_method = '';
-        if (isset($order_meta['_delivery'][0])) {
-            $delivery_data = maybe_unserialize($order_meta['_delivery'][0]);
-            if (isset($delivery_data['method']) && $delivery_data['method']) {
-                $delivery_method = fs_get_delivery($delivery_data['method']);
-            }
-        }
-        if (isset($order_meta['_payment'][0]) && $order_meta['_payment'][0]) {
-            $payment_term = get_term($order_meta['_payment'][0]);
-            $payment_method = $payment_term ? $payment_term->name : '';
+        if (!$user_id) {
+            wp_send_json_error(['msg' => __('User ID is required', 'f-shop')]);
         }
 
         // Get user data
-        $user_data = isset($order_meta['_user'][0]) ? maybe_unserialize($order_meta['_user'][0]) : [];
-        
-        // Prepare cart items
-        $cart_items = [];
-        if (isset($order_meta['_products'][0])) {
-            $products = maybe_unserialize($order_meta['_products'][0]);
-            if (is_array($products)) {
-                foreach ($products as $product_id => $product_data) {
-                    // fs_set_product can accept product ID or array with product data
-                    $product_item = is_array($product_data) ? array_merge(['ID' => $product_id], $product_data) : ['ID' => $product_id];
-                    $product = fs_set_product($product_item);
-                    if ($product && isset($product->title)) {
-                        $cart_items[] = [
-                            'name' => $product->title,
-                            'link' => isset($product->permalink) ? $product->permalink : get_permalink($product_id),
-                            'thumbnail_url' => isset($product->thumbnail_url) ? $product->thumbnail_url : get_the_post_thumbnail_url($product_id, 'thumbnail'),
-                            'qty' => isset($product_data['count']) ? $product_data['count'] : 1,
-                            'all_price' => isset($product_data['cost']) ? $product_data['cost'] : (isset($product->price) ? $product->price : 0),
-                            'currency' => fs_currency(),
-                            'attr' => isset($product_data['attr']) ? $product_data['attr'] : [],
-                        ];
-                    }
-                }
+        $user = get_user_by('ID', $user_id);
+        if (!$user) {
+            wp_send_json_error(['msg' => __('User not found', 'f-shop')]);
+        }
+
+        $user_email = $user->user_email;
+        $is_order_template = in_array($template_usage, ['order_create_admin', 'order_create_customer']);
+
+        // For order-related templates, order_id is required
+        if ($is_order_template && !$order_id) {
+            wp_send_json_error(['msg' => __('Order ID is required for order-related templates', 'f-shop')]);
+        }
+
+        // Get order data if order template
+        $order = null;
+        if ($is_order_template && $order_id) {
+            $order = new \FS\FS_Order($order_id);
+            if (!$order->ID) {
+                wp_send_json_error(['msg' => __('Order not found', 'f-shop')]);
             }
         }
 
-        // Format order date
-        $order_date = get_the_date('', $order_id);
-        $order_date_i18n = get_the_date(get_option('date_format') . ' ' . get_option('time_format'), $order_id);
+        // Get user meta data
+        $user_first_name = get_user_meta($user_id, 'fs_first_name', true);
+        if (empty($user_first_name)) {
+            $user_first_name = get_user_meta($user_id, 'first_name', true);
+        }
+        if (empty($user_first_name)) {
+            $user_first_name = $user->display_name;
+        }
+        
+        $user_last_name = get_user_meta($user_id, 'fs_last_name', true);
+        if (empty($user_last_name)) {
+            $user_last_name = get_user_meta($user_id, 'last_name', true);
+        }
+        
+        $user_phone = get_user_meta($user_id, 'fs_phone', true);
+        if (empty($user_phone)) {
+            $user_phone = get_user_meta($user_id, 'phone', true);
+        }
 
-        // Build mail_data
+        // Initialize mail_data with common fields
         $mail_data = [
-            'order_date' => $order_date_i18n,
-            'order_id' => $order_id,
-            'order_title' => $order->post->post_title ?? sprintf(__('Order #%d', 'f-shop'), $order_id),
-            'cart_discount' => isset($order_meta['_order_discount'][0]) ? sprintf('%s %s', apply_filters('fs_price_format', $order_meta['_order_discount'][0]), fs_currency()) : '0 ' . fs_currency(),
-            'cart_amount' => isset($order_meta['_amount'][0]) ? sprintf('%s %s', apply_filters('fs_price_format', $order_meta['_amount'][0]), fs_currency()) : '0 ' . fs_currency(),
-            'delivery_cost' => isset($order_meta['_delivery'][0]) ? (new \FS\FS_Delivery($order_id))->get_shipping_cost_text() : '0 ' . fs_currency(),
-            'products_cost' => isset($order_meta['_cart_cost'][0]) ? sprintf('%s %s', apply_filters('fs_price_format', $order_meta['_cart_cost'][0]), fs_currency()) : '0 ' . fs_currency(),
-            'packing_cost' => isset($order_meta['_packing_cost'][0]) ? sprintf('%s %s', apply_filters('fs_price_format', $order_meta['_packing_cost'][0]), fs_currency()) : '0 ' . fs_currency(),
-            'delivery_method' => $delivery_method,
-            'delivery_number' => isset($delivery_data['secession']) ? $delivery_data['secession'] : '',
-            'payment_method' => $payment_method,
-            'cart_items' => $cart_items,
-            'order_edit_url' => admin_url('post.php?post=' . $order_id . '&action=edit'),
-            'dashboard_url' => fs_account_url(),
             'site_name' => get_bloginfo('name'),
             'home_url' => home_url('/'),
+            'site_url' => get_bloginfo('url'),
             'admin_email' => get_option('admin_email'),
             'contact_email' => fs_option('manager_email', get_option('admin_email')),
             'contact_phone' => fs_option('contact_phone'),
             'contact_address' => fs_option('contact_address'),
             'mail_logo' => fs_option('fs_email_logo') ? wp_get_attachment_image_url(fs_option('fs_email_logo'), 'full') : '',
             'social_links' => [],
-            'client_city' => isset($order_meta['city'][0]) ? $order_meta['city'][0] : '',
-            'client_address' => isset($order_meta['_delivery'][0]) ? (maybe_unserialize($order_meta['_delivery'][0])['address'] ?? '') : '',
-            'address_street' => '',
-            'address_house_number' => '',
-            'address_entrance_number' => '',
-            'address_apartment_number' => '',
-            'client_phone' => isset($user_data['phone']) ? $user_data['phone'] : '',
-            'client_email' => isset($user_data['email']) ? $user_data['email'] : '',
-            'client_first_name' => isset($user_data['first_name']) ? $user_data['first_name'] : '',
-            'client_last_name' => isset($user_data['last_name']) ? $user_data['last_name'] : '',
-            'client_id' => isset($user_data['id']) ? $user_data['id'] : 0,
-            'client_comment' => isset($order_meta['_comment'][0]) ? $order_meta['_comment'][0] : '',
-            'admin_mail_title' => __('Test Email: New Order', 'f-shop'),
-            'admin_mail_message' => __('This is a test email sent from email template editor.', 'f-shop'),
-            'customer_mail_title' => __('Test Email: Thank you for your order', 'f-shop'),
-            'customer_mail_message' => __('This is a test email sent from email template editor.', 'f-shop'),
+            'dashboard_url' => fs_account_url(),
+            'cabinet_url' => fs_account_url(),
+            'email' => $user_email,
+            'login' => $user->user_login,
+            'first_name' => $user_first_name,
+            'full_name' => $user_first_name,
+            'password' => __('[Test Password]', 'f-shop'),
         ];
+
+        // Add order-specific data if order template
+        if ($is_order_template && $order) {
+            $order_meta = get_post_meta($order_id);
+            
+            // Get delivery and payment methods
+            $delivery_method = '';
+            $payment_method = '';
+            $delivery_data = [];
+            if (isset($order_meta['_delivery'][0])) {
+                $delivery_data = maybe_unserialize($order_meta['_delivery'][0]);
+                if (isset($delivery_data['method']) && $delivery_data['method']) {
+                    $delivery_method = fs_get_delivery($delivery_data['method']);
+                }
+            }
+            if (isset($order_meta['_payment'][0]) && $order_meta['_payment'][0]) {
+                $payment_term = get_term($order_meta['_payment'][0]);
+                $payment_method = $payment_term ? $payment_term->name : '';
+            }
+
+            // Get user data from order
+            $order_user_data = isset($order_meta['_user'][0]) ? maybe_unserialize($order_meta['_user'][0]) : [];
+            
+            // Prepare cart items
+            $cart_items = [];
+            if (isset($order_meta['_products'][0])) {
+                $products = maybe_unserialize($order_meta['_products'][0]);
+                if (is_array($products)) {
+                    foreach ($products as $product_id => $product_data) {
+                        $product_item = is_array($product_data) ? array_merge(['ID' => $product_id], $product_data) : ['ID' => $product_id];
+                        $product = fs_set_product($product_item);
+                        if ($product && isset($product->title)) {
+                            $cart_items[] = [
+                                'name' => $product->title,
+                                'link' => isset($product->permalink) ? $product->permalink : get_permalink($product_id),
+                                'thumbnail_url' => isset($product->thumbnail_url) ? $product->thumbnail_url : get_the_post_thumbnail_url($product_id, 'thumbnail'),
+                                'qty' => isset($product_data['count']) ? $product_data['count'] : 1,
+                                'all_price' => isset($product_data['cost']) ? $product_data['cost'] : (isset($product->price) ? $product->price : 0),
+                                'currency' => fs_currency(),
+                                'attr' => isset($product_data['attr']) ? $product_data['attr'] : [],
+                            ];
+                        }
+                    }
+                }
+            }
+
+            // Format order date
+            $order_date_i18n = get_the_date(get_option('date_format') . ' ' . get_option('time_format'), $order_id);
+
+            // Merge order-specific data
+            $mail_data = array_merge($mail_data, [
+                'order_date' => $order_date_i18n,
+                'order_id' => $order_id,
+                'order_title' => $order->post->post_title ?? sprintf(__('Order #%d', 'f-shop'), $order_id),
+                'cart_discount' => isset($order_meta['_order_discount'][0]) ? sprintf('%s %s', apply_filters('fs_price_format', $order_meta['_order_discount'][0]), fs_currency()) : '0 ' . fs_currency(),
+                'cart_amount' => isset($order_meta['_amount'][0]) ? sprintf('%s %s', apply_filters('fs_price_format', $order_meta['_amount'][0]), fs_currency()) : '0 ' . fs_currency(),
+                'delivery_cost' => isset($order_meta['_delivery'][0]) ? (new \FS\FS_Delivery($order_id))->get_shipping_cost_text() : '0 ' . fs_currency(),
+                'products_cost' => isset($order_meta['_cart_cost'][0]) ? sprintf('%s %s', apply_filters('fs_price_format', $order_meta['_cart_cost'][0]), fs_currency()) : '0 ' . fs_currency(),
+                'packing_cost' => isset($order_meta['_packing_cost'][0]) ? sprintf('%s %s', apply_filters('fs_price_format', $order_meta['_packing_cost'][0]), fs_currency()) : '0 ' . fs_currency(),
+                'delivery_method' => $delivery_method,
+                'delivery_number' => isset($delivery_data['secession']) ? $delivery_data['secession'] : '',
+                'payment_method' => $payment_method,
+                'cart_items' => $cart_items,
+                'order_edit_url' => admin_url('post.php?post=' . $order_id . '&action=edit'),
+                'client_city' => isset($order_meta['city'][0]) ? $order_meta['city'][0] : '',
+                'client_address' => isset($order_meta['_delivery'][0]) ? (maybe_unserialize($order_meta['_delivery'][0])['address'] ?? '') : '',
+                'address_street' => '',
+                'address_house_number' => '',
+                'address_entrance_number' => '',
+                'address_apartment_number' => '',
+                'client_phone' => isset($order_user_data['phone']) ? $order_user_data['phone'] : $user_phone,
+                'client_email' => isset($order_user_data['email']) ? $order_user_data['email'] : $user_email,
+                'client_first_name' => isset($order_user_data['first_name']) ? $order_user_data['first_name'] : $user_first_name,
+                'client_last_name' => isset($order_user_data['last_name']) ? $order_user_data['last_name'] : $user_last_name,
+                'client_id' => isset($order_user_data['id']) ? $order_user_data['id'] : $user_id,
+                'client_comment' => isset($order_meta['_comment'][0]) ? $order_meta['_comment'][0] : '',
+                'admin_mail_title' => __('Test Email: New Order', 'f-shop'),
+                'admin_mail_message' => __('This is a test email sent from email template editor.', 'f-shop'),
+                'customer_mail_title' => __('Test Email: Thank you for your order', 'f-shop'),
+                'customer_mail_message' => __('This is a test email sent from email template editor.', 'f-shop'),
+            ]);
+        } else {
+            // For non-order templates, use user data
+            $mail_data = array_merge($mail_data, [
+                'client_phone' => $user_phone,
+                'client_email' => $user_email,
+                'client_first_name' => $user_first_name,
+                'client_last_name' => $user_last_name,
+                'client_id' => $user_id,
+            ]);
+            
+            // Add password reset specific data
+            if ($template_usage === 'password_reset') {
+                $mail_data['password'] = __('[Test Password]', 'f-shop');
+            }
+        }
 
         // Get language for test email (from edit_lang GET parameter or current admin language)
         $test_lang = 'ua';
@@ -1201,36 +1311,53 @@ class FS_Post_Types
             wpm_set_language($test_lang);
         }
         
-        // Apply filters to get custom template data
-        $mail_data = apply_filters('fs_create_order_mail_data', $mail_data);
+        // Apply filters to get custom template data (only for order templates)
+        if ($is_order_template) {
+            $mail_data = apply_filters('fs_create_order_mail_data', $mail_data);
+        }
 
-        // Determine template path
+        // Determine template path based on usage type
         $template_path = '';
         if ($template_usage === 'order_create_admin') {
             $template_path = 'mail/admin-create-order';
         } elseif ($template_usage === 'order_create_customer') {
             $template_path = 'mail/user-create-order';
+        } elseif ($template_usage === 'user_registration') {
+            $template_path = 'mail/user-registration';
+        } elseif ($template_usage === 'user_registration_admin') {
+            $template_path = 'mail/user-registration-admin';
+        } elseif ($template_usage === 'password_reset') {
+            $template_path = 'mail/user-lost-password';
         }
 
         if (empty($template_path)) {
-            wp_send_json_error(['msg' => __('Invalid template usage type', 'f-shop')]);
+            wp_send_json_error(['msg' => sprintf(__('Invalid template usage type: %s', 'f-shop'), $template_usage)]);
         }
 
         // Set global template path for fs_override_frontend_template
         global $fs_current_template_path;
         $fs_current_template_path = $template_path;
+        
+        // Set global mail_data for template override
+        global $fs_current_mail_data;
+        $fs_current_mail_data = $mail_data;
 
         // Send test email
         try {
             $notification = new \FS\FS_Notification();
-            $admin_email = get_option('admin_email');
             
             // Get subject from template or use default
             $subject = '';
-            if ($template_type === 'admin') {
-                $subject = !empty($mail_data['admin_mail_title']) ? $mail_data['admin_mail_title'] : __('Test: New Order', 'f-shop');
-            } else {
+            if ($template_usage === 'order_create_admin' || $template_usage === 'user_registration_admin') {
+                $subject = !empty($mail_data['admin_mail_title']) ? $mail_data['admin_mail_title'] : __('Test Email', 'f-shop');
+            } elseif ($template_usage === 'order_create_customer') {
                 $subject = !empty($mail_data['customer_mail_title']) ? $mail_data['customer_mail_title'] : __('Test: Order Confirmation', 'f-shop');
+            } elseif ($template_usage === 'user_registration') {
+                $subject = sprintf(__('Registration on the website «%s»', 'f-shop'), get_bloginfo('name'));
+            } elseif ($template_usage === 'password_reset') {
+                $subject = __('Password Reset', 'f-shop');
+            } else {
+                $subject = __('Test Email', 'f-shop');
             }
             
             // Replace variables in subject
@@ -1242,13 +1369,14 @@ class FS_Post_Types
                 $subject
             );
 
-            $notification->set_recipients([$admin_email]);
+            // Send to selected user email
+            $notification->set_recipients([$user_email]);
             $notification->set_subject($subject);
             $notification->set_template($template_path, $mail_data);
             $notification->send();
 
             wp_send_json_success([
-                'msg' => sprintf(__('Test email sent successfully to %s', 'f-shop'), $admin_email)
+                'msg' => sprintf(__('Test email sent successfully to %s', 'f-shop'), $user_email)
             ]);
         } catch (\Exception $e) {
             wp_send_json_error([
