@@ -192,6 +192,11 @@ msgstr ""
 msgid "All items have been added to the cart"
 msgstr ""
 
+#: lib/FS_Ajax.php:194
+#, php-format
+msgid "Order #%1$s from %2$s %3$s (%4$s)"
+msgstr ""
+
 #: lib/FS_Cart.php:226
 msgid "All items have been successfully removed from the cart."
 msgstr ""

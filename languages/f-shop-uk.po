@@ -215,6 +215,11 @@ msgstr "Додає поле для введення мітки іншими мо
 msgid "All items have been added to the cart"
 msgstr "Всі товари додано до кошика"
 
+#: lib/FS_Ajax.php:194
+#, php-format
+msgid "Order #%1$s from %2$s %3$s (%4$s)"
+msgstr "Замовлення #%1$s від %2$s %3$s (%4$s)"
+
 #: lib/FS_Cart.php:226
 msgid "All items have been successfully removed from the cart."
 msgstr "Усі товари було успішно видалено із кошика."

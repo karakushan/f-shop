@@ -28,6 +28,20 @@ module.exports = {
                 loader: "vue-loader",
             },
             {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            url: false,
+                            importLoaders: 1,
+                            sourceMap: true
+                        }
+                    }
+                ],
+            },
+            {
                 test: /\.scss$/,
                 use: [
                     MiniCssExtractPlugin.loader,

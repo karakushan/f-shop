@@ -1467,6 +1467,7 @@ function fs_attr_group_filter($group, $type = 'option', $option_default = 'Вы�
 function fs_range_slider()
 {
     $term_id = get_queried_object_id() ? get_queried_object_id() : 0;
+    $use_cents = (int) fs_option('price_cents') === 1;
 
     echo fs_frontend_template('widget/jquery-ui-slider/ui-slider', [
         'vars' => [
@@ -1475,6 +1476,8 @@ function fs_range_slider()
             'price_start' => !empty($_GET['price_start']) ? intval($_GET['price_start']) : fs_price_min($term_id),
             'price_end' => !empty($_GET['price_end']) ? intval($_GET['price_end']) : fs_price_max($term_id),
             'currency' => fs_currency(),
+            'use_cents' => $use_cents,
+            'input_step' => $use_cents ? '0.01' : '1',
         ],
     ]);
 }

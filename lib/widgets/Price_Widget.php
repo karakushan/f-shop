@@ -85,12 +85,18 @@ class Price_Widget extends \WP_Widget
 			? $instance['title_' . get_locale()] : $instance['title'];
 
 		$title = apply_filters('widget_title', $title);
+		$use_cents = (int) fs_option('price_cents') === 1;
 
 		echo $args['before_widget'];
 		if (! empty($title)) {
 			echo $args['before_title'] . esc_html($title) . $args['after_title'];
 		}
-		echo fs_frontend_template('widget/jquery-ui-slider/ui-slider');
+		echo fs_frontend_template('widget/jquery-ui-slider/ui-slider', [
+			'vars' => [
+				'use_cents'  => $use_cents,
+				'input_step' => $use_cents ? '0.01' : '1',
+			],
+		]);
 		echo $args['after_widget'];
 	}
 

@@ -245,7 +245,8 @@ class FS_Action
 			'data'          => [],
 			'wrapper_class' => 'noUiSlider-wrapper'
 		]);
-		$term_id = get_queried_object_id();
+		$term_id   = get_queried_object_id();
+		$use_cents = (int) fs_option('price_cents') === 1;
 ?>
 		<script>
 			const initSlider = async () => {
@@ -254,45 +255,82 @@ class FS_Action
 				const currentUrl = new URL(window.location.href);
 				const fsPriceStartInput = document.getElementById('fsPriceStartInput');
 				const fsPriceEndInput = document.getElementById('fsPriceEndInput');
-				let inputTimeout;
+				const fsApplyButton = document.getElementById('fsRangeApply');
 				let isBlocked = false;
+				let isInitialUpdate = true;
+				const useCents = <?php echo $use_cents ? 'true' : 'false'; ?>;
+				const pricePrecision = useCents ? 2 : 0;
+				const sliderStep = useCents ? 0.01 : 1;
+				const formatPrice = (value) => {
+					const parsed = parseFloat(value);
+					if (Number.isNaN(parsed)) {
+						return (0).toFixed(pricePrecision);
+					}
+
+					const fixed = parsed.toFixed(pricePrecision);
+
+					return pricePrecision === 0 ? String(parseInt(fixed, 10)) : fixed;
+				};
 
 				// set initial values from url or default
-				fsPriceStartInput.value = currentUrl.searchParams.get('price_start') || maxMinPrices.min;
-				fsPriceEndInput.value = currentUrl.searchParams.get('price_end') || maxMinPrices.max;
+				fsPriceStartInput.value = formatPrice(currentUrl.searchParams.get('price_start') || maxMinPrices.min);
+				fsPriceEndInput.value = formatPrice(currentUrl.searchParams.get('price_end') || maxMinPrices.max);
+
+				const showApplyButton = () => {
+					if (fsApplyButton) {
+						fsApplyButton.classList.remove('hidden');
+					}
+				};
+
+				const hideApplyButton = () => {
+					console.log('hideApplyButton');
+					// if (fsApplyButton) {
+					// 	fsApplyButton.classList.add('hidden');
+					// }
+				};
 
 				const applyFilters = () => {
 					if (isBlocked) return;
-
-					clearTimeout(inputTimeout);
-					inputTimeout = setTimeout(() => {
-						currentUrl.searchParams.set('price_start', fsPriceStartInput.value);
-						currentUrl.searchParams.set('price_end', fsPriceEndInput.value);
-						window.location.href = currentUrl.toString();
-					}, 1000);
-
+					currentUrl.searchParams.set('price_start', formatPrice(fsPriceStartInput.value));
+					currentUrl.searchParams.set('price_end', formatPrice(fsPriceEndInput.value));
+					hideApplyButton();
+					window.location.href = currentUrl.toString();
+				};
+				if (fsApplyButton) {
+					fsApplyButton.addEventListener('click', (event) => {
+						event.preventDefault();
+						applyFilters();
+					});
 				}
-
-
-				fsPriceStartInput.addEventListener('input', applyFilters);
-				fsPriceEndInput.addEventListener('input', applyFilters);
+				const handleManualChange = () => {
+					if (!isBlocked) {
+						showApplyButton();
+					}
+				};
+				fsPriceStartInput.addEventListener('change', handleManualChange);
+				fsPriceEndInput.addEventListener('change', handleManualChange);
+				fsPriceStartInput.addEventListener('input', () => hideApplyButton());
+				fsPriceEndInput.addEventListener('input', () => hideApplyButton());
 
 				const fsRangeSlider = noUiSlider.create(slider, {
-					start: [fsPriceStartInput.value, fsPriceEndInput.value],
+					start: [parseFloat(fsPriceStartInput.value), parseFloat(fsPriceEndInput.value)],
 					connect: true,
 					range: {
 						'min': maxMinPrices.min,
 						'max': maxMinPrices.max
-					}
+					},
+					step: sliderStep
 				});
 				fsRangeSlider.on('update', function(values, handle) {
 					isBlocked = true;
-					fsPriceStartInput.value = values[0];
-					fsPriceEndInput.value = values[1];
+					fsPriceStartInput.value = formatPrice(values[0]);
+					fsPriceEndInput.value = formatPrice(values[1]);
 					isBlocked = false;
-				});
-				fsRangeSlider.on('change', function(values, handle) {
-					applyFilters();
+					if (isInitialUpdate) {
+						isInitialUpdate = false;
+						return;
+					}
+					showApplyButton();
 				});
 			}
 

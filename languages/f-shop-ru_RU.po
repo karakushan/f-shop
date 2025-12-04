@@ -214,6 +214,11 @@ msgstr "Добавляет поле для ввода словаря на дру
 msgid "All items have been added to the cart"
 msgstr "Все товары было добавлено в корзину"
 
+#: lib/FS_Ajax.php:194
+#, php-format
+msgid "Order #%1$s from %2$s %3$s (%4$s)"
+msgstr "Заказ #%1$s от %2$s %3$s (%4$s)"
+
 #: lib/FS_Cart.php:226
 msgid "All items have been successfully removed from the cart."
 msgstr "Все товары были удалены из корзины"

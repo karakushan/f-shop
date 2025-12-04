@@ -234,11 +234,11 @@ class FS_Products
 	}
 
 	/**
-	 * Получить максимальную цену в категории вне зависимости от валюты (в базовой валюте)
+	 * Get maximum price in category or in product archive if term_id is 0.
 	 *
-	 * @param $term_id
+	 * @param int $term_id Category term ID. If 0, returns max price for all products (archive).
 	 *
-	 * @return float|int
+	 * @return float|int Maximum price
 	 */
 	public static function get_max_price_in_category($term_id)
 	{
@@ -253,14 +253,19 @@ class FS_Products
 		$args = array(
 			'post_type'      => FS_Config::get_data('post_type'),
 			'posts_per_page' => -1, // Получить все товары
-			'tax_query'      => array(
+			'post_status'    => 'publish',
+		);
+
+		// If term_id is 0, get prices for all products (archive), otherwise filter by category
+		if ($term_id > 0) {
+			$args['tax_query'] = array(
 				array(
 					'taxonomy' => FS_Config::get_data('product_taxonomy'),
 					'field'    => 'term_id',
 					'terms'    => $term_id,
 				),
-			),
-		);
+			);
+		}
 
 		$query     = new \WP_Query($args);
 		$max_price = 0;
@@ -285,11 +290,11 @@ class FS_Products
 
 
 	/**
-	 * Получить минимальную цену в категории вне зависимости от валюты (в базовой валюте)
+	 * Get minimum price in category or in product archive if term_id is 0.
 	 *
-	 * @param $term_id
+	 * @param int $term_id Category term ID. If 0, returns min price for all products (archive).
 	 *
-	 * @return float|int|mixed
+	 * @return float|int Minimum price
 	 */
 	public static function get_min_price_in_category($term_id)
 	{
@@ -304,14 +309,19 @@ class FS_Products
 		$args = array(
 			'post_type'      => FS_Config::get_data('post_type'),
 			'posts_per_page' => -1, // Получить все товары
-			'tax_query'      => array(
+			'post_status'    => 'publish',
+		);
+
+		// If term_id is 0, get prices for all products (archive), otherwise filter by category
+		if ($term_id > 0) {
+			$args['tax_query'] = array(
 				array(
 					'taxonomy' => FS_Config::get_data('product_taxonomy'),
 					'field'    => 'term_id',
 					'terms'    => $term_id,
 				),
-			),
-		);
+			);
+		}
 
 		$query     = new \WP_Query($args);
 		$min_price = 0;
