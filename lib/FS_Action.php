@@ -98,7 +98,7 @@ class FS_Action
 
 		/* отображает виджет (блок) со списком желаний */
 		add_action('fs_wishlist_widget', 'fs_wishlist_widget', 10, 1);
-		
+
 		/* удаляет товар из списка желаний */
 		add_action('fs_delete_wish_list_item', array($this, 'delete_wish_list_item'), 10, 1);
 
@@ -251,6 +251,8 @@ class FS_Action
 		<script>
 			const initSlider = async () => {
 				const slider = document.getElementById('fsRangeSlider');
+				if (!slider) return;
+
 				const maxMinPrices = await Alpine.store('FS').getMaxMinPrice(<?php echo esc_attr($term_id) ?>).then(r => r.data);
 				const currentUrl = new URL(window.location.href);
 				const fsPriceStartInput = document.getElementById('fsPriceStartInput');
@@ -273,8 +275,10 @@ class FS_Action
 				};
 
 				// set initial values from url or default
-				fsPriceStartInput.value = formatPrice(currentUrl.searchParams.get('price_start') || maxMinPrices.min);
-				fsPriceEndInput.value = formatPrice(currentUrl.searchParams.get('price_end') || maxMinPrices.max);
+				if (fsPriceStartInput && fsPriceEndInput) {
+					fsPriceStartInput.value = formatPrice(currentUrl.searchParams.get('price_start') || maxMinPrices.min);
+					fsPriceEndInput.value = formatPrice(currentUrl.searchParams.get('price_end') || maxMinPrices.max);
+				}
 
 				const showApplyButton = () => {
 					if (fsApplyButton) {
@@ -307,10 +311,14 @@ class FS_Action
 						showApplyButton();
 					}
 				};
-				fsPriceStartInput.addEventListener('change', handleManualChange);
-				fsPriceEndInput.addEventListener('change', handleManualChange);
-				fsPriceStartInput.addEventListener('input', () => hideApplyButton());
-				fsPriceEndInput.addEventListener('input', () => hideApplyButton());
+				if (fsPriceStartInput) {
+					fsPriceStartInput.addEventListener('change', handleManualChange);
+					fsPriceStartInput.addEventListener('input', () => hideApplyButton());
+				}
+				if (fsPriceEndInput) {
+					fsPriceEndInput.addEventListener('change', handleManualChange);
+					fsPriceEndInput.addEventListener('input', () => hideApplyButton());
+				}
 
 				const fsRangeSlider = noUiSlider.create(slider, {
 					start: [parseFloat(fsPriceStartInput.value), parseFloat(fsPriceEndInput.value)],
@@ -323,18 +331,32 @@ class FS_Action
 				});
 				fsRangeSlider.on('update', function(values, handle) {
 					isBlocked = true;
-					fsPriceStartInput.value = formatPrice(values[0]);
-					fsPriceEndInput.value = formatPrice(values[1]);
+					if (fsPriceStartInput && fsPriceEndInput) {
+						fsPriceStartInput.value = formatPrice(values[0]);
+						fsPriceEndInput.value = formatPrice(values[1]);
+					}
 					isBlocked = false;
 					if (isInitialUpdate) {
 						isInitialUpdate = false;
+						// Отправляем событие для скрытия прелоадера после первой инициализации
+						window.dispatchEvent(new Event('fs-price-slider-loaded'));
 						return;
 					}
 					showApplyButton();
 				});
 			}
 
-			document.addEventListener('DOMContentLoaded', initSlider);
+			// Инициализация слайдера после загрузки DOM и Alpine.js
+			document.addEventListener('DOMContentLoaded', async () => {
+				try {
+					// Ждем инициализации Alpine.js и загрузки данных
+					await initSlider();
+				} catch (error) {
+					console.error('Error initializing price slider:', error);
+					// Отправляем событие даже при ошибке, чтобы скрыть прелоадер
+					window.dispatchEvent(new Event('fs-price-slider-loaded'));
+				}
+			});
 		</script>
 		<div class="<?php echo esc_attr($args['wrapper_class']) ?>">
 	<?php

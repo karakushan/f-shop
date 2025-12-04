@@ -1365,6 +1365,7 @@ class FS_Ajax
 
     /**
      * Returns product attributes for a specific category or for product archive if category_id is null.
+     * Results for archive (category_id is null) are cached for 1 hour to reduce database queries.
      *
      * @return void
      */
@@ -1380,13 +1381,30 @@ class FS_Ajax
 
         $attribute_id = (int) $_POST['attribute_id'];
         $category_id = isset($_POST['category_id']) && $_POST['category_id'] !== '' && $_POST['category_id'] !== 'null' && $_POST['category_id'] !== null
-            ? (int) $_POST['category_id'] 
+            ? (int) $_POST['category_id']
             : null;
 
         // If category_id is null, get attributes for product archive (all products)
         if ($category_id === null) {
+            // Cache key for archive attributes (only for archive, not for specific categories)
+            $cache_key = 'fs_archive_attributes_' . $attribute_id;
+
+            // Try to get cached result (1 hour cache)
+            $cached_attributes = get_transient($cache_key);
+            if (false !== $cached_attributes) {
+                wp_send_json_success([
+                    'attributes' => (array) $cached_attributes,
+                ]);
+                return;
+            }
+
+            // Get attributes from database
             $attributes = $this->get_archive_attributes($attribute_id);
+
+            // Cache result for 1 hour (3600 seconds)
+            set_transient($cache_key, $attributes, HOUR_IN_SECONDS);
         } else {
+            // For specific categories, don't use cache (always get fresh data)
             $attributes = fs_product_category_screen_attributes($attribute_id, $category_id);
         }
 
