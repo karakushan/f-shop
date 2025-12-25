@@ -179,8 +179,6 @@ class FS_Ajax
             // Получить вариацию товара по атрибутам
             add_action('wp_ajax_fs_get_variation_by_attributes', [$this, 'fs_get_variation_by_attributes_callback']);
             add_action('wp_ajax_nopriv_fs_get_variation_by_attributes', [$this, 'fs_get_variation_by_attributes_callback']);
-
-            
         }
     }
 
@@ -850,14 +848,43 @@ class FS_Ajax
                 });
         }, ARRAY_FILTER_USE_BOTH);
 
+        // Get custom validation rules from filter
+        $validation_rules = apply_filters('fs_field_validation_rules', [], $form_fields);
+
         foreach ($form_fields as $key => $form_field) {
+            // Required field validation
             if (isset($form_field['required']) && $form_field['required'] && trim($_POST[$key]) == '') {
                 $errors[$key] = sprintf(__('The "%s" field is required!', 'f-shop'), $form_field['name']);
             }
-            if ($form_field['type'] === 'tel' && isset($_POST[$key]) && strlen(preg_replace('/[^0-9]/', '', $_POST[$key])) !== 12) {
-                $errors[$key] = __('The phone number must have at least 12 digits.', 'f-shop');
+
+            // Apply custom validation rules if exists
+            if (isset($validation_rules[$key]) && isset($_POST[$key])) {
+                $rule = $validation_rules[$key];
+                $field_value = $_POST[$key];
+
+                // Check if callback function exists
+                if (isset($rule['callback']) && is_callable($rule['callback'])) {
+                    $validation_result = call_user_func($rule['callback'], $field_value, $key, $form_field);
+
+                    // If validation failed, add error
+                    if ($validation_result !== true) {
+                        $error_message = is_string($validation_result)
+                            ? $validation_result
+                            : (isset($rule['message']) ? $rule['message'] : sprintf(__('The "%s" field is invalid.', 'f-shop'), $form_field['name']));
+                        $errors[$key] = $error_message;
+                    }
+                }
+            } else {
+                // Default validation for tel fields (backward compatibility)
+                // Only apply if no custom validation rule exists
+                if ($form_field['type'] === 'tel' && isset($_POST[$key]) && !empty(trim($_POST[$key])) && strlen(preg_replace('/[^0-9]/', '', $_POST[$key])) !== 12) {
+                    $errors[$key] = __('The phone number must have at least 12 digits.', 'f-shop');
+                }
             }
         }
+
+        // Allow filtering errors before sending
+        $errors = apply_filters('fs_checkout_validation_errors', $errors, $form_fields);
 
         array_walk($form_fields, function (&$fields, $key) use ($form_fields) {
             $item = $form_fields[$key];
@@ -1020,14 +1047,14 @@ class FS_Ajax
         // Вставляем заказ в базу данных
         $pay_method = $sanitize_field['fs_payment_methods'] ? get_term(intval($sanitize_field['fs_payment_methods']), $fs_config->data['product_pay_taxonomy']) : null;
         $post_title = sprintf('%s  %s (%s)', $sanitize_field['fs_first_name'], $sanitize_field['fs_last_name'], $current_date_i18n);
-        
+
         // Get current user language for order
         $order_language = 'ua';
         if (function_exists('wpm_get_language')) {
             $order_language = wpm_get_language();
             $order_language = strtolower($order_language);
         }
-        
+
         $new_order_data = [
             'post_title' => $post_title,
             'post_content' => '',
@@ -1153,11 +1180,11 @@ class FS_Ajax
             // We send a letter with order details to the customer
             $notification->set_recipients([$sanitize_field['fs_email']]);
             $notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($customer_mail_subject), $mail_data));
-            
+
             // Set global template path for fs_override_frontend_template filter
             global $fs_current_template_path;
             $fs_current_template_path = 'mail/user-create-order';
-            
+
             $notification->set_template('mail/user-create-order', $mail_data);
             $notification->send();
 
@@ -1171,10 +1198,10 @@ class FS_Ajax
             if (count($admin_users) > 0) {
                 $notification->set_recipients($admin_users);
                 $notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($admin_mail_subject), $mail_data));
-                
+
                 // Set global template path for fs_override_frontend_template filter
                 $fs_current_template_path = 'mail/admin-create-order';
-                
+
                 $notification->set_template('mail/admin-create-order', $mail_data);
                 $notification->send();
             }
@@ -1452,7 +1479,7 @@ class FS_Ajax
         } elseif (isset($_GET[$nonce_field])) {
             $nonce_verified = FS_Config::verify_nonce('get');
         }
-        
+
         if (!$nonce_verified) {
             wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
         }

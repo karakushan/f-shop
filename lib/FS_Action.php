@@ -98,7 +98,7 @@ class FS_Action
 
 		/* отображает виджет (блок) со списком желаний */
 		add_action('fs_wishlist_widget', 'fs_wishlist_widget', 10, 1);
-		
+
 		/* удаляет товар из списка желаний */
 		add_action('fs_delete_wish_list_item', array($this, 'delete_wish_list_item'), 10, 1);
 
@@ -243,31 +243,45 @@ class FS_Action
 	{
 		$args    = wp_parse_args($args, [
 			'data'          => [],
-			'wrapper_class' => 'noUiSlider-wrapper'
+			'wrapper_class' => 'noUiSlider-wrapper',
+			'unique_id'     => str_replace('.', '_', uniqid('fs_slider_'))
 		]);
 		$term_id = get_queried_object_id();
+		$unique_id = str_replace('.', '_', $args['unique_id']);
+		$use_cents = fs_option('price_cents') == 1;
 ?>
 		<script>
-			const initSlider = async () => {
-				const slider = document.getElementById('fsRangeSlider');
+			const initSlider<?php echo esc_js($unique_id) ?> = async () => {
+				const slider = document.getElementById('<?php echo esc_js('fsRangeSlider' . $unique_id) ?>');
 				const maxMinPrices = await Alpine.store('FS').getMaxMinPrice(<?php echo esc_attr($term_id) ?>).then(r => r.data);
 				const currentUrl = new URL(window.location.href);
-				const fsPriceStartInput = document.getElementById('fsPriceStartInput');
-				const fsPriceEndInput = document.getElementById('fsPriceEndInput');
+				const fsPriceStartInput = document.getElementById('<?php echo esc_js('fsPriceStartInput' . $unique_id) ?>');
+				const fsPriceEndInput = document.getElementById('<?php echo esc_js('fsPriceEndInput' . $unique_id) ?>');
+				const useCents = <?php echo $use_cents ? 'true' : 'false'; ?>;
 				let inputTimeout;
 				let isBlocked = false;
 
+				// Helper function to format price based on cents setting
+				const formatPrice = (value) => {
+					const numValue = parseFloat(value);
+					return useCents ? numValue.toFixed(2) : Math.floor(numValue);
+				};
+
 				// set initial values from url or default
-				fsPriceStartInput.value = currentUrl.searchParams.get('price_start') || maxMinPrices.min;
-				fsPriceEndInput.value = currentUrl.searchParams.get('price_end') || maxMinPrices.max;
+				const priceStart = currentUrl.searchParams.get('price_start') || maxMinPrices.min;
+				const priceEnd = currentUrl.searchParams.get('price_end') || maxMinPrices.max;
+				fsPriceStartInput.value = formatPrice(priceStart);
+				fsPriceEndInput.value = formatPrice(priceEnd);
 
 				const applyFilters = () => {
 					if (isBlocked) return;
 
 					clearTimeout(inputTimeout);
 					inputTimeout = setTimeout(() => {
-						currentUrl.searchParams.set('price_start', fsPriceStartInput.value);
-						currentUrl.searchParams.set('price_end', fsPriceEndInput.value);
+						const startValue = useCents ? parseFloat(fsPriceStartInput.value) : Math.floor(parseFloat(fsPriceStartInput.value));
+						const endValue = useCents ? parseFloat(fsPriceEndInput.value) : Math.floor(parseFloat(fsPriceEndInput.value));
+						currentUrl.searchParams.set('price_start', startValue);
+						currentUrl.searchParams.set('price_end', endValue);
 						window.location.href = currentUrl.toString();
 					}, 1000);
 
@@ -278,17 +292,17 @@ class FS_Action
 				fsPriceEndInput.addEventListener('input', applyFilters);
 
 				const fsRangeSlider = noUiSlider.create(slider, {
-					start: [fsPriceStartInput.value, fsPriceEndInput.value],
+					start: [parseFloat(fsPriceStartInput.value), parseFloat(fsPriceEndInput.value)],
 					connect: true,
 					range: {
-						'min': maxMinPrices.min,
-						'max': maxMinPrices.max
+						'min': parseFloat(maxMinPrices.min),
+						'max': parseFloat(maxMinPrices.max)
 					}
 				});
 				fsRangeSlider.on('update', function(values, handle) {
 					isBlocked = true;
-					fsPriceStartInput.value = values[0];
-					fsPriceEndInput.value = values[1];
+					fsPriceStartInput.value = formatPrice(values[0]);
+					fsPriceEndInput.value = formatPrice(values[1]);
 					isBlocked = false;
 				});
 				fsRangeSlider.on('change', function(values, handle) {
@@ -296,7 +310,7 @@ class FS_Action
 				});
 			}
 
-			document.addEventListener('DOMContentLoaded', initSlider);
+			document.addEventListener('DOMContentLoaded', initSlider<?php echo esc_js($unique_id) ?>);
 		</script>
 		<div class="<?php echo esc_attr($args['wrapper_class']) ?>">
 	<?php
