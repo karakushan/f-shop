@@ -2006,9 +2006,53 @@ msgstr "Сброс пароля"
 msgid "Password reset on the site"
 msgstr "Сброс пароля на сайте"
 
-#: lib/FS_Users.php:367 lib/FS_Users.php:1302
+#: lib/FS_Users.php:1101
+msgid "Password reset link has been sent to your email address."
+msgstr "Ссылка для сброса пароля отправлена на ваш адрес электронной почты."
+
+#: lib/FS_Users.php:1083
+msgid "Failed to send password reset email."
+msgstr "Не удалось отправить письмо для сброса пароля."
+
+#: lib/FS_Users.php:1086
+msgid "Mailtrap is enabled but credentials are not configured."
+msgstr "Mailtrap включен, но учетные данные не настроены."
+
+#: lib/FS_Users.php:1088
+msgid "Please check your email configuration."
+msgstr "Пожалуйста, проверьте настройки электронной почты."
+
+#: lib/FS_Users.php:1092
+msgid "Error details:"
+msgstr "Детали ошибки:"
+
+#: lib/FS_Users.php:1128
+msgid "Password reset link has expired. Please request a new one."
+msgstr "Ссылка для сброса пароля истекла. Пожалуйста, запросите новую."
+
+#: lib/FS_Users.php:1130
+msgid "Invalid password reset link."
+msgstr "Недействительная ссылка для сброса пароля."
+
+#: lib/FS_Users.php:1119
+msgid "Invalid reset key."
+msgstr "Недействительный ключ сброса."
+
+#: lib/FS_Users.php:1136
+msgid "Password cannot be empty."
+msgstr "Пароль не может быть пустым."
+
+#: lib/FS_Users.php:1140
+msgid "Password cannot be a space or all spaces."
+msgstr "Пароль не может быть пробелом или состоять только из пробелов."
+
+#: lib/FS_Users.php:367 lib/FS_Users.php:1302 lib/FS_Users.php:1144
 msgid "Passwords do not match"
 msgstr "Пароли не совпадают"
+
+#: lib/FS_Users.php:1144
+msgid "Passwords do not match."
+msgstr "Пароли не совпадают."
 
 #: templates/front-end/shortcode/fs-order-info.php:74
 msgid "pay now"

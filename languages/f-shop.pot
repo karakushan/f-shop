@@ -1866,8 +1866,52 @@ msgstr ""
 msgid "Password reset on the site"
 msgstr ""
 
-#: lib/FS_Users.php:367 lib/FS_Users.php:1302
+#: lib/FS_Users.php:1101
+msgid "Password reset link has been sent to your email address."
+msgstr ""
+
+#: lib/FS_Users.php:1083
+msgid "Failed to send password reset email."
+msgstr ""
+
+#: lib/FS_Users.php:1086
+msgid "Mailtrap is enabled but credentials are not configured."
+msgstr ""
+
+#: lib/FS_Users.php:1088
+msgid "Please check your email configuration."
+msgstr ""
+
+#: lib/FS_Users.php:1092
+msgid "Error details:"
+msgstr ""
+
+#: lib/FS_Users.php:1128
+msgid "Password reset link has expired. Please request a new one."
+msgstr ""
+
+#: lib/FS_Users.php:1130
+msgid "Invalid password reset link."
+msgstr ""
+
+#: lib/FS_Users.php:1119
+msgid "Invalid reset key."
+msgstr ""
+
+#: lib/FS_Users.php:1136
+msgid "Password cannot be empty."
+msgstr ""
+
+#: lib/FS_Users.php:1140
+msgid "Password cannot be a space or all spaces."
+msgstr ""
+
+#: lib/FS_Users.php:367 lib/FS_Users.php:1302 lib/FS_Users.php:1144
 msgid "Passwords do not match"
+msgstr ""
+
+#: lib/FS_Users.php:1144
+msgid "Passwords do not match."
 msgstr ""
 
 #: templates/front-end/shortcode/fs-order-info.php:74
