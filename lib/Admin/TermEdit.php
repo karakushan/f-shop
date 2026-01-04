@@ -27,7 +27,7 @@ class TermEdit
     public function __construct()
     {
         add_action('carbon_fields_register_fields', [$this, 'carbon_register_term_meta']);
-        add_action('saved_'.FS_Config::get_data('product_taxonomy'), [
+        add_action('saved_' . FS_Config::get_data('product_taxonomy'), [
             $this,
             'saved_product_category_callback',
         ]);
@@ -54,7 +54,7 @@ class TermEdit
 
             $fs = [];
             foreach ($term_fields as $name => $field) {
-                if (!in_array($field['type'], $this->allowed_types)) {
+                if (!isset($field['type']) || !in_array($field['type'], $this->allowed_types)) {
                     continue;
                 }
 
@@ -71,7 +71,7 @@ class TermEdit
                     }
 
                     // Create single field with language indicator in label
-                    $label = $field['name'].' ('.strtoupper($current_lang).')';
+                    $label = $field['name'] . ' (' . strtoupper($current_lang) . ')';
                     $f = $this->make_field($field, $name, $label);
                     $f->set_datastore($multilingual_datastore);
                     $fs[] = $f;

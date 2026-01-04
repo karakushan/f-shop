@@ -329,6 +329,19 @@ class FS_Taxonomy
                 ];
             }
 
+            // Price range filtering
+            if (!empty($url['price_start']) && !empty($url['price_end'])) {
+                $price_start = floatval($url['price_start']);
+                $price_end = floatval($url['price_end']);
+
+                $meta_query[] = [
+                    'key' => FS_Config::get_meta('price_sort'),
+                    'value' => [$price_start, $price_end],
+                    'type' => 'NUMERIC',
+                    'compare' => 'BETWEEN',
+                ];
+            }
+
             // Фильтрация по производителю
             if (!empty($url['brands'])) {
                 $brands = explode(FS_Filters::get_param_separator(), sanitize_text_field($url['brands']));
