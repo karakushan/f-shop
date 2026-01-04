@@ -3953,3 +3953,71 @@ msgstr "Це тестове повідомлення, відправлене з 
 #: lib/FS_Post_Types.php
 msgid "Cart items table (editable template)"
 msgstr "Таблиця товарів (редагується через шаблон)"
+
+#: lib/FS_Settings.php:735
+msgid "Development mode"
+msgstr "Режим розробки"
+
+#: lib/FS_Settings.php:736
+msgid "Settings for development and testing functionality"
+msgstr "Налаштування для функціональності розробки та тестування"
+
+#: lib/FS_Settings.php:741
+msgid "Enable email testing with Mailtrap.io"
+msgstr "Увімкнути тестування електронної пошти з Mailtrap.io"
+
+#: lib/FS_Settings.php:742
+msgid "When enabled, all emails will be sent through Mailtrap sandbox for testing purposes"
+msgstr "Коли увімкнено, всі листи будуть відправлятися через Mailtrap sandbox для тестування"
+
+#: lib/FS_Settings.php:748
+msgid "Mailtrap Username"
+msgstr "Ім'я користувача Mailtrap"
+
+#: lib/FS_Settings.php:749
+msgid "Your Mailtrap username from sandbox settings"
+msgstr "Ваше ім'я користувача Mailtrap з налаштувань sandbox"
+
+#: lib/FS_Settings.php:755
+msgid "Mailtrap Password"
+msgstr "Пароль Mailtrap"
+
+#: lib/FS_Settings.php:756
+msgid "Your Mailtrap password from sandbox settings"
+msgstr "Ваш пароль Mailtrap з налаштувань sandbox"
+
+#: lib/FS_Settings.php:762
+msgid "Mailtrap Host"
+msgstr "Хост Mailtrap"
+
+#: lib/FS_Settings.php:763
+msgid "Mailtrap SMTP host address"
+msgstr "Адреса SMTP хоста Mailtrap"
+
+#: lib/FS_Settings.php:769
+msgid "Mailtrap Port"
+msgstr "Порт Mailtrap"
+
+#: lib/FS_Settings.php:770
+msgid "Mailtrap SMTP port (usually 2525 for sandbox)"
+msgstr "SMTP порт Mailtrap (зазвичай 2525 для sandbox)"
+
+#: lib/FS_Settings.php:785
+msgid "Currencies and prices"
+msgstr "Валюти та ціни"
+
+#: lib/FS_Settings.php:821
+msgid "Update prices"
+msgstr "Оновити ціни"
+
+#: lib/FS_Settings.php:822
+msgid "Update"
+msgstr "Оновити"
+
+#: lib/FS_Settings.php:850
+msgid "Disable standard modal windows"
+msgstr "Вимкнути стандартні модальні вікна"
+
+#: lib/FS_Settings.php:851
+msgid "Check this option to disable default plugin modal windows (cart, wishlist, etc.) if you want to use your own custom modals"
+msgstr "Встановіть цю опцію, щоб вимкнути стандартні модальні вікна плагіна (кошик, список бажань тощо), якщо ви хочете використовувати власні модальні вікна"
