@@ -61,6 +61,9 @@ class FS_Users
         add_action('wp_ajax_fs_resetpass', [$this, 'reset_password_ajax']);
         add_action('wp_ajax_nopriv_fs_resetpass', [$this, 'reset_password_ajax']);
 
+        // Upload avatar/image for user profile
+        add_action('wp_ajax_fs_upload_avatar', [$this, 'upload_avatar_ajax']);
+
         // Protection of personal account from unauthorized users
         add_action('template_redirect', [$this, 'cabinet_protect']);
 
@@ -1945,6 +1948,125 @@ class FS_Users
         }
 
         return false;
+    }
+
+    /**
+     * AJAX handler for avatar upload.
+     * Allows authenticated users to upload avatar images.
+     *
+     * @return void
+     */
+    public function upload_avatar_ajax()
+    {
+        // Check if user is logged in
+        if (!is_user_logged_in()) {
+            wp_send_json_error([
+                'message' => __('You must be logged in to upload files.', 'f-shop'),
+            ]);
+        }
+
+        // Verify nonce
+        if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'media-form')) {
+            wp_send_json_error([
+                'message' => __('Security check failed.', 'f-shop'),
+            ]);
+        }
+
+        // Check if file was uploaded
+        if (empty($_FILES['async-upload'])) {
+            wp_send_json_error([
+                'message' => __('No file was uploaded.', 'f-shop'),
+            ]);
+        }
+
+        $user_id = get_current_user_id();
+        $file = $_FILES['async-upload'];
+
+        // Check for upload errors
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            wp_send_json_error([
+                'message' => $this->get_file_error_message($file['error']),
+            ]);
+        }
+
+        // Check file type
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!in_array($file['type'], $allowed_types)) {
+            wp_send_json_error([
+                'message' => __('Invalid file type. Allowed types: JPG, PNG, GIF, WEBP', 'f-shop'),
+            ]);
+        }
+
+        // Check file size (max 5MB)
+        $max_size = apply_filters('fs_max_file_size', 5 * 1024 * 1024, 'fs_user_avatar');
+        if ($file['size'] > $max_size) {
+            wp_send_json_error([
+                'message' => sprintf(
+                    __('File is too large. Maximum size is %s MB', 'f-shop'),
+                    round($max_size / (1024 * 1024), 2)
+                ),
+            ]);
+        }
+
+        // Include WordPress file handling functions
+        require_once ABSPATH.'wp-admin/includes/image.php';
+        require_once ABSPATH.'wp-admin/includes/file.php';
+        require_once ABSPATH.'wp-admin/includes/media.php';
+
+        // Temporarily grant upload_files capability using filter
+        add_filter('user_has_cap', [$this, 'grant_upload_cap'], 10, 4);
+
+        // Handle file upload
+        $attachment_id = media_handle_upload('async-upload', 0);
+
+        // Remove temporary capability filter
+        remove_filter('user_has_cap', [$this, 'grant_upload_cap'], 10);
+
+        if (is_wp_error($attachment_id)) {
+            wp_send_json_error([
+                'message' => $attachment_id->get_error_message(),
+            ]);
+        }
+
+        // Get attachment URL
+        $attachment_url = wp_get_attachment_image_url($attachment_id, 'medium');
+        if (!$attachment_url) {
+            $attachment_url = wp_get_attachment_url($attachment_id);
+        }
+
+        // Delete old avatar if exists
+        $old_attachment_id = get_user_meta($user_id, 'fs_user_avatar', true);
+        if ($old_attachment_id && $old_attachment_id != $attachment_id) {
+            wp_delete_attachment($old_attachment_id, true);
+        }
+
+        // Save new avatar ID
+        update_user_meta($user_id, 'fs_user_avatar', $attachment_id);
+
+        // Return success response
+        wp_send_json_success([
+            'id' => $attachment_id,
+            'url' => $attachment_url,
+        ]);
+    }
+
+    /**
+     * Temporarily grants upload_files capability to current user.
+     * Used for avatar upload functionality.
+     *
+     * @param array $allcaps All capabilities of the user
+     * @param array $caps    Required capabilities
+     * @param array $args    Additional arguments
+     * @param WP_User $user  User object
+     *
+     * @return array Modified capabilities
+     */
+    public function grant_upload_cap($allcaps, $caps, $args, $user)
+    {
+        if (in_array('upload_files', $caps) && $user->ID == get_current_user_id()) {
+            $allcaps['upload_files'] = true;
+        }
+        return $allcaps;
     }
 
     /**
