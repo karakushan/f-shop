@@ -246,7 +246,7 @@ class FS_Action
 			'wrapper_class' => 'noUiSlider-wrapper',
 			'unique_id'     => str_replace('.', '_', uniqid('fs_slider_'))
 		]);
-		$term_id = get_queried_object_id();
+		$term_id   = get_queried_object_id();
 		$unique_id = str_replace('.', '_', $args['unique_id']);
 		$use_cents = fs_option('price_cents') == 1;
 ?>
@@ -308,6 +308,11 @@ class FS_Action
 				fsRangeSlider.on('change', function(values, handle) {
 					applyFilters();
 				});
+
+				// Notify Alpine widgets that price slider data has been loaded
+				if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+					window.dispatchEvent(new CustomEvent('fs_price_slider_loaded'));
+				}
 			}
 
 			document.addEventListener('DOMContentLoaded', initSlider<?php echo esc_js($unique_id) ?>);

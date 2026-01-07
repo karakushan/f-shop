@@ -284,6 +284,26 @@ class FS {
     );
   }
 
+  /**
+   * Updates wishlist notification settings for a specific product.
+   *
+   * @param {number|string} productId - ID of the product.
+   * @param {Object} settings - Notification settings.
+   * @param {boolean} settings.notifyAvailable - Whether to notify about availability.
+   * @param {boolean} settings.followPrice - Whether to follow the price.
+   * @returns {Promise<object>} - Promise with server response.
+   */
+  updateWishlistNotifications(
+    productId,
+    { notifyAvailable = false, followPrice = false } = {}
+  ) {
+    return this.post("fs_update_wishlist_notifications", {
+      product_id: productId,
+      notify_available: notifyAvailable ? 1 : 0,
+      follow_price: followPrice ? 1 : 0,
+    });
+  }
+
   // === CART ===
   getCart() {
     return this.post("fs_get_cart", {});

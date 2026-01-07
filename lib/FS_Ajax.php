@@ -168,6 +168,9 @@ class FS_Ajax
             add_action('wp_ajax_fs_get_wishlist', [$this, 'get_wishlist']);
             add_action('wp_ajax_nopriv_fs_get_wishlist', [$this, 'get_wishlist']);
 
+            // Update wishlist notifications (availability / follow price)
+            add_action('wp_ajax_fs_update_wishlist_notifications', [$this, 'fs_update_wishlist_notifications']);
+
             // Возвращает все вариации товара по его ID
             add_action('wp_ajax_fs_get_product_variations', [$this, 'fs_get_product_variations_callback']);
             add_action('wp_ajax_nopriv_fs_get_product_variations', [$this, 'fs_get_product_variations_callback']);
@@ -1492,14 +1495,21 @@ class FS_Ajax
             wp_send_json_error(['msg' => __('Category ID not found', 'f-shop')]);
         }
 
-        $attribute_id = !empty($_POST['attribute_id']) ? (int)$_POST['attribute_id'] : (int)$_GET['attribute_id'];
-        $category_id = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : (int)$_GET['category_id'];
+		$attribute_id = !empty($_POST['attribute_id']) ? (int)$_POST['attribute_id'] : (int)$_GET['attribute_id'];
+		$category_id = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : (int)$_GET['category_id'];
 
-        $attributes = fs_product_category_screen_attributes($attribute_id, $category_id);
+		// Build cache key based on category and attribute to avoid heavy recalculation.
+		$cache_key = sprintf('fs_category_attributes_%d_%d', $category_id, $attribute_id);
+		$attributes = wp_cache_get($cache_key);
 
-        wp_send_json_success([
-            'attributes' => (array)$attributes,
-        ]);
+		if (false === $attributes) {
+			$attributes = fs_product_category_screen_attributes($attribute_id, $category_id);
+			wp_cache_set($cache_key, $attributes);
+		}
+
+		wp_send_json_success([
+			'attributes' => (array)$attributes,
+		]);
     }
 
     public function fs_calculate_price_callback()
@@ -1883,6 +1893,90 @@ class FS_Ajax
             'items' => FS_Wishlist::get_wishlist_items(),
             'count' => FS_Wishlist::get_wishlist_count(),
         ]);
+    }
+
+    /**
+     * Updates wishlist notification settings for the current user.
+     *
+     * Stores user preferences to be notified about product availability
+     * and/or to follow product price changes.
+     *
+     * @return void Sends JSON response with updated settings
+     */
+    public function fs_update_wishlist_notifications()
+    {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
+        }
+
+        $user_id = get_current_user_id();
+
+        if (!$user_id) {
+            wp_send_json_error(['msg' => __('User must be logged in to update wishlist notifications.', 'f-shop')]);
+        }
+
+        $product_id       = isset($_POST['product_id']) ? (int) $_POST['product_id'] : 0;
+        $notify_available = isset($_POST['notify_available']) ? (int) $_POST['notify_available'] : null;
+        $follow_price     = isset($_POST['follow_price']) ? (int) $_POST['follow_price'] : null;
+
+        if ($product_id <= 0) {
+            wp_send_json_error(['msg' => __('Invalid product ID.', 'f-shop')]);
+        }
+
+        $result = [
+            'product_id'         => $product_id,
+            'notify_available'   => false,
+            'follow_price'       => false,
+            'notify_available_list' => [],
+            'follow_price_list'     => [],
+        ];
+
+        // Helper to update a notification list in user meta
+        $update_list = static function ($meta_key, $enabled) use ($user_id, $product_id) {
+            $list = get_user_meta($user_id, $meta_key, true);
+            $list = is_array($list) ? $list : [];
+
+            $index = array_search($product_id, $list, true);
+
+            if ($enabled) {
+                if ($index === false) {
+                    $list[] = $product_id;
+                }
+            } else {
+                if ($index !== false) {
+                    unset($list[$index]);
+                    $list = array_values($list);
+                }
+            }
+
+            update_user_meta($user_id, $meta_key, $list);
+
+            return $list;
+        };
+
+        if ($notify_available !== null) {
+            $notify_list                         = $update_list('fs_wishlist_notify_available', (bool) $notify_available);
+            $result['notify_available']          = in_array($product_id, $notify_list, true);
+            $result['notify_available_list']     = $notify_list;
+        } else {
+            $current_list                        = get_user_meta($user_id, 'fs_wishlist_notify_available', true);
+            $current_list                        = is_array($current_list) ? $current_list : [];
+            $result['notify_available']          = in_array($product_id, $current_list, true);
+            $result['notify_available_list']     = $current_list;
+        }
+
+        if ($follow_price !== null) {
+            $follow_list                         = $update_list('fs_wishlist_follow_price', (bool) $follow_price);
+            $result['follow_price']              = in_array($product_id, $follow_list, true);
+            $result['follow_price_list']         = $follow_list;
+        } else {
+            $current_follow_list                 = get_user_meta($user_id, 'fs_wishlist_follow_price', true);
+            $current_follow_list                 = is_array($current_follow_list) ? $current_follow_list : [];
+            $result['follow_price']              = in_array($product_id, $current_follow_list, true);
+            $result['follow_price_list']         = $current_follow_list;
+        }
+
+        wp_send_json_success($result);
     }
 
     /**

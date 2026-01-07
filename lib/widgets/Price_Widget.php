@@ -146,7 +146,23 @@ class Price_Widget extends \WP_Widget
 		if (! empty($title)) {
 			echo $args['before_title'] . esc_html($title) . $args['after_title'];
 		}
-		echo fs_frontend_template('widget/jquery-ui-slider/ui-slider');
+
+		// Wrap price slider with Alpine loader similar to Attribute_Widget
+		?>
+		<div x-data="{ loaded: false }"
+			 x-on:fs_price_slider_loaded.window="loaded = true">
+			<div class="fs-loader-block"
+				 :style="{'display': !loaded ? 'flex' : 'none'}"
+				 style="display:none;">
+				<img src="<?php echo esc_url(FS_PLUGIN_URL); ?>/assets/img/loader-circle.svg" alt="loader">
+			</div>
+
+			<div :style="{'display': loaded ? 'block' : 'none'}">
+				<?php echo fs_frontend_template('widget/jquery-ui-slider/ui-slider'); ?>
+			</div>
+		</div>
+		<?php
+
 		echo $args['after_widget'];
 	}
 

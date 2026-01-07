@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: Fast Shop\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-04 11:05+0000\n"
-"PO-Revision-Date: 2025-04-11 08:09+0000\n"
+"PO-Revision-Date: 2026-01-07 06:08+0000\n"
 "Last-Translator: \n"
-"Language-Team: Russian\n"
+"Language-Team: Русский\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.6.11; wp-6.4.2\n"
+"X-Loco-Version: 2.8.0; wp-6.7.2; php-7.4.33"
 
 #: templates/front-end/shortcode/order-detail.php:14
 msgid "#ID"
@@ -189,7 +189,7 @@ msgid "Add tax"
 msgstr "Добавить налог"
 
 msgid "Add to cart"
-msgstr ""
+msgstr "В корзину"
 
 msgid "Add to wishlist"
 msgstr ""
@@ -3882,24 +3882,40 @@ msgid "Email Header HTML:"
 msgstr "HTML заголовка письма:"
 
 #: lib/FS_Post_Types.php:624
-msgid "HTML code for email header (e.g., opening &lt;html&gt;, &lt;head&gt;, &lt;body&gt; tags, styles, etc.)"
-msgstr "HTML код заголовка письма (например, открывающие теги &lt;html&gt;, &lt;head&gt;, &lt;body&gt;, стили и т.д.)"
+msgid ""
+"HTML code for email header (e.g., opening &lt;html&gt;, &lt;head&gt;, &lt;"
+"body&gt; tags, styles, etc.)"
+msgstr ""
+"HTML код заголовка письма (например, открывающие теги &lt;html&gt;, &lt;"
+"head&gt;, &lt;body&gt;, стили и т.д.)"
 
 #: lib/FS_Post_Types.php:627
-msgid "This header will be prepended to the main email content. Include opening HTML tags, head section with styles, and opening body tag."
-msgstr "Этот заголовок будет добавлен перед основным содержимым письма. Включите открывающие HTML теги, секцию head со стилями и открывающий тег body."
+msgid ""
+"This header will be prepended to the main email content. Include opening "
+"HTML tags, head section with styles, and opening body tag."
+msgstr ""
+"Этот заголовок будет добавлен перед основным содержимым письма. Включите "
+"открывающие HTML теги, секцию head со стилями и открывающий тег body."
 
 #: lib/FS_Post_Types.php:643
 msgid "Email Footer HTML:"
 msgstr "HTML нижнего колонтитула письма:"
 
 #: lib/FS_Post_Types.php:651
-msgid "HTML code for email footer (e.g., closing &lt;/body&gt;, &lt;/html&gt; tags, etc.)"
-msgstr "HTML код нижнего колонтитула письма (например, закрывающие теги &lt;/body&gt;, &lt;/html&gt; и т.д.)"
+msgid ""
+"HTML code for email footer (e.g., closing &lt;/body&gt;, &lt;/html&gt; tags, "
+"etc.)"
+msgstr ""
+"HTML код нижнего колонтитула письма (например, закрывающие теги &lt;/body&gt;"
+", &lt;/html&gt; и т.д.)"
 
 #: lib/FS_Post_Types.php:654
-msgid "This footer will be appended to the main email content. Include closing body and html tags."
-msgstr "Этот нижний колонтитул будет добавлен после основного содержимого письма. Включите закрывающие теги body и html."
+msgid ""
+"This footer will be appended to the main email content. Include closing body "
+"and html tags."
+msgstr ""
+"Этот нижний колонтитул будет добавлен после основного содержимого письма. "
+"Включите закрывающие теги body и html."
 
 #: lib/FS_Post_Types.php
 msgid "Test Email"
@@ -3966,8 +3982,12 @@ msgid "Enable email testing with Mailtrap.io"
 msgstr "Включить тестирование электронной почты с Mailtrap.io"
 
 #: lib/FS_Settings.php:742
-msgid "When enabled, all emails will be sent through Mailtrap sandbox for testing purposes"
-msgstr "Когда включено, все письма будут отправляться через Mailtrap sandbox для тестирования"
+msgid ""
+"When enabled, all emails will be sent through Mailtrap sandbox for testing "
+"purposes"
+msgstr ""
+"Когда включено, все письма будут отправляться через Mailtrap sandbox для "
+"тестирования"
 
 #: lib/FS_Settings.php:748
 msgid "Mailtrap Username"
@@ -4018,5 +4038,10 @@ msgid "Disable standard modal windows"
 msgstr "Отключить стандартные модальные окна"
 
 #: lib/FS_Settings.php:851
-msgid "Check this option to disable default plugin modal windows (cart, wishlist, etc.) if you want to use your own custom modals"
-msgstr "Установите эту опцию, чтобы отключить стандартные модальные окна плагина (корзина, список желаний и т.д.), если вы хотите использовать собственные модальные окна"
+msgid ""
+"Check this option to disable default plugin modal windows (cart, wishlist, "
+"etc.) if you want to use your own custom modals"
+msgstr ""
+"Установите эту опцию, чтобы отключить стандартные модальные окна плагина "
+"(корзина, список желаний и т.д.), если вы хотите использовать собственные "
+"модальные окна"

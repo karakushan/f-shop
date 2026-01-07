@@ -274,10 +274,9 @@ class Attribute_Widget extends \WP_Widget
 	 */
 	public function widget($args, $instance)
 	{
-		do_action('qm/debug', $instance);
+
 		$title = fs_option('fs_multi_language_support') && isset($instance['title_' . get_locale()])
 			? $instance['title_' . get_locale()] : $instance['title'];
-
 		$title              = apply_filters('widget_title', $title);
 		$fs_only_cats       = ! empty($instance['fs_only_cats']) ? $instance['fs_only_cats'] : [];
 		$fs_hide_in_catalog = ! empty($instance['fs_hide_in_catalog']) ? $instance['fs_hide_in_catalog'] : 0;

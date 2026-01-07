@@ -1509,17 +1509,23 @@ function fs_attr_group_filter($group, $type = 'option', $option_default = 'Вы�
  */
 function fs_range_slider()
 {
-    $term_id = get_queried_object_id() ? get_queried_object_id() : 0;
+    $term_id   = get_queried_object_id() ? get_queried_object_id() : 0;
+    // Generate unique ID for each slider instance to avoid duplicate HTML IDs on the page.
+    $unique_id = str_replace('.', '_', uniqid('fs_slider_'));
 
-    echo fs_frontend_template('widget/jquery-ui-slider/ui-slider', [
-        'vars' => [
-            'price_min' => fs_price_min($term_id),
-            'price_max' => fs_price_max($term_id),
-            'price_start' => !empty($_GET['price_start']) ? intval($_GET['price_start']) : fs_price_min($term_id),
-            'price_end' => !empty($_GET['price_end']) ? intval($_GET['price_end']) : fs_price_max($term_id),
-            'currency' => fs_currency(),
-        ],
-    ]);
+    echo fs_frontend_template(
+        'widget/jquery-ui-slider/ui-slider',
+        [
+            'vars' => [
+                'unique_id'   => $unique_id,
+                'price_min'   => fs_price_min($term_id),
+                'price_max'   => fs_price_max($term_id),
+                'price_start' => ! empty($_GET['price_start']) ? intval($_GET['price_start']) : fs_price_min($term_id),
+                'price_end'   => ! empty($_GET['price_end']) ? intval($_GET['price_end']) : fs_price_max($term_id),
+                'currency'    => fs_currency(),
+            ],
+        ]
+    );
 }
 
 /**
