@@ -1187,6 +1187,18 @@ msgstr ""
 msgid "Get a new password"
 msgstr ""
 
+#: themes/umbrella/f-shop/auth/lostpassword.php:50
+msgid "New password"
+msgstr ""
+
+#: themes/umbrella/f-shop/auth/lostpassword.php:58
+msgid "Confirm new password"
+msgstr ""
+
+#: themes/umbrella/f-shop/auth/lostpassword.php:76
+msgid "Reset password"
+msgstr ""
+
 #: templates/front-end/archive-product/loop-product.php:19
 #: templates/front-end/archive-product/loop-product.php:24
 #, php-format
@@ -3193,6 +3205,10 @@ msgstr ""
 #: lib/FS_Users.php:900
 msgid ""
 "Your password has been successfully reset. Password sent to your e-mail."
+msgstr ""
+
+#: lib/FS_Users.php:1160
+msgid "Your password has been successfully reset."
 msgstr ""
 
 #: lib/FS_Users.php:165

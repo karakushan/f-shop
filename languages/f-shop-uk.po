@@ -1275,6 +1275,18 @@ msgstr "Стать"
 msgid "Get a new password"
 msgstr "Отримати новий пароль"
 
+#: themes/umbrella/f-shop/auth/lostpassword.php:50
+msgid "New password"
+msgstr "Новий пароль"
+
+#: themes/umbrella/f-shop/auth/lostpassword.php:58
+msgid "Confirm new password"
+msgstr "Підтвердіть новий пароль"
+
+#: themes/umbrella/f-shop/auth/lostpassword.php:76
+msgid "Reset password"
+msgstr "Скинути пароль"
+
 #: templates/front-end/archive-product/loop-product.php:19
 #: templates/front-end/archive-product/loop-product.php:24
 #, php-format
@@ -3440,6 +3452,10 @@ msgstr "Ваш пароль успішно змінено"
 msgid ""
 "Your password has been successfully reset. Password sent to your e-mail."
 msgstr "Ваш пароль успішно скинуто. Пароль надіслано на вашу електронну пошту."
+
+#: lib/FS_Users.php:1160
+msgid "Your password has been successfully reset."
+msgstr "Ваш пароль успішно скинуто."
 
 #: lib/FS_Users.php:165
 #, php-format

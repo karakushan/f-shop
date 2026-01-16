@@ -1194,6 +1194,18 @@ msgstr ""
 msgid "Get a new password"
 msgstr ""
 
+#: themes/umbrella/f-shop/auth/lostpassword.php:50
+msgid "New password"
+msgstr "Nowe hasło"
+
+#: themes/umbrella/f-shop/auth/lostpassword.php:58
+msgid "Confirm new password"
+msgstr "Potwierdź nowe hasło"
+
+#: themes/umbrella/f-shop/auth/lostpassword.php:76
+msgid "Reset password"
+msgstr "Resetuj hasło"
+
 #: templates/front-end/archive-product/loop-product.php:19
 #: templates/front-end/archive-product/loop-product.php:24
 #, php-format
@@ -3197,6 +3209,10 @@ msgid ""
 "Your password has been successfully reset. Password sent to your e-mail."
 msgstr ""
 
+#: lib/FS_Users.php:1160
+msgid "Your password has been successfully reset."
+msgstr "Twoje hasło zostało pomyślnie zresetowane."
+
 #: lib/FS_Users.php:165
 #, php-format
 msgid "Your password must be %s to %s characters"
@@ -3439,7 +3455,7 @@ msgstr ""
 
 #: templates/back-end/fields/image.php:188
 msgid "Uploading..."
-msgstr ""
+msgstr "Przesyłanie..."
 
 #: templates/back-end/fields/image.php:196
 msgid "Placeholder"
@@ -3447,7 +3463,7 @@ msgstr ""
 
 #: templates/back-end/fields/image.php:197
 msgid "No image selected"
-msgstr ""
+msgstr "Nie wybrano obrazu"
 
 #: templates/back-end/fields/image.php:213
 msgid ""
@@ -3457,16 +3473,16 @@ msgstr ""
 
 #: templates/back-end/fields/image.php:225
 msgid "Upload"
-msgstr ""
+msgstr "Prześlij"
 
 #: templates/back-end/fields/image.php:243
 msgid "Media Library"
-msgstr ""
+msgstr "Biblioteka multimediów"
 
 #: templates/back-end/fields/image.php:254
 msgid "Remove"
-msgstr ""
+msgstr "Usuń"
 
 #: templates/back-end/fields/image.php:262
 msgid "Maximum file size: %s MB"
-msgstr ""
+msgstr "Maksymalny rozmiar pliku: %s MB"

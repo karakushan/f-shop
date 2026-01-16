@@ -1273,6 +1273,18 @@ msgstr "Пол"
 msgid "Get a new password"
 msgstr "Получить новый пароль"
 
+#: themes/umbrella/f-shop/auth/lostpassword.php:50
+msgid "New password"
+msgstr "Новый пароль"
+
+#: themes/umbrella/f-shop/auth/lostpassword.php:58
+msgid "Confirm new password"
+msgstr "Подтвердите новый пароль"
+
+#: themes/umbrella/f-shop/auth/lostpassword.php:76
+msgid "Reset password"
+msgstr "Сбросить пароль"
+
 #: templates/front-end/archive-product/loop-product.php:19
 #: templates/front-end/archive-product/loop-product.php:24
 #, php-format
@@ -1651,7 +1663,7 @@ msgstr "Маркетинг"
 
 #: templates/back-end/fields/image.php:262
 msgid "Maximum file size: %s MB"
-msgstr ""
+msgstr "Максимальный размер файла: %s МБ"
 
 #: lib/FS_Users.php:962
 msgid "Maximum length is %d characters"
@@ -1659,7 +1671,7 @@ msgstr ""
 
 #: templates/back-end/fields/image.php:243
 msgid "Media Library"
-msgstr ""
+msgstr "Медиабиблиотека"
 
 #: templates/front-end/dashboard/personal_info.php:8
 #: templates/front-end/dashboard/personal_info.php:65
@@ -1774,7 +1786,7 @@ msgstr "Не найдено полей для сохранения"
 
 #: templates/back-end/fields/image.php:197
 msgid "No image selected"
-msgstr ""
+msgstr "Изображение не выбрано"
 
 #: lib/FS_Payment.php:38
 msgid "No order number specified."
@@ -2416,7 +2428,7 @@ msgstr "Похожие товары"
 
 #: templates/back-end/fields/image.php:254
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: templates/back-end/metabox/related.php:22
 msgid "remove"
@@ -3142,11 +3154,11 @@ msgstr "Дата обновления"
 
 #: templates/back-end/fields/image.php:225
 msgid "Upload"
-msgstr ""
+msgstr "Загрузить"
 
 #: templates/back-end/fields/image.php:188
 msgid "Uploading..."
-msgstr ""
+msgstr "Загрузка..."
 
 #: lib/Admin/ProductEdit.php:162
 msgid "Upsell products"
@@ -3439,6 +3451,10 @@ msgstr "Ваш пароль был успешно изменен"
 msgid ""
 "Your password has been successfully reset. Password sent to your e-mail."
 msgstr "Ваш пароль был успешно сброшен. Новый пароль выслан на ваш e-mail."
+
+#: lib/FS_Users.php:1160
+msgid "Your password has been successfully reset."
+msgstr "Ваш пароль был успешно сброшен."
 
 #: lib/FS_Users.php:165
 #, php-format
