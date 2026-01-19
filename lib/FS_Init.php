@@ -132,16 +132,21 @@ class FS_Init
     public static function frontend_scripts_and_styles()
     {
         wp_enqueue_style(FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/css/iziToast.min.css', [], FS_Config::get_data('plugin_ver'), 'all');
+        // Swiper CSS is included in the compiled plugin bundle
         wp_enqueue_style(FS_PLUGIN_PREFIX . 'style', FS_PLUGIN_URL . 'assets/css/f-shop.css', [], FS_Config::get_data('plugin_ver'), 'all');
-        wp_enqueue_style(FS_PLUGIN_PREFIX . 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', [], null, 'all');
+        // Swiper is loaded from npm in theme, not from CDN
+        // wp_enqueue_style(FS_PLUGIN_PREFIX . 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', [], null, 'all');
 
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'domurl', FS_PLUGIN_URL . 'assets/js/url.min.js', ['jquery'], null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'izi-toast', FS_PLUGIN_URL . 'assets/js/iziToast.min.js', ['jquery'], null, true);
 
-        wp_enqueue_script(FS_PLUGIN_PREFIX . 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], null, true);
+        // Swiper is loaded from npm in theme, not from CDN
+        // wp_enqueue_script(FS_PLUGIN_PREFIX . 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], null, true);
 
+        // F-Shop main script depends on theme's bundle.js which provides global Swiper
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', [
             'jquery',
+            'pools-main', // Theme's bundle.js that exposes window.Swiper
         ], null, true);
 
         $l10n = [
@@ -174,7 +179,12 @@ class FS_Init
             'fs_disable_modals' => fs_option('fs_disable_modals', 0),
         ];
         wp_localize_script(FS_PLUGIN_PREFIX . 'main', 'fShop', $l10n);
-        wp_enqueue_script(FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', [], null, false);
+        
+        // Enqueue frontend CSS for Swiper
+        wp_enqueue_style(FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/css/fs-frontend.css');
+        
+        // Enqueue frontend script with Swiper in footer
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', ['jquery'], null, true);
         wp_localize_script(FS_PLUGIN_PREFIX . 'frontend', 'FS_DATA', $l10n);
     }
 

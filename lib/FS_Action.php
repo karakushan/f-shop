@@ -257,6 +257,13 @@ class FS_Action
 				const currentUrl = new URL(window.location.href);
 				const fsPriceStartInput = document.getElementById('<?php echo esc_js('fsPriceStartInput' . $unique_id) ?>');
 				const fsPriceEndInput = document.getElementById('<?php echo esc_js('fsPriceEndInput' . $unique_id) ?>');
+				
+				// Check if required elements exist
+				if (!slider || !fsPriceStartInput || !fsPriceEndInput) {
+					console.error('Price slider elements not found. Slider initialization aborted.');
+					return;
+				}
+				
 				const useCents = <?php echo $use_cents ? 'true' : 'false'; ?>;
 				let inputTimeout;
 				let isBlocked = false;

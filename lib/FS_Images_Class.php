@@ -76,39 +76,78 @@ class FS_Images_Class
 
 		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']); ?>
 		<script>
-			document.addEventListener("DOMContentLoaded", function() {
-				// Затем инициализируем слайдер с миниатюрами
-				const thumbsSwiper = new Swiper("#<?php echo $thumbs_gallery_id; ?>", {
-					direction: "vertical",
-					slidesPerView: <?php echo esc_attr($args['thumbItem']); ?>,
-					spaceBetween: 10,
-
-					loop: false,
-
-					height: <?php echo esc_attr($args['height']); ?>,
-					watchSlidesProgress: true,
-
-				});
-				// Сначала инициализируем основной слайдер
-				const mainGallerySwiper = new Swiper("#<?php echo $big_gallery_id; ?>", {
-					slidesPerView: 1,
-					loop: false,
-					thumbs: {
-						swiper: thumbsSwiper,
-					},
-					grabCursor: true,
-					height: <?php echo esc_attr($args['height']); ?>,
-					navigation: {
-						nextEl: ".fs-swiper-next",
-						prevEl: ".fs-swiper-prev",
+			(function() {
+				function initProductGallery() {
+					// Check if Swiper is available
+					if (typeof Swiper === 'undefined') {
+						console.warn('Swiper library not loaded yet, retrying...');
+						setTimeout(initProductGallery, 100);
+						return;
 					}
-				});
+					
+					if (typeof window.SwiperNavigation === 'undefined' || typeof window.SwiperThumbs === 'undefined') {
+						console.warn('Swiper modules not loaded yet, retrying...');
+						setTimeout(initProductGallery, 100);
+						return;
+					}
 
-				setTimeout(() => {
-					mainGallerySwiper.slideTo(1);
-					mainGallerySwiper.slideTo(0);
-				}, 500);
-			});
+					console.log('Initializing product gallery with IDs:', '<?php echo $thumbs_gallery_id; ?>', '<?php echo $big_gallery_id; ?>');
+
+					// Initialize thumbnail swiper
+					const thumbsSwiper = new Swiper("#<?php echo $thumbs_gallery_id; ?>", {
+						direction: "vertical",
+						slidesPerView: <?php echo esc_attr($args['thumbItem']); ?>,
+						spaceBetween: 10,
+						loop: false,
+						watchSlidesProgress: true,
+						freeMode: true,
+					});
+					
+					console.log('Thumbs swiper initialized:', thumbsSwiper);
+
+					// Initialize main gallery swiper
+					const mainGallerySwiper = new Swiper("#<?php echo $big_gallery_id; ?>", {
+						slidesPerView: 1,
+						spaceBetween: 10,
+						loop: false,
+						modules: [window.SwiperNavigation, window.SwiperThumbs],
+						thumbs: {
+							swiper: thumbsSwiper,
+						},
+						grabCursor: true,
+						navigation: {
+							nextEl: ".fs-swiper-next",
+							prevEl: ".fs-swiper-prev",
+						},
+						on: {
+							init: function() {
+								console.log('Main gallery initialized');
+								// Workaround for thumbnails sync issue
+								setTimeout(() => {
+									if (mainGallerySwiper && mainGallerySwiper.slides && mainGallerySwiper.slides.length > 1) {
+										mainGallerySwiper.slideTo(1, 0);
+										mainGallerySwiper.slideTo(0, 0);
+										console.log('Thumbnails synced');
+									}
+								}, 100);
+							},
+							slideChange: function() {
+								console.log('Slide changed to:', this.activeIndex);
+							}
+						}
+					});
+					
+					console.log('Main gallery swiper initialized:', mainGallerySwiper);
+				}
+
+				// Start initialization when DOM is ready
+				if (document.readyState === 'loading') {
+					document.addEventListener('DOMContentLoaded', initProductGallery);
+				} else {
+					// DOM already loaded
+					initProductGallery();
+				}
+			})();
 		</script>
 		<div class="fs-product-gallery">
 			<?php

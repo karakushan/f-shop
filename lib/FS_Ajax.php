@@ -1327,7 +1327,7 @@ class FS_Ajax
 
             foreach ($wishlist as $product_id) {
                 // Проверяем, существует ли товар
-                if (!get_post($product_id)) {
+                if (!get_post($product_id) || !fs_in_stock($product_id)) {
                     continue;
                 }
 
