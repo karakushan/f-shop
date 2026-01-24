@@ -80,6 +80,7 @@ class FS_Config {
 			'adress'         => [ 'label' => __( 'Address', 'f-shop' ), 'name' => 'adress' ],
 			'location'       => [ 'label' => __( 'Position on the map', 'f-shop' ), 'name' => 'location' ],
 			'profile_update' => [ 'label' => __( 'Update Date', 'f-shop' ), 'name' => 'profile_update' ],
+			'cart'           => [ 'label' => __( 'Shopping Cart', 'f-shop' ), 'name' => 'fs_user_cart' ],
 		];
 
 		self::$currencies = [

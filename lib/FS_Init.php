@@ -146,7 +146,6 @@ class FS_Init
         // F-Shop main script depends on theme's bundle.js which provides global Swiper
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'main', FS_PLUGIN_URL . 'assets/js/f-shop.js', [
             'jquery',
-            'pools-main', // Theme's bundle.js that exposes window.Swiper
         ], null, true);
 
         $l10n = [

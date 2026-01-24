@@ -38,6 +38,15 @@ class FS_Cart
         // полное удаление корзины
         add_action('fs_destroy_cart', [$this, 'destroy_cart']);
 
+        // Загрузка корзины из профиля при авторизации пользователя
+        add_action('wp_login', [$this, 'load_cart_on_login'], 10, 2);
+
+        // Сохранение корзины в профиль при выходе пользователя
+        add_action('wp_logout', [$this, 'save_cart_on_logout']);
+
+        // Приоритетная загрузка корзины из профиля для авторизованных пользователей
+        add_filter('fs_get_cart', [$this, 'load_saved_cart_first'], 10, 1);
+
         // присваиваем переменной $cart содержимое корзины
         if (!empty($_SESSION['cart'])) {
             $this->cart = $_SESSION['cart'];
@@ -45,16 +54,26 @@ class FS_Cart
     }
 
     /**
-     * Updating the number of goods in the basket by ajax.
+     * Updating number of goods in basket by ajax.
      */
     public function change_cart_item_count()
     {
         $item_id = intval($_POST['index']);
         $product_count = floatval($_POST['count']);
-        if (!empty($_SESSION['cart'])) {
-            $_SESSION['cart'][$item_id]['count'] = $product_count;
-            $product_id = (int) $_SESSION['cart'][$item_id]['ID'];
+        $cart = self::get_cart();
+
+        if (!empty($cart) && isset($cart[$item_id])) {
+            $cart[$item_id]['count'] = $product_count;
+            $_SESSION['cart'] = $cart;
+            
+            $product_id = (int) $cart[$item_id]['ID'];
             $sum = fs_get_price($product_id) * $product_count;
+            
+            // Сохранение в профиль для авторизованных пользователей
+            if (is_user_logged_in()) {
+                self::save_cart_to_profile(get_current_user_id(), $_SESSION['cart']);
+            }
+            
             wp_send_json_success([
                 'sum' => apply_filters('fs_price_format', $sum) . ' ' . fs_currency(),
                 'cost' => apply_filters('fs_price_format', fs_get_cart_cost()) . ' ' . fs_currency(),
@@ -121,7 +140,7 @@ class FS_Cart
     }
 
     /**
-     * Adds an item to the cart.
+     * Adds an item to cart.
      *
      * @param array $data
      *
@@ -168,17 +187,21 @@ class FS_Cart
 
         $_SESSION['cart'] = $cart;
 
+        // Сохранение в профиль для авторизованных пользователей
+        if (is_user_logged_in()) {
+            self::save_cart_to_profile(get_current_user_id(), $_SESSION['cart']);
+        }
+
         return true;
     }
 
-    // ajax обработка добавления в корзину
     /**
-     * Handles AJAX request for adding a product to the cart.
-     * 
-     * Processes the request data, validates it, and adds the product to the cart.
-     * If a similar product already exists in the cart, it updates the quantity.
+     * Handles AJAX request for adding a product to cart.
+     *
+     * Processes request data, validates it, and adds product to cart.
+     * If a similar product already exists in cart, it updates the quantity.
      * Supports product variations and attributes.
-     * 
+     *
      * @return void Sends JSON response with success or error message
      */
     public function add_to_cart_ajax()
@@ -286,12 +309,18 @@ class FS_Cart
         }
 
         unset($_SESSION['cart'][$cart_item]);
+        $_SESSION['cart'] = array_values($_SESSION['cart']);
+
+        // Сохранение в профиль для авторизованных пользователей
+        if (is_user_logged_in()) {
+            self::save_cart_to_profile(get_current_user_id(), $_SESSION['cart']);
+        }
 
         return true;
     }
 
     /**
-     * Destroys the cart completely.
+     * Destroys cart completely.
      *
      * @return bool
      */
@@ -299,21 +328,24 @@ class FS_Cart
     {
         unset($_SESSION['cart']);
 
+        // Сохранение в профиль для авторизованных пользователей
+        if (is_user_logged_in()) {
+            self::save_cart_to_profile(get_current_user_id(), []);
+        }
+
         return true;
     }
 
     /**
-     * Destroys the cart completely via ajax.
-     *
-     * @return bool
+     * Destroys cart completely via ajax.
      */
     public function remove_cart_ajax()
     {
-        $remove = $this->destroy_cart();
+        $remove = self::destroy_cart();
         if ($remove) {
-            wp_send_json_success(['message' => __('All items have been successfully removed from the cart.', 'f-shop')]);
+            wp_send_json_success(['message' => __('All items have been successfully removed from cart.', 'f-shop')]);
         } else {
-            wp_send_json_error(['message' => __('An error occurred while removing items from the cart or the cart is empty.', 'f-shop')]);
+            wp_send_json_error(['message' => __('An error occurred while removing items from cart or cart is empty.', 'f-shop')]);
         }
     }
 
@@ -324,27 +356,59 @@ class FS_Cart
      */
     public function delete_cart_item()
     {
-        if (!is_numeric($_POST['index']) || !isset($_SESSION['cart'][$_POST['index']])) {
-            wp_send_json_error(['message' => __('Index not specified', 'f-shop')]);
+        // Получаем актуальную корзину (с учетом профиля)
+        $cart = self::get_cart();
+        
+        // Проверяем наличие индекса
+        if (!isset($_POST['index'])) {
+            wp_send_json_error(['message' => __('Index not specified in request', 'f-shop')]);
         }
-        unset($_SESSION['cart'][$_POST['index']]);
-        $_SESSION['cart'] = array_values($_SESSION['cart']);
+        
+        $index = $_POST['index'];
+        
+        // Преобразуем в число, если это строка
+        if (is_string($index)) {
+            $index = intval($index);
+        }
+        
+        // Проверяем, является ли индекс числом
+        if (!is_numeric($index)) {
+            wp_send_json_error(['message' => __('Invalid index format', 'f-shop')]);
+        }
+        
+        // Проверяем существование элемента с таким индексом
+        if (!isset($cart[$index])) {
+            wp_send_json_error(['message' => __('Item not found in cart', 'f-shop')]);
+        }
+
+        unset($cart[$index]);
+        $_SESSION['cart'] = array_values($cart);
+        
+        // Сохранение в профиль для авторизованных пользователей
+        if (is_user_logged_in()) {
+            self::save_cart_to_profile(get_current_user_id(), $_SESSION['cart']);
+        }
 
         wp_send_json_success(self::get_cart_object());
     }
 
     /**
-     * Returns the cart.
+     * Returns cart.
      *
      * @return array
      */
     public static function get_cart()
     {
-        return !empty($_POST['cart']) ? (array) $_POST['cart'] : (isset($_SESSION['cart']) ? (array) $_SESSION['cart'] : []);
+        // Применяем фильтр для приоритетной загрузки из профиля
+        $cart = apply_filters('fs_get_cart', 
+            !empty($_POST['cart']) ? (array) $_POST['cart'] : (isset($_SESSION['cart']) ? (array) $_SESSION['cart'] : [])
+        );
+        
+        return $cart;
     }
 
     /**
-     * Checks if the cart is empty.
+     * Checks if cart is empty.
      *
      * @return bool
      */
@@ -361,10 +425,15 @@ class FS_Cart
     public static function set_cart($cart)
     {
         $_SESSION['cart'] = $cart;
+
+        // Сохранение в профиль для авторизованных пользователей
+        if (is_user_logged_in()) {
+            self::save_cart_to_profile(get_current_user_id(), $cart);
+        }
     }
 
     /**
-     * Checks if an item is in the cart.
+     * Checks if an item is in cart.
      *
      * @return bool
      */
@@ -375,5 +444,162 @@ class FS_Cart
         }, self::get_cart());
 
         return in_array($product_id, $ids);
+    }
+
+    /**
+     * Gets saved cart from user profile.
+     *
+     * @param int $user_id User ID (defaults to current user)
+     * @return array Cart items from profile
+     */
+    public static function get_saved_cart($user_id = 0)
+    {
+        if (!$user_id) {
+            $user_id = get_current_user_id();
+        }
+
+        if (!$user_id) {
+            return [];
+        }
+
+        // Для пользовательских мета-полей используем напрямую имя поля из массива user_meta
+        if (!isset(FS_Config::$user_meta['cart']['name'])) {
+            return [];
+        }
+        $meta_key = FS_Config::$user_meta['cart']['name']; // 'fs_user_cart'
+        
+        // Получаем мета-данные
+        $cart_meta = get_user_meta($user_id, $meta_key, true);
+        
+        $cart = is_array($cart_meta) ? $cart_meta : [];
+
+        return is_array($cart) ? $cart : [];
+    }
+
+    /**
+     * Saves cart to user profile.
+     *
+     * @param int $user_id User ID
+     * @param array $cart Cart items to save
+     * @return bool Success status
+     */
+    public static function save_cart_to_profile($user_id, $cart)
+    {
+        if (!$user_id) {
+            $user_id = get_current_user_id();
+        }
+
+        if (!$user_id) {
+            return false;
+        }
+
+        // Для пользовательских мета-полей используем напрямую имя поля из массива user_meta
+        if (!isset(FS_Config::$user_meta['cart']['name'])) {
+            return false;
+        }
+        $meta_key = FS_Config::$user_meta['cart']['name']; // 'fs_user_cart'
+        $result = update_user_meta($user_id, $meta_key, $cart);
+        
+        return $result;
+    }
+
+    /**
+     * Merges session cart and profile cart.
+     *
+     * @param array $session_cart Cart from session
+     * @param array $profile_cart Cart from user profile
+     *
+     * @return array Merged cart
+     */
+    private static function merge_carts($session_cart, $profile_cart)
+    {
+        $merged_cart = [];
+
+        // Create array for quick search by product ID
+        $profile_items = [];
+        foreach ($profile_cart as $item) {
+            $key = $item['ID'] . '_' . ($item['variation'] ?? 0);
+            $profile_items[$key] = $item;
+        }
+
+        // Merge items from session cart
+        foreach ($session_cart as $item) {
+            $key = $item['ID'] . '_' . ($item['variation'] ?? 0);
+
+            if (isset($profile_items[$key])) {
+                // Item exists in profile - sum quantities
+                $merged_cart[] = [
+                    'ID' => $item['ID'],
+                    'count' => $profile_items[$key]['count'] + $item['count'],
+                    'attr' => $item['attr'],
+                    'variation' => $item['variation'],
+                ];
+                unset($profile_items[$key]);
+            } else {
+                // New item in profile - add it
+                $merged_cart[] = $item;
+            }
+        }
+
+        // Add remaining items from profile
+        foreach ($profile_items as $item) {
+            $merged_cart[] = $item;
+        }
+
+        return $merged_cart;
+    }
+
+    /**
+     * Loads cart from profile on user login.
+     *
+     * @param string $user_login User login
+     * @param WP_User $user User object
+     */
+    public function load_cart_on_login($user_login, $user)
+    {
+        $profile_cart = self::get_saved_cart($user->ID);
+
+        if (!empty($profile_cart)) {
+            $session_cart = self::get_cart();
+
+            if (!empty($session_cart)) {
+                // Merge carts
+                $merged_cart = self::merge_carts($session_cart, $profile_cart);
+                $_SESSION['cart'] = $merged_cart;
+            } else {
+                // Load cart from profile
+                $_SESSION['cart'] = $profile_cart;
+            }
+        }
+    }
+
+    /**
+     * Loads saved cart from user profile with priority.
+     *
+     * @param array $cart Current cart
+     * @return array Updated cart
+     */
+    public function load_saved_cart_first($cart)
+    {
+        // Если корзина уже загружена из профиля, не перезаписываем
+        if (is_user_logged_in()) {
+            $profile_cart = self::get_saved_cart();
+            
+            if (!empty($profile_cart)) {
+                return $profile_cart;
+            }
+        }
+        
+        return $cart;
+    }
+
+    /**
+     * Saves cart to profile on user logout.
+     */
+    public function save_cart_on_logout()
+    {
+        if (isset($_SESSION['cart']) && is_user_logged_in()) {
+            self::save_cart_to_profile(get_current_user_id(), $_SESSION['cart']);
+        }
     }
 }

@@ -16,53 +16,53 @@ class ComposerStaticInit65a8bef00674e5dcac46ac3d70407240
     );
 
     public static $prefixLengthsPsr4 = array (
-        'P' => 
+        'P' =>
         array (
             'PhpParser\\' => 10,
         ),
-        'F' => 
+        'F' =>
         array (
             'FS\\Widget\\' => 10,
             'FS\\Integrations\\' => 16,
             'FS\\' => 3,
         ),
-        'D' => 
+        'D' =>
         array (
             'Doctrine\\Instantiator\\' => 22,
             'DeepCopy\\' => 9,
         ),
-        'C' => 
+        'C' =>
         array (
             'Carbon_Fields\\' => 14,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'PhpParser\\' => 
+        'PhpParser\\' =>
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'FS\\Widget\\' => 
+        'FS\\Widget\\' =>
         array (
             0 => __DIR__ . '/../..' . '/lib/widgets',
         ),
-        'FS\\Integrations\\' => 
+        'FS\\Integrations\\' =>
         array (
             0 => __DIR__ . '/../..' . '/lib/integrations',
         ),
-        'FS\\' => 
+        'FS\\' =>
         array (
             0 => __DIR__ . '/../..' . '/lib',
         ),
-        'Doctrine\\Instantiator\\' => 
+        'Doctrine\\Instantiator\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
         ),
-        'DeepCopy\\' => 
+        'DeepCopy\\' =>
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Carbon_Fields\\' => 
+        'Carbon_Fields\\' =>
         array (
             0 => __DIR__ . '/..' . '/htmlburger/carbon-fields/core',
         ),
