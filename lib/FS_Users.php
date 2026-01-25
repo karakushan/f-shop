@@ -17,7 +17,7 @@ class FS_Users
     protected $rules = [
         'lengthStatus' => true, // password length true for applicable
         'minLength' => '6',
-        'maxLength' => '12',
+        'maxLength' => '32',
         'numberStatus' => false, // password number true for contain at last one number
         'uppercaseStatus' => false, // password uppercase true for contain at last one uppercase
         'lowercaseStatus' => false, // password lowercase true for contain at last one lowercase
@@ -489,7 +489,7 @@ class FS_Users
         }
 
         // Password and repeat password
-        if ($_POST['fs_password'] != $_POST['fs_password_repeat']) {
+        if ($_POST['fs_password'] != $_POST['fs_repeat_password']) {
             wp_send_json_error(['msg' => __('Passwords do not match', 'f-shop')]);
         }
 
@@ -970,16 +970,16 @@ class FS_Users
                 'value' => fs_option('fs_autofill_form') && get_user_meta($user->ID, 'fs_subscribe_cart', 1) ? get_user_meta($user->ID, 'fs_subscribe_cart', 1) : '',
             ],
             'fs_login' => [
-                'name' => __('Login', 'f-shop'),
+                'name' => __('Login or Email', 'f-shop'),
                 'type' => 'text',
                 'label' => '',
-                'placeholder' => __('Login', 'f-shop'),
-                'description' => 'Username for account login',
+                'placeholder' => __('Enter login or email', 'f-shop'),
+                'description' => __('Enter your login or email address for authentication', 'f-shop'),
                 'value' => fs_option('fs_autofill_form') ? $user->user_login : '',
                 'required' => true,
                 'save_meta' => false,
                 'attributes' => [
-                    'autocomplete' => 'off',
+                    'autocomplete' => 'username',
                 ],
             ],
             'fs_password' => [
@@ -1004,6 +1004,19 @@ class FS_Users
                 'value' => '',
                 'required' => true,
                 'save_meta' => false,
+            ],
+            'fs_old_password' => [
+                'name' => __('Current password', 'f-shop'),
+                'placeholder' => __('Enter current password', 'f-shop'),
+                'type' => 'password',
+                'label' => '',
+                'description' => __('Enter your current password to confirm changes', 'f-shop'),
+                'value' => '',
+                'required' => true,
+                'save_meta' => false,
+                'attributes' => [
+                    'autocomplete' => 'current-password',
+                ],
             ],
         ];
 
