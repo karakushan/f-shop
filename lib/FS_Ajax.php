@@ -28,6 +28,22 @@ class FS_Ajax
             // Add product to compare
             add_action('wp_ajax_fs_add_to_comparison', [$this, 'fs_add_to_comparison_callback']);
             add_action('wp_ajax_nopriv_fs_add_to_comparison', [$this, 'fs_add_to_comparison_callback']);
+            
+            // Add product to compare (new handler for fs.js)
+            add_action('wp_ajax_fs_addto_compare', [$this, 'fs_addto_compare']);
+            add_action('wp_ajax_nopriv_fs_addto_compare', [$this, 'fs_addto_compare']);
+            
+            // Get compare list data
+            add_action('wp_ajax_fs_get_compare', [$this, 'get_compare']);
+            add_action('wp_ajax_nopriv_fs_get_compare', [$this, 'get_compare']);
+            
+            // Remove from compare list
+            add_action('wp_ajax_fs_del_compare_pos', [$this, 'remove_from_compare']);
+            add_action('wp_ajax_nopriv_fs_del_compare_pos', [$this, 'remove_from_compare']);
+            
+            // Clean compare list
+            add_action('wp_ajax_fs_clean_compare', [$this, 'fs_clean_compare']);
+            add_action('wp_ajax_nopriv_fs_clean_compare', [$this, 'fs_clean_compare']);
 
             // Deletes one term (property) of a product
             add_action('wp_ajax_fs_remove_product_term', [$this, 'fs_remove_product_term_callback']);

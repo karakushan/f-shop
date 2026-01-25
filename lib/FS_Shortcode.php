@@ -26,6 +26,9 @@ class FS_Shortcode
 
         // WISHLIST
         add_shortcode('fs_wishlist', [$this, 'wishlist_shortcode']);
+        
+        // COMPARE
+        add_shortcode('fs_compare', [$this, 'compare_shortcode']);
 
         // CART
         add_shortcode('fs_cart_widget', [$this, 'cart_widget']); // Шорткод виджета корзины
@@ -67,6 +70,39 @@ class FS_Shortcode
             'template' => 'wishlist/wishlist-product',
         ], $atts);
         $items = fs_get_wishlist();
+        $html = '<div class="'.esc_attr($atts['wrapper_class']).'">';
+
+        if ($items) {
+            $html .= $atts['before_loops'];
+            global $post;
+            foreach ($items as $post) {
+                setup_postdata($post);
+                $html .= fs_frontend_template($atts['template']);
+            }
+            $html .= $atts['after_loops'];
+            wp_reset_postdata();
+        } else {
+            $html .= '<p>'.esc_html($atts['empty_text']).'</p >';
+        }
+
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    /**
+     * Шорткод списка сравнения.
+     *
+     * @return string
+     */
+    public function compare_shortcode($atts)
+    {
+        $atts = shortcode_atts([
+            'wrapper_class' => 'fs-compare-products row',
+            'empty_text' => __('Compare list is empty', 'f-shop'),
+            'template' => 'compare/compare-product',
+        ], $atts);
+        $items = FS\FS_Compare::get_compare_products();
         $html = '<div class="'.esc_attr($atts['wrapper_class']).'">';
 
         if ($items) {

@@ -19,6 +19,10 @@ class FS {
       items: [],
       count: 0,
     };
+    this.compare = {
+      items: [],
+      count: 0,
+    };
     this.modal = {
       modalID: null,
       isOpen: false,
@@ -40,6 +44,7 @@ class FS {
 
     // Инициализация списка избранного при создании экземпляра класса
     this.initWishlist();
+    this.initCompare();
   }
 
   // Инициализация списка избранного
@@ -50,6 +55,21 @@ class FS {
       })
       .catch((error) => {
         console.error("Failed to initialize wishlist:", error);
+      });
+  }
+
+  // Инициализация списка сравнения
+  initCompare() {
+    this.updateCompare()
+      .then(() => {
+        console.log(
+          "Compare list initialized with",
+          this.compare.count,
+          "items"
+        );
+      })
+      .catch((error) => {
+        console.error("Failed to initialize compare list:", error);
       });
   }
 
@@ -213,6 +233,97 @@ class FS {
       this.wishlist = { items: [], count: 0 };
       window.location.reload();
     });
+  }
+
+  // === COMPARE ===
+
+  /**
+   * Updates compare state by fetching latest data
+   */
+  updateCompare() {
+    return this.post("fs_get_compare").then((response) => {
+      if (response.success) {
+        this.compare = response.data;
+      }
+      return response;
+    });
+  }
+
+  /**
+   * Adds an item to the compare list by its identifier.
+   *
+   * @param {string|number} itemId - The identifier of the item to add to the compare list.
+   * @return {Promise<void>} A Promise that resolves once the item is added and
+   *                         the appropriate response handling is completed.
+   */
+  addToCompare(itemId) {
+    return this.post("fs_addto_compare", { product_id: itemId }).then(
+      (response) => {
+        if (response.success) {
+          // Обновляем данные сравнения в свойстве this.compare
+          this.updateCompare().then(() => {
+            // Вызываем событие для обновления интерфейса с данными товара
+
+            const compareUpdatedEvent = new CustomEvent("fs-compare-updated", {
+              detail: {
+                action: response.data.action,
+                itemId: itemId,
+                product: response.data.product, // Передаем данные о товаре из ответа
+                compare: this.compare,
+              },
+            });
+            window.dispatchEvent(compareUpdatedEvent);
+          });
+
+          // Показываем уведомление об успешном добавлении
+          this.showToast("success", {
+            title: response.data.title ?? this.getMessage("success"),
+            message: response.data.msg,
+          });
+        } else {
+          // Показываем уведомление об ошибке
+          this.showToast("error", {
+            title: response.data.title ?? this.getMessage("error"),
+            message: response.data.msg,
+          });
+        }
+      }
+    );
+  }
+
+  // Deletes the compare list
+  cleanCompare() {
+    this.post("fs_clean_compare", {}).then((data) => {
+      this.compare = { items: [], count: 0 };
+      window.location.reload();
+    });
+  }
+
+  // Removes an item from the compare list
+  removeCompareItem(itemId) {
+    return this.post("fs_del_compare_pos", { item_id: itemId }).then(
+      (response) => {
+        if (response.success) {
+          this.updateCompare().then(() => {
+            const compareUpdatedEvent = new CustomEvent(
+              "fs-compare-item-deleted",
+              { detail: { itemId: itemId, compare: this.compare } }
+            );
+            window.dispatchEvent(compareUpdatedEvent);
+          });
+
+          this.showToast("success", {
+            title: response.data.title ?? this.getMessage("success"),
+            message: response.data.msg,
+          });
+        } else {
+          this.showToast("error", {
+            title: response.data.title ?? this.getMessage("error"),
+            message: response.data.msg,
+          });
+        }
+      }
+    );
   }
 
   /**

@@ -957,8 +957,11 @@ function fs_add_to_comparison($post_id = 0, $label = '', $attr = [])
  * @param string $label the inscription on the button
  * @param array  $attr  html attributes of the button element
  */
-function fs_order_send($label = 'Отправить заказ', $attr = [])
+function fs_order_send($label = '', $attr = [])
 {
+    if (empty($label)) {
+        $label = __('Send order', 'f-shop');
+    }
     $args = wp_parse_args($attr, [
         'class' => 'fs-order-send btn btn-success btn-lg',
         'preloader_src' => FS_PLUGIN_URL.'assets/img/form-preloader.svg',
@@ -1495,8 +1498,11 @@ function fs_amount_discount($product_id = 0, $echo = true, $wrap = '<span>%s</sp
  * @param string $type           тип фильтра 'option' (список опций в теге "select",по умолчанию) или обычный список "ul"
  * @param string $option_default первая опция (текст) если выбран 2 параметр "option"
  */
-function fs_attr_group_filter($group, $type = 'option', $option_default = 'Выберите значение')
+function fs_attr_group_filter($group, $type = 'option', $option_default = '')
 {
+    if (empty($option_default)) {
+        $option_default = __('Select value', 'f-shop');
+    }
     $fs_filter = new FS\FS_Filters();
     echo $fs_filter->attr_group_filter($group, $type, $option_default);
 }
@@ -1628,8 +1634,11 @@ function fs_price_min()
  *
  * @return void
  */
-function fs_add_to_wishlist($product_id = 0, $button_text = 'В список желаний', $args = [])
+function fs_add_to_wishlist($product_id = 0, $button_text = '', $args = [])
 {
+    if (empty($button_text)) {
+        $button_text = __('Add to wishlist', 'f-shop');
+    }
     $product_id = fs_get_product_id($product_id);
     $defaults = [
         'attr' => '',
@@ -1643,6 +1652,7 @@ function fs_add_to_wishlist($product_id = 0, $button_text = 'В список ж�
     $html_atts = fs_parse_attr([], [
         'class' => $args['class'],
         'id' => $args['id'],
+        'data-product-id' => $product_id,
         'x-data' => json_encode(['inWishlist' => FS\FS_Wishlist::contains($product_id)]),
         'x-on:click' => 'Alpine.store("FS").addToWishlist('.$product_id.'); inWishlist=!inWishlist',
         'x-bind:class' => '{\'fs-in-wishlist\':inWishlist}',
@@ -1651,6 +1661,56 @@ function fs_add_to_wishlist($product_id = 0, $button_text = 'В список ж�
     switch ($args['type']) {
         case 'link':
             echo '<a href="#fs-whishlist-btn"  '.$html_atts.' '.$args['atts'].'>'.$button_text.'<span class="fs-atc-preloader" style="display:none">'.$args['preloader'].'</span></a>';
+            break;
+
+        case 'button':
+            echo '<button '.$html_atts.' '.$args['atts'].'>'.$button_text.'<span class="fs-atc-preloader" style="display:none">'.$args['preloader'].'</span></button>';
+            break;
+    }
+}
+
+/**
+ * Displays a button or link to add a product to the comparison list.
+ *
+ * @param int    $product_id  Product ID. If not specified, the current product is used.
+ * @param string $button_text button or link text
+ * @param array  $args        Additional parameters for button/link customization:
+ *                            - 'attr'      (string) Custom attributes.
+ *                            - 'type'      (string) Element type ('button' or 'link'). Default is 'button'.
+ *                            - 'preloader' (string) HTML code for preloader, shown during loading.
+ *                            - 'class'     (string) CSS classes for the element.
+ *                            - 'id'        (string) HTML ID of the element.
+ *                            - 'atts'      (string) Additional attributes for the element.
+ *
+ * @return void
+ */
+function fs_add_to_compare($product_id = 0, $button_text = '', $args = [])
+{
+    if (empty($button_text)) {
+        $button_text = __('Add to comparison', 'f-shop');
+    }
+    $product_id = fs_get_product_id($product_id);
+    $defaults = [
+        'attr' => '',
+        'type' => 'button',
+        'preloader' => '<img src="'.FS_PLUGIN_URL.'/assets/img/ajax-loader.gif" alt="preloader">',
+        'class' => 'fs-compare-btn',
+        'id' => 'fs-compare-btn-'.$product_id,
+        'atts' => '',
+    ];
+    $args = wp_parse_args($args, $defaults);
+    $html_atts = fs_parse_attr([], [
+        'class' => $args['class'],
+        'id' => $args['id'],
+        'data-product-id' => $product_id,
+        'x-data' => json_encode(['inCompare' => FS\FS_Compare::contains($product_id)]),
+        'x-on:click' => 'Alpine.store("FS").addToCompare('.$product_id.'); inCompare=!inCompare',
+        'x-bind:class' => '{\'fs-in-compare\':inCompare}',
+    ]);
+
+    switch ($args['type']) {
+        case 'link':
+            echo '<a href="#fs-compare-btn"  '.$html_atts.' '.$args['atts'].'>'.$button_text.'<span class="fs-atc-preloader" style="display:none">'.$args['preloader'].'</span></a>';
             break;
 
         case 'button':
@@ -2092,6 +2152,14 @@ function fs_wishlist_count()
 }
 
 /**
+ * Displays the number of products in the compare list.
+ */
+function fs_compare_count()
+{
+    echo esc_html(FS\FS_Compare::get_compare_count());
+}
+
+/**
  * Returns the total number of products in the wishlist.
  *
  * Gets the count from the FS_Wishlist class which combines items from:
@@ -2113,6 +2181,16 @@ function fs_get_wishlist_count()
 function fs_wishlist_url()
 {
     return get_the_permalink(intval(fs_option('page_whishlist')));
+}
+
+/**
+ * Returns a link to the compare page.
+ *
+ * @return false|string
+ */
+function fs_compare_url()
+{
+    return get_the_permalink(intval(fs_option('page_compare')));
 }
 
 /**

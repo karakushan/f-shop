@@ -4150,3 +4150,22 @@ msgstr "Следить за ценой"
 
 #~ msgid "Test email will be sent to admin email address."
 #~ msgstr "Тестовое письмо будет отправлено на адрес администратора."
+
+
+msgid "Add to comparison"
+msgstr "К сравнению"
+
+msgid "Product removed from comparison list"
+msgstr "Товар удален из списка сравнения"
+
+msgid "Maximum 4 products allowed in comparison"
+msgstr "В списке сравнения может быть не более 4 товаров"
+
+msgid "Item &laquo;%s&raquo; successfully added to comparison list."
+msgstr "Товар &laquo;%s&raquo; успешно добавлен в список сравнения."
+
+msgid "Product removed from your comparison list."
+msgstr "Товар удален из вашего списка сравнения."
+
+msgid "Item &laquo;%product%&raquo; successfully added to comparison list."
+msgstr "Товар &laquo;%product%&raquo; успешно добавлен в список сравнения."

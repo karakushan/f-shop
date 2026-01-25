@@ -43,6 +43,7 @@ class FS_Init
         TermEdit::class,
         CommentMetabox::class,
         FS_Wishlist::class,
+        FS_Compare::class,
     ];
     protected static $instance;
 
@@ -156,6 +157,7 @@ class FS_Init
             'checkoutUrl' => fs_checkout_url(false),
             'catalogUrl' => fs_get_catalog_link(),
             'wishlistUrl' => fs_wishlist_url(),
+            'compareUrl' => fs_option('fs_compare_page') ? get_permalink(fs_option('fs_compare_page')) : '#',
             'preorderWindow' => fs_option('fs_preorder_services', 0),
             'langs' => [
                 'success' => __('Success!', 'f-shop'),
@@ -174,6 +176,7 @@ class FS_Init
                     __('Checkout', 'f-shop')
                 ),
                 'addToWishlist' => __('Item &laquo;%product%&raquo; successfully added to wishlist. <a href="%wishlist_url%">Go to wishlist</a>', 'f-shop'),
+                'addToCompare' => __('Item &laquo;%product%&raquo; successfully added to comparison list.', 'f-shop'),
             ],
             'fs_disable_modals' => fs_option('fs_disable_modals', 0),
         ];

@@ -4166,3 +4166,22 @@ msgstr "Слідкувати за ціною"
 
 #~ msgid "Test email will be sent to admin email address."
 #~ msgstr "Тестове повідомлення буде відправлено на адресу адміністратора."
+
+
+msgid "Add to comparison"
+msgstr "До порівняння"
+
+msgid "Product removed from comparison list"
+msgstr "Товар видалено зі списку порівняння"
+
+msgid "Maximum 4 products allowed in comparison"
+msgstr "У списку порівняння може бути не більше 4 товарів"
+
+msgid "Item &laquo;%s&raquo; successfully added to comparison list."
+msgstr "Товар &laquo;%s&raquo; успішно доданий до списку порівняння."
+
+msgid "Product removed from your comparison list."
+msgstr "Товар видалено з вашого списку порівняння."
+
+msgid "Item &laquo;%product%&raquo; successfully added to comparison list."
+msgstr "Товар &laquo;%product%&raquo; успішно доданий до списку порівняння."
