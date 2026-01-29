@@ -27,7 +27,6 @@ theme:
     - navigation.indexes
     - navigation.tracking
     - toc.follow
-    - toc.integrate
     - search.suggest
     - search.highlight
     - content.tabs.link
