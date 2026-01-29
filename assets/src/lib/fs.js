@@ -369,6 +369,7 @@ class FS {
       });
 
     return this.post("order_send", formData).then((r) => {
+      window.dispatchEvent(new CustomEvent("fs-checkout-finish-submit"));
       document.dispatchEvent(
         new CustomEvent("fs-checkout-finish", {
           detail: {

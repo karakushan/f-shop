@@ -100,6 +100,7 @@ if (defined('FS_DEBUG') && FS_DEBUG == true) {
 }
 
 require_once 'vendor/autoload.php';
+require_once 'lib/FS_Stock_Status.php';
 
 // Initialize the plugin
 if (class_exists('\FS\FS_Init')) {
@@ -226,7 +227,7 @@ function fs_activate()
             }
         }
     }
-
+    
     // Регистрируем статусы заказов по умолчанию
     $default_order_statuses = [
         'new' => [

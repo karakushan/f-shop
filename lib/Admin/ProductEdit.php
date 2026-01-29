@@ -118,7 +118,8 @@ class ProductEdit {
 					),
 
 					$product_fields['sku']['key']      => $product_fields['sku'],
-					$product_fields['quantity']['key'] => $product_fields['quantity'],
+					$product_fields['stock_status']['key'] => $product_fields['stock_status'],
+					$product_fields['stock_status_text']['key'] => $product_fields['stock_status_text'],
 					FS_Config::get_meta( 'currency' )  => array(
 						'label'    => __( 'Item Currency', 'f-shop' ),
 						'on'       => (bool) fs_option( 'multi_currency_on' ),
@@ -305,5 +306,10 @@ class ProductEdit {
 	function save_product_meta( $post_id, $context ) {
 		$field = (array) $_POST['variations'];
 		update_post_meta( $post_id, FS_Config::get_meta( 'variations' ), $field );
+		
+		// Save stock status if provided
+		if ( isset( $_POST['fs_stock_status'] ) ) {
+			fs_set_stock_status( $post_id, sanitize_text_field( $_POST['fs_stock_status'] ) );
+		}
 	}
 }

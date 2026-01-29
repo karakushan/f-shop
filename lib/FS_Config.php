@@ -583,6 +583,8 @@ class FS_Config
             'cross_sell' => 'fs_cross_sell',
             'product_rating' => 'fs_product_rating',
             'product_type' => 'fs_product_type',
+            'stock_status' => 'fs_stock_status',
+            'stock_status_text' => 'fs_stock_status_text',
         ];
 
         $meta = apply_filters('fs_meta', $meta);
@@ -622,6 +624,19 @@ class FS_Config
                 ],
                 'label' => __('Stock in stock', 'f-shop'),
                 'help' => __('Enter "0" if stock is exhausted. An empty field means inventory control for the item. disabled, and the goods are always in the presence!', 'f-shop'),
+            ],
+            'stock_status' => [
+                'key' => 'fs_stock_status',
+                'type' => 'select',
+                'options' => \FS\FS_Stock_Status::get_statuses(),
+                'label' => __('Stock in stock', 'f-shop'),
+                'help' => __('Select the current stock status of the product', 'f-shop'),
+            ],
+            'stock_status_text' => [
+                'key' => 'fs_stock_status_text',
+                'type' => 'text',
+                'label' => __('Stock Status Description', 'f-shop'),
+                'help' => __('Additional text to describe the stock status', 'f-shop'),
             ],
             'gallery' => ['key' => 'fs_galery'],
             'related_products' => ['key' => 'fs_related_products'],

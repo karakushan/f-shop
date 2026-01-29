@@ -6,12 +6,18 @@
            value="<?php echo esc_attr(fs_get_product_code()); ?>" id="price">
 </div>
 <div class="fs-field-row clearfix">
-    <label for="fs_remaining_amount"><?php esc_html_e('Stock in stock', 'f-shop') ?></label>
-    <input type="text" id="fs_remaining_amount" name="fs_remaining_amount"
-           value="<?php echo esc_attr(fs_remaining_amount()) ?>">
-    <div class="fs-help"><?php esc_html_e('Enter "0" if stock is exhausted. An empty field means inventory control for the item.
-        disabled, and the goods are always in the presence!', 'f-shop'); ?>
-    </div>
+    <label for="fs_stock_status"><?php esc_html_e('Stock Status', 'f-shop') ?></label>
+    <select id="fs_stock_status" name="fs_stock_status">
+        <?php 
+        $current_status = fs_get_stock_status();
+        $statuses = fs_get_stock_statuses();
+        foreach ($statuses as $value => $label): ?>
+            <option value="<?php echo esc_attr($value); ?>" <?php selected($current_status, $value); ?>>
+                <?php echo esc_html($label); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    <div class="fs-help"><?php esc_html_e('Select the current stock status of the product', 'f-shop'); ?></div>
 </div>
 <div class="fs-field-row clearfix">
     <div class="checkbox-wrapper">

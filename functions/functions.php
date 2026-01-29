@@ -969,7 +969,7 @@ function fs_order_send($label = 'Отправить заказ', $attr = [])
     $preloader = '<img class="fs-atc-preloader" style="display:none" x-show="loading" src="' . esc_attr($args['preloader_src']) . '" width="' . esc_attr($args['preloader_width']) . '" alt="preloader">';
     $inline_attributes = fs_parse_attr($attr, $args, ['preloader_src', 'preloader_width']);
 
-    printf('<button type="submit" x-on:fs-checkout-start-submit.window="loading = true" x-on:fs-checkout-finish-submit.window="loading = false" x-data="{loading: false }" %s><span>%s</span> ' . $preloader . '</button>', $inline_attributes, $label);
+    printf('<button type="submit" :disabled="loading" :class="loading ? \'opacity-50 cursor-not-allowed\' : \'\'" x-on:fs-checkout-start-submit.window="loading = true" x-on:fs-checkout-finish-submit.window="loading = false" x-data="{loading: false }" %s><span>%s</span> ' . $preloader . '</button>', $inline_attributes, $label);
 }
 
 /**
@@ -1096,10 +1096,14 @@ if (!function_exists('fs_in_stock')) {
      */
     function fs_in_stock($product_id = 0)
     {
+        // Use new stock status system if available
+        if (class_exists('FS\FS_Stock_Status')) {
+            return \FS\FS_Stock_Status::is_in_stock($product_id);
+        }
+        
+        // Fallback to old method
         $product_id = fs_get_product_id($product_id);
-
         $stock = get_post_meta($product_id, FS_Config::get_meta('remaining_amount'), true);
-
         return (is_numeric($stock) && intval($stock) > 0) || $stock == '';
     }
 }
@@ -1825,6 +1829,104 @@ function fs_get_all_prices()
     $config_prices = FS_Config::$prices;
 
     return apply_filters('fs_prices', $config_prices);
+}
+
+/**
+ * Get product stock status
+ * 
+ * @param int $product_id
+ * @return string
+ */
+function fs_get_stock_status($product_id = 0) {
+    if (class_exists('FS\FS_Stock_Status')) {
+        return \FS\FS_Stock_Status::get_status($product_id);
+    }
+    return '';
+}
+
+/**
+ * Set product stock status
+ * 
+ * @param int $product_id
+ * @param string $status
+ * @return bool
+ */
+function fs_set_stock_status($product_id, $status) {
+    if (class_exists('FS\FS_Stock_Status')) {
+        return \FS\FS_Stock_Status::set_status($product_id, $status);
+    }
+    return false;
+}
+
+/**
+ * Get available stock statuses
+ * 
+ * @return array
+ */
+function fs_get_stock_statuses() {
+    if (class_exists('FS\FS_Stock_Status')) {
+        return \FS\FS_Stock_Status::get_statuses();
+    }
+    
+    // Fallback if class not loaded
+    return [
+        '' => __('In Stock', 'f-shop'),
+        '0' => __('Out of Stock', 'f-shop'),
+        '1' => __('On Order', 'f-shop'),
+        '2' => __('Expected', 'f-shop'),
+    ];
+}
+
+/**
+ * Check if product is out of stock
+ * 
+ * @param int $product_id
+ * @return bool
+ */
+function fs_is_out_of_stock($product_id = 0) {
+    if (class_exists('FS\FS_Stock_Status')) {
+        return \FS\FS_Stock_Status::is_out_of_stock($product_id);
+    }
+    return false;
+}
+
+/**
+ * Check if product is on order
+ * 
+ * @param int $product_id
+ * @return bool
+ */
+function fs_is_on_order($product_id = 0) {
+    if (class_exists('FS\FS_Stock_Status')) {
+        return \FS\FS_Stock_Status::is_on_order($product_id);
+    }
+    return false;
+}
+
+/**
+ * Check if product is expected
+ * 
+ * @param int $product_id
+ * @return bool
+ */
+function fs_is_expected($product_id = 0) {
+    if (class_exists('FS\FS_Stock_Status')) {
+        return \FS\FS_Stock_Status::is_expected($product_id);
+    }
+    return false;
+}
+
+/**
+ * Get stock status label
+ * 
+ * @param string $status
+ * @return string
+ */
+function fs_get_stock_status_label($status) {
+    if (class_exists('FS\FS_Stock_Status')) {
+        return \FS\FS_Stock_Status::get_status_label($status);
+    }
+    return __('Unknown', 'f-shop');
 }
 
 /**

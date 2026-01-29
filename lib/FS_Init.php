@@ -4,6 +4,7 @@ namespace FS;
 
 use FS\Admin\CommentMetabox;
 use FS\Admin\TermEdit;
+use FS\FS_Stock_Status;
 
 /**
  * Инициализирует функции и классы плагина.
@@ -42,6 +43,7 @@ class FS_Init
         Admin\ProductEdit::class,
         TermEdit::class,
         CommentMetabox::class,
+        FS_Stock_Status::class,
         FS_Wishlist::class,
     ];
     protected static $instance;
