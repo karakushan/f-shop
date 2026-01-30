@@ -87,14 +87,29 @@ class Price_Widget extends \WP_Widget
 		$title = apply_filters('widget_title', $title);
 		$use_cents = (int) fs_option('price_cents') === 1;
 
+		// Server-side caching: check for cached price range
+		$term_id = get_queried_object_id();
+		$cache_key = 'fs_price_range_' . ($term_id ?: 'archive');
+
+		$cached_price_range = get_transient($cache_key);
+		$has_cache = ($cached_price_range !== false);
+
+		// Prepare data for the template
+		$price_data = [
+			'min' => $has_cache ? $cached_price_range['min'] : 0,
+			'max' => $has_cache ? $cached_price_range['max'] : 0,
+			'has_cache' => $has_cache,
+		];
+
 		echo $args['before_widget'];
 		if (! empty($title)) {
 			echo $args['before_title'] . esc_html($title) . $args['after_title'];
 		}
 		echo fs_frontend_template('widget/jquery-ui-slider/ui-slider', [
 			'vars' => [
-				'use_cents'  => $use_cents,
-				'input_step' => $use_cents ? '0.01' : '1',
+				'use_cents'   => $use_cents,
+				'input_step'  => $use_cents ? '0.01' : '1',
+				'price_data'  => $price_data,
 			],
 		]);
 		echo $args['after_widget'];

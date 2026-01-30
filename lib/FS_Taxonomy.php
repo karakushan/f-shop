@@ -54,7 +54,7 @@ class FS_Taxonomy
         add_action('pre_get_posts', [$this, 'taxonomy_filter_products'], 12, 1);
 
         // Adding the ability to sort by availability
-        if (fs_option('fs_product_sort_by') == 'stock_desc' || (isset($_GET['order_type']) && $_GET['order_type'] == 'stock_desc')) {
+        if (in_array(fs_option('fs_product_sort_by'), ['stock_desc', 'stock_priority']) || (isset($_GET['order_type']) && in_array($_GET['order_type'], ['stock_desc', 'stock_priority']))) {
             add_filter('posts_clauses', [$this, 'order_by_stock_status'], 10, 2);
         }
 
@@ -242,14 +242,29 @@ class FS_Taxonomy
             return $posts_clauses;
         }
 
+        $order_type = isset($_GET['order_type']) ? $_GET['order_type'] : fs_option('fs_product_sort_by');
+
         if (($query->is_archive && isset($query->query['post_type']) && $query->query['post_type'] == FS_Config::get_data('post_type'))
             || ($query->is_tax && isset($query->query['catalog']))
         ) {
             global $wpdb;
-            $posts_clauses['join'] .= " INNER JOIN $wpdb->postmeta postmeta ON ($wpdb->posts.ID = postmeta.post_id) ";
-            $order_by = "if(postmeta.meta_value='0','0','1') DESC";
-            $posts_clauses['orderby'] = $posts_clauses['orderby'] ? $posts_clauses['orderby'].", $order_by" : " $order_by";
-            $posts_clauses['where'] = $posts_clauses['where']." AND postmeta.meta_key = 'fs_remaining_amount'";
+
+            if ($order_type == 'stock_priority') {
+                $posts_clauses['join'] .= " LEFT JOIN $wpdb->postmeta pm_stock ON ($wpdb->posts.ID = pm_stock.post_id AND pm_stock.meta_key = 'fs_stock_status') ";
+                $order_by = "CASE 
+                        WHEN pm_stock.meta_value IS NULL OR pm_stock.meta_value = '' THEN 1 
+                        WHEN pm_stock.meta_value = '1' THEN 2 
+                        WHEN pm_stock.meta_value = '2' THEN 3 
+                        WHEN pm_stock.meta_value = '0' THEN 4 
+                        ELSE 5 
+                    END ASC";
+                $posts_clauses['orderby'] = $posts_clauses['orderby'] ? "$order_by, " . $posts_clauses['orderby'] : $order_by;
+            } else {
+                $posts_clauses['join'] .= " INNER JOIN $wpdb->postmeta postmeta ON ($wpdb->posts.ID = postmeta.post_id) ";
+                $order_by = "if(postmeta.meta_value='0','0','1') DESC";
+                $posts_clauses['orderby'] = $posts_clauses['orderby'] ? "$order_by, " . $posts_clauses['orderby'] : $order_by;
+                $posts_clauses['where'] = $posts_clauses['where'] . " AND postmeta.meta_key = 'fs_remaining_amount'";
+            }
         }
 
         return $posts_clauses;
@@ -506,6 +521,9 @@ class FS_Taxonomy
                     ],
                 ];
                 $order_by = ['in_stock' => 'ASC'];
+                break;
+
+            case 'stock_priority': // Сортування по пріоритету наявності: в наявності → під замовлення → в очікуванні → немає в наявності
                 break;
 
             case 'price_desc': // Сортування за ціною за спаданням

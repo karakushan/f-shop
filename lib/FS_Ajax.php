@@ -104,6 +104,12 @@ class FS_Ajax
             add_action('wp_ajax_fs_attach_attribute', [$this, 'fs_attach_attribute_callback']);
             add_action('wp_ajax_nopriv_fs_attach_attribute', [$this, 'fs_attach_attribute_callback']);
 
+            // fs_save_attribute_values_order
+            add_action('wp_ajax_fs_save_attribute_values_order', [$this, 'fs_save_attribute_values_order_callback']);
+
+            // fs_save_attribute_group_order
+            add_action('wp_ajax_fs_save_attribute_group_order', [$this, 'fs_save_attribute_group_order_callback']);
+
             add_action('wp_ajax_fs_get_admin_attributes_table', [
                 'FS\FS_Taxonomy',
                 'fs_get_admin_product_attributes_table',
@@ -147,6 +153,9 @@ class FS_Ajax
             // fs_send_product_comment
             add_action('wp_ajax_fs_send_product_comment', [$this, 'fs_send_product_comment']);
             add_action('wp_ajax_nopriv_fs_send_product_comment', [$this, 'fs_send_product_comment']);
+
+            // Admin add product comment
+            add_action('wp_ajax_fs_admin_add_comment', [$this, 'fs_admin_add_comment']);
 
             // fs_comment_like_dislike
             add_action('wp_ajax_fs_comment_like_dislike', [$this, 'fs_comment_like_dislike']);
@@ -525,9 +534,15 @@ class FS_Ajax
         }
 
         if ($find_posts) {
-            wp_send_json_success(array_map(function ($item) {
-                return fs_set_product(['ID' => $item->ID, 'count' => 1, 'attr' => []]);
-            }, $find_posts));
+            $results = array_map(function ($item) {
+                $product = fs_set_product(['ID' => $item->ID, 'count' => 1, 'attr' => []]);
+                return [
+                    'id' => $item->ID,
+                    'title' => apply_filters('the_title', $item->post_title),
+                    'price' => fs_get_price($item->ID),
+                ];
+            }, $find_posts);
+            wp_send_json_success($results);
         }
 
         wp_send_json_error();
@@ -1324,6 +1339,53 @@ class FS_Ajax
     }
 
     /**
+     * Saves the order of attribute values for a specific product and attribute group.
+     *
+     * @return void
+     */
+    public function fs_save_attribute_values_order_callback()
+    {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
+        }
+
+        $post_id = intval($_POST['post_id']);
+        $group_id = intval($_POST['group_id']);
+        $order = isset($_POST['order']) ? array_map('intval', $_POST['order']) : [];
+
+        // Save order with unique meta key per attribute group
+        update_post_meta($post_id, '_fs_attribute_values_order_' . $group_id, $order);
+
+        wp_send_json_success([
+            'message' => __('Attribute values order saved', 'f-shop'),
+            'title' => __('Success!', 'f-shop'),
+        ]);
+    }
+
+    /**
+     * Saves the order of attribute groups for a specific product.
+     *
+     * @return void
+     */
+    public function fs_save_attribute_group_order_callback()
+    {
+        if (!FS_Config::verify_nonce()) {
+            wp_send_json_error(['msg' => __('Security check failed', 'f-shop')]);
+        }
+
+        $post_id = intval($_POST['post_id']);
+        $order = isset($_POST['order']) ? array_map('intval', $_POST['order']) : [];
+
+        // Save group order to post meta
+        update_post_meta($post_id, '_fs_attribute_group_order', $order);
+
+        wp_send_json_success([
+            'message' => __('Attribute groups order saved', 'f-shop'),
+            'title' => __('Success!', 'f-shop'),
+        ]);
+    }
+
+    /**
      * Creates and attaches a feature to a product.
      *
      * @return void
@@ -1522,9 +1584,21 @@ class FS_Ajax
     public function fs_get_max_min_price_callback()
     {
         $term_id = (int) $_POST['term_id'];
+
+        $max_price = FS_Products::get_max_price_in_category($term_id);
+        $min_price = FS_Products::get_min_price_in_category($term_id);
+
+        // Cache the price range for 1 hour
+        $cache_key = 'fs_price_range_' . ($term_id ?: 'archive');
+        $price_range = [
+            'min' => $min_price,
+            'max' => $max_price,
+        ];
+        set_transient($cache_key, $price_range, HOUR_IN_SECONDS);
+
         wp_send_json_success([
-            'max' => FS_Products::get_max_price_in_category($term_id),
-            'min' => FS_Products::get_min_price_in_category($term_id),
+            'max' => $max_price,
+            'min' => $min_price,
         ]);
     }
 
@@ -1881,6 +1955,140 @@ class FS_Ajax
         wp_send_json_success([
             'variations' => $variations,
             'has_variations' => true,
+        ]);
+    }
+
+    /**
+     * Admin function to add a product comment from the comments admin page.
+     * Allows admins to create comments with full access to all product comment features.
+     *
+     * @return void JSON response with success/error status
+     */
+    public function fs_admin_add_comment()
+    {
+        // Verify nonce
+        if (!isset($_POST['fs_comment_nonce']) || !wp_verify_nonce($_POST['fs_comment_nonce'], 'fs_add_comment_nonce')) {
+            wp_send_json_error(['message' => __('Security check failed', 'f-shop')]);
+        }
+
+        // Check permissions
+        if (!current_user_can('moderate_comments')) {
+            wp_send_json_error(['message' => __('You do not have permission to add comments', 'f-shop')]);
+        }
+
+        $product_id = (int) ($_POST['post_id'] ?? 0);
+        $wp_upload_dir = wp_upload_dir();
+        $errors = [];
+
+        if (!$product_id) {
+            $errors['product_id'] = __('Product ID not found', 'f-shop');
+        }
+
+        // Validate email
+        if (!is_email($_POST['email'] ?? '')) {
+            $errors['email'] = __('Email is not valid', 'f-shop');
+        }
+
+        // Validate name
+        if (empty($_POST['author'])) {
+            $errors['name'] = __('Name is required', 'f-shop');
+        }
+
+        // Validate body
+        if (empty($_POST['body'])) {
+            $errors['body'] = __('Comment is required', 'f-shop');
+        }
+
+        if (count($errors)) {
+            wp_send_json_error($errors);
+        }
+
+        // Check if files are uploaded
+        $files = [];
+        if (!empty($_FILES['files'])) {
+            $uploaded_files = $_FILES['files'];
+            $upload_overrides = ['test_form' => false];
+
+            // Loop through each uploaded file
+            foreach ($uploaded_files['tmp_name'] as $key => $tmp_name) {
+                // Skip empty file entries
+                if ($uploaded_files['error'][$key] === UPLOAD_ERR_NO_FILE) {
+                    continue;
+                }
+
+                $file = [
+                    'name' => uniqid() . '-' . basename($uploaded_files['name'][$key]),
+                    'type' => $uploaded_files['type'][$key],
+                    'tmp_name' => $tmp_name,
+                    'error' => $uploaded_files['error'][$key],
+                    'size' => $uploaded_files['size'][$key],
+                ];
+
+                // Handle the file upload
+                $movefile = wp_handle_upload($file, $upload_overrides);
+
+                if ($movefile && !isset($movefile['error'])) {
+                    // Add to database
+                    $attachment = [
+                        'guid' => $wp_upload_dir['url'] . '/' . basename($movefile['file']),
+                        'post_mime_type' => $movefile['type'],
+                        'post_title' => preg_replace('/\.[^.]+$/', '', basename($movefile['file'])),
+                        'post_content' => '',
+                        'post_status' => 'inherit',
+                    ];
+
+                    // Insert the attachment
+                    $attach_id = wp_insert_attachment($attachment, $movefile['file']);
+                    if (is_wp_error($attach_id)) {
+                        if (!isset($errors['files'])) {
+                            $errors['files'] = [];
+                        }
+                        $errors['files'][] = $attach_id->get_error_message();
+                    } else {
+                        $files[] = $attach_id;
+                    }
+                } else {
+                    // Error handling for file upload
+                    if (!isset($errors['files'])) {
+                        $errors['files'] = [];
+                    }
+                    $errors['files'][] = $movefile['error'] ?? __('Unknown upload error', 'f-shop');
+                }
+            }
+
+            // If there were file errors but we got here without early exit
+            if (isset($errors['files']) && count($errors['files'])) {
+                wp_send_json_error($errors);
+            }
+        }
+
+        $user = wp_get_current_user();
+        $comment_author = $_POST['author'];
+        $comment_email = $_POST['email'];
+
+        $comment = [
+            'comment_post_ID' => $product_id,
+            'comment_author' => $comment_author,
+            'comment_author_email' => $comment_email,
+            'comment_content' => $_POST['body'],
+            'user_id' => $user->ID ?: 0,
+            'comment_date' => current_time('mysql'),
+            'comment_approved' => 1, // Admin comments are auto-approved
+            'comment_karma' => (int) ($_POST['rating'] ?? 5),
+        ];
+
+        $comment_id = wp_insert_comment($comment);
+
+        if ($comment_id) {
+            update_comment_meta($comment_id, 'fs_images', $files);
+            update_comment_meta($comment_id, 'fs_likes', 0);
+            update_comment_meta($comment_id, 'fs_dislikes', 0);
+        }
+
+        wp_send_json_success([
+            'message' => __('Comment added successfully', 'f-shop'),
+            'comment_id' => $comment_id,
+            'images' => $files,
         ]);
     }
 }

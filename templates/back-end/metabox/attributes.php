@@ -16,6 +16,7 @@ $attributes = get_terms( [
 ?>
 
 <div class="fs-attributes"
+     data-post-id="<?php echo $post_id ?>"
      x-data='{
 	        selectedAttribute : null,
 	        addErrors: [],
@@ -118,11 +119,15 @@ $attributes = get_terms( [
 		</ul>
 	</div>
 
-	<div class="fs-attributes__list">
+	<div class="fs-attributes__list" data-fs-attribute-groups-container>
 		<template x-for="(attribute, attributeIndex) in attributes" :key="'attribute-'+attributeIndex">
-			<div class="fs-attributes__item " x-data="{ open:false }">
-				<div class="fs-attributes__item-header fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap">
+			<div class="fs-attributes__item " x-data="{ open:false }" :data-attribute-id="attribute.id">
+				<div class="fs-attributes__item-header fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap"
+				     :data-attribute-id="attribute.id">
 					<div class="fs-attributes__item-name fs-flex fs-flex-1 fs-flex-items-center fs-gap-0-5">
+						<div class="fs-attributes__item-drag">
+							<span class="dashicons dashicons-menu-alt3"></span>
+						</div>
 						<span class="dashicons dashicons-category"></span>
 						<span x-text="attribute.name+' ('+attribute.children.length+')'"></span>
 					</div>
@@ -136,11 +141,16 @@ $attributes = get_terms( [
 						</button>
 					</div>
 				</div>
-				<div class="fs-attributes__item-values" x-show="open" x-transition>
+				<div class="fs-attributes__item-values" x-show="open" x-transition
+			     data-fs-attribute-values-container>
 					<template x-for="(value,index) in attribute.children" :key="'child-'+index">
 						<div
 							x-data="{show:true}" x-show="show"
-							class="fs-attributes__item-value fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap">
+							class="fs-attributes__item-value fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap"
+							:data-value-id="value.id">
+							<div class="fs-attributes__item-value-drag">
+								<span class="dashicons dashicons-menu-alt3"></span>
+							</div>
 							<div class="fs-attributes__item-value-name fs-flex-1">
 								<span x-text="value.name"></span>
 							</div>

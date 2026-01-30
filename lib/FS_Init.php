@@ -3,6 +3,7 @@
 namespace FS;
 
 use FS\Admin\CommentMetabox;
+use FS\Admin\ProductComments;
 use FS\Admin\TermEdit;
 use FS\FS_Stock_Status;
 
@@ -43,6 +44,7 @@ class FS_Init
         Admin\ProductEdit::class,
         TermEdit::class,
         CommentMetabox::class,
+        Admin\ProductComments::class,
         FS_Stock_Status::class,
         FS_Wishlist::class,
     ];
@@ -219,6 +221,10 @@ class FS_Init
         wp_enqueue_script(FS_PLUGIN_PREFIX.'tooltipster', FS_PLUGIN_URL.'assets/plugins/tooltipster-master/dist/js/tooltipster.bundle.min.js', ['jquery'], null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX.'tooltipster', FS_PLUGIN_URL.'wp-content/plugins/f-shop/assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css', ['jquery'], null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX.'select2', FS_PLUGIN_URL.'assets/plugins/bower_components/select2/dist/js/select2.min.js', ['jquery'], null, true);
+        wp_enqueue_script(FS_PLUGIN_PREFIX.'alpine', 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js', [], null, false);
+
+        // Enqueue SortableJS for attribute values sorting
+        wp_enqueue_script(FS_PLUGIN_PREFIX.'sortable', 'https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js', ['jquery'], null, true);
 
         wp_enqueue_script(FS_PLUGIN_PREFIX.'admin', FS_PLUGIN_URL.'assets/js/fs-admin.js', [
             'jquery',
@@ -229,6 +235,7 @@ class FS_Init
         $l10n = [
             'allowedImagesType' => fs_allowed_images_type('json'),
             'mediaNonce' => wp_create_nonce('media-form'),
+            'nonce' => wp_create_nonce('f-shop'),
         ];
         wp_localize_script(FS_PLUGIN_PREFIX.'admin', 'fShop', $l10n);
 

@@ -335,23 +335,44 @@ class FS_Filters {
 		) );
 
 		$sorting_types = apply_filters( 'fs_catalog_sorting_criteria', [
-			'date_desc'  => [
-				'name' => __( 'recently added', 'f-shop' )// недавно добавленные
+			'none'           => [
+				'name' => __( 'By default', 'f-shop' ) // по умолчанию
 			],
-			'date_asc'   => [
-				'name' => __( 'later added', 'f-shop' ) // давно добавленные
+			'menu_order'     => [
+				'name' => __( 'By sorting field', 'f-shop' ) // по полю сортировки
 			],
-			'price_asc'  => [
-				'name' => __( 'from cheap to expensive', 'f-shop' ) // от дешевых к дорогим
+			'date_desc'      => [
+				'name' => __( 'Recently added', 'f-shop' ) // недавно добавленные
 			],
-			'price_desc' => [
-				'name' => __( 'from expensive to cheap', 'f-shop' ) // от дорогих к дешевым
+			'date_asc'       => [
+				'name' => __( 'Later added', 'f-shop' ) // давно добавленные
 			],
-			'name_asc'   => [
-				'name' => __( 'by title A to Z', 'f-shop' ) // по названию от А до Я
+			'price_asc'      => [
+				'name' => __( 'From cheap to expensive', 'f-shop' ) // от дешевых к дорогим
 			],
-			'name_desc'  => [
-				'name' => __( 'by title Z to A', 'f-shop' ) // по названию от Я до А
+			'price_desc'     => [
+				'name' => __( 'From expensive to cheap', 'f-shop' ) // от дорогих к дешевым
+			],
+			'name_asc'       => [
+				'name' => __( 'By title A to Z', 'f-shop' ) // по названию от А до Я
+			],
+			'name_desc'      => [
+				'name' => __( 'By title Z to A', 'f-shop' ) // по названию от Я до А
+			],
+			'views_desc'     => [
+				'name' => __( 'By popularity', 'f-shop' ) // по популярности
+			],
+			'action_price'   => [
+				'name' => __( 'First promotional', 'f-shop' ) // акционные
+			],
+			'rating_desc'    => [
+				'name' => __( 'By rating', 'f-shop' ) // по рейтингу
+			],
+			'stock_desc'     => [
+				'name' => __( 'In stock', 'f-shop' ) // в наличии
+			],
+			'stock_priority' => [
+				'name' => __( 'By availability priority', 'f-shop' ) // по приоритету наличия
 			]
 		] );
 
@@ -360,6 +381,9 @@ class FS_Filters {
 		}
 
 		$order_type_get = ! empty( $_GET['order_type'] ) ? $_GET['order_type'] : fs_option( 'fs_product_sort_by' );
+		if ( is_array( $order_type_get ) ) {
+			$order_type_get = 'date_desc';
+		}
 
 		echo ' <select name="order_type"  class="' . esc_attr( $attr['class'] ) . '" data-fs-action="filter"> ';
 		foreach ( $sorting_types as $key => $order_type ) {

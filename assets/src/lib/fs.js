@@ -37,9 +37,75 @@ class FS {
     this.variation = null;
     this.variations = {}; // Хранилище вариаций по ID
     this.attributes = {}; // Хранилище атрибутов
+    this.cachePrefix = "fs_cache_"; // Префикс для кеша
+    this.cacheExpiry = 3600000; // Время жизни кеша в мс (1 час)
 
     // Инициализация списка избранного при создании экземпляра класса
     this.initWishlist();
+  }
+
+  // === КЕШИРОВАНИЕ ===
+
+  /**
+   * Получает данные из локального хранилища
+   * @param {string} key - Ключ кеша
+   * @returns {object|null} - Данные из кеша или null
+   */
+  getCache(key) {
+    try {
+      const cacheKey = this.cachePrefix + key;
+      const cached = localStorage.getItem(cacheKey);
+      if (!cached) return null;
+
+      const data = JSON.parse(cached);
+      // Проверяем срок действия кеша
+      if (data.expiry && Date.now() > data.expiry) {
+        localStorage.removeItem(cacheKey);
+        return null;
+      }
+      return data.value;
+    } catch (e) {
+      console.warn("Cache read error:", e);
+      return null;
+    }
+  }
+
+  /**
+   * Сохраняет данные в локальное хранилище
+   * @param {string} key - Ключ кеша
+   * @param {*} value - Данные для сохранения
+   * @param {number} ttl - Время жизни в секундах (по умолчанию 1 час)
+   */
+  setCache(key, value, ttl = 3600) {
+    try {
+      const cacheKey = this.cachePrefix + key;
+      const data = {
+        value: value,
+        expiry: Date.now() + (ttl * 1000),
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(data));
+    } catch (e) {
+      console.warn("Cache write error:", e);
+    }
+  }
+
+  /**
+   * Очищает кеш по префиксу
+   * @param {string} prefix - Префикс для удаления
+   */
+  clearCache(prefix = "") {
+    try {
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(this.cachePrefix + prefix)) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((key) => localStorage.removeItem(key));
+    } catch (e) {
+      console.warn("Cache clear error:", e);
+    }
   }
 
   // Инициализация списка избранного
@@ -564,9 +630,31 @@ class FS {
   }
 
   getCategoryAttributes(attributeId, categoryId = null) {
+    // Создаем ключ кеша на основе attributeId и categoryId
+    const cacheKey = `attrs_${attributeId}_${categoryId || "archive"}`;
+
+    // Пытаемся получить данные из кеша
+    const cachedData = this.getCache(cacheKey);
+    if (cachedData) {
+      console.log(`[Cache] Attributes loaded from cache: ${cacheKey}`);
+      // Возвращаем промис с закэшированными данными
+      return Promise.resolve({
+        success: true,
+        data: { attributes: cachedData },
+      });
+    }
+
+    // Если кеша нет, делаем AJAX запрос
     return this.post("fs_get_category_attributes", {
       category_id: categoryId,
       attribute_id: attributeId,
+    }).then((response) => {
+      if (response.success && response.data.attributes) {
+        // Сохраняем результат в кеш
+        this.setCache(cacheKey, response.data.attributes, 3600);
+        console.log(`[Cache] Attributes saved to cache: ${cacheKey}`);
+      }
+      return response;
     });
   }
 
@@ -612,7 +700,31 @@ class FS {
   }
 
   getMaxMinPrice(term_id) {
-    return this.post("fs_get_max_min_price", { term_id: term_id });
+    // Создаем ключ кеша на основе term_id
+    const cacheKey = `price_range_${term_id || "archive"}`;
+
+    // Пытаемся получить данные из кеша
+    const cachedData = this.getCache(cacheKey);
+    if (cachedData) {
+      console.log(`[Cache] Price range loaded from cache: ${cacheKey}`);
+      // Возвращаем промис с закэшированными данными
+      return Promise.resolve({
+        success: true,
+        data: cachedData,
+      });
+    }
+
+    // Если кеша нет, делаем AJAX запрос
+    return this.post("fs_get_max_min_price", { term_id: term_id }).then(
+      (response) => {
+        if (response.success && response.data) {
+          // Сохраняем результат в кеш
+          this.setCache(cacheKey, response.data, 3600);
+          console.log(`[Cache] Price range saved to cache: ${cacheKey}`);
+        }
+        return response;
+      }
+    );
   }
 
   getCategoryBrands(term_id) {

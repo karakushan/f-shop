@@ -1,9 +1,18 @@
 <?php
 /**
  * Price Range Slider
+ *
+ * @var array $vars Template variables including price_data with cached min/max values
  */
-?>
-<?php do_action( 'fs_before_range_slider', [ 'wrapper_class' => 'noUiSlider-wrapper' ] ); ?>
+$price_data = $vars['price_data'] ?? [];
+$has_cache = !empty($price_data['has_cache']);
+$price_min = $price_data['min'] ?? 0;
+$price_max = $price_data['max'] ?? 0;
+
+do_action( 'fs_before_range_slider', [
+    'wrapper_class' => 'noUiSlider-wrapper',
+    'price_data'    => $price_data,
+] ); ?>
     <div class="flex justify-between gap-2 mb-3">
         <label class="relative flex items-center">
             <span class="text-[12px] text-theme3 absolute top-[-22px] left-[14px]"><?php _e( 'від', 'roov' ) ?>:</span>

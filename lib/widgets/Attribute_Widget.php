@@ -237,11 +237,28 @@ class Attribute_Widget extends \WP_Widget
 
         $current_category = fs_is_product_category() ? get_queried_object() : 0;
         $attr_group = get_term($instance['fs_att_group']);
-        ?>
-		<ul class="fs-attribute-widget" x-data="{attributes: [], loaded:false }"
-			x-init="Alpine.store('FS')?.getCategoryAttributes(<?php echo $instance['fs_att_group']; ?>,<?php echo $current_category->term_id; ?>)
-            .then( (r) =>{ if(r.success===true) {attributes=r.data.attributes;} } )
-            .finally(()=> loaded=true);">
+        $attribute_id = $instance['fs_att_group'];
+        $category_id = $current_category->term_id ?? 0;
+
+        // Server-side caching: check for cached attributes
+        $cache_key = 'fs_archive_attributes_' . $attribute_id;
+        $cached_attributes = get_transient($cache_key);
+
+        // Only use cache for archive (no specific category), not for category pages
+        $use_cache = ($category_id == 0 && $cached_attributes !== false);
+        $attributes_json = '';
+
+        if ($use_cache) {
+            // Use cached data - no AJAX needed
+            $attributes_json = json_encode($cached_attributes);
+            echo '<ul class="fs-attribute-widget" x-data="{attributes: ' . $attributes_json . ', loaded: true }">';
+        } else {
+            // No cache - will need AJAX to fetch data
+            echo '<ul class="fs-attribute-widget" x-data="{attributes: [], loaded: false }"
+                x-init="Alpine.store(\'FS\')?.getCategoryAttributes(' . $attribute_id . ', ' . $category_id . ')
+                .then( (r) =>{ if(r.success===true) {attributes=r.data.attributes;} } )
+                .finally(()=> loaded=true);">';
+        } ?>
 			<div class="fs-loader-block" :style="{'display':!loaded?'flex':'none'}" style="display:none;">
 				<img src="<?php echo esc_url(FS_PLUGIN_URL); ?>/assets/img/loader-circle.svg" alt="loader">
 			</div>

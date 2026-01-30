@@ -3185,9 +3185,7 @@ msgstr "Недоступно для оплати"
 msgid "units"
 msgstr "одиниці"
 
-#: lib/FS_Users.php:1225
-msgid "Unknown upload error"
-msgstr ""
+
 
 #: templates/back-end/metabox/up-sell.php:1
 msgid "Up-sell products"
@@ -3754,3 +3752,66 @@ msgstr "Опис статусу наявності"
 #: lib/FS_Config.php:639
 msgid "Additional text to describe the stock status"
 msgstr "Додатковий текст для опису статусу товару"
+
+msgid "By availability priority"
+msgstr "За пріоритетом наявності"
+
+#: lib/Admin/ProductComments.php:26 lib/Admin/ProductComments.php:27 lib/Admin/ProductComments.php:61 lib/Admin/ProductComments.php:147 lib/Admin/ProductComments.php:180
+msgid "Add Comment"
+msgstr "Додати коментар"
+
+#: lib/Admin/ProductComments.php:40 lib/Admin/ProductComments.php:88 lib/Admin/ProductComments.php:101
+msgid "Add Product Comment"
+msgstr "Додати коментар до товару"
+
+#: lib/Admin/ProductComments.php:41
+msgid "Create a new comment for any product. The comment will be published immediately."
+msgstr "Створіть новий коментар до будь-якого товару. Коментар буде опубліковано негайно."
+
+#: lib/Admin/ProductComments.php:43
+msgid "Add New Comment"
+msgstr "Додати новий коментар"
+
+#: lib/Admin/ProductComments.php:117
+msgid "Search for a product..."
+msgstr "Пошук товару..."
+
+#: lib/Admin/ProductComments.php:123
+msgid "Loading..."
+msgstr "Завантаження..."
+
+#: lib/Admin/ProductComments.php:151
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: lib/Admin/ProductComments.php:166
+msgid "Attach Images"
+msgstr "Додати зображення"
+
+#: lib/Admin/ProductComments.php:168
+msgid "Maximum file size: 10 MB"
+msgstr "Максимальний розмір файлу: 10 МБ"
+
+#: lib/Admin/ProductComments.php:178
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: lib/Admin/ProductComments.php:181
+msgid "Saving..."
+msgstr "Збереження..."
+
+#: lib/Admin/ProductComments.php:490
+msgid "Please select a product"
+msgstr "Будь ласка, виберіть товар"
+
+#: lib/Admin/ProductComments.php:508 lib/FS_Ajax.php:2077
+msgid "Comment added successfully"
+msgstr "Коментар успішно додано"
+
+#: lib/Admin/ProductComments.php:514 lib/Admin/ProductComments.php:531
+msgid "Error adding comment"
+msgstr "Помилка при додаванні коментаря"
+
+#: lib/FS_Ajax.php:2043
+msgid "Unknown upload error"
+msgstr "Невідома помилка завантаження"

@@ -1677,6 +1677,62 @@ td.fs_menu_order.column-fs_menu_order {
       background: #f0f0f1;
       padding: 6px 12px;
     }
+
+    &--sortable-ghost {
+      opacity: 0.4;
+      background: #e3f2fd;
+      border: 2px dashed #2271b1;
+    }
+  }
+
+  &__item-drag {
+    cursor: grab;
+    color: #a0a5aa;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: #2271b1;
+    }
+
+    .dashicons {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  // Styles for drag-and-drop sorting
+  &__item-value-drag {
+    cursor: grab;
+    color: #a0a5aa;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: #2271b1;
+    }
+
+    .dashicons {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  // Sortable ghost class - applied to the placeholder element
+  &__item-value--sortable-ghost {
+    opacity: 0.4;
+    background: #e3f2fd;
+    border: 2px dashed #2271b1;
+  }
+
+  // Sortable drag class - applied to the element being dragged
+  &__item-value.sortable-drag {
+    opacity: 1;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 }
 

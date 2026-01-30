@@ -3183,9 +3183,7 @@ msgstr "Не доступен для оплаты"
 msgid "units"
 msgstr "единицы"
 
-#: lib/FS_Users.php:1225
-msgid "Unknown upload error"
-msgstr ""
+
 
 #: templates/back-end/metabox/up-sell.php:1
 msgid "Up-sell products"
@@ -3753,3 +3751,66 @@ msgstr "Описание статуса наличия"
 #: lib/FS_Config.php:639
 msgid "Additional text to describe the stock status"
 msgstr "Дополнительный текст для описания статуса товара"
+
+msgid "By availability priority"
+msgstr "По приоритету наличия"
+
+#: lib/Admin/ProductComments.php:26 lib/Admin/ProductComments.php:27 lib/Admin/ProductComments.php:61 lib/Admin/ProductComments.php:147 lib/Admin/ProductComments.php:180
+msgid "Add Comment"
+msgstr "Добавить комментарий"
+
+#: lib/Admin/ProductComments.php:40 lib/Admin/ProductComments.php:88 lib/Admin/ProductComments.php:101
+msgid "Add Product Comment"
+msgstr "Добавить комментарий к товару"
+
+#: lib/Admin/ProductComments.php:41
+msgid "Create a new comment for any product. The comment will be published immediately."
+msgstr "Создайте новый комментарий к любому товару. Комментарий будет опубликован немедленно."
+
+#: lib/Admin/ProductComments.php:43
+msgid "Add New Comment"
+msgstr "Добавить новый комментарий"
+
+#: lib/Admin/ProductComments.php:117
+msgid "Search for a product..."
+msgstr "Поиск товара..."
+
+#: lib/Admin/ProductComments.php:123
+msgid "Loading..."
+msgstr "Загрузка..."
+
+#: lib/Admin/ProductComments.php:151
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: lib/Admin/ProductComments.php:166
+msgid "Attach Images"
+msgstr "Добавить изображения"
+
+#: lib/Admin/ProductComments.php:168
+msgid "Maximum file size: 10 MB"
+msgstr "Максимальный размер файла: 10 МБ"
+
+#: lib/Admin/ProductComments.php:178
+msgid "Cancel"
+msgstr "Отмена"
+
+#: lib/Admin/ProductComments.php:181
+msgid "Saving..."
+msgstr "Сохранение..."
+
+#: lib/Admin/ProductComments.php:490
+msgid "Please select a product"
+msgstr "Пожалуйста, выберите товар"
+
+#: lib/Admin/ProductComments.php:508 lib/FS_Ajax.php:2077
+msgid "Comment added successfully"
+msgstr "Комментарий успешно добавлен"
+
+#: lib/Admin/ProductComments.php:514 lib/Admin/ProductComments.php:531
+msgid "Error adding comment"
+msgstr "Ошибка при добавлении комментария"
+
+#: lib/FS_Ajax.php:2043
+msgid "Unknown upload error"
+msgstr "Неизвестная ошибка загрузки"

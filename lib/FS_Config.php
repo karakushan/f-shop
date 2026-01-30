@@ -191,6 +191,12 @@ class FS_Config
             'action_price' => [
                 'name' => __('First promotional', 'f-shop'),
             ],
+            'stock_desc' => [
+                'name' => __('In stock', 'f-shop'),
+            ],
+            'stock_priority' => [
+                'name' => __('By availability priority', 'f-shop'),
+            ],
         ];
 
         return apply_filters('fs_orderby_keys', $keys);

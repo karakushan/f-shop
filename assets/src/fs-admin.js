@@ -8,6 +8,11 @@ jQuery(document).ready(function ($) {
         init() {
 
         },
+        getNonce: function() {
+            if (window.fShop && window.fShop.nonce) return window.fShop.nonce;
+            if (window.FS_BACKEND && window.FS_BACKEND.nonce) return window.FS_BACKEND.nonce;
+            return '';
+        },
         // запускает прогресс бар в самом верху сайта
         showMetaboxPreloader: function () {
             $(".fs-mb-preloader").css("display", "block");
@@ -745,6 +750,124 @@ window.fsGetAttributes = function (parent, callback) {
         },
     });
 }
+
+// Initialize SortableJS for attribute values drag-and-drop sorting
+jQuery(document).ready(function ($) {
+    // Wait for SortableJS to be loaded
+    function initAttributeValuesSortable() {
+        if (typeof Sortable === 'undefined') {
+            setTimeout(initAttributeValuesSortable, 100);
+            return;
+        }
+
+        // Initialize Sortable for attribute groups
+        $(document).on('mouseenter', '[data-fs-attribute-groups-container]', function () {
+            var $container = $(this);
+            if ($container.data('sortableInitialized')) return;
+
+            new Sortable($container[0], {
+                animation: 150,
+                handle: '.fs-attributes__item-drag',
+                ghostClass: 'fs-attributes__item--sortable-ghost',
+                onEnd: function (evt) {
+                    var postId = $('#post_ID').val() || $('.fs-attributes').data('post-id');
+                    var order = [];
+                    $container.children('.fs-attributes__item').each(function () {
+                        var id = $(this).attr('data-attribute-id');
+                        if (id) order.push(id);
+                    });
+
+                    var nonce = FS.getNonce();
+
+                    if (!order.length) return;
+
+                    $.ajax({
+                        type: 'POST',
+                        url: ajaxurl,
+                        data: {
+                            action: 'fs_save_attribute_group_order',
+                            post_id: postId,
+                            fs_secret: nonce,
+                            order: order
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                console.log('Attribute groups order saved successfully');
+                            } else {
+                                console.error('Failed to save attribute groups order:', data.data ? data.data.msg : 'Unknown error');
+                            }
+                        }
+                    });
+                }
+            });
+            $container.data('sortableInitialized', true);
+        });
+
+        // Initialize Sortable on each attribute values container
+        $(document).on('mouseenter', '[data-fs-attribute-values-container]', function () {
+            var $container = $(this);
+
+            // Check if Sortable is already initialized on this container
+            if ($container.data('sortableInitialized')) {
+                return;
+            }
+
+            // Get the parent attribute group ID from the container's parent element
+            var $attrItem = $container.closest('.fs-attributes__item');
+            var groupId = $attrItem.attr('data-attribute-id') || 
+                          $attrItem.find('.fs-attributes__item-header').attr('data-attribute-id') || 0;
+
+            new Sortable($container[0], {
+                animation: 150,
+                handle: '.fs-attributes__item-value-drag',
+                ghostClass: 'fs-attributes__item-value--sortable-ghost',
+                onEnd: function (evt) {
+                    var postId = $('#post_ID').val() || $('.fs-attributes').data('post-id');
+
+                    // Get all value IDs in the new order
+                    var order = [];
+                    $container.children('.fs-attributes__item-value').each(function () {
+                        var id = $(this).attr('data-value-id');
+                        if (id) order.push(id);
+                    });
+
+                    var nonce = FS.getNonce();
+
+                    if (!order.length || !groupId) return;
+
+                    // Save the order via AJAX
+                    $.ajax({
+                        type: 'POST',
+                        url: ajaxurl,
+                        data: {
+                            action: 'fs_save_attribute_values_order',
+                            post_id: postId,
+                            group_id: groupId,
+                            fs_secret: nonce,
+                            order: order
+                        },
+                        cache: false,
+                        success: function (data) {
+                            if (data.success) {
+                                console.log('Attribute values order saved successfully');
+                            } else {
+                                console.error('Failed to save attribute values order:', data.data ? data.data.msg : 'Unknown error');
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            console.error('Error saving attribute values order:', xhr);
+                        }
+                    });
+                }
+            });
+
+            $container.data('sortableInitialized', true);
+        });
+    }
+
+    // Initialize when DOM is ready
+    initAttributeValuesSortable();
+});
 
 
 

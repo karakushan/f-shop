@@ -974,6 +974,10 @@ class FS_Product
             return [];
         }
 
+        // Apply attribute group ordering if saved
+        $group_order = get_post_meta($post_id, '_fs_attribute_group_order', true);
+        $group_order = is_array($group_order) ? $group_order : [];
+
         $parents = [];
         $parents_ids = [];
         foreach ($attributes as $attribute) {
@@ -993,10 +997,44 @@ class FS_Product
             }
         }
 
-        $groped = array_map(function ($attribute) use ($attributes, $tax) {
+        // Sort parents based on saved group order
+        if (!empty($group_order)) {
+            usort($parents, function($a, $b) use ($group_order) {
+                $pos_a = array_search($a->term_id, $group_order);
+                $pos_b = array_search($b->term_id, $group_order);
+
+                if ($pos_a !== false && $pos_b !== false) return $pos_a - $pos_b;
+                if ($pos_a !== false) return -1;
+                if ($pos_b !== false) return 1;
+                return 0;
+            });
+        }
+
+        $groped = array_map(function ($attribute) use ($attributes, $tax, $post_id) {
             $children = array_values(array_filter($attributes, function ($child) use ($attribute) {
                 return $child->parent === $attribute->term_id;
             }));
+
+            // Apply saved values order for this group
+            $values_order = get_post_meta($post_id, '_fs_attribute_values_order_' . $attribute->term_id, true);
+            $values_order = is_array($values_order) ? $values_order : [];
+
+            if (!empty($values_order)) {
+                usort($children, function($a, $b) use ($values_order) {
+                    $pos_a = array_search($a->term_id, $values_order);
+                    $pos_b = array_search($b->term_id, $values_order);
+
+                    // If both are in order array, sort by position
+                    if ($pos_a !== false && $pos_b !== false) {
+                        return $pos_a - $pos_b;
+                    }
+                    // If only one is in order array, it comes first
+                    if ($pos_a !== false) return -1;
+                    if ($pos_b !== false) return 1;
+                    // If neither is in order array, maintain original order
+                    return 0;
+                });
+            }
 
             return [
                 'id' => $attribute->term_id,

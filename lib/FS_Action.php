@@ -235,6 +235,7 @@ class FS_Action
 	 *
 	 * @type array $data Additional data for the range slider.
 	 * @type string $wrapper_class CSS class applied to the wrapper element of the slider. Default 'noUiSlider-wrapper'.
+	 * @type array $price_data Cached price range data with 'min', 'max', and 'has_cache' keys.
 	 * }
 	 *
 	 * @return void The function outputs HTML and JavaScript for the range slider.
@@ -243,17 +244,34 @@ class FS_Action
 	{
 		$args    = wp_parse_args($args, [
 			'data'          => [],
-			'wrapper_class' => 'noUiSlider-wrapper'
+			'wrapper_class' => 'noUiSlider-wrapper',
+			'price_data'    => [],
 		]);
 		$term_id   = get_queried_object_id();
 		$use_cents = (int) fs_option('price_cents') === 1;
+
+		// Get pre-loaded price data from server-side cache
+		$price_data = $args['price_data'];
+		$has_cache = !empty($price_data['has_cache']);
+		$price_min = !empty($price_data['min']) ? $price_data['min'] : 0;
+		$price_max = !empty($price_data['max']) ? $price_data['max'] : 0;
+
+		// JSON encode pre-loaded data for use in JS
+		$preloaded_prices = $has_cache ? json_encode([
+			'min' => $price_min,
+			'max' => $price_max,
+		]) : 'null';
 ?>
 		<script>
 			const initSlider = async () => {
 				const slider = document.getElementById('fsRangeSlider');
 				if (!slider) return;
 
-				const maxMinPrices = await Alpine.store('FS').getMaxMinPrice(<?php echo esc_attr($term_id) ?>).then(r => r.data);
+				// Try to get pre-loaded prices from server-side cache
+				const preloadedData = <?php echo $preloaded_prices; ?>;
+
+				// Use pre-loaded data if available, otherwise fetch via AJAX
+				const maxMinPrices = preloadedData || await Alpine.store('FS').getMaxMinPrice(<?php echo esc_attr($term_id) ?>).then(r => r.data);
 				const currentUrl = new URL(window.location.href);
 				const fsPriceStartInput = document.getElementById('fsPriceStartInput');
 				const fsPriceEndInput = document.getElementById('fsPriceEndInput');
