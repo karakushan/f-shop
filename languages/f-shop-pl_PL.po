@@ -23,17 +23,13 @@ msgid ""
 "<p>This online store is powered by <a href=\"https://f-shop.top/\">F-Shop</a>"
 ".  <a href=\"https://f-shop.top/dokumentacija/\">Documentation</a>. <a "
 "href=\"https://f-shop.top/novosti/\">News</a>.</p>"
-msgstr "https://f-shop.top/\
-https://f-shop.top/dokumentacija/\
-https://f-shop.top/novosti/\"
+msgstr "https://f-shop.top/ https://f-shop.top/dokumentacija/ https://f-shop.top/novosti/"
 
 #: lib/FS_Users.php:897
 msgid ""
 "A password reset request was received on the site \"%site_name%\". Your new "
 "password is: %password%. If this was not you, please ignore this email."
-msgstr "%nazwa_witryny%\"
-"Otrzymano żądanie resetowania hasła na stronie \"%site_name%\". Twoje nowe "
-"hasło to: %password%. Jeśli to nie Ty, zignoruj tę wiadomość e-mail."
+msgstr "Otrzymano żądanie resetowania hasła na stronie \"%site_name%\". Twoje nowe hasło to: %password%. Jeśli to nie Ty, zignoruj tę wiadomość e-mail."
 
 #: lib/FS_Orders.php:207
 msgid ""
@@ -42,10 +38,7 @@ msgid ""
 "the convenience of accounting for new orders, they are automatically placed "
 "in the \"New\" tab on the order management panel and are displayed as a list,"
 " sorted by the date added."
-msgstr "Nowy\
-
-
-Nowy\"
+msgstr "Administrator otrzymuje powiadomienie e-mail o wszystkich zamówieniach ze statusem \"Nowy\", co pozwala mu natychmiast skontaktować się z kupującym. Dla wygody księgowania nowych zamówień są one automatycznie umieszczane w zakładce \"Nowy\" na panelu zarządzania zamówieniami i wyświetlane jako lista posortowana według daty dodania."
 
 #: templates/front-end/dashboard/personal_info.php:112
 msgid "Account deleting"
