@@ -77,17 +77,30 @@ class FS_Images_Class
 		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']); ?>
 		<script>
 			(function() {
+				let retryCount = 0;
+				const maxRetries = 50; // Maximum 5 seconds (50 * 100ms)
+				
 				function initProductGallery() {
+					retryCount++;
+					
 					// Check if Swiper is available
 					if (typeof Swiper === 'undefined') {
-						console.warn('Swiper library not loaded yet, retrying...');
-						setTimeout(initProductGallery, 100);
+						if (retryCount <= maxRetries) {
+							console.warn('Swiper library not loaded yet, retrying... (' + retryCount + '/' + maxRetries + ')');
+							setTimeout(initProductGallery, 100);
+						} else {
+							console.error('Swiper library failed to load after ' + maxRetries + ' attempts');
+						}
 						return;
 					}
 					
 					if (typeof window.SwiperNavigation === 'undefined' || typeof window.SwiperThumbs === 'undefined') {
-						console.warn('Swiper modules not loaded yet, retrying...');
-						setTimeout(initProductGallery, 100);
+						if (retryCount <= maxRetries) {
+							console.warn('Swiper modules not loaded yet, retrying... (' + retryCount + '/' + maxRetries + ')');
+							setTimeout(initProductGallery, 100);
+						} else {
+							console.error('Swiper modules failed to load after ' + maxRetries + ' attempts');
+						}
 						return;
 					}
 
