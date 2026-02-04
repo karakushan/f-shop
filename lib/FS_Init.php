@@ -221,7 +221,6 @@ class FS_Init
         wp_enqueue_script(FS_PLUGIN_PREFIX.'tooltipster', FS_PLUGIN_URL.'assets/plugins/tooltipster-master/dist/js/tooltipster.bundle.min.js', ['jquery'], null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX.'tooltipster', FS_PLUGIN_URL.'wp-content/plugins/f-shop/assets/plugins/tooltipster-master/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css', ['jquery'], null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX.'select2', FS_PLUGIN_URL.'assets/plugins/bower_components/select2/dist/js/select2.min.js', ['jquery'], null, true);
-        wp_enqueue_script(FS_PLUGIN_PREFIX.'alpine', 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js', [], null, false);
 
         // Enqueue SortableJS for attribute values sorting
         wp_enqueue_script(FS_PLUGIN_PREFIX.'sortable', 'https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js', ['jquery'], null, true);

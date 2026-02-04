@@ -8,6 +8,7 @@ if ( ! isset( $_GET['post'] ) || ! isset( $_GET['action'] ) || $_GET['action'] !
 }
 
 $post_id    = absint( $_GET['post'] );
+
 $attributes = get_terms( [
 	'taxonomy'   => \FS\FS_Config::get_data( 'features_taxonomy' ),
 	'hide_empty' => false,
@@ -27,7 +28,7 @@ $attributes = get_terms( [
 	            name: "",
 	            value: ""
 	        },
-			attributes: <?php echo htmlentities(json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? [])) ?>,
+			attributes: <?php echo json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) ?>,
 			showAddForm: false,
 			getAttributes(){
 				 $store.FS?.getAttributes(<?php echo $post_id ?>)
@@ -120,10 +121,10 @@ $attributes = get_terms( [
 	</div>
 
 	<div class="fs-attributes__list" data-fs-attribute-groups-container>
-		<template x-for="(attribute, attributeIndex) in attributes" :key="'attribute-'+attributeIndex">
-			<div class="fs-attributes__item " x-data="{ open:false }" :data-attribute-id="attribute.id">
+		<template x-for="attribute in attributes" :key="'attr-' + attribute.id">
+			<div class="fs-attributes__item" x-data="{ open:false }" x-bind:data-attribute-id="attribute.id">
 				<div class="fs-attributes__item-header fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap"
-				     :data-attribute-id="attribute.id">
+				     x-bind:data-attribute-id="attribute.id">
 					<div class="fs-attributes__item-name fs-flex fs-flex-1 fs-flex-items-center fs-gap-0-5">
 						<div class="fs-attributes__item-drag">
 							<span class="dashicons dashicons-menu-alt3"></span>
@@ -143,11 +144,11 @@ $attributes = get_terms( [
 				</div>
 				<div class="fs-attributes__item-values" x-show="open" x-transition
 			     data-fs-attribute-values-container>
-					<template x-for="(value,index) in attribute.children" :key="'child-'+index">
+					<template x-for="value in attribute.children" :key="'val-' + value.id">
 						<div
 							x-data="{show:true}" x-show="show"
 							class="fs-attributes__item-value fs-flex fs-flex-items-center fs-flex-beetween fs-flex-wrap"
-							:data-value-id="value.id">
+							x-bind:data-value-id="value.id">
 							<div class="fs-attributes__item-value-drag">
 								<span class="dashicons dashicons-menu-alt3"></span>
 							</div>
@@ -177,7 +178,7 @@ $attributes = get_terms( [
 							</template>
 						</select>
 						<button class="button button-large" x-show="createNew"
-						        x-on:click.prevent="addChildAttribute(attribute.id,attributeIndex);">
+						        x-on:click.prevent="addChildAttribute(attribute.id, attributes.indexOf(attribute));">
 							<?php _e( 'Add value', 'f-shop' ) ?>
 						</button>
 						<button class="button button-large" x-show="!createNew"

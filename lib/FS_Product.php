@@ -974,6 +974,17 @@ class FS_Product
             return [];
         }
 
+        // Remove duplicate terms from attributes array
+        $unique_attributes = [];
+        $seen_term_ids = [];
+        foreach ($attributes as $attribute) {
+            if (!in_array($attribute->term_id, $seen_term_ids)) {
+                $unique_attributes[] = $attribute;
+                $seen_term_ids[] = $attribute->term_id;
+            }
+        }
+        $attributes = $unique_attributes;
+
         // Apply attribute group ordering if saved
         $group_order = get_post_meta($post_id, '_fs_attribute_group_order', true);
         $group_order = is_array($group_order) ? $group_order : [];
