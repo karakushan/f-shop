@@ -53,10 +53,8 @@ class FS_Taxonomy
         // Filtering products on the category page and in the product archives
         add_action('pre_get_posts', [$this, 'taxonomy_filter_products'], 12, 1);
 
-        // Adding the ability to sort by availability
-        if (in_array(fs_option('fs_product_sort_by'), ['stock_desc', 'stock_priority']) || (isset($_GET['order_type']) && in_array($_GET['order_type'], ['stock_desc', 'stock_priority']))) {
-            add_filter('posts_clauses', [$this, 'order_by_stock_status'], 10, 2);
-        }
+        // Adding the ability to sort by availability priority as secondary criterion for all sorting types
+        add_filter('posts_clauses', [$this, 'order_by_stock_status'], 10, 2);
 
         add_action('fs_product_category_filter', [$this, 'product_category_filter']);
 
@@ -234,37 +232,43 @@ class FS_Taxonomy
     }
 
     /**
-     * Добавляет сортировку по наличию.
+     * Добавляет сортировку по приоритету наличия как вторичный критерий ко всем типам сортировки.
      */
     public function order_by_stock_status($posts_clauses, $query)
     {
-        if (is_admin() || !$query->is_main_query()) {
+        // Пропускаем админку
+        if (is_admin()) {
             return $posts_clauses;
         }
 
-        $order_type = isset($_GET['order_type']) ? $_GET['order_type'] : fs_option('fs_product_sort_by');
-
-        if (($query->is_archive && isset($query->query['post_type']) && $query->query['post_type'] == FS_Config::get_data('post_type'))
+        // Проверяем, является ли это основным запросом или REST API запросом для товаров
+        $is_rest_api = defined('REST_REQUEST') && REST_REQUEST;
+        $is_product_query = ($query->is_archive && isset($query->query['post_type']) && $query->query['post_type'] == FS_Config::get_data('post_type'))
             || ($query->is_tax && isset($query->query['catalog']))
-        ) {
+            || ($is_rest_api && isset($query->query['post_type']) && $query->query['post_type'] == FS_Config::get_data('post_type'));
+
+        if (!$is_product_query) {
+            return $posts_clauses;
+        }
+
+        // Для основного запроса или REST API применяем сортировку
+        if ($query->is_main_query() || $is_rest_api) {
             global $wpdb;
 
-            if ($order_type == 'stock_priority') {
-                $posts_clauses['join'] .= " LEFT JOIN $wpdb->postmeta pm_stock ON ($wpdb->posts.ID = pm_stock.post_id AND pm_stock.meta_key = 'fs_stock_status') ";
-                $order_by = "CASE 
-                        WHEN pm_stock.meta_value IS NULL OR pm_stock.meta_value = '' THEN 1 
-                        WHEN pm_stock.meta_value = '1' THEN 2 
-                        WHEN pm_stock.meta_value = '2' THEN 3 
-                        WHEN pm_stock.meta_value = '0' THEN 4 
-                        ELSE 5 
-                    END ASC";
-                $posts_clauses['orderby'] = $posts_clauses['orderby'] ? "$order_by, " . $posts_clauses['orderby'] : $order_by;
-            } else {
-                $posts_clauses['join'] .= " INNER JOIN $wpdb->postmeta postmeta ON ($wpdb->posts.ID = postmeta.post_id) ";
-                $order_by = "if(postmeta.meta_value='0','0','1') DESC";
-                $posts_clauses['orderby'] = $posts_clauses['orderby'] ? "$order_by, " . $posts_clauses['orderby'] : $order_by;
-                $posts_clauses['where'] = $posts_clauses['where'] . " AND postmeta.meta_key = 'fs_remaining_amount'";
-            }
+            // Добавляем JOIN для получения статуса наличия
+            $posts_clauses['join'] .= " LEFT JOIN $wpdb->postmeta pm_stock ON ($wpdb->posts.ID = pm_stock.post_id AND pm_stock.meta_key = 'fs_stock_status') ";
+            
+            // Создаем CASE выражение для сортировки по приоритету наличия
+            $stock_priority_order = "CASE 
+                    WHEN pm_stock.meta_value IS NULL OR pm_stock.meta_value = '' THEN 1 
+                    WHEN pm_stock.meta_value = '1' THEN 2 
+                    WHEN pm_stock.meta_value = '2' THEN 3 
+                    WHEN pm_stock.meta_value = '0' THEN 4 
+                    ELSE 5 
+                END ASC";
+            
+            // Применяем сортировку по наличию как вторичный критерий ко всем типам сортировки
+            $posts_clauses['orderby'] = $posts_clauses['orderby'] ? "$stock_priority_order, " . $posts_clauses['orderby'] : $stock_priority_order;
         }
 
         return $posts_clauses;

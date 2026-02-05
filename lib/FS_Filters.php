@@ -371,9 +371,7 @@ class FS_Filters {
 			'stock_desc'     => [
 				'name' => __( 'In stock', 'f-shop' ) // в наличии
 			],
-			'stock_priority' => [
-				'name' => __( 'By availability priority', 'f-shop' ) // по приоритету наличия
-			]
+
 		] );
 
 		if ( empty( $sorting_types ) ) {
