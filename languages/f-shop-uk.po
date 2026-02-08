@@ -3815,3 +3815,35 @@ msgstr "Помилка при додаванні коментаря"
 #: lib/FS_Ajax.php:2043
 msgid "Unknown upload error"
 msgstr "Невідома помилка завантаження"
+
+#: lib/FS_Settings.php:632
+msgid "Multilingual feed"
+msgstr "Мультимовний фід"
+
+#: lib/FS_Settings.php:633
+msgid "Enable multilingual fields in YML feed according to Rozetka requirements"
+msgstr "Включити мультимовні поля у YML фіду на вимоги Rozetka"
+
+#: lib/FS_Settings.php:639
+msgid "Default language"
+msgstr "Мова за замовчуванням"
+
+#: lib/FS_Settings.php:647
+msgid "Export full description with HTML"
+msgstr "Експортувати повний опис з HTML"
+
+#: lib/FS_Settings.php:648
+msgid "If enabled, exports the complete description from the product editor with all HTML tags in a CDATA section. If disabled, exports clean text without tags."
+msgstr "Якщо включено, експортує повний опис з редактора товару зі всіма HTML тегами в CDATA секції. Якщо вимкнено, експортує чистий текст без тегів."
+
+#: lib/FS_Settings.php:651
+msgid "Vendor attribute"
+msgstr "Атрибут бренду"
+
+#: lib/FS_Settings.php:652
+msgid "Select the product attribute to use as vendor field in the YML feed"
+msgstr "Виберіть атрибут товару як поле бренду у YML фіді"
+
+#: lib/FS_Settings.php:665
+msgid "-- Select attribute --"
+msgstr "— Виберіть атрибут —"

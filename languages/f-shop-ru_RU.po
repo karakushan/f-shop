@@ -3814,3 +3814,39 @@ msgstr "Ошибка при добавлении комментария"
 #: lib/FS_Ajax.php:2043
 msgid "Unknown upload error"
 msgstr "Неизвестная ошибка загрузки"
+
+#: lib/FS_Settings.php:632
+msgid "Multilingual feed"
+msgstr "Многоязычный фид"
+
+#: lib/FS_Settings.php:633
+msgid "Enable multilingual fields in YML feed according to Rozetka requirements"
+msgstr "Включить многоязычные поля в YML фиде в соответствии с претензиями Rozetka"
+
+#: lib/FS_Settings.php:639
+msgid "Default language"
+msgstr "Любые язык по умолчанию"
+
+#: lib/FS_Settings.php:640
+msgid "Select the default language for the feed. This language will be used without prefix."
+msgstr "Выберите язык по умолчанию для ленты. В этом языке будет использоваться без префикса."
+
+#: lib/FS_Settings.php:647
+msgid "Export full description with HTML"
+msgstr "Экспортировать полное описание с HTML"
+
+#: lib/FS_Settings.php:648
+msgid "If enabled, exports the complete description from the product editor with all HTML tags in a CDATA section. If disabled, exports clean text without tags."
+msgstr "Если включено, экспортирует полное описание из редактора товара со всеми HTML тегами в CDATA секции. Если выключено, экспортирует чистый текст без тегов."
+
+#: lib/FS_Settings.php:651
+msgid "Vendor attribute"
+msgstr "Атрибут бренда"
+
+#: lib/FS_Settings.php:652
+msgid "Select the product attribute to use as vendor field in the YML feed"
+msgstr "Выберите атрибут товара как поле бренда в YML фиде"
+
+#: lib/FS_Settings.php:665
+msgid "-- Select attribute --"
+msgstr "— Выберите атрибут —"

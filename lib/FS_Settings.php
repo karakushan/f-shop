@@ -626,8 +626,88 @@ class FS_Settings
                     ],
                     'value' => fs_option('_fs_export_prom', 'rozetka'),
                 ],
+                [
+                    'type' => 'checkbox',
+                    'name' => '_fs_multilingual_feed',
+                    'label' => __('Multilingual feed', 'f-shop'),
+                    'help' => __('Enable multilingual fields in YML feed according to Rozetka requirements', 'f-shop'),
+                    'value' => fs_option('_fs_multilingual_feed'),
+                ],
+                [
+                    'type' => 'select',
+                    'name' => '_fs_default_language',
+                    'label' => __('Default language', 'f-shop'),
+                    'help' => __('Select the default language for the feed. This language will be used without prefix.', 'f-shop'),
+                    'values' => $this->get_available_languages(),
+                    'value' => fs_option('_fs_default_language', 'ru'),
+                ],
+                [
+                    'type' => 'checkbox',
+                    'name' => '_fs_full_description_feed',
+                    'label' => __('Export full description with HTML', 'f-shop'),
+                    'help' => __('If enabled, exports the complete description from the product editor with all HTML tags in a CDATA section. If disabled, exports clean text without tags.', 'f-shop'),
+                    'value' => fs_option('_fs_full_description_feed'),
+                ],
+                [
+                    'type' => 'select',
+                    'name' => '_fs_vendor_attribute',
+                    'label' => __('Vendor attribute', 'f-shop'),
+                    'help' => __('Select the product attribute to use as vendor field in the YML feed', 'f-shop'),
+                    'values' => $this->get_product_attributes(),
+                    'value' => fs_option('_fs_vendor_attribute', ''),
+                ],
             ],
         ];
+    }
+
+    /**
+     * Get available languages for multilingual feed.
+     *
+     * @return array Languages array
+     */
+    private function get_available_languages(): array
+    {
+        $languages = [];
+        $fs_languages = \FS\FS_Config::get_languages();
+        
+        foreach ($fs_languages as $lang_code => $lang_data) {
+            $languages[$lang_code] = $lang_data['name'];
+        }
+        
+        return $languages;
+    }
+
+    /**
+     * Get parent product attributes for vendor selection.
+     * Only returns parent attributes (categories), not individual values.
+     *
+     * @return array Attributes array
+     */
+    private function get_product_attributes(): array
+    {
+        $attributes = ['' => __('-- Select attribute --', 'f-shop')];
+        
+        global $wpdb;
+        
+        // Get only parent attributes (parent = 0)
+        $query = $wpdb->prepare(
+            "SELECT DISTINCT t.term_id, t.slug, t.name 
+             FROM {$wpdb->terms} t 
+             INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id 
+             WHERE tt.taxonomy = %s AND tt.parent = 0 
+             ORDER BY t.name ASC",
+            'product-attributes'
+        );
+        
+        $results = $wpdb->get_results($query);
+        
+        if (!empty($results)) {
+            foreach ($results as $row) {
+                $attributes[$row->slug] = $row->name;
+            }
+        }
+        
+        return $attributes;
     }
 
     /**
