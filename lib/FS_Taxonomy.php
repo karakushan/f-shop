@@ -536,36 +536,53 @@ class FS_Taxonomy
 
     /**
      * Add rewrite rules for terms.
+     * 
+     * For default language: add explicit rules for taxonomy without prefix if that's how it's configured
+     * For additional languages: create custom rules with language prefix and custom slugs
      *
      * @return array
      */
     public function taxonomy_rewrite_rules($wp_rewrite)
     {
         // Get all languages
-        if (!function_exists('wpm_get_languages')) {
+        if (!function_exists('wpm_get_languages') || !function_exists('wpm_get_default_language')) {
             return $wp_rewrite;
         }
 
         $languages = wpm_get_languages();
         $default_lang = wpm_get_default_language();
-        global $wpdb;
         $rules = [];
 
-        foreach ($languages as $lang_code => $lang_data) {
-            // Process all languages, including default
-            // Get all terms for all taxonomies that might have custom slugs
-            $taxonomies = ['category', 'catalog']; // Add other taxonomies if needed
+        // Add rewrite rules for default language (without language prefix)
+        // These are needed because the taxonomy may be configured with empty slug
+        $taxonomies = ['catalog'];
+        foreach ($taxonomies as $taxonomy) {
+            $terms = get_terms([
+                'taxonomy' => $taxonomy,
+                'hide_empty' => false,
+            ]);
 
+            if (!is_wp_error($terms) && !empty($terms)) {
+                foreach ($terms as $term) {
+                    // For default language, use the term's default slug without any prefix
+                    $rules['^' . preg_quote($term->slug, '~') . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&lang=' . $default_lang;
+                    $rules['^' . preg_quote($term->slug, '~') . '/page/([0-9]{1,})/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]&lang=' . $default_lang;
+                }
+            }
+        }
+
+        // Process only non-default languages for custom multilingual URLs
+        foreach ($languages as $lang_code => $lang_data) {
+            // Skip default language - we handled it above
+            if ($lang_code === $default_lang) {
+                continue;
+            }
+
+            // Get all terms for taxonomies that might have custom slugs
             foreach ($taxonomies as $taxonomy) {
                 $terms = get_terms([
                     'taxonomy' => $taxonomy,
                     'hide_empty' => false,
-                    // 'meta_query' => [
-                    //     [
-                    //         'key' => '_seo_slug',
-                    //         'compare' => 'EXISTS',
-                    //     ],
-                    // ],
                 ]);
 
                 // Skip if no terms found
@@ -574,37 +591,33 @@ class FS_Taxonomy
                 }
 
                 foreach ($terms as $term) {
-                    $custom_slug = $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$wpdb->termmeta} WHERE term_id = %d AND meta_key = '_seo_slug'", $term->term_id));
-                    $ml_array = wpm_string_to_ml_array($custom_slug);
-                    $lang_slug = isset($ml_array[$lang_code]) ? $ml_array[$lang_code] : '';
+                    // Get the language-specific slug
+                    $lang_slug = '';
+                    
+                    // First, check if there's a custom SEO slug for this language
+                    $custom_slug = get_term_meta($term->term_id, '_seo_slug', true);
+                    if (!empty($custom_slug) && function_exists('wpm_string_to_ml_array')) {
+                        $ml_array = wpm_string_to_ml_array($custom_slug);
+                        $lang_slug = isset($ml_array[$lang_code]) ? $ml_array[$lang_code] : '';
+                    }
 
-                    // If the term has no custom slug, use the term slug
+                    // If no custom slug for this language, use the term's default slug with language prefix
                     if (empty($lang_slug)) {
                         $lang_slug = $term->slug;
                     }
 
-                    // For default language, use slug without prefix
-                    if ($lang_code === $default_lang) {
-                        // Add rewrite rule for this term in this language
-                        $rules['^'.$lang_slug.'/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&lang='.$lang_code;
-                        $rules['^'.$lang_slug.'/page/([0-9]{1,})/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]&lang='.$lang_code;
+                    // Build the full URL pattern: {lang_prefix}/{slug}
+                    $lang_prefix = isset($lang_data['slug']) ? $lang_data['slug'] . '/' : '';
+                    $full_slug = $lang_prefix . $lang_slug;
 
-                        continue;
-                    }
-
-                    // For non-default languages, add language prefix
-                    $slug_prefix = '';
-                    if ($lang_code !== $default_lang && isset($lang_data['slug'])) {
-                        $slug_prefix = $lang_data['slug'].'/';
-                    }
-
-                    // Add rewrite rule for this term in this language
-                    $rules['^'.$slug_prefix.$lang_slug.'/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&lang='.$lang_code;
-                    $rules['^'.$slug_prefix.$lang_slug.'/page/([0-9]{1,})/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]&lang='.$lang_code;
+                    // Add rewrite rules for this term in this language
+                    $rules['^' . preg_quote($full_slug, '~') . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&lang=' . $lang_code;
+                    $rules['^' . preg_quote($full_slug, '~') . '/page/([0-9]{1,})/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]&lang=' . $lang_code;
                 }
             }
         }
 
+        // Prepend our rules to the existing rules (important for priority)
         $wp_rewrite->rules = $rules + $wp_rewrite->rules;
 
         return $wp_rewrite->rules;
@@ -1063,18 +1076,23 @@ class FS_Taxonomy
 
     /**
      * Sets a slug for a product category.
+     * 
+     * Always returns rewrite rules so that WordPress can properly route category URLs
+     * for the default language. Custom slugs for multilingual URLs are handled
+     * by taxonomy_rewrite_rules() function.
      *
-     * @return mixed|void
+     * @return mixed|array
      */
     public function product_category_rewrite_slug()
     {
-        $rewrite = false;
-
-        if (fs_option('fs_product_category_slug')) {
-            $rewrite = [
-                'slug' => fs_option('fs_product_category_slug', 'catalog'),
-            ];
-        }
+        // Get the configured slug from options, or default to empty string (no prefix)
+        $slug = fs_option('fs_product_category_slug', '');
+        
+        // Always enable rewrite rules for the catalog taxonomy
+        $rewrite = [
+            'slug' => $slug, // Can be empty string for no prefix
+            'hierarchical' => true,
+        ];
 
         return apply_filters('fs_product_category_rewrite_slug', $rewrite);
     }
