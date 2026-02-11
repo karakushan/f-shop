@@ -30,11 +30,11 @@ class FS_Taxonomy
         add_filter('manage_fs-currencies_custom_column', [$this, 'currencies_column_content'], 10, 3);
         add_filter('manage_fs-currencies_custom_column', [$this, 'currencies_column_content'], 10, 3);
         add_filter('manage_edit-fs-currencies_columns', [$this, 'add_fs_currencies_columns']);
-        add_filter('manage_edit-'.FS_Config::get_data('product_pay_taxonomy').'_columns', [
+        add_filter('manage_edit-' . FS_Config::get_data('product_pay_taxonomy') . '_columns', [
             $this,
             'pay_taxonomy_columns',
         ]);
-        add_filter('manage_'.FS_Config::get_data('product_pay_taxonomy').'_custom_column', [
+        add_filter('manage_' . FS_Config::get_data('product_pay_taxonomy') . '_custom_column', [
             $this,
             'pay_taxonomy_column_content',
         ], 10, 3);
@@ -61,8 +61,8 @@ class FS_Taxonomy
         add_action('fs_product_category_filter', [$this, 'product_category_filter']);
 
         // Add action hook to clear currency cache when currency terms are updated/deleted
-        add_action('edited_'.FS_Config::get_data('currencies_taxonomy'), [__CLASS__, 'clear_currency_cache']);
-        add_action('delete_'.FS_Config::get_data('currencies_taxonomy'), [__CLASS__, 'clear_currency_cache']);
+        add_action('edited_' . FS_Config::get_data('currencies_taxonomy'), [__CLASS__, 'clear_currency_cache']);
+        add_action('delete_' . FS_Config::get_data('currencies_taxonomy'), [__CLASS__, 'clear_currency_cache']);
 
         // поля таксономии харакеристик товара
         add_action('product-attributes_edit_form_fields', [$this, 'edit_product_attr_fields']);
@@ -88,8 +88,8 @@ class FS_Taxonomy
             // add_action($taxonomy.'_add_form_fields', [$this, 'add_taxonomy_fields'], 10, 1);
 
             // Хуки для збереження мета даних
-            add_action('created_'.$taxonomy, [$this, 'save_taxonomy_meta'], 10, 2);
-            add_action('edited_'.$taxonomy, [$this, 'save_taxonomy_meta'], 10, 2);
+            add_action('created_' . $taxonomy, [$this, 'save_taxonomy_meta'], 10, 2);
+            add_action('edited_' . $taxonomy, [$this, 'save_taxonomy_meta'], 10, 2);
         }
     }
 
@@ -198,7 +198,7 @@ class FS_Taxonomy
 
         $current_tax = get_queried_object_id();
 
-        echo '<ul class="'.esc_attr($args['wrapper_class']).'">';
+        echo '<ul class="' . esc_attr($args['wrapper_class']) . '">';
 
         foreach ($product_categories as $product_category) {
             if (!is_object($product_category)) {
@@ -210,10 +210,10 @@ class FS_Taxonomy
             $parent_term_id = get_term_field('parent', $current_tax);
 
             $link_class = is_tax('catalog') && (get_queried_object_id() == $product_category->term_id || $parent_term_id == $product_category->term_id) ? 'active' : '';
-            $href = !is_tax($product_category->taxonomy, $product_category->term_id) ? 'href="'.esc_url(get_term_link($product_category)).'"' : '';
+            $href = !is_tax($product_category->taxonomy, $product_category->term_id) ? 'href="' . esc_url(get_term_link($product_category)) . '"' : '';
 
-            echo '<li class="level-'.esc_attr($level).'">';
-            echo '<a '.$href.' class="level-'.esc_attr($level).'-link '.esc_attr($link_class).'">'.$category_icon.esc_html($product_category->name).'</a>';
+            echo '<li class="level-' . esc_attr($level) . '">';
+            echo '<a ' . $href . ' class="level-' . esc_attr($level) . '-link ' . esc_attr($link_class) . '">' . $category_icon . esc_html($product_category->name) . '</a>';
             $product_categories_child = get_terms([
                 'taxonomy' => $this->taxonomy_name,
                 'hide_empty' => false,
@@ -243,8 +243,8 @@ class FS_Taxonomy
             global $wpdb;
             $posts_clauses['join'] .= " INNER JOIN $wpdb->postmeta postmeta ON ($wpdb->posts.ID = postmeta.post_id) ";
             $order_by = "if(postmeta.meta_value='0','0','1') DESC";
-            $posts_clauses['orderby'] = $posts_clauses['orderby'] ? $posts_clauses['orderby'].", $order_by" : " $order_by";
-            $posts_clauses['where'] = $posts_clauses['where']." AND postmeta.meta_key = 'fs_remaining_amount'";
+            $posts_clauses['orderby'] = $posts_clauses['orderby'] ? $posts_clauses['orderby'] . ", $order_by" : " $order_by";
+            $posts_clauses['where'] = $posts_clauses['where'] . " AND postmeta.meta_key = 'fs_remaining_amount'";
         }
 
         return $posts_clauses;
@@ -432,7 +432,7 @@ class FS_Taxonomy
                     "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND (meta_value = %s OR meta_value LIKE %s)",
                     FS_Config::get_meta('sku'),
                     $search_query,
-                    $wpdb->esc_like($search_query).'%'
+                    $wpdb->esc_like($search_query) . '%'
                 )
             );
 
@@ -593,7 +593,7 @@ class FS_Taxonomy
                 foreach ($terms as $term) {
                     // Get the language-specific slug
                     $lang_slug = '';
-                    
+
                     // First, check if there's a custom SEO slug for this language
                     $custom_slug = get_term_meta($term->term_id, '_seo_slug', true);
                     if (!empty($custom_slug) && function_exists('wpm_string_to_ml_array')) {
@@ -669,6 +669,7 @@ class FS_Taxonomy
 
     /**
      * Removes the taxonomy prefix in the product category link.
+     * Also removes hierarchical parent slugs from category URLs.
      *
      * @return string|string[]
      */
@@ -688,8 +689,8 @@ class FS_Taxonomy
             if ($lang_code === $default_lang) {
                 // Remove the taxonomy prefix in links if the option is enabled
                 if (fs_option('fs_disable_taxonomy_slug')) {
-                    $term_link = str_replace('/'.$taxonomy.'/', '/', $term_link);
-                }
+                    $term_link = home_url('/' . $term->slug . '/');
+                } 
 
                 return $term_link;
             }
@@ -705,13 +706,13 @@ class FS_Taxonomy
                     $languages = wpm_get_languages();
                     $lang_url_prefix = isset($languages[$lang_code]['slug']) ? $languages[$lang_code]['slug'] : $lang_code;
 
-                    return $site_url.'/'.$lang_url_prefix.'/'.$lang_seo_slug.'/';
+                    return $site_url . '/' . $lang_url_prefix . '/' . $lang_seo_slug . '/';
                 }
             }
         }
 
         if (fs_option('fs_disable_taxonomy_slug')) {
-            $term_link = str_replace('/'.$taxonomy.'/', '/', $term_link);
+            $term_link = str_replace('/' . $taxonomy . '/', '/', $term_link);
         }
 
         return $term_link;
@@ -1071,7 +1072,7 @@ class FS_Taxonomy
             'sk' => 'sk_SK',
         ];
 
-        return isset($mapping[$lang_code]) ? $mapping[$lang_code] : $lang_code.'_'.strtoupper($lang_code);
+        return isset($mapping[$lang_code]) ? $mapping[$lang_code] : $lang_code . '_' . strtoupper($lang_code);
     }
 
     /**
@@ -1087,7 +1088,7 @@ class FS_Taxonomy
     {
         // Get the configured slug from options, or default to empty string (no prefix)
         $slug = fs_option('fs_product_category_slug', '');
-        
+
         // Always enable rewrite rules for the catalog taxonomy
         $rewrite = [
             'slug' => $slug, // Can be empty string for no prefix
@@ -1343,7 +1344,7 @@ class FS_Taxonomy
             foreach ($fields[$taxonomy] as $name => $field) {
                 $field['args']['value'] = self::fs_get_term_meta($term->term_id, $name, 1, $field['args']['default'] ?? '');
                 echo '<tr class="form-field taxonomy-thumbnail-wrap">';
-                echo '<th scope="row"><label for="taxonomy-thumbnail">'.esc_attr($field['name']).'</label></th>';
+                echo '<th scope="row"><label for="taxonomy-thumbnail">' . esc_attr($field['name']) . '</label></th>';
 
                 echo '<td>';
 
@@ -1376,7 +1377,7 @@ class FS_Taxonomy
         if (isset($fields[$taxonomy]) && count($fields[$taxonomy])) {
             foreach ($fields[$taxonomy] as $name => $field) {
                 echo '<div class="form-field">';
-                echo '<label for="'.esc_attr($name).'">'.esc_attr($field['name']).'</label>';
+                echo '<label for="' . esc_attr($name) . '">' . esc_attr($field['name']) . '</label>';
 
                 $form->render_field(
                     $name,
@@ -1454,7 +1455,7 @@ class FS_Taxonomy
                 if (strripos($link, $_SERVER['REQUEST_URI'])) {
                     $class = 'active';
                 }
-                echo '<li class="'.esc_attr($class).'"><a href="'.esc_url($link).'">'.esc_html($term->name).'</a></li> ';
+                echo '<li class="' . esc_attr($class) . '"><a href="' . esc_url($link) . '">' . esc_html($term->name) . '</a></li> ';
             }
             echo '</ul>';
         }
@@ -1587,70 +1588,70 @@ class FS_Taxonomy
             }
         }
         ob_start();
-        ?>
-		<table class="wp-list-table widefat fixed striped" data-fs-element="product-feature-table">
-			<thead>
-				<tr>
-					<th><?php esc_html_e('Attribute', 'f-shop'); ?></th>
-					<th><?php esc_html_e('Value', 'f-shop'); ?></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php if ($attributes_hierarchy) { ?>
-					<?php foreach ($attributes_hierarchy as $k => $att_h) { ?>
-						<?php $parent = get_term($k, $fs_config->data['features_taxonomy']); ?>
-						<tr>
-							<td><?php echo esc_html(apply_filters('the_title', $parent->name)); ?></td>
-							<td>
-								<ul class="fs-childs-list"> <?php foreach ($att_h as $child) { ?>
-										<li><?php echo esc_html(apply_filters('the_title', $child->name)); ?> <a
-												class="remove-att"
-												title="<?php esc_attr_e('do I delete a property?', 'f-shop'); ?>"
-												data-action="remove-att"
-												data-category-id="<?php echo esc_attr($child->term_id); ?>"
-												data-product-id="<?php echo esc_attr($post_id); ?>"><span
-													class="dashicons dashicons-no-alt"></span></a>
-										</li>
+?>
+        <table class="wp-list-table widefat fixed striped" data-fs-element="product-feature-table">
+            <thead>
+                <tr>
+                    <th><?php esc_html_e('Attribute', 'f-shop'); ?></th>
+                    <th><?php esc_html_e('Value', 'f-shop'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($attributes_hierarchy) { ?>
+                    <?php foreach ($attributes_hierarchy as $k => $att_h) { ?>
+                        <?php $parent = get_term($k, $fs_config->data['features_taxonomy']); ?>
+                        <tr>
+                            <td><?php echo esc_html(apply_filters('the_title', $parent->name)); ?></td>
+                            <td>
+                                <ul class="fs-childs-list"> <?php foreach ($att_h as $child) { ?>
+                                        <li><?php echo esc_html(apply_filters('the_title', $child->name)); ?> <a
+                                                class="remove-att"
+                                                title="<?php esc_attr_e('do I delete a property?', 'f-shop'); ?>"
+                                                data-action="remove-att"
+                                                data-category-id="<?php echo esc_attr($child->term_id); ?>"
+                                                data-product-id="<?php echo esc_attr($post_id); ?>"><span
+                                                    class="dashicons dashicons-no-alt"></span></a>
+                                        </li>
 
-									<?php } ?>
+                                    <?php } ?>
 
-								</ul>
-								<?php $args = [
-								    'show_option_all' => '',
-								    'show_option_none' => '',
-								    'orderby' => 'ID',
-								    'order' => 'ASC',
-								    'show_last_update' => 0,
-								    'show_count' => 0,
-								    'hide_empty' => 0,
-								    'child_of' => $parent->term_id,
-								    'exclude' => '',
-								    'echo' => 1,
-								    'selected' => 0,
-								    'hierarchical' => 0,
-								    'name' => 'cat',
-								    'id' => 'name',
-								    'class' => 'fs-select-att',
-								    'depth' => 0,
-								    'tab_index' => 0,
-								    'taxonomy' => $fs_config->data['features_taxonomy'],
-								    'hide_if_empty' => false,
-								    'value_field' => 'term_id', // значение value e option
-								    'required' => false,
-								];
+                                </ul>
+                                <?php $args = [
+                                    'show_option_all' => '',
+                                    'show_option_none' => '',
+                                    'orderby' => 'ID',
+                                    'order' => 'ASC',
+                                    'show_last_update' => 0,
+                                    'show_count' => 0,
+                                    'hide_empty' => 0,
+                                    'child_of' => $parent->term_id,
+                                    'exclude' => '',
+                                    'echo' => 1,
+                                    'selected' => 0,
+                                    'hierarchical' => 0,
+                                    'name' => 'cat',
+                                    'id' => 'name',
+                                    'class' => 'fs-select-att',
+                                    'depth' => 0,
+                                    'tab_index' => 0,
+                                    'taxonomy' => $fs_config->data['features_taxonomy'],
+                                    'hide_if_empty' => false,
+                                    'value_field' => 'term_id', // значение value e option
+                                    'required' => false,
+                                ];
 
-					    wp_dropdown_categories($args); ?>
-								<button type="button" class="button button-secondary" data-fs-action="add-atts-from"
-									data-post="<?php echo esc_attr($post_id); ?>"><?php esc_html_e('add attribute', 'f-shop'); ?>
-								</button>
+                                wp_dropdown_categories($args); ?>
+                                <button type="button" class="button button-secondary" data-fs-action="add-atts-from"
+                                    data-post="<?php echo esc_attr($post_id); ?>"><?php esc_html_e('add attribute', 'f-shop'); ?>
+                                </button>
 
-							</td>
-						</tr>
-					<?php } ?>
-				<?php } ?>
-			</tbody>
-		</table>
-<?php
+                            </td>
+                        </tr>
+                    <?php } ?>
+                <?php } ?>
+            </tbody>
+        </table>
+        <?php
         $output = ob_get_clean();
 
         if ($is_ajax) {
@@ -1663,7 +1664,7 @@ class FS_Taxonomy
     // count all posts in category and subcategories
     public static function fs_count_posts_in_term($cat_id, $taxonomy = null)
     {
-        $count = get_transient('fs_count_posts_in_term_'.$cat_id);
+        $count = get_transient('fs_count_posts_in_term_' . $cat_id);
         if (false === $count) {
             $count = 0;
             $taxonomy = $taxonomy ?: FS_Config::get_data('product_taxonomy');
@@ -1681,7 +1682,7 @@ class FS_Taxonomy
                 $count = $query->found_posts;
             }
             wp_reset_postdata();
-            set_transient('fs_count_posts_in_term_'.$cat_id, $count, HOUR_IN_SECONDS);
+            set_transient('fs_count_posts_in_term_' . $cat_id, $count, HOUR_IN_SECONDS);
         }
 
         return $count;
@@ -1700,75 +1701,75 @@ class FS_Taxonomy
             'range' => ['name' => __('range', 'f-shop')],
         ];
         ?>
-		<tr class="form-field term-parent-wrap">
-			<th scope="row"><label for="fs_att_type"><?php esc_html_e('Attribute type', 'f-shop'); ?></label></th>
-			<td>
-				<select name="f-shop[fs_att_type]" id="fs_att_type" class="postform">
-					<?php if (!empty($attr_types)) {
-					    foreach ($attr_types as $att_key => $attr_type) {
-					        echo ' <option value="'.esc_attr($att_key).'" '.selected($att_key, $att_type, 0).' > '.esc_html($attr_type['name']).'</option >';
-					    }
-					} ?>
-				</select>
-				<p class="description"><?php esc_html_e('Products may have different properties. Here you can choose which type of property you need.', 'f-shop'); ?></p>
-			</td>
-		</tr>
-		<tr class="form-field term-parent-wrap  fs-att-values fs-att-color"
-			style="display: <?php if ($att_type == 'color') {
-			    echo 'table-row';
-			} else {
-			    echo 'none';
-			} ?>">
-			<th scope="row">
-				<label for="fs_att_color_value"><?php esc_html_e('Color value', 'f-shop'); ?></label>
-			</th>
-			<td>
-				<input type="text" name="f-shop[fs_att_color_value]"
-					value="<?php echo esc_attr(get_term_meta($term->term_id, 'fs_att_color_value', 1)); ?>"
-					class="fs-color-select" id="fs_att_color_value">
-			</td>
-		</tr>
-		<tr class="form-field term-parent-wrap fs-att-values fs-att-range"
-			style="display: <?php if ($att_type == 'range') {
-			    echo 'table-row';
-			} else {
-			    echo 'none';
-			} ?>">
-			<th scope="row"><label><?php esc_html_e('Beginning of range', 'f-shop'); ?></label></th>
-			<td>
-				<input type="number" step="0.01" name="f-shop[fs_att_range_start_value]" placeholder="0"
-					value="<?php echo esc_attr(get_term_meta($term->term_id, 'fs_att_range_start_value', 1)); ?>">
-			</td>
-		</tr>
-		<tr class="form-field term-parent-wrap fs-att-values fs-att-range"
-			style="display: <?php if ($att_type == 'range') {
-			    echo 'table-row';
-			} else {
-			    echo 'none';
-			} ?>">
-			<th scope="row"><label><?php esc_html_e('End of range', 'f-shop'); ?></label></th>
-			<td>
-				<input type="number" step="0.01" name="f-shop[fs_att_range_end_value]" placeholder="∞"
-					value="<?php echo esc_attr(get_term_meta($term->term_id, 'fs_att_range_end_value', 1)); ?>">
-			</td>
-		</tr>
-		<tr class="form-field term-parent-wrap fs-att-values fs-att-range"
-			style="display: <?php if ($att_type == 'range') {
-			    echo 'table-row';
-			} else {
-			    echo 'none';
-			} ?>">
-			<th scope="row">
-				<label
-					for="fs_att_compare"><?php esc_html_e('Use the number of purchased goods to compare with this attribute.', 'f-shop'); ?></label>
-			</th>
-			<td>
-				<input type="checkbox"
-					name="f-shop[fs_att_compare]" <?php checked(1, get_term_meta($term->term_id, 'fs_att_compare', 1)); ?>
-					value="1" id="fs_att_compare">
-			</td>
-		</tr>
-	<?php
+        <tr class="form-field term-parent-wrap">
+            <th scope="row"><label for="fs_att_type"><?php esc_html_e('Attribute type', 'f-shop'); ?></label></th>
+            <td>
+                <select name="f-shop[fs_att_type]" id="fs_att_type" class="postform">
+                    <?php if (!empty($attr_types)) {
+                        foreach ($attr_types as $att_key => $attr_type) {
+                            echo ' <option value="' . esc_attr($att_key) . '" ' . selected($att_key, $att_type, 0) . ' > ' . esc_html($attr_type['name']) . '</option >';
+                        }
+                    } ?>
+                </select>
+                <p class="description"><?php esc_html_e('Products may have different properties. Here you can choose which type of property you need.', 'f-shop'); ?></p>
+            </td>
+        </tr>
+        <tr class="form-field term-parent-wrap  fs-att-values fs-att-color"
+            style="display: <?php if ($att_type == 'color') {
+                                echo 'table-row';
+                            } else {
+                                echo 'none';
+                            } ?>">
+            <th scope="row">
+                <label for="fs_att_color_value"><?php esc_html_e('Color value', 'f-shop'); ?></label>
+            </th>
+            <td>
+                <input type="text" name="f-shop[fs_att_color_value]"
+                    value="<?php echo esc_attr(get_term_meta($term->term_id, 'fs_att_color_value', 1)); ?>"
+                    class="fs-color-select" id="fs_att_color_value">
+            </td>
+        </tr>
+        <tr class="form-field term-parent-wrap fs-att-values fs-att-range"
+            style="display: <?php if ($att_type == 'range') {
+                                echo 'table-row';
+                            } else {
+                                echo 'none';
+                            } ?>">
+            <th scope="row"><label><?php esc_html_e('Beginning of range', 'f-shop'); ?></label></th>
+            <td>
+                <input type="number" step="0.01" name="f-shop[fs_att_range_start_value]" placeholder="0"
+                    value="<?php echo esc_attr(get_term_meta($term->term_id, 'fs_att_range_start_value', 1)); ?>">
+            </td>
+        </tr>
+        <tr class="form-field term-parent-wrap fs-att-values fs-att-range"
+            style="display: <?php if ($att_type == 'range') {
+                                echo 'table-row';
+                            } else {
+                                echo 'none';
+                            } ?>">
+            <th scope="row"><label><?php esc_html_e('End of range', 'f-shop'); ?></label></th>
+            <td>
+                <input type="number" step="0.01" name="f-shop[fs_att_range_end_value]" placeholder="∞"
+                    value="<?php echo esc_attr(get_term_meta($term->term_id, 'fs_att_range_end_value', 1)); ?>">
+            </td>
+        </tr>
+        <tr class="form-field term-parent-wrap fs-att-values fs-att-range"
+            style="display: <?php if ($att_type == 'range') {
+                                echo 'table-row';
+                            } else {
+                                echo 'none';
+                            } ?>">
+            <th scope="row">
+                <label
+                    for="fs_att_compare"><?php esc_html_e('Use the number of purchased goods to compare with this attribute.', 'f-shop'); ?></label>
+            </th>
+            <td>
+                <input type="checkbox"
+                    name="f-shop[fs_att_compare]" <?php checked(1, get_term_meta($term->term_id, 'fs_att_compare', 1)); ?>
+                    value="1" id="fs_att_compare">
+            </td>
+        </tr>
+        <?php
         $atach_image_id = get_term_meta($term->term_id, 'fs_att_image_value', 1);
         $att_image = $atach_image_id ? wp_get_attachment_image_url($atach_image_id, 'medium') : '';
         $display_button = !empty($att_image) ? 'block' : 'none';
@@ -1779,60 +1780,60 @@ class FS_Taxonomy
             $class = 'hidden';
         }
         ?>
-		<tr class="form-field term-parent-wrap fs-att-values fs-att-image"
-			style="display: <?php if ($att_type == 'image') {
-			    echo 'table-row';
-			} else {
-			    echo 'none';
-			} ?>" id="fs-att-image">
-			<th scope="row"><label><?php esc_html_e('Image', 'f-shop'); ?></label></th>
-			<td>
-				<div class="fs-fields-container">';
-					<div class="fs-selected-image <?php echo esc_attr($class); ?>"
-						style=" background-image: url(<?php echo esc_attr($att_image); ?>);"></div>
-					<button type="button" class="select_file"><?php echo esc_html($display_text); ?></button>
-					<input type="hidden" name="f-shop[fs_att_image_value]"
-						value="<?php echo esc_attr(get_term_meta($term->term_id, 'fs_att_image_value', 1)); ?>"
-						class="fs-image-select">
-					<button type="button" class="delete_file"
-						style="display:<?php echo esc_attr($display_button); ?>"> <?php esc_html_e('delete image', 'f-shop'); ?>
-					</button>
-				</div>
-			</td>
-		</tr>
-	<?php
+        <tr class="form-field term-parent-wrap fs-att-values fs-att-image"
+            style="display: <?php if ($att_type == 'image') {
+                                echo 'table-row';
+                            } else {
+                                echo 'none';
+                            } ?>" id="fs-att-image">
+            <th scope="row"><label><?php esc_html_e('Image', 'f-shop'); ?></label></th>
+            <td>
+                <div class="fs-fields-container">';
+                    <div class="fs-selected-image <?php echo esc_attr($class); ?>"
+                        style=" background-image: url(<?php echo esc_attr($att_image); ?>);"></div>
+                    <button type="button" class="select_file"><?php echo esc_html($display_text); ?></button>
+                    <input type="hidden" name="f-shop[fs_att_image_value]"
+                        value="<?php echo esc_attr(get_term_meta($term->term_id, 'fs_att_image_value', 1)); ?>"
+                        class="fs-image-select">
+                    <button type="button" class="delete_file"
+                        style="display:<?php echo esc_attr($display_button); ?>"> <?php esc_html_e('delete image', 'f-shop'); ?>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    <?php
     }
 
     public function add_product_attr_fields()
     {
-        ?>
-		<div class="form-field term-parent-wrap">
-			<label for="fs_att_type"> <?php esc_html_e('Attribute type', 'f-shop'); ?> </label>
-			<select name="f-shop[fs_att_type]" id="fs_att_type" class="postform">
-				<option value="text"> <?php esc_html_e('text', 'f-shop'); ?></option>
-				<option value="color"> <?php esc_html_e('color', 'f-shop'); ?></option>
-				<option value="image"> <?php esc_html_e('image', 'f-shop'); ?></option>
-			</select>
-			<p class="description"> <?php esc_html_e('Products may have different properties. Here you can choose which type of property you need.', 'f-shop'); ?>
-				.</p>
+    ?>
+        <div class="form-field term-parent-wrap">
+            <label for="fs_att_type"> <?php esc_html_e('Attribute type', 'f-shop'); ?> </label>
+            <select name="f-shop[fs_att_type]" id="fs_att_type" class="postform">
+                <option value="text"> <?php esc_html_e('text', 'f-shop'); ?></option>
+                <option value="color"> <?php esc_html_e('color', 'f-shop'); ?></option>
+                <option value="image"> <?php esc_html_e('image', 'f-shop'); ?></option>
+            </select>
+            <p class="description"> <?php esc_html_e('Products may have different properties. Here you can choose which type of property you need.', 'f-shop'); ?>
+                .</p>
 
-		</div>
-		<div class="form-field term-parent-wrap fs-att-values" style="display: none;" id="fs-att-color">
-			<label for="fs_att_color_value"> <?php esc_html_e('Color value', 'f-shop'); ?> </label>
-			<input type="text" name="f-shop[fs_att_color_value]" value="" class="fs-color-select"
-				id="fs_att_color_value">
-		</div>
-		<div class="form-field term-parent-wrap  fs-att-values" style="display: none;" id="fs-att-image">
-			<label> <?php esc_html_e('Image', 'f-shop'); ?></label>
-			<div class="fs-fields-container">
-				<div class="fs-selected-image" style=" background-image: url();"></div>
-				<button type="button" class="select_file"> <?php esc_html_e('select image', 'f-shop'); ?></button>
-				<input type="hidden" name="f-shop[fs_att_image_value]" value="" class="fs-image-select">
-				<button type="button" class="delete_file"
-					style="display:none"> <?php esc_html_e('delete image', 'f-shop'); ?></button>
-			</div>
-		</div>
-	<?php
+        </div>
+        <div class="form-field term-parent-wrap fs-att-values" style="display: none;" id="fs-att-color">
+            <label for="fs_att_color_value"> <?php esc_html_e('Color value', 'f-shop'); ?> </label>
+            <input type="text" name="f-shop[fs_att_color_value]" value="" class="fs-color-select"
+                id="fs_att_color_value">
+        </div>
+        <div class="form-field term-parent-wrap  fs-att-values" style="display: none;" id="fs-att-image">
+            <label> <?php esc_html_e('Image', 'f-shop'); ?></label>
+            <div class="fs-fields-container">
+                <div class="fs-selected-image" style=" background-image: url();"></div>
+                <button type="button" class="select_file"> <?php esc_html_e('select image', 'f-shop'); ?></button>
+                <input type="hidden" name="f-shop[fs_att_image_value]" value="" class="fs-image-select">
+                <button type="button" class="delete_file"
+                    style="display:none"> <?php esc_html_e('delete image', 'f-shop'); ?></button>
+            </div>
+        </div>
+<?php
     }
 
     /**
