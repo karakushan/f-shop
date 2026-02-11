@@ -578,9 +578,13 @@ class FS_Taxonomy
                     $ml_array = wpm_string_to_ml_array($custom_slug);
                     $lang_slug = isset($ml_array[$lang_code]) ? $ml_array[$lang_code] : '';
 
-                    // If the term has no custom slug, or the language is the default language, use the term slug
-                    if (empty($lang_slug) || $lang_code === $default_lang) {
+                    // If the term has no custom slug, use the term slug
+                    if (empty($lang_slug)) {
                         $lang_slug = $term->slug;
+                    }
+
+                    // For default language, use slug without prefix
+                    if ($lang_code === $default_lang) {
                         // Add rewrite rule for this term in this language
                         $rules['^'.$lang_slug.'/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&lang='.$lang_code;
                         $rules['^'.$lang_slug.'/page/([0-9]{1,})/?$'] = 'index.php?'.$term->taxonomy.'='.$term->slug.'&paged=$matches[1]&lang='.$lang_code;
@@ -588,6 +592,7 @@ class FS_Taxonomy
                         continue;
                     }
 
+                    // For non-default languages, add language prefix
                     $slug_prefix = '';
                     if ($lang_code !== $default_lang && isset($lang_data['slug'])) {
                         $slug_prefix = $lang_data['slug'].'/';
@@ -684,7 +689,7 @@ class FS_Taxonomy
                 if (isset($ml_array[$lang_code]) && !empty($ml_array[$lang_code])) {
                     $lang_seo_slug = $ml_array[$lang_code];
                     $site_url = site_url();
-
+                    $languages = wpm_get_languages();
                     $lang_url_prefix = isset($languages[$lang_code]['slug']) ? $languages[$lang_code]['slug'] : $lang_code;
 
                     return $site_url.'/'.$lang_url_prefix.'/'.$lang_seo_slug.'/';
