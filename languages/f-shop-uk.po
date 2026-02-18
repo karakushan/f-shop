@@ -1851,6 +1851,20 @@ msgstr "Не вказаний метод оплати"
 msgid "No product found in wish list"
 msgstr "Не знайдено товарів в списку бажань"
 
+#: functions/functions.php:3369
+msgid "No reviews"
+msgstr "Немає відгуків"
+
+#. translators: %s: number of reviews
+#: functions/functions.php:3376
+#, php-format
+msgctxt "reviews count"
+msgid "%s review"
+msgid_plural "%s reviews"
+msgstr[0] "%s відгук"
+msgstr[1] "%s відгуки"
+msgstr[2] "%s відгуків"
+
 #: lib/widgets/Attribute_Widget.php:133
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24
 msgid "Normal"

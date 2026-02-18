@@ -1848,6 +1848,20 @@ msgstr "Не найден метод оплаты"
 msgid "No product found in wish list"
 msgstr "Не найдено товаров в списке желаний"
 
+#: functions/functions.php:3369
+msgid "No reviews"
+msgstr "Нет отзывов"
+
+#. translators: %s: number of reviews
+#: functions/functions.php:3376
+#, php-format
+msgctxt "reviews count"
+msgid "%s review"
+msgid_plural "%s reviews"
+msgstr[0] "%s отзыв"
+msgstr[1] "%s отзыва"
+msgstr[2] "%s отзывов"
+
 #: lib/widgets/Attribute_Widget.php:133
 #: templates/front-end/widget/attributes-filter/attributes-filter.php:24
 msgid "Normal"
