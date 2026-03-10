@@ -1090,9 +1090,10 @@ class FS_Taxonomy
         $slug = fs_option('fs_product_category_slug', '');
 
         // Always enable rewrite rules for the catalog taxonomy
+        // hierarchical => false means flat URLs (e.g., /grabli/ instead of /sadovo-ogorodnyj-inventar/grabli/)
         $rewrite = [
             'slug' => $slug, // Can be empty string for no prefix
-            'hierarchical' => true,
+            'hierarchical' => false,
         ];
 
         return apply_filters('fs_product_category_rewrite_slug', $rewrite);
