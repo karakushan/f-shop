@@ -6,7 +6,7 @@ defined('ABSPATH') or exit('No script kiddies please!');
 Plugin Name: F-Shop
 Plugin URI: https://f-shop.top/
 Description:  Simple and functional online store plugin.
-Version: 1.4.1
+Version: 1.4.2
 Author: Vitaliy Karakushan
 Author URI: https://f-shop.top/
 License: GPL2

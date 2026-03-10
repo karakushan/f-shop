@@ -74,11 +74,16 @@ class FS_Images_Class
 		);
 		$args    = wp_parse_args($args, $default);
 
-		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']); ?>
+		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']);
+		$images_count = count($gallery_images_ids);
+		$show_navigation = $images_count > 1;
+		?>
 		<script>
 			(function() {
 				let retryCount = 0;
 				const maxRetries = 50; // Maximum 5 seconds (50 * 100ms)
+				const imagesCount = <?php echo $images_count; ?>;
+				const showNavigation = <?php echo $show_navigation ? 'true' : 'false'; ?>;
 				
 				function initProductGallery() {
 					retryCount++;
@@ -127,11 +132,11 @@ class FS_Images_Class
 						thumbs: {
 							swiper: thumbsSwiper,
 						},
-						grabCursor: true,
-						navigation: {
+						grabCursor: imagesCount > 1,
+						navigation: showNavigation ? {
 							nextEl: ".fs-swiper-next",
 							prevEl: ".fs-swiper-prev",
-						},
+						} : false,
 						on: {
 							init: function() {
 								console.log('Main gallery initialized');

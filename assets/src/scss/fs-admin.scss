@@ -1554,10 +1554,14 @@ td.fs_menu_order.column-fs_menu_order {
     border-bottom-color: #fff;
   }
 
+  // Support both cf-container--tabbed and cf-container--tabbed-horizontal
+  &.cf-container--tabbed,
   &.cf-container--tabbed-horizontal {
     flex-direction: row;
   }
 
+  // Support both tabbed and tabbed-horizontal classes
+  .cf-container__tabs--tabbed,
   .cf-container__tabs--tabbed-horizontal {
     flex-basis: 304px;
     padding: 0;
