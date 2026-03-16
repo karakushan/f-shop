@@ -2353,6 +2353,21 @@ td.fs_menu_order.column-fs_menu_order {
   }
 }
 
+.cf-container__tabs {
+    display: flex;
+    width:280px;
+    
+}
+
+.cf-container__tabs-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    width: 100%;
+    flex-direction: column;
+    gap: 1px;
+}
+
 // Адаптивність для мобільних пристроїв
 @media screen and (max-width: 768px) {
   .fs-order-status-badge {

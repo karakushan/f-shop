@@ -177,33 +177,35 @@ class Category_Widget extends \WP_Widget {
 			return;
 		}
 
+		// Prepare categories with their URLs for navigation
+		$categories_with_urls = [];
+		foreach ( $categories as $category ) {
+			$categories_with_urls[] = [
+				'term_id' => $category->term_id,
+				'name'     => $category->name,
+				'slug'     => $category->slug,
+				'url'      => get_term_link( $category ),
+			];
+		}
+
 		echo $args['before_widget'];
 		if ( ! empty( $title ) ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
-		$query = isset( $_REQUEST['categories'] ) ? array_map( 'sanitize_text_field', explode( FS_Filters::get_param_separator(), $_REQUEST['categories'] ) ) : [];
+		// Determine current category from URL for initial checkbox state
+		$current_term = get_queried_object();
+		$current_category_id = ($current_term && isset($current_term->term_id)) ? $current_term->term_id : 0;
 		?>
         <ul class="fs-category-filter"
-            x-data='{categories: <?php echo wp_json_encode( $query ?? [] ) ?>, separator : "<?php echo FS_Filters::get_param_separator() ?>", allCategories: <?php echo wp_json_encode( $categories ) ?>}'
-            x-init="()=>{
-            $watch('categories', (value) => {
-              if (value.length > 0) {
-                    const params = new URLSearchParams(window.location.search);
-                    params.set('categories', value.join(separator));
-                    window.location = `${window.location.pathname}?${params.toString()}`;
-                } else {
-                    const params = new URLSearchParams(window.location.search);
-                    params.delete('categories');
-                    window.location = `${window.location.pathname}?${params.toString()}`;
-                }
-            })
-            }">
+            x-data='{currentCategoryId: <?php echo $current_category_id; ?>, allCategories: <?php echo wp_json_encode( $categories_with_urls ) ?>}'>
             <template x-for="category in allCategories" :key="category.term_id">
                 <li class="fs-checkbox-wrapper level-1">
-                    <input type="checkbox" x-model="categories" class="checkStyle"
+                    <input type="checkbox" class="checkStyle"
                            :name="'categories['+category.term_id+']'"
                            :value="category.term_id"
-                           :id="'fs-category-'+category.term_id">
+                           :id="'fs-category-'+category.term_id"
+                           :checked="category.term_id == currentCategoryId"
+                           @click="window.location.href = category.url">
                     <label :for="'fs-category-'+category.term_id" x-text="category.name"></label>
                 </li>
             </template>
