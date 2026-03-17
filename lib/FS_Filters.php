@@ -28,6 +28,9 @@ class FS_Filters {
 		// Display the product edit fields in the quick editing mode
 		add_action( 'quick_edit_custom_box', array( $this, 'product_quick_edit_fields' ), 10, 2 );
 
+		// Save quick edit fields
+		add_action( 'save_post_product', array( $this, 'save_quick_edit_fields' ), 10, 3 );
+
 		// Modify the saved product field
 		add_filter( 'fs_filter_meta_field', array( $this, 'fs_filter_meta_field' ), 10, 3 );
 
@@ -197,6 +200,65 @@ class FS_Filters {
             </fieldset>
 			<?php
 		}
+	}
+
+	/**
+	 * Save quick edit fields for products.
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post object.
+	 * @param bool    $update  Whether this is an existing post being updated.
+	 */
+	public function save_quick_edit_fields( $post_id, $post, $update ) {
+		// Skip autosave
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		// Check if this is a quick edit request (inline edit)
+		if ( ! isset( $_POST['action'] ) || $_POST['action'] !== 'inline-save' ) {
+			return;
+		}
+
+		// Verify inline edit nonce
+		if ( ! isset( $_POST['_inline_edit'] ) || ! wp_verify_nonce( $_POST['_inline_edit'], 'inlineeditnonce' ) ) {
+			return;
+		}
+
+		// Check user permissions
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		// Save price
+		$price_meta = FS_Config::get_meta( 'price' );
+		if ( isset( $_POST[ $price_meta ] ) && $_POST[ $price_meta ] !== '' ) {
+			$price = floatval( str_replace( ',', '.', sanitize_text_field( $_POST[ $price_meta ] ) ) );
+			update_post_meta( $post_id, $price_meta, $price );
+			// Update real price for sorting
+			update_post_meta( $post_id, '_fs_real_price', fs_get_price( $post_id ) );
+		}
+
+		// Save SKU (vendor code)
+		$sku_meta = FS_Config::get_meta( 'sku' );
+		if ( isset( $_POST[ $sku_meta ] ) ) {
+			$sku = sanitize_text_field( $_POST[ $sku_meta ] );
+			if ( $sku !== '' ) {
+				update_post_meta( $post_id, $sku_meta, $sku );
+			} else {
+				delete_post_meta( $post_id, $sku_meta );
+			}
+		}
+
+		// Save stock quantity
+		$stock_meta = FS_Config::get_meta( 'remaining_amount' );
+		if ( isset( $_POST[ $stock_meta ] ) && $_POST[ $stock_meta ] !== '' ) {
+			$stock = intval( $_POST[ $stock_meta ] );
+			update_post_meta( $post_id, $stock_meta, $stock );
+		}
+
+		// Trigger action for other plugins to hook into
+		do_action( 'fs_after_quick_edit_save', $post_id, $post );
 	}
 
 	// редиректы для админки
