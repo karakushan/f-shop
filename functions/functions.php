@@ -3626,7 +3626,7 @@ function fs_get_product_rating($product_id = 0)
 
 if (!function_exists('fs_get_category_text')) {
     /**
-     * Returns the product category text.
+     * Returns the product category text (supports WP Multilang format).
      *
      * @param int $category_id
      */
@@ -3636,7 +3636,15 @@ if (!function_exists('fs_get_category_text')) {
             $category_id = get_queried_object_id();
         }
 
-        return apply_filters('the_content', fs_get_term_meta('_content', $category_id, 1));
+        // Try WP Multilang format first (field without suffix, WP Multilang handles translation)
+        $content = get_term_meta($category_id, '_content', 1);
+        
+        // Fallback to old suffix format if empty
+        if (empty($content)) {
+            $content = fs_get_term_meta('_content', $category_id, 1);
+        }
+
+        return apply_filters('the_content', $content);
     }
 }
 

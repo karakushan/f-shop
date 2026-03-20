@@ -103,7 +103,12 @@ class FS_SEO {
 		if ( fs_is_catalog() && fs_option( '_fs_catalog_meta_description' ) != '' ) {
 			$meta_description = fs_option( '_fs_catalog_meta_description' );
 		} elseif ( fs_is_product_category() ) { // Если посетитель находится на странице таксономии товаров
-			$meta_description = fs_get_term_meta( '_seo_description' );
+			// Try WP Multilang format first (field without suffix)
+			$meta_description = get_term_meta( get_queried_object_id(), '_seo_description', 1 );
+			// Fallback to old suffix format if empty
+			if ( empty( $meta_description ) ) {
+				$meta_description = fs_get_term_meta( '_seo_description' );
+			}
 		}
 
 		$meta_description = apply_filters( 'fs_meta_description', $meta_description );
