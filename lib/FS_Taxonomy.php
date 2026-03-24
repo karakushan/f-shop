@@ -1000,6 +1000,14 @@ class FS_Taxonomy
                     ],
                     'help' => __('Color for the status badge in the orders list. If no color is set, blue will be used by default.', 'f-shop'),
                 ],
+                '_fs_status_icon' => [
+                    'name' => __('Status Icon', 'f-shop'),
+                    'type' => 'image',
+                    'args' => [
+                        'default' => '',
+                    ],
+                    'help' => __('Icon for the order status. Upload an image to display alongside the status name.', 'f-shop'),
+                ],
             ],
         ];
 

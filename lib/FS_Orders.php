@@ -69,7 +69,8 @@ class FS_Orders
                 $post = get_post($post_id);
                 $status = $post->post_status;
                 $status_name = $this->get_status_name($status);
-                $status_color = $this->get_status_color($status);
+                $status_color = self::get_status_color($status);
+                $status_icon = self::get_status_icon_url($status);
                 $status_class = 'status-'.str_replace('-', '_', $status);
 
                 $style = '';
@@ -77,7 +78,12 @@ class FS_Orders
                     $style = ' style="background-color: '.esc_attr($status_color).'; color: #fff;"';
                 }
 
-                echo '<span class="fs-order-status-badge '.esc_attr($status_class).'"'.$style.'>'.esc_html($status_name).'</span>';
+                $icon_html = '';
+                if ($status_icon) {
+                    $icon_html = '<img src="'.esc_url($status_icon).'" alt="" class="fs-order-status-icon" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;">';
+                }
+
+                echo '<span class="fs-order-status-badge '.esc_attr($status_class).'"'.$style.'>'.$icon_html.esc_html($status_name).'</span>';
                 break;
             case 'fs_user':
                 echo '<ul>';
@@ -105,28 +111,6 @@ class FS_Orders
     private function get_status_name($status)
     {
         return self::get_status_display_name($status);
-    }
-
-    /**
-     * Get status color for badge.
-     *
-     * @param string $status
-     *
-     * @return string|null
-     */
-    private function get_status_color($status)
-    {
-        // Спробуємо отримати колір з мета поля таксономії
-        $term = get_term_by('slug', $status, FS_Config::get_data('order_statuses_taxonomy'));
-        if ($term && !is_wp_error($term)) {
-            $color = get_term_meta($term->term_id, '_fs_status_color', true);
-            if ($color) {
-                return $color;
-            }
-        }
-
-        // Якщо колір не знайдено, повертаємо синій за замовчуванням
-        return '#3498db';
     }
 
     /**
@@ -360,6 +344,48 @@ class FS_Orders
 
         // Якщо нічого не знайдено, повертаємо статус як є
         return ucfirst(str_replace(['-', '_'], ' ', $status));
+    }
+
+    /**
+     * Get the icon URL for an order status.
+     *
+     * @param string $status The status slug
+     * @param string $size Optional. Image size to retrieve. Default 'thumbnail'.
+     * @return string|null The icon URL or null if not set
+     */
+    public static function get_status_icon_url($status, $size = 'thumbnail')
+    {
+        $term = get_term_by('slug', $status, FS_Config::get_data('order_statuses_taxonomy'));
+        if ($term && !is_wp_error($term)) {
+            $icon_id = get_term_meta($term->term_id, '_fs_status_icon', true);
+            if ($icon_id) {
+                $icon_url = wp_get_attachment_image_url($icon_id, $size);
+                if ($icon_url) {
+                    return $icon_url;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the color for an order status.
+     *
+     * @param string $status The status slug
+     * @return string The color hex code or default blue
+     */
+    public static function get_status_color($status)
+    {
+        $term = get_term_by('slug', $status, FS_Config::get_data('order_statuses_taxonomy'));
+        if ($term && !is_wp_error($term)) {
+            $color = get_term_meta($term->term_id, '_fs_status_color', true);
+            if ($color) {
+                return $color;
+            }
+        }
+
+        return '#3498db';
     }
 
     /**

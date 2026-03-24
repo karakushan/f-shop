@@ -1813,6 +1813,18 @@ msgid ""
 "be used by default."
 msgstr ""
 
+#: lib/FS_Taxonomy.php:990
+msgid "Status Icon"
+msgstr "Иконка статуса"
+
+#: lib/FS_Taxonomy.php:994
+msgid ""
+"Icon for the order status. Upload an image to display alongside the status "
+"name."
+msgstr ""
+"Иконка для статуса заказа. Загрузите изображение для отображения рядом с "
+"названием статуса."
+
 #: lib/FS_Taxonomy.php:1087 lib/FS_Taxonomy.php:1089 lib/FS_Taxonomy.php:1091
 #: lib/FS_Taxonomy.php:1092 lib/FS_Taxonomy.php:1093 lib/FS_Taxonomy.php:1094
 #: lib/FS_Taxonomy.php:1096 lib/FS_Taxonomy.php:1098 lib/FS_Taxonomy.php:1099
