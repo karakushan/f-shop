@@ -357,7 +357,8 @@ class FS_Orders
     {
         $term = get_term_by('slug', $status, FS_Config::get_data('order_statuses_taxonomy'));
         if ($term && !is_wp_error($term)) {
-            $icon_id = get_term_meta($term->term_id, '_fs_status_icon', true);
+            // Carbon Fields stores with double underscore prefix
+            $icon_id = get_term_meta($term->term_id, '__fs_status_icon', true);
             if ($icon_id) {
                 $icon_url = wp_get_attachment_image_url($icon_id, $size);
                 if ($icon_url) {
@@ -379,7 +380,8 @@ class FS_Orders
     {
         $term = get_term_by('slug', $status, FS_Config::get_data('order_statuses_taxonomy'));
         if ($term && !is_wp_error($term)) {
-            $color = get_term_meta($term->term_id, '_fs_status_color', true);
+            // Carbon Fields stores with double underscore prefix
+            $color = get_term_meta($term->term_id, '__fs_status_color', true);
             if ($color) {
                 return $color;
             }
