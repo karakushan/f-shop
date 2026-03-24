@@ -975,7 +975,7 @@ class FS_Taxonomy
             // Поле кольору для статусів замовлень
             FS_Config::get_data('order_statuses_taxonomy') => [
                 '_fs_status_color' => [
-                    'name' => __('Badge Color', 'f-shop'),
+                    'name' => __('Badge Text Color', 'f-shop'),
                     'type' => 'color',
                     'palette' => [
                         '#3498db', // Синій (за замовчуванням)
@@ -998,7 +998,35 @@ class FS_Taxonomy
                     'args' => [
                         'default' => '#3498db',
                     ],
-                    'help' => __('Color for the status badge in the orders list. If no color is set, blue will be used by default.', 'f-shop'),
+                    'help' => __('Text color for the status badge. If not set, blue will be used by default.', 'f-shop'),
+                ],
+                '_fs_status_bg_color' => [
+                    'name' => __('Badge Background Color', 'f-shop'),
+                    'type' => 'color',
+                    'palette' => [
+                        '#3498db', // Синій
+                        '#f39c12', // Помаранчевий
+                        '#9b59b6', // Фіолетовий
+                        '#27ae60', // Зелений
+                        '#16a085', // Морський зелений
+                        '#2ecc71', // Світло-зелений
+                        '#e74c3c', // Червоний
+                        '#95a5a6', // Сірий
+                        '#e67e22', // Темно-помаранчевий
+                        '#34495e', // Темно-сірий
+                        '#1abc9c', // Бірюзовий
+                        '#f1c40f', // Жовтий
+                        '#8e44ad', // Пурпурний
+                        '#2c3e50', // Темно-синій
+                        '#d35400', // Червоно-помаранчевий
+                        '#c0392b',  // Темно-червоний
+                        '#ffffff', // Білий
+                        '#f5f7f9', // Світло-сірий
+                    ],
+                    'args' => [
+                        'default' => '#f5f7f9',
+                    ],
+                    'help' => __('Background color for the status badge. If not set, light gray will be used by default.', 'f-shop'),
                 ],
                 '_fs_status_icon' => [
                     'name' => __('Status Icon', 'f-shop'),
