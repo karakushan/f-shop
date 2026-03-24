@@ -1810,17 +1810,27 @@ msgstr "Скидка в процентах"
 msgid "Badge Color"
 msgstr "Колір"
 
-#: lib/FS_Taxonomy.php:982
-msgid ""
-"Color for the status badge in the orders list. If no color is set, blue will "
-"be used by default."
-msgstr ""
+#: lib/FS_Taxonomy.php:978
+msgid "Badge Text Color"
+msgstr "Колір тексту бейджа"
 
-#: lib/FS_Taxonomy.php:990
+#: lib/FS_Taxonomy.php:1001
+msgid "Text color for the status badge. If not set, blue will be used by default."
+msgstr "Колір тексту для бейджа статусу. Якщо не встановлено, за замовчуванням використовується синій."
+
+#: lib/FS_Taxonomy.php:1003
+msgid "Badge Background Color"
+msgstr "Фоновий колір бейджа"
+
+#: lib/FS_Taxonomy.php:1030
+msgid "Background color for the status badge. If not set, light gray will be used by default."
+msgstr "Фоновий колір для бейджа статусу. Якщо не встановлено, за замовчуванням використовується світло-сірий."
+
+#: lib/FS_Taxonomy.php:1038
 msgid "Status Icon"
 msgstr "Іконка статусу"
 
-#: lib/FS_Taxonomy.php:994
+#: lib/FS_Taxonomy.php:1042
 msgid ""
 "Icon for the order status. Upload an image to display alongside the status "
 "name."

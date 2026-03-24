@@ -391,6 +391,26 @@ class FS_Orders
     }
 
     /**
+     * Get the background color for an order status badge.
+     *
+     * @param string $status The status slug
+     * @return string The background color hex code or default light gray
+     */
+    public static function get_status_bg_color($status)
+    {
+        $term = get_term_by('slug', $status, FS_Config::get_data('order_statuses_taxonomy'));
+        if ($term && !is_wp_error($term)) {
+            // Carbon Fields stores with double underscore prefix
+            $bg_color = get_term_meta($term->term_id, '__fs_status_bg_color', true);
+            if ($bg_color) {
+                return $bg_color;
+            }
+        }
+
+        return '#f5f7f9';
+    }
+
+    /**
      * Метабокс отображает селект с статусами заказа и кнопку сохранения.
      */
     public function order_status_box()
