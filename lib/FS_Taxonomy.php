@@ -549,9 +549,8 @@ class FS_Taxonomy
             return $wp_rewrite;
         }
 
-        $languages = wpm_get_languages();
         $default_lang = wpm_get_default_language();
-        $rules = [];
+        $rules = [];  
 
         // Add rewrite rules for default language (without language prefix)
         // These are needed because the taxonomy may be configured with empty slug
@@ -569,53 +568,7 @@ class FS_Taxonomy
                     $rules['^' . preg_quote($term->slug, '~') . '/page/([0-9]{1,})/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]&lang=' . $default_lang;
                 }
             }
-        }
-
-        // Process only non-default languages for custom multilingual URLs
-        foreach ($languages as $lang_code => $lang_data) {
-            // Skip default language - we handled it above
-            if ($lang_code === $default_lang) {
-                continue;
-            }
-
-            // Get all terms for taxonomies that might have custom slugs
-            foreach ($taxonomies as $taxonomy) {
-                $terms = get_terms([
-                    'taxonomy' => $taxonomy,
-                    'hide_empty' => false,
-                ]);
-
-                // Skip if no terms found
-                if (is_wp_error($terms) || empty($terms)) {
-                    continue;
-                }
-
-                foreach ($terms as $term) {
-                    // Get the language-specific slug
-                    $lang_slug = '';
-
-                    // First, check if there's a custom SEO slug for this language
-                    $custom_slug = get_term_meta($term->term_id, '_seo_slug', true);
-                    if (!empty($custom_slug) && function_exists('wpm_string_to_ml_array')) {
-                        $ml_array = wpm_string_to_ml_array($custom_slug);
-                        $lang_slug = isset($ml_array[$lang_code]) ? $ml_array[$lang_code] : '';
-                    }
-
-                    // If no custom slug for this language, use the term's default slug with language prefix
-                    if (empty($lang_slug)) {
-                        $lang_slug = $term->slug;
-                    }
-
-                    // Build the full URL pattern: {lang_prefix}/{slug}
-                    $lang_prefix = isset($lang_data['slug']) ? $lang_data['slug'] . '/' : '';
-                    $full_slug = $lang_prefix . $lang_slug;
-
-                    // Add rewrite rules for this term in this language
-                    $rules['^' . preg_quote($full_slug, '~') . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&lang=' . $lang_code;
-                    $rules['^' . preg_quote($full_slug, '~') . '/page/([0-9]{1,})/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug . '&paged=$matches[1]&lang=' . $lang_code;
-                }
-            }
-        }
+        } 
 
         // Prepend our rules to the existing rules (important for priority)
         $wp_rewrite->rules = $rules + $wp_rewrite->rules;
@@ -643,11 +596,10 @@ class FS_Taxonomy
         }
 
         // Get the custom multilingual slugs for this term.
-        $custom_slug_raw = get_term_meta($term->term_id, '_seo_slug', true);
-        if (!$custom_slug_raw || !function_exists('wpm_string_to_ml_array')) {
+        $ml_slugs = $this->get_multilang_term_slugs($term->term_id);
+        if (empty($ml_slugs)) {
             return;
         }
-        $ml_slugs = wpm_string_to_ml_array($custom_slug_raw);
 
         // Extract the term slug part from the URL, removing pagination.
         $request_uri_path = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -695,19 +647,15 @@ class FS_Taxonomy
                 return $term_link;
             }
 
-            $custom_slug_raw = get_term_meta($term->term_id, '_seo_slug', true);
+            $ml_array = $this->get_multilang_term_slugs($term->term_id);
 
-            if ($custom_slug_raw && function_exists('wpm_string_to_ml_array') && $lang_code !== $default_lang) {
-                $ml_array = wpm_string_to_ml_array($custom_slug_raw);
+            if (isset($ml_array[$lang_code]) && !empty($ml_array[$lang_code])) {
+                $lang_seo_slug = $ml_array[$lang_code];
+                $site_url = site_url();
+                $languages = wpm_get_languages();
+                $lang_url_prefix = isset($languages[$lang_code]['slug']) ? $languages[$lang_code]['slug'] : $lang_code;
 
-                if (isset($ml_array[$lang_code]) && !empty($ml_array[$lang_code])) {
-                    $lang_seo_slug = $ml_array[$lang_code];
-                    $site_url = site_url();
-                    $languages = wpm_get_languages();
-                    $lang_url_prefix = isset($languages[$lang_code]['slug']) ? $languages[$lang_code]['slug'] : $lang_code;
-
-                    return $site_url . '/' . $lang_url_prefix . '/' . $lang_seo_slug . '/';
-                }
+                return $site_url . '/' . $lang_url_prefix . '/' . $lang_seo_slug . '/';
             }
         }
 
@@ -716,6 +664,30 @@ class FS_Taxonomy
         }
 
         return $term_link;
+    }
+
+    private function get_multilang_term_slugs($term_id)
+    {
+        if (!function_exists('wpm_string_to_ml_array')) {
+            return [];
+        }
+
+        global $wpdb;
+
+        $custom_slug_raw = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT meta_value FROM {$wpdb->termmeta} WHERE term_id = %d AND meta_key = '_seo_slug' LIMIT 1",
+                $term_id
+            )
+        );
+
+        if (empty($custom_slug_raw)) {
+            return [];
+        }
+
+        $ml_slugs = wpm_string_to_ml_array($custom_slug_raw);
+
+        return is_array($ml_slugs) ? $ml_slugs : [];
     }
 
     /**
