@@ -65,12 +65,15 @@ class FS_Shortcode
     public function wishlist_shortcode($atts)
     {
         $atts = shortcode_atts([
-            'wrapper_class' => 'fs-wislist-poducts row',
+            'wrapper_class' => 'fs-wishlist-products grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6',
             'empty_text' => __('Wish list is empty', 'f-shop'),
             'template' => 'wishlist/wishlist-product',
         ], $atts);
         $items = fs_get_wishlist();
-        $html = '<div class="'.esc_attr($atts['wrapper_class']).'">';
+        $html = '<div class="max-w-container mx-auto px-4 lg:px-container">';
+        $html .= '<div class="flex flex-col gap-6 lg:gap-12">';
+        $html .= '<h1 class="text-[24px] lg:text-[36px] font-normal text-[#010304] leading-[1.3]">' . esc_html__('Обране', 'f-shop') . '</h1>';
+        $html .= '<div class="' . esc_attr($atts['wrapper_class']) . '">';
 
         if ($items) {
             $html .= $atts['before_loops'];
@@ -85,6 +88,8 @@ class FS_Shortcode
             $html .= '<p>'.esc_html($atts['empty_text']).'</p >';
         }
 
+        $html .= '</div>';
+        $html .= '</div>';
         $html .= '</div>';
 
         return $html;

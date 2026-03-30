@@ -871,7 +871,7 @@ function fs_add_to_cart($product_id = 0, $label = 'Add to cart', $args = [])
             'inCart' => FS_Cart::contains($product_id),
             'productId' => $product_id,
         ]),
-        'x-on:click' => 'Alpine.store("FS").addToCart(productId, Number(typeof count!== "undefined"? count : 1), typeof variationId !== "undefined" ? variationId : null, typeof attributes !== "undefined" ? attributes : {}); inCart=true; $event.preventDefault(); console.log( variationId)',
+        'x-on:click' => '(() => { $event.preventDefault(); const safeCount = typeof count !== "undefined" ? Number(count) : 1; const safeVariationId = typeof variationId !== "undefined" ? variationId : null; const safeAttributes = typeof attributes !== "undefined" ? attributes : {}; Alpine.store("FS").addToCart(productId, safeCount, safeVariationId, safeAttributes); inCart = true; })()',
     ]);
 
     $atc_after = '<span class="fs-atc-preloader" style="display:none" x-show="$store?.FS?.loading"></span>';
