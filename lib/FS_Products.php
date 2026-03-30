@@ -245,8 +245,10 @@ class FS_Products
      */
     public static function get_max_price_in_category($term_id)
     {
+        $term_id = (int) $term_id;
+
         // проверяем есть ли данные в кеше
-        $cache_key = 'fs_max_price_in_category_'.$term_id;
+        $cache_key = $term_id > 0 ? 'fs_max_price_in_category_'.$term_id : 'fs_max_price_in_category_all';
         $cache = wp_cache_get($cache_key);
         if (false !== $cache) {
             return $cache;
@@ -255,14 +257,17 @@ class FS_Products
         $args = [
             'post_type' => FS_Config::get_data('post_type'),
             'posts_per_page' => -1, // Получить все товары
-            'tax_query' => [
+        ];
+
+        if ($term_id > 0) {
+            $args['tax_query'] = [
                 [
                     'taxonomy' => FS_Config::get_data('product_taxonomy'),
                     'field' => 'term_id',
                     'terms' => $term_id,
                 ],
-            ],
-        ];
+            ];
+        }
 
         $query = new \WP_Query($args);
         $max_price = 0;
@@ -292,8 +297,10 @@ class FS_Products
      */
     public static function get_min_price_in_category($term_id)
     {
+        $term_id = (int) $term_id;
+
         // проверяем есть ли данные в кеше
-        $cache_key = 'fs_min_price_in_category_'.$term_id;
+        $cache_key = $term_id > 0 ? 'fs_min_price_in_category_'.$term_id : 'fs_min_price_in_category_all';
         $cache = wp_cache_get($cache_key);
         if (false !== $cache) {
             return $cache;
@@ -302,14 +309,17 @@ class FS_Products
         $args = [
             'post_type' => FS_Config::get_data('post_type'),
             'posts_per_page' => -1, // Получить все товары
-            'tax_query' => [
+        ];
+
+        if ($term_id > 0) {
+            $args['tax_query'] = [
                 [
                     'taxonomy' => FS_Config::get_data('product_taxonomy'),
                     'field' => 'term_id',
                     'terms' => $term_id,
                 ],
-            ],
-        ];
+            ];
+        }
 
         $query = new \WP_Query($args);
         $min_price = 0;
@@ -339,21 +349,26 @@ class FS_Products
      */
     public static function get_category_brands($term_id)
     {
+        $term_id = (int) $term_id;
+
         $args = [
             'post_type' => FS_Config::get_data('post_type'),
             'posts_per_page' => -1, // Получить все товары
-            'tax_query' => [
+        ];
+
+        if ($term_id > 0) {
+            $args['tax_query'] = [
                 [
                     'taxonomy' => FS_Config::get_data('product_taxonomy'),
                     'field' => 'term_id',
                     'terms' => $term_id,
                 ],
-            ],
-        ];
+            ];
+        }
 
         $query = new \WP_Query($args);
 
-        $cache_key = 'fs_brand_widget_terms_term_'.$term_id;
+        $cache_key = $term_id > 0 ? 'fs_brand_widget_terms_term_'.$term_id : 'fs_brand_widget_terms_all';
         $terms = wp_cache_get($cache_key);
 
         if (false === $terms) {

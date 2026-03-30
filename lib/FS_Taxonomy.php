@@ -320,6 +320,17 @@ class FS_Taxonomy
 
             FS_Taxonomy::set_order_query($meta_query, $order_by, $url['order_type']);
 
+            // Search results may not have fs_price_sort meta, so use the base price meta for price sorting.
+            if ($query->is_search() && in_array($url['order_type'], ['price_asc', 'price_desc'], true)) {
+                if (isset($meta_query['price']) && is_array($meta_query['price'])) {
+                    unset($meta_query['price']);
+                }
+
+                $query->set('meta_key', FS_Config::get_meta('price'));
+                $query->set('orderby', 'meta_value_num');
+                $query->set('order', $url['order_type'] === 'price_asc' ? 'ASC' : 'DESC');
+            }
+
             // Фильтрация по наличию
             if (!empty($url['availability'])) {
                 $meta_query['availability'] = [
@@ -408,7 +419,10 @@ class FS_Taxonomy
             }
 
             $query->set('posts_per_page', $per_page);
-            $query->set('orderby', $order_by ?: ['post_date' => 'DESC']);
+
+            if (!($query->is_search() && in_array($url['order_type'], ['price_asc', 'price_desc'], true))) {
+                $query->set('orderby', $order_by ?: ['post_date' => 'DESC']);
+            }
         }
     }
 

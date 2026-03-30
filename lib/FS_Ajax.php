@@ -1507,19 +1507,19 @@ class FS_Ajax
             wp_send_json_error(['msg' => __('Attribute ID not found', 'f-shop')]);
         }
 
-        if (empty($_POST['category_id']) && empty($_GET['category_id'])) {
-            wp_send_json_error(['msg' => __('Category ID not found', 'f-shop')]);
-        }
-
 		$attribute_id = !empty($_POST['attribute_id']) ? (int)$_POST['attribute_id'] : (int)$_GET['attribute_id'];
-		$category_id = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : (int)$_GET['category_id'];
+		$category_id = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : (!empty($_GET['category_id']) ? (int)$_GET['category_id'] : 0);
 
 		// Build cache key based on category and attribute to avoid heavy recalculation.
 		$cache_key = sprintf('fs_category_attributes_%d_%d', $category_id, $attribute_id);
 		$attributes = wp_cache_get($cache_key);
 
 		if (false === $attributes) {
-			$attributes = fs_product_category_screen_attributes($attribute_id, $category_id);
+			if ($category_id > 0) {
+				$attributes = fs_product_category_screen_attributes($attribute_id, $category_id);
+			} else {
+				$attributes = fs_current_screen_attributes($attribute_id);
+			}
 			wp_cache_set($cache_key, $attributes);
 		}
 
@@ -1576,7 +1576,8 @@ class FS_Ajax
 
     public function fs_get_max_min_price_callback()
     {
-        $term_id = (int)$_POST['term_id'];
+        $term_id = isset($_POST['term_id']) ? (int)$_POST['term_id'] : 0;
+
         wp_send_json_success([
             'max' => FS_Products::get_max_price_in_category($term_id),
             'min' => FS_Products::get_min_price_in_category($term_id),
@@ -1585,7 +1586,7 @@ class FS_Ajax
 
     public function fs_get_category_brands_callback()
     {
-        $term_id = (int)$_POST['term_id'];
+        $term_id = isset($_POST['term_id']) ? (int)$_POST['term_id'] : 0;
         $brands = FS_Products::get_category_brands($term_id);
 
         wp_send_json_success($brands);

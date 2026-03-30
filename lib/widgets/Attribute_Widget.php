@@ -296,11 +296,12 @@ class Attribute_Widget extends \WP_Widget
 		echo $title ?: '';
 		echo $args['after_title'] ?: '';
 
-		$current_category = fs_is_product_category() ? get_queried_object() : 0;
+		$current_category = fs_is_product_category() ? get_queried_object() : null;
+		$current_category_id = ($current_category && isset($current_category->term_id)) ? (int) $current_category->term_id : 0;
 		$attr_group       = get_term($instance['fs_att_group']);
 	?>
 		<ul x-data="{attributes: [], loaded:false }"
-			x-init="Alpine.store('FS')?.getCategoryAttributes(<?php echo $instance['fs_att_group'] ?>,<?php echo $current_category->term_id ?>)
+			x-init="Alpine.store('FS')?.getCategoryAttributes(<?php echo (int) $instance['fs_att_group'] ?>,<?php echo $current_category_id ?>)
             .then( (r) =>{ if(r.success===true) {attributes=r.data.attributes;} } )
             .finally(()=> loaded=true);">
 			<div class="fs-loader-block" :style="{'display':!loaded?'flex':'none'}" style="display:none;">
