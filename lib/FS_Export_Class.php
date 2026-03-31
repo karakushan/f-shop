@@ -124,60 +124,64 @@ class FS_Export_Class
 		}
 		
 		// Додаємо параметри з мультиязичними значеннями
+		// Параметри додаються тільки для украинської мови (ua)
+		// Групуємо значення за назвою параметра щоб уникнути дублювання
 		$product_attributes = get_the_terms($post_id, 'product-attributes');
 		if ($product_attributes) {
 			global $wpdb;
-			
+			$params_grouped = array(); // Масив для групування параметрів за назвою
+				
 			foreach ($product_attributes as $attribute) {
 				// Отримуємо ім'я атрибута з БД напрямку
 				$attr_name_raw = $wpdb->get_var($wpdb->prepare(
 					"SELECT name FROM {$wpdb->terms} WHERE term_id = %d",
 					$attribute->term_id
 				));
-						
+							
 				// Отримуємо parent name з БД напрямку для уникнуття фільтрів
 				$parent_name_raw = $wpdb->get_var($wpdb->prepare(
 					"SELECT tm.name FROM {$wpdb->term_taxonomy} t JOIN {$wpdb->terms} tm ON t.term_id = tm.term_id WHERE t.term_id = %d",
 					$attribute->parent
 				));
-						
+							
 				if ($attr_name_raw && $parent_name_raw) {
-					// Отримуємо мультиязичні розміри для назви атрибута значення
+					// Отримуємо мультиязичні розміри для назви атрибата значення
 					$attr_ml_array = wpm_string_to_ml_array($attr_name_raw);
 					if (!is_array($attr_ml_array)) {
 						$attr_ml_array = [$default_lang => $attr_name_raw];
 					}
-									
+										
 					// Отримуємо мультиязичні розміри для назви категорії параметра
 					$parent_ml_array = wpm_string_to_ml_array($parent_name_raw);
 					if (!is_array($parent_ml_array)) {
 						$parent_ml_array = [$default_lang => $parent_name_raw];
 					}
-									
-					// Отримуємо основне ім'я параметра (для мови за замовчуванням)
-					$param_name = !empty($parent_ml_array[$default_lang]) ? $parent_ml_array[$default_lang] : $parent_name_raw;
-									
-					// Не додаємо text node, усі вин в value элементах
+										
+					// Використовуємо українську версію для назви параметра (ua)
+					$param_name = !empty($parent_ml_array['ua']) ? $parent_ml_array['ua'] : $parent_name_raw;
+					$attr_value = !empty($attr_ml_array['ua']) ? $attr_ml_array['ua'] : '';
+						
+					// Групуємо значення за назвою параметра
+					if (!isset($params_grouped[$param_name])) {
+						$params_grouped[$param_name] = array();
+					}
+						
+					if (!empty($attr_value)) {
+						$params_grouped[$param_name][] = $attr_value;
+					}
+				}
+			}
+				
+			// Додаємо згруповані параметри в XML
+			foreach ($params_grouped as $param_name => $param_values) {
+				if (!empty($param_values)) {
+					// Об'єднуємо значення з роздільником ", "
+					$combined_value = implode(', ', $param_values);
+						
+					// Створюємо параметр
 					$param = $xml->createElement('param');
 					$param->setAttribute("name", $param_name);
-									
-					// Додаємо value для кожної мови
-					// Маппінг кодів мов з wp-multilang на ISO коди для Rozetka
-					$lang_code_map = [
-						'ua' => 'uk',  // Ukrainian
-						'ru' => 'ru',   // Russian
-					];
-									
-					foreach ($languages as $lang_code => $lang_data) {
-						// Отримуємо значення атрибута для даного языка
-						if (isset($attr_ml_array[$lang_code]) && !empty($attr_ml_array[$lang_code])) {
-							$value = $xml->createElement('value', $attr_ml_array[$lang_code]);
-							// Завжди додаємо lang атрибут з маппованим кодом
-							$mapped_lang = isset($lang_code_map[$lang_code]) ? $lang_code_map[$lang_code] : $lang_code;
-							$value->setAttribute('lang', $mapped_lang);
-							$param->appendChild($value);
-						}
-					}
+					$param->appendChild($xml->createTextNode($combined_value));
 						
 					$offer->appendChild($param);
 				}
@@ -312,6 +316,25 @@ class FS_Export_Class
 				/*yml_catalog->shop->offers->offer->currencyId*/
 				$currencyId = $xml->createElement('currencyId', 'UAH');
 				$offer->appendChild($currencyId);
+							
+				/*yml_catalog->shop->offers->offer->stock_quantity*/
+				// Отримуємо статус наявності товару
+				$stock_status = get_post_meta($post->ID, 'fs_stock_status', 1);
+				// Товар в наличии, если статус пустой или '0' (In Stock - пустая строка по умолчанию)
+				if (empty($stock_status) || $stock_status === '') {
+					// Отримуємо кількість товару
+					$stock_quantity = get_post_meta($post->ID, 'fs_remaining_amount', 1);
+					// Якщо кількість не вказана, ставимо 100
+					if (empty($stock_quantity) || !is_numeric($stock_quantity)) {
+						$stock_quantity = 100;
+					} else {
+						$stock_quantity = intval($stock_quantity);
+					}
+					// Додаємо тег stock_quantity
+					$stock_qty_element = $xml->createElement('stock_quantity', $stock_quantity);
+					$offer->appendChild($stock_qty_element);
+				}
+							
 				/*yml_catalog->shop->offers->offer->name*/
 				// Отримуємо назву для мови за замовчуванням
 				// Отримуємо роботу з ровним данним з БД для уникнуття всіх фільтрів
