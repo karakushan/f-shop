@@ -952,7 +952,7 @@ class FS_Ajax
 
         // Если пользователь хочет зарегистрироваться, но email уже существует, не оформляем заказ
         if (!$user_id && $register_requested && $existing_user_id) {
-            $error_message = __('Користувач з таким email вже існує. Будь ласка, увійдіть на сайт або зробіть замовлення без реєстрації.', 'f-shop');
+            $error_message = __('A user with this email already exists. Please log in to the site or place the order without registration.', 'f-shop');
 
             wp_send_json_error([
                 'msg' => $error_message,
@@ -972,7 +972,7 @@ class FS_Ajax
             $user_id = FS_Users::register_user($sanitize_field['fs_email'], '', $sanitize_field);
             if (is_wp_error($user_id)) {
                 $error_message = $user_id->get_error_code() === 'existing_user_email'
-                    ? __('Користувач з таким email вже існує. Будь ласка, увійдіть на сайт або зробіть замовлення без реєстрації.', 'f-shop')
+                    ? __('A user with this email already exists. Please log in to the site or place the order without registration.', 'f-shop')
                     : $user_id->get_error_message();
 
                 wp_send_json_error([

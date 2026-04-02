@@ -1471,7 +1471,7 @@ class FS_Users
         }
 
         if (email_exists($email)) {
-            return new \WP_Error('existing_user_email', __('Користувач з таким email вже існує. Будь ласка, увійдіть на сайт або зробіть замовлення без реєстрації.', 'f-shop'));
+            return new \WP_Error('existing_user_email', __('A user with this email already exists. Please log in to the site or place the order without registration.', 'f-shop'));
         }
 
         $first_name = !empty($user_data['fs_first_name']) ? sanitize_text_field($user_data['fs_first_name']) : '';

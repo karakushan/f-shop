@@ -37,13 +37,13 @@ msgstr ""
 "Был получен запрос сброс пароля на сайте \"%site_name%\". Ваш новый пароль: "
 "%password%. Если это были не вы, то проигнорируйте данное письмо."
 
-#: lib/FS_Ajax.php:955 lib/FS_Ajax.php:975 lib/FS_Users.php:1473
+#: lib/FS_Ajax.php:955 lib/FS_Ajax.php:975 lib/FS_Users.php:1474
 msgid ""
-"Користувач з таким email вже існує. Будь ласка, увійдіть на сайт або "
-"зробіть замовлення без реєстрації."
+"A user with this email already exists. Please log in to the site or place "
+"the order without registration."
 msgstr ""
-"Користувач з таким email вже існує. Будь ласка, увійдіть на сайт або "
-"зробіть замовлення без реєстрації."
+"Пользователь с таким email уже существует. Пожалуйста, войдите на сайт или "
+"оформите заказ без регистрации."
 
 #: lib/FS_Users.php:1223
 msgid "A PHP extension stopped the file upload"
