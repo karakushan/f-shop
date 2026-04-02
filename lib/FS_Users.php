@@ -904,9 +904,23 @@ class FS_Users
             wp_send_json_error(['msg' => __('Failed verification of nonce form', 'f-shop')]);
         }
 
-        $user_email = sanitize_email($_POST['user_login']);
+        $raw_login = isset($_POST['user_login']) ? wp_unslash($_POST['user_login']) : '';
+        if ($raw_login === '' && isset($_POST['fs_email'])) {
+            $raw_login = wp_unslash($_POST['fs_email']);
+        }
 
-        if (!email_exists($user_email)) {
+        $raw_login = trim($raw_login);
+
+        if ($raw_login === '') {
+            wp_send_json_error(['msg' => __('This field is required', 'f-shop')]);
+        }
+
+        $is_email = is_email($raw_login);
+        $user = $is_email
+            ? get_user_by('email', sanitize_email($raw_login))
+            : get_user_by('login', sanitize_user($raw_login));
+
+        if (!$user) {
             wp_send_json_error(['msg' => __('This user does not exist on the site', 'f-shop')]);
         }
 
@@ -914,11 +928,11 @@ class FS_Users
             wp_send_json_error(['msg' => __('You are already logged in', 'f-shop')]);
         }
 
-        $user = get_user_by('email', $user_email);
-
         $new_password = wp_generate_password();
 
         wp_set_password($new_password, $user->ID);
+
+        $user_email = $user->user_email;
 
         $replace_keys = [
             'site_url' => get_bloginfo('url'),
@@ -926,13 +940,20 @@ class FS_Users
             'admin_email' => get_bloginfo('admin_email'),
             'password' => $new_password,
             'first_name' => $user->first_name,
+            'email' => $user_email,
+            'mail_logo' => fs_option('fs_email_logo') ? wp_get_attachment_image_url(fs_option('fs_email_logo'), 'full') : '',
         ];
+
+        $locale = function_exists('determine_locale') ? determine_locale() : get_locale();
+        $subject = $locale === 'ru_RU'
+            ? sprintf('Сброс пароля на сайте "%s"', get_bloginfo('name'))
+            : sprintf('Скидання пароля на сайті "%s"', get_bloginfo('name'));
 
         $notification = new FS_Notification();
         $notification->set_recipients([$user_email]);
-        $notification->set_subject(__('Password reset on the site', 'f-shop'));
-        $notification->set_message(__('A password reset request was received on the site "%site_name%". Your new password is: %password%. If this was not you, please ignore this email.', 'f-shop'), $replace_keys);
-        $notification->send($user_email, 'user-lost-password', $replace_keys);
+        $notification->set_subject($subject);
+        $notification->set_template('mail/user-lost-password', $replace_keys);
+        $notification->send();
 
         wp_send_json_success(['msg' => __('Your password has been successfully reset. Password sent to your e-mail.', 'f-shop')]);
     }
@@ -1512,6 +1533,7 @@ class FS_Users
 
         $replace_keys = [
             'site_name' => get_bloginfo('name'),
+            'home_url' => home_url('/'),
             'first_name' => $first_name,
             'full_name' => $full_name ?: $first_name,
             'password' => $password,
@@ -1520,6 +1542,7 @@ class FS_Users
             'site_url' => get_bloginfo('url'),
             'login' => $email,
             'cabinet_url' => $cabinet_page_url,
+            'mail_logo' => fs_option('fs_email_logo') ? wp_get_attachment_image_url(fs_option('fs_email_logo'), 'full') : '',
         ];
 
         $notification = new FS_Notification();

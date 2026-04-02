@@ -3869,3 +3869,39 @@ msgstr "Виберіть атрибут товару як поле бренду 
 #: lib/FS_Settings.php:665
 msgid "-- Select attribute --"
 msgstr "— Виберіть атрибут —"
+
+#: templates/front-end/mail/user-registration.php:16
+msgid "Registration on the website \"%s\""
+msgstr "Реєстрація на сайті \"%s\""
+
+#: templates/front-end/mail/user-registration.php:131
+msgid "Welcome, %s!"
+msgstr "Вітаємо, %s!"
+
+#: templates/front-end/mail/user-registration.php:136
+msgid "You have successfully registered on the website \"%s\"."
+msgstr "Ви успішно зареєструвалися на сайті \"%s\"."
+
+#: templates/front-end/mail/user-registration.php:143
+msgid "Registration details"
+msgstr "Дані реєстрації"
+
+#: templates/front-end/mail/user-registration.php:160
+msgid "Personal account"
+msgstr "Особистий кабінет"
+
+#: templates/front-end/mail/user-registration.php:167
+msgid "Go to account"
+msgstr "Перейти в кабінет"
+
+#: templates/front-end/mail/user-registration.php:175
+msgid "If you did not register on the website \"%s\", please ignore this email."
+msgstr "Якщо ви не реєструвалися на сайті \"%s\", просто проігноруйте цей лист."
+
+#: templates/front-end/mail/user-registration-admin.php:12
+msgid "New user %1$s (%2$s) on your website \"%3$s\"!"
+msgstr "Новий користувач %1$s (%2$s) на вашому сайті \"%3$s\"!"
+
+#: templates/front-end/mail/user-registration-admin.php:20
+msgid "This is an informational message and does not require a reply."
+msgstr "Це інформаційне повідомлення, воно не потребує відповіді."

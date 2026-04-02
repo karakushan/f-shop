@@ -3899,3 +3899,43 @@ msgstr ""
 #: templates/front-end/wishlist/wishlist.php:1
 msgid "To wish list"
 msgstr ""
+
+#: templates/front-end/mail/user-registration.php:16
+msgid "Registration on the website \"%s\""
+msgstr ""
+
+#: templates/front-end/mail/user-registration.php:131
+msgid "Welcome, %s!"
+msgstr ""
+
+#: templates/front-end/mail/user-registration.php:136
+msgid "You have successfully registered on the website \"%s\"."
+msgstr ""
+
+#: templates/front-end/mail/user-registration.php:143
+msgid "Registration details"
+msgstr ""
+
+#: templates/front-end/mail/user-registration.php:156
+msgid "Password"
+msgstr ""
+
+#: templates/front-end/mail/user-registration.php:160
+msgid "Personal account"
+msgstr ""
+
+#: templates/front-end/mail/user-registration.php:167
+msgid "Go to account"
+msgstr ""
+
+#: templates/front-end/mail/user-registration.php:175
+msgid "If you did not register on the website \"%s\", please ignore this email."
+msgstr ""
+
+#: templates/front-end/mail/user-registration-admin.php:12
+msgid "New user %1$s (%2$s) on your website \"%3$s\"!"
+msgstr ""
+
+#: templates/front-end/mail/user-registration-admin.php:20
+msgid "This is an informational message and does not require a reply."
+msgstr ""
