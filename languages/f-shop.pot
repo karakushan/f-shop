@@ -25,6 +25,12 @@ msgstr ""
 msgid "https://f-shop.top/"
 msgstr ""
 
+#: lib/FS_Ajax.php:955 lib/FS_Ajax.php:975 lib/FS_Users.php:1473
+msgid ""
+"Користувач з таким email вже існує. Будь ласка, увійдіть на сайт або "
+"зробіть замовлення без реєстрації."
+msgstr ""
+
 #. Description of the plugin
 #: f-shop.php
 msgid "Simple and functional online store plugin."

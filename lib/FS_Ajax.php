@@ -790,7 +790,7 @@ class FS_Ajax
      */
     public function fs_add_to_comparison_callback()
     {
-        session_start();
+        FS_Init::start_session();
         unset($_SESSION['fs_comparison_list']);
         if (!empty($_SESSION['fs_comparison_list']) && is_array($_SESSION['fs_comparison_list']) && !in_array((int) $_POST['product_id'], $_SESSION['fs_comparison_list'])) {
             $_SESSION['fs_comparison_list'] = array_unshift($_SESSION['fs_comparison_list'], (int) $_POST['product_id']);
@@ -838,12 +838,14 @@ class FS_Ajax
 
         array_walk($form_fields, function (&$fields, $key) use ($form_fields) {
             $item = $form_fields[$key];
+            $posted_value = $_POST[$key] ?? '';
+
             if ($item['type'] == 'tel' || $item['type'] == 'number') {
-                $fields = preg_replace('/[^0-9]/', '', $_POST[$key]);
+                $fields = preg_replace('/[^0-9]/', '', $posted_value);
             } elseif ($item['type'] == 'email') {
-                $fields = sanitize_email($_POST[$key]);
+                $fields = sanitize_email($posted_value);
             } else {
-                $fields = trim($_POST[$key]);
+                $fields = trim($posted_value);
             }
         });
 
@@ -945,14 +947,41 @@ class FS_Ajax
             $user_id = $user->ID;
         }
 
-        // получаем пользователя по email
-        if (empty($user_id) && !empty($sanitize_field['fs_email'])) {
-            $user_id = email_exists($sanitize_field['fs_email']);
+        $register_requested = !empty($sanitize_field['fs_customer_register']) && (int) $sanitize_field['fs_customer_register'] === 1;
+        $existing_user_id = !empty($sanitize_field['fs_email']) ? email_exists($sanitize_field['fs_email']) : false;
+
+        // Если пользователь хочет зарегистрироваться, но email уже существует, не оформляем заказ
+        if (!$user_id && $register_requested && $existing_user_id) {
+            $error_message = __('Користувач з таким email вже існує. Будь ласка, увійдіть на сайт або зробіть замовлення без реєстрації.', 'f-shop');
+
+            wp_send_json_error([
+                'msg' => $error_message,
+                'errors' => [
+                    'fs_email' => $error_message,
+                ],
+            ]);
+        }
+
+        // получаем пользователя по email только если регистрация через checkout не запрашивалась
+        if (empty($user_id) && !$register_requested && $existing_user_id) {
+            $user_id = $existing_user_id;
         }
 
         //  Если стоит галочка "Зарегистрироваться" и пользователь не найден
-        if (!$user_id && !empty($sanitize_field['fs_customer_register']) && $sanitize_field['fs_customer_register'] == 1) {
+        if (!$user_id && $register_requested) {
             $user_id = FS_Users::register_user($sanitize_field['fs_email'], '', $sanitize_field);
+            if (is_wp_error($user_id)) {
+                $error_message = $user_id->get_error_code() === 'existing_user_email'
+                    ? __('Користувач з таким email вже існує. Будь ласка, увійдіть на сайт або зробіть замовлення без реєстрації.', 'f-shop')
+                    : $user_id->get_error_message();
+
+                wp_send_json_error([
+                    'msg' => $error_message,
+                    'errors' => [
+                        'fs_email' => $error_message,
+                    ],
+                ]);
+            }
         }
 
         // Обновляем данные пользователя
@@ -969,8 +998,9 @@ class FS_Ajax
             wp_update_user($user_data);
 
             // Сохраняем мета поля пользователя
-            foreach ($sanitize_field as $key => $user_meta) {
-                if (!empty($sanitize_field[$key]) && !empty($user_meta['save_meta'])) {
+            $allowed_fields = FS_Users::get_user_fields($user_id);
+            foreach ($sanitize_field as $key => $value) {
+                if (!empty($value) && !empty($allowed_fields[$key]['save_meta'])) {
                     update_user_meta($user_id, $key, $sanitize_field[$key]);
                 }
             }

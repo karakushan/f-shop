@@ -583,6 +583,7 @@ class FS_Users
                 'required' => true,
                 'checkout' => true,
                 'mask' => fs_option('fs_phone_mask', '+380 (99) 999-99-99'),
+                'save_meta' => true,
             ],
             'fs_gender' => [
                 'name' => __('Gender', 'f-shop'),
@@ -1442,50 +1443,96 @@ class FS_Users
             ]);
         }
 
-        // Adding a user to the database
-        $user_id = wp_insert_user([
-            'user_pass' => $save_fields['fs_password'],
-            'user_email' => $save_fields['fs_email'],
-            'user_login' => $save_fields['fs_email'],
-            'display_name' => $save_fields['fs_first_name'],
-            'role' => 'client',
-            'show_admin_bar_front' => false,
-        ]);
-
-        // If an error occurred while adding a user
+        $user_id = self::register_user($save_fields['fs_email'], $save_fields['fs_password'], $save_fields);
         if (is_wp_error($user_id)) {
             wp_send_json_error(['msg' => $user_id->get_error_message()]);
         }
-
-        // Keys for replacement in the letter
-        $replace_keys = [
-            'site_name' => get_bloginfo('name'),
-            'first_name' => $save_fields['fs_first_name'],
-            'full_name' => $save_fields['fs_first_name'],
-            'password' => $save_fields['fs_password'],
-            'email' => $save_fields['fs_email'],
-            'admin_email' => get_bloginfo('admin_email'),
-            'site_url' => get_bloginfo('url'),
-            'login' => $save_fields['fs_email'],
-            'cabinet_url' => fs_account_url(),
-        ];
-
-        // Send notification to the user
-        $notification = new FS_Notification();
-        $notification->set_recipients([$save_fields['fs_email']]);
-        $notification->set_subject(sprintf(__('Registration on the website «%s»', 'f-shop'), get_bloginfo('name')));
-        $notification->set_template('mail/user-registration', $replace_keys);
-        $notification->send();
-
-        // Send a letter to the admin
-        $notification->set_recipients([get_bloginfo('admin_email')]);
-        $notification->set_template('mail/user-registration-admin', $replace_keys);
-        $notification->send();
 
         // Отправляем сообщение успешной регистрации на экран
         wp_send_json_success([
             'msg' => sprintf(__('Congratulations! You have successfully registered! <a href="%s">Log in</a>', 'f-shop'), esc_url(get_permalink(fs_option('page_auth')))),
         ]);
+    }
+
+    /**
+     * Registers a new user and sends standard registration notifications.
+     *
+     * @param string $email
+     * @param string $password
+     * @param array  $user_data
+     *
+     * @return int|\WP_Error
+     */
+    public static function register_user($email, $password = '', $user_data = [])
+    {
+        $email = sanitize_email($email);
+        if (!is_email($email)) {
+            return new \WP_Error('invalid_email', __('Email does not match format', 'f-shop'));
+        }
+
+        if (email_exists($email)) {
+            return new \WP_Error('existing_user_email', __('Користувач з таким email вже існує. Будь ласка, увійдіть на сайт або зробіть замовлення без реєстрації.', 'f-shop'));
+        }
+
+        $first_name = !empty($user_data['fs_first_name']) ? sanitize_text_field($user_data['fs_first_name']) : '';
+        $last_name = !empty($user_data['fs_last_name']) ? sanitize_text_field($user_data['fs_last_name']) : '';
+        $full_name = trim($first_name . ' ' . $last_name);
+
+        if ($password === '') {
+            $password = wp_generate_password(20, true, true);
+        }
+
+        $user_id = wp_insert_user([
+            'user_pass' => $password,
+            'user_email' => $email,
+            'user_login' => $email,
+            'display_name' => $full_name ?: $first_name ?: $email,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'role' => 'client',
+            'show_admin_bar_front' => false,
+        ]);
+
+        if (is_wp_error($user_id)) {
+            return $user_id;
+        }
+
+        $allowed_fields = self::get_user_fields($user_id);
+        foreach ($allowed_fields as $key => $field) {
+            if (empty($field['save_meta']) || !isset($user_data[$key]) || $user_data[$key] === '') {
+                continue;
+            }
+
+            update_user_meta($user_id, $key, $user_data[$key]);
+        }
+
+        $cabinet_page_url = fs_option('page_cabinet')
+            ? get_permalink((int) fs_option('page_cabinet'))
+            : fs_account_url();
+
+        $replace_keys = [
+            'site_name' => get_bloginfo('name'),
+            'first_name' => $first_name,
+            'full_name' => $full_name ?: $first_name,
+            'password' => $password,
+            'email' => $email,
+            'admin_email' => get_bloginfo('admin_email'),
+            'site_url' => get_bloginfo('url'),
+            'login' => $email,
+            'cabinet_url' => $cabinet_page_url,
+        ];
+
+        $notification = new FS_Notification();
+        $notification->set_recipients([$email]);
+        $notification->set_subject(sprintf(__('Registration on the website «%s»', 'f-shop'), get_bloginfo('name')));
+        $notification->set_template('mail/user-registration', $replace_keys);
+        $notification->send();
+
+        $notification->set_recipients([get_bloginfo('admin_email')]);
+        $notification->set_template('mail/user-registration-admin', $replace_keys);
+        $notification->send();
+
+        return $user_id;
     }
 
     /**

@@ -1721,6 +1721,9 @@ function fs_get_current_user()
 {
     $user = wp_get_current_user();
     if ($user->exists()) {
+        $wp_first_name = $user->first_name;
+        $wp_last_name = $user->last_name;
+        $wp_email = $user->user_email;
         $profile_update = empty($user->profile_update) ? strtotime($user->user_registered) : $user->profile_update;
 
         // Get all user fields
@@ -1732,8 +1735,16 @@ function fs_get_current_user()
             $user->$field_name = FS_Users::get_user_field($field);
         }
 
-        // Set basic email from WP user
-        $user->email = $user->user_email;
+        // Keep core WP account fields when the plugin field is not stored in user meta.
+        if (empty($user->first_name)) {
+            $user->first_name = $wp_first_name;
+        }
+        if (empty($user->last_name)) {
+            $user->last_name = $wp_last_name;
+        }
+        if (empty($user->email)) {
+            $user->email = $wp_email;
+        }
 
         // Set profile update time
         $user->profile_update = $profile_update;

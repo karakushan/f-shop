@@ -57,6 +57,7 @@ class FS_Init
     {
         global $f_shop;
         $f_shop = $this;
+        $this->maybe_session_init();
         // Получаем опции плагина
         $this->fs_option = get_option('fs_option');
 
@@ -72,7 +73,7 @@ class FS_Init
             'plugin_settings_link',
         ]);
 
-        add_action('init', [$this, 'session_init']);
+        add_action('init', [$this, 'maybe_session_init']);
 
         // Подключает свои шаблоны вместо стандартных темы
         add_filter('template_include', [$this, 'custom_plugin_templates']);
@@ -84,7 +85,7 @@ class FS_Init
 
         add_action('after_setup_theme', [$this, 'crb_load']);
 
-        $this->session_init();
+        $this->maybe_session_init();
     }
 
     /**
@@ -106,11 +107,41 @@ class FS_Init
     /**
      * инициализируем сессии.
      */
-    public function session_init()
+    public function maybe_session_init()
     {
-        if (session_id() == '' && !headers_sent()) {
-            session_start();
+        if (!$this->should_bootstrap_session()) {
+            return;
         }
+
+        self::start_session();
+    }
+
+    /**
+     * Determines whether the current request should bootstrap a PHP session.
+     */
+    protected function should_bootstrap_session(): bool
+    {
+        if (PHP_SAPI === 'cli' || headers_sent() || session_status() === PHP_SESSION_ACTIVE) {
+            return false;
+        }
+
+        if (is_admin() || wp_doing_ajax()) {
+            return true;
+        }
+
+        return isset($_COOKIE[session_name()]);
+    }
+
+    /**
+     * Starts a PHP session when the current request needs one.
+     */
+    public static function start_session(): bool
+    {
+        if (PHP_SAPI === 'cli' || headers_sent() || session_status() === PHP_SESSION_ACTIVE) {
+            return false;
+        }
+
+        return session_start();
     }
 
     /**
