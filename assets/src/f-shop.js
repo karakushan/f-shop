@@ -5,14 +5,6 @@ import FsLightbox from "fslightbox";
 
 import FS from "./lib/fs";
 
-// Initialize Alpine Store for FS
-if (typeof Alpine !== "undefined") {
-  Alpine.store("FS", new FS());
-  Alpine.store("FS").loading = false;
-  Alpine.store("FS").showNoAvailableModal = false;
-  Alpine.store("FS").noAvailableProductData = null;
-}
-
 document.addEventListener("DOMContentLoaded", function () {
   window.FsLightbox = FsLightbox;
 });

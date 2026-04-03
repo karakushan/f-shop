@@ -26,5 +26,11 @@ Alpine.plugin(mask);
 // plugin libs
 import FS from "./lib/fs.js";
 
-Alpine.store("FS", new FS(false));
-Alpine.start();
+if (typeof Alpine.store("FS") === "undefined") {
+  Alpine.store("FS", new FS(false));
+}
+
+if (!window.__fsAlpineStarted) {
+  window.__fsAlpineStarted = true;
+  Alpine.start();
+}

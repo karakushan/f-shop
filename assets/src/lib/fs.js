@@ -34,6 +34,8 @@ class FS {
       },
     };
     this.loading = false;
+    this.showNoAvailableModal = false;
+    this.noAvailableProductData = null;
     this.variation = null;
     this.variations = {}; // Хранилище вариаций по ID
     this.attributes = {}; // Хранилище атрибутов
@@ -65,7 +67,6 @@ class FS {
       }
       return data.value;
     } catch (e) {
-      console.warn("Cache read error:", e);
       return null;
     }
   }
@@ -84,9 +85,7 @@ class FS {
         expiry: Date.now() + (ttl * 1000),
       };
       localStorage.setItem(cacheKey, JSON.stringify(data));
-    } catch (e) {
-      console.warn("Cache write error:", e);
-    }
+    } catch (e) {}
   }
 
   /**
@@ -103,20 +102,12 @@ class FS {
         }
       }
       keysToRemove.forEach((key) => localStorage.removeItem(key));
-    } catch (e) {
-      console.warn("Cache clear error:", e);
-    }
+    } catch (e) {}
   }
 
   // Инициализация списка избранного
   initWishlist() {
-    this.updateWishlist()
-      .then(() => {
-        console.log("Wishlist initialized with", this.wishlist.count, "items");
-      })
-      .catch((error) => {
-        console.error("Failed to initialize wishlist:", error);
-      });
+    this.updateWishlist().catch(() => {});
   }
 
   getSetting(settingName) {
@@ -308,9 +299,7 @@ class FS {
           });
         }
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch(() => {});
   }
 
   /**
@@ -519,7 +508,6 @@ class FS {
 
   setCart(cart) {
     if (!Array.isArray(cart)) {
-      console.error("Cart must be an array");
       return;
     }
     this.cart = cart;
@@ -636,7 +624,6 @@ class FS {
     // Пытаемся получить данные из кеша
     const cachedData = this.getCache(cacheKey);
     if (cachedData) {
-      console.log(`[Cache] Attributes loaded from cache: ${cacheKey}`);
       // Возвращаем промис с закэшированными данными
       return Promise.resolve({
         success: true,
@@ -652,7 +639,6 @@ class FS {
       if (response.success && response.data.attributes) {
         // Сохраняем результат в кеш
         this.setCache(cacheKey, response.data.attributes, 3600);
-        console.log(`[Cache] Attributes saved to cache: ${cacheKey}`);
       }
       return response;
     });
@@ -706,7 +692,6 @@ class FS {
     // Пытаемся получить данные из кеша
     const cachedData = this.getCache(cacheKey);
     if (cachedData) {
-      console.log(`[Cache] Price range loaded from cache: ${cacheKey}`);
       // Возвращаем промис с закэшированными данными
       return Promise.resolve({
         success: true,
@@ -720,7 +705,6 @@ class FS {
         if (response.success && response.data) {
           // Сохраняем результат в кеш
           this.setCache(cacheKey, response.data, 3600);
-          console.log(`[Cache] Price range saved to cache: ${cacheKey}`);
         }
         return response;
       }
