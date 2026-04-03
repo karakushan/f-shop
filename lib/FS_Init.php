@@ -268,6 +268,7 @@ class FS_Init
             'nonce' => wp_create_nonce('f-shop'),
         ];
         wp_localize_script(FS_PLUGIN_PREFIX.'admin', 'fShop', $l10n);
+        wp_add_inline_script(FS_PLUGIN_PREFIX.'admin', $this->get_multilang_fields_visibility_script(), 'after');
 
         wp_enqueue_script(FS_PLUGIN_PREFIX.'backend', FS_PLUGIN_URL.'assets/js/fs-backend.js', [], null, true);
         wp_localize_script(FS_PLUGIN_PREFIX.'backend', 'FS_BACKEND', [
@@ -298,6 +299,180 @@ class FS_Init
                 'selected' => __('selected', 'f-shop'),
             ],
         ]);
+    }
+
+    /**
+     * Returns the admin script that hides non-active multilingual fields while keeping them in the DOM.
+     */
+    protected function get_multilang_fields_visibility_script(): string
+    {
+        $locale = function_exists('determine_locale') ? determine_locale() : get_user_locale();
+
+        return sprintf(
+            <<<'JS'
+(function() {
+    const activeLocale = %s;
+    const localeAliases = {
+        uk: ['uk', 'uk_ua', 'ua'],
+        ru: ['ru', 'ru_ru'],
+    };
+
+    const normalizeLocale = (locale) => {
+        const value = String(locale || '').toLowerCase().replace('-', '_');
+
+        for (const [normalized, aliases] of Object.entries(localeAliases)) {
+            if (aliases.includes(value)) {
+                return normalized;
+            }
+        }
+
+        return value;
+    };
+
+    const getCurrentLocale = () => {
+        const url = new URL(window.location.href);
+        const editLang = url.searchParams.get('edit_lang');
+
+        if (editLang) {
+            return normalizeLocale(editLang);
+        }
+
+        const langInput = document.querySelector('input[name="edit_lang"]');
+
+        if (langInput && langInput.value) {
+            return normalizeLocale(langInput.value);
+        }
+
+        const activeLanguageTab = document.querySelector('a.nav-tab-active[href*="edit_lang="]');
+
+        if (activeLanguageTab) {
+            const tabUrl = new URL(activeLanguageTab.href, window.location.origin);
+            const tabLang = tabUrl.searchParams.get('edit_lang');
+
+            if (tabLang) {
+                return normalizeLocale(tabLang);
+            }
+        }
+
+        const htmlLang = document.documentElement.lang || '';
+
+        if (htmlLang) {
+            return normalizeLocale(htmlLang);
+        }
+
+        return normalizeLocale(activeLocale);
+    };
+
+    const fieldLocaleFromLabel = (label) => {
+        const value = String(label || '').toLowerCase();
+
+        if (value.includes('(українська)') || value.includes('(uk)') || value.includes('(ua)')) {
+            return 'uk';
+        }
+
+        if (value.includes('(російська)') || value.includes('(русский)') || value.includes('(ru)')) {
+            return 'ru';
+        }
+
+        return '';
+    };
+
+    const fieldLocaleFromName = (name) => {
+        const value = String(name || '').toLowerCase().replace(/-/g, '_');
+        const match = value.match(/__(uk|uk_ua|ua|ru|ru_ru)(?=[\]_]|$)/);
+
+        if (!match) {
+            return '';
+        }
+
+        return normalizeLocale(match[1]);
+    };
+
+    const toggleFieldState = (field, hidden) => {
+        field.style.display = hidden ? 'none' : '';
+        field.setAttribute('data-fs-locale-hidden', hidden ? '1' : '0');
+    };
+
+    const syncVisibleRichTextEditors = () => {
+        if (!window.tinymce) {
+            return;
+        }
+
+        document.querySelectorAll('.cf-field[data-fs-locale-hidden="0"] textarea').forEach((textarea) => {
+            const editor = window.tinymce.get(textarea.id);
+
+            if (!editor) {
+                return;
+            }
+
+            const textareaValue = String(textarea.value || '').trim();
+            const editorValue = String(editor.getContent() || '').trim();
+
+            if (textareaValue === editorValue) {
+                return;
+            }
+
+            editor.setContent(textarea.value || '');
+            editor.save();
+        });
+    };
+
+    const persistAllEditorsBeforeSubmit = () => {
+        if (window.tinymce && Array.isArray(window.tinymce.editors)) {
+            window.tinymce.editors.forEach((editor) => {
+                if (editor && typeof editor.save === 'function') {
+                    editor.save();
+                }
+            });
+        }
+    };
+
+    const applyLocaleVisibility = () => {
+        const currentLocale = getCurrentLocale();
+
+        document.querySelectorAll('.cf-field').forEach((field) => {
+            const label = field.querySelector('.cf-field__label')?.textContent?.trim() || '';
+            const namedControl = field.querySelector('[name]');
+            const fieldLocale = fieldLocaleFromName(namedControl?.getAttribute('name') || '') || fieldLocaleFromLabel(label);
+
+            if (!fieldLocale) {
+                toggleFieldState(field, false);
+                return;
+            }
+
+            toggleFieldState(field, fieldLocale !== currentLocale);
+        });
+
+        window.setTimeout(syncVisibleRichTextEditors, 0);
+        window.setTimeout(syncVisibleRichTextEditors, 300);
+    };
+
+    document.addEventListener('DOMContentLoaded', applyLocaleVisibility);
+
+    if (document.readyState !== 'loading') {
+        applyLocaleVisibility();
+    }
+
+    document.addEventListener('submit', (event) => {
+        if (!event.target || !(event.target instanceof HTMLFormElement)) {
+            return;
+        }
+
+        persistAllEditorsBeforeSubmit();
+    }, true);
+
+    const observer = new MutationObserver(() => {
+        applyLocaleVisibility();
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
+})();
+JS,
+            wp_json_encode(mb_strtolower((string) $locale))
+        );
     }
 
     /**
