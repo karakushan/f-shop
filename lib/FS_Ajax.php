@@ -180,7 +180,56 @@ class FS_Ajax
             // Получить вариацию товара по атрибутам
             add_action('wp_ajax_fs_get_variation_by_attributes', [$this, 'fs_get_variation_by_attributes_callback']);
             add_action('wp_ajax_nopriv_fs_get_variation_by_attributes', [$this, 'fs_get_variation_by_attributes_callback']);
+
+            add_action('wp_ajax_fs_test_telegram_notification', [$this, 'fs_test_telegram_notification']);
         }
+    }
+
+    public function fs_test_telegram_notification()
+    {
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error([
+                'message' => __('You do not have permission to perform this action.', 'f-shop'),
+            ], 403);
+        }
+
+        check_ajax_referer('f-shop', 'nonce');
+
+        if (!fs_option('fs_notify_telegram')) {
+            wp_send_json_error([
+                'message' => __('Telegram notifications are disabled in settings.', 'f-shop'),
+            ], 400);
+        }
+
+        $telegram = new \FS\Services\Telegram();
+        $results = $telegram->send_message(
+            sprintf(
+                __('Test Telegram notification from "%s".', 'f-shop'),
+                get_bloginfo('name')
+            )
+        );
+
+        if (empty($results)) {
+            wp_send_json_error([
+                'message' => __('No Telegram user IDs configured or bot token is missing.', 'f-shop'),
+            ], 400);
+        }
+
+        $sent = array_values(array_filter($results, static function ($item) {
+            return isset($item['status']) && $item['status'] === 'sent';
+        }));
+
+        if (!empty($sent)) {
+            wp_send_json_success([
+                'message' => __('Test message sent. Check the configured Telegram chats.', 'f-shop'),
+                'results' => $results,
+            ]);
+        }
+
+        wp_send_json_error([
+            'message' => __('Telegram test failed. See details below.', 'f-shop'),
+            'results' => $results,
+        ], 400);
     }
 
     /**
@@ -1151,26 +1200,32 @@ class FS_Ajax
             $mail_data = apply_filters('fs_create_order_mail_data', $mail_data);
 
             // NOTIFICATION
-            $notification = new FS_Notification();
+            $customer_notification = new FS_Notification();
 
             // We send a letter with order details to the customer
-            $notification->set_recipients([$sanitize_field['fs_email']]);
-            $notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($customer_mail_subject), $mail_data));
-            $notification->set_template('mail/user-create-order', $mail_data);
-            $notification->send();
-
-            // Send a letter to the admin
-            if (fs_option('fs_notify_telegram')) {
-                $notification->push_channel('telegram');
-            }
+            $customer_notification->set_recipients([$sanitize_field['fs_email']]);
+            $customer_notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($customer_mail_subject), $mail_data));
+            $customer_notification->set_template('mail/user-create-order', $mail_data);
+            $customer_notification->send();
 
             $admin_users = explode(',', fs_option('manager_email', get_option('admin_email')));
             $admin_users = array_filter(array_map('trim', $admin_users), 'is_email');
+
+            if (fs_option('fs_notify_telegram')) {
+                $telegram_notification = new FS_Notification();
+                $telegram_notification->set_recipients($admin_users ?: [get_option('admin_email')]);
+                $telegram_notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($admin_mail_subject), $mail_data));
+                $telegram_notification->set_template('mail/admin-create-order', $mail_data);
+                $telegram_notification->push_channel('telegram');
+                $telegram_notification->send();
+            }
+
             if (count($admin_users) > 0) {
-                $notification->set_recipients($admin_users);
-                $notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($admin_mail_subject), $mail_data));
-                $notification->set_template('mail/admin-create-order', $mail_data);
-                $notification->send();
+                $admin_notification = new FS_Notification();
+                $admin_notification->set_recipients($admin_users);
+                $admin_notification->set_subject($this->replace_mail_variables($this->extract_text_by_locale($admin_mail_subject), $mail_data));
+                $admin_notification->set_template('mail/admin-create-order', $mail_data);
+                $admin_notification->send();
             }
 
             // Create a payment link

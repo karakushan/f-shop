@@ -266,6 +266,10 @@ class FS_Init
             'allowedImagesType' => fs_allowed_images_type('json'),
             'mediaNonce' => wp_create_nonce('media-form'),
             'nonce' => wp_create_nonce('f-shop'),
+            'telegramTest' => [
+                'sending' => __('Sending test message...', 'f-shop'),
+                'unknownError' => __('Unknown error while sending Telegram test message.', 'f-shop'),
+            ],
         ];
         wp_localize_script(FS_PLUGIN_PREFIX.'admin', 'fShop', $l10n);
         wp_add_inline_script(FS_PLUGIN_PREFIX.'admin', $this->get_multilang_fields_visibility_script(), 'after');

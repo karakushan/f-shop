@@ -66,6 +66,77 @@ jQuery(document).ready(function ($) {
     FS.init();
     window.FS = FS;
 
+    $(document).on('click', '#fs-telegram-test-button', function () {
+        const $button = $(this);
+        const $result = $('#fs-telegram-test-result');
+
+        $button.prop('disabled', true);
+        $result
+            .show()
+            .removeClass('notice notice-success notice-error inline')
+            .text(window.fShop?.telegramTest?.sending || 'Sending test message...');
+
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            dataType: 'json',
+            data: {
+                action: 'fs_test_telegram_notification',
+                nonce: FS.getNonce(),
+            },
+            success: function (response) {
+                const lines = [];
+                const payload = response?.data || {};
+
+                if (payload.message) {
+                    lines.push(payload.message);
+                }
+
+                if (Array.isArray(payload.results)) {
+                    payload.results.forEach(function (item) {
+                        let line = `user ${item.user_id}: ${item.status}`;
+                        if (item.chat_id) {
+                            line += ` (chat ${item.chat_id})`;
+                        }
+                        if (item.error) {
+                            line += ` - ${item.error}`;
+                        }
+                        lines.push(line);
+                    });
+                }
+
+                $result
+                    .addClass('notice notice-success inline')
+                    .html(lines.join('<br>'));
+            },
+            error: function (xhr) {
+                const response = xhr?.responseJSON;
+                const payload = response?.data || {};
+                const lines = [payload.message || window.fShop?.telegramTest?.unknownError || 'Unknown error while sending Telegram test message.'];
+
+                if (Array.isArray(payload.results)) {
+                    payload.results.forEach(function (item) {
+                        let line = `user ${item.user_id}: ${item.status}`;
+                        if (item.chat_id) {
+                            line += ` (chat ${item.chat_id})`;
+                        }
+                        if (item.error) {
+                            line += ` - ${item.error}`;
+                        }
+                        lines.push(line);
+                    });
+                }
+
+                $result
+                    .addClass('notice notice-error inline')
+                    .html(lines.join('<br>'));
+            },
+            complete: function () {
+                $button.prop('disabled', false);
+            }
+        });
+    });
+
 
     if (typeof inlineEditPost !== 'undefined') {
         // we create a copy of the WP inline edit post function
@@ -868,7 +939,6 @@ jQuery(document).ready(function ($) {
     // Initialize when DOM is ready
     initAttributeValuesSortable();
 });
-
 
 
 

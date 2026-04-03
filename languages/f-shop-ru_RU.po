@@ -2791,17 +2791,69 @@ msgstr "Отчество"
 msgid "Taxes"
 msgstr "Налоги"
 
+#: lib/FS_Settings.php:942
+msgid "Telegram notifications"
+msgstr "Уведомления в Telegram"
+
 #: lib/FS_Settings.php:949
+msgid "To receive Telegram notifications, add the bot <a href=\"%s\" target=\"_blank\">@FShopOfficialBot</a> and send it any message, for example \"Hi\"."
+msgstr "Чтобы получать уведомления в Telegram, добавьте бота <a href=\"%s\" target=\"_blank\">@FShopOfficialBot</a> и отправьте ему любое сообщение, например \"Привет\"."
+
+#: lib/FS_Settings.php:954
 msgid "Telegram bot token"
-msgstr ""
+msgstr "Токен Telegram-бота"
 
-#: lib/FS_Settings.php:956
-msgid "Telegram chat id"
-msgstr ""
+#: lib/FS_Settings.php:961
+msgid "Telegram user IDs"
+msgstr "Telegram user ID"
 
-#: lib/FS_Settings.php:963
-msgid "Telegram user id"
-msgstr ""
+#: lib/FS_Settings.php:965
+msgid "Enter one Telegram user ID per line. You can find your user ID via <a href=\"%s\" target=\"_blank\">@getmyid_bot</a>."
+msgstr "Введите по одному Telegram user ID в каждой строке. Узнать свой user ID можно через <a href=\"%s\" target=\"_blank\">@getmyid_bot</a>."
+
+#: lib/FS_Settings.php:970
+msgid "Test Telegram delivery"
+msgstr "Тестирование доставки в Telegram"
+
+#: lib/FS_Settings.php:971
+msgid "Send test message"
+msgstr "Отправить тестовое сообщение"
+
+#: lib/FS_Settings.php:972
+msgid "Sends a test notification to all configured Telegram user IDs."
+msgstr "Отправляет тестовое сообщение на все настроенные Telegram user ID."
+
+#: lib/FS_Ajax.php:198
+msgid "You do not have permission to perform this action."
+msgstr "У вас нет прав для выполнения этого действия."
+
+#: lib/FS_Ajax.php:206
+msgid "Telegram notifications are disabled in settings."
+msgstr "Уведомления в Telegram отключены в настройках."
+
+#: lib/FS_Ajax.php:214
+msgid "Test Telegram notification from \"%s\"."
+msgstr "Тестовое Telegram-сообщение с сайта \"%s\"."
+
+#: lib/FS_Ajax.php:221
+msgid "No Telegram user IDs configured or bot token is missing."
+msgstr "Не настроены Telegram user ID или отсутствует токен бота."
+
+#: lib/FS_Ajax.php:230
+msgid "Test message sent. Check the configured Telegram chats."
+msgstr "Тестовое сообщение отправлено. Проверьте настроенные Telegram-чаты."
+
+#: lib/FS_Ajax.php:236
+msgid "Telegram test failed. See details below."
+msgstr "Тест Telegram не удался. Детали ниже."
+
+#: lib/FS_Init.php:271
+msgid "Sending test message..."
+msgstr "Отправка тестового сообщения..."
+
+#: lib/FS_Init.php:272
+msgid "Unknown error while sending Telegram test message."
+msgstr "Неизвестная ошибка при отправке тестового Telegram-сообщения."
 
 #: lib/FS_Settings.php:833
 msgid "Templates"
