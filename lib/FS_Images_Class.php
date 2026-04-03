@@ -78,25 +78,45 @@ class FS_Images_Class
         ];
         $args = wp_parse_args($args, $default);
 
-        $gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']); ?>
+        $gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']);
+        $gallery_count = count($gallery_images_ids);
+        $thumb_slides_per_view = min((int) $args['thumbItem'], max($gallery_count, 1));
+        $enable_main_loop = !empty($args['loop']) && $gallery_count > 1;
+        ?>
 		<script>
 			document.addEventListener("DOMContentLoaded", function() {
-				// Затем инициализируем слайдер с миниатюрами
+				const thumbsModules = [];
+				const mainModules = [];
+
+				if (window.Navigation) {
+					mainModules.push(window.Navigation);
+				}
+
+				if (window.Thumbs) {
+					mainModules.push(window.Thumbs);
+				}
+
 				const thumbsSwiper = new Swiper("#<?php echo $thumbs_gallery_id; ?>", {
+					modules: thumbsModules,
 					direction: "vertical",
-					slidesPerView: <?php echo esc_attr($args['thumbItem']); ?>,
+					slidesPerView: <?php echo esc_attr($thumb_slides_per_view); ?>,
 					spaceBetween: 10,
-					loop: <?php echo $args['loop'] ? 'true' : 'false'; ?>,
+					loop: false,
+					freeMode: true,
+					slideToClickedSlide: true,
 					height: <?php echo esc_attr($args['height']); ?>,
 					watchSlidesProgress: true,
+					watchOverflow: true,
 				});
 				
-				// Сначала инициализируем основной слайдер
 				const mainGallerySwiper = new Swiper("#<?php echo $big_gallery_id; ?>", {
+					modules: mainModules,
 					slidesPerView: 1,
-					loop: <?php echo $args['loop'] ? 'true' : 'false'; ?>,
+					loop: <?php echo $enable_main_loop ? 'true' : 'false'; ?>,
+					watchOverflow: true,
 					thumbs: {
 						swiper: thumbsSwiper,
+						multipleActiveThumbs: false,
 					},
 					grabCursor: true,
 					height: <?php echo esc_attr($args['height']); ?>,
@@ -106,29 +126,73 @@ class FS_Images_Class
 					},
 					on: {
 						init: function() {
-							// Убеждаемся, что кнопки навигации работают после инициализации
 							setTimeout(() => {
 								if (this.navigation && this.navigation.nextEl && this.navigation.prevEl) {
 									this.navigation.update();
 								}
+								if (this.thumbs && this.thumbs.swiper) {
+									this.thumbs.swiper.update();
+								}
 							}, 100);
 						},
 						afterInit: function() {
-							// Дополнительная проверка после полной инициализации
 							setTimeout(() => {
 								if (this.navigation) {
 									this.navigation.update();
 								}
+								if (this.thumbs && this.thumbs.swiper) {
+									this.thumbs.swiper.update();
+								}
 							}, 200);
+						},
+						slideChange: function() {
+							if (this.thumbs && this.thumbs.swiper) {
+								this.thumbs.swiper.update();
+							}
 						}
 					}
 				});
 
-				// Обновляем навигацию после полной загрузки
+				const syncThumbsState = () => {
+					if (!mainGallerySwiper.thumbs || !mainGallerySwiper.thumbs.swiper) {
+						return;
+					}
+
+					const currentIndex = mainGallerySwiper.realIndex;
+
+					thumbsSwiper.slides.forEach((slide, index) => {
+						slide.classList.toggle("swiper-slide-thumb-active", index === currentIndex);
+					});
+
+					if (typeof thumbsSwiper.slideTo === "function") {
+						thumbsSwiper.slideTo(currentIndex);
+					}
+				};
+
+				thumbsSwiper.on("click", function(swiper) {
+					if (typeof swiper.clickedIndex !== "number" || swiper.clickedIndex < 0) {
+						return;
+					}
+
+					if (mainGallerySwiper.params.loop && typeof mainGallerySwiper.slideToLoop === "function") {
+						mainGallerySwiper.slideToLoop(swiper.clickedIndex);
+						return;
+					}
+
+					mainGallerySwiper.slideTo(swiper.clickedIndex);
+				});
+
+				mainGallerySwiper.on("slideChange", syncThumbsState);
+				mainGallerySwiper.on("afterInit", syncThumbsState);
+
 				setTimeout(() => {
 					if (mainGallerySwiper.navigation) {
 						mainGallerySwiper.navigation.update();
 					}
+					if (mainGallerySwiper.thumbs && mainGallerySwiper.thumbs.swiper) {
+						mainGallerySwiper.thumbs.swiper.update();
+					}
+					syncThumbsState();
 				}, 500);
 			});
 		</script>
