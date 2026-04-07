@@ -69,10 +69,69 @@ class FS_Images_Class
 			"paginationHtml"     => '<div class="swiper-pagination"></div>',
 			"attachments"        => false,
 			"use_post_thumbnail" => true,
+			"thumbs_direction"   => null,
+			"thumbs_spaceBetween" => null,
+			"thumbs_loop"        => null,
+			"thumbs_watchSlidesProgress" => null,
+			"thumbs_freeMode"    => null,
+			"main_spaceBetween"  => null,
+			"main_loop"          => null,
+			"main_grabCursor"    => null,
+			"thumbsSwiper"       => array(),
+			"mainSwiper"         => array(),
 			"image_alt"          => get_the_title($product_id),
 			"image_title"        => get_the_title($product_id),
 		);
 		$args    = wp_parse_args($args, $default);
+
+		$thumbs_swiper_config = array(
+			'direction'           => 'vertical',
+			'slidesPerView'       => (int) $args['thumbItem'],
+			'spaceBetween'        => 10,
+			'loop'                => false,
+			'watchSlidesProgress' => true,
+			'freeMode'            => true,
+		);
+
+		if (is_array($args['thumbsSwiper'])) {
+			$thumbs_swiper_config = array_replace_recursive($thumbs_swiper_config, $args['thumbsSwiper']);
+		}
+
+		$thumbs_flat_map = array(
+			'thumbs_direction'           => 'direction',
+			'thumbs_spaceBetween'        => 'spaceBetween',
+			'thumbs_loop'                => 'loop',
+			'thumbs_watchSlidesProgress' => 'watchSlidesProgress',
+			'thumbs_freeMode'            => 'freeMode',
+		);
+
+		foreach ($thumbs_flat_map as $arg_key => $config_key) {
+			if ($args[$arg_key] !== null) {
+				$thumbs_swiper_config[$config_key] = $args[$arg_key];
+			}
+		}
+
+		$main_swiper_config = array(
+			'slidesPerView' => (int) $args['item'],
+			'spaceBetween'  => 10,
+			'loop'          => false,
+		);
+
+		if (is_array($args['mainSwiper'])) {
+			$main_swiper_config = array_replace_recursive($main_swiper_config, $args['mainSwiper']);
+		}
+
+		$main_flat_map = array(
+			'main_spaceBetween' => 'spaceBetween',
+			'main_loop'         => 'loop',
+			'main_grabCursor'   => 'grabCursor',
+		);
+
+		foreach ($main_flat_map as $arg_key => $config_key) {
+			if ($args[$arg_key] !== null) {
+				$main_swiper_config[$config_key] = $args[$arg_key];
+			}
+		}
 
 		$gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']);
 		$images_count = count($gallery_images_ids);
@@ -112,48 +171,54 @@ class FS_Images_Class
 					console.log('Initializing product gallery with IDs:', '<?php echo $thumbs_gallery_id; ?>', '<?php echo $big_gallery_id; ?>');
 
 					// Initialize thumbnail swiper
-					const thumbsSwiper = new Swiper("#<?php echo $thumbs_gallery_id; ?>", {
-						direction: "vertical",
-						slidesPerView: <?php echo esc_attr($args['thumbItem']); ?>,
-						spaceBetween: 10,
-						loop: false,
-						watchSlidesProgress: true,
-						freeMode: true,
-					});
+					const thumbsConfig = <?php echo wp_json_encode($thumbs_swiper_config); ?>;
+					const mainConfig = <?php echo wp_json_encode($main_swiper_config); ?>;
+					const thumbsSwiper = new Swiper("#<?php echo $thumbs_gallery_id; ?>", thumbsConfig);
 					
 					console.log('Thumbs swiper initialized:', thumbsSwiper);
 
 					// Initialize main gallery swiper
-					const mainGallerySwiper = new Swiper("#<?php echo $big_gallery_id; ?>", {
-						slidesPerView: 1,
-						spaceBetween: 10,
-						loop: false,
-						modules: [window.SwiperNavigation, window.SwiperThumbs],
-						thumbs: {
-							swiper: thumbsSwiper,
-						},
-						grabCursor: imagesCount > 1,
-						navigation: showNavigation ? {
+					mainConfig.modules = [window.SwiperNavigation, window.SwiperThumbs];
+					mainConfig.thumbs = Object.assign({}, mainConfig.thumbs || {}, {
+						swiper: thumbsSwiper,
+					});
+
+					if (typeof mainConfig.grabCursor === "undefined") {
+						mainConfig.grabCursor = imagesCount > 1;
+					}
+
+					if (typeof mainConfig.navigation === "undefined") {
+						mainConfig.navigation = showNavigation ? {
 							nextEl: ".fs-swiper-next",
 							prevEl: ".fs-swiper-prev",
-						} : false,
-						on: {
-							init: function() {
-								console.log('Main gallery initialized');
-								// Workaround for thumbnails sync issue
-								setTimeout(() => {
-									if (mainGallerySwiper && mainGallerySwiper.slides && mainGallerySwiper.slides.length > 1) {
-										mainGallerySwiper.slideTo(1, 0);
-										mainGallerySwiper.slideTo(0, 0);
-										console.log('Thumbnails synced');
-									}
-								}, 100);
-							},
-							slideChange: function() {
-								console.log('Slide changed to:', this.activeIndex);
-							}
+						} : false;
+					} else if (mainConfig.navigation && showNavigation) {
+						mainConfig.navigation = Object.assign({
+							nextEl: ".fs-swiper-next",
+							prevEl: ".fs-swiper-prev",
+						}, mainConfig.navigation);
+					} else if (!showNavigation) {
+						mainConfig.navigation = false;
+					}
+
+					mainConfig.on = Object.assign({}, mainConfig.on || {}, {
+						init: function() {
+							console.log('Main gallery initialized');
+							// Workaround for thumbnails sync issue
+							setTimeout(() => {
+								if (this && this.slides && this.slides.length > 1) {
+									this.slideTo(1, 0);
+									this.slideTo(0, 0);
+									console.log('Thumbnails synced');
+								}
+							}, 100);
+						},
+						slideChange: function() {
+							console.log('Slide changed to:', this.activeIndex);
 						}
 					});
+
+					const mainGallerySwiper = new Swiper("#<?php echo $big_gallery_id; ?>", mainConfig);
 					
 					console.log('Main gallery swiper initialized:', mainGallerySwiper);
 				}
