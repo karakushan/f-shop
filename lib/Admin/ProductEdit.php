@@ -55,10 +55,14 @@ class ProductEdit {
 
 				if ( isset( $field['multilang'] ) && $field['multilang'] == true ) {
 					foreach ( FS_Config::get_languages() as $language ) {
-						if ( ! empty( $field['hidden_default_language'] ) && $language['locale'] === FS_Config::default_locale() ) {
+						if ( $this->should_skip_default_language_field( $name, $field, $language ) ) {
 							continue;
 						}
-						$fields[] = $this->make_field( $field, $name . '__' . mb_strtolower( $language['locale'] ), $field['label'] . ' (' . $language['name'] . ')' );
+						$fields[] = $this->make_field(
+							$this->prepare_multilang_field( $name, $field, $language ),
+							$name . '__' . mb_strtolower( $language['locale'] ),
+							$field['label'] . ' (' . $language['name'] . ')'
+						);
 					}
 				} else {
 					$fields[] = $this->make_field( $field, $name );
@@ -254,6 +258,34 @@ class ProductEdit {
 		return apply_filters( 'fs_product_tabs_admin', $tabs );
 	}
 
+	private function should_skip_default_language_field( $name, $field, $language ) {
+		if ( empty( $field['hidden_default_language'] ) || $language['locale'] !== FS_Config::default_locale() ) {
+			return false;
+		}
+
+		// Keep the Ukrainian SEO slug visible in admin, but disallow editing.
+		return $name !== 'fs_seo_slug';
+	}
+
+	private function prepare_multilang_field( $name, $field, $language ) {
+		if ( $name !== 'fs_seo_slug' || $language['locale'] !== FS_Config::default_locale() ) {
+			return $field;
+		}
+
+		$field['atts']['readOnly'] = 'readOnly';
+		$field['value']            = $this->get_current_post_slug();
+
+		return $field;
+	}
+
+	private function get_current_post_slug() {
+		if ( empty( $this->post_id ) ) {
+			return '';
+		}
+
+		return (string) get_post_field( 'post_name', $this->post_id );
+	}
+
 	function make_field( $field, $name, $label = '' ) {
 		if ( $label !== '' ) {
 			$field['label'] = $label;
@@ -263,6 +295,10 @@ class ProductEdit {
 
 		if ( ! empty( $field['atts'] ) && is_array( $field['atts'] ) ) {
 			$f->set_attributes( $field['atts'] );
+		}
+
+		if ( isset( $field['value'] ) ) {
+			$f->set_default_value( $field['value'] );
 		}
 
 		if ( isset( $field['width'] ) ) {

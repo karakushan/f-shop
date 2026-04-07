@@ -148,6 +148,22 @@ msgstr "Створити замовлення"
 msgid "Add Order Status"
 msgstr "Створити новий статус замовлення"
 
+#: lib/FS_Post_Types.php:117
+msgid "New order"
+msgstr "Нове замовлення"
+
+#: lib/FS_Post_Types.php:119
+msgid "Search orders"
+msgstr "Шукати замовлення"
+
+#: lib/FS_Post_Types.php:120
+msgid "Orders not found"
+msgstr "Замовлення не знайдено"
+
+#: lib/FS_Post_Types.php:121
+msgid "No orders found in trash"
+msgstr "У кошику замовлень не знайдено"
+
 #: lib/FS_Settings.php:685
 msgid "Add packaging cost to order"
 msgstr "Додавати вартість упаковки до замовлення"
@@ -156,6 +172,26 @@ msgstr "Додавати вартість упаковки до замовлен
 #: templates/back-end/metabox/order/edit.php:27
 msgid "Add product"
 msgstr "Додати товар"
+
+#: lib/FS_Products.php:61
+msgid "New product"
+msgstr "Новий товар"
+
+#: lib/FS_Products.php:62
+msgid "View product"
+msgstr "Переглянути товар"
+
+#: lib/FS_Products.php:63
+msgid "Search products"
+msgstr "Шукати товари"
+
+#: lib/FS_Products.php:64
+msgid "Products not found"
+msgstr "Товари не знайдено"
+
+#: lib/FS_Products.php:65
+msgid "No products found in trash"
+msgstr "У кошику товарів не знайдено"
 
 #: templates/back-end/metabox/product-variations/add-variation.php:41
 msgid "add property"

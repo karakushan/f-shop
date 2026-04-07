@@ -147,6 +147,22 @@ msgstr "Добавить заказ"
 msgid "Add Order Status"
 msgstr "Добавить статус заказа"
 
+#: lib/FS_Post_Types.php:117
+msgid "New order"
+msgstr "Новый заказ"
+
+#: lib/FS_Post_Types.php:119
+msgid "Search orders"
+msgstr "Искать заказы"
+
+#: lib/FS_Post_Types.php:120
+msgid "Orders not found"
+msgstr "Заказы не найдены"
+
+#: lib/FS_Post_Types.php:121
+msgid "No orders found in trash"
+msgstr "В корзине заказы не найдены"
+
 #: lib/FS_Settings.php:685
 msgid "Add packaging cost to order"
 msgstr "Добавить стоимость упаковки к заказу"
@@ -155,6 +171,26 @@ msgstr "Добавить стоимость упаковки к заказу"
 #: templates/back-end/metabox/order/edit.php:27
 msgid "Add product"
 msgstr "Добавить товар"
+
+#: lib/FS_Products.php:61
+msgid "New product"
+msgstr "Новый товар"
+
+#: lib/FS_Products.php:62
+msgid "View product"
+msgstr "Просмотреть товар"
+
+#: lib/FS_Products.php:63
+msgid "Search products"
+msgstr "Искать товары"
+
+#: lib/FS_Products.php:64
+msgid "Products not found"
+msgstr "Товары не найдены"
+
+#: lib/FS_Products.php:65
+msgid "No products found in trash"
+msgstr "В корзине товары не найдены"
 
 #: templates/back-end/metabox/product-variations/add-variation.php:41
 msgid "add property"

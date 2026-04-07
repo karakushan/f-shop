@@ -3,6 +3,7 @@
 namespace FS\Admin;
 
 use Carbon_Fields\Field\Field;
+use FS\FS_Config;
 
 class PostMetaDatastore extends \Carbon_Fields\Datastore\Datastore {
 
@@ -24,7 +25,15 @@ class PostMetaDatastore extends \Carbon_Fields\Datastore\Datastore {
 		$key        = $this->get_key_for_field( $field );
 		$meta_value = get_post_meta( $this->get_object_id(), $key, true );
 
+		if ( $this->is_default_language_product_slug( $key ) && $meta_value === '' ) {
+			return (string) get_post_field( 'post_name', $this->get_object_id() );
+		}
+
 		return $meta_value !== false ? $meta_value : $field->get_default_value();
+	}
+
+	protected function is_default_language_product_slug( $key ) {
+		return $key === 'fs_seo_slug__' . mb_strtolower( FS_Config::default_locale() );
 	}
 
 	/**
