@@ -716,7 +716,7 @@ class FS_Taxonomy
         $checkout_fields = [];
         foreach (FS_Users::get_user_fields() as $key => $user_field) {
             if (isset($user_field['checkout']) && $user_field['checkout'] == true) {
-                $checkout_fields[$key] = $user_field['name'];
+                $checkout_fields[$key] = sprintf('%s [%s]', $user_field['name'], $key);
             }
         }
         $fields = [

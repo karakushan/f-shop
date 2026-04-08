@@ -11,6 +11,28 @@ if (!defined('ABSPATH')) {
  */
 class FS_Shortcode
 {
+    /**
+     * Returns delivery method multiselect values saved by Carbon Fields.
+     */
+    private function get_delivery_method_fields($term_id, $meta_key)
+    {
+        $value = function_exists('carbon_get_term_meta')
+            ? carbon_get_term_meta($term_id, $meta_key)
+            : get_term_meta($term_id, $meta_key, true);
+
+        if (is_array($value)) {
+            return array_values(array_filter($value, static function ($item) {
+                return $item !== '' && $item !== null;
+            }));
+        }
+
+        if ($value === '' || $value === null || $value === false) {
+            return [];
+        }
+
+        return [(string) $value];
+    }
+
     public function __construct()
     {
         // USER
@@ -291,8 +313,8 @@ class FS_Shortcode
                 'id' => $method->term_id,
                 'name' => $method->name,
                 'description' => $method->description,
-                'disableFields' => (array) get_term_meta($method->term_id, '_fs_disable_fields', 1),
-                'requiredFields' => (array) get_term_meta($method->term_id, '_fs_required_fields', 1),
+                'disableFields' => $this->get_delivery_method_fields($method->term_id, '_fs_disable_fields'),
+                'requiredFields' => $this->get_delivery_method_fields($method->term_id, '_fs_required_fields'),
             ];
         }, get_terms([
             'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
