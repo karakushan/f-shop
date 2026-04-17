@@ -691,6 +691,14 @@ class FS_Product
                     if (!in_array($field['type'], ['checkbox']) && $is_multilang) {
                         foreach (FS_Config::get_languages() as $code => $language) {
                             $meta_key = $key . '__' . $language['locale'];
+                            $is_default_product_slug = $key == 'fs_seo_slug'
+                                && $language['locale'] === FS_Config::default_locale();
+
+                            if ($is_default_product_slug) {
+                                update_post_meta($post_id, $meta_key, (string) get_post_field('post_name', $post_id));
+                                continue;
+                            }
+
                             if ((isset($_POST[$meta_key]) && $_POST[$meta_key] != '')
                                 || ($key == 'fs_seo_slug' && isset($_POST[$meta_key]))
                             ) {

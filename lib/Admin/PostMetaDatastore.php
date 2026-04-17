@@ -23,10 +23,11 @@ class PostMetaDatastore extends \Carbon_Fields\Datastore\Datastore {
 	 */
 	public function load( Field $field ) {
 		$key        = $this->get_key_for_field( $field );
-		$meta_value = get_post_meta( $this->get_object_id(), $key, true );
+		$object_id  = $this->get_object_id();
+		$meta_value = get_post_meta( $object_id, $key, true );
 
-		if ( $this->is_default_language_product_slug( $key ) && $meta_value === '' ) {
-			return (string) get_post_field( 'post_name', $this->get_object_id() );
+		if ( $this->is_default_language_product_slug( $key ) ) {
+			return (string) get_post_field( 'post_name', $object_id );
 		}
 
 		return $meta_value !== false ? $meta_value : $field->get_default_value();
@@ -41,6 +42,12 @@ class PostMetaDatastore extends \Carbon_Fields\Datastore\Datastore {
 	 */
 	public function save( Field $field ) {
 		$key = $this->get_key_for_field( $field );
+
+		if ( $this->is_default_language_product_slug( $key ) ) {
+			update_post_meta( $this->get_object_id(), $key, (string) get_post_field( 'post_name', $this->get_object_id() ) );
+			return;
+		}
+
 		update_post_meta( $this->get_object_id(), $key, $field->get_value() );
 	}
 
