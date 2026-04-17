@@ -47,9 +47,6 @@ class FS_Taxonomy
             add_action('generate_rewrite_rules', [$this, 'taxonomy_rewrite_rules']);
         });
 
-        //  redirect to localized url
-        add_action('template_redirect', [$this, 'redirect_to_localized_url']);
-
         // Filtering products on the category page and in the product archives
         add_action('pre_get_posts', [$this, 'taxonomy_filter_products'], 12, 1);
 
@@ -588,49 +585,6 @@ class FS_Taxonomy
         $wp_rewrite->rules = $rules + $wp_rewrite->rules;
 
         return $wp_rewrite->rules;
-    }
-
-    /**
-     * Redirects to a localized url if a localized slug is specified for the product category.
-     *
-     * @return void
-     */
-    public function redirect_to_localized_url()
-    {
-        global $wp_query;
-
-        // Run only for taxonomies with custom rewrite rules, on frontend, when wpm is active.
-        if (is_admin() || !is_tax(['category', 'catalog']) || !function_exists('wpm_get_languages')) {
-            return;
-        }
-
-        $term = get_queried_object();
-        if (!$term || is_wp_error($term)) {
-            return;
-        }
-
-        // Get the custom multilingual slugs for this term.
-        $ml_slugs = $this->get_multilang_term_slugs($term->term_id);
-        if (empty($ml_slugs)) {
-            return;
-        }
-
-        // Extract the term slug part from the URL, removing pagination.
-        $request_uri_path = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $term_url_part = preg_replace('~/(page|paged)/.*$~', '', $request_uri_path);
-        $path_parts = array_values(array_filter(explode('/', $term_url_part)));
-        $url_term_slug = end($path_parts);
-
-        // Find which language our URL slug belongs to.
-        $slug_lang_code = array_search($url_term_slug, $ml_slugs);
-        $current_lang_code = wpm_get_language();
-
-        if ($slug_lang_code && $slug_lang_code !== $current_lang_code) {
-            $wp_query->set_404();
-            status_header(404);
-
-            return;
-        }
     }
 
     /**
