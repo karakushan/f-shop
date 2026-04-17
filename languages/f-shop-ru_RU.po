@@ -1674,9 +1674,9 @@ msgstr ""
 "использовать следующие переменные: <code>%order_id%</code> - номер заказа, "
 "<code>%pay_name%</code> - название выбранного метода оплаты"
 
-#: lib/FS_Taxonomy.php:798
-msgid "Unavailable for payment"
-msgstr "Не доступен для оплаты"
+#: lib/FS_Taxonomy.php:798 lib/FS_Taxonomy.php:1531
+msgid "Inactive"
+msgstr "Неактивный"
 
 #: lib/FS_Taxonomy.php:799
 msgid ""
@@ -1930,12 +1930,8 @@ msgid "Описание"
 msgstr ""
 
 #: lib/FS_Taxonomy.php:1531
-msgid "Disabled"
-msgstr "Выключено"
-
-#: lib/FS_Taxonomy.php:1531
-msgid "Enabled"
-msgstr "Влючено"
+msgid "Active"
+msgstr "Активный"
 
 #: lib/FS_Taxonomy.php:1674
 msgid "text"

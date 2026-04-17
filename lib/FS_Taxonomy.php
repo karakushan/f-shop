@@ -38,6 +38,15 @@ class FS_Taxonomy
             $this,
             'pay_taxonomy_column_content',
         ], 10, 3);
+        add_filter('manage_edit-' . FS_Config::get_data('product_del_taxonomy') . '_columns', [
+            $this,
+            'delivery_taxonomy_columns',
+        ]);
+        add_filter('manage_' . FS_Config::get_data('product_del_taxonomy') . '_custom_column', [
+            $this,
+            'delivery_taxonomy_column_content',
+        ], 10, 3);
+        add_action('admin_head', [$this, 'print_checkout_taxonomy_admin_styles']);
 
         // Remove taxonomy slug from links
         add_filter('term_link', [$this, 'replace_taxonomy_slug_filter'], 10, 3);
@@ -754,7 +763,7 @@ class FS_Taxonomy
                     'args' => [],
                 ],
                 '_fs_pay_inactive' => [
-                    'name' => __('Unavailable for payment', 'f-shop'),
+                    'name' => __('Inactive', 'f-shop'),
                     'help' => __('If you turn off, then the payment method will not be visible to users, only in the admin panel.', 'f-shop'),
                     'type' => 'checkbox',
                     'args' => [],
@@ -784,6 +793,11 @@ class FS_Taxonomy
                     'args' => [
                         'multilang' => true,
                     ],
+                ],
+                '_fs_delivery_inactive' => [
+                    'name' => __('Inactive', 'f-shop'),
+                    'help' => __('If you turn off, then the delivery method will not be visible to users, only in the admin panel.', 'f-shop'),
+                    'type' => 'checkbox',
                 ],
                 '_fs_disable_fields' => [
                     'name' => __('Fields to disable when choosing this delivery method', 'f-shop'),
@@ -1487,12 +1501,50 @@ class FS_Taxonomy
      */
     public function pay_taxonomy_columns($columns)
     {
-        unset($columns['posts'], $columns['slug'], $columns['description']);
-        $columns['icon'] = __('Иконка', 'f-shop');
-        $columns['status'] = __('Status', 'f-shop');
-        $columns['description'] = __('Описание', 'f-shop');
+        $reordered_columns = [];
 
-        return $columns;
+        if (isset($columns['cb'])) {
+            $reordered_columns['cb'] = $columns['cb'];
+        }
+
+        $reordered_columns['icon'] = __('Иконка', 'f-shop');
+
+        foreach ($columns as $key => $label) {
+            if (in_array($key, ['cb', 'posts', 'slug', 'description'], true)) {
+                continue;
+            }
+
+            $reordered_columns[$key] = $label;
+        }
+
+        $reordered_columns['status'] = __('Status', 'f-shop');
+        $reordered_columns['description'] = __('Описание', 'f-shop');
+
+        return $reordered_columns;
+    }
+
+    public function delivery_taxonomy_columns($columns)
+    {
+        $reordered_columns = [];
+
+        if (isset($columns['cb'])) {
+            $reordered_columns['cb'] = $columns['cb'];
+        }
+
+        $reordered_columns['icon'] = __('Иконка', 'f-shop');
+
+        foreach ($columns as $key => $label) {
+            if (in_array($key, ['cb', 'posts', 'slug', 'description'], true)) {
+                continue;
+            }
+
+            $reordered_columns[$key] = $label;
+        }
+
+        $reordered_columns['status'] = __('Status', 'f-shop');
+        $reordered_columns['description'] = __('Описание', 'f-shop');
+
+        return $reordered_columns;
     }
 
     public function currencies_column_content($content, $column_name, $term_id)
@@ -1520,22 +1572,120 @@ class FS_Taxonomy
     {
         switch ($column_name) {
             case 'icon':
-                $attachment_id = get_term_meta($term_id, '_thumbnail_id', 1);
-                if ($attachment_id) {
-                    $content = wp_get_attachment_image($attachment_id, 'thumbnail', true);
-                }
-
+                $content = $this->get_checkout_taxonomy_icon_html($term_id);
                 break;
 
             case 'status':
-                // do your stuff here with $term or $term_id
-                $content = get_term_meta($term_id, '_fs_pay_inactive', 1) == 1 ? __('Disabled', 'f-shop') : __('Enabled', 'f-shop');
+                $content = \FS\FS_Users::is_checkout_term_active($term_id, FS_Config::get_data('product_pay_taxonomy'))
+                    ? __('Active', 'f-shop')
+                    : __('Inactive', 'f-shop');
                 break;
             default:
                 break;
         }
 
         return $content;
+    }
+
+    public function delivery_taxonomy_column_content($content, $column_name, $term_id)
+    {
+        switch ($column_name) {
+            case 'icon':
+                $content = $this->get_checkout_taxonomy_icon_html($term_id);
+                break;
+
+            case 'status':
+                $content = \FS\FS_Users::is_checkout_term_active($term_id, FS_Config::get_data('product_del_taxonomy'))
+                    ? __('Active', 'f-shop')
+                    : __('Inactive', 'f-shop');
+                break;
+            default:
+                break;
+        }
+
+        return $content;
+    }
+
+    /**
+     * Renders a normalized admin icon for checkout taxonomies.
+     *
+     * @param int $term_id
+     *
+     * @return string
+     */
+    private function get_checkout_taxonomy_icon_html($term_id)
+    {
+        $attachment_id = absint(get_term_meta($term_id, '_thumbnail_id', true));
+
+        if ($attachment_id) {
+            $image = wp_get_attachment_image($attachment_id, 'medium', false, [
+                'class' => 'fs-admin-taxonomy-icon__image',
+                'loading' => 'lazy',
+            ]);
+        } else {
+            $image = '<span class="dashicons dashicons-format-image fs-admin-taxonomy-icon__placeholder" aria-hidden="true"></span>';
+        }
+
+        return '<span class="fs-admin-taxonomy-icon">' . $image . '</span>';
+    }
+
+    /**
+     * Prints admin styles for checkout taxonomy list tables.
+     *
+     * @return void
+     */
+    public function print_checkout_taxonomy_admin_styles()
+    {
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+
+        if (!$screen || $screen->base !== 'edit-tags') {
+            return;
+        }
+
+        if (!in_array($screen->taxonomy, [
+            FS_Config::get_data('product_pay_taxonomy'),
+            FS_Config::get_data('product_del_taxonomy'),
+        ], true)) {
+            return;
+        }
+        ?>
+        <style>
+            .column-icon {
+                width: 78px;
+            }
+
+            .fs-admin-taxonomy-icon {
+                width: 40px;
+                height: 24px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 3px;
+                background: #fff;
+                border: 1px solid #dcdcde;
+                border-radius: 6px;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            }
+
+            .fs-admin-taxonomy-icon img.fs-admin-taxonomy-icon__image {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                display: block;
+            }
+
+            .fs-admin-taxonomy-icon__placeholder {
+                font-size: 14px;
+                color: #8c8f94;
+                width: 14px;
+                height: 14px;
+            }
+
+            .column-status {
+                width: 120px;
+            }
+        </style>
+        <?php
     }
 
     /**

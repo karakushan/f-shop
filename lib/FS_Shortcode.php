@@ -308,6 +308,22 @@ class FS_Shortcode
             return fs_frontend_template('checkout/checkout-no-items');
         }
 
+        $delivery_terms = FS_Users::get_checkout_terms(FS_Config::get_data('product_del_taxonomy'), [
+            'orderby' => 'meta_value_num',
+            'meta_key' => '_fs_term_order',
+            'order' => 'ASC',
+        ]);
+
+        if (empty($delivery_terms)) {
+            $delivery_terms = get_terms([
+                'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
+                'hide_empty' => false,
+                'orderby' => 'meta_value_num',
+                'meta_key' => '_fs_term_order',
+                'order' => 'ASC',
+            ]);
+        }
+
         $shipping_methods = array_map(function ($method) {
             return [
                 'id' => $method->term_id,
@@ -316,13 +332,7 @@ class FS_Shortcode
                 'disableFields' => $this->get_delivery_method_fields($method->term_id, '_fs_disable_fields'),
                 'requiredFields' => $this->get_delivery_method_fields($method->term_id, '_fs_required_fields'),
             ];
-        }, get_terms([
-            'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
-            'hide_empty' => false,
-            'orderby' => 'meta_value_num',
-            'meta_key' => '_fs_term_order',
-            'order' => 'ASC',
-        ]));
+        }, $delivery_terms);
 
         $template = FS_Form::form_open([
             'name' => 'fs-order-send',

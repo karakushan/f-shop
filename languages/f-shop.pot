@@ -1587,8 +1587,8 @@ msgid ""
 "<code>%pay_name%</code> - name of the payment method"
 msgstr ""
 
-#: lib/FS_Taxonomy.php:798
-msgid "Unavailable for payment"
+#: lib/FS_Taxonomy.php:798 lib/FS_Taxonomy.php:1531
+msgid "Inactive"
 msgstr ""
 
 #: lib/FS_Taxonomy.php:799
@@ -1822,11 +1822,7 @@ msgid "Описание"
 msgstr ""
 
 #: lib/FS_Taxonomy.php:1531
-msgid "Disabled"
-msgstr ""
-
-#: lib/FS_Taxonomy.php:1531
-msgid "Enabled"
+msgid "Active"
 msgstr ""
 
 #: lib/FS_Taxonomy.php:1674

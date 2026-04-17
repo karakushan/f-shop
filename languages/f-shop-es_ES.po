@@ -890,8 +890,8 @@ msgid "Disable taxonomy slug in permalink"
 msgstr "Desactivar slug de taxonomía en permalink"
 
 #: lib/FS_Taxonomy.php:1526
-msgid "Disabled"
-msgstr "Desactivado"
+msgid "Active"
+msgstr "Activo"
 
 #: lib/FS_Init.php:261 lib/FS_Taxonomy.php:1075
 #: templates/front-end/mail/user-create-order.php:551
@@ -1050,10 +1050,6 @@ msgstr "Habilitar ordenación de elementos arrastrando"
 #: lib/FS_Settings.php:247
 msgid "Enable the service of notification of receipt of goods to the warehouse"
 msgstr "Habilitar el servicio de notificación de recepción de productos en el almacén"
-
-#: lib/FS_Taxonomy.php:1526
-msgid "Enabled"
-msgstr "Habilitado"
 
 #: lib/FS_Taxonomy.php:1263
 msgid "End of range"
@@ -3155,9 +3151,9 @@ msgstr "Ucraniano"
 msgid "Ukrainian hryvnia"
 msgstr "Grivna ucraniana"
 
-#: lib/FS_Taxonomy.php:740
-msgid "Unavailable for payment"
-msgstr "No disponible para pago"
+#: lib/FS_Taxonomy.php:740 lib/FS_Taxonomy.php:1526
+msgid "Inactive"
+msgstr "Inactivo"
 
 #: lib/FS_Users.php:1210 lib/FS_Users.php:1211
 msgid "Unfortunately, a user with such data does not exist on the site"

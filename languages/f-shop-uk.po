@@ -1677,9 +1677,9 @@ msgstr ""
 "Ви також можете використовувати ці метадані: <code>%order_id%</code> - номер "
 "замовлення, <code>%pay_name%</code> - назва методу оплати"
 
-#: lib/FS_Taxonomy.php:798
-msgid "Unavailable for payment"
-msgstr "Недоступно для оплати"
+#: lib/FS_Taxonomy.php:798 lib/FS_Taxonomy.php:1531
+msgid "Inactive"
+msgstr "Неактивний"
 
 #: lib/FS_Taxonomy.php:799
 msgid ""
@@ -1933,12 +1933,8 @@ msgid "Описание"
 msgstr "Опис"
 
 #: lib/FS_Taxonomy.php:1531
-msgid "Disabled"
-msgstr "Вимкнено"
-
-#: lib/FS_Taxonomy.php:1531
-msgid "Enabled"
-msgstr "Ввімкнено"
+msgid "Active"
+msgstr "Активний"
 
 #: lib/FS_Taxonomy.php:1674
 msgid "text"

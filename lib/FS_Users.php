@@ -10,6 +10,135 @@ class FS_Users
     private $form;
 
     /**
+     * Returns checkout taxonomy terms with inactive methods filtered out.
+     *
+     * @param string $taxonomy Taxonomy slug.
+     * @param array  $args     Additional get_terms arguments.
+     *
+     * @return array
+     */
+    public static function get_checkout_terms($taxonomy, $args = [])
+    {
+        $fields = $args['fields'] ?? 'all';
+        unset($args['fields']);
+
+        $query_args = wp_parse_args($args, [
+            'taxonomy' => $taxonomy,
+            'hide_empty' => false,
+        ]);
+
+        $terms = get_terms($query_args);
+
+        if ((is_wp_error($terms) || empty($terms)) && !empty($query_args['meta_key'])) {
+            $fallback_args = $query_args;
+            unset($fallback_args['meta_key']);
+
+            if (!empty($fallback_args['orderby']) && strpos((string) $fallback_args['orderby'], 'meta_value') === 0) {
+                $fallback_args['orderby'] = 'name';
+            }
+
+            $terms = get_terms($fallback_args);
+        }
+
+        $terms = self::filter_checkout_terms($terms, $taxonomy);
+
+        if ($fields === 'id=>name') {
+            $values = [];
+
+            foreach ($terms as $term) {
+                $values[$term->term_id] = $term->name;
+            }
+
+            return $values;
+        }
+
+        return $terms;
+    }
+
+    /**
+     * Filters inactive checkout methods from taxonomy terms.
+     *
+     * @param array|\WP_Error $terms    Terms list.
+     * @param string          $taxonomy Taxonomy slug.
+     *
+     * @return array
+     */
+    public static function filter_checkout_terms($terms, $taxonomy = '')
+    {
+        if (is_wp_error($terms) || !is_array($terms)) {
+            return [];
+        }
+
+        return array_values(array_filter($terms, static function ($term) use ($taxonomy) {
+            return is_object($term) && self::is_checkout_term_active($term->term_id, $taxonomy ?: $term->taxonomy);
+        }));
+    }
+
+    /**
+     * Checks whether checkout taxonomy term is active.
+     *
+     * @param int    $term_id   Term ID.
+     * @param string $taxonomy  Taxonomy slug.
+     *
+     * @return bool
+     */
+    public static function is_checkout_term_active($term_id, $taxonomy)
+    {
+        foreach (self::get_checkout_inactive_meta_keys($taxonomy) as $meta_key) {
+            if (self::is_truthy_meta_value(get_term_meta($term_id, $meta_key, true))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns possible inactive meta keys for checkout taxonomies.
+     *
+     * @param string $taxonomy Taxonomy slug.
+     *
+     * @return array
+     */
+    private static function get_checkout_inactive_meta_keys($taxonomy)
+    {
+        if ($taxonomy === FS_Config::get_data('product_pay_taxonomy')) {
+            return [
+                '_fs_pay_inactive',
+                '__fs_pay_inactive',
+            ];
+        }
+
+        if ($taxonomy === FS_Config::get_data('product_del_taxonomy')) {
+            return [
+                '_fs_delivery_inactive',
+                '__fs_delivery_inactive',
+            ];
+        }
+
+        return [
+            '_fs_inactive',
+            '__fs_inactive',
+        ];
+    }
+
+    /**
+     * Normalizes truthy term meta values.
+     *
+     * @param mixed $value Meta value.
+     *
+     * @return bool
+     */
+    private static function is_truthy_meta_value($value)
+    {
+        if (is_array($value)) {
+            $value = reset($value);
+        }
+
+        return in_array(strtolower(trim((string) $value)), ['1', 'true', 'yes', 'on'], true);
+    }
+
+    /**
      * Password Verification Ruleset.
      *
      * @var array
@@ -886,7 +1015,7 @@ class FS_Users
                 'title' => __('Choose shipping method', 'f-shop'),
                 'description' => 'Preferred shipping method for order delivery',
                 'value' => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_delivery_methods', 1) : '',
-                'values' => get_terms([
+                'values' => self::get_checkout_terms(FS_Config::get_data('product_del_taxonomy'), [
                     'taxonomy' => FS_Config::get_data('product_del_taxonomy'),
                     'fields' => 'id=>name',
                     'hide_empty' => 0,
@@ -905,24 +1034,11 @@ class FS_Users
                 'title' => __('Select a Payment Method', 'f-shop'),
                 'description' => 'Preferred payment method for order transactions',
                 'value' => fs_option('fs_autofill_form') && $user_id ? get_user_meta($user_id, 'fs_payment_methods', 1) : '',
-                'values' => get_terms([
+                'values' => self::get_checkout_terms(FS_Config::get_data('product_pay_taxonomy'), [
                     'taxonomy' => FS_Config::get_data('product_pay_taxonomy'),
                     'fields' => 'id=>name',
                     'hide_empty' => 0,
                     'parent' => 0,
-                    'meta_query' => [
-                        'relation' => 'OR',
-                        [
-                            'key' => '_fs_pay_inactive',
-                            'value' => 1,
-                            'compare' => '!=',
-                            'type' => 'NUMERIC',
-                        ],
-                        [
-                            'key' => '_fs_pay_inactive',
-                            'compare' => 'NOT EXISTS',
-                        ],
-                    ],
                 ]),
                 'required' => false,
                 'checkout' => true,
