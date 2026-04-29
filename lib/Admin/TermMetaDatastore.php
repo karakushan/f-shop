@@ -88,6 +88,10 @@ class TermMetaDatastore extends \Carbon_Fields\Datastore\Datastore
         $current_lang = isset($_POST['edit_lang']) ? sanitize_text_field($_POST['edit_lang']) :
             (isset($_GET['edit_lang']) ? sanitize_text_field($_GET['edit_lang']) : 'ua');
 
+        if ($key === '_seo_slug' && function_exists('wpm_get_default_language') && $current_lang === wpm_get_default_language()) {
+            return;
+        }
+
         $existing_value = $this->get_raw_meta($key);
 
         $ml_array = [];
