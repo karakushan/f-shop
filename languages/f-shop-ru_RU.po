@@ -3899,8 +3899,8 @@ msgstr "Следить за ценой"
 #~ msgid "No product found in wish list"
 #~ msgstr "Не найдено товаров в списке желаний"
 
-#~ msgid "No reviews"
-#~ msgstr "Нет отзывов"
+msgid "No reviews"
+msgstr "Нет отзывов"
 
 #~ msgid "Normal"
 #~ msgstr "Нормальный"

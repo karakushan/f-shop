@@ -611,7 +611,7 @@ msgstr "Gratulacje! Na Twojej stronie pojawiło się nowe zamówienie."
 #, php-format
 msgid ""
 "Congratulations! You have successfully registered! <a href=\"%s\">Log in</a>"
-msgstr "%S\"
+msgstr "Gratulacje! Pomyślnie się zarejestrowałeś! <a href=\"%s\">Zaloguj się</a>"
 
 #: lib/FS_Taxonomy.php:783
 msgid "Consider the cost of packaging"
@@ -1043,13 +1043,13 @@ msgid ""
 "Enter \"0\" if stock is exhausted. An empty field means inventory control "
 "for the item.\n"
 "        disabled, and the goods are always in the presence!"
-msgstr "0\"
+msgstr "Wprowadź \"0\", jeśli zapasy są wyczerpane. Puste pole oznacza, że kontrola zapasów dla przedmiotu jest wyłączona, a towary są zawsze dostępne!"
 
 #: lib/FS_Config.php:624
 msgid ""
 "Enter \"0\" if stock is exhausted. An empty field means inventory control "
 "for the item. disabled, and the goods are always in the presence!"
-msgstr "0\"
+msgstr "Wprowadź \"0\", jeśli zapasy są wyczerpane. Puste pole oznacza, że kontrola zapasów dla przedmiotu jest wyłączona, a towary są zawsze dostępne!"
 
 #: templates/back-end/metabox/attributes.php:162
 msgid "Enter a name"
@@ -1483,7 +1483,7 @@ msgstr "Pozycja &laquo;%product%&raquo; pomyślnie dodano do koszyka."
 msgid ""
 "Item &laquo;%product%&raquo; successfully added to wishlist. <a "
 "href=\"%wishlist_url%\">Go to wishlist</a>"
-msgstr "%lista życzeń_url%\"
+msgstr "Przedmiot &laquo;%product%&raquo; został pomyślnie dodany do listy życzeń. <a href=\"%wishlist_url%\">Przejdź do listy życzeń</a>"
 
 #: lib/Admin/ProductEdit.php:123
 msgid "Item Currency"
@@ -1565,8 +1565,7 @@ msgstr "Wzór listu do użytkownika podczas tworzenia nowego zamówienia"
 msgid ""
 "Link to product feed in YML format: <a href=\"%s\" target=\"_blank\">%s</a> "
 "or <a href=\"%s\" target=\"_blank\">%s</a>"
-msgstr "%s\_blank\
-%s\_blank\"
+msgstr "Link do kanału produktów w formacie YML: <a href=\"%s\" target=\"_blank\">%s</a> lub <a href=\"%s\" target=\"_blank\">%s</a>"
 
 #: lib/Admin/ProductEdit.php:241
 msgid "Link to the product"
@@ -1832,7 +1831,7 @@ msgstr "Na zamówienie"
 msgid ""
 "On your site \"%s\" user %s created a new order #%d. Please contact the "
 "customer for this data:"
-msgstr "%S\"
+msgstr "Na Twojej stronie \"%s\" użytkownik %s utworzył nowe zamówienie #%d. Skontaktuj się z klientem w sprawie tych danych:"
 
 #: lib/widgets/Availability_Widget.php:83
 msgid "Only in stock"
@@ -2787,9 +2786,7 @@ msgstr "Formularz nie przeszedł kontroli bezpieczeństwa!"
 msgid ""
 "The login information you entered is incorrect. <a href=\"%s\">Reset "
 "password</a>"
-msgstr "%S\"
-"Wprowadzone dane logowania są nieprawidłowe. <a href=\"%s\">Resetuj hasło</a>"
-"Wprowadzone dane logowania są nieprawidłowe. <a href=\"%s\">Resetuj hasło</a>"
+msgstr "Wprowadzone dane logowania są nieprawidłowe. <a href=\"%s\">Resetuj hasło</a>"
 
 #: templates/front-end/product/comments.php:210
 msgid "The maximum file size is 10 Mb"
@@ -2805,7 +2802,7 @@ msgid ""
 "The order is accepted and can be paid. The status is introduced mainly for "
 "the convenience of internal order management, not \"New\", but not yet paid "
 "or not sent for delivery;"
-msgstr "Nowy\"
+msgstr "Zamówienie zostało przyjęte i może być opłacone. Status jest wprowadzany głównie dla wygody wewnętrznego zarządzania zamówieniami, nie \"Nowy\", ale jeszcze nie opłacone lub nie wysłane do dostawy;"
 
 #: lib/FS_Order.php:788
 msgid "The order status is not defined"
@@ -2868,7 +2865,7 @@ msgstr "Wystąpił błąd podczas wysyłania listu do administratora strony!"
 msgid ""
 "This checkbox is needed if you will not store templates in the \"f-shop\" "
 "directory of your theme."
-msgstr "f-sklep\"
+msgstr "To pole wyboru jest potrzebne, jeśli nie będziesz przechowywać szablonów w katalogu \"f-shop\" swojego motywu."
 
 #: lib/FS_Settings.php:421
 msgid ""
@@ -3110,7 +3107,7 @@ msgstr "Stosowane przy składaniu zamówienia, jeżeli użytkownik posiada upraw
 msgid ""
 "User \"%s\" added a comment. <a href=\"%s\" target=\"_blank\"> Go to comment "
 "<a>"
-msgstr "%s\%s\_blank\"
+msgstr "Użytkownik \"%s\" dodał komentarz. <a href=\"%s\" target=\"_blank\">Przejdź do komentarza</a>"
 
 #: lib/FS_Order.php:559
 #, php-format
@@ -3127,7 +3124,7 @@ msgstr ""
 msgid ""
 "User %s requests to be notified of the availability of the product \"%s\". "
 "Product Link: %s"
-msgstr "%S\"
+msgstr "Użytkownik %s prosi o powiadomienie o dostępności produktu \"%s\". Link do produktu: %s"
 
 #: lib/FS_Order.php:319
 msgid "User data is not filled in or not valid!"
@@ -3259,7 +3256,7 @@ msgstr "Jesteś już zalogowany."
 msgid ""
 "You are already logged in. <a href=\"%1$s\">Logout</a>. <a href=\"%2$s\">Go "
 "to cabinet</a>"
-msgstr "%1$s\%2$s\"
+msgstr "Jesteś już zalogowany. <a href=\"%1$s\">Wyloguj się</a>. <a href=\"%2$s\">Przejdź do panelu</a>"
 
 #: templates/back-end/fields/gallery.php:18
 msgid "You can drag images to change positions in the gallery."
@@ -3348,7 +3345,7 @@ msgid ""
 "payment of the order. You can pay for the purchase by <a href=\"%pay_url%\">"
 "link</a>. You have chosen the payment method: %pay_name%.\n"
 "Good luck!"
-msgstr "%pay_url%\"
+msgstr "Twoje zamówienie zostało pomyślnie utworzone. Możesz zapłacić za zakup za pomocą <a href=\"%pay_url%\">linku</a>. Wybrałeś metodę płatności: %pay_name%.\nPowodzenia!"
 
 #: lib/FS_Init.php:154
 msgid "Your order has been successfully created. We will contact you shortly."
@@ -3538,8 +3535,7 @@ msgstr "Charakterystyka produktu"
 msgid ""
 "Щоб дізнатися \"user id\" можна скористатися ботом <a href=\"%s\" "
 "target=\"_blank\">@getmyid_bot</a>"
-msgstr "identyfikator użytkownika\%s\
-_puste\"
+msgstr "Aby dowiedzieć się \"user id\", można skorzystać z bota <a href=\"%s\" target=\"_blank\">@getmyid_bot</a>"
 
 #: lib/FS_Settings.php:521
 #, php-format
@@ -3547,9 +3543,7 @@ msgid ""
 "Щоб отримувати повідомлення в телеграмі додайте бота <a href=\"%s\" "
 "target=\"_blank\">@FShopOfficialBot</a> та напишіть будь-яке повідомлення "
 "типу \"Привіт\""
-msgstr "%s\
-_puste\
-Witam\"
+msgstr "Aby otrzymywać powiadomienia w Telegramie, dodaj bota <a href=\"%s\" target=\"_blank\">@FShopOfficialBot</a> i napisz dowolną wiadomość, np. \"Witam\""
 
 #: lib/Admin/ProductEdit.php:177
 msgid "додаткові товари, які можна запропонувати з основним"
