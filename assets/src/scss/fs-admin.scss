@@ -572,6 +572,43 @@ td.fs_price.column-fs_price span.fs-base-price {
   margin: 10px 0;
 }
 
+.fs-attributes__preset {
+  margin: 0 0 16px;
+  padding: 12px;
+  border: 1px solid #dcdcde;
+  border-radius: 6px;
+  background: #f6f7f7;
+}
+
+.fs-attributes__preset-field {
+  flex: 1 1 auto;
+  min-width: 280px;
+}
+
+.fs-attributes__preset-field label {
+  display: block;
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+.fs-attributes__preset-field .fs-attributes__select {
+  width: 100%;
+}
+
+.fs-attributes__preset-action {
+  display: flex;
+  align-items: flex-end;
+}
+
+.fs-attributes__preset-note {
+  margin: 4px 0 0;
+  color: #646970;
+}
+
+.fs-field__success {
+  color: #00a32a;
+}
+
 #fs-table {
   color: #036;
 }

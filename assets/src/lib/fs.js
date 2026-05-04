@@ -409,6 +409,13 @@ class FS {
     });
   }
 
+  loadCategoryAttributePreset(postId, categoryId) {
+    return this.post("fs_load_category_attribute_preset", {
+      post_id: postId,
+      category_id: categoryId,
+    });
+  }
+
   sendOrder($event, order = { cart: [] }) {
     window.dispatchEvent(new CustomEvent("fs-checkout-start-submit"));
     const formData = new FormData($event.target);

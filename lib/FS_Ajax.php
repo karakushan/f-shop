@@ -45,6 +45,9 @@ class FS_Ajax
             add_action('wp_ajax_fs_add_att', [$this, 'fs_add_att_callback']);
             add_action('wp_ajax_nopriv_fs_add_att', [$this, 'fs_add_att_callback']);
 
+            add_action('wp_ajax_fs_load_category_attribute_preset', [$this, 'fs_load_category_attribute_preset_callback']);
+            add_action('wp_ajax_nopriv_fs_load_category_attribute_preset', [$this, 'fs_load_category_attribute_preset_callback']);
+
             // Setting a product rating
             add_action('wp_ajax_fs_set_rating', [$this, 'fs_set_rating_callback']);
             add_action('wp_ajax_nopriv_fs_set_rating', [$this, 'fs_set_rating_callback']);
@@ -747,6 +750,57 @@ class FS_Ajax
         }
 
         wp_send_json_error(['message' => __('An unexpected error occurred while attaching the attribute to the product.', 'f-shop')]);
+    }
+
+    /**
+     * Loads the attribute preset from a selected product category.
+     */
+    public function fs_load_category_attribute_preset_callback()
+    {
+        $post_id = isset($_POST['post_id']) ? (int) $_POST['post_id'] : 0;
+        $category_id = isset($_POST['category_id']) ? (int) $_POST['category_id'] : 0;
+        $features_taxonomy = FS_Config::get_data('features_taxonomy');
+        $catalog_taxonomy = FS_Config::get_data('product_taxonomy');
+
+        if ($post_id <= 0 || $category_id <= 0) {
+            wp_send_json_error(['message' => __('Select a category to load preset attributes.', 'f-shop')]);
+        }
+
+        $existing_attributes = wp_get_object_terms($post_id, $features_taxonomy, ['fields' => 'ids']);
+        if (is_wp_error($existing_attributes)) {
+            wp_send_json_error(['message' => $existing_attributes->get_error_message()]);
+        }
+
+        if (!empty($existing_attributes)) {
+            wp_send_json_error(['message' => __('Preset attributes can only be loaded for a product without configured attributes.', 'f-shop')]);
+        }
+
+        $product_categories = wp_get_object_terms($post_id, $catalog_taxonomy, ['fields' => 'ids']);
+        if (is_wp_error($product_categories)) {
+            wp_send_json_error(['message' => $product_categories->get_error_message()]);
+        }
+
+        $product_categories = array_map('intval', $product_categories);
+        if (!in_array($category_id, $product_categories, true)) {
+            wp_send_json_error(['message' => __('The selected category is not assigned to this product.', 'f-shop')]);
+        }
+
+        $preset_group_ids = FS_Product::get_category_attribute_order_for_term($category_id);
+        if (empty($preset_group_ids)) {
+            wp_send_json_error(['message' => __('No preset attributes found for the selected category.', 'f-shop')]);
+        }
+
+        $attached_terms = wp_set_object_terms($post_id, $preset_group_ids, $features_taxonomy, true);
+        if (is_wp_error($attached_terms)) {
+            wp_send_json_error(['message' => $attached_terms->get_error_message()]);
+        }
+
+        update_post_meta($post_id, '_fs_attribute_group_order', array_values($preset_group_ids));
+
+        wp_send_json_success([
+            'message' => __('Preset attributes loaded successfully.', 'f-shop'),
+            'group_ids' => array_values($preset_group_ids),
+        ]);
     }
 
     /**

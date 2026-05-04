@@ -1036,6 +1036,116 @@ class FS_Product
     }
 
     /**
+     * Returns the resolved category-level attribute order for a specific catalog term.
+     *
+     * Walks up the category tree and returns the first configured preset it finds.
+     *
+     * @param int $term_id
+     * @return array
+     */
+    public static function get_category_attribute_order_for_term($term_id)
+    {
+        $catalog_taxonomy = FS_Config::get_data('product_taxonomy');
+        $current_term = get_term((int) $term_id, $catalog_taxonomy);
+
+        while ($current_term instanceof \WP_Term) {
+            $order = get_term_meta($current_term->term_id, '_catalog_attribute_order', true);
+            $order = self::normalize_attribute_order($order);
+
+            if (!empty($order)) {
+                return $order;
+            }
+
+            if ((int) $current_term->parent === 0) {
+                break;
+            }
+
+            $current_term = get_term((int) $current_term->parent, $catalog_taxonomy);
+            if (is_wp_error($current_term) || !$current_term instanceof \WP_Term) {
+                break;
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * Returns the term that provides the resolved category attribute preset.
+     *
+     * @param int $term_id
+     * @return \WP_Term|null
+     */
+    public static function get_category_attribute_order_source_term($term_id)
+    {
+        $catalog_taxonomy = FS_Config::get_data('product_taxonomy');
+        $current_term = get_term((int) $term_id, $catalog_taxonomy);
+
+        while ($current_term instanceof \WP_Term) {
+            $order = get_term_meta($current_term->term_id, '_catalog_attribute_order', true);
+            $order = self::normalize_attribute_order($order);
+
+            if (!empty($order)) {
+                return $current_term;
+            }
+
+            if ((int) $current_term->parent === 0) {
+                break;
+            }
+
+            $current_term = get_term((int) $current_term->parent, $catalog_taxonomy);
+            if (is_wp_error($current_term) || !$current_term instanceof \WP_Term) {
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns category preset options for a product edit form.
+     *
+     * @param int $post_id
+     * @return array<int, array<string, mixed>>
+     */
+    public static function get_product_attribute_preset_categories($post_id)
+    {
+        $catalog_taxonomy = FS_Config::get_data('product_taxonomy');
+        $catalog_terms = wp_get_object_terms($post_id, $catalog_taxonomy, [
+            'orderby' => 'name',
+            'order' => 'ASC',
+        ]);
+
+        if (empty($catalog_terms) || is_wp_error($catalog_terms)) {
+            return [];
+        }
+
+        $preset_categories = [];
+
+        foreach ($catalog_terms as $term) {
+            $resolved_order = self::get_category_attribute_order_for_term($term->term_id);
+            if (empty($resolved_order)) {
+                continue;
+            }
+
+            $source_term = self::get_category_attribute_order_source_term($term->term_id);
+            $label = $term->name;
+
+            if ($source_term instanceof \WP_Term && (int) $source_term->term_id !== (int) $term->term_id) {
+                $label = sprintf('%s (%s: %s)', $term->name, __('Preset from', 'f-shop'), $source_term->name);
+            }
+
+            $preset_categories[] = [
+                'id' => (int) $term->term_id,
+                'name' => $term->name,
+                'label' => $label,
+                'source_id' => $source_term instanceof \WP_Term ? (int) $source_term->term_id : (int) $term->term_id,
+            ];
+        }
+
+        return array_values($preset_categories);
+    }
+
+    /**
      * Normalizes saved attribute order values from meta.
      *
      * @param mixed $order

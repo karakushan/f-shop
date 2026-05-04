@@ -8,6 +8,7 @@ if ( ! isset( $_GET['post'] ) || ! isset( $_GET['action'] ) || $_GET['action'] !
 }
 
 $post_id    = absint( $_GET['post'] );
+$preset_categories = \FS\FS_Product::get_product_attribute_preset_categories( $post_id );
 
 $attributes = get_terms( [
 	'taxonomy'   => \FS\FS_Config::get_data( 'features_taxonomy' ),
@@ -28,10 +29,15 @@ $attributes = get_terms( [
 	            name: "",
 	            value: ""
 	        },
+			presetCategories: <?php echo json_encode( $preset_categories, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) ?>,
+			selectedPresetCategory: <?php echo ! empty( $preset_categories ) ? (int) $preset_categories[0]['id'] : 'null' ?>,
+			presetError: "",
+			presetSuccessMessage: "",
+			presetLoading: false,
 			attributes: <?php echo json_encode( \FS\FS_Product::get_attributes_hierarchy( $post_id ) ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) ?>,
 			showAddForm: false,
 			getAttributes(){
-				 $store.FS?.getAttributes(<?php echo $post_id ?>)
+				 return $store.FS?.getAttributes(<?php echo $post_id ?>)
 				    .then((response) => { this.attributes = response.data; });
 			},
 			validateAttribute(ctx,exclude = []){
@@ -78,12 +84,61 @@ $attributes = get_terms( [
 					this.showAddForm = true;
 				}
 			},
+			loadPresetAttributes(){
+				if(!this.selectedPresetCategory || this.attributes.length > 0 || this.presetLoading){
+					return;
+				}
+
+				this.presetError = "";
+				this.presetSuccessMessage = "";
+				this.presetLoading = true;
+
+				this.$store.FS?.loadCategoryAttributePreset(this.createAttribute.postId, this.selectedPresetCategory)
+					.then((response) => {
+						if(response.success){
+							this.presetSuccessMessage = response.data?.message || "";
+							this.getAttributes();
+							return;
+						}
+
+						this.presetError = response.data?.message || "Не вдалося завантажити атрибути.";
+					})
+					.catch((error) => {
+						this.presetError = error?.data?.message || error?.message || "Не вдалося завантажити атрибути.";
+					})
+					.finally(() => {
+						this.presetLoading = false;
+					});
+			},
 			detachAttribute(attributeId){
 				$store.FS?.detachAttribute(this.createAttribute.postId,attributeId)
 					.then((response) => {  this.getAttributes() });
 			}
 }'
 >
+	<div class="fs-attributes__preset fs-flex fs-flex-items-end fs-flex-wrap fs-gap-0-5"
+	     x-show="attributes.length === 0 && presetCategories.length > 0">
+		<div class="fs-attributes__preset-field fs-flex-1">
+			<label for="fs-attributes-preset-category"><?php _e('Категорія з предустановленими атрибутами', 'f-shop'); ?></label>
+			<select id="fs-attributes-preset-category" class="fs-attributes__select" x-model="selectedPresetCategory">
+				<template x-for="category in presetCategories" :key="'preset-category-' + category.id">
+					<option :value="category.id" x-text="category.label"></option>
+				</template>
+			</select>
+		</div>
+		<div class="fs-attributes__preset-action">
+			<button class="button button-secondary button-large"
+			        x-bind:disabled="presetLoading"
+			        x-on:click.prevent="loadPresetAttributes()"
+			        x-text="presetLoading ? '<?php echo esc_js( __( 'Завантаження...', 'f-shop' ) ); ?>' : '<?php echo esc_js( __( 'Завантажити предустановлені атрибути', 'f-shop' ) ); ?>'"></button>
+		</div>
+		<p class="fs-attributes__preset-note fs-width-100">
+			<?php _e('Панель відображається лише поки у товару ще немає налаштованих атрибутів.', 'f-shop'); ?>
+		</p>
+		<p class="fs-field__error fs-width-100 fs-m-0" x-show="presetError.length > 0" x-text="presetError"></p>
+		<p class="fs-field__success fs-width-100 fs-m-0" x-show="presetSuccessMessage.length > 0" x-text="presetSuccessMessage"></p>
+	</div>
+
 	<div class="fs-attributes__add" >
 		<select class="fs-attributes__select" x-model="selectedAttribute">
 			<option><?php _e('Add a new attribute','f-shop'); ?></option>
