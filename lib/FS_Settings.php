@@ -656,6 +656,17 @@ class FS_Settings
                     'values' => $this->get_product_attributes(),
                     'value' => fs_option('_fs_vendor_attribute', ''),
                 ],
+                [
+                    'type' => 'number',
+                    'name' => '_fs_default_export_stock_quantity',
+                    'label' => __('Default stock quantity', 'f-shop'),
+                    'help' => __('Used in the YML feed when the product stock quantity is empty or invalid.', 'f-shop'),
+                    'value' => fs_option('_fs_default_export_stock_quantity', 100),
+                    'attributes' => [
+                        'min' => 0,
+                        'step' => 1,
+                    ],
+                ],
             ],
         ];
     }

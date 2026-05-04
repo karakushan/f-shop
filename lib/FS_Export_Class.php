@@ -10,6 +10,7 @@ class FS_Export_Class
 	public $feed_name = 'fs-yml-export';
 	public static $base_price;
 	public static $action_price;
+	private const DEFAULT_EXPORT_STOCK_QUANTITY = 100;
 
 	public function __construct()
 	{
@@ -189,6 +190,20 @@ class FS_Export_Class
 		}
 	}
 
+	public function get_default_export_stock_quantity(): int
+	{
+		$default_stock_quantity = fs_option(
+			'_fs_default_export_stock_quantity',
+			self::DEFAULT_EXPORT_STOCK_QUANTITY
+		);
+
+		if (!is_numeric($default_stock_quantity)) {
+			return self::DEFAULT_EXPORT_STOCK_QUANTITY;
+		}
+
+		return max(0, (int) $default_stock_quantity);
+	}
+
 
 	function products_to_yml($admin_notices = false)
 	{
@@ -324,9 +339,9 @@ class FS_Export_Class
 				if (empty($stock_status) || $stock_status === '') {
 					// Отримуємо кількість товару
 					$stock_quantity = get_post_meta($post->ID, 'fs_remaining_amount', 1);
-					// Якщо кількість не вказана, ставимо 100
+					// Якщо кількість не вказана, беремо значення з налаштувань експорту
 					if (empty($stock_quantity) || !is_numeric($stock_quantity)) {
-						$stock_quantity = 100;
+						$stock_quantity = $this->get_default_export_stock_quantity();
 					} else {
 						$stock_quantity = intval($stock_quantity);
 					}
