@@ -969,6 +969,164 @@ class FS_Product
     }
 
     /**
+     * Returns the category-level attribute order for a product.
+     *
+     * Walks through the product's catalog categories (from deepest to shallowest)
+     * and returns the first found attribute order configuration.
+     *
+     * @param int $post_id The product ID.
+     * @return array Array of attribute group term IDs in display order, or empty array.
+     */
+    public static function get_category_attribute_order($post_id)
+    {
+        $catalog_taxonomy = FS_Config::get_data('product_taxonomy');
+        $catalog_terms = wp_get_object_terms($post_id, $catalog_taxonomy, ['orderby' => 'name']);
+
+        if (empty($catalog_terms) || is_wp_error($catalog_terms)) {
+            return [];
+        }
+
+        // Calculate depth for each assigned category term.
+        $terms_with_depth = [];
+        foreach ($catalog_terms as $term) {
+            $depth = 0;
+            $current_term = $term;
+            while ($current_term->parent != 0) {
+                ++$depth;
+                $current_term = get_term($current_term->parent, $catalog_taxonomy);
+                if (is_wp_error($current_term)) {
+                    break;
+                }
+            }
+            $terms_with_depth[] = [
+                'term' => $term,
+                'depth' => $depth,
+            ];
+        }
+
+        // Sort assigned terms by depth descending so the nearest category chain wins.
+        usort($terms_with_depth, function ($a, $b) {
+            return $b['depth'] - $a['depth'];
+        });
+
+        // Walk up each assigned category chain and use the closest configured order.
+        foreach ($terms_with_depth as $item) {
+            $current_term = $item['term'];
+
+            while ($current_term instanceof \WP_Term) {
+                $order = get_term_meta($current_term->term_id, '_catalog_attribute_order', true);
+                $order = self::normalize_attribute_order($order);
+
+                if (!empty($order)) {
+                    return $order;
+                }
+
+                if ((int) $current_term->parent === 0) {
+                    break;
+                }
+
+                $current_term = get_term((int) $current_term->parent, $catalog_taxonomy);
+                if (is_wp_error($current_term) || !$current_term instanceof \WP_Term) {
+                    break;
+                }
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * Normalizes saved attribute order values from meta.
+     *
+     * @param mixed $order
+     *
+     * @return array
+     */
+    private static function normalize_attribute_order($order)
+    {
+        if (is_string($order)) {
+            $decoded = json_decode($order, true);
+            if (is_array($decoded)) {
+                $order = $decoded;
+            }
+        }
+
+        if (!is_array($order)) {
+            return [];
+        }
+
+        $order = array_map('intval', $order);
+        $order = array_filter($order, function ($term_id) {
+            return $term_id > 0;
+        });
+
+        return array_values(array_unique($order));
+    }
+
+    /**
+     * Sorts attribute groups by a preferred order while preserving remaining items.
+     *
+     * @param array $parents
+     * @param array $preferred_order
+     * @param array $fallback_order
+     *
+     * @return array
+     */
+    private static function sort_attribute_groups(array $parents, array $preferred_order = [], array $fallback_order = [])
+    {
+        if (empty($parents)) {
+            return [];
+        }
+
+        $preferred_positions = array_flip(self::normalize_attribute_order($preferred_order));
+        $fallback_positions = array_flip(self::normalize_attribute_order($fallback_order));
+
+        foreach ($parents as $index => $parent) {
+            $parent->_fs_original_index = $index;
+        }
+
+        usort($parents, function ($a, $b) use ($preferred_positions, $fallback_positions) {
+            $preferred_a = $preferred_positions[$a->term_id] ?? null;
+            $preferred_b = $preferred_positions[$b->term_id] ?? null;
+
+            if ($preferred_a !== null && $preferred_b !== null) {
+                return $preferred_a <=> $preferred_b;
+            }
+
+            if ($preferred_a !== null) {
+                return -1;
+            }
+
+            if ($preferred_b !== null) {
+                return 1;
+            }
+
+            $fallback_a = $fallback_positions[$a->term_id] ?? null;
+            $fallback_b = $fallback_positions[$b->term_id] ?? null;
+
+            if ($fallback_a !== null && $fallback_b !== null) {
+                return $fallback_a <=> $fallback_b;
+            }
+
+            if ($fallback_a !== null) {
+                return -1;
+            }
+
+            if ($fallback_b !== null) {
+                return 1;
+            }
+
+            return $a->_fs_original_index <=> $b->_fs_original_index;
+        });
+
+        foreach ($parents as $parent) {
+            unset($parent->_fs_original_index);
+        }
+
+        return array_values($parents);
+    }
+
+    /**
      * Returns a list of product attributes as a hierarchical list.
      *
      * @return array
@@ -993,9 +1151,8 @@ class FS_Product
         }
         $attributes = $unique_attributes;
 
-        // Apply attribute group ordering if saved
-        $group_order = get_post_meta($post_id, '_fs_attribute_group_order', true);
-        $group_order = is_array($group_order) ? $group_order : [];
+        // Apply attribute group ordering if saved (product-level)
+        $group_order = self::normalize_attribute_order(get_post_meta($post_id, '_fs_attribute_group_order', true));
 
         $parents = [];
         $parents_ids = [];
@@ -1016,18 +1173,9 @@ class FS_Product
             }
         }
 
-        // Sort parents based on saved group order
-        if (!empty($group_order)) {
-            usort($parents, function($a, $b) use ($group_order) {
-                $pos_a = array_search($a->term_id, $group_order);
-                $pos_b = array_search($b->term_id, $group_order);
-
-                if ($pos_a !== false && $pos_b !== false) return $pos_a - $pos_b;
-                if ($pos_a !== false) return -1;
-                if ($pos_b !== false) return 1;
-                return 0;
-            });
-        }
+        // Check for category-level attribute ordering (takes priority over product-level)
+        $catalog_order = self::normalize_attribute_order(self::get_category_attribute_order($post_id));
+        $parents = self::sort_attribute_groups($parents, $catalog_order, $group_order);
 
         $groped = array_map(function ($attribute) use ($attributes, $tax, $post_id) {
             $children = array_values(array_filter($attributes, function ($child) use ($attribute) {

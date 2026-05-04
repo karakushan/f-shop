@@ -270,6 +270,12 @@ class FS_Init
                 'sending' => __('Sending test message...', 'f-shop'),
                 'unknownError' => __('Unknown error while sending Telegram test message.', 'f-shop'),
             ],
+            'catalogAttrSorter' => [
+                'dragToReorder' => __('Drag to reorder', 'f-shop'),
+                'remove' => __('Remove', 'f-shop'),
+                'searchPlaceholder' => __('Search attribute groups...', 'f-shop'),
+                'noAttributesSelected' => __('No attributes selected yet. Use the search field above to add attribute groups.', 'f-shop'),
+            ],
         ];
         wp_localize_script(FS_PLUGIN_PREFIX.'admin', 'fShop', $l10n);
         wp_add_inline_script(FS_PLUGIN_PREFIX.'admin', $this->get_multilang_fields_visibility_script(), 'after');

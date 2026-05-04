@@ -938,6 +938,142 @@ jQuery(document).ready(function ($) {
 
     // Initialize when DOM is ready
     initAttributeValuesSortable();
+
+    // === CATALOG ATTRIBUTE ORDER SORTER (Select2 multi-select) ===
+    initCatalogAttributeSorter();
+
+    function initCatalogAttributeSorter() {
+        var $sorter = $('[data-fs-catalog-attributes-container]');
+        if (!$sorter.length) return;
+
+        var $sorterWrapper = $sorter.closest('.fs-catalog-attribute-sorter');
+        var $select2 = $sorterWrapper.find('[data-fs-catalog-attr-select2]');
+        var $hiddenInput = $sorterWrapper.find('[data-fs-catalog-attribute-order-input]');
+        var $emptyMsg = $sorter.find('.fs-catalog-attr-empty-msg');
+
+        // Initialize SortableJS on the container
+        var sortableInstance = null;
+        if (typeof Sortable !== 'undefined') {
+            sortableInstance = new Sortable($sorter[0], {
+                animation: 150,
+                handle: '.fs-catalog-attr-drag',
+                ghostClass: 'fs-catalog-attr-item--sortable-ghost',
+                onEnd: function () {
+                    updateCatalogAttributeOrder();
+                }
+            });
+        }
+
+        // Initialize Select2 on the multi-select
+        var placeholderText = $select2.data('placeholder') || (window.fShop && window.fShop.catalogAttrSorter && window.fShop.catalogAttrSorter.searchPlaceholder) || 'Search...';
+        $select2.select2({
+            placeholder: placeholderText,
+            width: '100%',
+            allowClear: true,
+            closeOnSelect: false
+        });
+
+        // When Select2 selection changes, sync the sortable list
+        $select2.on('change', function () {
+            var selectedIds = $(this).val() || [];
+            selectedIds = selectedIds.map(function (id) { return parseInt(id, 10); });
+
+            // Build a set of currently displayed item IDs
+            var currentIds = {};
+            $sorter.find('.fs-catalog-attr-item').each(function () {
+                currentIds[$(this).data('attr-id')] = true;
+            });
+
+            // Remove items that are no longer selected
+            $sorter.find('.fs-catalog-attr-item').each(function () {
+                var $item = $(this);
+                var itemId = $item.data('attr-id');
+                if (selectedIds.indexOf(itemId) === -1) {
+                    $item.remove();
+                }
+            });
+
+            // Add new items that were selected but not yet in the list
+            var $select2Options = $select2.find('option');
+            for (var i = 0; i < selectedIds.length; i++) {
+                var id = selectedIds[i];
+                if (!currentIds[id]) {
+                    var name = $select2Options.filter('[value="' + id + '"]').text().trim();
+                    if (name) {
+                        addCatalogAttributeItem(id, name);
+                    }
+                }
+            }
+
+            updateEmptyMessage();
+            updateCatalogAttributeOrder();
+        });
+
+        // Remove button handler — deselects in Select2
+        $sorter.on('click', '.fs-remove-catalog-attr', function () {
+            var $item = $(this).closest('.fs-catalog-attr-item');
+            var attrId = $item.data('attr-id');
+
+            // Deselect in Select2 (triggers change event which syncs the list)
+            var currentVals = $select2.val() || [];
+            currentVals = currentVals.filter(function (id) {
+                return parseInt(id, 10) !== attrId;
+            });
+            $select2.val(currentVals).trigger('change');
+        });
+
+        /**
+         * Creates and appends a sortable item to the container.
+         */
+        function addCatalogAttributeItem(attrId, attrName) {
+            var $item = $('<div>', {
+                class: 'fs-catalog-attr-item',
+                'data-attr-id': attrId
+            }).append(
+                $('<span>', {
+                    class: 'fs-catalog-attr-drag dashicons dashicons-menu',
+                    title: (window.fShop && window.fShop.catalogAttrSorter && window.fShop.catalogAttrSorter.dragToReorder) || 'Drag to reorder'
+                })
+            ).append(
+                $('<span>', {
+                    class: 'fs-catalog-attr-name',
+                    text: attrName
+                })
+            ).append(
+                $('<button>', {
+                    type: 'button',
+                    class: 'fs-remove-catalog-attr',
+                    title: (window.fShop && window.fShop.catalogAttrSorter && window.fShop.catalogAttrSorter.remove) || 'Remove'
+                }).append(
+                    $('<span>', { class: 'dashicons dashicons-no-alt' })
+                )
+            );
+
+            $sorter.append($item);
+        }
+
+        /**
+         * Shows/hides the empty message.
+         */
+        function updateEmptyMessage() {
+            if ($emptyMsg.length) {
+                $emptyMsg.toggle($sorter.find('.fs-catalog-attr-item').length === 0);
+            }
+        }
+
+        /**
+         * Collects current attribute IDs from the sortable container
+         * and writes them as JSON to the hidden input.
+         */
+        function updateCatalogAttributeOrder() {
+            var order = [];
+            $sorter.find('.fs-catalog-attr-item').each(function () {
+                var id = $(this).data('attr-id');
+                if (id) order.push(parseInt(id, 10));
+            });
+            $hiddenInput.val(JSON.stringify(order));
+        }
+    }
 });
 
 

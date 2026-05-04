@@ -2514,7 +2514,7 @@ msgstr "Регистрация на сайте «%s»"
 msgid "Related products"
 msgstr "Похожие товары"
 
-#: templates/back-end/fields/image.php:238
+#: templates/back-end/fields/image.php:238 lib/FS_Init.php:280
 msgid "Remove"
 msgstr "Удалить"
 
@@ -3996,3 +3996,40 @@ msgstr "Новый пользователь %1$s (%2$s) на вашем сайт
 #: templates/front-end/mail/user-registration-admin.php:20
 msgid "This is an informational message and does not require a reply."
 msgstr "Это информационное сообщение, оно не требует ответа."
+
+#: lib/FS_Taxonomy.php:1805
+msgid "Attribute order"
+msgstr "Порядок атрибутов"
+
+#: lib/FS_Taxonomy.php:1806
+msgid "No attribute groups found. Create attribute groups first."
+msgstr "Группы атрибутов не найдены. Сначала создайте группы атрибутов."
+
+#: lib/FS_Taxonomy.php:1834
+msgid "Attribute display order"
+msgstr "Порядок отображения атрибутов"
+
+#: lib/FS_Taxonomy.php:1836
+msgid "Select and sort attribute groups to display on product pages in this category."
+msgstr "Выберите и отсортируйте группы атрибутов для отображения на страницах товаров в этой категории."
+
+#: lib/FS_Taxonomy.php:1845
+msgid "Search attribute groups..."
+msgstr "Поиск групп атрибутов..."
+
+#: lib/FS_Taxonomy.php:1856
+msgid "Search and select attribute groups. Drag items below to change display order."
+msgstr "Найдите и выберите группы атрибутов. Перетаскивайте элементы ниже, чтобы изменить порядок отображения."
+
+#: lib/FS_Taxonomy.php:1873 lib/FS_Init.php:278
+msgid "Drag to reorder"
+msgstr "Перетащите для изменения порядка"
+
+#: lib/FS_Taxonomy.php:1879 lib/FS_Init.php:279
+msgid "Remove from list"
+msgstr "Удалить из списка"
+
+
+#: lib/FS_Taxonomy.php:1866 lib/FS_Init.php:281
+msgid "No attributes selected yet. Use the search field above to add attribute groups."
+msgstr "Атрибуты еще не выбраны. Используйте поле поиска выше, чтобы добавить группы атрибутов."

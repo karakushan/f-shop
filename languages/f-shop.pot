@@ -3939,3 +3939,43 @@ msgstr ""
 #: templates/front-end/mail/user-registration-admin.php:20
 msgid "This is an informational message and does not require a reply."
 msgstr ""
+
+#: lib/FS_Taxonomy.php:1805
+msgid "Attribute order"
+msgstr ""
+
+#: lib/FS_Taxonomy.php:1806
+msgid "No attribute groups found. Create attribute groups first."
+msgstr ""
+
+#: lib/FS_Taxonomy.php:1834
+msgid "Attribute display order"
+msgstr ""
+
+#: lib/FS_Taxonomy.php:1836
+msgid "Select and sort attribute groups to display on product pages in this category."
+msgstr ""
+
+#: lib/FS_Taxonomy.php:1845
+msgid "Search attribute groups..."
+msgstr ""
+
+#: lib/FS_Taxonomy.php:1856
+msgid "Search and select attribute groups. Drag items below to change display order."
+msgstr ""
+
+#: lib/FS_Taxonomy.php:1873 lib/FS_Init.php:278
+msgid "Drag to reorder"
+msgstr ""
+
+#: lib/FS_Taxonomy.php:1879 lib/FS_Init.php:279
+msgid "Remove from list"
+msgstr ""
+
+#: lib/FS_Init.php:280
+msgid "Remove"
+msgstr ""
+
+#: lib/FS_Taxonomy.php:1866 lib/FS_Init.php:281
+msgid "No attributes selected yet. Use the search field above to add attribute groups."
+msgstr ""

@@ -2433,3 +2433,107 @@ td.fs_menu_order.column-fs_menu_order {
     }
   }
 }
+
+/* === Catalog Attribute Order Sorter === */
+.fs-catalog-attr-select2-wrap {
+  .select2-container {
+    max-width: 500px;
+  }
+}
+
+.fs-catalog-attributes-container {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fs-catalog-attr-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  border-radius: 3px;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: #8c8f94;
+  }
+
+  &--sortable-ghost {
+    opacity: 0.4;
+    background: #f0f6fc;
+    border: 2px dashed #2271b1;
+  }
+}
+
+.fs-catalog-attr-drag {
+  cursor: grab;
+  color: #8c8f94;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  &:hover {
+    color: #2271b1;
+  }
+
+  .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.fs-catalog-attr-name {
+  flex: 1;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.fs-remove-catalog-attr {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0 !important;
+  min-height: auto !important;
+  line-height: 1 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 50%;
+  color: #d63638 !important;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  box-sizing: border-box;
+
+  .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    display: block;
+    text-align: center;
+    line-height: 14px;
+    position: relative;
+    top: -1px;
+  }
+
+  &:hover {
+    background: #d63638 !important;
+    color: #fff !important;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(214, 54, 56, 0.3);
+    outline: none;
+  }
+}
+
+.fs-catalog-attr-empty-msg {
+  padding: 8px 0;
+}

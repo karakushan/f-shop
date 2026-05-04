@@ -68,6 +68,10 @@ class FS_Taxonomy
         add_action('create_product-attributes', [$this, 'save_custom_taxonomy_meta']);
         add_action('edited_product-attributes', [$this, 'save_custom_taxonomy_meta']);
 
+        // Catalog attribute order sorter UI and save
+        add_action('catalog_edit_form_fields', [$this, 'render_catalog_attribute_sorter'], 20, 1);
+        add_action('edited_catalog', [$this, 'save_catalog_attribute_order'], 20, 1);
+
         // Додаємо хуки для всіх таксономій, що мають мета поля
         $taxonomies_with_meta = [
             FS_Config::get_data('product_taxonomy'),
@@ -1776,5 +1780,147 @@ class FS_Taxonomy
         }
 
         return $term_id;
+    }
+
+    /**
+     * Renders the attribute sorter UI on the catalog taxonomy edit page.
+     *
+     * Allows the admin to select which attribute groups to display
+     * and in what order for products in this category.
+     *
+     * @param \WP_Term $term The current term object.
+     */
+    public function render_catalog_attribute_sorter($term)
+    {
+        // Get all parent attribute groups (terms with parent=0 in product-attributes)
+        $attribute_groups = get_terms([
+            'taxonomy' => 'product-attributes',
+            'hide_empty' => false,
+            'parent' => 0,
+            'orderby' => 'name',
+            'order' => 'ASC',
+        ]);
+
+        if (is_wp_error($attribute_groups) || empty($attribute_groups)) {
+            echo '<tr class="form-field"><th scope="row"><label>' . esc_html__('Attribute order', 'f-shop') . '</label></th>';
+            echo '<td><p class="description">' . esc_html__('No attribute groups found. Create attribute groups first.', 'f-shop') . '</p></td></tr>';
+            return;
+        }
+
+        // Get saved order
+        $saved_order = get_term_meta($term->term_id, '_catalog_attribute_order', true);
+        $saved_order = is_array($saved_order) ? $saved_order : [];
+        $saved_order_flip = array_flip($saved_order);
+
+        // Build ordered list of selected items
+        $selected_items = [];
+        foreach ($attribute_groups as $group) {
+            if (isset($saved_order_flip[$group->term_id])) {
+                $selected_items[] = $group;
+            }
+        }
+
+        // Sort selected items by saved order
+        usort($selected_items, function ($a, $b) use ($saved_order) {
+            $pos_a = array_search($a->term_id, $saved_order);
+            $pos_b = array_search($b->term_id, $saved_order);
+            return $pos_a - $pos_b;
+        });
+
+        $order_json = esc_attr(wp_json_encode($saved_order));
+        ?>
+        <tr class="form-field fs-catalog-attribute-sorter-row">
+            <th scope="row">
+                <label><?php esc_html_e('Attribute display order', 'f-shop'); ?></label>
+                <p class="description" style="font-weight:normal;">
+                    <?php esc_html_e('Select and sort attribute groups to display on product pages in this category.', 'f-shop'); ?>
+                </p>
+            </th>
+            <td>
+                <div class="fs-catalog-attribute-sorter">
+                    <!-- Select2 multi-select: pick attribute groups -->
+                    <div class="fs-catalog-attr-select2-wrap" style="max-width:500px; margin-bottom:12px;">
+                        <select class="fs-catalog-attr-select2"
+                                data-fs-catalog-attr-select2
+                                data-placeholder="<?php esc_attr_e('Search attribute groups...', 'f-shop'); ?>"
+                                multiple="multiple"
+                                style="width:100%;">
+                            <?php foreach ($attribute_groups as $group) : ?>
+                                <option value="<?php echo esc_attr($group->term_id); ?>"
+                                    <?php selected(isset($saved_order_flip[$group->term_id])); ?>>
+                                    <?php echo esc_html($group->name); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <p class="description" style="margin-top:4px;">
+                            <?php esc_html_e('Search and select attribute groups. Drag items below to change display order.', 'f-shop'); ?>
+                        </p>
+                    </div>
+
+                    <!-- Sortable container for selected attributes -->
+                    <div class="fs-catalog-attributes-container"
+                         data-fs-catalog-attributes-container
+                         style="max-width:500px;">
+                        <?php if (empty($selected_items)) : ?>
+                            <p class="description fs-catalog-attr-empty-msg">
+                                <?php esc_html_e('No attributes selected yet. Use the search field above to add attribute groups.', 'f-shop'); ?>
+                            </p>
+                        <?php endif; ?>
+                        <?php foreach ($selected_items as $item) : ?>
+                            <div class="fs-catalog-attr-item"
+                                 data-attr-id="<?php echo esc_attr($item->term_id); ?>">
+                                <span class="fs-catalog-attr-drag dashicons dashicons-menu"
+                                      title="<?php esc_attr_e('Drag to reorder', 'f-shop'); ?>"></span>
+                                <span class="fs-catalog-attr-name">
+                                    <?php echo esc_html($item->name); ?>
+                                </span>
+                                <button type="button"
+                                        class="fs-remove-catalog-attr"
+                                        title="<?php esc_attr_e('Remove from list', 'f-shop'); ?>">
+                                    <span class="dashicons dashicons-no-alt"></span>
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Hidden input to store the order -->
+                    <input type="hidden"
+                           name="fs_catalog_attribute_order"
+                           data-fs-catalog-attribute-order-input
+                           value="<?php echo $order_json; ?>">
+                </div>
+            </td>
+        </tr>
+        <?php
+    }
+
+    /**
+     * Saves the catalog attribute order when the term is edited.
+     *
+     * @param int $term_id The term ID being saved.
+     */
+    public function save_catalog_attribute_order($term_id)
+    {
+        if (!isset($_POST['fs_catalog_attribute_order'])) {
+            return;
+        }
+
+        $order_json = stripslashes($_POST['fs_catalog_attribute_order']);
+        $order = json_decode($order_json, true);
+
+        if (is_array($order)) {
+            // Ensure all values are integers
+            $order = array_map('intval', $order);
+            $order = array_filter($order, function ($id) {
+                return $id > 0;
+            });
+            $order = array_values($order);
+
+            if (!empty($order)) {
+                update_term_meta($term_id, '_catalog_attribute_order', $order);
+            } else {
+                delete_term_meta($term_id, '_catalog_attribute_order');
+            }
+        }
     }
 }
