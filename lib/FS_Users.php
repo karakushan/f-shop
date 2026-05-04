@@ -1469,9 +1469,29 @@ class FS_Users
             wp_send_json_error(['msg' => $user_id->get_error_message()]);
         }
 
-        // Отправляем сообщение успешной регистрации на экран
+        $user = get_user_by('id', $user_id);
+        $redirect = fs_option('page_cabinet')
+            ? get_permalink((int) fs_option('page_cabinet'))
+            : fs_account_url();
+
+        if ($user instanceof \WP_User) {
+            nocache_headers();
+            wp_clear_auth_cookie();
+            wp_set_current_user($user->ID);
+            wp_set_auth_cookie($user->ID);
+
+            /**
+             * Fires after a user has logged in.
+             *
+             * @param string   $user_login Username.
+             * @param \WP_User $user       WP_User object of the logged-in user.
+             */
+            do_action('wp_login', $user->user_login, $user);
+        }
+
         wp_send_json_success([
-            'msg' => sprintf(__('Congratulations! You have successfully registered! <a href="%s">Log in</a>', 'f-shop'), esc_url(get_permalink(fs_option('page_auth')))),
+            'msg' => __('Congratulations! You have successfully registered!', 'f-shop'),
+            'redirect' => $redirect,
         ]);
     }
 

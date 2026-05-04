@@ -1030,8 +1030,20 @@ class FS_Ajax
         // IP адрес покупателя
         $customer_ip = fs_get_user_ip();
 
-        // Ищем покупателя в черном списке
-        $search_blacklist = $wpdb->get_var("SELECT COUNT({$wpdb->posts}.ID) FROM $wpdb->postmeta LEFT JOIN $wpdb->posts ON {$wpdb->postmeta}.post_id={$wpdb->posts}.ID  WHERE post_status='black_list' AND {$wpdb->postmeta}.meta_key='_customer_ip' AND {$wpdb->postmeta}.meta_value='$customer_ip'");
+        $blacklist_entry = FS_Blacklist::get_matching_entry([
+            'email' => $sanitize_field['fs_email'] ?? '',
+            'phone' => $sanitize_field['fs_phone'] ?? '',
+            'ip' => $customer_ip,
+        ]);
+
+        if ($blacklist_entry) {
+            wp_send_json_error([
+                'id' => 'fs_blacklist',
+                'title' => apply_filters('fs_blacklist_order_title', __('Error!', 'f-shop')),
+                'type' => apply_filters('fs_blacklist_order_type', 'error'),
+                'msg' => apply_filters('fs_blacklist_order_message', __('Вибачте, але ви не можете відправити це замовлення', 'f-shop'), $blacklist_entry),
+            ]);
+        }
 
         $product_class = new FS_Product();
         $fs_products = FS_Cart::get_cart();
@@ -1132,7 +1144,7 @@ class FS_Ajax
         $new_order_data = [
             'post_title' => '',
             'post_content' => '',
-            'post_status' => $search_blacklist ? 'black_list' : $order_status,
+            'post_status' => $order_status,
             'post_type' => FS_Config::get_data('post_type_orders'),
             'post_author' => 1,
             'ping_status' => get_option('default_ping_status'),

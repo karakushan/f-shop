@@ -39,6 +39,7 @@ class FS_Init
         FS_Export_Class::class,
         FS_SEO::class,
         FS_Customers::class,
+        FS_Blacklist::class,
         FS_Form::class,
         FS_Currency_Price::class,
         Admin\ProductEdit::class,

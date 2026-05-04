@@ -4033,3 +4033,74 @@ msgstr "Удалить из списка"
 #: lib/FS_Taxonomy.php:1866 lib/FS_Init.php:281
 msgid "No attributes selected yet. Use the search field above to add attribute groups."
 msgstr "Атрибуты еще не выбраны. Используйте поле поиска выше, чтобы добавить группы атрибутов."
+
+#: lib/FS_Blacklist.php:75 lib/FS_Blacklist.php:76 lib/FS_Blacklist.php:88
+#: lib/FS_Blacklist.php:104 lib/FS_Blacklist_List.php:11
+msgid "Blacklist"
+msgstr "Черный список"
+
+#: lib/FS_Blacklist.php:106
+msgid "Add manually"
+msgstr "Добавить вручную"
+
+#: lib/FS_Blacklist.php:114 lib/FS_Blacklist_List.php:131
+#: lib/FS_Blacklist_List.php:165
+msgid "IP address"
+msgstr "IP-адрес"
+
+#: lib/FS_Blacklist.php:118 lib/FS_Blacklist_List.php:132
+#: lib/FS_Blacklist_List.php:166
+msgid "Add to blacklist"
+msgstr "Добавить в черный список"
+
+#: lib/FS_Blacklist.php:148
+msgid "You do not have permission to manage the blacklist."
+msgstr "У вас нет прав для управления черным списком."
+
+#: lib/FS_Blacklist.php:169
+msgid "Entry added to blacklist."
+msgstr "Запись добавлена в черный список."
+
+#: lib/FS_Blacklist.php:178
+msgid "You do not have permission to edit orders."
+msgstr "У вас нет прав для редактирования заказов."
+
+#: lib/FS_Blacklist.php:196
+msgid "Client added to blacklist."
+msgstr "Клиент добавлен в черный список."
+
+#: lib/FS_Blacklist.php:222
+msgid "Save order with client data first to add it to blacklist."
+msgstr "Сначала сохраните заказ с данными клиента, чтобы добавить его в черный список."
+
+#: lib/FS_Blacklist.php:224
+msgid "Client is in blacklist"
+msgstr "Клиент в черном списке"
+
+#: lib/FS_Blacklist.php:225
+msgid "Open blacklist"
+msgstr "Открыть черный список"
+
+#: lib/FS_Blacklist.php:232
+msgid "Add client to blacklist"
+msgstr "Добавить клиента в черный список"
+
+#: lib/FS_Blacklist.php:305
+msgid "Specify at least one value: e-mail, phone, or IP."
+msgstr "Укажите хотя бы одно значение: e-mail, телефон или IP."
+
+#: lib/FS_Blacklist.php:345
+msgid "Failed to save blacklist entry."
+msgstr "Не удалось сохранить запись в черном списке."
+
+#: lib/FS_Blacklist.php:354
+msgid "Order not found."
+msgstr "Заказ не найден."
+
+#: lib/FS_Blacklist_List.php:10
+msgid "Blacklist entry"
+msgstr "Запись черного списка"
+
+#: lib/FS_Blacklist_List.php:78
+msgid "Blacklist is empty."
+msgstr "Черный список пуст."

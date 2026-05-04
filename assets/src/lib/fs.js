@@ -455,6 +455,15 @@ class FS {
         setTimeout(() => {
           if (r.data.redirect.length) window.location.href = r.data.redirect;
         }, 1000);
+      } else if (r.data?.msg) {
+        const shown = this.showToast(r.data.type || "error", {
+          title: r.data.title ?? this.getMessage("error"),
+          message: r.data.msg,
+        });
+
+        if (!shown) {
+          window.alert(r.data.msg);
+        }
       }
 
       return r;

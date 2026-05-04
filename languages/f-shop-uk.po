@@ -4026,3 +4026,73 @@ msgstr "Вилучити зі списку"
 #: lib/FS_Taxonomy.php:1866 lib/FS_Init.php:281
 msgid "No attributes selected yet. Use the search field above to add attribute groups."
 msgstr "Атрибути ще не вибрані. Використовуйте поле пошуку вище, щоб додати групи атрибутів."
+
+#: lib/FS_Blacklist.php:75 lib/FS_Blacklist.php:76 lib/FS_Blacklist.php:88
+#: lib/FS_Blacklist.php:104 lib/FS_Blacklist_List.php:11
+msgid "Blacklist"
+msgstr "Чорний список"
+
+#: lib/FS_Blacklist.php:106
+msgid "Add manually"
+msgstr "Додати вручну"
+
+#: lib/FS_Blacklist.php:122 lib/FS_Blacklist_List.php:133
+#: lib/FS_Blacklist_List.php:167
+msgid "IP address"
+msgstr "IP-адреса"
+
+#: lib/FS_Blacklist.php:127
+msgid "Add to blacklist"
+msgstr "Додати до чорного списку"
+
+#: lib/FS_Blacklist.php:148
+msgid "You do not have permission to manage the blacklist."
+msgstr "У вас немає прав для керування чорним списком."
+
+#: lib/FS_Blacklist.php:169
+msgid "Entry added to blacklist."
+msgstr "Запис додано до чорного списку."
+
+#: lib/FS_Blacklist.php:178
+msgid "You do not have permission to edit orders."
+msgstr "У вас немає прав для редагування замовлень."
+
+#: lib/FS_Blacklist.php:196
+msgid "Client added to blacklist."
+msgstr "Клієнта додано до чорного списку."
+
+#: lib/FS_Blacklist.php:222
+msgid "Save order with client data first to add it to blacklist."
+msgstr "Спочатку збережіть замовлення з даними клієнта, щоб додати його до чорного списку."
+
+#: lib/FS_Blacklist.php:224
+msgid "Client is in blacklist"
+msgstr "Клієнт у чорному списку"
+
+#: lib/FS_Blacklist.php:225
+msgid "Open blacklist"
+msgstr "Відкрити чорний список"
+
+#: lib/FS_Blacklist.php:232
+msgid "Add client to blacklist"
+msgstr "Додати клієнта до чорного списку"
+
+#: lib/FS_Blacklist.php:305
+msgid "Specify at least one value: e-mail, phone, or IP."
+msgstr "Вкажіть хоча б одне значення: e-mail, телефон або IP."
+
+#: lib/FS_Blacklist.php:345
+msgid "Failed to save blacklist entry."
+msgstr "Не вдалося зберегти запис у чорному списку."
+
+#: lib/FS_Blacklist.php:354
+msgid "Order not found."
+msgstr "Замовлення не знайдено."
+
+#: lib/FS_Blacklist_List.php:10
+msgid "Blacklist entry"
+msgstr "Запис чорного списку"
+
+#: lib/FS_Blacklist_List.php:78
+msgid "Blacklist is empty."
+msgstr "Чорний список порожній."
