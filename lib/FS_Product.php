@@ -340,7 +340,7 @@ class FS_Product
         $product_id = $product_id ? $product_id : $this->id;
         $variation_id = !is_null($variation_id) && is_numeric($variation_id) ? $variation_id : $this->variation;
         $variation = $this->get_variation($product_id, $variation_id);
-        $title = get_the_title($product_id);
+        $title = self::normalize_title_for_display(get_the_title($product_id));
 
         // Добавляем свойства вариации к названию товара в скобках, если они еще не добавлены
         if (!empty($variation) && !empty($variation['attributes'])) {
@@ -369,6 +369,20 @@ class FS_Product
         }
 
         return $title;
+    }
+
+    /**
+     * Normalizes a product title for frontend display.
+     *
+     * @param string $title Product title that may contain HTML entities.
+     *
+     * @return string
+     */
+    public static function normalize_title_for_display($title)
+    {
+        $charset = get_bloginfo('charset') ?: 'UTF-8';
+
+        return html_entity_decode((string) $title, ENT_QUOTES | ENT_HTML5, $charset);
     }
 
     /**

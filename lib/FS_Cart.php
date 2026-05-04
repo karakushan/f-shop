@@ -121,6 +121,20 @@ class FS_Cart
     }
 
     /**
+     * Normalizes a product name for JSON responses consumed by the frontend.
+     *
+     * @param string $name Product name that may contain HTML entities.
+     *
+     * @return string
+     */
+    public static function normalize_product_name_for_response($name)
+    {
+        $charset = get_bloginfo('charset') ?: 'UTF-8';
+
+        return html_entity_decode((string) $name, ENT_QUOTES | ENT_HTML5, $charset);
+    }
+
+    /**
      * Adds an item to the cart.
      *
      * @param array $data
@@ -224,7 +238,9 @@ class FS_Cart
 
         if ($product) {
             // Базовая информация о товаре
-            $product->name = apply_filters('the_title', $product->post_title);
+            $product->name = self::normalize_product_name_for_response(
+                apply_filters('the_title', $product->post_title)
+            );
 
             if ($is_variated && !empty($variation)) {
                 $attributes = get_terms([
