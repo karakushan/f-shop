@@ -80,7 +80,6 @@ class FS_Images_Class
 
         $gallery_images_ids = self::get_gallery($product_id, $args['use_post_thumbnail'], $args['attachments']);
         $gallery_count = count($gallery_images_ids);
-        $thumb_slides_per_view = min((int) $args['thumbItem'], max($gallery_count, 1));
         $enable_main_loop = !empty($args['loop']) && $gallery_count > 1;
         ?>
 		<script>
@@ -99,7 +98,7 @@ class FS_Images_Class
 				const thumbsSwiper = new Swiper("#<?php echo $thumbs_gallery_id; ?>", {
 					modules: thumbsModules,
 					direction: "vertical",
-					slidesPerView: <?php echo esc_attr($thumb_slides_per_view); ?>,
+					slidesPerView: "auto",
 					spaceBetween: 10,
 					loop: false,
 					freeMode: true,
