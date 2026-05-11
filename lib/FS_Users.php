@@ -185,7 +185,7 @@ class FS_Users
     public function isWhiteSpaceContain($str)
     {
         $str = preg_replace('/\s\s+/', ' ', $str);
-        if (strpos($str, ' ') | preg_match(' ', $str)) {
+        if (strpos($str, ' ') !== false) {
             return false;
         } else {
             return true;
@@ -1423,7 +1423,7 @@ class FS_Users
         $validation_errors = [];
 
         foreach ($allowed_fields as $key => $field) {
-            $value = $_POST[$key];
+            $value = $_POST[$key] ?? '';
             if ($field['type'] == 'email') {
                 $value = sanitize_email($value);
             } else {
