@@ -107,96 +107,56 @@ if (class_exists('\FS\FS_Init')) {
 }
 
 /**
- * Configure PHPMailer to use Mailtrap when development mode is enabled.
+ * Check whether local email archiving is enabled.
  *
- * @param PHPMailer $phpmailer The PHPMailer instance.
+ * @return bool
  */
-function fs_mailtrap_config($phpmailer)
+function fs_email_testing_enabled()
 {
-    // Ensure fs_option function is available
-    if (!function_exists('fs_option')) {
-        return;
-    }
-
-    // Check if Mailtrap is enabled in settings or via environment variable
-    $mailtrap_enabled = fs_option('fs_enable_mailtrap');
-    
-    // Check environment variable (for Docker setup)
-    $env_mailtrap_enabled = false;
-    if (function_exists('getenv_docker')) {
-        $env_mailtrap_enabled = getenv_docker('WORDPRESS_LOCAL_DEV', false);
-    } elseif (getenv('WORDPRESS_LOCAL_DEV')) {
-        $env_mailtrap_enabled = true;
-    }
-    
-    if (!$mailtrap_enabled && !$env_mailtrap_enabled) {
-        return;
-    }
-
-    // Get Mailtrap settings from plugin options or environment variables
-    $host = fs_option('fs_mailtrap_host');
-    if (empty($host)) {
-        $host = 'sandbox.smtp.mailtrap.io';
-    }
-    
-    $port = fs_option('fs_mailtrap_port');
-    if (empty($port)) {
-        $port = '2525';
-    }
-    
-    $username = fs_option('fs_mailtrap_username');
-    if (empty($username) && $env_mailtrap_enabled) {
-        if (function_exists('getenv_docker')) {
-            $username = getenv_docker('WORDPRESS_MAILTRAP_USERNAME', '');
-        } else {
-            $username = getenv('WORDPRESS_MAILTRAP_USERNAME') ?: '';
-        }
-    }
-    
-    $password = fs_option('fs_mailtrap_password');
-    if (empty($password) && $env_mailtrap_enabled) {
-        if (function_exists('getenv_docker')) {
-            $password = getenv_docker('WORDPRESS_MAILTRAP_PASSWORD', '');
-        } else {
-            $password = getenv('WORDPRESS_MAILTRAP_PASSWORD') ?: '';
-        }
-    }
-
-    // Only configure if credentials are provided
-    if (empty($username) || empty($password)) {
-        return;
-    }
-
-    // Configure PHPMailer for SMTP
-    $phpmailer->isSMTP();
-    $phpmailer->Host = $host;
-    $phpmailer->SMTPAuth = true;
-    $phpmailer->Port = intval($port);
-    $phpmailer->Username = $username;
-    $phpmailer->Password = $password;
-    
-    // Disable SSL verification for Mailtrap sandbox
-    $phpmailer->SMTPOptions = array(
-        'ssl' => array(
-            'verify_peer' => false,
-            'verify_peer_name' => false,
-            'allow_self_signed' => true
-        )
-    );
-    
-    // Enable debug output if WP_DEBUG is enabled
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        $phpmailer->SMTPDebug = 2;
-        $phpmailer->Debugoutput = function($str, $level) {
-            error_log("PHPMailer Debug ($level): $str");
-        };
-    }
+    return function_exists('fs_option') && (bool) fs_option('fs_test_mode');
 }
 
-// Hook into phpmailer_init to configure Mailtrap
-// Use plugins_loaded to ensure all plugin functions are available
+/**
+ * Save the original email body and prevent external delivery in test mode.
+ *
+ * @param null|bool $return Short-circuit value for wp_mail().
+ * @param array     $mail   The wp_mail() arguments.
+ * @return bool
+ */
+function fs_save_test_email($return, $mail)
+{
+    if (!fs_email_testing_enabled()) {
+        return $return;
+    }
+
+    $directory = WP_CONTENT_DIR . '/f-shop-test-emails';
+    if (!wp_mkdir_p($directory)) {
+        error_log('F-Shop test email error: unable to create email archive directory.');
+        return true;
+    }
+
+    $deny_file = $directory . '/.htaccess';
+    if (!file_exists($deny_file)) {
+        file_put_contents($deny_file, "<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nOrder allow,deny\nDeny from all\n</IfModule>\n", LOCK_EX);
+    }
+
+    $filename = wp_unique_filename(
+        $directory,
+        'email-' . gmdate('Ymd-His') . '.html'
+    );
+    $filepath = trailingslashit($directory) . $filename;
+    $message = isset($mail['message']) ? (string) $mail['message'] : '';
+
+    if (false === file_put_contents($filepath, $message, LOCK_EX)) {
+        error_log('F-Shop test email error: unable to save ' . $filepath);
+    }
+
+    return true;
+}
+
+// Use plugins_loaded to ensure all plugin functions are available.
 add_action('plugins_loaded', function () {
-    add_action('phpmailer_init', 'fs_mailtrap_config');
+    add_filter('pre_wp_mail', 'fs_save_test_email', 10, 2);
 }, 20);
 
 // Adding WP CLI support

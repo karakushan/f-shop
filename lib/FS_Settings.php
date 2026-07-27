@@ -177,7 +177,6 @@ class FS_Settings
             'seo' => $this->get_seo_settings(),
             'export' => $this->get_export_settings($feed_link, $feed_link_permalink),
             'marketing' => $this->get_marketing_settings(),
-            'testing' => $this->get_testing_settings(),
         ];
 
         if (taxonomy_exists($fs_config->data['currencies_taxonomy'])) {
@@ -230,8 +229,8 @@ class FS_Settings
                 [
                     'type' => 'checkbox',
                     'name' => 'fs_test_mode',
-                    'label' => __('Test mode', 'f-shop'),
-                    'help' => __('In test mode, orders come only to the administrator\'s mail', 'f-shop'),
+                    'label' => __('Email testing', 'f-shop'),
+                    'help' => __('When enabled, emails are saved to the site local directory wp-content/f-shop-test-emails and are not sent externally.', 'f-shop'),
                     'value' => fs_option('fs_test_mode'),
                 ],
             ],
@@ -719,56 +718,6 @@ class FS_Settings
                     'name' => 'fs_marketing_code_footer',
                     'label' => __('Коды аналитики в футере', 'f-shop'),
                     'value' => fs_option('fs_marketing_code_footer'),
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * Get development mode settings section.
-     *
-     * @return array Development mode settings array
-     */
-    private function get_testing_settings(): array
-    {
-        return [
-            'name' => __('Development mode', 'f-shop'),
-            'description' => __('Settings for development and testing functionality', 'f-shop'),
-            'fields' => [
-                [
-                    'type' => 'checkbox',
-                    'name' => 'fs_enable_mailtrap',
-                    'label' => __('Enable email testing with Mailtrap.io', 'f-shop'),
-                    'help' => __('When enabled, all emails will be sent through Mailtrap sandbox for testing purposes', 'f-shop'),
-                    'value' => fs_option('fs_enable_mailtrap'),
-                ],
-                [
-                    'type' => 'text',
-                    'name' => 'fs_mailtrap_username',
-                    'label' => __('Mailtrap Username', 'f-shop'),
-                    'help' => __('Your Mailtrap username from sandbox settings', 'f-shop'),
-                    'value' => fs_option('fs_mailtrap_username'),
-                ],
-                [
-                    'type' => 'text',
-                    'name' => 'fs_mailtrap_password',
-                    'label' => __('Mailtrap Password', 'f-shop'),
-                    'help' => __('Your Mailtrap password from sandbox settings', 'f-shop'),
-                    'value' => fs_option('fs_mailtrap_password'),
-                ],
-                [
-                    'type' => 'text',
-                    'name' => 'fs_mailtrap_host',
-                    'label' => __('Mailtrap Host', 'f-shop'),
-                    'help' => __('Mailtrap SMTP host address', 'f-shop'),
-                    'value' => fs_option('fs_mailtrap_host', 'sandbox.smtp.mailtrap.io'),
-                ],
-                [
-                    'type' => 'number',
-                    'name' => 'fs_mailtrap_port',
-                    'label' => __('Mailtrap Port', 'f-shop'),
-                    'help' => __('Mailtrap SMTP port (usually 2525 for sandbox)', 'f-shop'),
-                    'value' => fs_option('fs_mailtrap_port', '2525'),
                 ],
             ],
         ];

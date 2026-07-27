@@ -1206,19 +1206,9 @@ class FS_Users
                 }
             }
             
-            // Check if Mailtrap is configured
-            $mailtrap_enabled = fs_option('fs_enable_mailtrap');
-            $mailtrap_username = fs_option('fs_mailtrap_username');
-            $mailtrap_password = fs_option('fs_mailtrap_password');
-            
             if ($error_code === 'retrieve_password_email_failure') {
                 $msg = __('Failed to send password reset email.', 'f-shop');
-                
-                if ($mailtrap_enabled && (empty($mailtrap_username) || empty($mailtrap_password))) {
-                    $msg .= ' ' . __('Mailtrap is enabled but credentials are not configured.', 'f-shop');
-                } elseif (!$mailtrap_enabled) {
-                    $msg .= ' ' . __('Please check your email configuration.', 'f-shop');
-                }
+                $msg .= ' ' . __('Please check your email configuration.', 'f-shop');
                 
                 if ($detailed_error && defined('WP_DEBUG') && WP_DEBUG) {
                     $msg .= ' ' . __('Error details:', 'f-shop') . ' ' . esc_html($detailed_error);
