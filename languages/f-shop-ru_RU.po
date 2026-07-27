@@ -3730,8 +3730,8 @@ msgstr "Следить за ценой"
 #~ msgid "Additional data"
 #~ msgstr "Дополнительные данные"
 
-#~ msgid "All offers"
-#~ msgstr "Все предложения"
+msgid "All offers"
+msgstr "Все предложения"
 
 #~ msgid "Amount"
 #~ msgstr "Сумма"
@@ -3911,11 +3911,11 @@ msgstr "Нет отзывов"
 #~ msgid "Off"
 #~ msgstr "Выключено"
 
-#~ msgid "On order"
-#~ msgstr "Под заказ"
+msgid "On order"
+msgstr "Под заказ"
 
-#~ msgid "Only in stock"
-#~ msgstr "Только в наличии"
+msgid "Only in stock"
+msgstr "Только в наличии"
 
 #, php-format
 #~ msgid "Order %d from %s"

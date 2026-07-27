@@ -3739,8 +3739,8 @@ msgstr "Слідкувати за ціною"
 #~ msgid "Additional data"
 #~ msgstr "Додаткові дані"
 
-#~ msgid "All offers"
-#~ msgstr "Всі пропозиції"
+msgid "All offers"
+msgstr "Всі пропозиції"
 
 #~ msgid "Amount"
 #~ msgstr "Сума"
@@ -3922,11 +3922,11 @@ msgstr "Немає відгуків"
 #~ msgid "Off"
 #~ msgstr "Не відображати"
 
-#~ msgid "On order"
-#~ msgstr "Під заказ"
+msgid "On order"
+msgstr "Під замовлення"
 
-#~ msgid "Only in stock"
-#~ msgstr "В наявності"
+msgid "Only in stock"
+msgstr "Тільки в наявності"
 
 #, php-format
 #~ msgid "Order %d from %s"
