@@ -214,7 +214,13 @@ class FS_Init
         wp_enqueue_style('wp-jquery-ui-dialog');
         wp_enqueue_style(FS_PLUGIN_PREFIX . 'select2', FS_PLUGIN_URL . 'assets/plugins/bower_components/select2/dist/css/select2.min.css');
         wp_enqueue_style(FS_PLUGIN_PREFIX . 'fs-material-fonts', '//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons');
-        wp_enqueue_style(FS_PLUGIN_PREFIX . 'fs-admin', FS_PLUGIN_URL . 'assets/css/fs-admin.css');
+        $fs_admin_css = FS_PLUGIN_PATH . 'assets/css/fs-admin.css';
+        wp_enqueue_style(
+            FS_PLUGIN_PREFIX . 'fs-admin',
+            FS_PLUGIN_URL . 'assets/css/fs-admin.css',
+            [],
+            file_exists($fs_admin_css) ? filemtime($fs_admin_css) : null
+        );
 
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'spectrum', FS_PLUGIN_URL . 'assets/js/spectrum.js', ['jquery'], null, true);
         wp_enqueue_script(FS_PLUGIN_PREFIX . 'js-cookie', FS_PLUGIN_URL . 'assets/js/js.cookie.js', ['jquery'], null, true);

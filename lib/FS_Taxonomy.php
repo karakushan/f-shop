@@ -338,10 +338,13 @@ class FS_Taxonomy
             }
 
             // Фильтрация по наличию
-            if (!empty($url['availability'])) {
+            if (isset($url['availability'])) {
+                if ($url['availability'] !== '0' && $url['availability'] !== '1') {
+                    return;
+                }
                 $meta_query['availability'] = [
                     'key' => FS_Config::get_meta('remaining_amount'),
-                    'compare' => $url['availability'] == '1' ? '!=' : '==',
+                    'compare' => $url['availability'] === '1' ? '!=' : '==',
                     'value' => '0',
                 ];
             }

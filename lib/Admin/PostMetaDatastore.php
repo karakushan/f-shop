@@ -40,7 +40,10 @@ class PostMetaDatastore extends \Carbon_Fields\Datastore\Datastore
     public function load(Field $field)
     {
         $key = $this->get_key_for_field($field);
-        $raw_value = get_post_meta($this->get_object_id(), $key, true) ?:'';
+        $raw_value = get_post_meta($this->get_object_id(), $key, true);
+        if ($raw_value === false || $raw_value === '') {
+            $raw_value = '';
+        }
 
         if (!in_array($field->get_base_name(), $this->multilingual_fields, true)) {
             return $raw_value !== '' ? $raw_value : $field->get_default_value();
