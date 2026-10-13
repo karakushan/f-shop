@@ -476,7 +476,8 @@ class FS_SEO {
 			return;
 		}
 		$term        = get_queried_object();
-		$count_votes = FS_Rating_Class::get_count_ratings_in_category();
+		$rating_summary = FS_Rating_Class::get_category_rating_summary();
+		$product_summary = FS_Product::get_category_product_summary();
 		$schema      = array(
 			"@context"        => "https://schema.org",
 			"@type"           => "Product",
@@ -487,15 +488,15 @@ class FS_SEO {
 				: '',
 			"offers"          => [
 				"@type"         => "AggregateOffer",
-				"lowPrice"      => FS_Product::get_min_price_in_category(),
-				"highPrice"     => FS_Product::get_max_price_in_category(),
-				"offerCount"    => FS_Product::get_count_products_in_category() > 0 ? FS_Product::get_count_products_in_category() : 1,
+				"lowPrice"      => $product_summary['min'],
+				"highPrice"     => $product_summary['max'],
+				"offerCount"    => $product_summary['count'] > 0 ? $product_summary['count'] : 1,
 				"priceCurrency" => fs_option( 'fs_currency_code', 'UAH' ),
 			],
 			"aggregateRating" => [
 				"@type"       => "AggregateRating",
-				"ratingCount" => $count_votes ?: 1,
-				"ratingValue" => $count_votes ? round( FS_Rating_Class::get_average_rating_in_category(), 1 ) : 5,
+				"ratingCount" => $rating_summary['count'] ?: 1,
+				"ratingValue" => $rating_summary['count'] ? round( $rating_summary['average'], 1 ) : 5,
 				"bestRating"  => "5"
 			]
 		);

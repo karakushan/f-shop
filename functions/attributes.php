@@ -117,7 +117,7 @@ function fs_current_screen_attributes( $group_id = 0, $args = array() ) {
 	) );
 
 	if ( is_tax() ) {
-		global $wp_query, $post;
+		global $wp_query;
 
 		$tax_query [] = [
 			'taxonomy' => FS_Config::get_data( 'product_taxonomy' ),
@@ -135,25 +135,12 @@ function fs_current_screen_attributes( $group_id = 0, $args = array() ) {
 
 		$post_args = apply_filters( 'fs_current_screen_attributes_args', $post_args );
 
-		$posts = new WP_Query( $post_args );
+		$attributes_by_parent = _fs_get_cached_current_screen_attribute_ids( $post_args );
+		$attributes = isset( $attributes_by_parent[ (int) $group_id ] )
+			? $attributes_by_parent[ (int) $group_id ]
+			: [];
 
-		if ( $posts->have_posts() ) {
-			while ( $posts->have_posts() ) {
-				$posts->the_post();
-				$post_terms = get_the_terms( $post, FS_Config::get_data( 'features_taxonomy' ) );
-				if ( $post_terms ) {
-					foreach ( $post_terms as $post_term ) {
-						if ( $post_term->parent != $group_id ) {
-							continue;
-						}
-						$attributes[] = $post_term->term_id;
-					}
-				}
-			}
-		}
-		wp_reset_query();
 		if ( count( $attributes ) ) {
-			$attributes      = array_unique( $attributes );
 			$args['include'] = $attributes;
 			$attributes      = get_terms( $args );
 		}
@@ -163,6 +150,56 @@ function fs_current_screen_attributes( $group_id = 0, $args = array() ) {
 	}
 
 	return $attributes;
+}
+
+/**
+ * Collect attribute term IDs for all groups once per category query and cache them.
+ *
+ * @param array $post_args Product query arguments.
+ * @return array<int, array<int, int>> Attribute term IDs grouped by parent term ID.
+ */
+function _fs_get_cached_current_screen_attribute_ids( $post_args ) {
+	$language = get_query_var( 'lang' );
+	if ( ! $language && function_exists( 'wpm_get_user_language' ) ) {
+		$language = wpm_get_user_language();
+	}
+	$cache_version = FS_Product::get_category_product_summary_cache_version();
+	$cache_key     = 'fs_fshop_screen_attributes_' . md5( serialize( [ $post_args, (string) $language, $cache_version ] ) );
+	$cached        = get_transient( $cache_key );
+
+	if ( is_array( $cached ) ) {
+		return $cached;
+	}
+
+	$attributes_by_parent = [];
+	$posts                = new WP_Query( $post_args );
+
+	while ( $posts->have_posts() ) {
+		$posts->the_post();
+		$post_terms = get_the_terms( get_the_ID(), FS_Config::get_data( 'features_taxonomy' ) );
+
+		if ( ! $post_terms || is_wp_error( $post_terms ) ) {
+			continue;
+		}
+
+		foreach ( $post_terms as $post_term ) {
+			$parent_id = (int) $post_term->parent;
+			if ( ! isset( $attributes_by_parent[ $parent_id ] ) ) {
+				$attributes_by_parent[ $parent_id ] = [];
+			}
+			$attributes_by_parent[ $parent_id ][] = (int) $post_term->term_id;
+		}
+	}
+
+	wp_reset_postdata();
+
+	foreach ( $attributes_by_parent as $parent_id => $term_ids ) {
+		$attributes_by_parent[ $parent_id ] = array_values( array_unique( $term_ids ) );
+	}
+
+	set_transient( $cache_key, $attributes_by_parent, 86400 );
+
+	return $attributes_by_parent;
 }
 
 /**

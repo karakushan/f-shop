@@ -15,14 +15,8 @@ class FS {
     this.cart = [];
     this.filters = [];
     this.cartType = "modal";
-    this.wishlist = {
-      items: [],
-      count: 0,
-    };
-    this.compare = {
-      items: [],
-      count: 0,
-    };
+    this.wishlist = window.FS_DATA.wishlist ?? { items: [], count: 0 };
+    this.compare = window.FS_DATA.compare ?? { items: [], count: 0 };
     this.modal = {
       modalID: null,
       isOpen: false,
@@ -42,35 +36,6 @@ class FS {
     this.variations = {}; // Хранилище вариаций по ID
     this.attributes = {}; // Хранилище атрибутов
 
-    // Инициализация списка избранного при создании экземпляра класса
-    this.initWishlist();
-    this.initCompare();
-  }
-
-  // Инициализация списка избранного
-  initWishlist() {
-    this.updateWishlist()
-      .then(() => {
-        console.log("Wishlist initialized with", this.wishlist.count, "items");
-      })
-      .catch((error) => {
-        console.error("Failed to initialize wishlist:", error);
-      });
-  }
-
-  // Инициализация списка сравнения
-  initCompare() {
-    this.updateCompare()
-      .then(() => {
-        console.log(
-          "Compare list initialized with",
-          this.compare.count,
-          "items"
-        );
-      })
-      .catch((error) => {
-        console.error("Failed to initialize compare list:", error);
-      });
   }
 
   getSetting(settingName) {
@@ -193,23 +158,29 @@ class FS {
     return this.post("fs_addto_wishlist", { product_id: itemId }).then(
       (response) => {
         if (response.success) {
-          // Обновляем данные избранного в свойстве this.wishlist
-          this.updateWishlist().then(() => {
-            // Вызываем событие для обновления интерфейса с данными товара
+          const productId = Number(itemId);
+          const items = Array.isArray(this.wishlist.items)
+            ? this.wishlist.items
+            : [];
 
-            const wishlistUpdatedEvent = new CustomEvent(
-              "fs-wishlist-item-added",
-              {
-                detail: {
-                  action: response.data.action,
-                  itemId: itemId,
-                  product: response.data.product, // Передаем данные о товаре из ответа
-                  wishlist: this.wishlist,
-                },
-              }
-            );
-            window.dispatchEvent(wishlistUpdatedEvent);
-          });
+          this.wishlist.items =
+            response.data.action === "add"
+              ? items.some((id) => Number(id) === productId)
+                ? items
+                : [...items, productId]
+              : items.filter((id) => Number(id) !== productId);
+          this.wishlist.count = this.wishlist.items.length;
+
+          window.dispatchEvent(
+            new CustomEvent("fs-wishlist-item-added", {
+              detail: {
+                action: response.data.action,
+                itemId: itemId,
+                product: response.data.product,
+                wishlist: this.wishlist,
+              },
+            })
+          );
 
           // Показываем уведомление об успешном добавлении
           this.showToast("success", {
@@ -229,9 +200,22 @@ class FS {
 
   // Deletes the wishlist
   cleanWishlist() {
-    this.post("fs_clean_wishlist", {}).then((data) => {
-      this.wishlist = { items: [], count: 0 };
-      window.location.reload();
+    return this.post("fs_clean_wishlist").then((response) => {
+      if (response.success) {
+        this.wishlist = { items: [], count: 0 };
+        window.dispatchEvent(
+          new CustomEvent("fs-wishlist-cleared", {
+            detail: { wishlist: this.wishlist },
+          })
+        );
+      } else {
+        this.showToast("error", {
+          title: response.data.title ?? this.getMessage("error"),
+          message: response.data.msg,
+        });
+      }
+
+      return response;
     });
   }
 
@@ -260,20 +244,29 @@ class FS {
     return this.post("fs_addto_compare", { product_id: itemId }).then(
       (response) => {
         if (response.success) {
-          // Обновляем данные сравнения в свойстве this.compare
-          this.updateCompare().then(() => {
-            // Вызываем событие для обновления интерфейса с данными товара
+          const productId = Number(itemId);
+          const items = Array.isArray(this.compare.items)
+            ? this.compare.items
+            : [];
 
-            const compareUpdatedEvent = new CustomEvent("fs-compare-updated", {
+          this.compare.items =
+            response.data.action === "add"
+              ? items.some((id) => Number(id) === productId)
+                ? items
+                : [...items, productId]
+              : items.filter((id) => Number(id) !== productId);
+          this.compare.count = this.compare.items.length;
+
+          window.dispatchEvent(
+            new CustomEvent("fs-compare-updated", {
               detail: {
                 action: response.data.action,
                 itemId: itemId,
-                product: response.data.product, // Передаем данные о товаре из ответа
+                product: response.data.product,
                 compare: this.compare,
               },
-            });
-            window.dispatchEvent(compareUpdatedEvent);
-          });
+            })
+          );
 
           // Показываем уведомление об успешном добавлении
           this.showToast("success", {
@@ -304,13 +297,20 @@ class FS {
     return this.post("fs_del_compare_pos", { item_id: itemId }).then(
       (response) => {
         if (response.success) {
-          this.updateCompare().then(() => {
-            const compareUpdatedEvent = new CustomEvent(
-              "fs-compare-item-deleted",
-              { detail: { itemId: itemId, compare: this.compare } }
-            );
-            window.dispatchEvent(compareUpdatedEvent);
-          });
+          const productId = Number(itemId);
+          const items = Array.isArray(this.compare.items)
+            ? this.compare.items
+            : [];
+          this.compare.items = items.filter(
+            (id) => Number(id) !== productId
+          );
+          this.compare.count = this.compare.items.length;
+
+          window.dispatchEvent(
+            new CustomEvent("fs-compare-item-deleted", {
+              detail: { itemId: itemId, compare: this.compare },
+            })
+          );
 
           this.showToast("success", {
             title: response.data.title ?? this.getMessage("success"),
@@ -369,15 +369,20 @@ class FS {
     return this.post("fs_del_wishlist_pos", { item_id: itemId }).then(
       (response) => {
         if (response.success) {
-          // Обновляем данные избранного в свойстве this.wishlist
-          this.updateWishlist().then(() => {
-            // Вызываем событие для обновления интерфейса
-            const wishlistUpdatedEvent = new CustomEvent(
-              "fs-wishlist-item-deleted",
-              { detail: { itemId: itemId, wishlist: this.wishlist } }
-            );
-            window.dispatchEvent(wishlistUpdatedEvent);
-          });
+          const productId = Number(itemId);
+          const items = Array.isArray(this.wishlist.items)
+            ? this.wishlist.items
+            : [];
+          this.wishlist.items = items.filter(
+            (id) => Number(id) !== productId
+          );
+          this.wishlist.count = this.wishlist.items.length;
+
+          window.dispatchEvent(
+            new CustomEvent("fs-wishlist-item-deleted", {
+              detail: { itemId: itemId, wishlist: this.wishlist },
+            })
+          );
 
           // Показываем уведомление об успешном удалении
           this.showToast("success", {

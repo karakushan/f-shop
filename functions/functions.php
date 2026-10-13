@@ -1300,12 +1300,26 @@ function fs_user_viewed($args = [])
  */
 function fs_get_product_currency($product_id = 0)
 {
+    static $currency_details_cache = [];
+
     $fs_config = new FS_Config();
     $product_id = fs_get_product_id($product_id);
     $product_currency_id = intval(get_post_meta($product_id, $fs_config->meta['currency'], 1));
-    $product_currency_code = get_term_meta($product_currency_id, '__fs_currency_code', 1);
-    $product_currency_symbol = get_term_meta($product_currency_id, '__fs_currency_display', 1);
-    $product_currency_locales = carbon_get_term_meta($product_currency_id, '_fs_currency_locale');
+
+    // Currency details are shared by many products, so resolve them once per currency/language.
+    $language = function_exists('wpm_get_language') ? wpm_get_language() : get_locale();
+    $cache_key = md5(serialize([$product_currency_id, (string) $language]));
+    if (!array_key_exists($cache_key, $currency_details_cache)) {
+        $currency_details_cache[$cache_key] = [
+            'code' => get_term_meta($product_currency_id, '__fs_currency_code', 1),
+            'symbol' => get_term_meta($product_currency_id, '__fs_currency_display', 1),
+            'locales' => carbon_get_term_meta($product_currency_id, '_fs_currency_locale'),
+        ];
+    }
+
+    $product_currency_code = $currency_details_cache[$cache_key]['code'];
+    $product_currency_symbol = $currency_details_cache[$cache_key]['symbol'];
+    $product_currency_locales = $currency_details_cache[$cache_key]['locales'];
     $site_currency_id = intval(fs_option('default_currency', 0));
 
     // если у товара не найден ID валюта возвращаем  ID валюты по умолчанию
@@ -1333,14 +1347,12 @@ function fs_currency()
     $currency_symbol = fs_option('currency_symbol', '$');
 
     if (fs_option('multi_currency_on')) { 
-        global $wpdb;
         $default_country = FS_Config::get_data('default_country');
         $current_country = apply_filters('fs_current_country', $default_country);
 
-        $locale_currency_id = $wpdb->get_var($wpdb->prepare("SELECT term_id FROM $wpdb->termmeta WHERE meta_key LIKE %s AND meta_value = %s", $wpdb->esc_like('__fs_currency_locale').'%', $current_country));
-
-        if ($locale_currency_id) {
-            $currency_symbol = get_term_meta($locale_currency_id, '__fs_currency_display', 1);
+        $locale_currency_symbol = _fs_get_currency_symbol_for_locale($current_country);
+        if (null !== $locale_currency_symbol) {
+            $currency_symbol = $locale_currency_symbol;
         }
     }
 

@@ -149,6 +149,9 @@ class FS_Init
             'jquery',
         ], null, true);
 
+        $wishlist_items = array_values(FS_Wishlist::get_wishlist_items());
+        $compare_items = array_values(FS_Compare::get_compare_items());
+
         $l10n = [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('f-shop'),
@@ -181,13 +184,27 @@ class FS_Init
             'fs_disable_modals' => fs_option('fs_disable_modals', 0),
         ];
         wp_localize_script(FS_PLUGIN_PREFIX . 'main', 'fShop', $l10n);
+
+        $frontend_l10n = $l10n;
+        $frontend_l10n['wishlist'] = [
+            'items' => $wishlist_items,
+            'count' => count($wishlist_items),
+        ];
+        $frontend_l10n['compare'] = [
+            'items' => $compare_items,
+            'count' => count($compare_items),
+        ];
         
         // Enqueue frontend CSS for Swiper
         wp_enqueue_style(FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/css/fs-frontend.css');
         
         // Enqueue frontend script with Swiper in footer
-        wp_enqueue_script(FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', ['jquery'], null, true);
-        wp_localize_script(FS_PLUGIN_PREFIX . 'frontend', 'FS_DATA', $l10n);
+        $frontend_script_path = FS_PLUGIN_PATH . 'assets/js/fs-frontend.js';
+        $frontend_script_version = file_exists($frontend_script_path)
+            ? filemtime($frontend_script_path)
+            : FS_Config::get_data('plugin_ver');
+        wp_enqueue_script(FS_PLUGIN_PREFIX . 'frontend', FS_PLUGIN_URL . 'assets/js/fs-frontend.js', ['jquery'], $frontend_script_version, true);
+        wp_localize_script(FS_PLUGIN_PREFIX . 'frontend', 'FS_DATA', $frontend_l10n);
     }
 
     /**

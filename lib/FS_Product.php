@@ -11,6 +11,18 @@ namespace FS;
 
 class FS_Product
 {
+    /**
+     * Category product summaries calculated during the current request.
+     *
+     * @var array
+     */
+    private static $category_product_summary_cache = [];
+    private static $category_product_summary_cache_version = null;
+    private static $category_product_summary_version_bumped = false;
+
+    private const CATEGORY_PRODUCT_SUMMARY_CACHE_VERSION_OPTION = 'fs_fshop_category_product_summary_version';
+    private const CATEGORY_PRODUCT_SUMMARY_CACHE_TTL = 300;
+
     public $variation;
     public $id = 0;
     public $item_id = 0;
@@ -783,100 +795,235 @@ class FS_Product
         echo fs_frontend_template('product/comments');
     }
 
-    // get minimal price of all products in the category
+    /**
+     * Get the product count and price range for the current category in one pass.
+     *
+     * @param int|null $term_id Category ID, or null to use the current category.
+     * @return array{min: float, max: float, count: int, product_ids: array<int, int>}
+     */
+    public static function get_category_product_summary($term_id = null)
+    {
+        $empty_summary = [
+            'min' => 0.0,
+            'max' => 0.0,
+            'count' => 0,
+            'product_ids' => [],
+        ];
+
+        if (null === $term_id) {
+            if (!fs_is_product_category()) {
+                return $empty_summary;
+            }
+
+            $term = get_queried_object();
+            if (!is_object($term) || empty($term->term_id)) {
+                return $empty_summary;
+            }
+            $term_id = (int) $term->term_id;
+        } else {
+            $term_id = (int) $term_id;
+            if ($term_id > 0) {
+                $term = get_term($term_id, FS_Config::get_data('product_taxonomy'));
+                if (!is_object($term) || is_wp_error($term)) {
+                    return $empty_summary;
+                }
+            }
+        }
+
+        $country = apply_filters('fs_current_country', FS_Config::get_data('default_country'));
+        $language = function_exists('wpm_get_language') ? wpm_get_language() : get_query_var('lang');
+        $cache_version = self::get_category_product_summary_cache_version();
+        $cache_key = md5(serialize([$term_id, (string) $country, (string) $language, $cache_version]));
+
+        if (array_key_exists($cache_key, self::$category_product_summary_cache)) {
+            return self::$category_product_summary_cache[$cache_key];
+        }
+
+        $transient_key = 'fs_fshop_category_summary_' . $cache_key;
+        $cached_summary = get_transient($transient_key);
+        if (is_array($cached_summary)
+            && isset($cached_summary['min'], $cached_summary['max'], $cached_summary['count'], $cached_summary['product_ids'])
+        ) {
+            self::$category_product_summary_cache[$cache_key] = $cached_summary;
+            return $cached_summary;
+        }
+
+        $query_args = [
+            'post_type' => FS_Config::get_data('post_type'),
+            'posts_per_page' => -1,
+        ];
+
+        if ($term_id > 0) {
+            $query_args['tax_query'] = [
+                [
+                    'taxonomy' => FS_Config::get_data('product_taxonomy'),
+                    'field' => 'term_id',
+                    'terms' => $term_id,
+                ],
+            ];
+        }
+
+        $query = new \WP_Query($query_args);
+
+        $summary = [
+            'min' => 0.0,
+            'max' => 0.0,
+            'count' => (int) $query->post_count,
+            'product_ids' => [],
+        ];
+
+        while ($query->have_posts()) {
+            $query->the_post();
+            $product_id = (int) get_the_ID();
+            $summary['product_ids'][] = $product_id;
+            $price = (float) fs_get_price($product_id);
+
+            if ($price <= 0) {
+                continue;
+            }
+
+            if ($summary['min'] === 0.0 || $price < $summary['min']) {
+                $summary['min'] = $price;
+            }
+
+            if ($price > $summary['max']) {
+                $summary['max'] = $price;
+            }
+        }
+
+        wp_reset_postdata();
+
+        self::$category_product_summary_cache[$cache_key] = $summary;
+        set_transient($transient_key, $summary, self::CATEGORY_PRODUCT_SUMMARY_CACHE_TTL);
+
+        return $summary;
+    }
+
+    /**
+     * Invalidate the category summary after product, term, or currency changes.
+     *
+     * @return void
+     */
+    public static function invalidate_category_product_summary_cache()
+    {
+        self::$category_product_summary_cache = [];
+
+        if (self::$category_product_summary_version_bumped) {
+            return;
+        }
+
+        self::$category_product_summary_version_bumped = true;
+        $version = self::get_category_product_summary_cache_version();
+        self::$category_product_summary_cache_version = $version + 1;
+        update_option(self::CATEGORY_PRODUCT_SUMMARY_CACHE_VERSION_OPTION, $version + 1, 'yes');
+    }
+
+    /**
+     * Invalidate summaries when a product's metadata changes.
+     *
+     * @param int    $meta_id  Metadata ID.
+     * @param int    $object_id Product ID.
+     * @param string $meta_key Metadata key.
+     * @return void
+     */
+    public static function invalidate_category_summary_for_post_meta($meta_id, $object_id, $meta_key)
+    {
+        $price_meta_keys = [
+            FS_Config::get_meta('price'),
+            FS_Config::get_meta('action_price'),
+            FS_Config::get_meta('currency'),
+            FS_Config::get_meta('variations'),
+            '_languages',
+        ];
+
+        if (get_post_type($object_id) === FS_Config::get_data('post_type')
+            && in_array($meta_key, $price_meta_keys, true)
+        ) {
+            self::invalidate_category_product_summary_cache();
+        }
+    }
+
+    /**
+     * Invalidate summaries when a product's term relationships change.
+     *
+     * @param int    $object_id Product ID.
+     * @param mixed  $terms     Terms being assigned.
+     * @param array  $tt_ids    Term taxonomy IDs.
+     * @param string $taxonomy  Taxonomy name.
+     * @return void
+     */
+    public static function invalidate_category_summary_for_object_terms($object_id, $terms, $tt_ids, $taxonomy)
+    {
+        if (get_post_type($object_id) === FS_Config::get_data('post_type')) {
+            self::invalidate_category_product_summary_cache();
+        }
+    }
+
+    /**
+     * Invalidate summaries when F-SHOP currency settings change.
+     *
+     * @param string $option Option name.
+     * @return void
+     */
+    public static function invalidate_category_summary_for_option($option)
+    {
+        if (self::CATEGORY_PRODUCT_SUMMARY_CACHE_VERSION_OPTION === $option) {
+            return;
+        }
+
+        $currency_options = [
+            'default_currency',
+            'default_country',
+            'multi_currency_on',
+            'price_conversion',
+            'price_cents',
+            'currency_symbol',
+            'fs_currency_code',
+        ];
+
+        if (in_array($option, $currency_options, true)) {
+            self::invalidate_category_product_summary_cache();
+        }
+    }
+
+    /**
+     * Return the persistent cache version, initializing it once as an autoloaded option.
+     *
+     * @return int
+     */
+    public static function get_category_product_summary_cache_version()
+    {
+        if (null !== self::$category_product_summary_cache_version) {
+            return self::$category_product_summary_cache_version;
+        }
+
+        $version = get_option(self::CATEGORY_PRODUCT_SUMMARY_CACHE_VERSION_OPTION, false);
+        if (false === $version) {
+            add_option(self::CATEGORY_PRODUCT_SUMMARY_CACHE_VERSION_OPTION, 1, '', 'yes');
+            $version = get_option(self::CATEGORY_PRODUCT_SUMMARY_CACHE_VERSION_OPTION, 1);
+        }
+
+        self::$category_product_summary_cache_version = max(1, (int) $version);
+
+        return self::$category_product_summary_cache_version;
+    }
+
+    // Get the minimum price of products in the current category.
     public static function get_min_price_in_category()
     {
-        $min_price = 0;
-        if (fs_is_product_category()) {
-            $taxonomy = FS_Config::get_data('product_taxonomy');
-            $term = get_queried_object();
-            $args = [
-                'post_type' => FS_Config::get_data('post_type'),
-                'posts_per_page' => -1,
-                'tax_query' => [
-                    [
-                        'taxonomy' => $taxonomy,
-                        'field' => 'term_id',
-                        'terms' => $term->term_id,
-                    ],
-                ],
-            ];
-            $query = new \WP_Query($args);
-            if ($query->have_posts()) {
-                while ($query->have_posts()) {
-                    $query->the_post();
-                    $price = fs_get_price();
-                    if ($price > 0 && $price < $min_price || $min_price == 0) {
-                        $min_price = $price;
-                    }
-                }
-            }
-            wp_reset_postdata();
-        }
-
-        return floatval($min_price);
+        return (float) self::get_category_product_summary()['min'];
     }
 
-    // get max price of all products in the category
+    // Get the maximum price of products in the current category.
     public static function get_max_price_in_category()
     {
-        $max_price = 0;
-        if (fs_is_product_category()) {
-            $taxonomy = FS_Config::get_data('product_taxonomy');
-            $term = get_queried_object();
-            $args = [
-                'post_type' => FS_Config::get_data('post_type'),
-                'posts_per_page' => -1,
-                'tax_query' => [
-                    [
-                        'taxonomy' => $taxonomy,
-                        'field' => 'term_id',
-                        'terms' => $term->term_id,
-                    ],
-                ],
-            ];
-            $query = new \WP_Query($args);
-            if ($query->have_posts()) {
-                while ($query->have_posts()) {
-                    $query->the_post();
-                    $price = fs_get_price();
-                    if ($price && $price > $max_price) {
-                        $max_price = $price;
-                    }
-                }
-            }
-            wp_reset_postdata();
-        }
-
-        return floatval($max_price);
+        return (float) self::get_category_product_summary()['max'];
     }
 
-    // count all products in the category
+    // Count products in the current category.
     public static function get_count_products_in_category()
     {
-        $count = 0;
-        if (fs_is_product_category()) {
-            $taxonomy = FS_Config::get_data('product_taxonomy');
-            $term = get_queried_object();
-            $args = [
-                'post_type' => FS_Config::get_data('post_type'),
-                'posts_per_page' => -1,
-                'tax_query' => [
-                    [
-                        'taxonomy' => $taxonomy,
-                        'field' => 'term_id',
-                        'terms' => $term->term_id,
-                    ],
-                ],
-            ];
-            $query = new \WP_Query($args);
-            if ($query->have_posts()) {
-                $count = $query->post_count;
-            }
-            wp_reset_postdata();
-        }
-
-        return intval($count);
+        return (int) self::get_category_product_summary()['count'];
     }
 
     /**
@@ -1036,3 +1183,24 @@ class FS_Product
         return array_values($groped);
     }
 }
+
+$category_summary_invalidator = [FS_Product::class, 'invalidate_category_product_summary_cache'];
+add_action('save_post_' . FS_Config::get_data('post_type'), $category_summary_invalidator, 100, 0);
+add_action('deleted_post', $category_summary_invalidator, 10, 0);
+add_action('added_post_meta', [FS_Product::class, 'invalidate_category_summary_for_post_meta'], 10, 3);
+add_action('updated_post_meta', [FS_Product::class, 'invalidate_category_summary_for_post_meta'], 10, 3);
+add_action('deleted_post_meta', [FS_Product::class, 'invalidate_category_summary_for_post_meta'], 10, 3);
+add_action('set_object_terms', [FS_Product::class, 'invalidate_category_summary_for_object_terms'], 10, 4);
+add_action('added_term_meta', $category_summary_invalidator, 10, 0);
+add_action('updated_term_meta', $category_summary_invalidator, 10, 0);
+add_action('deleted_term_meta', $category_summary_invalidator, 10, 0);
+add_action('created_term', $category_summary_invalidator, 10, 0);
+add_action('edited_term', $category_summary_invalidator, 10, 0);
+add_action('delete_term', $category_summary_invalidator, 10, 0);
+add_action('comment_post', $category_summary_invalidator, 10, 0);
+add_action('edit_comment', $category_summary_invalidator, 10, 0);
+add_action('transition_comment_status', $category_summary_invalidator, 10, 0);
+add_action('deleted_comment', $category_summary_invalidator, 10, 0);
+add_action('added_option', [FS_Product::class, 'invalidate_category_summary_for_option'], 10, 1);
+add_action('updated_option', [FS_Product::class, 'invalidate_category_summary_for_option'], 10, 1);
+add_action('deleted_option', [FS_Product::class, 'invalidate_category_summary_for_option'], 10, 1);

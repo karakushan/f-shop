@@ -214,6 +214,9 @@ function fs_dropdown_cats_multiple($output, $r)
 add_filter('fs_price_filter', 'fs_price_filter_callback', 10, 2);
 function fs_price_filter_callback($price, $post_id)
 {
+    static $locale_currency_ids = [];
+    static $currency_costs = [];
+
     $price = floatval(str_replace(',', '.', $price));
 
     if (fs_option('multi_currency_on') != 1) {
@@ -230,16 +233,27 @@ function fs_price_filter_callback($price, $post_id)
         $default_country = FS_Config::get_data('default_country');
         $current_country = apply_filters('fs_current_country', $default_country);
 
-        // получаем валюту текущей локали
-        $locale_currency_id = $wpdb->get_var($wpdb->prepare("SELECT term_id FROM $wpdb->termmeta WHERE meta_key LIKE %s AND meta_value = %s", $wpdb->esc_like('__fs_currency_locale').'%', $current_country));
+        // Resolve each locale's currency once per request, not once per product.
+        $country_key = (string) $current_country;
+        if (!array_key_exists($country_key, $locale_currency_ids)) {
+            $locale_currency_ids[$country_key] = $wpdb->get_var($wpdb->prepare("SELECT term_id FROM $wpdb->termmeta WHERE meta_key LIKE %s AND meta_value = %s", $wpdb->esc_like('__fs_currency_locale').'%', $current_country));
+        }
+
+        $locale_currency_id = $locale_currency_ids[$country_key];
 
         if (!$locale_currency_id) {
             $locale_currency_id = $default_currency_id;
         }
-        $locale_currency_cost = get_term_meta($locale_currency_id, '__fs_currency_cost', true);
+        if (!array_key_exists($locale_currency_id, $currency_costs)) {
+            $currency_costs[$locale_currency_id] = get_term_meta($locale_currency_id, '__fs_currency_cost', true);
+        }
+        $locale_currency_cost = $currency_costs[$locale_currency_id];
 
         if ($product_currency_id != $locale_currency_id) {
-            $product_currency_cost = floatval(get_term_meta($product_currency_id, '__fs_currency_cost', true));
+            if (!array_key_exists($product_currency_id, $currency_costs)) {
+                $currency_costs[$product_currency_id] = get_term_meta($product_currency_id, '__fs_currency_cost', true);
+            }
+            $product_currency_cost = floatval($currency_costs[$product_currency_id]);
             // конвертируем в базовую валюту
             if ($product_currency_cost) {
                 $price = $price * $product_currency_cost;

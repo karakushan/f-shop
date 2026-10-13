@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *Класс рефтинга и статистики
  */
 class FS_Rating_Class {
+	private static $category_rating_summary_cache = [];
+
 
 	function __construct() {
 		add_action( 'wp_head', array( &$this, 'post_views_counter' ) );
@@ -88,39 +90,9 @@ class FS_Rating_Class {
 	 * @return float
 	 */
 	public static function get_average_rating_in_category() {
-		$average_rating = 0;
-		if ( fs_is_product_category() ) {
-			$taxonomy = FS_Config::get_data( 'product_taxonomy' );
-			$term     = get_queried_object();
-			$args     = [
-				'post_type'      => FS_Config::get_data( 'post_type' ),
-				'posts_per_page' => - 1,
-				'tax_query'      => [
-					[
-						'taxonomy' => $taxonomy,
-						'field'    => 'term_id',
-						'terms'    => $term->term_id,
-					]
-				]
-			];
-			$query    = new \WP_Query( $args );
-			if ( $query->have_posts() ) {
-				$count = 0;
-				$sum   = 0;
-				while ( $query->have_posts() ) {
-					$query->the_post();
-					$rating = FS_Product::get_average_rating( get_the_ID() );
-					if ( $rating > 0 ) {
-						$sum += $rating;
-						$count ++;
-					}
-				}
-				$average_rating = $count > 0 ? $sum / $count : 0;
-			}
-			wp_reset_postdata();
-		}
+		$summary = self::get_category_rating_summary();
 
-		return floatval( $average_rating );
+		return (float) $summary['average'];
 	}
 
 
@@ -130,34 +102,85 @@ class FS_Rating_Class {
 	 * @return int
 	 */
 	public static function get_count_ratings_in_category() {
-		$count_ratings = 0;
-		if ( fs_is_product_category() ) {
-			$taxonomy = FS_Config::get_data( 'product_taxonomy' );
-			$term     = get_queried_object();
-			$args     = [
-				'post_type'      => FS_Config::get_data( 'post_type' ),
-				'posts_per_page' => - 1,
-				'tax_query'      => [
-					[
-						'taxonomy' => $taxonomy,
-						'field'    => 'term_id',
-						'terms'    => $term->term_id,
-					]
-				]
-			];
-			$query    = new \WP_Query( $args );
-			if ( $query->have_posts() ) {
-				while ( $query->have_posts() ) {
-					$query->the_post();
-					$rating = FS_Product::get_average_rating( get_the_ID() );
-					if ( $rating > 0 ) {
-						$count_ratings ++;
-					}
-				}
-			}
-			wp_reset_postdata();
+		$summary = self::get_category_rating_summary();
+
+		return (int) $summary['count'];
+	}
+
+	/**
+	 * Aggregate product ratings for the current category with one bulk comment query.
+	 *
+	 * @return array{count: int, average: float}
+	 */
+	public static function get_category_rating_summary() {
+		$empty_summary = [
+			'count'   => 0,
+			'average' => 0.0,
+		];
+
+		if ( ! fs_is_product_category() ) {
+			return $empty_summary;
 		}
 
-		return intval( $count_ratings );
+		$term = get_queried_object();
+		if ( ! is_object( $term ) || empty( $term->term_id ) ) {
+			return $empty_summary;
+		}
+
+		$country      = apply_filters( 'fs_current_country', FS_Config::get_data( 'default_country' ) );
+		$language     = function_exists( 'wpm_get_language' ) ? wpm_get_language() : get_query_var( 'lang' );
+		$cache_version = FS_Product::get_category_product_summary_cache_version();
+		$cache_key     = md5( serialize( [ (int) $term->term_id, (string) $country, (string) $language, $cache_version ] ) );
+
+		if ( array_key_exists( $cache_key, self::$category_rating_summary_cache ) ) {
+			return self::$category_rating_summary_cache[ $cache_key ];
+		}
+
+		$transient_key = 'fs_fshop_category_rating_' . $cache_key;
+		$cached        = get_transient( $transient_key );
+		if ( is_array( $cached ) && isset( $cached['count'], $cached['average'] ) ) {
+			self::$category_rating_summary_cache[ $cache_key ] = $cached;
+			return $cached;
+		}
+
+		$product_summary = FS_Product::get_category_product_summary();
+		$product_ids     = isset( $product_summary['product_ids'] ) ? $product_summary['product_ids'] : [];
+		$comments        = $product_ids ? get_comments( [
+			'post__in' => $product_ids,
+			'status'   => 'approve',
+			'number'   => 0,
+			'orderby'  => 'comment_ID',
+			'order'    => 'ASC',
+		] ) : [];
+
+		$ratings_by_product = [];
+		foreach ( $comments as $comment ) {
+			$post_id = (int) $comment->comment_post_ID;
+			if ( ! isset( $ratings_by_product[ $post_id ] ) ) {
+				$ratings_by_product[ $post_id ] = [ 'sum' => 0, 'count' => 0 ];
+			}
+			$ratings_by_product[ $post_id ]['sum'] += (int) $comment->comment_karma;
+			$ratings_by_product[ $post_id ]['count']++;
+		}
+
+		$rating_count = 0;
+		$rating_sum   = 0.0;
+		foreach ( $ratings_by_product as $product_rating ) {
+			$rating = round( $product_rating['sum'] / $product_rating['count'], 1 );
+			if ( $rating > 0 ) {
+				$rating_sum += $rating;
+				$rating_count++;
+			}
+		}
+
+		$summary = [
+			'count'   => $rating_count,
+			'average' => $rating_count > 0 ? $rating_sum / $rating_count : 0.0,
+		];
+
+		self::$category_rating_summary_cache[ $cache_key ] = $summary;
+		set_transient( $transient_key, $summary, 86400 );
+
+		return $summary;
 	}
 }
